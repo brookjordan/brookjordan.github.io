@@ -1,0 +1,2 @@
+!function(a,b,c){"use strict";c.module("app",["brk"]).controller("Test_brkMenu_Controller",["brkMenu","$timeout","$filter","brkID",function(a){function b(a){g=""+Math.floor(1e3*Math.random()),f=a.add({name:g}).get(g)}var c,d,e,f,g,h=this;h.menu=a,h.addItem=b,b(a),c=f,b(a),d=f,b(a),e=f,b(a),a.linkMenus(c,d,"open","one is"),a.linkMenus(e,f,"open","one not"),a.linkMenus(c,f,"open","one each")}])}(window,document,angular);
+//# sourceMappingURL=list.js.map

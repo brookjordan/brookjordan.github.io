@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gradient lines</title>
+  <style>
+    html, body, canvas {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .colors {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    input {
+      float: left;
+      pointer-events: initial;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <canvas id="newline"></canvas>
+
+  <div class="colors">
+    <input type="color" id="color1elt" value="#ffbbdd">
+    <input type="color" id="color2elt" value="#bbddff">
+    <input type="color" id="color3elt" value="#ccffaa">
+    <input type="button" value="Clear canvas" id="clearcanvas">
+    <input type="button" value="Download image" id="downloadimage">
+  </div>
+
+  <script>
+    'use strict';
+
+    var newlineCtx = newline.getContext('2d');
+    var canvasCtx = canvas.getContext('2d');
+    var coords = undefined;
+    var penSize = 10;
+    var penColor = 'red';
+
+    resizeAndClearAll();
+    window.addEventListener('resize', resizeAndClearAll);
+
+    newline.addEventListener('mousedown', startDraw);
+    newline.addEventListener('touchstart', startDraw);
+
+    window.addEventListener('mouseup', endDraw);
+    window.addEventListener('touchend', endDraw);
+    window.addEventListener('mouseleave', endDraw);
+    newline.addEventListener('mouseup', endDraw);
+    newline.addEventListener('touchend', endDraw);
+
+    clearcanvas.addEventListener('click', resizeAndClearAll);
+    clearcanvas.addEventListener('touchstart', resizeAndClearAll);
+
+    downloadimage.addEventListener('click', downloadImage);
+    downloadimage.addEventListener('touchstart', downloadImage);
+
+    function startDraw(e) {
+      if (e.target.nodeName.toUpperCase() !== 'INPUT') {
+        e.preventDefault();
+        coords = [[e.pageX, e.pageY]];
+        newline.addEventListener('mousemove', addToDraw);
+        newline.addEventListener('touchmove', addToDraw);
+      }
+    }
+
+    function addToDraw(e) {
+      e.preventDefault();
+      coords.push([e.pageX, e.pageY]);
+      render(coords);
+    }
+
+    function endDraw(e) {
+      e.preventDefault();
+
+      newline.removeEventListener('mousemove', addToDraw);
+      newline.removeEventListener('touchmove', addToDraw);
+
+      canvasCtx.drawImage(newline, 0, 0);
+      resizeAndClearNewline();
+    }
+
+    function render(coords) {
+      var coordsLength = coords.length / 2;
+      var color = undefined;
+      var color1 = undefined;
+      var color2 = undefined;
+      var i = undefined;
+
+      resizeAndClearNewline();
+
+      coords.forEach(function (coord, index) {
+        if (index < coordsLength) {
+          color1 = rgb(color1elt.value) || [ 255, 0, 0 ];
+          color2 = rgb(color2elt.value) || [ 0, 255, 0 ];
+          i      = index;
+        } else {
+          color1 = rgb(color2elt.value) || [ 0, 255, 0 ];
+          color2 = rgb(color3elt.value) || [ 0, 0, 255 ];
+          i      = index - coordsLength;
+        }
+
+        color =
+          'rgb(' +
+            Math.round(((color1[0] * ( coordsLength - i )) + (color2[0] * i)) / coordsLength) + ',' +
+            Math.round(((color1[1] * ( coordsLength - i )) + (color2[1] * i)) / coordsLength) + ',' +
+            Math.round(((color1[2] * ( coordsLength - i )) + (color2[2] * i)) / coordsLength) +
+          ')';
+
+        var size = index ? Math.abs(coords[index][0] - coords[index - 1][0]) + Math.abs(coords[index][1] - coords[index - 1][1]) : '1';
+        fillCircle.apply(undefined, coord.concat([color, size * 1.5]));
+      });
+    }
+
+    function fillCircle(x, y) {
+      var color = arguments.length <= 2 || arguments[2] === undefined ? penColor : arguments[2];
+      var size = arguments.length <= 3 || arguments[3] === undefined ? penSize : arguments[3];
+
+      newlineCtx.beginPath();
+      newlineCtx.fillStyle = color;
+      newlineCtx.arc(x, y, size / 2, 0, 2 * Math.PI, false);
+      newlineCtx.fill();
+    }
+
+    function resizeAndClearAll(e) {
+      resizeAndClearCanvas();
+      resizeAndClearNewline();
+    }
+
+    function resizeAndClearCanvas() {
+      canvas.width = innerWidth;
+      canvas.height = innerHeight;
+    }
+
+    function resizeAndClearNewline() {
+      newline.width = innerWidth;
+      newline.height = innerHeight;
+    }
+
+    function rgb(hex) {
+      var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result ? [
+          parseInt(result[1], 16),
+          parseInt(result[2], 16),
+          parseInt(result[3], 16)
+      ] : null;
+    }
+
+    function downloadImage() {
+      var a = document.createElement('a');
+      a.href = canvas.toDataURL();
+      a.download = 'download';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+  </script>
+</body>
+</html>

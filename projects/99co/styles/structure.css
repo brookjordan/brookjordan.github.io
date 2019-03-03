@@ -1,0 +1,77 @@
+html, body, .body {
+	width: 100%;
+	height: 100%;
+}
+
+.body {
+	position: relative;
+
+	padding-top: 50px;
+
+	overflow: hidden;
+}
+
+.headContainer {
+	position: absolute;
+	z-index: 1;
+
+	top: 0;
+	left: 0;
+
+	width: 120%;
+	height: 50px;
+	padding: 0 10%;
+	margin-left: -10%;
+
+	background-color: rgb( 48, 63, 159 );
+	box-shadow: 10px 0 10px rgba( 0, 0, 0, .6 );
+}
+
+.listContainer {
+	position: relative;
+	z-index: 0;
+	padding-top: 80px;
+}
+
+.filterContainer {
+	position: absolute;
+	z-index: 1;
+	top: 0;
+	left: 0;
+
+	width: 100%;
+	height: 80px;
+}
+
+
+@media ( orientation: portrait ) {
+	.mapContainer {
+		width: 100%;
+		height: 50%;
+	}
+
+	.listContainer {
+		width: 100%;
+		height: 50%;
+
+		background-image: linear-gradient( to bottom, rgba( 0, 0, 0, .15 ), rgba( 0, 0, 0, .0 ) 5px );
+	}
+}
+
+@media ( orientation: landscape ) {
+	.mapContainer {
+		float: left;
+
+		width: 60%;
+		height: 100%;
+	}
+
+	.listContainer {
+		float: left;
+
+		width: 40%;
+		height: 100%;
+
+		background-image: linear-gradient( to right, rgba( 0, 0, 0, .215 ), rgba( 0, 0, 0, .0 ) 5px );
+	}
+}

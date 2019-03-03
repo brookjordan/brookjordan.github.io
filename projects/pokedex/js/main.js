@@ -1,0 +1,1 @@
+"use strict";var log=!1,pokedex=getPokedex(),pokemonElts={};renderPokemon(),updatePokedexData();var log=!0;

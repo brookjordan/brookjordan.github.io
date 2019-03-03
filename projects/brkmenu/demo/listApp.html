@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Brk Nav</title>
+
+	<style>
+		[ng-cloak] {
+			display: none !important;
+		}
+
+		body, html {
+			height: 100%;
+
+			background: #EEE;
+			font-family: monospace;
+		}
+		h2, h3, h4 {
+			margin: 0;
+		}
+
+		.btn {
+			border: none;
+
+			background: #666;
+
+			color: white;
+			outline: none;
+			cursor: pointer;
+			border-radius: 2px;
+			cursor: pointer;
+
+			transition: all .1s linear;
+		}
+		.btn--over {
+			background: #999;
+		}
+		.btn--down {
+			background: #444;
+		}
+		.btn--overdown {
+			background: #000;
+
+			transition: all .01s linear;
+		}
+
+		li {
+			padding: 5px;
+			border-radius: 5px;
+		}
+		.li-open {
+			background: black;
+			color: white;
+		}
+	</style>
+</head>
+
+<body>
+	<div ng-cloak
+		 ng-controller="Test_brkMenu_Controller as main">
+
+		<button ng-click="main.addItem( main.menu )"
+						brk-class="btn" >+</button>
+		<ul>
+			<li ng-repeat="level1 in main.menu.nav track by level1.ID"
+					ng-class="{ 'li-open': level1.is.open }">
+				<h2>
+					<span ng-click="level1.toggle( 'open' )">
+						{{ level1.name }}
+					</span>
+
+					<button ng-click="main.menu.remove(level1.path)"
+									brk-class="btn" >x</button>
+					<button ng-click="main.addItem( level1 )"
+									brk-class="btn" >+</button>
+				</h2>
+
+				<ul>
+					<li ng-repeat="level2 in level1.nav track by level2.ID">
+						<h3>
+							{{ level2.name }}
+							<button ng-click="main.menu.remove(level2.path)"
+											brk-class="btn" >x</button>
+							<button ng-click="main.addItem( level2 )"
+											brk-class="btn" >+</button>
+						</h3>
+
+						<ul>
+							<li ng-repeat="level3 in level2.nav track by level3.ID">
+								<h4>
+									{{ level3.name }}
+									<button ng-click="main.menu.remove(level3.path)"
+													brk-class="btn" >x</button>
+								</h4>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+		</ul>
+
+	</div>
+
+	<script src="../build/js/vendor.js"></script>
+	<script src="../build/js/brk.js"></script>
+	<script src="../build/js/list.js"></script>
+</body>
+
+</html>

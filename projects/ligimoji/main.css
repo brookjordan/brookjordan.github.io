@@ -1,0 +1,80 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+.app {
+  height: 100%;
+  margin: 0;
+}
+
+label,
+input {
+  width: 300px;
+  font-size: 30px;
+  font-family: open sans, sans-serif, serif;
+}
+
+input {
+  font-size: 60px;
+}
+
+.app {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  position: relative;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.emoji {
+  position: relative;
+  width: 300px;
+  height: 300px;
+}
+.emoji__body, .emoji__mouth, .emoji__eyes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 300px;
+  height: 300px;
+  background-size: 300px;
+}
+.emoji--body-round .emoji__body {
+  background-image: url("./i/body--round.png");
+  background-image: url("./i/body--round.svg");
+}
+.emoji--body-egg-plant .emoji__body {
+  background-image: url("./i/body--egg-plant.png");
+  background-image: url("./i/body--egg-plant.svg");
+}
+.emoji--eyes-normal .emoji__eyes {
+  background-image: url("./i/eyes--normal.png");
+  background-image: url("./i/eyes--normal.svg");
+}
+.emoji--eyes-hearts .emoji__eyes {
+  background-image: url("./i/eyes--hearts.png");
+  background-image: url("./i/eyes--hearts.svg");
+}
+.emoji--mouth-normal .emoji__mouth {
+  background-image: url("./i/mouth--normal.png");
+  background-image: url("./i/mouth--normal.svg");
+}
+.emoji--mouth-giggle .emoji__mouth {
+  background-image: url("./i/mouth--giggle.png");
+  background-image: url("./i/mouth--giggle.svg");
+}
+.emoji--body-egg-plant .emoji__eyes, .emoji--body-egg-plant .emoji__mouth {
+  -webkit-transform: translate(1%, -2%) rotate(12deg);
+          transform: translate(1%, -2%) rotate(12deg);
+}

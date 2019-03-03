@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>You're a…</title>
+
+    <style>
+        body {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60vw;
+            text-align: center;
+            font-family: sans-serif;
+            padding-bottom: 2em;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        h1 {
+            font-weight: 400;
+        }
+
+        h3 {
+            text-align: left;
+        }
+
+        button {
+            float: right;
+        }
+    </style>
+    <script src="https://code.responsivevoice.org/responsivevoice.js"></script>
+</head>
+<body>
+    <h3><button>Again!</button>You're a…</h3>
+    <h1></h1>
+
+    <hr>
+
+    <script>
+var a = `Atomic Steamy Rusty Witless Lumpy Shitty Moist Chunky Lousy Bulbous Trashy Dumbass Nerdy Dotarded Crusty Brainless`.split(' ');
+var b = `knob bum turd prick bulge ass chut shit rod chode fuck wiener jizz panty cock dong`.split(' ');
+var c = `vacuum general gremlin pixie spasm fiend fungus tunnel corporal raider demon buccaneer tyrant juggler magician fiddle`.split(' ');
+var d = `... ! .`.split(' ');
+
+printNewInsult();
+
+document.documentElement.onclick = printNewInsult;
+
+function printNewInsult() {
+    document.querySelector('h1').innerHTML = Math.random() > 0.95
+        ? `${ randomItem(a) }, ${ randomItem(a) } ${ randomItem(b) } ${ randomItem(c, true) }${ randomItem(d, true) }`
+        : `${ randomItem(a) } ${ randomItem(b) } ${ randomItem(c, true) }${ randomItem(d, true) }`;
+    responsiveVoice && responsiveVoice.speak(document.querySelector('h1').innerText);
+}
+
+function randomItem(arr, boring) {
+    var rand = Math.random();
+    if (boring || rand < 0.8) {
+        return arr[Math.floor(Math.random() * arr.length)];
+    } else if (rand < 0.9) {
+        return `<em>${ arr[Math.floor(Math.random() * arr.length)] }</em>`;
+    } else if (rand < 0.967) {
+        return `<strong>${ arr[Math.floor(Math.random() * arr.length)] }</strong>`;
+    } else {
+        return `<u>${ arr[Math.floor(Math.random() * arr.length)] }</u>`;
+    }
+}
+    </script>
+</body>
+</html>

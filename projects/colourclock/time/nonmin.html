@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Colour clock</title>
+	<link href='http://fonts.googleapis.com/css?family=Josefin+Sans:100&amp;text=ABCDEFrawdjuste0123456789%23%3A' rel='stylesheet' type='text/css'>
+
+	<style>
+		html, body, h1, p {
+			position: relative;
+			height: 100%;
+			margin: 0;
+
+			font-family: 'Josefin Sans', sans-serif;
+			font-weight: 100;
+			text-align: center;
+		}
+		body {
+			transition: background-color 1s linear;
+		}
+		h1, p {
+			transition: color 3s ease-in-out, font-size 1s ease-in-out, line-height 1s ease-in-out;
+		}
+		html:before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: linear-gradient( 15deg, rgba(0,0,0,0.4), rgba(0,0,0,0) 50%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.3) );
+		}
+		h1 {
+			line-height: 30px;
+			font-size: 30px;
+		}
+		p {
+			line-height: 10px;
+			font-size: 10px;
+		}
+		.w1, .w2 {
+			display: inline-block;
+			width: 49.5%;
+			padding-right: .5%;
+			text-align: right;
+		}
+		.v1, .v2 {
+			display: inline-block;
+			width: 49.5%;
+			padding-left: .5%;
+			text-align: left;
+		}
+		article {
+			position: relative;
+
+			top: 50%;
+			margin-top: -25px;
+		}
+		.d {
+			display: inline-block;
+			width: .7em;
+		}
+
+		@media all and (min-width: 320px) {
+			h1 {
+				line-height: 45px;
+				font-size: 45px;
+			}
+			p {
+				line-height: 15px;
+				font-size: 15px;
+			}
+			article {
+				margin-top: -37.5px;
+			}
+		}
+
+		@media all and (min-width: 500px) {
+			h1 {
+				line-height: 60px;
+				font-size: 60px;
+			}
+			p {
+				line-height: 20px;
+				font-size: 20px;
+			}
+			article {
+				margin-top: -50px;
+			}
+		}
+
+		@media all and (min-width: 800px) {
+			h1 {
+				line-height: 75px;
+				font-size: 75px;
+			}
+			p {
+				line-height: 25px;
+				font-size: 25px;
+			}
+			article {
+				margin-top: -62.5px;
+			}
+		}
+
+		@media all and (min-width: 1100px) {
+			h1 {
+				line-height: 90px;
+				font-size: 90px;
+			}
+			p {
+				line-height: 30px;
+				font-size: 30px;
+			}
+			article {
+				margin-top: -75px;
+			}
+		}
+
+		@media all and (min-width: 1700px) {
+			h1 {
+				line-height: 120px;
+				font-size: 120px;
+			}
+			p {
+				line-height: 40px;
+				font-size: 40px;
+			}
+			article {
+				margin-top: -100px;
+			}
+		}
+	</style>
+</head>
+<body>
+
+	<article class="t">
+		<h1>
+			<span class="d h1"></span><span class="d h2"></span>
+			<div class="d c1">:</div>
+			<span class="d m1"></span><span class="d m2"></span>
+			<div class="d c2">:</div>
+			<span class="d s1"></span><span class="d s2"></span>
+		</h1>
+
+		<p><time><span class="w1">raw: </span><span class="v1"></span></time></p>
+		<p><time><span class="w2">adjusted: </span><span class="v2"></span></time></p>
+	</article>
+
+	<script>
+		function pad(n, width) {
+			n = n + '';
+			return n.length >= width ? n : new Array(width - n.length + 1).join('0') + n;
+		}
+
+		function changeTime () {
+			var t = new Date();
+
+			var h = t.getHours();
+			var m = t.getMinutes();
+			var s = t.getSeconds();
+
+			var rD = ( Math.round( h/23*255 ) );
+			var gD = ( Math.round( m/59*255 ) );
+			var bD = ( Math.round( s/59*255 ) );
+
+			var rR = pad( h.toString( 16 ), 2 );
+			var gR = pad( m.toString( 16 ), 2 );
+			var bR = pad( s.toString( 16 ), 2 );
+
+			var rH = pad( rD.toString( 16 ), 2 );
+			var gH = pad( gD.toString( 16 ), 2 );
+			var bH = pad( bD.toString( 16 ), 2 );
+
+			var realHex = pad(h,2) + pad(m,2) + pad(s,2);
+			var adjustedHex = rH + gH + bH;
+
+			hE1.innerHTML = pad( h, 2 ).split('')[0];
+			hE2.innerHTML = pad( h, 2 ).split('')[1];
+			mE1.innerHTML = pad( m, 2 ).split('')[0];
+			mE2.innerHTML = pad( m, 2 ).split('')[1];
+			sE1.innerHTML = pad( s, 2 ).split('')[0];
+			sE2.innerHTML = pad( s, 2 ).split('')[1];
+
+			v1.innerHTML = '#' + realHex;
+			v2.innerHTML = '#' + adjustedHex.toUpperCase();
+
+			bS.backgroundColor = '#' + adjustedHex;
+
+			if ( ( rD + gD + bD ) < 383 ) {
+				tE.style.color = 'white';
+			} else {
+				tE.style.color = 'black';
+			}
+
+			setTimeout( changeTime, 1000 );
+		}
+
+		var tE = document.querySelector('.t');
+
+		var hE1 = document.querySelector('.h1');
+		var hE2 = document.querySelector('.h2');
+		var mE1 = document.querySelector('.m1');
+		var mE2 = document.querySelector('.m2');
+		var sE1 = document.querySelector('.s1');
+		var sE2 = document.querySelector('.s2');
+
+		var v1 = document.querySelector('.v1');
+		var v2 = document.querySelector('.v2');
+
+		var bS = document.body.style;
+
+		changeTime();
+	</script>
+</body>
+</html>

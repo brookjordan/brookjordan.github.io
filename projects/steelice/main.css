@@ -1,0 +1,52 @@
+body {
+  font-family: sans-serif;
+  font-size: 5vmin;
+}
+
+h1 {
+  text-align: right;
+}
+
+.glasses {
+  display: flex;
+  align-items: flex-end;
+}
+
+.glass {
+  position: relative;
+  width: 39.9vmin;
+  height: 71.6vmin;
+  border-radius: 3px;
+  border: 1px solid black;
+  color: white;
+}
+
+.glass .steel {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 30vmin;
+  height: 30vmin;
+  transform: translateX(-50%);
+  border: 1px solid black;
+  border-radius: 3px;
+}
+
+.glass .ice {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 30vmin;
+  height: 30vmin;
+  transform: translateX(-50%);
+  border: 1px solid black;
+  border-radius: 3px;
+}
+
+.glass-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+/*# sourceMappingURL=main.css.map */

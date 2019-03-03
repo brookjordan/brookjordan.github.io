@@ -1,0 +1,268 @@
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+
+body {
+  line-height: 1;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+blockquote, q {
+  quotes: none;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+html {
+  font-size: 12px;
+  font-family: open sans;
+}
+
+button {
+  background: none;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  color: inherit;
+  outline: 0;
+}
+
+@keyframes notification-in {
+  0% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.top-menu {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  min-height: 48px;
+  padding: 8px 16px;
+  background: #f4f4f4;
+}
+
+.top-menu > :not(:first-child) {
+  margin-left: 16px;
+}
+
+.button-wrapper {
+  position: relative;
+}
+
+.button {
+  padding: 8px 16px;
+  border: 1px solid black;
+  line-height: 16px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.notify-banners {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding-top: 32px;
+  pointer-events: none;
+}
+
+.notification-wrapper {
+  padding-top: 8px;
+  transform-origin: 225px -16px;
+  transition: transform ease-in-out 0.3s;
+  animation: notification-in 0.2s ease-out;
+  pointer-events: initial;
+}
+
+.notification-wrapper--hiding {
+  transform: scale(0);
+  transition: transform ease-in 0.2s;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.notification-wrapper--deleting {
+  transform: scale(1.05) rotate(10deg) translateY(50px);
+  opacity: 0;
+  pointer-events: none;
+  transform-origin: 0 100%;
+  transition: transform ease-in 0.2s, opacity ease-in 0.2s;
+}
+
+.notification-wrapper:nth-child(2) {
+  transition-delay: 0.1s;
+}
+
+.notification-wrapper:nth-child(3) {
+  transition-delay: 0.2s;
+}
+
+.notification-wrapper:nth-child(4) {
+  transition-delay: 0.25s;
+}
+
+.notification-wrapper:nth-child(5) {
+  transition-delay: 0.28s;
+}
+
+.notification-wrapper:nth-child(6) {
+  transition-delay: 0.3s;
+}
+
+.notification-wrapper:nth-child(6) ~ .notification-wrapper {
+  transition-delay: 0.3s;
+}
+
+.notification-banner {
+  display: flex;
+  min-height: 48px;
+  width: 250px;
+  border: 1px solid black;
+  line-height: 16px;
+  border-radius: 3px;
+}
+
+.notification-banner__info {
+  flex-basis: 0;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+}
+
+.notification-banner__buttons {
+  display: flex;
+  flex-direction: column;
+  align-content: stretch;
+}
+
+.notification-banner__button {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  flex-grow: 1;
+  padding: 8px 16px;
+  border-left: 1px solid black;
+  line-height: 16px;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.notification-banner__button:not(:first-child) {
+  border-top: 1px solid black;
+}
+
+.messages {
+  position: absolute;
+  top: 40px;
+  z-index: 300;
+  right: 0;
+  height: 500px;
+  width: 250px;
+  pointer-events: none;
+}
+
+.messages__scroller {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-height: 100%;
+  width: 250px;
+  overflow-y: auto;
+  transform: scaleY(0);
+  transform-origin: 50% 0;
+  transition: transform 0.2s;
+  pointer-events: auto;
+  border-radius: 3px;
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+}
+
+.messages::before {
+  content: '';
+  position: absolute;
+  top: 0px;
+  left: -2px;
+  width: calc(100% + 4px);
+  height: 3px;
+  background: rgba(0, 0, 0, 0.3);
+  transform: translateY(-1.5px) scale(0, 0.5);
+  transition: transform 0.1s;
+  transition-delay: 0.2s;
+}
+
+.messages--open::before {
+  transform: translateY(-1.5px) scale(1, 0.5);
+  transition-delay: 0s;
+}
+
+.messages--open .messages__scroller {
+  transform: scaleY(1);
+}
+
+.message {
+  position: relative;
+  background: rgba(245, 245, 245, 0.8);
+  padding: 8px 16px;
+  line-height: 16px;
+}
+
+.message--new {
+  animation: notification-in 0.2s ease-out;
+}
+
+.message:nth-child(2n) {
+  background: rgba(230, 230, 230, 0.8);
+}
+/*# sourceMappingURL=main.0.3.0.css.map */

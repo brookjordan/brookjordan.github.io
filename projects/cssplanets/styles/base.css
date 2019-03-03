@@ -1,0 +1,318 @@
+* {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  line-height: 1.4;
+  font-size: 100%;
+  font-weight: inherit; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+          text-size-adjust: 100%;
+  /* Prevent font scaling in landscape while allowing user zoom */ }
+
+html, body, div, h1, h2, h3, h4, p, time,
+article, section, time, nav {
+  display: block;
+  margin: 0;
+  padding: 0; }
+
+ul, li {
+  margin: 0;
+  padding: 0; }
+
+a {
+  text-decoration: none;
+  color: inherit; }
+  a:hover {
+    text-decoration: underline; }
+
+button {
+  display: block;
+  padding: 0;
+  border: none;
+  background: none;
+  outline: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer; }
+
+* {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box; }
+
+html {
+  width: 100%;
+  height: 100%;
+  background: black; }
+
+body {
+  position: relative;
+  padding: 50%;
+  width: 0;
+  height: 0; }
+
+.body {
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  width: 100%;
+  height: 100%; }
+
+solarsystem, orbit, planet, planet:after {
+  display: block;
+  -webkit-border-radius: 50%;
+          border-radius: 50%;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  -webkit-transform-style: preserve-3d;
+          transform-style: preserve-3d;
+  -webkit-perspective: 2000px;
+          perspective: 2000px; }
+
+solarsystem {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; }
+
+orbit {
+  position: absolute;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  /**/
+  -webkit-animation-name: orbit;
+          animation-name: orbit;
+  -webkit-animation-timing-function: linear;
+          animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  /**/ }
+
+orbit[mer] {
+  top: 49.3076133364%;
+  left: 49.3076133364%;
+  width: 1.3847733271%;
+  height: 1.3847733271%;
+  -webkit-animation-duration: 0.8797s;
+          animation-duration: 0.8797s; }
+
+orbit[ven] {
+  top: 48.9196324852%;
+  left: 48.9196324852%;
+  width: 2.1607350295%;
+  height: 2.1607350295%;
+  -webkit-animation-duration: 2.247s;
+          animation-duration: 2.247s; }
+
+orbit[ear] {
+  top: 48.4932830619%;
+  left: 48.4932830619%;
+  width: 3.0134338762%;
+  height: 3.0134338762%;
+  -webkit-animation-duration: 3.6525s;
+          animation-duration: 3.6525s; }
+
+orbit[mar] {
+  top: 47.5286391037%;
+  left: 47.5286391037%;
+  width: 4.9427217926%;
+  height: 4.9427217926%;
+  -webkit-animation-duration: 6.8665s;
+          animation-duration: 6.8665s; }
+
+orbit[jup] {
+  top: 41.9024174313%;
+  left: 41.9024174313%;
+  width: 16.1951651374%;
+  height: 16.1951651374%;
+  -webkit-animation-duration: 43.33s;
+          animation-duration: 43.33s; }
+
+orbit[sat] {
+  top: 34.9920779958%;
+  left: 34.9920779958%;
+  width: 30.0158440084%;
+  height: 30.0158440084%;
+  -webkit-animation-duration: 107.59s;
+          animation-duration: 107.59s; }
+
+orbit[ura] {
+  top: 20.186732869%;
+  left: 20.186732869%;
+  width: 59.6265342619%;
+  height: 59.6265342619%;
+  -webkit-animation-duration: 306.8s;
+          animation-duration: 306.8s; }
+
+orbit[nep] {
+  top: 5%;
+  left: 5%;
+  width: 90%;
+  height: 90%;
+  -webkit-animation-duration: 601.9s;
+          animation-duration: 601.9s; }
+
+planet {
+  position: absolute;
+  top: 50%;
+  right: 0%;
+  /**/
+  -webkit-animation-name: planet;
+          animation-name: planet;
+  -webkit-animation-timing-function: linear;
+          animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  /**/ }
+
+orbit[mer] planet {
+  width: 14.0944366978%;
+  height: 14.0944366978%;
+  margin-top: -7.0472183489%;
+  margin-right: -7.0472183489%;
+  background: #92532a;
+  -webkit-animation-duration: 0.8797s;
+          animation-duration: 0.8797s; }
+
+orbit[ven] planet {
+  width: 22.4034873958%;
+  height: 22.4034873958%;
+  margin-top: -11.2017436979%;
+  margin-right: -11.2017436979%;
+  background: #895c22;
+  -webkit-animation-duration: 2.247s;
+          animation-duration: 2.247s; }
+
+orbit[ear] planet {
+  width: 16.9135949532%;
+  height: 16.9135949532%;
+  margin-top: -8.4567974766%;
+  margin-right: -8.4567974766%;
+  background: #385799;
+  -webkit-animation-duration: 3.6525s;
+          animation-duration: 3.6525s; }
+
+orbit[mar] planet {
+  width: 5.4852369075%;
+  height: 5.4852369075%;
+  margin-top: -2.7426184537%;
+  margin-right: -2.7426184537%;
+  background: #712606;
+  -webkit-animation-duration: 6.8665s;
+          animation-duration: 6.8665s; }
+
+orbit[jup] planet {
+  width: 35.3152311289%;
+  height: 35.3152311289%;
+  margin-top: -17.6576155645%;
+  margin-right: -17.6576155645%;
+  background: #9e5621;
+  -webkit-animation-duration: 43.33s;
+          animation-duration: 43.33s; }
+
+orbit[sat] planet {
+  width: 15.5203365219%;
+  height: 15.5203365219%;
+  margin-top: -7.760168261%;
+  margin-right: -7.760168261%;
+  background: #dbc971;
+  -webkit-animation-duration: 107.59s;
+          animation-duration: 107.59s; }
+
+orbit[ura] planet {
+  width: 3.4027803647%;
+  height: 3.4027803647%;
+  margin-top: -1.7013901823%;
+  margin-right: -1.7013901823%;
+  background: #4696c2;
+  -webkit-animation-duration: 306.8s;
+          animation-duration: 306.8s; }
+
+orbit[nep] planet {
+  width: 2.1886222222%;
+  height: 2.1886222222%;
+  margin-top: -1.0943111111%;
+  margin-right: -1.0943111111%;
+  background: #314e90;
+  -webkit-animation-duration: 601.9s;
+          animation-duration: 601.9s; }
+
+planet:after {
+  display: block;
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  -webkit-transform: rotateX(90deg) rotateZ(0deg) rotateY(20deg);
+          transform: rotateX(90deg) rotateZ(0deg) rotateY(20deg); }
+
+orbit[jup] planet:after {
+  content: '';
+  width: 140%;
+  height: 140%;
+  margin-top: -20%;
+  margin-left: -20%;
+  background: -webkit-radial-gradient(50% 50%, ellipse farthest-side, rgba(255, 255, 255, 0) 85%, rgba(255, 255, 255, 0.5) 86%);
+  background: radial-gradient(ellipse farthest-side at 50% 50%, rgba(255, 255, 255, 0) 85%, rgba(255, 255, 255, 0.5) 86%); }
+
+orbit[sat] planet:after {
+  content: '';
+  width: 260%;
+  height: 260%;
+  margin-top: -80%;
+  margin-left: -80%;
+  background: -webkit-radial-gradient(50% 50%, ellipse farthest-side, rgba(255, 255, 255, 0) 50%, white 51%, white 59%, rgba(255, 255, 255, 0) 60%, white 70%, white 80%, rgba(255, 255, 255, 0) 81%, rgba(255, 255, 255, 0) 85%, white 51%);
+  background: radial-gradient(ellipse farthest-side at 50% 50%, rgba(255, 255, 255, 0) 50%, white 51%, white 59%, rgba(255, 255, 255, 0) 60%, white 70%, white 80%, rgba(255, 255, 255, 0) 81%, rgba(255, 255, 255, 0) 85%, white 51%); }
+
+orbit[nep] planet:after {
+  content: '';
+  width: 200%;
+  height: 200%;
+  margin-top: -50%;
+  margin-left: -50%;
+  background: -webkit-radial-gradient(50% 50%, ellipse farthest-side, rgba(255, 255, 255, 0) 92%, rgba(255, 255, 255, 0.3) 93%);
+  background: radial-gradient(ellipse farthest-side at 50% 50%, rgba(255, 255, 255, 0) 92%, rgba(255, 255, 255, 0.3) 93%); }
+
+@-webkit-keyframes orbit {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg); }
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg); } }
+
+@keyframes orbit {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg); }
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg); } }
+
+@-webkit-keyframes planet {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg); }
+  100% {
+    -webkit-transform: rotate(-360deg);
+            transform: rotate(-360deg); } }
+
+@keyframes planet {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg); }
+  100% {
+    -webkit-transform: rotate(-360deg);
+            transform: rotate(-360deg); } }
+
+.portraitNotice {
+  display: none;
+  position: absolute;
+  top: 10px;
+  left: 10%;
+  width: 80%;
+  text-align: center;
+  color: #555; }
+  @media (orientation: landscape) {
+    .portraitNotice {
+      display: block; } }
+/*# sourceMappingURL=base.css.map */

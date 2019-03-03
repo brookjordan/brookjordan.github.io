@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gradient lines</title>
+  <style>
+    html, body, canvas {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .colors {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    input {
+      float: left;
+      pointer-events: initial;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <canvas id="newline"></canvas>
+
+  <div class="colors">
+    <input type="color" id="color1elt" value="#ffbbdd">
+    <input type="color" id="color2elt" value="#bbddff">
+    <input type="color" id="color3elt" value="#ccffaa">
+    <input type="button" value="Clear canvas" id="clearcanvas">
+    <input type="button" value="Download image" id="downloadimage">
+  </div>
+
+  <script>
+    'use strict';
+
+    const newlineCtx = newline.getContext('2d');
+    const canvasCtx  = canvas.getContext('2d');
+    let coords   = undefined;
+    let penSize  = 10;
+    let penColor = 'rgb(255,0,0)'; // red
+
+    resizeAndClearAll();
+    window.addEventListener('resize', resizeAndClearAll);
+
+    newline.addEventListener('mousedown', startDraw);
+    newline.addEventListener('touchstart', startDraw);
+
+    window.addEventListener('mouseup', endDraw);
+    window.addEventListener('touchend', endDraw);
+    window.addEventListener('mouseleave', endDraw);
+    newline.addEventListener('mouseup', endDraw);
+    newline.addEventListener('touchend', endDraw);
+
+    clearcanvas.addEventListener('click', resizeAndClearAll);
+    clearcanvas.addEventListener('touchstart', resizeAndClearAll);
+
+    downloadimage.addEventListener('click', downloadImage);
+    downloadimage.addEventListener('touchstart', downloadImage);
+
+    function startDraw(e) {
+      if (e.target.nodeName.toUpperCase() !== 'INPUT') {
+        e.preventDefault();
+        coords = [[e.pageX, e.pageY]];
+        newline.addEventListener('mousemove', addToDraw);
+        newline.addEventListener('touchmove', addToDraw);
+      }
+    }
+
+    function addToDraw(e) {
+      e.preventDefault();
+      coords.push([e.pageX, e.pageY]);
+      render(coords);
+    }
+
+    function endDraw(e) {
+      e.preventDefault();
+
+      newline.removeEventListener('mousemove', addToDraw);
+      newline.removeEventListener('touchmove', addToDraw);
+
+      canvasCtx.drawImage(newline, 0, 0);
+      resizeAndClearNewline();
+    }
+
+    function render(_coords) {
+      let coords           = _coords.slice(0);
+      let colorInputElts   = Array.from(document.querySelectorAll('[type="color"]'));
+      let colorCount       = colorInputElts.length;
+      let gradientCount    = colorCount - 1;
+      let coordsLength     = _coords.length / (colorCount - 1);
+      let coordsGroups     = [];
+      let color;
+      let pointsDrawn      = 0;
+
+      let gradientsLeft = gradientCount;
+      while (coords.length) {
+        coordsGroups.push(coords.splice(0, Math.round(coords.length / gradientsLeft)));
+        gradientsLeft -= 1;
+      }
+
+      resizeAndClearNewline();
+
+      coordsGroups.forEach((coordGroup, index) => {
+        let color1       = rgb(colorInputElts[index].value);
+        let color2       = rgb(colorInputElts[index + 1].value);
+        let coordsLength = coordGroup.length;
+
+        coordGroup.forEach((coord, index) => {
+          color =
+            `rgb(${Math.round(((color1[0] * ( coordsLength - index )) + (color2[0] * index)) / coordsLength)},` +
+                `${Math.round(((color1[1] * ( coordsLength - index )) + (color2[1] * index)) / coordsLength)},` +
+                `${Math.round(((color1[2] * ( coordsLength - index )) + (color2[2] * index)) / coordsLength)})`;
+
+          let size = pointsDrawn
+            ? Math.abs(_coords[pointsDrawn][0] - _coords[pointsDrawn - 1][0]) + Math.abs(_coords[pointsDrawn][1] - _coords[pointsDrawn - 1][1])
+            : '1';
+
+          fillCircle(...coord, color, size * 1.5);
+          pointsDrawn += 1;
+        });
+      });
+    }
+
+    function fillCircle(x, y, color=penColor, size=penSize) {
+      newlineCtx.beginPath();
+      newlineCtx.fillStyle = color;
+      newlineCtx.arc(x, y, (size / 2), 0, (2 * Math.PI), false);
+      newlineCtx.fill();
+    }
+
+    function resizeAndClearAll(e) {
+      resizeAndClearCanvas();
+      resizeAndClearNewline();
+    }
+
+    function resizeAndClearCanvas() {
+      canvas.width  = innerWidth;
+      canvas.height = innerHeight;
+    }
+
+    function resizeAndClearNewline() {
+      newline.width  = innerWidth;
+      newline.height = innerHeight;
+    }
+
+    function rgb(hex) {
+      let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result
+        ? [
+            parseInt(result[1], 16),
+            parseInt(result[2], 16),
+            parseInt(result[3], 16)
+          ]
+        : null;
+    }
+
+    function downloadImage() {
+      let a = document.createElement('a');
+      a.href = canvas.toDataURL();
+      a.download = 'download';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+html {
+  font-family: "Open Sans", sans-serif;
+  font-size: 10px;
+}
+
+body {
+  font-size: 1.4rem;
+}
+
+html, body, .app {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+input, button {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  border-radius: 0;
+  outline: 0;
+  margin: 0;
+}
+
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+}
+
+.color-menu {
+  order: 1;
+  display: flex;
+  justify-content: space-between;
+  background: #eef;
+}
+
+.color-tools {
+  display: flex;
+}
+
+.color-tools input {
+  height: 32px;
+  line-height: 32px;
+  padding: 0;
+  border: 0;
+  margin: 0;
+  background: #eef;
+  outline: 0;
+  padding: 0 10px;
+}
+
+.colors {
+  display: flex;
+  flex-grow: 1;
+  padding-left: 20px;
+}
+
+.colors input {
+  flex-grow: 1;
+  width: 0;
+  flex-basis: 0;
+  height: 32px;
+  line-height: 32px;
+  padding: 0;
+  border: 0;
+  background: #eef;
+}
+
+.colors .jscolor {
+  padding: 0 10px;
+}
+
+.canvas {
+  position: relative;
+  order: 2;
+  flex-grow: 1;
+  flex-basis: 0;
+}
+
+.background {
+  display: flex;
+  order: 3;
+}
+
+.background input {
+  flex-grow: 1;
+  width: 0;
+  flex-basis: 0;
+  height: 32px;
+  line-height: 32px;
+  padding: 0;
+  border: 0;
+  background: #eef;
+}
+
+.buttons {
+  display: flex;
+  order: 4;
+}
+
+.buttons input {
+  flex-grow: 1;
+  height: 32px;
+  line-height: 32px;
+  padding: 0;
+  border: 0;
+  margin: 0;
+  background: #eef;
+  outline: 0;
+}

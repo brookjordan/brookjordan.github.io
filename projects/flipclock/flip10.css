@@ -1,0 +1,18 @@
+#clock {
+	-webkit-perspective: 300px;
+	   -moz-perspective: 300px;
+	        perspective: 300px;
+}
+
+.digit__piece {
+	background: black;
+}
+
+
+
+.digit__piece--off {
+	-webkit-transform: rotateX( 180deg );
+	   -moz-transform: rotateX( 180deg );
+	        transform: rotateX( 180deg );
+
+}

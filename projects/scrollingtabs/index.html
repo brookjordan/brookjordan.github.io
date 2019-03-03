@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tab scroller</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+<style>
+
+html, body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  padding: 10px;
+  background: #eee;
+  font-size: 12px;
+  font-family: "Open sans", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.tabs {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+  height: 50px;
+}
+
+.tab {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  background: #777;
+  white-space: nowrap;
+  height: 30px;
+  line-height: 30px;
+  border-color: #666;
+  border-style: solid;
+  border-right-width: 1px;
+  -ms-flex-negative: 8;
+      flex-shrink: 8;
+  color: white;
+  overflow: hidden;
+  cursor: pointer;
+  -webkit-transition-duration: 0.2s;
+          transition-duration: 0.2s;
+  -webkit-transition-property: background-color, height, line-height, border-radius, color, -webkit-flex-shrink;
+  transition-property: background-color, height, line-height, border-radius, color, -webkit-flex-shrink;
+  transition-property: flex-shrink, background-color, height, line-height, border-radius, color;
+  transition-property: flex-shrink, background-color, height, line-height, border-radius, color, -webkit-flex-shrink, -ms-flex-negative;
+}
+.tab__inner {
+  padding: 0 15px;
+}
+.tab--focus-0 {
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  height: 35px;
+  line-height: 35px;
+  background: #bbb;
+  border-width: 0 !important;
+}
+.tab--focus-1, .tab--focus--1 {
+  -ms-flex-negative: 1;
+      flex-shrink: 1;
+  height: 34px;
+  line-height: 34px;
+  background: #aaa;
+  border-width: 0 !important;
+}
+.tab--focus-2, .tab--focus--2 {
+  -ms-flex-negative: 2;
+      flex-shrink: 2;
+  height: 31px;
+  line-height: 31px;
+  background: #999;
+  border-width: 0 !important;
+}
+.tab--focus-3, .tab--focus--3 {
+  -ms-flex-negative: 4;
+      flex-shrink: 4;
+  background: #888;
+  border-width: 0 !important;
+}
+.tab--active, .tab--pinned {
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+}
+.tab--pinned {
+  -webkit-box-ordinal-group: 0;
+      -ms-flex-order: -1;
+          order: -1;
+}
+.tab--active {
+  background: #fff;
+  color: black;
+  cursor: default;
+  height: 40px;
+  line-height: 40px;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  border-width: 0 !important;
+}
+.tab--active ~ .tab {
+  border-right-width: 0;
+  border-left-width: 1px;
+}
+.tab:first-child {
+  border-top-left-radius: 3px;
+}
+.tab:last-child {
+  border-top-right-radius: 3px;
+}
+
+</style>
+</head>
+<body>
+<div class="tabs">
+  <div class="tab"><div class="tab__inner">I</div></div>
+  <div class="tab tab--active"><div class="tab__inner">Have</div></div>
+  <div class="tab"><div class="tab__inner">Tabs</div></div>
+</div>
+
+<div class="tabs" style="margin-top: 50px;">
+  <div class="tab"><div class="tab__inner">I</div></div>
+  <div class="tab"><div class="tab__inner">Have</div></div>
+  <div class="tab"><div class="tab__inner">A</div></div>
+  <div class="tab tab--active"><div class="tab__inner">Little</div></div>
+  <div class="tab"><div class="tab__inner">Bucket</div></div>
+  <div class="tab"><div class="tab__inner">Of</div></div>
+  <div class="tab"><div class="tab__inner">Tabs</div></div>
+</div>
+
+<div class="tabs" style="margin-top: 50px;">
+  <div class="tab"><div class="tab__inner">I</div></div>
+  <div class="tab"><div class="tab__inner">Have</div></div>
+  <div class="tab"><div class="tab__inner">A</div></div>
+  <div class="tab tab--active"><div class="tab__inner">Shit</div></div>
+  <div class="tab"><div class="tab__inner">Tonne</div></div>
+  <div class="tab"><div class="tab__inner">Of</div></div>
+  <div class="tab"><div class="tab__inner">Tabs</div></div>
+  <div class="tab"><div class="tab__inner">More</div></div>
+  <div class="tab"><div class="tab__inner">Than</div></div>
+  <div class="tab"><div class="tab__inner">I</div></div>
+  <div class="tab"><div class="tab__inner">Can</div></div>
+  <div class="tab"><div class="tab__inner">Handle</div></div>
+</div>
+
+<div class="tabs" style="margin-top: 50px;">
+  <div class="tab"><div class="tab__inner">I</div></div>
+  <div class="tab"><div class="tab__inner">Have</div></div>
+  <div class="tab"><div class="tab__inner">A</div></div>
+  <div class="tab tab--active"><div class="tab__inner">Shit</div></div>
+  <div class="tab"><div class="tab__inner">Tonne</div></div>
+  <div class="tab"><div class="tab__inner">Of</div></div>
+  <div class="tab"><div class="tab__inner">Tabs</div></div>
+  <div class="tab"><div class="tab__inner">Far</div></div>
+  <div class="tab"><div class="tab__inner">More</div></div>
+  <div class="tab"><div class="tab__inner">Than</div></div>
+  <div class="tab"><div class="tab__inner">I</div></div>
+  <div class="tab"><div class="tab__inner">Know</div></div>
+  <div class="tab"><div class="tab__inner">What</div></div>
+  <div class="tab"><div class="tab__inner">To</div></div>
+  <div class="tab"><div class="tab__inner">Do</div></div>
+  <div class="tab"><div class="tab__inner">With</div></div>
+  <div class="tab"><div class="tab__inner">And</div></div>
+  <div class="tab"><div class="tab__inner">They</div></div>
+  <div class="tab"><div class="tab__inner">Won't</div></div>
+  <div class="tab"><div class="tab__inner">Fit</div></div>
+  <div class="tab"><div class="tab__inner">So</div></div>
+  <div class="tab"><div class="tab__inner">I</div></div>
+  <div class="tab"><div class="tab__inner">Stack</div></div>
+  <div class="tab"><div class="tab__inner">Them</div></div>
+</div>
+
+<div class="tabs" style="margin-top: 50px;">
+  <div class="tab"><div class="tab__inner">I</div></div>
+  <div class="tab"><div class="tab__inner">Have</div></div>
+  <div class="tab"><div class="tab__inner">A</div></div>
+  <div class="tab tab--active"><div class="tab__inner">Shit</div></div>
+  <div class="tab"><div class="tab__inner">Tonne</div></div>
+  <div class="tab"><div class="tab__inner">Of</div></div>
+  <div class="tab"><div class="tab__inner">Tabs</div></div>
+  <div class="tab"><div class="tab__inner">Far</div></div>
+  <div class="tab"><div class="tab__inner">More</div></div>
+  <div class="tab"><div class="tab__inner">Than</div></div>
+  <div class="tab"><div class="tab__inner">I</div></div>
+  <div class="tab"><div class="tab__inner">Know</div></div>
+  <div class="tab"><div class="tab__inner">What</div></div>
+  <div class="tab"><div class="tab__inner">To</div></div>
+  <div class="tab"><div class="tab__inner">Do</div></div>
+  <div class="tab"><div class="tab__inner">With</div></div>
+  <div class="tab"><div class="tab__inner">And</div></div>
+  <div class="tab"><div class="tab__inner">They</div></div>
+  <div class="tab"><div class="tab__inner">Won't</div></div>
+  <div class="tab"><div class="tab__inner">Fit</div></div>
+  <div class="tab"><div class="tab__inner">So</div></div>
+  <div class="tab"><div class="tab__inner">I</div></div>
+  <div class="tab"><div class="tab__inner">Stack</div></div>
+  <div class="tab"><div class="tab__inner">Them</div></div>
+  <div class="tab"><div class="tab__inner">What</div></div>
+  <div class="tab"><div class="tab__inner">Are</div></div>
+  <div class="tab"><div class="tab__inner">They</div></div>
+  <div class="tab"><div class="tab__inner">Doing</div></div>
+  <div class="tab"><div class="tab__inner">They're</div></div>
+  <div class="tab"><div class="tab__inner">Everywhere</div></div>
+  <div class="tab"><div class="tab__inner">And</div></div>
+  <div class="tab"><div class="tab__inner">I</div></div>
+  <div class="tab"><div class="tab__inner">Can't</div></div>
+  <div class="tab"><div class="tab__inner">Stop</div></div>
+  <div class="tab"><div class="tab__inner">Them</div></div>
+  <div class="tab"><div class="tab__inner">Oh</div></div>
+  <div class="tab"><div class="tab__inner">My</div></div>
+  <div class="tab"><div class="tab__inner">God</div></div>
+  <div class="tab"><div class="tab__inner">Please</div></div>
+  <div class="tab"><div class="tab__inner">Send</div></div>
+  <div class="tab"><div class="tab__inner">Help</div></div>
+  <div class="tab"><div class="tab__inner">AAAARGH!!!</div></div>
+</div>
+
+<script>
+
+'use strict';
+
+Array.from(document.querySelectorAll('.tabs')).forEach(function (tabBlock) {
+
+  var focusTabIndex = 0;
+  var tabs = Array.from(tabBlock.querySelectorAll('.tab'));
+
+  tabs.forEach(function (tabElt) {
+    tabElt.addEventListener('mousedown', function (e) {
+      e.preventDefault();
+
+      if (e.which === 1) {
+        removeAllSpecialClasses({ removeActive: true });
+        tabElt.classList.add('tab--active');
+        setNewFocusTab(getIndex(tabElt));
+      } else if (e.which === 3) {
+        removeAllSpecialClasses({ removeActive: true });
+        tabElt.classList.add('tab--active');
+        tabElt.classList.add('tab--pinned');
+        setNewFocusTab(getIndex(tabElt));
+      }
+    });
+
+    tabElt.addEventListener('mouseenter', function (e) {
+      removeAllSpecialClasses();
+      setNewFocusTab(getIndex(tabElt));
+    });
+  });
+
+  tabBlock.addEventListener('mouseleave', function (e) {
+    removeAllSpecialClasses();
+  });
+
+  function removeAllSpecialClasses() {
+    var _ref = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+    var _ref$removeActive = _ref.removeActive;
+    var removeActive = _ref$removeActive === undefined ? false : _ref$removeActive;
+
+    tabs.forEach(function (tabElt) {
+      removeSpecialClasses(tabElt, { removeActive: removeActive });
+    });
+  }
+
+  function setNewFocusTab(newIndex) {
+    focusTabIndex = newIndex;
+    tabs.forEach(function (tabElt) {
+      setSpecialClasses(tabElt, focusTabIndex);
+    });
+  }
+
+  function setSpecialClasses(tabElt, focusIndex) {
+    var focusPower = getIndex(tabElt) - focusIndex;
+    if (Math.abs(focusPower) < 4) {
+      tabElt.classList.add('tab--focus-' + focusPower);
+    }
+  }
+
+  function removeSpecialClasses(tabElt) {
+    var _ref2 = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+    var _ref2$removeActive = _ref2.removeActive;
+    var removeActive = _ref2$removeActive === undefined ? false : _ref2$removeActive;
+
+    if (removeActive) {
+      tabElt.classList.remove('tab--active');
+    }
+    tabElt.classList.remove('tab--focus--3');
+    tabElt.classList.remove('tab--focus--2');
+    tabElt.classList.remove('tab--focus--1');
+    tabElt.classList.remove('tab--focus-0');
+    tabElt.classList.remove('tab--focus-1');
+    tabElt.classList.remove('tab--focus-2');
+    tabElt.classList.remove('tab--focus-3');
+  }
+
+  function getIndex(tabElt) {
+    return tabs.indexOf(tabElt);
+  }
+});
+
+</script>
+</body>
+</html>

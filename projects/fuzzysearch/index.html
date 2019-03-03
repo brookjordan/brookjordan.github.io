@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!--	OG:Tags			-->
+	<meta property="og:url"			content="http://brookjordan.uk/projects/fuzzysearch/" />
+	<meta property="og:title"		content="Fuzzy search" />
+	<meta property="og:image"		content="http://brookjordan.uk/projects/fuzzysearch/og-image.jpg">
+	<meta property="og:site_name"	content="All about Brook Jordan." />
+	<meta property="og:description"	content="Search for pokémon, even if you can't remember their exact name!" />
+	<meta property="og:type"		content="website" />
+	<meta property="og:locale"		content="en_GB" />
+	<!--	END: OG:Tags	-->
+
+	<title>Fuzzy search</title>
+
+	<link rel="stylesheet" href="main.1.css">
+</head>
+<body>
+	<progress id="progress" value="0" max="100"></progress>
+	<input id="search" type="text" placeholder="Search...">
+	<div id="results"></div>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react.js"></script>
+	<script src="fuzzySearch.js"></script>
+	<script src="main.1.js"></script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Testing grid creation</title>
+
+	<link rel="stylesheet" href="main.css">
+	<style id="style"></style>
+</head>
+<body>
+	<label for="columns">Columns</label>
+	<input name="columns" id="columns" value="12" type="text" />
+<br />
+<br />
+	<label for="spacing">Spacing</label>
+	<input name="spacing" id="spacing" value="20" type="text" />
+<br />
+<br />
+	<label for="spacer">Spacer</label>
+	<input name="spacer" id="spacer" value="p" type="text" />
+<br />
+<br />
+	<div class="wrapper cf">
+		<div class="row row_7 onphone_fill">
+			<div>
+				<div class="box">Box full of cool stuff</div>
+			</div>
+
+			<div class="grid_1 nopad ontablet_3 onphone_6">
+				<div class="box">Box full of cool stuff</div>
+			</div>
+			<div class="grid_1 ontablet_3 onphone_6">
+				<div class="box">Box full of cool stuff</div>
+			</div>
+			<div class="grid_1 ontablet_4 onphone_6">
+				<div class="box">Box full of cool stuff</div>
+			</div>
+
+			<div class="grid_2 onphone_6">
+				<div class="box">Box full of cool stuff</div>
+			</div>
+			<div class="grid_2 onphone_fill">
+				<div class="box">Box full of cool stuff</div>
+			</div>
+			<div class="grid_2 ontablet_7 onphone_4">
+				<div class="box">Box full of cool stuff</div>
+			</div>
+
+			<div class="grid_3 nopad onphone_3">
+				<div class="box">Box full of cool stuff</div>
+			</div>
+			<div class="grid_3 clear onphone_flow onphone_5">
+				<div class="box">Box full of cool stuff</div>
+			</div>
+			<div class="grid_5 ontablet_9 onphone_fill">
+				<div class="box">Box full of cool stuff</div>
+			</div>
+
+			<div class="grid_4 ontablet_fill">
+				<div class="box">Box full of cool stuff</div>
+			</div>
+			<div class="grid_7 ontablet_fill clear">
+				<div class="box">Box full of cool stuff</div>
+			</div>
+			<div class="grid_5 ontablet_fill">
+				<div class="box">Box full of cool stuff</div>
+			</div>
+		</div>
+
+		<div class="row nopad row_5 onphone_fill">
+			<div class="grid_4 ontablet_6 onphone_fill">
+				<div class="box">Box full of cool stuff</div>
+			</div>
+			<div class="grid_4 ontablet_6 onphone_fill">
+				<div class="box">Box full of cool stuff</div>
+			</div>
+			<div class="grid_4 ontablet_4 onphone_fill">
+				<div class="box">Box full of cool stuff</div>
+			</div>
+
+			<div class="ontablet_8 onphone_fill">
+				<div class="box">Box full of cool stuff</div>
+			</div>
+		</div>
+	</div>
+
+	<textarea id="output"></textarea>
+
+	<script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+html, body {
+  margin: 0;
+}
+.grid {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.row {
+  position: relative;
+  flex-grow: 1;
+}
+
+canvas {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+</style>
+
+
+<form id="image-form">
+  <input type='file' id="image-select" />
+</form>
+
+<div id="grid" class="grid">
+  <div class="col">
+    <div class="row"></div>
+    <div class="row"></div>
+    <div class="row"></div>
+    <div class="row"></div>
+  </div>
+  <div class="col">
+    <div class="row"></div>
+    <div class="row"></div>
+    <div class="row"></div>
+    <div class="row"></div>
+  </div>
+  <div class="col">
+    <div class="row"></div>
+    <div class="row"></div>
+    <div class="row"></div>
+    <div class="row"></div>
+  </div>
+  <div class="col">
+    <div class="row"></div>
+    <div class="row"></div>
+    <div class="row"></div>
+    <div class="row"></div>
+  </div>
+</div>
+
+
+<script>
+let imageSelectInput = document.getElementById("image-select");
+let grid = document.getElementById("grid");
+let rows = Array.from(document.querySelectorAll('.row'));
+let cols = Array.from(document.querySelectorAll('.col'));
+let ctxs;
+
+createCanvi();
+imageSelectInput.addEventListener('change', setCanvasFromInput);
+
+function doit(e) {
+  e.preventDefault();
+  let pageX;
+  let pageY;
+
+  if (e.touches) {
+    pageX = e.touches[0].pageX;
+    pageY = e.touches[0].pageY;
+  } else {
+    pageX = e.pageX;
+    pageY = e.pageY;
+  }
+  pageX = (0.5 - pageX / innerWidth)  * 2;
+  pageY = (0.5 - pageY / innerHeight) * 2;
+
+  rows.forEach((row, i) => {
+    var rowIndex = i % 4;
+    row.style.flexGrow = Math.pow(rowIndex + 1, pageY);
+  });
+
+  cols.forEach((col, i) => {
+    col.style.flexGrow = Math.pow(i + 1, pageX);
+  });
+}
+
+async function setCanvasFromInput() {
+  let imgSrc = await getImageFromReader(imageSelectInput);
+  let img    = await getLoadedImage(imgSrc);
+  canvasWidth = Math.floor(img.naturalWidth / 4);
+  canvasHeight = Math.floor(img.naturalHeight / 4);
+  ctxs.forEach((ctx, i) => {
+    var col = Math.floor(i / 4);
+    var row = i % 4;
+    ctx.canvas.width  = canvasWidth;
+    ctx.canvas.height = canvasHeight;
+    ctx.drawImage(img, -col * canvasWidth, -canvasHeight * row);
+  });
+  document.querySelector('form').parentNode.removeChild(document.querySelector('form'));
+
+  window.onmousemove = doit;
+  window.ontouchmove = doit;
+}
+
+function getImageFromReader(input) {
+  return new Promise((resolve, reject) => {
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+      reader.onload = e => resolve(e.target.result);
+      reader.readAsDataURL(input.files[0]);
+    } else {
+      reject('Inputs not found.');
+    }
+  });
+}
+
+function getLoadedImage(src) {
+  return new Promise((resolve, reject) => {
+    let img = new Image();
+    img.onload = e => resolve(img);
+    img.src = src;
+  });
+}
+
+function createCanvi() {
+  ctxs = new Array(16);
+  ctxs.fill(0);
+  ctxs = ctxs.map(i => document.createElement('canvas'));
+  ctxs.forEach((canvas, i) => rows[i].appendChild(canvas) );
+  ctxs = ctxs.map(canvas => canvas.getContext('2d'));
+}
+</script>

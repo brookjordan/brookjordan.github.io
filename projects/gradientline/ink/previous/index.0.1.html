@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta property="og:image" content="http://brookjordan.uk/projects/gradientline/og-image.jpg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>Gradient lines</title>
+  <style>
+    html, body, .app {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+
+    input, button {
+      -webkit-appearance: none;
+         -moz-appearance: none;
+              appearance: none;
+      border-radius: 0;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .app {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .color-menu {
+      order: 1;
+      display: flex;
+      justify-content: space-between;
+      background: #eef;
+    }
+
+    .color-tools {
+      display: flex;
+    }
+
+    .color-tools input {
+      height: 32px;
+      line-height: 32px;
+      padding: 0;
+      border: 0;
+      margin: 0;
+      background: #eef;
+      outline: 0;
+      padding: 0 10px;
+    }
+
+    .colors {
+      display: flex;
+      flex-grow: 1;
+      padding-left: 20px;
+    }
+
+    .colors input {
+      flex-grow: 1;
+      width: 0;
+      flex-basis: 0;
+      height: 32px;
+      line-height: 32px;
+      padding: 0;
+      border: 0;
+      background: #eef;
+    }
+
+    .colors .jscolor {
+      padding: 0 10px;
+    }
+
+    .canvas {
+      position: relative;
+      order: 2;
+      flex-grow: 1;
+      flex-basis: 0;
+    }
+
+    .buttons {
+      display: flex;
+      order: 3;
+    }
+
+    .buttons input {
+      flex-grow: 1;
+      height: 32px;
+      line-height: 32px;
+      padding: 0;
+      border: 0;
+      margin: 0;
+      background: #eef;
+      outline: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="color-menu">
+      <div class="color-tools">
+        <input id="addcolorelt" type="button" value="Add color">
+        <input id="removecolorelt" type="button" value="Remove color">
+      </div>
+
+      <div class="colors"></div>
+    </div>
+
+    <div class="canvas">
+      <canvas id="canvaselt"></canvas>
+      <canvas id="newlineelt"></canvas>
+    </div>
+
+    <div class="buttons">
+      <input type="button" value="Clear canvas" id="clearcanvaselt">
+      <input type="button" value="Download image" id="downloadimageelt">
+      <input type="button" value="Undo" id="undoelt">
+      <input type="button" value="Redo" id="redoelt">
+    </div>
+  </div>
+
+  <script src="jscolor.min.js"></script>
+  <script>
+    'use strict';
+
+    const newlineCtx = newlineelt.getContext('2d');
+    const canvasCtx  = canvaselt.getContext('2d');
+    const colorInputsElt = document.querySelector('.colors');
+    const colorInputElts = [];
+    const BROWSER_HAS_COLOR_INPUT = browserHasColorInput();
+    let coords   = undefined;
+    let penSize  = 35;
+    let penColor = 'rgb(255,0,0)'; // red
+    let cavasBounds;
+    let undos = [];
+    let redos = [];
+
+    let undoCheck_start = 0;
+    let undoCheck_end = 0;
+
+    addColorInput('#FFFFFF');
+    addColorInput('#FED1EF');
+    addColorInput('#DEF5FF');
+
+    resizeAndClearAll();
+    window.addEventListener('resize', resizeAndClearNewline);
+
+    newlineelt.addEventListener('mousedown', startDraw);
+    newlineelt.addEventListener('touchstart', startDraw);
+
+    clearcanvaselt.addEventListener('click', resizeAndClearAll);
+    clearcanvaselt.addEventListener('touchstart', resizeAndClearAll);
+
+    downloadimageelt.addEventListener('click', downloadImage);
+    downloadimageelt.addEventListener('touchstart', downloadImage);
+
+    undoelt.addEventListener('click', undo);
+    undoelt.addEventListener('touchstart', preventDefaultThen(undo));
+
+    redoelt.addEventListener('click', redo);
+    redoelt.addEventListener('touchstart', preventDefaultThen(redo));
+
+    addcolorelt.addEventListener('click', addColorInput);
+    addcolorelt.addEventListener('touchstart', preventDefaultThen(addColorInput));
+    removecolorelt.addEventListener('click', removeColorInput);
+    removecolorelt.addEventListener('touchstart', preventDefaultThen(removeColorInput));
+
+    window.addEventListener('keydown', e => {
+      if (e.ctrlKey || e.metaKey) {
+        switch(e.which) {
+          case 90: // z
+            e.preventDefault();
+            undo();
+            break;
+          case 89: // y
+            e.preventDefault();
+            redo();
+            break;
+        }
+      }
+    });
+
+    function startDraw(e) {
+      e.preventDefault();
+
+      coords = [[e.pageX, e.pageY]];
+      newlineelt.addEventListener('mousemove', addToDraw);
+      newlineelt.addEventListener('touchmove', addToDraw);
+
+      newlineelt.addEventListener('mouseup', endDraw);
+      newlineelt.addEventListener('touchend', endDraw);
+      newlineelt.addEventListener('mouseleave', endDraw);
+
+      if (undoCheck_start === undoCheck_end) {
+        undoCheck_start += 1;
+      }
+    }
+
+    function addToDraw(e) {
+      e.preventDefault();
+      coords.push([e.pageX, e.pageY]);
+      render(polishCoords(coords));
+    }
+
+    function polishCoords(coords) {
+      let lastCoord = coords[coords.length - 1];
+      let prevCoord;
+      let prevSpeed;
+      let left = 0;
+      let newCoords = [];
+
+      coords.forEach((coord, index) => {
+        if (index) {
+          let dist = getLength(prevCoord, coord);
+          let speed = dist;
+          let subCoords = [];
+          while(dist >= 1) {
+            prevCoord = [prevCoord[0] - (prevCoord[0] - coord[0]) / dist, prevCoord[1] - (prevCoord[1] - coord[1]) / dist];
+            subCoords.push([...prevCoord, (speed + prevSpeed) / 2]);
+            dist = getLength(prevCoord, coord);
+          }
+          newCoords = [...newCoords, ...subCoords];
+          prevSpeed = speed;
+        } else {
+          newCoords.push(coord);
+          prevCoord = coord;
+          prevSpeed = 0;
+        }
+      });
+
+      return newCoords;
+    }
+
+    function getLength(coordA, coordB) {
+      return Math.sqrt(Math.pow(coordA[0] - coordB[0], 2) + Math.pow(coordA[1] - coordB[1], 2));
+    }
+
+    function endDraw(e) {
+      e.preventDefault();
+
+      newlineelt.removeEventListener('mousemove', addToDraw);
+      newlineelt.removeEventListener('touchmove', addToDraw);
+
+      newlineelt.removeEventListener('mouseup', endDraw);
+      newlineelt.removeEventListener('touchend', endDraw);
+      newlineelt.removeEventListener('mouseleave', endDraw);
+
+      if (undoCheck_end !== undoCheck_start) {
+        undoCheck_end = undoCheck_start;
+        addToUndoStack();
+      }
+
+      render(polishCoords(coords));
+      canvasCtx.drawImage(newlineelt, 0, 0, canvaselt.width, canvaselt.height);
+      resizeAndClearNewline();
+    }
+
+    function render(_coords) {
+      let coords           = _coords.slice(0);
+      let colorCount       = colorInputElts.length;
+      let gradientCount    = colorCount - 1;
+      let coordsLength     = _coords.length / (colorCount - 1);
+      let coordsGroups     = [];
+      let color;
+
+      resizeAndClearNewline();
+
+      if (gradientCount) {
+        let pointsDrawn   = 0;
+        let gradientsLeft = gradientCount;
+
+        while (gradientsLeft) {
+          coordsGroups.push(coords.splice(0, Math.round(coords.length / gradientsLeft)));
+          gradientsLeft -= 1;
+        }
+
+        coordsGroups.forEach((coordGroup, index) => {
+          let color1       = rgb(colorInputElts[index].value);
+          let color2       = rgb(colorInputElts[index + 1].value);
+          let coordsLength = coordGroup.length;
+
+          coordGroup.forEach((coord, index) => {
+            color =
+              `rgb(${Math.round(((color1[0] * ( coordsLength - index )) + (color2[0] * index)) / coordsLength)},` +
+                  `${Math.round(((color1[1] * ( coordsLength - index )) + (color2[1] * index)) / coordsLength)},` +
+                  `${Math.round(((color1[2] * ( coordsLength - index )) + (color2[2] * index)) / coordsLength)})`;
+
+            drawPoint(coord, color);
+            pointsDrawn += 1;
+          });
+        });
+      } else {
+        let color = colorInputElts[0].value;
+
+        _coords.forEach((coord, index) => {
+          drawPoint(coord, color);
+        });
+      }
+    }
+
+    function fillCircle(x, y, color=penColor, size=penSize) {
+      newlineCtx.beginPath();
+      newlineCtx.fillStyle = color;
+      newlineCtx.arc(x, y, (size / 2), 0, (2 * Math.PI), false);
+      newlineCtx.fill();
+    }
+
+    function drawPoint(coord, color) {
+      fillCircle(
+        (coord[0] - cavasBounds.left) * devicePixelRatio,
+        (coord[1] - cavasBounds.top)  * devicePixelRatio,
+        color,
+        (
+          coord[2]
+            ? penSize / Math.sqrt((Math.max(2, coord[2]) / 2))
+            : penSize / 2
+        ) * devicePixelRatio
+      );
+    }
+
+    function resizeAndClearAll(e) {
+      resizeAndClearCanvas();
+      resizeAndClearNewline();
+    }
+
+    function clearCanvas() {
+      canvaselt.width  = cavasBounds.width * devicePixelRatio;
+      canvaselt.height = cavasBounds.height * devicePixelRatio;
+    }
+
+    function resizeAndClearCanvas() {
+      cavasBounds      = canvaselt.getBoundingClientRect();
+      clearCanvas();
+    }
+
+    function resizeAndClearNewline() {
+      cavasBounds       = newlineelt.getBoundingClientRect();
+      newlineelt.width  = cavasBounds.width * devicePixelRatio;
+      newlineelt.height = cavasBounds.height * devicePixelRatio;
+    }
+
+    function rgb(hex) {
+      let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result
+        ? [
+            parseInt(result[1], 16),
+            parseInt(result[2], 16),
+            parseInt(result[3], 16)
+          ]
+        : null;
+    }
+
+    function downloadImage() {
+      let a = document.createElement('a');
+      a.href = canvaselt.toDataURL();
+      a.download = 'download';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    function addColorInput(startingColor) {
+      let newInput = document.createElement('input');
+
+      if (BROWSER_HAS_COLOR_INPUT) {
+        newInput.type = 'color';
+      } else {
+        newInput.className = 'jscolor';
+      }
+      newInput.value = typeof startingColor === 'string'
+        ? startingColor
+        : '#000000'.replace(/0/g,function(){return (~~(Math.random()*16)).toString(16);});
+      colorInputsElt.appendChild(newInput);
+      colorInputElts.push(newInput);
+    }
+
+    function removeColorInput() {
+      if (colorInputElts.length <= 1) { return; }
+      let removingInput = colorInputElts.splice(-1, 1)[0];
+      colorInputsElt.removeChild(removingInput);
+    }
+
+    function addToUndoStack() {
+      redos = [];
+      undos.push(getCanvasData());
+      if (undos.length > 10) {
+        undos = undos.slice(-10);
+      }
+    }
+
+    function getCanvasData() {
+      return canvasCtx.getImageData(0, 0, canvaselt.width, canvaselt.height);
+    }
+
+    function undo() {
+      if (undos.length) {
+        let undo = undos.pop();
+        redos.push(getCanvasData());
+        clearCanvas();
+        canvasCtx.putImageData(undo, 0, 0);
+      }
+    }
+
+    function redo() {
+      if (redos.length) {
+        let redo = redos.pop();
+        undos.push(getCanvasData());
+        clearCanvas();
+        canvasCtx.putImageData(redo, 0, 0);
+      }
+    }
+
+    function browserHasColorInput() {
+      var inputelt = document.createElement('input');
+      inputelt.setAttribute('type', 'color');
+      var hasColorInputType = inputelt.type === 'color' && 'style' in inputelt;
+
+      if (hasColorInputType) {
+        inputelt.value         = '1)';
+        hasColorInputType = inputelt.value != '1)';
+      }
+
+      return !!hasColorInputType;
+    }
+
+    function preventDefaultThen(func, params = []) {
+      return function (event) {
+        event.preventDefault();
+        func(...params);
+      };
+    }
+  </script>
+</body>
+</html>

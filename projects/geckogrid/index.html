@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<title>Test layout</title>
+	<link rel="stylesheet" href="resets.css">
+	<link rel="stylesheet" href="main.css">
+</head>
+<body>
+
+
+<div class="tradeGecko">
+  <nav class="app-nav">
+    <img class="nav_head" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/291020/side-head.jpg" alt="" />
+  </nav>
+  <section class="section section--inventory">
+    <header class="menu-bar">
+      <h1 class="section__title menu-bar__title">Inventory</h1>
+
+      <div class="menu-bar__right">
+        <div class="button-set">
+          <button class="button-set__button--primary button-set__button">
+            Add New
+            <i class="button-set__button-icon--drill fa fa-caret-down"></i>
+          </button>
+          <button class="button-set__button">
+            Bulk Edit
+            <i class="button-set__button-icon--drill fa fa-caret-down"></i>
+          </button>
+          <button class="button-set__button">
+            Export
+            <i class="button-set__button-icon--drill fa fa-caret-down"></i>
+          </button>
+        </div>
+
+        <div class="button-set">
+          <button class="button-set__button button-set__button--action">Help</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="section__content section-content">
+      <div class="section-content__header">
+        <div class="menu-bar">
+          <div class="menu-bar__left">
+            <div class="tab-set">
+              <button class="tab-set__tab tab-set__tab--active">Active</button>
+              <button class="tab-set__tab">All</button>
+              <button class="tab-set__tab">
+                Jewellery
+                <i class="tab-set__tab-icon--drill fa fa-caret-down"></i>
+              </button>
+              <button class="tab-set__tab">Apparel</button>
+              <button class="tab-set__tab">Stitch</button>
+              <button class="tab-set__tab">Test</button>
+              <button class="tab-set__tab">
+                Bla Filter
+                <i class="tab-set__tab-icon--drill fa fa-caret-down"></i>
+              </button>
+              <button class="tab-set__tab">
+                test_criteria
+                <i class="tab-set__tab-icon--drill fa fa-caret-down"></i>
+              </button>
+              <button class="tab-set__tab">666</button>
+              <button class="tab-set__tab">Furniture</button>
+              <button class="tab-set__tab">Disabled</button>
+              <button class="tab-set__tab">Castle</button>
+            </div>
+
+            <div class="tab-set tab-set--single">
+              <button class="tab-set__tab">
+                Add New Filter
+                <i class="tabs__icon--plus fa fa-plus"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="menu-bar__right menu-bar--rigid">
+            <div class="tab-set">
+              <button class="tab-set__tab">Disabled</button>
+              <button class="tab-set__tab">
+                <i class="tab-set__tab-icon--delete fa fa-trash-o"></i>
+                Trash
+              </button>
+            </div>
+          </div>
+        </div>
+      </div><!-- END == .section-content__header -->
+
+      <div class="section-content__body">
+        <img class="placeholder_image" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/291020/inventory.jpg" alt="" />
+      </div><!-- END == .section-content__body -->
+    </div>
+
+    <div class="float-menu-wrapper"><div class="float-menu theme--dark">
+      <div class="menu-bar">
+        <div class="menu-bar__left">
+          <p class="menu-bar__text">Results per page</p>
+          <div class="button-set">
+            <button class="button-set__button">
+              100
+              <i class="tab-set__tab-icon--drill fa fa-caret-down"></i>
+            </button>
+          </div>
+          <div class="button-set">
+            <button class="button-set__button">
+              Product names starting with...
+              <i class="tab-set__tab-icon--drill fa fa-caret-down"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="menu-bar__center menu-bar--permanant">
+          <p class="menu-bar__label">Results:</p>
+          <p class="menu-bar__text ">Showing page 1 <em>of</em> 23</p>
+        </div>
+
+        <div class="menu-bar__right">
+          <div class="button-set">
+            <button class="button-set__button--disabled button-set__button">Previous</button>
+          </div>
+          <div class="button-set">
+            <button class="button-set__button button-set__button--primary">Next</button>
+          </div>
+        </div>
+      </div>
+    </div></div><!-- END == .float-menu -->
+  </section><!-- END == .section--inventory -->
+</div>
+
+
+	<script src="main.js"></script>
+</body>
+</html>

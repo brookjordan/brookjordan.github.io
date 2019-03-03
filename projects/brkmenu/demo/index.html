@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Brk Nav</title>
+
+  <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="../build/css/menu.css">
+</head>
+<body>
+
+  <div class="body2">
+    <div class="BUNS"
+         ng-controller="BUNS as buns"
+         ng-class="{
+           'BUNS--meOpen'  : buns.nav.get( 'me' ).is.open,
+           'BUNS--youOpen' : buns.nav.get( 'you' ).is.open,
+           'BUNS--notifyOpen' : buns.nav.get( 'notify' ).is.open
+         }">
+      <div class="BUNS-prime">
+        <button class="BUNS-prime__youToggle BUNS-navToggle"
+                ng-click="buns.nav.get( 'you' ).toggleOpen()"></button>
+        <button class="BUNS-prime__meToggle BUNS-navToggle"
+                ng-click="buns.nav.get( 'me' ).toggleOpen()"></button>
+      </div>
+
+      <div class="BUNS-me"><div class="wrapper">
+        <div brk-class="BUNS-me__nav"
+             class="BUNS-me__nav BUNS-sideNav"
+             ng-click="buns.nav.get( 'me' ).toggleOpen()"></div>
+        <div class="BUNS-me__navInfo BUNS-sideNavInfo"></div>
+      </div></div>
+
+      <div class="BUNS-you BUNS-you-{{ activeYou }}Open"><div class="wrapper">
+        <div brk-class="BUNS-you__nav"
+             class="BUNS-you__nav BUNS-sideNav" >
+
+          <div ng-cloak
+               class="BUNS-navItem BUNS-you__nav__item BUNS-navItem-{{ item.name }}"
+               ng-class="{ 'BUNS-navItem--active': buns.you.is.open &amp;&amp; item.name === buns.activeYou }"
+               ng-repeat="item in buns.nav.get( 'you' ).nav track by item.ID" >
+            <button brk-class="BUNS-navItem__toggle"
+                    ng-click="buns.toggleMenu( item )"
+                    brk-touchstart="buns.toggleMenu( item )"></button>
+          </div>
+        </div>
+        <div class="BUNS-you__navInfo BUNS-sideNavInfo"></div>
+        <div ng-cloak
+             class="wrapper-scrollable"
+             ng-include="buns.activeYou &amp;&amp; 'templates/modules/' + buns.activeYou + '.html'"></div>
+      </div></div>
+
+      <div class="BUNS-notify"
+           ng-cloak ></div>
+
+      <div class="wrapper-scrollable">
+        <div ng-cloak
+             class="BUNS-content">
+          <div class="box"></div><div class="box"></div>
+          <div class="box"></div><div class="box"></div>
+          <div class="box"></div><div class="box"></div>
+          <div class="box"></div><div class="box"></div>
+          <div class="box"></div><div class="box"></div>
+          <div class="box"></div><div class="box"></div>
+          <div class="box"></div><div class="box"></div>
+          <div class="box"></div><div class="box"></div>
+          <div class="box"></div><div class="box"></div>
+          <div class="box"></div><div class="box"></div>
+          <div class="box"></div><div class="box"></div>
+          <div class="box"></div><div class="box"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/ng-template"
+          id="templates/modules/nav.html">
+    <div class="BUNS-module">
+      <h3 class="BUNS-module__title">
+        Other sites you may enjoy
+      </h3>
+    </div>
+  </script>
+
+  <script type="text/ng-template"
+          id="templates/modules/games.html">
+    <div class="BUNS-module">
+      <h3 class="BUNS-module__title">
+        Check out these games
+      </h3>
+    </div>
+  </script>
+
+  <script type="text/ng-template"
+          id="templates/modules/favourites.html">
+    <div class="BUNS-module">
+      <h3 class="BUNS-module__title">
+        All of your saved favourites
+      </h3>
+    </div>
+  </script>
+
+  <script src="../build/js/vendor.js"></script>
+  <script src="../c/brk.min.js"></script>
+  <script src="../build/js/menu.js"></script>
+</body>
+</html>

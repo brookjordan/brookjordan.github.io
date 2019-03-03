@@ -1,0 +1,8782 @@
+body, html {
+  margin: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  position: relative;
+  background: black;
+}
+
+.board {
+  position: relative;
+  width: 56.25vh;
+  height: 100vh;
+  margin: 0 auto;
+  background: #2b2735;
+  font-size: 3.51562vh;
+  overflow: hidden;
+}
+
+@media (max-aspect-ratio: 9 / 16) {
+  .board {
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+            transform: translateY(-50%);
+    width: 100vw;
+    height: 177.77778vw;
+    font-size: 6.25vw;
+  }
+}
+
+.bar {
+  position: absolute;
+  width: 100%;
+  height: 4em;
+  top: 2em;
+  background: black;
+  -webkit-transform: scaleY(0.2);
+          transform: scaleY(0.2);
+}
+
+@-webkit-keyframes pog-up {
+  0% {
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+  100% {
+    -webkit-transform: translateY(-32em);
+            transform: translateY(-32em);
+  }
+}
+
+@keyframes pog-up {
+  0% {
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+  100% {
+    -webkit-transform: translateY(-32em);
+            transform: translateY(-32em);
+  }
+}
+
+:root {
+  --pog-ratio: 10;
+  --part-size: calc(16 / (var(--pog-ratio) * 4 + 5) * 1em);
+  --pog-size: calc(var(--part-size) * var(--pog-ratio));
+}
+
+.pog {
+  position: absolute;
+  top: 100%;
+  left: 6.5em;
+  -webkit-animation: pog-up 2s steps(34, end);
+          animation: pog-up 2s steps(34, end);
+}
+
+.pog__inner {
+  width: var(--pog-size);
+  height: var(--pog-size);
+  transition: 0.3s ease-out;
+}
+
+.pog--1 {
+  -webkit-animation-delay: 2.25s;
+          animation-delay: 2.25s;
+}
+
+.pog--1 .pog__inner {
+  -webkit-animation-delay: 0.75833;
+          animation-delay: 0.75833;
+  background-image: url("whoosh-up.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-up;
+          animation-name: whoosh-up;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@-webkit-keyframes whoosh-up {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+@keyframes whoosh-up {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--1:checked ~ .pog--1 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--1:checked ~ .pog--1 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--2 {
+  -webkit-animation-delay: 3.75s;
+          animation-delay: 3.75s;
+}
+
+.pog--2 .pog__inner {
+  -webkit-animation-delay: 0.58333;
+          animation-delay: 0.58333;
+  background-image: url("whoosh-up.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-up;
+          animation-name: whoosh-up;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-up {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--2:checked ~ .pog--2 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--2:checked ~ .pog--2 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--3 {
+  -webkit-animation-delay: 5.25s;
+          animation-delay: 5.25s;
+}
+
+.pog--3 .pog__inner {
+  -webkit-animation-delay: 0.75833;
+          animation-delay: 0.75833;
+  background-image: url("whoosh-up.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-up;
+          animation-name: whoosh-up;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-up {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--3:checked ~ .pog--3 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--3:checked ~ .pog--3 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--4 {
+  -webkit-animation-delay: 7.25s;
+          animation-delay: 7.25s;
+}
+
+.pog--4 .pog__inner {
+  -webkit-animation-delay: 0.05833;
+          animation-delay: 0.05833;
+  background-image: url("whoosh-up.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-up;
+          animation-name: whoosh-up;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-up {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--4:checked ~ .pog--4 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--4:checked ~ .pog--4 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--5 {
+  -webkit-animation-delay: 9.25s;
+          animation-delay: 9.25s;
+}
+
+.pog--5 .pog__inner {
+  -webkit-animation-delay: 0.64167;
+          animation-delay: 0.64167;
+  background-image: url("whoosh-down.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-down;
+          animation-name: whoosh-down;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@-webkit-keyframes whoosh-down {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+@keyframes whoosh-down {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--5:checked ~ .pog--5 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--5:checked ~ .pog--5 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--6 {
+  -webkit-animation-delay: 11.25s;
+          animation-delay: 11.25s;
+}
+
+.pog--6 .pog__inner {
+  -webkit-animation-delay: 0.58333;
+          animation-delay: 0.58333;
+  background-image: url("whoosh-down.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-down;
+          animation-name: whoosh-down;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-down {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--6:checked ~ .pog--6 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--6:checked ~ .pog--6 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--7 {
+  -webkit-animation-delay: 13.25s;
+          animation-delay: 13.25s;
+}
+
+.pog--7 .pog__inner {
+  -webkit-animation-delay: 0.64167;
+          animation-delay: 0.64167;
+  background-image: url("whoosh-down.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-down;
+          animation-name: whoosh-down;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-down {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--7:checked ~ .pog--7 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--7:checked ~ .pog--7 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--8 {
+  -webkit-animation-delay: 15.25s;
+          animation-delay: 15.25s;
+}
+
+.pog--8 .pog__inner {
+  -webkit-animation-delay: 0.525;
+          animation-delay: 0.525;
+  background-image: url("whoosh-up.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-up;
+          animation-name: whoosh-up;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-up {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--8:checked ~ .pog--8 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--8:checked ~ .pog--8 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--9 {
+  -webkit-animation-delay: 17.25s;
+          animation-delay: 17.25s;
+}
+
+.pog--9 .pog__inner {
+  -webkit-animation-delay: 0.81667;
+          animation-delay: 0.81667;
+  background-image: url("whoosh-down.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-down;
+          animation-name: whoosh-down;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-down {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--9:checked ~ .pog--9 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--9:checked ~ .pog--9 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--10 {
+  -webkit-animation-delay: 19s;
+          animation-delay: 19s;
+}
+
+.pog--10 .pog__inner {
+  -webkit-animation-delay: 0.875;
+          animation-delay: 0.875;
+  background-image: url("whoosh-down.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-down;
+          animation-name: whoosh-down;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-down {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--10:checked ~ .pog--10 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--10:checked ~ .pog--10 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--11 {
+  -webkit-animation-delay: 21s;
+          animation-delay: 21s;
+}
+
+.pog--11 .pog__inner {
+  -webkit-animation-delay: 0.7;
+          animation-delay: 0.7;
+  background-image: url("whoosh-left.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-left;
+          animation-name: whoosh-left;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@-webkit-keyframes whoosh-left {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+@keyframes whoosh-left {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--11:checked ~ .pog--11 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--11:checked ~ .pog--11 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--12 {
+  -webkit-animation-delay: 22.25s;
+          animation-delay: 22.25s;
+}
+
+.pog--12 .pog__inner {
+  -webkit-animation-delay: 0.46667;
+          animation-delay: 0.46667;
+  background-image: url("whoosh-left.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-left;
+          animation-name: whoosh-left;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-left {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--12:checked ~ .pog--12 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--12:checked ~ .pog--12 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--13 {
+  -webkit-animation-delay: 24.25s;
+          animation-delay: 24.25s;
+}
+
+.pog--13 .pog__inner {
+  -webkit-animation-delay: 0.93333;
+          animation-delay: 0.93333;
+  background-image: url("whoosh-up.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-up;
+          animation-name: whoosh-up;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-up {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--13:checked ~ .pog--13 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--13:checked ~ .pog--13 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--14 {
+  -webkit-animation-delay: 26.25s;
+          animation-delay: 26.25s;
+}
+
+.pog--14 .pog__inner {
+  -webkit-animation-delay: 0.75833;
+          animation-delay: 0.75833;
+  background-image: url("whoosh-left.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-left;
+          animation-name: whoosh-left;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-left {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--14:checked ~ .pog--14 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--14:checked ~ .pog--14 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--15 {
+  -webkit-animation-delay: 27.5s;
+          animation-delay: 27.5s;
+}
+
+.pog--15 .pog__inner {
+  -webkit-animation-delay: 0.7;
+          animation-delay: 0.7;
+  background-image: url("whoosh-up.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-up;
+          animation-name: whoosh-up;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-up {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--15:checked ~ .pog--15 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--15:checked ~ .pog--15 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--16 {
+  -webkit-animation-delay: 29.5s;
+          animation-delay: 29.5s;
+}
+
+.pog--16 .pog__inner {
+  -webkit-animation-delay: 0.75833;
+          animation-delay: 0.75833;
+  background-image: url("whoosh-left.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-left;
+          animation-name: whoosh-left;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-left {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--16:checked ~ .pog--16 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--16:checked ~ .pog--16 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--17 {
+  -webkit-animation-delay: 31s;
+          animation-delay: 31s;
+}
+
+.pog--17 .pog__inner {
+  -webkit-animation-delay: 0.875;
+          animation-delay: 0.875;
+  background-image: url("whoosh-left.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-left;
+          animation-name: whoosh-left;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-left {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--17:checked ~ .pog--17 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--17:checked ~ .pog--17 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--18 {
+  -webkit-animation-delay: 32.25s;
+          animation-delay: 32.25s;
+}
+
+.pog--18 .pog__inner {
+  -webkit-animation-delay: 0.05833;
+          animation-delay: 0.05833;
+  background-image: url("whoosh-down.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-down;
+          animation-name: whoosh-down;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-down {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--18:checked ~ .pog--18 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--18:checked ~ .pog--18 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--19 {
+  -webkit-animation-delay: 33.25s;
+          animation-delay: 33.25s;
+}
+
+.pog--19 .pog__inner {
+  -webkit-animation-delay: 0.75833;
+          animation-delay: 0.75833;
+  background-image: url("whoosh-left.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-left;
+          animation-name: whoosh-left;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-left {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--19:checked ~ .pog--19 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--19:checked ~ .pog--19 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--20 {
+  -webkit-animation-delay: 34.25s;
+          animation-delay: 34.25s;
+}
+
+.pog--20 .pog__inner {
+  -webkit-animation-delay: 0.11667;
+          animation-delay: 0.11667;
+  background-image: url("whoosh-left.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-left;
+          animation-name: whoosh-left;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-left {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--20:checked ~ .pog--20 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--20:checked ~ .pog--20 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--21 {
+  -webkit-animation-delay: 35.75s;
+          animation-delay: 35.75s;
+}
+
+.pog--21 .pog__inner {
+  -webkit-animation-delay: 0.7;
+          animation-delay: 0.7;
+  background-image: url("whoosh-down.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-down;
+          animation-name: whoosh-down;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-down {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--21:checked ~ .pog--21 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--21:checked ~ .pog--21 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--22 {
+  -webkit-animation-delay: 36.75s;
+          animation-delay: 36.75s;
+}
+
+.pog--22 .pog__inner {
+  -webkit-animation-delay: 0.75833;
+          animation-delay: 0.75833;
+  background-image: url("whoosh-left.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-left;
+          animation-name: whoosh-left;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-left {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--22:checked ~ .pog--22 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--22:checked ~ .pog--22 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--23 {
+  -webkit-animation-delay: 38.25s;
+          animation-delay: 38.25s;
+}
+
+.pog--23 .pog__inner {
+  -webkit-animation-delay: 0.11667;
+          animation-delay: 0.11667;
+  background-image: url("whoosh-left.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-left;
+          animation-name: whoosh-left;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-left {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--23:checked ~ .pog--23 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--23:checked ~ .pog--23 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--24 {
+  -webkit-animation-delay: 39.5s;
+          animation-delay: 39.5s;
+}
+
+.pog--24 .pog__inner {
+  -webkit-animation-delay: 0.05833;
+          animation-delay: 0.05833;
+  background-image: url("whoosh-up.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-up;
+          animation-name: whoosh-up;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-up {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--24:checked ~ .pog--24 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--24:checked ~ .pog--24 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--25 {
+  -webkit-animation-delay: 40.5s;
+          animation-delay: 40.5s;
+}
+
+.pog--25 .pog__inner {
+  -webkit-animation-delay: 0.7;
+          animation-delay: 0.7;
+  background-image: url("whoosh-left.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-left;
+          animation-name: whoosh-left;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-left {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--25:checked ~ .pog--25 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--25:checked ~ .pog--25 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--26 {
+  -webkit-animation-delay: 41.5s;
+          animation-delay: 41.5s;
+}
+
+.pog--26 .pog__inner {
+  -webkit-animation-delay: 0.875;
+          animation-delay: 0.875;
+  background-image: url("whoosh-up.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-up;
+          animation-name: whoosh-up;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-up {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--26:checked ~ .pog--26 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--26:checked ~ .pog--26 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--27 {
+  -webkit-animation-delay: 42.75s;
+          animation-delay: 42.75s;
+}
+
+.pog--27 .pog__inner {
+  -webkit-animation-delay: 0.29167;
+          animation-delay: 0.29167;
+  background-image: url("whoosh-down.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-down;
+          animation-name: whoosh-down;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-down {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--27:checked ~ .pog--27 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--27:checked ~ .pog--27 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--28 {
+  -webkit-animation-delay: 43.5s;
+          animation-delay: 43.5s;
+}
+
+.pog--28 .pog__inner {
+  -webkit-animation-delay: 0.7;
+          animation-delay: 0.7;
+  background-image: url("whoosh-left.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-left;
+          animation-name: whoosh-left;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-left {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--28:checked ~ .pog--28 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--28:checked ~ .pog--28 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--29 {
+  -webkit-animation-delay: 44.25s;
+          animation-delay: 44.25s;
+}
+
+.pog--29 .pog__inner {
+  -webkit-animation-delay: 0.46667;
+          animation-delay: 0.46667;
+  background-image: url("whoosh-left.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-left;
+          animation-name: whoosh-left;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-left {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--29:checked ~ .pog--29 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--29:checked ~ .pog--29 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--30 {
+  -webkit-animation-delay: 45.25s;
+          animation-delay: 45.25s;
+}
+
+.pog--30 .pog__inner {
+  -webkit-animation-delay: 0.7;
+          animation-delay: 0.7;
+  background-image: url("whoosh-down.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-down;
+          animation-name: whoosh-down;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-down {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--30:checked ~ .pog--30 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--30:checked ~ .pog--30 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--31 {
+  -webkit-animation-delay: 46.5s;
+          animation-delay: 46.5s;
+}
+
+.pog--31 .pog__inner {
+  -webkit-animation-delay: 0.29167;
+          animation-delay: 0.29167;
+  background-image: url("whoosh-left.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-left;
+          animation-name: whoosh-left;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-left {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--31:checked ~ .pog--31 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--31:checked ~ .pog--31 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--32 {
+  -webkit-animation-delay: 47.5s;
+          animation-delay: 47.5s;
+}
+
+.pog--32 .pog__inner {
+  -webkit-animation-delay: 0.58333;
+          animation-delay: 0.58333;
+  background-image: url("whoosh-up.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-up;
+          animation-name: whoosh-up;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-up {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--32:checked ~ .pog--32 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--32:checked ~ .pog--32 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--33 {
+  -webkit-animation-delay: 48.5s;
+          animation-delay: 48.5s;
+}
+
+.pog--33 .pog__inner {
+  -webkit-animation-delay: 0.7;
+          animation-delay: 0.7;
+  background-image: url("whoosh-left.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-left;
+          animation-name: whoosh-left;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-left {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--33:checked ~ .pog--33 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--33:checked ~ .pog--33 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--34 {
+  -webkit-animation-delay: 49.5s;
+          animation-delay: 49.5s;
+}
+
+.pog--34 .pog__inner {
+  -webkit-animation-delay: 0.35;
+          animation-delay: 0.35;
+  background-image: url("whoosh-up.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-up;
+          animation-name: whoosh-up;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-up {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--34:checked ~ .pog--34 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--34:checked ~ .pog--34 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--35 {
+  -webkit-animation-delay: 50.5s;
+          animation-delay: 50.5s;
+}
+
+.pog--35 .pog__inner {
+  -webkit-animation-delay: 0.46667;
+          animation-delay: 0.46667;
+  background-image: url("whoosh-down.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-down;
+          animation-name: whoosh-down;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-down {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--35:checked ~ .pog--35 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--35:checked ~ .pog--35 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--36 {
+  -webkit-animation-delay: 51.75s;
+          animation-delay: 51.75s;
+}
+
+.pog--36 .pog__inner {
+  -webkit-animation-delay: 0.525;
+          animation-delay: 0.525;
+  background-image: url("whoosh-down.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-down;
+          animation-name: whoosh-down;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-down {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--36:checked ~ .pog--36 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--36:checked ~ .pog--36 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--37 {
+  -webkit-animation-delay: 52.75s;
+          animation-delay: 52.75s;
+}
+
+.pog--37 .pog__inner {
+  -webkit-animation-delay: 0.99167;
+          animation-delay: 0.99167;
+  background-image: url("whoosh-down.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-down;
+          animation-name: whoosh-down;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-down {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--37:checked ~ .pog--37 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--37:checked ~ .pog--37 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--38 {
+  -webkit-animation-delay: 53.25s;
+          animation-delay: 53.25s;
+}
+
+.pog--38 .pog__inner {
+  -webkit-animation-delay: 0.93333;
+          animation-delay: 0.93333;
+  background-image: url("whoosh-up.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-up;
+          animation-name: whoosh-up;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-up {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--38:checked ~ .pog--38 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--38:checked ~ .pog--38 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--39 {
+  -webkit-animation-delay: 53.75s;
+          animation-delay: 53.75s;
+}
+
+.pog--39 .pog__inner {
+  -webkit-animation-delay: 0.58333;
+          animation-delay: 0.58333;
+  background-image: url("whoosh-down.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-down;
+          animation-name: whoosh-down;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-down {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--39:checked ~ .pog--39 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--39:checked ~ .pog--39 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--40 {
+  -webkit-animation-delay: 55s;
+          animation-delay: 55s;
+}
+
+.pog--40 .pog__inner {
+  -webkit-animation-delay: 0.40833;
+          animation-delay: 0.40833;
+  background-image: url("whoosh-up.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-up;
+          animation-name: whoosh-up;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-up {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--40:checked ~ .pog--40 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--40:checked ~ .pog--40 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--41 {
+  -webkit-animation-delay: 56s;
+          animation-delay: 56s;
+}
+
+.pog--41 .pog__inner {
+  -webkit-animation-delay: 0.175;
+          animation-delay: 0.175;
+  background-image: url("whoosh-down.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-down;
+          animation-name: whoosh-down;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-down {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--41:checked ~ .pog--41 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--41:checked ~ .pog--41 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--42 {
+  -webkit-animation-delay: 56.5s;
+          animation-delay: 56.5s;
+}
+
+.pog--42 .pog__inner {
+  -webkit-animation-delay: 0.46667;
+          animation-delay: 0.46667;
+  background-image: url("whoosh-up.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-up;
+          animation-name: whoosh-up;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-up {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--42:checked ~ .pog--42 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--42:checked ~ .pog--42 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--43 {
+  -webkit-animation-delay: 57.5s;
+          animation-delay: 57.5s;
+}
+
+.pog--43 .pog__inner {
+  -webkit-animation-delay: 0.525;
+          animation-delay: 0.525;
+  background-image: url("whoosh-left.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-left;
+          animation-name: whoosh-left;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-left {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--43:checked ~ .pog--43 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--43:checked ~ .pog--43 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--44 {
+  -webkit-animation-delay: 58.25s;
+          animation-delay: 58.25s;
+}
+
+.pog--44 .pog__inner {
+  -webkit-animation-delay: 0.525;
+          animation-delay: 0.525;
+  background-image: url("whoosh-right.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-right;
+          animation-name: whoosh-right;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@-webkit-keyframes whoosh-right {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+@keyframes whoosh-right {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--44:checked ~ .pog--44 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--44:checked ~ .pog--44 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--45 {
+  -webkit-animation-delay: 59.25s;
+          animation-delay: 59.25s;
+}
+
+.pog--45 .pog__inner {
+  -webkit-animation-delay: 0.875;
+          animation-delay: 0.875;
+  background-image: url("whoosh-up.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-up;
+          animation-name: whoosh-up;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-up {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--45:checked ~ .pog--45 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--45:checked ~ .pog--45 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--46 {
+  -webkit-animation-delay: 60s;
+          animation-delay: 60s;
+}
+
+.pog--46 .pog__inner {
+  -webkit-animation-delay: 0.64167;
+          animation-delay: 0.64167;
+  background-image: url("whoosh-right.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-right;
+          animation-name: whoosh-right;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-right {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--46:checked ~ .pog--46 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--46:checked ~ .pog--46 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--47 {
+  -webkit-animation-delay: 60.5s;
+          animation-delay: 60.5s;
+}
+
+.pog--47 .pog__inner {
+  -webkit-animation-delay: 0.58333;
+          animation-delay: 0.58333;
+  background-image: url("whoosh-down.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-down;
+          animation-name: whoosh-down;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-down {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--47:checked ~ .pog--47 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--47:checked ~ .pog--47 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--48 {
+  -webkit-animation-delay: 61s;
+          animation-delay: 61s;
+}
+
+.pog--48 .pog__inner {
+  -webkit-animation-delay: 0.29167;
+          animation-delay: 0.29167;
+  background-image: url("whoosh-up.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-up;
+          animation-name: whoosh-up;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-up {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--48:checked ~ .pog--48 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--48:checked ~ .pog--48 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--49 {
+  -webkit-animation-delay: 61.75s;
+          animation-delay: 61.75s;
+}
+
+.pog--49 .pog__inner {
+  -webkit-animation-delay: 0.05833;
+          animation-delay: 0.05833;
+  background-image: url("whoosh-up.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-up;
+          animation-name: whoosh-up;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-up {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--49:checked ~ .pog--49 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--49:checked ~ .pog--49 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--50 {
+  -webkit-animation-delay: 62.5s;
+          animation-delay: 62.5s;
+}
+
+.pog--50 .pog__inner {
+  -webkit-animation-delay: 0.46667;
+          animation-delay: 0.46667;
+  background-image: url("whoosh-left.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-left;
+          animation-name: whoosh-left;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-left {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--50:checked ~ .pog--50 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--50:checked ~ .pog--50 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--51 {
+  -webkit-animation-delay: 63s;
+          animation-delay: 63s;
+}
+
+.pog--51 .pog__inner {
+  -webkit-animation-delay: 0.05833;
+          animation-delay: 0.05833;
+  background-image: url("whoosh-left.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-left;
+          animation-name: whoosh-left;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-left {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--51:checked ~ .pog--51 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--51:checked ~ .pog--51 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--52 {
+  -webkit-animation-delay: 64s;
+          animation-delay: 64s;
+}
+
+.pog--52 .pog__inner {
+  -webkit-animation-delay: 0.58333;
+          animation-delay: 0.58333;
+  background-image: url("whoosh-left.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-left;
+          animation-name: whoosh-left;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-left {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--52:checked ~ .pog--52 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--52:checked ~ .pog--52 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--53 {
+  -webkit-animation-delay: 64.5s;
+          animation-delay: 64.5s;
+}
+
+.pog--53 .pog__inner {
+  -webkit-animation-delay: 0.11667;
+          animation-delay: 0.11667;
+  background-image: url("whoosh-down.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-down;
+          animation-name: whoosh-down;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-down {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--53:checked ~ .pog--53 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--53:checked ~ .pog--53 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--54 {
+  -webkit-animation-delay: 65.5s;
+          animation-delay: 65.5s;
+}
+
+.pog--54 .pog__inner {
+  -webkit-animation-delay: 0.99167;
+          animation-delay: 0.99167;
+  background-image: url("whoosh-down.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-down;
+          animation-name: whoosh-down;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-down {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--54:checked ~ .pog--54 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--54:checked ~ .pog--54 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--55 {
+  -webkit-animation-delay: 66s;
+          animation-delay: 66s;
+}
+
+.pog--55 .pog__inner {
+  -webkit-animation-delay: 0.29167;
+          animation-delay: 0.29167;
+  background-image: url("whoosh-right.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-right;
+          animation-name: whoosh-right;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-right {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--55:checked ~ .pog--55 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--55:checked ~ .pog--55 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--56 {
+  -webkit-animation-delay: 66.5s;
+          animation-delay: 66.5s;
+}
+
+.pog--56 .pog__inner {
+  -webkit-animation-delay: 0.05833;
+          animation-delay: 0.05833;
+  background-image: url("whoosh-left.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-left;
+          animation-name: whoosh-left;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-left {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--56:checked ~ .pog--56 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--56:checked ~ .pog--56 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--57 {
+  -webkit-animation-delay: 67.5s;
+          animation-delay: 67.5s;
+}
+
+.pog--57 .pog__inner {
+  -webkit-animation-delay: 0.7;
+          animation-delay: 0.7;
+  background-image: url("whoosh-down.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-down;
+          animation-name: whoosh-down;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-down {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--57:checked ~ .pog--57 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--57:checked ~ .pog--57 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--58 {
+  -webkit-animation-delay: 68.25s;
+          animation-delay: 68.25s;
+}
+
+.pog--58 .pog__inner {
+  -webkit-animation-delay: 0.29167;
+          animation-delay: 0.29167;
+  background-image: url("whoosh-up.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-up;
+          animation-name: whoosh-up;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-up {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--58:checked ~ .pog--58 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--58:checked ~ .pog--58 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--59 {
+  -webkit-animation-delay: 69s;
+          animation-delay: 69s;
+}
+
+.pog--59 .pog__inner {
+  -webkit-animation-delay: 0.525;
+          animation-delay: 0.525;
+  background-image: url("whoosh-down.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-down;
+          animation-name: whoosh-down;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-down {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--59:checked ~ .pog--59 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--59:checked ~ .pog--59 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--60 {
+  -webkit-animation-delay: 69.75s;
+          animation-delay: 69.75s;
+}
+
+.pog--60 .pog__inner {
+  -webkit-animation-delay: 0.23333;
+          animation-delay: 0.23333;
+  background-image: url("whoosh-right.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-right;
+          animation-name: whoosh-right;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-right {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--60:checked ~ .pog--60 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--60:checked ~ .pog--60 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--61 {
+  -webkit-animation-delay: 70.5s;
+          animation-delay: 70.5s;
+}
+
+.pog--61 .pog__inner {
+  -webkit-animation-delay: 0.81667;
+          animation-delay: 0.81667;
+  background-image: url("whoosh-left.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-left;
+          animation-name: whoosh-left;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-left {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--61:checked ~ .pog--61 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--61:checked ~ .pog--61 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--62 {
+  -webkit-animation-delay: 71.25s;
+          animation-delay: 71.25s;
+}
+
+.pog--62 .pog__inner {
+  -webkit-animation-delay: 0.99167;
+          animation-delay: 0.99167;
+  background-image: url("whoosh-up.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-up;
+          animation-name: whoosh-up;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-up {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--62:checked ~ .pog--62 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--62:checked ~ .pog--62 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--63 {
+  -webkit-animation-delay: 71.75s;
+          animation-delay: 71.75s;
+}
+
+.pog--63 .pog__inner {
+  -webkit-animation-delay: 0.11667;
+          animation-delay: 0.11667;
+  background-image: url("whoosh-down.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-down;
+          animation-name: whoosh-down;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-down {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--63:checked ~ .pog--63 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--63:checked ~ .pog--63 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--64 {
+  -webkit-animation-delay: 72.5s;
+          animation-delay: 72.5s;
+}
+
+.pog--64 .pog__inner {
+  -webkit-animation-delay: 0.58333;
+          animation-delay: 0.58333;
+  background-image: url("whoosh-left.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-left;
+          animation-name: whoosh-left;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-left {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--64:checked ~ .pog--64 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--64:checked ~ .pog--64 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--65 {
+  -webkit-animation-delay: 73s;
+          animation-delay: 73s;
+}
+
+.pog--65 .pog__inner {
+  -webkit-animation-delay: 0.875;
+          animation-delay: 0.875;
+  background-image: url("whoosh-up.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-up;
+          animation-name: whoosh-up;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-up {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--65:checked ~ .pog--65 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--65:checked ~ .pog--65 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--66 {
+  -webkit-animation-delay: 73.75s;
+          animation-delay: 73.75s;
+}
+
+.pog--66 .pog__inner {
+  -webkit-animation-delay: 0.7;
+          animation-delay: 0.7;
+  background-image: url("whoosh-down.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-down;
+          animation-name: whoosh-down;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-down {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--66:checked ~ .pog--66 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--66:checked ~ .pog--66 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--67 {
+  -webkit-animation-delay: 74.25s;
+          animation-delay: 74.25s;
+}
+
+.pog--67 .pog__inner {
+  -webkit-animation-delay: 0.175;
+          animation-delay: 0.175;
+  background-image: url("whoosh-right.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-right;
+          animation-name: whoosh-right;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-right {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--67:checked ~ .pog--67 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--67:checked ~ .pog--67 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--68 {
+  -webkit-animation-delay: 74.75s;
+          animation-delay: 74.75s;
+}
+
+.pog--68 .pog__inner {
+  -webkit-animation-delay: 0.7;
+          animation-delay: 0.7;
+  background-image: url("whoosh-up.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-up;
+          animation-name: whoosh-up;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-up {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--68:checked ~ .pog--68 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--68:checked ~ .pog--68 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--69 {
+  -webkit-animation-delay: 75.25s;
+          animation-delay: 75.25s;
+}
+
+.pog--69 .pog__inner {
+  -webkit-animation-delay: 0.35;
+          animation-delay: 0.35;
+  background-image: url("whoosh-left.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-left;
+          animation-name: whoosh-left;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-left {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--69:checked ~ .pog--69 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--69:checked ~ .pog--69 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--70 {
+  -webkit-animation-delay: 76s;
+          animation-delay: 76s;
+}
+
+.pog--70 .pog__inner {
+  -webkit-animation-delay: 0.875;
+          animation-delay: 0.875;
+  background-image: url("whoosh-down.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-down;
+          animation-name: whoosh-down;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-down {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--70:checked ~ .pog--70 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--70:checked ~ .pog--70 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--71 {
+  -webkit-animation-delay: 76.75s;
+          animation-delay: 76.75s;
+}
+
+.pog--71 .pog__inner {
+  -webkit-animation-delay: 0.75833;
+          animation-delay: 0.75833;
+  background-image: url("whoosh-down.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-down;
+          animation-name: whoosh-down;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-down {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--71:checked ~ .pog--71 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--71:checked ~ .pog--71 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--72 {
+  -webkit-animation-delay: 77.25s;
+          animation-delay: 77.25s;
+}
+
+.pog--72 .pog__inner {
+  -webkit-animation-delay: 0.81667;
+          animation-delay: 0.81667;
+  background-image: url("whoosh-right.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-right;
+          animation-name: whoosh-right;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-right {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--72:checked ~ .pog--72 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--72:checked ~ .pog--72 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--73 {
+  -webkit-animation-delay: 77.75s;
+          animation-delay: 77.75s;
+}
+
+.pog--73 .pog__inner {
+  -webkit-animation-delay: 0.40833;
+          animation-delay: 0.40833;
+  background-image: url("whoosh-down.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-down;
+          animation-name: whoosh-down;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-down {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--73:checked ~ .pog--73 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--73:checked ~ .pog--73 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--74 {
+  -webkit-animation-delay: 78.5s;
+          animation-delay: 78.5s;
+}
+
+.pog--74 .pog__inner {
+  -webkit-animation-delay: 0.175;
+          animation-delay: 0.175;
+  background-image: url("whoosh-right.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-right;
+          animation-name: whoosh-right;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-right {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--74:checked ~ .pog--74 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--74:checked ~ .pog--74 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--75 {
+  -webkit-animation-delay: 79s;
+          animation-delay: 79s;
+}
+
+.pog--75 .pog__inner {
+  -webkit-animation-delay: 0.93333;
+          animation-delay: 0.93333;
+  background-image: url("whoosh-down.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-down;
+          animation-name: whoosh-down;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-down {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--75:checked ~ .pog--75 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--75:checked ~ .pog--75 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--76 {
+  -webkit-animation-delay: 79.5s;
+          animation-delay: 79.5s;
+}
+
+.pog--76 .pog__inner {
+  -webkit-animation-delay: 0.64167;
+          animation-delay: 0.64167;
+  background-image: url("whoosh-up.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-up;
+          animation-name: whoosh-up;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-up {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--76:checked ~ .pog--76 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--76:checked ~ .pog--76 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--77 {
+  -webkit-animation-delay: 80s;
+          animation-delay: 80s;
+}
+
+.pog--77 .pog__inner {
+  -webkit-animation-delay: 0.75833;
+          animation-delay: 0.75833;
+  background-image: url("whoosh-right.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-right;
+          animation-name: whoosh-right;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-right {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--77:checked ~ .pog--77 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--77:checked ~ .pog--77 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--78 {
+  -webkit-animation-delay: 80.25s;
+          animation-delay: 80.25s;
+}
+
+.pog--78 .pog__inner {
+  -webkit-animation-delay: 0.11667;
+          animation-delay: 0.11667;
+  background-image: url("whoosh-left.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-left;
+          animation-name: whoosh-left;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-left {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--78:checked ~ .pog--78 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--78:checked ~ .pog--78 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--79 {
+  -webkit-animation-delay: 81s;
+          animation-delay: 81s;
+}
+
+.pog--79 .pog__inner {
+  -webkit-animation-delay: 0.75833;
+          animation-delay: 0.75833;
+  background-image: url("whoosh-right.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-right;
+          animation-name: whoosh-right;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-right {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--79:checked ~ .pog--79 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--79:checked ~ .pog--79 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--80 {
+  -webkit-animation-delay: 81.5s;
+          animation-delay: 81.5s;
+}
+
+.pog--80 .pog__inner {
+  -webkit-animation-delay: 0.05833;
+          animation-delay: 0.05833;
+  background-image: url("whoosh-left.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-left;
+          animation-name: whoosh-left;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-left {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--80:checked ~ .pog--80 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--80:checked ~ .pog--80 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--81 {
+  -webkit-animation-delay: 82s;
+          animation-delay: 82s;
+}
+
+.pog--81 .pog__inner {
+  -webkit-animation-delay: 0.40833;
+          animation-delay: 0.40833;
+  background-image: url("whoosh-right.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-right;
+          animation-name: whoosh-right;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-right {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--81:checked ~ .pog--81 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--81:checked ~ .pog--81 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--82 {
+  -webkit-animation-delay: 82.5s;
+          animation-delay: 82.5s;
+}
+
+.pog--82 .pog__inner {
+  -webkit-animation-delay: 0.23333;
+          animation-delay: 0.23333;
+  background-image: url("whoosh-left.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-left;
+          animation-name: whoosh-left;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-left {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--82:checked ~ .pog--82 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--82:checked ~ .pog--82 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--83 {
+  -webkit-animation-delay: 82.75s;
+          animation-delay: 82.75s;
+}
+
+.pog--83 .pog__inner {
+  -webkit-animation-delay: 0.29167;
+          animation-delay: 0.29167;
+  background-image: url("whoosh-right.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-right;
+          animation-name: whoosh-right;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-right {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--83:checked ~ .pog--83 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--83:checked ~ .pog--83 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--84 {
+  -webkit-animation-delay: 83.5s;
+          animation-delay: 83.5s;
+}
+
+.pog--84 .pog__inner {
+  -webkit-animation-delay: 0.46667;
+          animation-delay: 0.46667;
+  background-image: url("whoosh-up.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-up;
+          animation-name: whoosh-up;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-up {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--84:checked ~ .pog--84 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--84:checked ~ .pog--84 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--85 {
+  -webkit-animation-delay: 84s;
+          animation-delay: 84s;
+}
+
+.pog--85 .pog__inner {
+  -webkit-animation-delay: 0.23333;
+          animation-delay: 0.23333;
+  background-image: url("whoosh-right.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-right;
+          animation-name: whoosh-right;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-right {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--85:checked ~ .pog--85 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--85:checked ~ .pog--85 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--86 {
+  -webkit-animation-delay: 84.25s;
+          animation-delay: 84.25s;
+}
+
+.pog--86 .pog__inner {
+  -webkit-animation-delay: 0.175;
+          animation-delay: 0.175;
+  background-image: url("whoosh-right.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-right;
+          animation-name: whoosh-right;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-right {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--86:checked ~ .pog--86 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--86:checked ~ .pog--86 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--87 {
+  -webkit-animation-delay: 84.5s;
+          animation-delay: 84.5s;
+}
+
+.pog--87 .pog__inner {
+  -webkit-animation-delay: 0.875;
+          animation-delay: 0.875;
+  background-image: url("whoosh-left.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-left;
+          animation-name: whoosh-left;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-left {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--87:checked ~ .pog--87 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--87:checked ~ .pog--87 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--88 {
+  -webkit-animation-delay: 85s;
+          animation-delay: 85s;
+}
+
+.pog--88 .pog__inner {
+  -webkit-animation-delay: 0.58333;
+          animation-delay: 0.58333;
+  background-image: url("whoosh-right.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-right;
+          animation-name: whoosh-right;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-right {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--88:checked ~ .pog--88 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--88:checked ~ .pog--88 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--89 {
+  -webkit-animation-delay: 85.5s;
+          animation-delay: 85.5s;
+}
+
+.pog--89 .pog__inner {
+  -webkit-animation-delay: 0.875;
+          animation-delay: 0.875;
+  background-image: url("whoosh-left.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-left;
+          animation-name: whoosh-left;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-left {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--89:checked ~ .pog--89 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--89:checked ~ .pog--89 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--90 {
+  -webkit-animation-delay: 86s;
+          animation-delay: 86s;
+}
+
+.pog--90 .pog__inner {
+  -webkit-animation-delay: 0.64167;
+          animation-delay: 0.64167;
+  background-image: url("whoosh-up.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-up;
+          animation-name: whoosh-up;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-up {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--90:checked ~ .pog--90 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--90:checked ~ .pog--90 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--91 {
+  -webkit-animation-delay: 86.25s;
+          animation-delay: 86.25s;
+}
+
+.pog--91 .pog__inner {
+  -webkit-animation-delay: 0.29167;
+          animation-delay: 0.29167;
+  background-image: url("whoosh-up.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-up;
+          animation-name: whoosh-up;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-up {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--91:checked ~ .pog--91 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--91:checked ~ .pog--91 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--92 {
+  -webkit-animation-delay: 86.75s;
+          animation-delay: 86.75s;
+}
+
+.pog--92 .pog__inner {
+  -webkit-animation-delay: 0.11667;
+          animation-delay: 0.11667;
+  background-image: url("whoosh-left.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-left;
+          animation-name: whoosh-left;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-left {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--92:checked ~ .pog--92 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--92:checked ~ .pog--92 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--93 {
+  -webkit-animation-delay: 87.25s;
+          animation-delay: 87.25s;
+}
+
+.pog--93 .pog__inner {
+  -webkit-animation-delay: 0.93333;
+          animation-delay: 0.93333;
+  background-image: url("whoosh-down.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-down;
+          animation-name: whoosh-down;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-down {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--93:checked ~ .pog--93 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--93:checked ~ .pog--93 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--94 {
+  -webkit-animation-delay: 87.75s;
+          animation-delay: 87.75s;
+}
+
+.pog--94 .pog__inner {
+  -webkit-animation-delay: 0.7;
+          animation-delay: 0.7;
+  background-image: url("whoosh-down.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-down;
+          animation-name: whoosh-down;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-down {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--94:checked ~ .pog--94 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--94:checked ~ .pog--94 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--95 {
+  -webkit-animation-delay: 88.25s;
+          animation-delay: 88.25s;
+}
+
+.pog--95 .pog__inner {
+  -webkit-animation-delay: 0.525;
+          animation-delay: 0.525;
+  background-image: url("whoosh-left.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-left;
+          animation-name: whoosh-left;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-left {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--95:checked ~ .pog--95 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--95:checked ~ .pog--95 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--96 {
+  -webkit-animation-delay: 88.75s;
+          animation-delay: 88.75s;
+}
+
+.pog--96 .pog__inner {
+  -webkit-animation-delay: 0.75833;
+          animation-delay: 0.75833;
+  background-image: url("whoosh-up.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-up;
+          animation-name: whoosh-up;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-up {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--96:checked ~ .pog--96 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--96:checked ~ .pog--96 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--97 {
+  -webkit-animation-delay: 89s;
+          animation-delay: 89s;
+}
+
+.pog--97 .pog__inner {
+  -webkit-animation-delay: 0.58333;
+          animation-delay: 0.58333;
+  background-image: url("whoosh-right.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-right;
+          animation-name: whoosh-right;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-right {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--97:checked ~ .pog--97 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--97:checked ~ .pog--97 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--98 {
+  -webkit-animation-delay: 89.5s;
+          animation-delay: 89.5s;
+}
+
+.pog--98 .pog__inner {
+  -webkit-animation-delay: 0.11667;
+          animation-delay: 0.11667;
+  background-image: url("whoosh-down.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-down;
+          animation-name: whoosh-down;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-down {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--98:checked ~ .pog--98 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--98:checked ~ .pog--98 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--99 {
+  -webkit-animation-delay: 89.75s;
+          animation-delay: 89.75s;
+}
+
+.pog--99 .pog__inner {
+  -webkit-animation-delay: 0.525;
+          animation-delay: 0.525;
+  background-image: url("whoosh-up.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-up;
+          animation-name: whoosh-up;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-up {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--99:checked ~ .pog--99 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--99:checked ~ .pog--99 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+.pog--100 {
+  -webkit-animation-delay: 90.25s;
+          animation-delay: 90.25s;
+}
+
+.pog--100 .pog__inner {
+  -webkit-animation-delay: 0.99167;
+          animation-delay: 0.99167;
+  background-image: url("whoosh-right.svg");
+  background-position: 0 50%;
+  background-size: 1200% 100%;
+  -webkit-animation-name: whoosh-right;
+          animation-name: whoosh-right;
+  -webkit-animation-duration: 0.7s;
+          animation-duration: 0.7s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: step-end;
+          animation-timing-function: step-end;
+}
+
+@keyframes whoosh-right {
+  0% {
+    background-position: 0% 50%;
+  }
+  8.33333% {
+    background-position: -100% 50%;
+  }
+  16.66667% {
+    background-position: -200% 50%;
+  }
+  25% {
+    background-position: -300% 50%;
+  }
+  33.33333% {
+    background-position: -400% 50%;
+  }
+  41.66667% {
+    background-position: -500% 50%;
+  }
+  50% {
+    background-position: -600% 50%;
+  }
+  58.33333% {
+    background-position: -700% 50%;
+  }
+  66.66667% {
+    background-position: -800% 50%;
+  }
+  75% {
+    background-position: -900% 50%;
+  }
+  83.33333% {
+    background-position: -1000% 50%;
+  }
+  91.66667% {
+    background-position: -1100% 50%;
+  }
+  100% {
+    background-position: -1200% 50%;
+  }
+}
+
+#point--100:checked ~ .pog--100 {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+#point--100:checked ~ .pog--100 .pog__inner {
+  -webkit-transform: scale(1.5);
+          transform: scale(1.5);
+  opacity: 0;
+}
+
+@-webkit-keyframes button-full-fade {
+  0%,
+  87.8125% {
+    bottom: -100%;
+  }
+  74.6875% {
+    bottom: 0;
+  }
+}
+
+@keyframes button-full-fade {
+  0%,
+  87.8125% {
+    bottom: -100%;
+  }
+  74.6875% {
+    bottom: 0;
+  }
+}
+
+.button {
+  position: absolute;
+  width: 4em;
+  height: 4em;
+  bottom: -100%;
+  -webkit-animation: button-full-fade 2s step-end;
+          animation: button-full-fade 2s step-end;
+}
+
+.button--1 {
+  -webkit-animation-delay: 2.25s;
+          animation-delay: 2.25s;
+  left: 4em;
+}
+
+#point--1:checked ~ .button--1 {
+  display: none;
+}
+
+.button--2 {
+  -webkit-animation-delay: 3.75s;
+          animation-delay: 3.75s;
+  left: 4em;
+}
+
+#point--2:checked ~ .button--2 {
+  display: none;
+}
+
+.button--3 {
+  -webkit-animation-delay: 5.25s;
+          animation-delay: 5.25s;
+  left: 4em;
+}
+
+#point--3:checked ~ .button--3 {
+  display: none;
+}
+
+.button--4 {
+  -webkit-animation-delay: 7.25s;
+          animation-delay: 7.25s;
+  left: 4em;
+}
+
+#point--4:checked ~ .button--4 {
+  display: none;
+}
+
+.button--5 {
+  -webkit-animation-delay: 9.25s;
+          animation-delay: 9.25s;
+  right: 4em;
+}
+
+#point--5:checked ~ .button--5 {
+  display: none;
+}
+
+.button--6 {
+  -webkit-animation-delay: 11.25s;
+          animation-delay: 11.25s;
+  right: 4em;
+}
+
+#point--6:checked ~ .button--6 {
+  display: none;
+}
+
+.button--7 {
+  -webkit-animation-delay: 13.25s;
+          animation-delay: 13.25s;
+  right: 4em;
+}
+
+#point--7:checked ~ .button--7 {
+  display: none;
+}
+
+.button--8 {
+  -webkit-animation-delay: 15.25s;
+          animation-delay: 15.25s;
+  left: 4em;
+}
+
+#point--8:checked ~ .button--8 {
+  display: none;
+}
+
+.button--9 {
+  -webkit-animation-delay: 17.25s;
+          animation-delay: 17.25s;
+  right: 4em;
+}
+
+#point--9:checked ~ .button--9 {
+  display: none;
+}
+
+.button--10 {
+  -webkit-animation-delay: 19s;
+          animation-delay: 19s;
+  right: 4em;
+}
+
+#point--10:checked ~ .button--10 {
+  display: none;
+}
+
+.button--11 {
+  -webkit-animation-delay: 21s;
+          animation-delay: 21s;
+  left: 0;
+}
+
+#point--11:checked ~ .button--11 {
+  display: none;
+}
+
+.button--12 {
+  -webkit-animation-delay: 22.25s;
+          animation-delay: 22.25s;
+  left: 0;
+}
+
+#point--12:checked ~ .button--12 {
+  display: none;
+}
+
+.button--13 {
+  -webkit-animation-delay: 24.25s;
+          animation-delay: 24.25s;
+  left: 4em;
+}
+
+#point--13:checked ~ .button--13 {
+  display: none;
+}
+
+.button--14 {
+  -webkit-animation-delay: 26.25s;
+          animation-delay: 26.25s;
+  left: 0;
+}
+
+#point--14:checked ~ .button--14 {
+  display: none;
+}
+
+.button--15 {
+  -webkit-animation-delay: 27.5s;
+          animation-delay: 27.5s;
+  left: 4em;
+}
+
+#point--15:checked ~ .button--15 {
+  display: none;
+}
+
+.button--16 {
+  -webkit-animation-delay: 29.5s;
+          animation-delay: 29.5s;
+  left: 0;
+}
+
+#point--16:checked ~ .button--16 {
+  display: none;
+}
+
+.button--17 {
+  -webkit-animation-delay: 31s;
+          animation-delay: 31s;
+  left: 0;
+}
+
+#point--17:checked ~ .button--17 {
+  display: none;
+}
+
+.button--18 {
+  -webkit-animation-delay: 32.25s;
+          animation-delay: 32.25s;
+  right: 4em;
+}
+
+#point--18:checked ~ .button--18 {
+  display: none;
+}
+
+.button--19 {
+  -webkit-animation-delay: 33.25s;
+          animation-delay: 33.25s;
+  left: 0;
+}
+
+#point--19:checked ~ .button--19 {
+  display: none;
+}
+
+.button--20 {
+  -webkit-animation-delay: 34.25s;
+          animation-delay: 34.25s;
+  left: 0;
+}
+
+#point--20:checked ~ .button--20 {
+  display: none;
+}
+
+.button--21 {
+  -webkit-animation-delay: 35.75s;
+          animation-delay: 35.75s;
+  right: 4em;
+}
+
+#point--21:checked ~ .button--21 {
+  display: none;
+}
+
+.button--22 {
+  -webkit-animation-delay: 36.75s;
+          animation-delay: 36.75s;
+  left: 0;
+}
+
+#point--22:checked ~ .button--22 {
+  display: none;
+}
+
+.button--23 {
+  -webkit-animation-delay: 38.25s;
+          animation-delay: 38.25s;
+  left: 0;
+}
+
+#point--23:checked ~ .button--23 {
+  display: none;
+}
+
+.button--24 {
+  -webkit-animation-delay: 39.5s;
+          animation-delay: 39.5s;
+  left: 4em;
+}
+
+#point--24:checked ~ .button--24 {
+  display: none;
+}
+
+.button--25 {
+  -webkit-animation-delay: 40.5s;
+          animation-delay: 40.5s;
+  left: 0;
+}
+
+#point--25:checked ~ .button--25 {
+  display: none;
+}
+
+.button--26 {
+  -webkit-animation-delay: 41.5s;
+          animation-delay: 41.5s;
+  left: 4em;
+}
+
+#point--26:checked ~ .button--26 {
+  display: none;
+}
+
+.button--27 {
+  -webkit-animation-delay: 42.75s;
+          animation-delay: 42.75s;
+  right: 4em;
+}
+
+#point--27:checked ~ .button--27 {
+  display: none;
+}
+
+.button--28 {
+  -webkit-animation-delay: 43.5s;
+          animation-delay: 43.5s;
+  left: 0;
+}
+
+#point--28:checked ~ .button--28 {
+  display: none;
+}
+
+.button--29 {
+  -webkit-animation-delay: 44.25s;
+          animation-delay: 44.25s;
+  left: 0;
+}
+
+#point--29:checked ~ .button--29 {
+  display: none;
+}
+
+.button--30 {
+  -webkit-animation-delay: 45.25s;
+          animation-delay: 45.25s;
+  right: 4em;
+}
+
+#point--30:checked ~ .button--30 {
+  display: none;
+}
+
+.button--31 {
+  -webkit-animation-delay: 46.5s;
+          animation-delay: 46.5s;
+  left: 0;
+}
+
+#point--31:checked ~ .button--31 {
+  display: none;
+}
+
+.button--32 {
+  -webkit-animation-delay: 47.5s;
+          animation-delay: 47.5s;
+  left: 4em;
+}
+
+#point--32:checked ~ .button--32 {
+  display: none;
+}
+
+.button--33 {
+  -webkit-animation-delay: 48.5s;
+          animation-delay: 48.5s;
+  left: 0;
+}
+
+#point--33:checked ~ .button--33 {
+  display: none;
+}
+
+.button--34 {
+  -webkit-animation-delay: 49.5s;
+          animation-delay: 49.5s;
+  left: 4em;
+}
+
+#point--34:checked ~ .button--34 {
+  display: none;
+}
+
+.button--35 {
+  -webkit-animation-delay: 50.5s;
+          animation-delay: 50.5s;
+  right: 4em;
+}
+
+#point--35:checked ~ .button--35 {
+  display: none;
+}
+
+.button--36 {
+  -webkit-animation-delay: 51.75s;
+          animation-delay: 51.75s;
+  right: 4em;
+}
+
+#point--36:checked ~ .button--36 {
+  display: none;
+}
+
+.button--37 {
+  -webkit-animation-delay: 52.75s;
+          animation-delay: 52.75s;
+  right: 4em;
+}
+
+#point--37:checked ~ .button--37 {
+  display: none;
+}
+
+.button--38 {
+  -webkit-animation-delay: 53.25s;
+          animation-delay: 53.25s;
+  left: 4em;
+}
+
+#point--38:checked ~ .button--38 {
+  display: none;
+}
+
+.button--39 {
+  -webkit-animation-delay: 53.75s;
+          animation-delay: 53.75s;
+  right: 4em;
+}
+
+#point--39:checked ~ .button--39 {
+  display: none;
+}
+
+.button--40 {
+  -webkit-animation-delay: 55s;
+          animation-delay: 55s;
+  left: 4em;
+}
+
+#point--40:checked ~ .button--40 {
+  display: none;
+}
+
+.button--41 {
+  -webkit-animation-delay: 56s;
+          animation-delay: 56s;
+  right: 4em;
+}
+
+#point--41:checked ~ .button--41 {
+  display: none;
+}
+
+.button--42 {
+  -webkit-animation-delay: 56.5s;
+          animation-delay: 56.5s;
+  left: 4em;
+}
+
+#point--42:checked ~ .button--42 {
+  display: none;
+}
+
+.button--43 {
+  -webkit-animation-delay: 57.5s;
+          animation-delay: 57.5s;
+  left: 0;
+}
+
+#point--43:checked ~ .button--43 {
+  display: none;
+}
+
+.button--44 {
+  -webkit-animation-delay: 58.25s;
+          animation-delay: 58.25s;
+  right: 0;
+}
+
+#point--44:checked ~ .button--44 {
+  display: none;
+}
+
+.button--45 {
+  -webkit-animation-delay: 59.25s;
+          animation-delay: 59.25s;
+  left: 4em;
+}
+
+#point--45:checked ~ .button--45 {
+  display: none;
+}
+
+.button--46 {
+  -webkit-animation-delay: 60s;
+          animation-delay: 60s;
+  right: 0;
+}
+
+#point--46:checked ~ .button--46 {
+  display: none;
+}
+
+.button--47 {
+  -webkit-animation-delay: 60.5s;
+          animation-delay: 60.5s;
+  right: 4em;
+}
+
+#point--47:checked ~ .button--47 {
+  display: none;
+}
+
+.button--48 {
+  -webkit-animation-delay: 61s;
+          animation-delay: 61s;
+  left: 4em;
+}
+
+#point--48:checked ~ .button--48 {
+  display: none;
+}
+
+.button--49 {
+  -webkit-animation-delay: 61.75s;
+          animation-delay: 61.75s;
+  left: 4em;
+}
+
+#point--49:checked ~ .button--49 {
+  display: none;
+}
+
+.button--50 {
+  -webkit-animation-delay: 62.5s;
+          animation-delay: 62.5s;
+  left: 0;
+}
+
+#point--50:checked ~ .button--50 {
+  display: none;
+}
+
+.button--51 {
+  -webkit-animation-delay: 63s;
+          animation-delay: 63s;
+  left: 0;
+}
+
+#point--51:checked ~ .button--51 {
+  display: none;
+}
+
+.button--52 {
+  -webkit-animation-delay: 64s;
+          animation-delay: 64s;
+  left: 0;
+}
+
+#point--52:checked ~ .button--52 {
+  display: none;
+}
+
+.button--53 {
+  -webkit-animation-delay: 64.5s;
+          animation-delay: 64.5s;
+  right: 4em;
+}
+
+#point--53:checked ~ .button--53 {
+  display: none;
+}
+
+.button--54 {
+  -webkit-animation-delay: 65.5s;
+          animation-delay: 65.5s;
+  right: 4em;
+}
+
+#point--54:checked ~ .button--54 {
+  display: none;
+}
+
+.button--55 {
+  -webkit-animation-delay: 66s;
+          animation-delay: 66s;
+  right: 0;
+}
+
+#point--55:checked ~ .button--55 {
+  display: none;
+}
+
+.button--56 {
+  -webkit-animation-delay: 66.5s;
+          animation-delay: 66.5s;
+  left: 0;
+}
+
+#point--56:checked ~ .button--56 {
+  display: none;
+}
+
+.button--57 {
+  -webkit-animation-delay: 67.5s;
+          animation-delay: 67.5s;
+  right: 4em;
+}
+
+#point--57:checked ~ .button--57 {
+  display: none;
+}
+
+.button--58 {
+  -webkit-animation-delay: 68.25s;
+          animation-delay: 68.25s;
+  left: 4em;
+}
+
+#point--58:checked ~ .button--58 {
+  display: none;
+}
+
+.button--59 {
+  -webkit-animation-delay: 69s;
+          animation-delay: 69s;
+  right: 4em;
+}
+
+#point--59:checked ~ .button--59 {
+  display: none;
+}
+
+.button--60 {
+  -webkit-animation-delay: 69.75s;
+          animation-delay: 69.75s;
+  right: 0;
+}
+
+#point--60:checked ~ .button--60 {
+  display: none;
+}
+
+.button--61 {
+  -webkit-animation-delay: 70.5s;
+          animation-delay: 70.5s;
+  left: 0;
+}
+
+#point--61:checked ~ .button--61 {
+  display: none;
+}
+
+.button--62 {
+  -webkit-animation-delay: 71.25s;
+          animation-delay: 71.25s;
+  left: 4em;
+}
+
+#point--62:checked ~ .button--62 {
+  display: none;
+}
+
+.button--63 {
+  -webkit-animation-delay: 71.75s;
+          animation-delay: 71.75s;
+  right: 4em;
+}
+
+#point--63:checked ~ .button--63 {
+  display: none;
+}
+
+.button--64 {
+  -webkit-animation-delay: 72.5s;
+          animation-delay: 72.5s;
+  left: 0;
+}
+
+#point--64:checked ~ .button--64 {
+  display: none;
+}
+
+.button--65 {
+  -webkit-animation-delay: 73s;
+          animation-delay: 73s;
+  left: 4em;
+}
+
+#point--65:checked ~ .button--65 {
+  display: none;
+}
+
+.button--66 {
+  -webkit-animation-delay: 73.75s;
+          animation-delay: 73.75s;
+  right: 4em;
+}
+
+#point--66:checked ~ .button--66 {
+  display: none;
+}
+
+.button--67 {
+  -webkit-animation-delay: 74.25s;
+          animation-delay: 74.25s;
+  right: 0;
+}
+
+#point--67:checked ~ .button--67 {
+  display: none;
+}
+
+.button--68 {
+  -webkit-animation-delay: 74.75s;
+          animation-delay: 74.75s;
+  left: 4em;
+}
+
+#point--68:checked ~ .button--68 {
+  display: none;
+}
+
+.button--69 {
+  -webkit-animation-delay: 75.25s;
+          animation-delay: 75.25s;
+  left: 0;
+}
+
+#point--69:checked ~ .button--69 {
+  display: none;
+}
+
+.button--70 {
+  -webkit-animation-delay: 76s;
+          animation-delay: 76s;
+  right: 4em;
+}
+
+#point--70:checked ~ .button--70 {
+  display: none;
+}
+
+.button--71 {
+  -webkit-animation-delay: 76.75s;
+          animation-delay: 76.75s;
+  right: 4em;
+}
+
+#point--71:checked ~ .button--71 {
+  display: none;
+}
+
+.button--72 {
+  -webkit-animation-delay: 77.25s;
+          animation-delay: 77.25s;
+  right: 0;
+}
+
+#point--72:checked ~ .button--72 {
+  display: none;
+}
+
+.button--73 {
+  -webkit-animation-delay: 77.75s;
+          animation-delay: 77.75s;
+  right: 4em;
+}
+
+#point--73:checked ~ .button--73 {
+  display: none;
+}
+
+.button--74 {
+  -webkit-animation-delay: 78.5s;
+          animation-delay: 78.5s;
+  right: 0;
+}
+
+#point--74:checked ~ .button--74 {
+  display: none;
+}
+
+.button--75 {
+  -webkit-animation-delay: 79s;
+          animation-delay: 79s;
+  right: 4em;
+}
+
+#point--75:checked ~ .button--75 {
+  display: none;
+}
+
+.button--76 {
+  -webkit-animation-delay: 79.5s;
+          animation-delay: 79.5s;
+  left: 4em;
+}
+
+#point--76:checked ~ .button--76 {
+  display: none;
+}
+
+.button--77 {
+  -webkit-animation-delay: 80s;
+          animation-delay: 80s;
+  right: 0;
+}
+
+#point--77:checked ~ .button--77 {
+  display: none;
+}
+
+.button--78 {
+  -webkit-animation-delay: 80.25s;
+          animation-delay: 80.25s;
+  left: 0;
+}
+
+#point--78:checked ~ .button--78 {
+  display: none;
+}
+
+.button--79 {
+  -webkit-animation-delay: 81s;
+          animation-delay: 81s;
+  right: 0;
+}
+
+#point--79:checked ~ .button--79 {
+  display: none;
+}
+
+.button--80 {
+  -webkit-animation-delay: 81.5s;
+          animation-delay: 81.5s;
+  left: 0;
+}
+
+#point--80:checked ~ .button--80 {
+  display: none;
+}
+
+.button--81 {
+  -webkit-animation-delay: 82s;
+          animation-delay: 82s;
+  right: 0;
+}
+
+#point--81:checked ~ .button--81 {
+  display: none;
+}
+
+.button--82 {
+  -webkit-animation-delay: 82.5s;
+          animation-delay: 82.5s;
+  left: 0;
+}
+
+#point--82:checked ~ .button--82 {
+  display: none;
+}
+
+.button--83 {
+  -webkit-animation-delay: 82.75s;
+          animation-delay: 82.75s;
+  right: 0;
+}
+
+#point--83:checked ~ .button--83 {
+  display: none;
+}
+
+.button--84 {
+  -webkit-animation-delay: 83.5s;
+          animation-delay: 83.5s;
+  left: 4em;
+}
+
+#point--84:checked ~ .button--84 {
+  display: none;
+}
+
+.button--85 {
+  -webkit-animation-delay: 84s;
+          animation-delay: 84s;
+  right: 0;
+}
+
+#point--85:checked ~ .button--85 {
+  display: none;
+}
+
+.button--86 {
+  -webkit-animation-delay: 84.25s;
+          animation-delay: 84.25s;
+  right: 0;
+}
+
+#point--86:checked ~ .button--86 {
+  display: none;
+}
+
+.button--87 {
+  -webkit-animation-delay: 84.5s;
+          animation-delay: 84.5s;
+  left: 0;
+}
+
+#point--87:checked ~ .button--87 {
+  display: none;
+}
+
+.button--88 {
+  -webkit-animation-delay: 85s;
+          animation-delay: 85s;
+  right: 0;
+}
+
+#point--88:checked ~ .button--88 {
+  display: none;
+}
+
+.button--89 {
+  -webkit-animation-delay: 85.5s;
+          animation-delay: 85.5s;
+  left: 0;
+}
+
+#point--89:checked ~ .button--89 {
+  display: none;
+}
+
+.button--90 {
+  -webkit-animation-delay: 86s;
+          animation-delay: 86s;
+  left: 4em;
+}
+
+#point--90:checked ~ .button--90 {
+  display: none;
+}
+
+.button--91 {
+  -webkit-animation-delay: 86.25s;
+          animation-delay: 86.25s;
+  left: 4em;
+}
+
+#point--91:checked ~ .button--91 {
+  display: none;
+}
+
+.button--92 {
+  -webkit-animation-delay: 86.75s;
+          animation-delay: 86.75s;
+  left: 0;
+}
+
+#point--92:checked ~ .button--92 {
+  display: none;
+}
+
+.button--93 {
+  -webkit-animation-delay: 87.25s;
+          animation-delay: 87.25s;
+  right: 4em;
+}
+
+#point--93:checked ~ .button--93 {
+  display: none;
+}
+
+.button--94 {
+  -webkit-animation-delay: 87.75s;
+          animation-delay: 87.75s;
+  right: 4em;
+}
+
+#point--94:checked ~ .button--94 {
+  display: none;
+}
+
+.button--95 {
+  -webkit-animation-delay: 88.25s;
+          animation-delay: 88.25s;
+  left: 0;
+}
+
+#point--95:checked ~ .button--95 {
+  display: none;
+}
+
+.button--96 {
+  -webkit-animation-delay: 88.75s;
+          animation-delay: 88.75s;
+  left: 4em;
+}
+
+#point--96:checked ~ .button--96 {
+  display: none;
+}
+
+.button--97 {
+  -webkit-animation-delay: 89s;
+          animation-delay: 89s;
+  right: 0;
+}
+
+#point--97:checked ~ .button--97 {
+  display: none;
+}
+
+.button--98 {
+  -webkit-animation-delay: 89.5s;
+          animation-delay: 89.5s;
+  right: 4em;
+}
+
+#point--98:checked ~ .button--98 {
+  display: none;
+}
+
+.button--99 {
+  -webkit-animation-delay: 89.75s;
+          animation-delay: 89.75s;
+  left: 4em;
+}
+
+#point--99:checked ~ .button--99 {
+  display: none;
+}
+
+.button--100 {
+  -webkit-animation-delay: 90.25s;
+          animation-delay: 90.25s;
+  right: 0;
+}
+
+#point--100:checked ~ .button--100 {
+  display: none;
+}
+
+.point {
+  position: absolute;
+  left: -200vw;
+}
+
+.point:checked {
+  counter-increment: points;
+}
+
+.point:not(:checked) + .point:checked {
+  counter-reset: combo;
+}
+
+.point:checked + .point:checked {
+  counter-increment: combo points;
+}
+
+.score {
+  position: absolute;
+  bottom: 3em;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+  padding: 1em;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.score::before {
+  content: counter(points);
+  font-size: 2em;
+  vertical-align: middle;
+}
+
+.score::after {
+  content: " combo: " counter(combo);
+  font-size: 1em;
+  opacity: 0.5;
+  vertical-align: middle;
+  text-transform: uppercase;
+}
+
+.arrow {
+  position: absolute;
+  width: 4em;
+  height: 4em;
+  background: rgba(0, 0, 255, 0.2);
+  bottom: 0;
+  pointer-events: none;
+}
+
+.arrow::after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  border: 1em solid transparent;
+}
+
+.arrow--left {
+  left: 0;
+}
+
+.arrow--left::after {
+  border-right-color: black;
+  border-left: 0;
+}
+
+.arrow--up {
+  left: 4em;
+}
+
+.arrow--up::after {
+  border-bottom-color: black;
+  border-top: 0;
+}
+
+.arrow--down {
+  right: 4em;
+}
+
+.arrow--down::after {
+  border-top-color: black;
+  border-bottom: 0;
+}
+
+.arrow--right {
+  right: 0;
+}
+
+.arrow--right::after {
+  border-left-color: black;
+  border-right: 0;
+}
+/*# sourceMappingURL=entry.css.map */

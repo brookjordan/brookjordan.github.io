@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+
+	<link rel="stylesheet" href="main.css">
+</head>
+<body>
+	<textarea id="TA" style="width:100%;"></textarea>
+	<div id="JSON"></div>
+	<script src="main.js"></script>
+	<script src="testJSON.js"></script>
+	<script>
+		function PJ( txtJSON ) {
+			document.getElementById('JSON').innerHTML	=	parseJSON( txtJSON, {
+				hideLabelQuotes:		true,
+				hideStringQuotes:		true,
+				hideColons:				true,
+				hideCurlyBraces:		false,
+				hideSquareBrackets:		false,
+
+
+
+				beforeStart:			'<p class="line">',
+				afterFinish:			'</p>',
+
+
+
+				beforePrintingMinus:	'<span class="negative">',
+				afterPrintingMinus:		'</span>',
+
+				beforePrintingPlus:		'<span class="negative">',
+				afterPrintingPlus:		'</span>',
+
+				beforePrintingNumber:	'<span class="number">',
+				afterPrintingNumber:	'</span>',
+
+				beforePrintingDecimal:	'',
+				afterPrintingDecimal:	'',
+
+				beforePrintingEscape:	'<span class="escape">',
+				afterPrintingEscape:	'</span>',
+
+
+
+				beforeOpeningObject:	'<span class="bracket curlybrace opening">',
+				beforePrintingObject:	'</span></p>' +
+										'<div class="object container"><p>',
+
+				afterPrintingObject:	'</p></div>' +
+										'<p class="line"><b class="bracket curlybrace closing">',
+				afterClosingObject:		'</b>',
+
+
+
+				beforeOpeningArray:		'<b class="bracket squarebracket opening">',
+				beforePrintingArray:	'</b></p><div class="array container"><p class="line">',
+
+				afterPrintingArray:		'</p></div>' +
+										'<p class="line"><b class="bracket squarebracket closing">',
+				afterClosingArray:		'</b>',
+
+
+
+				beforeOpeningLabel:		'<span class="label">',
+				beforePrintingLabel:	'',
+
+				afterPrintingLabel:		'',
+				afterClosingLabel:		'</span>',
+
+
+
+				beforeOpeningString:	'<span class="string">',
+				beforePrintingString:	'',
+
+				afterPrintingString:	'',
+				afterClosingString:		'</span>',
+
+
+
+				beforePrintingTrue:		'<b class="boolean">',
+				afterPrintingTrue:		'</b>',
+
+				beforePrintingFalse:	'<b class="boolean">',
+				afterPrintingFalse:		'</b>',
+
+				beforePrintingNull:		'<span class="null">',
+				afterPrintingNull:		'</span>',
+
+
+
+				beforePrintingComma:	'',
+				afterPrintingComma:		'</p><p class="line">',
+
+				beforePrintingColon:	'<small class="colon">',
+				afterPrintingColon:		'</small>',
+
+				afterUnfinished:		'<span style="color:red;">...</span>',
+
+				beforeError:			'<span style="color:red;">',
+				afterError:				'</span>'
+			});
+
+		}
+
+		PJ( testJSON );
+
+		document.getElementById('TA').onkeyup = function(){
+			PJ( this.value );
+		};
+	</script>
+</body>
+</html>

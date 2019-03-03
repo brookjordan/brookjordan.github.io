@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gradient lines</title>
+  <style>
+    html, body, .app {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    input {
+      float: left;
+    }
+
+    .app {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .colors {
+      order: 1;
+      background: #eef;
+    }
+
+    .canvas {
+      position: relative;
+      order: 2;
+      flex-grow: 1;
+      flex-basis: 0;
+    }
+
+    .buttons {
+      order: 3;
+      background: #eef;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="colors">
+      <input id="addcolorelt" type="button" value="Add color">
+      <input id="removecolorelt" type="button" value="Remove color">
+    </div>
+
+    <div class="canvas">
+      <canvas id="canvaselt"></canvas>
+      <canvas id="newlineelt"></canvas>
+    </div>
+
+    <div class="buttons">
+      <input type="button" value="Clear canvas" id="clearcanvaselt">
+      <input type="button" value="Download image" id="downloadimageelt">
+    </div>
+  </div>
+
+  <script>
+    'use strict';
+
+    const newlineCtx = newlineelt.getContext('2d');
+    const canvasCtx  = canvaselt.getContext('2d');
+    const colorInputsElt = document.querySelector('.colors');
+    const colorInputElts = [];
+    let coords   = undefined;
+    let penSize  = 10;
+    let penColor = 'rgb(255,0,0)'; // red
+    let cavasBounds;
+
+    addColorInput('#ffbbdd');
+    addColorInput('#bbddff');
+    addColorInput('#ccffaa');
+
+    resizeAndClearAll();
+    window.addEventListener('resize', resizeAndClearNewline);
+
+    newlineelt.addEventListener('mousedown', startDraw);
+    newlineelt.addEventListener('touchstart', startDraw);
+
+    window.addEventListener('mouseup', endDraw);
+    window.addEventListener('touchend', endDraw);
+    window.addEventListener('mouseleave', endDraw);
+    newlineelt.addEventListener('mouseup', endDraw);
+    newlineelt.addEventListener('touchend', endDraw);
+
+    clearcanvaselt.addEventListener('click', resizeAndClearAll);
+    clearcanvaselt.addEventListener('touchstart', resizeAndClearAll);
+
+    downloadimageelt.addEventListener('click', downloadImage);
+    downloadimageelt.addEventListener('touchstart', downloadImage);
+
+    addcolorelt.addEventListener('click', addColorInput);
+    addcolorelt.addEventListener('touchstart', addColorInput);
+    removecolorelt.addEventListener('click', removeColorInput);
+    removecolorelt.addEventListener('touchstart', removeColorInput);
+
+    function startDraw(e) {
+      if (e.target.nodeName.toUpperCase() !== 'INPUT') {
+        e.preventDefault();
+        coords = [[e.pageX, e.pageY]];
+        newlineelt.addEventListener('mousemove', addToDraw);
+        newlineelt.addEventListener('touchmove', addToDraw);
+      }
+    }
+
+    function addToDraw(e) {
+      e.preventDefault();
+      coords.push([e.pageX, e.pageY]);
+      render(coords);
+    }
+
+    function endDraw(e) {
+      e.preventDefault();
+
+      newlineelt.removeEventListener('mousemove', addToDraw);
+      newlineelt.removeEventListener('touchmove', addToDraw);
+
+      canvasCtx.drawImage(newlineelt, 0, 0, canvaselt.width, canvaselt.height);
+      resizeAndClearNewline();
+    }
+
+    function render(_coords) {
+      let coords           = _coords.slice(0);
+      let colorCount       = colorInputElts.length;
+      let gradientCount    = colorCount - 1;
+      let coordsLength     = _coords.length / (colorCount - 1);
+      let coordsGroups     = [];
+      let topOffset        = cavasBounds.top;
+      let leftOffset       = cavasBounds.left;
+      let color;
+
+      resizeAndClearNewline();
+
+      if (gradientCount) {
+        let pointsDrawn      = 0;
+        let gradientsLeft = gradientCount;
+
+        while (gradientsLeft) {
+          coordsGroups.push(coords.splice(0, Math.round(coords.length / gradientsLeft)));
+          gradientsLeft -= 1;
+        }
+
+        coordsGroups.forEach((coordGroup, index) => {
+          let color1       = rgb(colorInputElts[index].value);
+          let color2       = rgb(colorInputElts[index + 1].value);
+          let coordsLength = coordGroup.length;
+
+          coordGroup.forEach((coord, index) => {
+            color =
+              `rgb(${Math.round(((color1[0] * ( coordsLength - index )) + (color2[0] * index)) / coordsLength)},` +
+                  `${Math.round(((color1[1] * ( coordsLength - index )) + (color2[1] * index)) / coordsLength)},` +
+                  `${Math.round(((color1[2] * ( coordsLength - index )) + (color2[2] * index)) / coordsLength)})`;
+
+            let size = pointsDrawn
+              ? Math.abs(_coords[pointsDrawn][0] - _coords[pointsDrawn - 1][0]) + Math.abs(_coords[pointsDrawn][1] - _coords[pointsDrawn - 1][1])
+              : 1;
+
+            fillCircle(coord[0] - leftOffset, coord[1] - topOffset, color, size * 1.5);
+            pointsDrawn += 1;
+          });
+        });
+      } else {
+        let color = colorInputElts[0].value;
+        _coords.forEach((coord, index) => {
+          let size = index
+            ? Math.abs(coord[0] - _coords[index - 1][0]) + Math.abs(coord[1] - _coords[index - 1][1])
+            : 1;
+
+          fillCircle(...coord, color, size * 1.5);
+        });
+      }
+    }
+
+    function fillCircle(x, y, color=penColor, size=penSize) {
+      newlineCtx.beginPath();
+      newlineCtx.fillStyle = color;
+      newlineCtx.arc(x, y, (size / 2), 0, (2 * Math.PI), false);
+      newlineCtx.fill();
+    }
+
+    function resizeAndClearAll(e) {
+      resizeAndClearCanvas();
+      resizeAndClearNewline();
+    }
+
+    function resizeAndClearCanvas() {
+      cavasBounds      = canvaselt.getBoundingClientRect();
+      canvaselt.width  = cavasBounds.width;
+      canvaselt.height = cavasBounds.height;
+    }
+
+    function resizeAndClearNewline() {
+      cavasBounds       = newlineelt.getBoundingClientRect();
+      newlineelt.width  = cavasBounds.width;
+      newlineelt.height = cavasBounds.height;
+    }
+
+    function rgb(hex) {
+      let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result
+        ? [
+            parseInt(result[1], 16),
+            parseInt(result[2], 16),
+            parseInt(result[3], 16)
+          ]
+        : null;
+    }
+
+    function downloadImage() {
+      let a = document.createElement('a');
+      a.href = canvaselt.toDataURL();
+      a.download = 'download';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    function addColorInput(startingColor) {
+      let newInput = document.createElement('input');
+      newInput.type = 'color';
+      newInput.value = typeof startingColor === 'string'
+        ? startingColor
+        : '#000000'.replace(/0/g,function(){return (~~(Math.random()*16)).toString(16);});;
+
+      colorInputsElt.appendChild(newInput);
+      colorInputElts.push(newInput);
+    }
+
+    function removeColorInput() {
+      if (colorInputElts.length <= 1) { return; }
+      let removingInput = colorInputElts.splice(-1, 1)[0];
+      colorInputsElt.removeChild(removingInput);
+    }
+  </script>
+</body>
+</html>

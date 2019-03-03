@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<title>Colour clock</title>
+
+	<link rel="apple-touch-icon" href="appleImage.jpg">
+
+	<style>
+/*  weight 100 */
+/* latin */
+@font-face {
+  font-family: 'Josefin Sans';
+  font-style: normal;
+  font-weight: 100;
+  src: local('Josefin Sans Thin'), local('JosefinSans-Thin'), url('../fonts/Josefin_Sans-100.woff') format('woff');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+
+
+
+/*  weight 300 */
+/* latin */
+@font-face {
+  font-family: 'Josefin Sans';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Josefin Sans Light'), local('JosefinSans-Light'), url('../fonts/Josefin_Sans-300.woff') format('woff');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+html, body, h1, h2, p {
+	position: relative;
+
+	margin: 0;
+
+	font-family: 'Josefin Sans', 'Helvetica Neue', 'Helvetica', sans-serif;
+	font-weight: 100;
+	text-align: center;
+}
+
+html, body {
+	height: 100%;
+}
+
+body {
+	position: absolute;
+	top: 0;
+	left: 0;
+
+	width: 100%;
+}
+
+.timebg,
+.datebg {
+	position: absolute;
+	z-index: -1;
+	top: 0;
+	left: 0;
+
+	width: 100%;
+	height: 100%;
+
+	transition: background .95s;
+}
+
+h1, h2, p {
+	opacity: .6;
+
+	transition: color 3s ease-in-out;
+}
+
+html:before {
+	content: '';
+
+	position: absolute;
+	top: 0;
+	left: 0;
+
+	width: 100%;
+	height: 100%;
+
+	background: linear-gradient( 15deg, rgba(0,0,0,0.4), rgba(0,0,0,0) 50%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.3) );
+}
+
+h1 {
+	margin-top: .2em;
+	margin-bottom: .1em;
+
+	line-height: 30px;
+	font-size: 30px;
+}
+
+p, h2 {
+	line-height: 12px;
+	font-size: 12px;
+
+	opacity: .4;
+}
+
+h2 {
+	box-sizing: border-box;
+
+	width: 200px;
+	margin: 0 auto;
+
+	font-weight: 300;
+	text-align: right;
+}
+
+h2 span + span {
+	padding-left: .2em;
+}
+
+.w1, .w2,
+.v1, .v11,
+.v2, .v22 {
+	margin: .2em 0;
+}
+
+.w1, .w2 {
+	box-sizing: border-box;
+
+	float: left;
+
+	width: 49.5%;
+	padding-right: .5%;
+
+	text-align: right;
+}
+
+.w11, .w22 {
+	padding-right: .2em;
+}
+
+.v1, .v2, .v11, .v22 {
+	float: right;
+
+	width: 49.5%;
+	padding-left: .5%;
+
+	text-align: left;
+}
+
+.v11, .v22,
+.w11, .w22,
+.hex:hover .v1,
+.hex:hover .v2 {
+	display: none;
+}
+
+.hex:hover .v11,
+.hex:hover .v22 {
+	display: block;
+}
+
+.hex:hover .w11,
+.hex:hover .w22 {
+	display: inline;
+}
+
+article {
+	position: relative;
+
+	top: 50%;
+	margin-top: -44px;
+}
+article:before, article:after {
+	content: '';
+	display: table;
+	clear: both;
+}
+
+.d {
+	display: inline-block;
+	width: .7em;
+	padding: 0 .1em;
+}
+
+@media all and (min-width: 360px) {
+	h1 {
+		line-height: 45px;
+		font-size: 45px;
+	}
+	p, h2 {
+		line-height: 18px;
+		font-size: 18px;
+	}
+	h2 {
+		width: 302px;
+	}
+	article {
+		margin-top: -64px;
+	}
+}
+
+@media all and (min-width: 500px) {
+	h1 {
+		line-height: 60px;
+		font-size: 60px;
+	}
+	p, h2 {
+		line-height: 24px;
+		font-size: 24px;
+	}
+	h2 {
+		width: 402px;
+	}
+	article {
+		margin-top: -84px;
+	}
+}
+
+@media all and (min-width: 800px) {
+	h1 {
+		line-height: 75px;
+		font-size: 75px;
+	}
+	p, h2 {
+		line-height: 30px;
+		font-size: 30px;
+	}
+	h2 {
+		width: 502px;
+	}
+	article {
+		margin-top: -103px;
+	}
+}
+
+@media all and (min-width: 1100px) {
+	h1 {
+		line-height: 90px;
+		font-size: 90px;
+	}
+	p, h2 {
+		line-height: 36px;
+		font-size: 36px;
+	}
+	h2 {
+		width: 604px;
+	}
+	article {
+		margin-top: -125px;
+	}
+}
+
+@media all and (min-width: 1700px) {
+	h1 {
+		line-height: 120px;
+		font-size: 120px;
+	}
+	p, h2 {
+		line-height: 48px;
+		font-size: 48px;
+	}
+	h2 {
+		width: 806px;
+	}
+	article {
+		margin-top: -165px;
+	}
+}	</style>
+</head>
+<body>
+	<div class="timebg"></div>
+	<div class="datebg"></div>
+
+	<article class="t">
+		<h2>
+			<span class="date"></span><!--
+		 --><span class="month"></span><!--
+		 --><span class="year"></span>
+		</h2>
+
+		<h1>
+			<span class="d h1"></span><span class="d h2"></span><!--
+		 --><span class="d c1">:</span><!--
+		 --><span class="d m1"></span><span class="d m2"></span><!--
+		 --><span class="d c2">:</span><!--
+		 --><span class="d s1"></span><span class="d s2"></span>
+		</h1>
+
+		<div class="hex">
+			<p><time><!--
+			--><span class="w1"><span class="w11">date</span>raw: </span><!--
+			--><span class="v1"></span><!--
+			--><span class="v11"></span>
+			</time></p>
+			<p><time><!--
+			--><span class="w2"><span class="w22">date</span>adjusted: </span><!--
+			--><span class="v2"></span><!--
+			--><span class="v22"></span>
+			</time></p>
+		</div>
+	</article>
+
+	<script>
+(function(){
+
+var tE = document.querySelector('.t');
+
+var HoursTensElt = document.querySelector('.h1');
+var HoursUnitsElt = document.querySelector('.h2');
+var MinsTensElt = document.querySelector('.m1');
+var MinsUnitsElt = document.querySelector('.m2');
+var SecondsTensElt = document.querySelector('.s1');
+var SecondsUnitsElt = document.querySelector('.s2');
+
+var DateElt = document.querySelector('.date');
+var MonthElt = document.querySelector('.month');
+var YearElt = document.querySelector('.year');
+
+var TimeBGElt = document.querySelector('.timebg');
+var DateBGElt = document.querySelector('.datebg');
+
+var timeHexElt = document.querySelector('.v1');
+var timeAdjustedHexElt = document.querySelector('.v2');
+var dateHexElt = document.querySelector('.v11');
+var dateAdjustedHexElt = document.querySelector('.v22');
+
+var bS = document.body.style;
+
+var currentTime;
+
+var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+updateDisplay();
+
+
+//	//	//	//	///	//	//	//	//
+
+
+function pad(n, width) {
+	n = n + '';
+	return n.length >= width ? n : new Array(width - n.length + 1).join('0') + n;
+}
+
+function updateDisplay () {
+	currentTime = getTimeParts();
+	var time = getTime();
+	var date = getDate();
+
+	//	Background colours
+	TimeBGElt.style.background = '#' + time.hex.adjusted;
+	DateBGElt.style.background = 'linear-gradient(-15deg,' +
+		'rgb(' + date.rgb.r + ',' + date.rgb.g + ',' + date.rgb.b + '),' +
+		'rgba(' + date.rgb.r + ',' + date.rgb.g + ',' + date.rgb.b + ',' + 0 + ')' +
+	')';
+
+	//	Text colour
+	if ( time.rgb.r + time.rgb.g + time.rgb.b + date.rgb.r + date.rgb.g + date.rgb.b < 255*3 ) {
+		tE.style.color = 'white';
+	} else {
+		tE.style.color = 'black';
+	}
+
+	//	Hex values
+	timeHexElt.innerHTML = '#' + time.hex.real;
+	timeAdjustedHexElt.innerHTML = '#' + time.hex.adjusted.toUpperCase();
+
+	dateHexElt.innerHTML = '#' + date.hex.real;
+	dateAdjustedHexElt.innerHTML = '#' + date.hex.adjusted.toUpperCase();
+
+	document.title = 'Colour clock | #' + time.hex.real;
+
+
+
+	setTimeout( updateDisplay, 50 );
+}
+
+function getTimeParts () {
+	var t = new Date();
+
+	return {
+		Y: t.getFullYear() % 100,
+		M: t.getMonth(),
+		d: t.getDate(),
+		H: t.getHours(),
+		m: t.getMinutes(),
+		s: t.getSeconds()
+	}
+}
+
+function getTime () {
+	var H = pad( currentTime.H, 2 );
+	var m = pad( currentTime.m, 2 );
+	var s = pad( currentTime.s, 2 );
+
+	var hex = getRGB( H, 23, m, 59, s, 59 );
+	var rgb = hex2rgb( hex.adjusted );
+
+	HoursTensElt.innerHTML = pad( H, 2 ).split('')[0];
+	HoursUnitsElt.innerHTML = pad( H, 2 ).split('')[1];
+	MinsTensElt.innerHTML = pad( m, 2 ).split('')[0];
+	MinsUnitsElt.innerHTML = pad( m, 2 ).split('')[1];
+	SecondsTensElt.innerHTML = pad( s, 2 ).split('')[0];
+	SecondsUnitsElt.innerHTML = pad( s, 2 ).split('')[1];
+
+	if ( ( rgb.r + rgb.g + rgb.b ) < 383 ) {
+		tE.style.color = 'white';
+	} else {
+		tE.style.color = 'black';
+	}
+
+	return {
+		hex: hex,
+		rgb: rgb
+	}
+
+}
+
+function getDate () {
+	var Y = currentTime.Y;
+	var M = currentTime.M;
+	var d = currentTime.d;
+
+	var hex = getRGB( Y, 99, M, 10, d, 31 );
+	var rgb = hex2rgb( hex.adjusted );
+
+	YearElt.innerHTML  = Y;
+	MonthElt.innerHTML = months[M];
+	DateElt.innerHTML   = d;
+
+	return {
+		hex: hex,
+		rgb: rgb
+	}
+}
+
+function getRGB ( rC, rM, gC, gM, bC, bM ) { //	Current and Max
+
+	var rD = ( Math.round( rC/rM*255 ) );
+	var gD = ( Math.round( gC/gM*255 ) );
+	var bD = ( Math.round( bC/bM*255 ) );
+
+	var rR = pad( rC.toString( 16 ), 2 );
+	var gR = pad( gC.toString( 16 ), 2 );
+	var bR = pad( bC.toString( 16 ), 2 );
+
+	var rH = pad( rD.toString( 16 ), 2 );
+	var gH = pad( gD.toString( 16 ), 2 );
+	var bH = pad( bD.toString( 16 ), 2 );
+
+	var realHex = pad( rC, 2 ) + pad(gC,2) + pad(bC,2);
+	var adjustedHex = rH + gH + bH;
+
+	return {
+		real: realHex,
+		adjusted: adjustedHex
+	}
+
+}
+
+function hex2rgb ( hex ) {
+	return {
+		r: parseInt( hex.substr( 0, 2 ), 16 ),
+		g: parseInt( hex.substr( 2, 2 ), 16 ),
+		b: parseInt( hex.substr( 4, 2 ), 16 )
+	}
+}
+
+}());	</script>
+</body>
+</html>

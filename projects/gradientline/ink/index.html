@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta property="og:image" content="http://brookjordan.uk/projects/gradientline/og-image.jpg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>Gradient lines</title>
+  <link rel="icon" type="image/jpeg" href="favicon.jpg" />
+  <link rel="stylesheet" href="./styles/resets.css">
+  <link rel="stylesheet" href="./styles/main.css">
+</head>
+<body>
+  <div class="app">
+    <div class="color-menu">
+      <div class="color-tools">
+        <input id="switchcolorselt" type="button" value="Switch colors">
+        <input id="addcolorelt" type="button" value="Add color">
+        <input id="removecolorelt" type="button" value="Remove color">
+      </div>
+
+      <div class="colors"></div>
+    </div>
+
+    <div class="canvas">
+      <canvas id="canvaselt"></canvas>
+      <canvas id="newlineelt"></canvas>
+    </div>
+
+    <div class="background">
+      <input id="pensizeelt" type="range" value="6" min="0.1" max='20' step="0.1">
+      <input id="backgroundcolorelt" value="#ffffff" type="color" class="jscolor">
+    </div>
+
+    <div class="buttons">
+      <input type="button" value="Clear canvas" id="clearcanvaselt">
+      <input type="button" value="Download image" id="downloadimageelt">
+      <input type="button" value="Undo" id="undoelt">
+      <input type="button" value="Redo" id="redoelt">
+    </div>
+  </div>
+
+  <script type="module" src="./scripts/entry.js"></script>
+  <script nomodule src="./scripts/_bundle.0.2.0.js"></script>
+</body>
+</html>

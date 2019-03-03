@@ -1,0 +1,143 @@
+var defaultGirls = [
+  "Kezia",
+  "Ellie",
+  "Millie",
+  "Emily",
+  "Holly",
+  "Mollie",
+  "Stacey",
+  "$person's gran",
+  "$person's neice",
+  "$person's girlfriend"
+];
+
+var defaultBoys = [
+  "Brook",
+  "Major",
+  "Tom",
+  "Tyler",
+  "Dom",
+  "Lewis",
+  "Brendan",
+  "Santa",
+  "$person's grandpa",
+  "$person's boyfriend"
+];
+
+var defaultPrefixes = [
+  " unfortunately",
+  " likely",
+  " once",
+  " briefly",
+  " notably",
+  " accidentally",
+  " ACTUally",
+  " seriously, no joke, just",
+  " suddenly",
+  " actually",
+  " literally",
+  ", like,",
+  " really",
+  " just",
+  " drunkenly",
+  " TOTALLY",
+  " painfully"
+];
+
+var defaultObjects = [
+  "$they, $themself,",
+  "$their lightsabre",
+  "'you'",
+  "nothing",
+  "$their dad",
+  "$person's mum",
+  "$adj man",
+  "$adj woman",
+  "that... that <em>thing</em>",
+  "some poop",
+  "an air guitar",
+  "some fat",
+  "$their dog",
+  "a pen",
+  "$adj goblin",
+  "$adj penguin",
+  "$adj monkey",
+  "$their tongue",
+  "a napkin",
+  "$their face",
+  "$adj octopus",
+  "Cthulu",
+  "EVERYthing"
+];
+
+var defaultPlaces = [
+  "at the big game",
+  "down the stairs",
+  "in a coffin",
+  "over the moon",
+  "for $subject",
+  "in place",
+  "instead of $person",
+  "in the bathroom",
+  "followed by $object",
+  "on top of $subject",
+  "with $subject on top",
+  "with $subject",
+  "right behind $subject",
+  "in front of $subject",
+  "in the highest tower",
+  "in $their parents' room",
+  "without knowing",
+  "between the sofa cushions",
+  "in $person's dreams",
+  "around the world",
+  "nowhere",
+  "all alone",
+  "in the basement",
+  "down at the department store",
+  "in the supermarket",
+  "down at bargain basement",
+  "during a game of paintball",
+  "at $person's wedding"
+];
+
+var defaultAdjectives = [
+  "a fat",
+  "a crazy",
+  "a strong",
+  "a little",
+  "a ginormous",
+  "a ridiculous",
+  "an orange",
+  "a funny-looking",
+  "an awesome",
+  "a sly",
+  "an old",
+  "a kindly",
+  "a bright",
+  "a young",
+  "a cute",
+  "a sinister",
+  "a GIANT",
+  "an itsy bitsy, teeny weeny",
+  "a tremendously intelligent"
+];
+
+var defaultEndings = [
+  ", right?",
+  ", like I said.",
+  ", just like yo' momma!",
+  " again!",
+  "- without flinching!",
+  " as if it $was normal.",
+  "... kinda.",
+  " but later regretted it.",
+  " and wouldn't stop dancing.",
+  " then died.",
+  " for you.",
+  " for $subject.",
+  ", resulting in the early demise of $subject.",
+  " and didn't even realise it.",
+  ". Then $person copied $them.",
+  "… but nobody will believe me."
+];

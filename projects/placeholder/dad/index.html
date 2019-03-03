@@ -1,0 +1,379 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Placeholder text builder</title>
+    <style>
+      body.only,
+      html {
+        height:100%;
+        width:100%;
+      }
+
+      a,
+      body.only {
+        display:block;
+      }
+
+      a,
+      html {
+        background:#fff;
+      }
+
+      body,
+      html {
+        margin:0;
+        font-family:"Open Sans","Helvetica Neue",Helvetica,sans-serif;
+      }
+
+      body {
+        display:flex;
+        flex-flow:row wrap;
+        justify-content:space-around;
+        padding-bottom:500px;
+        padding-top:60px;
+        background: #eee;
+      }
+
+      body.only {
+        padding:0
+      }
+
+      a {
+        max-width:250px;
+        margin:-50px 0 0;
+        color:#2d3033;
+        text-decoration:none;
+
+        padding:10px 20px 60px;
+        border: 1px solid #ddd;
+        font-size: 26px;
+        background: white;
+      }
+
+      .only a {
+        position:relative;
+        top:50%;
+        padding:20px 40px;
+        margin:0 auto;
+        transform:translateY(-50%);
+      }
+    </style>
+  </head>
+  <body>
+    <script src="words--1.2.0.js"></script>
+    <script src="verbs--1.2.0.js"></script>
+    <script>
+    'use strict';
+
+    var getString;
+    var params = location.search.slice(1).split('=');
+    var begin = function() {};
+
+    if (params[0] === '_') {
+      document.body.className = 'only';
+      buildWord(atob(params[1]), false);
+    } else {
+      begin = _begin;
+    }
+
+    begin({
+      girls:      defaultGirls,
+      boys:       defaultBoys,
+      prefixes:   defaultPrefixes,
+      verbs:      defaultVerbs,
+      objects:    defaultObjects,
+      places:     defaultPlaces,
+      adjectives: defaultAdjectives,
+      endings:    defaultEndings,
+    });
+
+    function _begin(words) {
+      getString = randomString(words);
+      checkForBuild();
+      window.onscroll = window.ontouchmove = checkForBuild;
+    }
+
+    function checkForBuild() {
+      if (window.scrollY + innerHeight + 600 >= document.body.getBoundingClientRect().height) {
+        buildWords();
+      }
+    }
+
+    function buildWords() {
+      setTimeout(function() {
+        buildWord(getString(), true);
+        checkForBuild();
+      }, 0);
+    }
+
+    function buildWord(str, active) {
+      if (!!active) {
+        try {
+          document.body.innerHTML += '<a ' + makeStyle(str) + ' href="?_=' + btoa(str) + '" target="_blank">' + str + '</a>';
+        } catch(e) {
+          document.body.innerHTML += '<a ' + makeStyle(str) + '>' + str + '</a>';
+        }
+      } else {
+        document.body.innerHTML += '<a href="?" target="_self">' + str + '</a>';
+        document.title = str;
+      }
+    }
+
+    function makeStyle(str) {
+      return 'style="font-size:' + len(str.length) + 'px"';
+    }
+
+    function len(x) {
+      var min = 14;
+      var max = 26;
+    return max - Math.max(0, Math.min((max - min), 15 - 1000 / x))
+  }
+
+    function randomString(options) {
+      var o = options || {};
+      return function() {
+        //var timeLabel = 'timer__' + +new Date();
+        //console.time(timeLabel);
+
+        var girls      = o.girls ? o.girls.slice(0) : 'Mary | Sue'.split(' | ');
+        var boys       = o.boys ? o.boys.slice(0) : 'Fred | Dave'.split(' | ');
+        var prefixes   = o.prefixes ? o.prefixes.slice(0) : 'gladly | slowly'.split(' | ');
+        var verbs      = o.verbs ? o.verbs.slice(0) : 'likes $anObject | $was happy'.split(' | ');
+        var objects    = o.objects ? o.objects.slice(0) : '$themself | $adj apple | some grass | the chair | water'.split(' | ');
+        var places     = o.places ? o.places.slice(0) : 'in the park | with $their friends'.split(' | ');
+        var adjectives = o.adjectives ? o.adjectives.slice(0) : 'a small | an enormous'.split(' | ');
+        var endings    = o.endings ? o.endings.slice(0) : 'yesterday. | with high spirits!'.split(' | ');
+        var genders = {
+          male: {
+            they: 'he',
+            their: 'his',
+            them: 'him',
+            themself: 'himself',
+            was: 'was'
+          },
+          female: {
+            they: 'she',
+            their: 'her',
+            them: 'her',
+            themself: 'herself',
+            was: 'was'
+          },
+          plural: {
+            they: 'they',
+            their: 'their',
+            them: 'them',
+            themself: 'themselves',
+            was: 'were'
+          }
+        };
+        var subjects = undefined;
+        var gender = Math.ceil(Math.random() * (girls.length + boys.length));
+        if (gender < girls.length) {
+          gender = 'female';
+          subjects = girls;
+        } else {
+          gender = 'male';
+          subjects = boys;
+        };
+        var peopleConnectors = [
+          ' and',
+          ', then'
+        ];
+        var phraseConnectors = undefined;
+        var phrase = '';
+        addPeople();
+        buildPhraseConnectors();
+        addVerbObject();
+        addEnding();
+
+        //console.timeEnd(timeLabel);
+
+        return cleanPhrase(phrase);
+
+
+        function addPeople() {
+          var person;
+          if (gender === 'male') {
+            person = randomBoy();
+            subjects = girls.concat(boys);
+            phrase += fillPlaceholders(person);
+          } else if (gender === 'female') {
+            person = randomGirl();
+            subjects = boys.concat(girls);
+            phrase += fillPlaceholders(person);
+          } else {
+            phrase += fillPlaceholders(randomPerson());
+          }
+
+
+          subjects = subjects.concat(girls);
+          subjects = subjects.concat(boys);
+
+          if (subjects.length && Math.random() > 0.92) {
+            phrase += itemFrom(peopleConnectors, true) + ' ';
+            gender = 'plural';
+            addPeople();
+          }
+        }
+
+        function addVerbObject() {
+          if (!verbs.length || !subjects.length || !objects.length) { return };
+          if (prefixes.length && Math.random() > 0.9) {
+            phrase += itemFrom(prefixes, false) + ' ';
+          }
+          phrase += randomVerb();
+          if (verbs.length && subjects.length && objects.length && Math.random() > 0.8) {
+            phrase += itemFrom(phraseConnectors, true);
+            addVerbObject();
+          }
+        }
+
+        function addEnding() {
+          var chance = _chance(20);
+          if (Math.random() > 0.8) {
+            phrase += randomEnding();
+          } else {
+            var rnd = Math.random() * chance;
+            phrase += chance(10) ? '.' : chance(4) ? '!' : chance(4) ? '?' : chance(1) ? '...' : '?!?';
+          }
+        }
+
+        function _chance(index) {
+          var rnd = Math.random() * index;
+          var upto = 0;
+          return function(val) {
+            upto += val;
+            if (upto >= rnd) {
+              return true;
+            }
+            return false;
+          };
+        }
+
+        function itemFrom(array, safe) {
+          if (!!safe) {
+            return array[Math.floor(Math.random() * array.length)];
+          }
+          return array.splice(Math.floor(Math.random() * array.length), 1)[0];
+        }
+
+        function randomAdjective() {
+          return genderise(itemFrom(adjectives, true));
+        }
+
+        function randomEnding() {
+          return fillPlaceholders(genderise(itemFrom(endings, true)));
+        }
+
+        function randomVerb() {
+          var verb = itemFrom(verbs, false);
+          if (places.length && Math.random() > 0.9 && !/\$place/.test(verb)) {
+            if (!/\$place/.test(verb)) {
+              phrase += randomPlace();
+            }
+          }
+          return subjectise( prefixise( genderise(fillPlaceholders(verb)) ) );
+        }
+
+        function randomObject() {
+          var anObject = itemFrom(objects, false);
+          anObject = anObject.replace(/.+? /, '');
+          return fillPlaceholders(genderise(anObject));
+        }
+
+        function randomAnObject() {
+          return fillPlaceholders(genderise(itemFrom(objects, false)));
+        }
+
+        function randomGirl() {
+          var girl = itemFrom(girls, false);
+          subjects.splice(subjects.indexOf(girl), 1);
+          return fillPlaceholders(girl);
+        }
+
+        function randomBoy() {
+          var boy = itemFrom(boys, false);
+          subjects.splice(subjects.indexOf(boy), 1);
+          return fillPlaceholders(boy);
+        }
+
+        function randomPerson() {
+          var person = itemFrom(boys.concat(girls), false);
+          boys.splice(boys.indexOf(person), 1);
+          girls.splice(girls.indexOf(person), 1);
+          return fillPlaceholders(person);
+        }
+
+        function randomPlace() {
+          return fillPlaceholders(genderise(itemFrom(places, false)));
+        }
+
+        function randomSubject() {
+          var chance = _chance(2);
+          return chance(1) ? randomPerson() : randomAnObject();
+        }
+
+        function genderise(string) {
+          return string.replace('$themself', genders[gender].themself)
+                       .replace('$them', genders[gender].them)
+                       .replace('$their', genders[gender].their)
+                       .replace('$they', genders[gender].they)
+                       .replace('$was', genders[gender].was);
+        }
+
+        function prefixise(string) {
+          return string.replace('$prefix', itemFrom(prefixes, false));
+        }
+
+        function subjectise(string) {
+          return string.replace('$subject', randomSubject());
+        }
+
+
+
+        function fillPlaceholders(string) {
+          string = fillPlaceholder(string, '$subject', randomSubject);
+          string = fillPlaceholder(string, '$girl', randomGirl);
+          string = fillPlaceholder(string, '$boy', randomBoy);
+          string = fillPlaceholder(string, '$person', randomPerson);
+          string = fillPlaceholder(string, '$object', randomObject);
+          string = fillPlaceholder(string, '$anObject', randomAnObject);
+          string = fillPlaceholder(string, '$adj', randomAdjective);
+          string = fillPlaceholder(string, '$verb', randomVerb);
+          string = fillPlaceholder(string, '$place', randomPlace);
+          return string;
+        }
+
+        function fillPlaceholder(string, placeholder, randomPhrase) {
+          while (string.indexOf(placeholder) > -1) {
+            string = string.replace(placeholder, randomPhrase());
+            fillPlaceholder(string, placeholder, randomPhrase);
+          }
+          return string;
+        }
+
+        function buildPhraseConnectors() {
+          phraseConnectors = [
+            ' and',
+            ' then',
+            genderise(' as $they'),
+            genderise(' before $they'),
+            genderise(' when $they'),
+            genderise(' after $they'),
+            genderise(' because $they'),
+            genderise(' but then $they')
+          ];
+        }
+
+        function cleanPhrase(phrase) {
+          return phrase
+            .replace(/,{2}/, ',');
+        }
+      };
+    }
+    </script>
+  </body>
+</html>

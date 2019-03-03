@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Lil wayne</title>
+
+  <style>
+  body,html{margin:0;height:100%;width:100%;text-align:center;}
+  video{position:fixed;top:0;left:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity 5s ease-in-out;}
+  </style>
+</head>
+<body>
+  <h1>Loading… or broken.<br>Probably broken.</h1>
+  <video src="lilwayne.mp4" autoplay loop playsinline></video>
+  <script>
+      function noteFrequency(offset) {
+        // A4 has a defined, integer frequency. Let's use this as the base for calculations
+        const A4Frequency = 440;
+        // Allows:
+        //   - multiple flats and sharps in any order
+        //   - usage of '♭' or lowercase 'B' as flat
+        const noteRegExp         = /^([a-g])([♭b#]*)(-?\d+)?$/;
+        const semitoneMultiplier = 2 ** (1/12);
+        const scaleNoteCount     = 12;
+        // Pre calculate offsets of each note from A
+        // Octaves start at C so notes after B are negative
+        const noteOffsets = {
+          a:  0,
+          b:  2,
+          c: -9,
+          d: -7,
+          e: -5,
+          f: -4,
+          g: -2,
+        };
+        // Allow null or undefined to default to a 0 offset
+        offset = offset || 0;
+
+        // If a number is provided, use it directly as the offset
+        if (!isNaN(+offset)) {
+          // Decimals don't make sense, so we'll throw
+          if (+offset % 1) {
+            throw formattingError();
+          }
+        }
+
+        // Otherwise we'll try to calculate it from the string
+        else if (typeof offset === 'string') {
+          // Let's strip white spaces and lowercase everything so we know what we're dealing with
+          let offsetString = offset.replace(/\s+/g, '').toLowerCase();
+          if (!noteRegExp.test(offsetString)) {
+            throw formattingError();
+          }
+
+          // Pull the relevant information out of the RegExp
+          let [, note, sharpsAndFlats, octave = 4] = noteRegExp.exec(offsetString);
+          let sharpCount = (sharpsAndFlats.match(/#/g)    || []).length;
+          let flatCount  = (sharpsAndFlats.match(/[♭b]/g) || []).length;
+          let noteOffset = (sharpCount - flatCount + scaleNoteCount) % scaleNoteCount;
+
+          offset = ((noteOffsets[note] + noteOffset) % scaleNoteCount) + ((octave - 4) * scaleNoteCount);
+        }
+
+        // Non strings / number / undefined / null will throw an error
+        else {
+          throw formattingError();
+        }
+
+        return +(A4Frequency * semitoneMultiplier ** offset).toFixed(10);
+
+        function formattingError() {
+          return new Error(`${ offset } is not a valid note.
+            Please provide either:
+              - null or undefined to get the frequency of A4
+              - an integer number representing a semi-tone offset from A4
+              - a string depicting a note in the form '${ noteRegExp }'
+            That is:
+              The note letter[, flats and sharps][, the octave number]
+            If not stated otherwise:
+              - No sharps or flats are included
+              - The octave defaults to 4`.replace(/\n {6}/g, '\n'));
+        }
+      }
+
+      // code adapted from:
+      //   https://dev.opera.com/articles/drum-sounds-webaudio/
+      class Kick {
+        constructor(context) {
+          this.context = context;
+        }
+
+        setup() {
+          this.osc = this.context.createOscillator();
+          this.gain = this.context.createGain();
+          this.osc.connect(this.gain);
+          this.gain.connect(this.context.destination)
+        }
+
+        trigger(time) {
+          this.setup();
+
+          this.osc.frequency.setValueAtTime(150, time);
+          this.gain.gain.setValueAtTime(1, time);
+
+          this.osc.frequency.exponentialRampToValueAtTime(0.01, time + 0.5);
+          this.gain.gain.exponentialRampToValueAtTime(0.01, time + 0.5);
+
+          this.osc.start(time);
+
+          this.osc.stop(time + 0.5);
+        }
+      }
+
+      class Snare {
+        constructor (context) {
+          this.context = context;
+        }
+
+        noiseBuffer() {
+          var bufferSize = this.context.sampleRate;
+          var buffer = this.context.createBuffer(1, bufferSize, this.context.sampleRate);
+          var output = buffer.getChannelData(0);
+
+          for (var i = 0; i < bufferSize; i++) {
+            output[i] = Math.random() * 2 - 1;
+          }
+
+          return buffer;
+        }
+
+        setup() {
+          this.noise = this.context.createBufferSource();
+          this.noise.buffer = this.noiseBuffer();
+          var noiseFilter = this.context.createBiquadFilter();
+          noiseFilter.type = 'highpass';
+          noiseFilter.frequency.setValueAtTime(1000, 0);
+          this.noise.connect(noiseFilter);
+          this.noiseEnvelope = this.context.createGain();
+          noiseFilter.connect(this.noiseEnvelope);
+
+          this.noiseEnvelope.connect(this.context.destination);
+          this.osc = this.context.createOscillator();
+          this.osc.type = 'triangle';
+
+          this.oscEnvelope = this.context.createGain();
+          this.osc.connect(this.oscEnvelope);
+          this.oscEnvelope.connect(this.context.destination);
+        }
+
+        trigger(time) {
+          this.setup();
+
+          this.noiseEnvelope.gain.setValueAtTime(1, time);
+          this.noiseEnvelope.gain.exponentialRampToValueAtTime(0.01, time + 0.2);
+          this.noise.start(time)
+
+          this.osc.frequency.setValueAtTime(100, time);
+          this.oscEnvelope.gain.setValueAtTime(0, time);
+          this.oscEnvelope.gain.exponentialRampToValueAtTime(0.01, time + 0.1);
+          this.osc.start(time)
+
+          this.osc.stop(time + 0.2);
+          this.noise.stop(time + 0.2);
+        }
+      };
+
+      var
+        context = new(window.AudioContext || window.webkitAudioContext),
+        kick,
+        snare,
+        osc1,
+        osc2,
+        volume1,
+        volume2;
+
+      function beep(duration, note) {
+        volume1 = context.createGain();
+        volume1.connect(context.destination);
+        volume1.gain.setTargetAtTime(-0.97, 0, 0);
+        osc1.frequency.setValueAtTime(noteFrequency(note), 0);
+        osc1.connect(volume1);
+        osc1.connect(context.destination);
+        osc1.start();
+
+        volume2 = context.createGain();
+        volume2.connect(context.destination);
+        volume2.gain.setTargetAtTime(-0.9, 0, 0);
+        osc2.frequency.setValueAtTime(noteFrequency(note) + 7, 0);
+        osc2.type = 'square';
+        osc2.connect(volume2);
+        osc2.connect(context.destination);
+        osc2.start();
+      };
+
+      function note(at, note, dur) {
+        volume1.gain.setValueAtTime(-0.97, at);
+        volume2.gain.setValueAtTime(-0.9, at);
+        if (Math.random() > 0.8) {
+          osc1.frequency.setTargetAtTime(noteFrequency(note), at, dur / 2);
+          osc2.frequency.setTargetAtTime(noteFrequency(note) + 7, at + Math.random() * 0.1, dur / 2);
+        } else {
+          osc1.frequency.setValueAtTime(noteFrequency(note), at);
+          osc2.frequency.setValueAtTime(noteFrequency(note) + 7, at + Math.random() * 0.1);
+        }
+      }
+
+      function mute(at) {
+        volume1.gain.setValueAtTime(-1, at, 0.01);
+        volume2.gain.setValueAtTime(-1, at, 0.01);
+      }
+
+      var isIOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
+      let notes = [
+        'c',
+        'c',
+        'd',
+        'd',
+        'e',
+        'f',
+        'f',
+        'g',
+        'g',
+        'a',
+        'a',
+        'b',
+      ];
+      let pentatonic = [
+        0,
+        3,
+        5,
+        7,
+        10,
+      ];
+      let scaleToUse = pentatonic;
+      let scale = [
+        ...scaleToUse.map(note => note - 12),
+        ...scaleToUse,
+      ];
+      let j = Math.floor(scale.length / 2);
+      let maxJump = 1.5;
+      let _mj = maxJump * 2 - 0.1;
+      let speed = 120 * 3;
+      let _s = 60 / speed;
+      let maxHold = 3;
+      let timePassed = 0;
+      let i = 1000;
+      let tune = [];
+
+      window.addEventListener('touchstart', doUnlock, false);
+      window.addEventListener('mousedown', doUnlock, false);
+
+      function doUnlock() {
+        document.querySelector('video').style.opacity = 1;
+        document.querySelector('video').play();
+        unlock(init);
+      }
+
+      function init() {
+        kick = new Kick(context);
+        snare = new Snare(context);
+        osc1 = context.createOscillator();
+        osc2 = context.createOscillator();
+
+        beep();
+
+        while (i) {
+          i -= 1;
+          let dur = _s * Math.floor(Math.random() * maxHold + 1);
+          timePassed += dur;
+          if (Math.random() < 0.07) {
+            mute(timePassed);
+          } else {
+            let offset = Math.random() * _mj - _mj / 2;
+            if (j === 0) {
+              offset = Math.abs(offset);
+            } else if (j === scale.length - 1) {
+              offset = -Math.abs(offset);
+            }
+            j += offset > 0 ? Math.ceil(offset) : Math.floor(offset);
+            j = Math.min(scale.length - 1, Math.max(0, j));
+            note(timePassed, scale[j], dur);
+          }
+          tune.push(`${ notes[(scale[j] + 48) % notes.length] }: ${ dur.toFixed(3) }s`);
+        }
+
+        let k = 0;
+        while (timePassed > 0) {
+          k += 1;
+          if (k % 2 === 0) {
+            snare.trigger(timePassed);
+          }
+          kick.trigger(timePassed);
+          timePassed -= _s * 4;
+        }
+
+        document.body.removeChild(document.querySelector('h1'));
+      }
+
+      var isUnlocked = false;
+      function unlock(callback) {
+
+        if(!isIOS || this.unlocked) {
+          callback();
+          return;
+        }
+
+        // create empty buffer and play it
+        var buffer = context.createBuffer(1, 1, 22050);
+        var source = context.createBufferSource();
+        source.buffer = buffer;
+        source.connect(context.destination);
+        source.start();
+
+        // by checking the play state after some time, we know if we're really unlocked
+        setTimeout(function() {
+          if((source.playbackState === source.PLAYING_STATE || source.playbackState === source.FINISHED_STATE)) {
+          window.removeEventListener('touchstart', doUnlock, false);
+          window.removeEventListener('mousedown', doUnlock, false);
+            callback();
+          }
+        }, 0);
+      }
+
+      document.querySelector('h1').innerHTML = '<h1>Click to play</h1>';
+    </script>
+</body>
+</html>

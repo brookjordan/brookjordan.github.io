@@ -1,0 +1,911 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>TG Swatches</title>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300|Raleway:100' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet prefetch" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+    }
+
+    body {
+      padding-top: 70px;
+      padding-bottom: 90vh;
+      transition: background-color .5s;
+      will-change: background-color;
+    }
+
+    .colors {
+      display: flex;
+      flex-flow: row wrap;
+      justify-content: center;
+      margin: 0;
+    }
+
+    [data-clipboard-text="null"] {
+      pointer-events: none;
+    }
+
+    h3 {
+      text-transform: lowercase;
+    }
+
+    h3 span {
+      display: inline-block;
+      line-height: 1.4;
+    }
+
+    h1, h2, h3, h4, h5, h6, p {
+      margin: 0;
+    }
+
+    .compare {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 50;
+      width: 100%;
+      background: #fff;
+      transition: background-color .5s;
+      will-change: background-color;
+    }
+
+    .compare__input {
+      display: block;
+      width: 100%;
+      height: 70px;
+      line-height: 70px;
+      padding: 0;
+      border: 0;
+      margin: 0;
+      text-indent: 0.5em;
+      background: rgba(255, 255, 255, 0);
+      outline: 0;
+      text-align: center;
+      font-family: "Raleway", "Open Sans", sans-serif;
+      font-weight: 100;
+      transition: color .5s, height .5s, line-height .5s;
+      will-change: color, height, line-height;
+    }
+
+    color {
+      display: block;
+      flex: 150px 1 0;
+      order: 999998;
+      margin: -0.5px;
+      transition:
+        transform 0.3s;
+      will-change: border-radius, z-index, box-shadow;
+      box-shadow: 0 0 rgba(0,0,0,1);
+      z-index: 1;
+      border-radius: 0%;
+      contain: content;
+    }
+
+    color:hover {
+      border-radius: 15px;
+      z-index: 100;
+      transform: scale(1.05);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    .theme--dark {
+      color: white;
+    }
+
+    .constrain {
+      max-width: 140px;
+      margin: 0 auto;
+    }
+
+    .sizer {
+      position: relative;
+      z-index: 0;
+      padding-bottom: 1em;
+    }
+
+    .wrapper {
+      position: relative;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      padding: 0 5%;
+    }
+
+    .compare__input,
+    h3 {
+      font-family: "Raleway", "Open Sans", sans-serif;
+      font-weight: 100;
+      font-size: 20px;
+      line-height: 1.8;
+      text-align: center;
+      opacity: 0.6;
+      cursor: pointer;
+    }
+
+    p {
+      font-family: "Open Sans", sans-serif;
+      font-weight: 300;
+      font-size: 13px;
+      line-height: 1;
+      padding: 2% 0;
+      opacity: 0.8;
+      cursor: pointer;
+    }
+    p::after {
+      content: '';
+      display: table;
+      clear: both;
+    }
+    p span {
+      float: right;
+    }
+
+    .modal {
+      position: fixed;
+      top: 10px;
+      left: 10%;
+      z-index: 200;
+      max-width: 80%;
+      padding: 2% 5%;
+      background: white;
+      opacity: 0;
+      pointer-events: none;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      font-family: "raleway" "open sans" sans-serif;
+      font-size: 12px;
+      transition: opacity 2s;
+      transition-delay: 1s;
+      will-change: opacity;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+      border-radius: 4px;
+      text-transform: none;
+    }
+    .modal.show {
+      opacity: 0.8;
+      transition: opacity .2s;
+      will-change: opacity;
+    }
+    .modal.error {
+      background-color: #f6574d;
+      text-transform: lowercase;
+    }
+
+    small {
+      order: 999999;
+    }
+
+    @media (max-width: 149px) {
+      color {
+        flex: 50px 1 0;
+      }
+
+      h3 {
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      p {
+        display: none;
+      }
+
+      .wrapper {
+        padding: 0;
+      }
+
+      body {
+        padding-top: 50px;
+      }
+
+      .compare__input {
+        height: 50px;
+        line-height: 50px;
+      }
+
+      .modal {
+        display: none;
+      }
+    }
+    @media (min-width: 260px) {
+      color {
+        flex: 200px 1 0;
+      }
+
+      .constrain {
+        max-width: 260px;
+      }
+
+      .wrapper {
+        padding: 10px 0;
+      }
+
+      .compare__input,
+      h3 {
+        font-size: 40px;
+        line-height: 2;
+      }
+
+      p {
+        font-size: 15px;
+        padding: 2% 0;
+      }
+
+      h3,
+      p {
+        padding-left: 20px;
+        padding-right: 20px;
+        transition:
+          transform 0.2s;
+        will-change: transform;
+        border-radius: 20px;
+      }
+
+      p:hover,
+      h3:hover {
+        transform: scale(1.1);
+        background-color: rgb(128,128,128);
+      }
+
+      .modal {
+        font-size: 20px;
+      }
+
+      body {
+        padding-top: 100px;
+      }
+
+      .compare__input {
+        height: 100px;
+        line-height: 100px;
+      }
+    }
+    @media (min-width: 2000px) {
+      color {
+        flex: 300px 1 0;
+      }
+
+      .constrain {
+        max-width: 300px;
+      }
+
+      .wrapper {
+        padding: 15px 30px;
+      }
+
+      .compare__input,
+      h3 {
+        font-size: 50px;
+        line-height: 2;
+      }
+
+      p {
+        font-size: 18px;
+      }
+
+      .modal {
+        font-size: 40px;
+      }
+
+      body {
+        padding-top: 150px;
+      }
+
+      .compare__input {
+        height: 150px;
+        line-height: 150px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="colors">
+    <div class="compare">
+      <input class="compare__input" type="text" placeholder="test" />
+    </div>
+
+    <color name="Moko" hex="70cf32"></color>
+    <color name="Storm" hex="6c7279"></color>
+    <color name="Slate" hex="2d3033"></color>
+
+    <color name="White" hex="ffffff"></color>
+    <color name="Gray 1" hex="f4f4f5"></color>
+    <color name="Gray 2" hex="e2e6e8"></color>
+    <color name="Gray 3" hex="c4ced1"></color>
+    <color name="Gray 4" hex="a4aeb3"></color>
+    <color name="Gray 5" hex="889096"></color>
+    <color name="Gray 6" hex="6c7279"></color>
+    <color name="Gray 7" hex="585d64"></color>
+    <color name="Gray 8" hex="393c40"></color>
+    <color name="Gray 9" hex="2d3033"></color>
+    <color name="Gray 10" hex="242629"></color>
+    <color name="Black" hex="000000"></color>
+
+    <color name="Gray 1" hex="f4f6fa"></color>
+    <color name="Gray 2" hex="e5e9f1"></color>
+    <color name="Gray 3" hex="d2d9e8"></color>
+    <color name="Gray 4" hex="c1c9de"></color>
+    <color name="Gray 5" hex="9faac6"></color>
+    <color name="Gray 6" hex="606a84"></color>
+    <color name="Gray 7" hex="434b5f"></color>
+    <color name="Gray 8" hex="393d45"></color>
+    <color name="Gray 9" hex="2d3033"></color>
+
+    <color name="Moko light" hex="8ce437"></color>
+    <color name="Moko" hex="70cf32"></color>
+    <color name="Moko dark" hex="63bf1b"></color>
+
+    <color name="Oops light" hex="ffd580"></color>
+    <color name="Oops" hex="ffc95b"></color>
+    <color name="Oops dark" hex="f6bb42"></color>
+
+    <color name="Mayhem light" hex="e13d33"></color>
+    <color name="Mayhem" hex="c61c1c"></color>
+    <color name="Mayhem dark" hex="af0000"></color>
+
+    <color name="Dragonfruit light" hex="f4399a"></color>
+    <color name="Dragonfruit" hex="db2182"></color>
+    <color name="Dragonfruit dark" hex="cc076d"></color>
+
+    <color name="Haze light" hex="bc72d4"></color>
+    <color name="Haze" hex="a058b8"></color>
+    <color name="Haze dark" hex="8939a4"></color>
+
+    <color name="Royal light" hex="757be4"></color>
+    <color name="Royal" hex="5960ce"></color>
+    <color name="Royal dark" hex="5055c0"></color>
+
+    <color name="Vhs light" hex="255d80"></color>
+    <color name="Vhs" hex="1c4561"></color>
+    <color name="Vhs dark" hex="113855"></color>
+
+    <color name="Ocean light" hex="6f9bff"></color>
+    <color name="Ocean" hex="4b82ff"></color>
+    <color name="Ocean dark" hex="3169e8"></color>
+
+    <color name="Sky light" hex="75ecf1"></color>
+    <color name="Sky" hex="5cdee3"></color>
+    <color name="Sky dark" hex="3dd2d7"></color>
+
+    <color name="Surf light" hex="4debc6"></color>
+    <color name="Surf" hex="30d4ad"></color>
+    <color name="Surf dark" hex="13c69b"></color>
+
+    <color name="Snot light" hex="cbf300"></color>
+    <color name="Snot" hex="b2e60c"></color>
+    <color name="Snot dark" hex="a2d500"></color>
+
+    <color name="Prosper light" hex="faee57"></color>
+    <color name="Prosper" hex="f4e200"></color>
+    <color name="Prosper dark" hex="f7d800"></color>
+
+    <color name="Watermelon light" hex="ff6f66"></color>
+    <color name="Watermelon" hex="f6574d"></color>
+    <color name="Watermelon dark" hex="e13d33"></color>
+
+    <color name="Elite light" hex="f0cd80"></color>
+    <color name="Elite" hex="e4b462"></color>
+    <color name="Elite dark" hex="cb9a47"></color>
+
+    <color name="Velvet light" hex="a82981"></color>
+    <color name="Velvet" hex="810f5e"></color>
+    <color name="Velvet dark" hex="620044"></color>
+
+    <color name="Peachy light" hex="ff7ea2"></color>
+    <color name="Peachy" hex="ff5f8b"></color>
+    <color name="Peachy dark" hex="f5376c"></color>
+
+    <color name="Cadbury light" hex="68399d"></color>
+    <color name="Cadbury" hex="421476"></color>
+    <color name="Cadbury dark" hex="330666"></color>
+
+    <color name="Reef light" hex="5ec4ff"></color>
+    <color name="Reef" hex="32b4ff"></color>
+    <color name="Reef dark" hex="1399e6"></color>
+
+    <color name="Mint light" hex="0b96a7"></color>
+    <color name="Mint" hex="00717f"></color>
+    <color name="Mint dark" hex="005863"></color>
+
+    <color name="Aloe light" hex="15bf7f"></color>
+    <color name="Aloe" hex="00a164"></color>
+    <color name="Aloe dark" hex="008654"></color>
+
+    <!--Backgrounds gradients-->
+    <color name="Wash" hex="ffffff,f4f4f5"></color>
+    <color name="Sign" hex="a058b8,5960ce"></color>
+    <color name="Show" hex="1b4868,2071a9"></color>
+    <color name="Discover" hex="56b8dd,2f68a3"></color>
+    <color name="Platform" hex="3b79cb,47b1ed"></color>
+
+    <!--Icon/button gradients-->
+    <color name="Zenith" hex="3c6ecd,69d5f5"></color>
+    <color name="Solstice" hex="f6497f,584cd1"></color>
+    <color name="Click" hex="6ccb34,32b76b"></color>
+    <color name="Grass" hex="e3e170,09b1c3"></color>
+    <color name="Wave" hex="00e691,70bcfc"></color>
+    <color name="Malibu" hex="585cd1,ff38d6"></color>
+    <color name="Rise" hex="f65b86,ffce6c"></color>
+    <color name="Set" hex="ffa750,ff4cbf"></color>
+    <color name="Flight" hex="fb97ca,4895e7"></color>
+    <color name="Wash" hex="ffffff,f4f4f5"></color>
+
+    <!--External companies gradients-->
+    <color name="Magento" hex="ed4a19"></color>
+    <color name="Woocommerce" hex="9b5c8f"></color>
+    <color name="Bigcommerce" hex="6bcbdd"></color>
+    <color name="Stripe" hex="0065c8"></color>
+    <color name="Amazon" hex="ff9900"></color>
+    <color name="Xero" hex="00b7e3"></color>
+    <color name="Quickbooks" hex="2ca01c"></color>
+    <color name="Shipstation" hex="92c43f"></color>
+    <color name="Shopify" hex="8cbf44"></color>
+    <color name="Zapier" hex="ff4a00"></color>
+
+    <color empty></color>
+    <color empty></color>
+    <color empty></color>
+    <color empty></color>
+    <color empty></color>
+    <color empty></color>
+    <color empty></color>
+    <color empty></color>
+    <color empty></color>
+    <color empty></color>
+  </div>
+  <small>*CMYK values, when provided, should be based on the <strong>sRGB IEC61966-2.1</strong> profile.</small>
+
+  <script>
+    let ColorConverter = {
+      toRGB,
+      toHSV,
+      toHSL,
+    };
+
+    let colourNames = 'white gray black'.split(' ');
+
+    let builtSwatchCount = 0;
+
+    let swapping = false;
+    let swappingElt   = false;
+    let swapWithElt   = false;
+
+    let compareContainer = document.querySelector('.compare');
+    let compareInput = document.querySelector('.compare__input');
+    let testElement = document.createElement('div');
+    testElement.style.position = 'absolute';
+    testElement.style.opacity = 0;
+    document.body.appendChild(testElement);
+
+    let copy_input_elt = document.createElement('input');
+    document.body.appendChild( copy_input_elt );
+    copy_input_elt.style.display = 'none';
+
+    let colourElts= [];
+
+
+    document.addEventListener('mouseup', swapSelectedSwatches, false);
+    document.addEventListener('mouseleave', swapSelectedSwatches, false);
+
+    buildModal();
+
+    Array.prototype.forEach.call(
+      document.querySelectorAll('color'),
+      buildSwatch
+    );
+
+    compareInput.addEventListener('keyup', updateCompare, false);
+
+
+    function swapSelectedSwatches () {
+      if (swapping && swapWithElt) {
+        swapSwatches(swappingElt, swapWithElt);
+      }
+      swapping = false;
+      swapWithElt = false;
+      swappingElt = false;
+    }
+
+    function swapSwatches (swapping, swapWith) {
+      let swappingOrder = swapping.style.order;
+      let swapWithOrder = swapWith.style.order;
+      swapping.style.order = swapWithOrder;
+      swapWith.style.order = swappingOrder;
+    }
+
+    function updateCompare (e) {
+      let val    = compareInput.value.split(',')[0].toUpperCase();
+      let hexxed = hexify(val);
+
+      //  If it's a valid hex value
+      let inputColor;
+      if (isHex(hexxed)) {
+        inputColor = toRGB(hexxed);
+        val = hexxed;
+      } else {
+        testElement.style.color = 'white';
+        inputColor = new RGB(
+          ...getComputedStyle(testElement).color
+            .match(/ *\d+ *, *\d+ *, *\d+ */)[0]
+            .split(',')
+        );
+        val = hexify(toHex(inputColor));
+      };
+
+      inputColor = toHSL(inputColor);
+      compareContainer.style.backgroundColor = document.body.style.backgroundColor = val;
+
+      if (inputColor.l < 45) {
+        compareInput.classList.add('theme--dark');
+      } else {
+        compareInput.classList.add('theme--remove');
+      }
+    }
+
+    function hexify(val) {
+      val = val.toUpperCase()
+      val = val && String(val).match(/[0-9A-Z]+/);
+      val = val ? val[0] : '';
+      if (val.length < 7) {
+        if (val.length === 6) {
+          return `#${val}`;
+        }
+        if (val.length === 3) {
+          return `#${val[0]}${val[0]}${val[1]}${val[1]}${val[2]}${val[2]}`;
+        }
+      }
+    }
+
+    function isHex(val) {
+      return /^#(([0-9A-F]{3})|([0-9A-F]{6}))$/i.test(val);
+    }
+
+    function buildModal () {
+      var modal = document.createElement('h1');
+
+      modal.className = 'modal';
+
+      document.body.appendChild( modal );
+    }
+
+    function displayModal (text) {
+      let modal = document.querySelector('.modal');
+
+      modal.innerText = 'Copied: ' + text;
+      modal.classList.add( 'show' );
+      setTimeout(function() {
+        modal.classList.remove( 'show' );
+      }, 200);
+
+      let items = text.split(',');
+      let item = items.length > 1 && items.indexOf(compareInput.value) > -1
+        ? items[(items.indexOf(compareInput.value) + 1) % items.length]
+        : items[0];
+
+      if (isHex(item)) {
+        compareInput.value = item;
+        updateCompare();
+      };
+    }
+
+    function buildSwatch ( elt ) {
+      builtSwatchCount += 1;
+      let empty   = elt.getAttribute( 'empty' );
+      if ( typeof empty === 'string' && empty !== 'false' ) { return; }
+
+      let name    = elt.getAttribute( 'name' );
+      let hex     = elt.getAttribute( 'hex' ).replace(/#/g, '').split(',');
+      let rgb     = hex.map(hh => ColorConverter.toRGB(hh));
+      let hsl     = rgb.map(rr => ColorConverter.toHSL(rr));
+      let cmyk    = elt.getAttribute( 'cmyk' );
+      let pantone = elt.getAttribute( 'pantone' );
+      let constrain_elt = document.createElement('div');
+      let sizer_elt     = document.createElement('div');
+      let wrapper_elt   = document.createElement('div');
+      constrain_elt.className = 'constrain';
+      sizer_elt.className     = 'sizer';
+      wrapper_elt.className   = 'wrapper';
+
+      let hex_elt        = document.createElement('h3');
+      let hexVal_elt     = document.createElement('span');
+      let name_elt       = document.createElement('p');
+      let rgb_elt        = document.createElement('p');
+      let rgbVal_elt     = document.createElement('span');
+      let cmyk_elt       = document.createElement('p');
+      let cmykVal_elt    = document.createElement('span');
+      let hsl_elt        = document.createElement('p');
+      let hslVal_elt     = document.createElement('span');
+      let pantone_elt    = document.createElement('p');
+      let pantoneVal_elt = document.createElement('span');
+
+
+      let hex_val     = hex;
+      let name_val    = name;
+      let rgb_val     = rgb.map(rr => rr.array().join(', '));
+      let hsl_val     = hsl.map(rr => rr.array().join(', '));
+      let cmyk_val    = cmyk;
+      let pantone_val = pantone;
+
+      if (hex_val.length === 1) {
+        elt.style.backgroundColor = '#' + hex_val[0];
+      } else {
+        elt.style.backgroundImage = 'linear-gradient(to bottom, #' + hex_val.join(',#');
+      }
+
+      elt.style.order = builtSwatchCount;
+      elt.addEventListener('mousedown', function() {
+        swapping = true;
+        swappingElt = elt;
+      }, false);
+      elt.addEventListener('mouseenter', function() {
+        if (swapping) {
+          swapWithElt = elt;
+        }
+      }, false);
+
+      if ( name_val !== null ) {
+        name_elt.innerHTML  = name_val;
+      }
+      hexVal_elt.innerHTML  = `#${ hex_val.join(', #') }`;
+      rgb_elt.innerHTML     = 'RGB: ';
+      rgbVal_elt.innerHTML  = rgb_val.join(' - ');
+      hsl_elt.innerHTML     = 'HSL: ';
+      hslVal_elt.innerHTML  = hsl_val.join(' - ');
+      if ( cmyk !== null ) {
+        cmyk_elt.innerHTML    = 'CMYK*: ';
+        cmykVal_elt.innerHTML = cmyk_val;
+      }
+      if ( pantone !== null ) {
+        pantone_elt.innerHTML    = 'Pantone: ';
+        pantoneVal_elt.innerHTML = pantone_val;
+      }
+
+      if ( (hsl.reduce((acc, curr) => acc + curr.l, 0) / hsl.length) < 45 ) {
+        elt.classList.add('theme--dark');
+      }
+
+      hex_elt.setAttribute(     'data-clipboard-text', '#' + hex_val.join(',#') );
+      name_elt.setAttribute(    'data-clipboard-text', colourName(name_val, hex_val, hex_val.length > 1));
+      rgb_elt.setAttribute(     'data-clipboard-text', 'rgb(' + rgb_val.join('),rgb(') + ')' );
+      hsl_elt.setAttribute(     'data-clipboard-text', 'hsl(' + hsl_val.join('),hsl(') + ')' );
+      cmyk_elt.setAttribute(    'data-clipboard-text', cmyk_val );
+      pantone_elt.setAttribute( 'data-clipboard-text', pantone_val );
+
+      hex_elt.className =
+      name_elt.className =
+      rgb_elt.className =
+      hsl_elt.className =
+      cmyk_elt.className =
+      pantone_elt.className = 'data';
+
+      constrain_elt.appendChild( sizer_elt );
+      sizer_elt.appendChild( wrapper_elt );
+      hex_elt.appendChild( hexVal_elt );
+      wrapper_elt.appendChild( hex_elt );
+      wrapper_elt.appendChild( name_elt );
+      rgb_elt.appendChild( rgbVal_elt );
+      wrapper_elt.appendChild( rgb_elt );
+      hsl_elt.appendChild( hslVal_elt );
+      wrapper_elt.appendChild( hsl_elt );
+      cmyk_elt.appendChild( cmykVal_elt );
+      wrapper_elt.appendChild( cmyk_elt );
+      pantone_elt.appendChild( pantoneVal_elt );
+      wrapper_elt.appendChild( pantone_elt );
+      elt.appendChild( constrain_elt );
+
+      elt.addEventListener('click', e => {
+        let target = e.target;
+        while (target !== document.body && !target.getAttribute('data-clipboard-text')) {
+          target = target.parentNode;
+        }
+
+        if (target === document.body) { return; }
+
+        let text = target.getAttribute('data-clipboard-text');
+        copy_input_elt.style.display = 'block';
+        try {
+          copy_input_elt.value = text;
+          copy_input_elt.select();
+          var worked = document.execCommand('copy');
+          if (!worked) { return new Error(); }
+          displayModal(text);
+        } catch (e) {
+          prompt('Press ctrl-c to copy', text);
+        }
+        copy_input_elt.style.display = 'none';
+      });
+
+      colourElts.push(elt);
+    }
+
+
+    function HSV(h, s, v) {
+      if (h <= 0) { h = 0; }
+      if (s <= 0) { s = 0; }
+      if (v <= 0) { v = 0; }
+
+      if (h > 360) { h = 360; }
+      if (s > 100) { s = 100; }
+      if (v > 100) { v = 100; }
+
+      this.h = h;
+      this.s = s;
+      this.v = v;
+      this.array = function() {
+        return [this.h, this.s, this.v]
+      }
+    }
+
+    function HSL(h, s, l) {
+      if (h <= 0) { h = 0; }
+      if (s <= 0) { s = 0; }
+      if (l <= 0) { l = 0; }
+
+      if (h > 360) { h = 360; }
+      if (s > 100) { s = 100; }
+      if (l > 100) { l = 100; }
+
+      this.h = h;
+      this.s = s;
+      this.l = l;
+      this.array = function() {
+        return [this.h, this.s, this.l]
+      }
+    }
+
+    function RGB(r, g, b) {
+      if (r <= 0) { r = 0; }
+      if (g <= 0) { g = 0; }
+      if (b <= 0) { b = 0; }
+
+      if (r > 255) { r = 255; }
+      if (g > 255) { g = 255; }
+      if (b > 255) { b = 255; }
+
+      this.r = +r;
+      this.g = +g;
+      this.b = +b;
+      this.array = function() {
+        return [this.r, this.g, this.b]
+      }
+    }
+
+    function CMYK(c, m, y, k) {
+      if (c <= 0) { c = 0; }
+      if (m <= 0) { m = 0; }
+      if (y <= 0) { y = 0; }
+      if (k <= 0) { k = 0; }
+
+      if (c > 100) { c = 100; }
+      if (m > 100) { m = 100; }
+      if (y > 100) { y = 100; }
+      if (k > 100) { k = 100; }
+
+      this.c = c;
+      this.m = m;
+      this.y = y;
+      this.k = k;
+      this.array = function() {
+        return [this.c, this.m, this.y, this.k ]
+      }
+    }
+
+    function colourName (clrName, clrHex, isGradient) {
+      let clr = clrName ?
+          clrName.trim().replace(/ /g, '-').toLowerCase() :
+          clrHex.trim().replace(/ /g, '-').toLowerCase();
+      for(let i = 0; i < colourNames.length; ++i) {
+        if (clr.indexOf(colourNames[i]) > -1) {
+          return `$${clr}`;
+        }
+      }
+
+      return `$${ isGradient ? 'lg' : 'c' }-${ clr }`;
+    }
+
+
+    function toRGB   (HEX) {
+      let result = new RGB(0, 0, 0);
+      let parts = HEX.match(/[0-9a-f]{2}/gi).length === 3 ?
+        HEX.match(/[0-9a-f]{2}/gi) :
+        HEX.match(/[0-9a-f]/gi);
+
+      parts.forEach(function(part, i) {
+        parts[i] = parseInt(part, 16);
+      });
+
+      result.r = parts[0];
+      result.g = parts[1];
+      result.b = parts[2];
+
+      return result;
+    }
+
+    function toHex (RGB) {
+      let R = (+RGB.r).toString(16);
+      let G = (+RGB.g).toString(16);
+      let B = (+RGB.b).toString(16);
+      return `${R.length === 1 ? '0' : ''}${R}${G.length === 1 ? '0' : ''}${G}${B.length === 1 ? '0' : ''}${B}`;
+    }
+
+    function toHSV   (RGB) {
+      let result = new HSV(0, 0, 0);
+
+      let r = RGB.r / 255;
+      let g = RGB.g / 255;
+      let b = RGB.b / 255;
+
+      let minVal = Math.min(r, g, b);
+      let maxVal = Math.max(r, g, b);
+      let delta = maxVal - minVal;
+
+      result.v = maxVal;
+
+      if (delta == 0) {
+        result.h = 0;
+        result.s = 0;
+      } else {
+        result.s = delta / maxVal;
+        let del_R = (((maxVal - r) / 6) + (delta / 2)) / delta;
+        let del_G = (((maxVal - g) / 6) + (delta / 2)) / delta;
+        let del_B = (((maxVal - b) / 6) + (delta / 2)) / delta;
+
+        if (r == maxVal) { result.h = del_B - del_G; }
+        else if (g == maxVal) { result.h = (1 / 3) + del_R - del_B; }
+        else if (b == maxVal) { result.h = (2 / 3) + del_G - del_R; }
+
+        if (result.h < 0) { result.h += 1; }
+        if (result.h > 1) { result.h -= 1; }
+      }
+
+      result.h = Math.round(result.h * 360);
+      result.s = Math.round(result.s * 100);
+      result.v = Math.round(result.v * 100);
+
+      return result;
+    }
+
+    function toHSL (RGB) {
+      let result = new HSL(0, 0, 0);
+
+      let r = RGB.r/255;
+      let g = RGB.g/255;
+      let b = RGB.b/255;
+
+      let max = Math.max(r, g, b);
+      let min = Math.min(r, g, b);
+      let h;
+      let s;
+      let l = (max + min) / 2;
+
+      if(max == min){
+        h = s = 0; // achromatic
+      }else{
+        var d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch(max){
+          case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+          case g: h = (b - r) / d + 2; break;
+          case b: h = (r - g) / d + 4; break;
+        }
+        h /= 6;
+      }
+
+      result.h = Math.round(h*360);
+      result.s = Math.round(s*100);
+      result.l = Math.round(l*100);
+
+      return result;
+    }
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,298 @@
+* {
+	box-sizing: border-box;
+}
+html, body {
+	margin: 0;
+	height: 100%;
+}
+button {
+	border: none;
+	background: none;
+	padding: 20px;
+	border-radius: 4px;
+	background: black;
+	color: white;
+	margin: 0;
+	outline: none;
+	cursor: pointer;
+
+	-webkit-transition: opacity .2s;
+	        transition: opacity .2s;
+}
+button.active {
+	cursor: default;
+	opacity: .2;
+}
+
+#clock {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-top: -87.5px;
+	margin-left: -500px;
+	width: 1000px;
+
+	-webkit-transform-style: preserve-3d;
+	        transform-style: preserve-3d;
+	-webkit-perspective: 1000px;
+	        perspective: 1000px;
+}
+
+.digit {
+	float: left;
+	width: 105px;
+	margin: 0 10px;
+
+	-webkit-transform-style: preserve-3d;
+	        transform-style: preserve-3d;
+	-webkit-perspective: 1000px;
+	        perspective: 1000px;
+}
+
+.digit__piece {
+	float: left;
+
+	width: 34px;
+	height: 34px;
+	margin: 0 1px 1px 0;
+
+	border-radius: 4px;
+
+	-webkit-backface-visibility: hidden;
+	        backface-visibility: hidden;
+	-webkit-transform-style: preserve-3d;
+	        transform-style: preserve-3d;
+	-webkit-perspective: 1000px;
+	        perspective: 1000px;
+
+
+
+	-webkit-transition-duration: .45s;
+	   -moz-transition-duration: .45s;
+	        transition-duration: .45s;
+
+	-webkit-transition-timing-function: cubic-bezier(.85,-0.35,.72,1.58);
+	   -moz-transition-timing-function: cubic-bezier(.85,-0.35,.72,1.58);
+	        transition-timing-function: cubic-bezier(.85,-0.35,.72,1.58);
+
+	-webkit-transition-property:
+		-webkit-transform,
+		        transform,
+		-webkit-filter,
+		        filter,
+		border-radius,
+		background;
+
+	-moz-transition-property:
+		-moz-transform,
+		     transform,
+		-moz-filter,
+		     filter,
+		border-radius,
+		background;
+
+	transition-property:
+		-webkit-transform,
+		   -moz-transform,
+		        transform,
+		-webkit-filter,
+		   -moz-filter,
+		        filter,
+		border-radius,
+		background;
+}
+
+/*	Set transition delays	*/
+.digit__piece-0 {
+	-webkit-transition-delay: .00s;
+	        transition-delay: .00s;
+}
+.digit__piece-1,
+.digit__piece-3 {
+	-webkit-transition-delay: .03s;
+	        transition-delay: .03s;
+}
+.digit__piece-2,
+.digit__piece-4,
+.digit__piece-6 {
+	-webkit-transition-delay: .06s;
+	        transition-delay: .06s;
+}
+.digit__piece-5,
+.digit__piece-7,
+.digit__piece-9 {
+	-webkit-transition-delay: .12s;
+	        transition-delay: .12s;
+}
+.digit__piece-8,
+.digit__piece-10,
+.digit__piece-12 {
+	-webkit-transition-delay: .15s;
+	        transition-delay: .15s;
+}
+.digit__piece-11,
+.digit__piece-13 {
+	-webkit-transition-delay: .18s;
+	        transition-delay: .18s;
+}
+.digit__piece-14 {
+	-webkit-transition-delay: .21s;
+	        transition-delay: .21s;
+}
+
+/*	Set rounding	*/
+/*	Zero	*/
+.digit-0 .digit__piece-0 {
+	border-top-left-radius: 90%;
+}
+.digit-0 .digit__piece-2 {
+	border-top-right-radius: 90%;
+}
+.digit-0 .digit__piece-12 {
+	border-bottom-left-radius: 90%;
+}
+.digit-0 .digit__piece-14 {
+	border-bottom-right-radius: 90%;
+}
+
+/*	One	*/
+.digit-1 .digit__piece-0 {
+	border-top-left-radius: 90%;
+}
+.digit-1 .digit__piece-1 {
+	border-top-right-radius: 50%;
+}
+.digit-1 .digit__piece-12 {
+	border-top-left-radius: 50%;
+}
+.digit-1 .digit__piece-14 {
+	border-top-right-radius: 50%;
+}
+
+/*	Two	*/
+.digit-2 .digit__piece-0 {
+	border-top-left-radius: 90%;
+}
+.digit-2 .digit__piece-2 {
+	border-top-right-radius: 90%;
+}
+.digit-2 .digit__piece-8 {
+	border-bottom-right-radius: 90%;
+}
+.digit-2 .digit__piece-7 {
+	border-top-left-radius: 90%;
+}
+.digit-2 .digit__piece-9 {
+	border-top-left-radius: 90%;
+}
+.digit-2 .digit__piece-14 {
+	border-top-right-radius: 90%;
+}
+
+/*	Three	*/
+.digit-3 .digit__piece-0 {
+	border-bottom-left-radius: 50%;
+}
+.digit-3 .digit__piece-5 {
+	border-bottom-right-radius: 90%;
+}
+.digit-3 .digit__piece-7 {
+	border-bottom-left-radius: 50%;
+}
+.digit-3 .digit__piece-8 {
+	border-top-right-radius: 90%;
+}
+.digit-3 .digit__piece-12 {
+	border-bottom-left-radius: 90%;
+}
+.digit-3 .digit__piece-14 {
+	border-bottom-right-radius: 90%;
+}
+
+/*	Four	*/
+.digit-4 .digit__piece-6 {
+	border-bottom-left-radius: 90%;
+}
+
+/*	Five	*/
+.digit-5 .digit__piece-8 {
+	border-top-right-radius: 90%;
+}
+.digit-5 .digit__piece-12 {
+	border-bottom-left-radius: 90%;
+}
+.digit-5 .digit__piece-14 {
+	border-bottom-right-radius: 90%;
+}
+
+/*	Six	*/
+.digit-6 .digit__piece-0 {
+	border-top-left-radius: 90%;
+}
+.digit-6 .digit__piece-2 {
+	border-top-right-radius: 90%;
+}
+.digit-6 .digit__piece-8 {
+	border-top-right-radius: 90%;
+}
+.digit-6 .digit__piece-12 {
+	border-bottom-left-radius: 90%;
+}
+.digit-6 .digit__piece-14 {
+	border-bottom-right-radius: 90%;
+}
+
+/*	Seven	*/
+.digit-7 .digit__piece-8 {
+	border-bottom-right-radius: 90%;
+}
+.digit-7 .digit__piece-10 {
+	border-top-left-radius: 90%;
+}
+
+/*	Eight	*/
+.digit-8 .digit__piece-0 {
+	border-top-left-radius: 90%;
+}
+.digit-8 .digit__piece-2 {
+	border-top-right-radius: 90%;
+}
+.digit-8 .digit__piece-3 {
+	border-bottom-left-radius: 50%;
+}
+.digit-8 .digit__piece-5 {
+	border-bottom-right-radius: 50%;
+}
+.digit-8 .digit__piece-6 {
+	border-top-left-radius: 90%;
+}
+.digit-8 .digit__piece-8 {
+	border-top-right-radius: 90%;
+}
+.digit-8 .digit__piece-12 {
+	border-bottom-left-radius: 90%;
+}
+.digit-8 .digit__piece-14 {
+	border-bottom-right-radius: 90%;
+}
+
+/*	Nine	*/
+.digit-9 .digit__piece-0 {
+	border-top-left-radius: 90%;
+}
+.digit-9 .digit__piece-2 {
+	border-top-right-radius: 90%;
+}
+.digit-9 .digit__piece-6 {
+	border-bottom-left-radius: 90%;
+}
+
+
+
+
+
+
+.digit-10 .digit__piece-4,
+.digit-10 .digit__piece-10 {
+	border-radius: 50%;
+}

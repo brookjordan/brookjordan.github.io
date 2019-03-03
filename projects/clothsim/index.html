@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Cloth sim</title>
+
+	<link rel="stylesheet" href="styles/resets.css">
+	<link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+
+	<table style="position: absolute; background: rgba(255,255,255,0.8); pointer-events: none;">
+		<tr>
+			<td>Max speed:        <span id="maxSpeedValue"></span></td>
+			<td>Gravity:          <span id="gravityValue"></span></td>
+			<td>Friction:         <span id="frictionValue"></span></td>
+			<td>Elasticity:       <span id="elasticityValue"></span></td>
+			<td>Calculation rate: <span id="fpsValue"></span></td>
+			<td>Line colour:      <span id="colorValue"></span></td>
+		</tr>
+		<tr>
+			<td><input id="maxSpeedRange"   type="range"  min="0.1"   max="100"   step="0.1"   style="pointer-events: initial;" /></td>
+			<td><input id="gravityRange"    type="range"  min="-0.05" max="0.05"  step="0.001" style="pointer-events: initial;" /></td>
+			<td><input id="frictionRange"   type="range"  min="0.8"   max="0.995" step="0.005" style="pointer-events: initial;" /></td>
+			<td><input id="elasticityRange" type="range"  min="0.01"  max="0.2"   step="0.005" style="pointer-events: initial;" /></td>
+			<td><input id="fpsRange"        type="range"  min="30"    max="1000"  step="10"    style="pointer-events: initial;" /></td>
+			<td><input id="colorSwitcher"   type="color"                                       style="pointer-events: initial;" /></td>
+			<td><button id="restartSim" style="pointer-events: initial;" >Restart</button></td>
+		</tr>
+	</table>
+
+	<script src="scripts/build/main.js"></script>
+	<script>
+		window.
+		maxSpeedRange.onmousemove = function () {
+			glbl( 'max speed', +this.value );
+			maxSpeedValue.innerText = this.value;
+		}
+
+		gravityRange.onmousemove = function () {
+			glbl( 'gravity', -this.value );
+			gravityValue.innerText = -this.value;
+		}
+
+		frictionRange.onmousemove = function () {
+			glbl( 'friction', +this.value );
+			frictionValue.innerText = this.value;
+		}
+
+		elasticityRange.onmousemove = function () {
+			glbl( 'elasticity', +this.value );
+			elasticityValue.innerText = this.value;
+		}
+
+		fpsRange.onmousemove = function () {
+			glbl( 'fps', +this.value );
+			fpsValue.innerText = this.value;
+		}
+
+		colorSwitcher.onchange = function () {
+			glbl( 'color', this.value );
+			colorValue.innerText = this.value;
+		}
+
+		restartSim.onclick = function () {
+			glbl( 'restart', this.value );
+		}
+
+		maxSpeedValue.innerText   = maxSpeedRange.value   = glbl( 'max speed' );
+		gravityValue.innerText    = gravityRange.value    = glbl( 'gravity' );
+		frictionValue.innerText   = frictionRange.value   = glbl( 'friction' );
+		elasticityValue.innerText = elasticityRange.value = glbl( 'elasticity' );
+		fpsValue.innerText        = fpsRange.value        = glbl( 'fps' );
+		colorValue.innerText      = maxSpeedRange.value   = glbl( 'color' );
+	</script>
+</body>
+</html>

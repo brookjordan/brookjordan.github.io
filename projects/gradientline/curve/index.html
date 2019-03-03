@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Smooth curve</title>
+
+<style>
+html, body, canvas {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+}
+</style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+
+<script>
+canvas.width = innerWidth;
+canvas.height = innerHeight;
+
+var coord2 = [canvas.width * 0.6, canvas.height * 0.3];
+var coord3 = [canvas.width * 0.4, canvas.height * 0.7];
+
+drawFromDots();
+
+var movingCoord = 0;
+canvas.addEventListener('mousedown', handleMouseDown);
+canvas.addEventListener('contextmenu', handleMouseDown);
+
+canvas.addEventListener('touchmove', e => {
+	e.preventDefault();
+
+	if (e.touches.length > 1) {
+		drawFromDots(undefined, [e.pageX, e.pageY]);
+	} else {
+		drawFromDots([e.pageX, e.pageY], undefined);
+	}
+});
+
+function handleMouseMove(e) {
+	if (movingCoord === 2) {
+		drawFromDots([e.pageX, e.pageY], undefined);
+	} else if (movingCoord === 3) {
+		drawFromDots(undefined, [e.pageX, e.pageY]);
+	}
+	addEventListener('mouseup', handleMouseUp);
+}
+
+function handleMouseUp() {
+	removeEventListener('mousemove', handleMouseMove);
+	removeEventListener('mouseup', handleMouseUp);
+	movingCoord = 0;
+}
+
+function handleMouseDown(e) {
+	e.preventDefault();
+	movingCoord = e.button === 0
+		? 2
+		: 3;
+	addEventListener('mousemove', handleMouseMove);
+}
+
+function drawFromDots(_coord2, _coord3) {
+	canvas.width = innerWidth;
+	canvas.height = innerHeight;
+	var ctx = canvas.getContext('2d');
+	var coord1 = [0, 0];
+	coord2 = _coord2 || coord2;
+	coord3 = _coord3 || coord3;
+	var coord4 = [canvas.width, canvas.height];
+	var smoothBezier = getSmoothBezier(coord1, coord2, coord3, coord4);
+
+	ctx.beginPath();
+	ctx.lineWidth = width(5);
+	ctx.strokeStyle = '#ff0000';
+	ctx.lineJoin = 'round';
+	ctx.setLineDash([width(20), width(5)]);
+	ctx.moveTo(...coord1);
+	ctx.lineTo(...coord2);
+	ctx.lineTo(...coord3);
+	ctx.lineTo(...coord4);
+	ctx.stroke();
+
+	ctx.beginPath();
+	ctx.lineWidth = width(3);
+	ctx.strokeStyle = '#000000';
+	ctx.arc(...coord2, width(15), 0, Math.PI * 2);
+	ctx.stroke();
+
+	ctx.beginPath();
+	ctx.lineWidth = width(3);
+	ctx.strokeStyle = '#000000';
+	ctx.arc(...coord3, width(15), 0, Math.PI * 2);
+	ctx.stroke();
+
+	ctx.beginPath();
+	ctx.lineWidth = width(3);
+	ctx.strokeStyle = '#00ff00';
+	ctx.lineJoin = 'round';
+	ctx.setLineDash([width(20), width(5)]);
+	ctx.moveTo(...smoothBezier.bisectingVector1[0]);
+	ctx.lineTo(...smoothBezier.bisectingVector1[1]);
+	ctx.stroke();
+
+	ctx.beginPath();
+	ctx.lineWidth = width();
+	ctx.strokeStyle = '#00ff00';
+	ctx.lineJoin = 'round';
+	ctx.setLineDash([width(20), width(5)]);
+	ctx.moveTo(...smoothBezier.bisectingVector2[0]);
+	ctx.lineTo(...smoothBezier.bisectingVector2[1]);
+	ctx.stroke();
+
+	ctx.beginPath();
+	ctx.lineWidth = width(5);
+	ctx.strokeStyle = '#0000ff';
+	ctx.lineJoin = 'round';
+	ctx.setLineDash([width(20), width(5)]);
+	ctx.moveTo(...smoothBezier.correctedVector1[0]);
+	ctx.lineTo(...smoothBezier.correctedVector1[1]);
+	ctx.stroke();
+
+	ctx.beginPath();
+	ctx.lineWidth = width(5);
+	ctx.strokeStyle = '#0000ff';
+	ctx.lineJoin = 'round';
+	ctx.setLineDash([width(20), width(5)]);
+	ctx.moveTo(...smoothBezier.correctedVector2[0]);
+	ctx.lineTo(...smoothBezier.correctedVector2[1]);
+	ctx.stroke();
+
+	ctx.beginPath();
+	ctx.lineWidth = width(10);
+	ctx.strokeStyle = '#ff00ff';
+	ctx.setLineDash([]);
+	ctx.moveTo(...coord2);
+	ctx.bezierCurveTo(...smoothBezier.correctedVector1[0], ...smoothBezier.correctedVector2[0], ...coord3);
+	ctx.stroke();
+
+	ctx.beginPath();
+	ctx.lineWidth = width(10);
+	ctx.strokeStyle = '#ff00ff';
+	ctx.setLineDash([]);
+	ctx.moveTo(...coord1);
+	ctx.quadraticCurveTo(...smoothBezier.correctedVector1[1], ...coord2);
+	ctx.stroke();
+
+	ctx.beginPath();
+	ctx.lineWidth = width(10);
+	ctx.strokeStyle = '#ff00ff';
+	ctx.setLineDash([]);
+	ctx.moveTo(...coord4);
+	ctx.quadraticCurveTo(...smoothBezier.correctedVector2[1], ...coord3);
+	ctx.stroke();
+}
+
+function width(num) {
+	return num * canvas.width / 1000;
+}
+
+//	Gets a smooth bezier line between coord2 and coord 3,
+//    respecting coord 1 and coord 4
+function getSmoothBezier(coord1, coord2, coord3, coord4) {
+	var vector21 = [coord2, coord1];
+	var vector23 = [coord2, coord3];
+
+	var vector32 = [coord3, coord2];
+	var vector34 = [coord3, coord4];
+
+	var rotateClockwise123 = isFastestRotationClockwise(vector21, vector23);
+	var rotateClockwise234 = isFastestRotationClockwise(vector32, vector34);
+
+	var bisectingVector1 = getBisectingVector(vector21, vector23);
+	var bisectingVector2 = getBisectingVector(vector32, vector34);
+
+	var perpendicularVector1 = getShiftedVector(getPerpendicularVector(bisectingVector1));
+	var perpendicularVector2 = getShiftedVector(getPerpendicularVector(bisectingVector2));
+
+	var correctedVector1 = rotateClockwise123 ? perpendicularVector1 : getReversedVector(perpendicularVector1);
+	var correctedVector2 = rotateClockwise234 ? getReversedVector(perpendicularVector2) : perpendicularVector2;
+
+	return {
+		bisectingVector1,
+		bisectingVector2,
+		correctedVector1,
+		correctedVector2,
+	};
+}
+
+
+function getShiftedVector(vector) {
+	var middlePoint = getMiddlePointOfVector(vector[0], vector[1]);
+	var shiftBy = [vector[0][0] - middlePoint[0], vector[0][1] - middlePoint[1]];
+	return [[vector[0][0] + shiftBy[0], vector[0][1] + shiftBy[1]], [vector[1][0] + shiftBy[0], vector[1][1] + shiftBy[1]]];
+}
+
+
+function getVectorWithHalfLength(vector) {
+	return [vector[0], getMiddlePointOfVector(vector[0], vector[1])];
+}
+
+function isSimpleVector(vector) {
+	return typeof vector[0] === 'number';
+}
+
+function getSimpleVector(vector) {
+	return isSimpleVector(vector)
+		? vector
+		: [vector[1][0] - vector[0][0], vector[1][1] - vector[0][1]];
+}
+
+function getComplexVector(vector) {
+	return isSimpleVector(vector) ? getTranslatedVector(vector) : vector;
+}
+
+function getTranslatedVector(vector, coord = [0, 0]) {
+	var simpleVector = getSimpleVector(vector);
+	return [coord, [simpleVector[0] + coord[0], simpleVector[1] + coord[1]]];
+}
+
+function getUnitVector(vector) {
+	var simpleVector = getSimpleVector(vector);
+	var vectorLength = Math.sqrt(Math.pow(simpleVector[0], 2) + Math.pow(simpleVector[1], 2));
+	return [simpleVector[0] / vectorLength, simpleVector[1] / vectorLength];
+}
+
+//	Returns that vector2 with vector2[0] is on top of vector1[1]
+function getPerpendicularVector(vector) {
+	var normalizedVector    = [vector[1][0] - vector[0][0], vector[1][1] - vector[0][1]];
+	var perpendicularVector = [normalizedVector[1], -normalizedVector[0]];
+	return [vector[0], [perpendicularVector[0] + vector[0][0], perpendicularVector[1] + vector[0][1]]];
+}
+
+//	Assumes that vector1[0] has the same coord as vector2[0]
+function getBisectingVector(vector1, vector2) {
+	var minimumVectorLength = Math.min(getLengthOfVector(vector1), getLengthOfVector(vector2));
+	var unitVector1 = getUnitVector(vector1);
+	var unitVector2 = getUnitVector(vector2);
+
+	var bisectingVector = getUnitVector(getSumOfVectors(unitVector1, unitVector2));
+
+	return getTranslatedVector(getScaledVector(bisectingVector, minimumVectorLength / 1.5), vector1[0]);
+}
+
+function getScaledVector(vector, scale = 1) {
+	var simpleVector = getSimpleVector(vector);
+	var scaledVector = [simpleVector[0] * scale, simpleVector[1] * scale];
+	return scaledVector;
+}
+
+function getReversedVector(_vector) {
+	var vector = getComplexVector(_vector);
+	return [vector[1], vector[0]];
+}
+
+//	Assumes that vector1[0] has the same coord as vector2[0]
+function getSumOfVectors(vector1, vector2) {
+	var simpleVector1 = getSimpleVector(vector1);
+	var simpleVector2 = getSimpleVector(vector2);
+
+	return [simpleVector1[0] + simpleVector2[0], simpleVector1[1] + simpleVector2[1]];
+}
+
+//	Assumes that vector1[0] has the same coord as vector2[0]
+function getLengthOfVector(vector) {
+	var simpleVector = getSimpleVector(vector);
+
+	return Math.sqrt(Math.pow(simpleVector[0], 2) + Math.pow(simpleVector[1], 2));
+}
+
+function getMiddlePointOfVector(coord1, coord2) {
+	return [getAverageOfNumbers(coord1[0], coord2[0]), getAverageOfNumbers(coord1[1], coord2[1])];
+}
+
+function getDotProduct(vector1, vector2) {
+	var simpleVector1 = getSimpleVector(vector1);
+	var simpleVector2 = getSimpleVector(vector2);
+	return (simpleVector1[0] * simpleVector2[0]) + (simpleVector1[1] * simpleVector2[1]);
+}
+
+function getDeterminant(vector1, vector2) {
+	var simpleVector1 = getSimpleVector(vector1);
+	var simpleVector2 = getSimpleVector(vector2);
+	return (simpleVector1[0] * simpleVector2[1]) - (simpleVector1[1] * simpleVector2[0]);
+}
+
+function getAngleBetweenVectors(vector1, vector2) {
+	return Math.atan2(getDeterminant(vector1, vector2), getDotProduct(vector1, vector2));
+}
+
+function getAverageOfNumbers(num1, num2) {
+	return (num1 + num2) / 2;
+}
+
+function isFastestRotationClockwise(vector1, vector2) {
+	var simpleVector1 = getSimpleVector(vector1);
+	var simpleVector2 = getSimpleVector(vector2);
+	return -simpleVector2[0] * simpleVector1[1] > -simpleVector2[1] * simpleVector1[0];
+}
+</script>
+</body>
+</html>

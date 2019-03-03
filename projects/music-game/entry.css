@@ -1,0 +1,2677 @@
+body, html {
+  margin: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  position: relative;
+  background: black;
+}
+
+.board {
+  position: relative;
+  width: 56.25vh;
+  height: 100vh;
+  margin: 0 auto;
+  background: gray;
+  font-size: 3.515625vh;
+  overflow: hidden;
+}
+@media (max-aspect-ratio: 9/16) {
+  .board {
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100vw;
+    height: 177.7777777778vw;
+    font-size: 6.25vw;
+  }
+}
+
+.bar {
+  position: absolute;
+  width: 100%;
+  height: 4em;
+  top: 2em;
+  background: black;
+}
+
+@keyframes pog-up {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-32em);
+  }
+}
+:root {
+  --pog-ratio: 4;
+  --part-size: calc(16 / (var(--pog-ratio) * 4 + 5) * 1em);
+  --pog-size: calc(var(--part-size) * var(--pog-ratio));
+}
+
+.pog {
+  position: absolute;
+  top: 100%;
+  animation: pog-up 2s linear;
+}
+.pog__inner {
+  width: var(--pog-size);
+  height: var(--pog-size);
+  transition: 0.3s ease-out;
+}
+.pog__inner::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 1em solid transparent;
+}
+.pog--1 {
+  animation-delay: 2.5s;
+  left: var(--part-size);
+}
+.pog--1 .pog__inner {
+  background-color: red;
+}
+.pog--1 .pog__inner::after {
+  border-right-color: black;
+  border-left: 0;
+}
+#point--1:checked ~ .pog--1 {
+  animation-play-state: paused;
+}
+#point--1:checked ~ .pog--1 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--2 {
+  animation-delay: 3.75s;
+  left: calc(var(--part-size) * 3 + var(--pog-size) * 2);
+}
+.pog--2 .pog__inner {
+  background-color: white;
+}
+.pog--2 .pog__inner::after {
+  border-top-color: black;
+  border-bottom: 0;
+}
+#point--2:checked ~ .pog--2 {
+  animation-play-state: paused;
+}
+#point--2:checked ~ .pog--2 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--3 {
+  animation-delay: 5.75s;
+  left: calc(var(--part-size) * 3 + var(--pog-size) * 2);
+}
+.pog--3 .pog__inner {
+  background-color: white;
+}
+.pog--3 .pog__inner::after {
+  border-top-color: black;
+  border-bottom: 0;
+}
+#point--3:checked ~ .pog--3 {
+  animation-play-state: paused;
+}
+#point--3:checked ~ .pog--3 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--4 {
+  animation-delay: 7s;
+  left: calc(var(--part-size) * 2 + var(--pog-size));
+}
+.pog--4 .pog__inner {
+  background-color: green;
+}
+.pog--4 .pog__inner::after {
+  border-bottom-color: black;
+  border-top: 0;
+}
+#point--4:checked ~ .pog--4 {
+  animation-play-state: paused;
+}
+#point--4:checked ~ .pog--4 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--5 {
+  animation-delay: 8.25s;
+  left: calc(var(--part-size) * 4 + var(--pog-size) * 3);
+}
+.pog--5 .pog__inner {
+  background-color: blue;
+}
+.pog--5 .pog__inner::after {
+  border-left-color: black;
+  border-right: 0;
+}
+#point--5:checked ~ .pog--5 {
+  animation-play-state: paused;
+}
+#point--5:checked ~ .pog--5 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--6 {
+  animation-delay: 9.75s;
+  left: calc(var(--part-size) * 4 + var(--pog-size) * 3);
+}
+.pog--6 .pog__inner {
+  background-color: blue;
+}
+.pog--6 .pog__inner::after {
+  border-left-color: black;
+  border-right: 0;
+}
+#point--6:checked ~ .pog--6 {
+  animation-play-state: paused;
+}
+#point--6:checked ~ .pog--6 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--7 {
+  animation-delay: 11.25s;
+  left: calc(var(--part-size) * 4 + var(--pog-size) * 3);
+}
+.pog--7 .pog__inner {
+  background-color: blue;
+}
+.pog--7 .pog__inner::after {
+  border-left-color: black;
+  border-right: 0;
+}
+#point--7:checked ~ .pog--7 {
+  animation-play-state: paused;
+}
+#point--7:checked ~ .pog--7 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--8 {
+  animation-delay: 12.5s;
+  left: calc(var(--part-size) * 2 + var(--pog-size));
+}
+.pog--8 .pog__inner {
+  background-color: green;
+}
+.pog--8 .pog__inner::after {
+  border-bottom-color: black;
+  border-top: 0;
+}
+#point--8:checked ~ .pog--8 {
+  animation-play-state: paused;
+}
+#point--8:checked ~ .pog--8 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--9 {
+  animation-delay: 14.5s;
+  left: calc(var(--part-size) * 3 + var(--pog-size) * 2);
+}
+.pog--9 .pog__inner {
+  background-color: white;
+}
+.pog--9 .pog__inner::after {
+  border-top-color: black;
+  border-bottom: 0;
+}
+#point--9:checked ~ .pog--9 {
+  animation-play-state: paused;
+}
+#point--9:checked ~ .pog--9 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--10 {
+  animation-delay: 16.5s;
+  left: calc(var(--part-size) * 2 + var(--pog-size));
+}
+.pog--10 .pog__inner {
+  background-color: green;
+}
+.pog--10 .pog__inner::after {
+  border-bottom-color: black;
+  border-top: 0;
+}
+#point--10:checked ~ .pog--10 {
+  animation-play-state: paused;
+}
+#point--10:checked ~ .pog--10 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--11 {
+  animation-delay: 18.25s;
+  left: var(--part-size);
+}
+.pog--11 .pog__inner {
+  background-color: red;
+}
+.pog--11 .pog__inner::after {
+  border-right-color: black;
+  border-left: 0;
+}
+#point--11:checked ~ .pog--11 {
+  animation-play-state: paused;
+}
+#point--11:checked ~ .pog--11 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--12 {
+  animation-delay: 20.25s;
+  left: calc(var(--part-size) * 4 + var(--pog-size) * 3);
+}
+.pog--12 .pog__inner {
+  background-color: blue;
+}
+.pog--12 .pog__inner::after {
+  border-left-color: black;
+  border-right: 0;
+}
+#point--12:checked ~ .pog--12 {
+  animation-play-state: paused;
+}
+#point--12:checked ~ .pog--12 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--13 {
+  animation-delay: 21.75s;
+  left: var(--part-size);
+}
+.pog--13 .pog__inner {
+  background-color: red;
+}
+.pog--13 .pog__inner::after {
+  border-right-color: black;
+  border-left: 0;
+}
+#point--13:checked ~ .pog--13 {
+  animation-play-state: paused;
+}
+#point--13:checked ~ .pog--13 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--14 {
+  animation-delay: 23.5s;
+  left: var(--part-size);
+}
+.pog--14 .pog__inner {
+  background-color: red;
+}
+.pog--14 .pog__inner::after {
+  border-right-color: black;
+  border-left: 0;
+}
+#point--14:checked ~ .pog--14 {
+  animation-play-state: paused;
+}
+#point--14:checked ~ .pog--14 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--15 {
+  animation-delay: 25.25s;
+  left: calc(var(--part-size) * 4 + var(--pog-size) * 3);
+}
+.pog--15 .pog__inner {
+  background-color: blue;
+}
+.pog--15 .pog__inner::after {
+  border-left-color: black;
+  border-right: 0;
+}
+#point--15:checked ~ .pog--15 {
+  animation-play-state: paused;
+}
+#point--15:checked ~ .pog--15 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--16 {
+  animation-delay: 27s;
+  left: calc(var(--part-size) * 2 + var(--pog-size));
+}
+.pog--16 .pog__inner {
+  background-color: green;
+}
+.pog--16 .pog__inner::after {
+  border-bottom-color: black;
+  border-top: 0;
+}
+#point--16:checked ~ .pog--16 {
+  animation-play-state: paused;
+}
+#point--16:checked ~ .pog--16 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--17 {
+  animation-delay: 28s;
+  left: calc(var(--part-size) * 2 + var(--pog-size));
+}
+.pog--17 .pog__inner {
+  background-color: green;
+}
+.pog--17 .pog__inner::after {
+  border-bottom-color: black;
+  border-top: 0;
+}
+#point--17:checked ~ .pog--17 {
+  animation-play-state: paused;
+}
+#point--17:checked ~ .pog--17 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--18 {
+  animation-delay: 29s;
+  left: calc(var(--part-size) * 3 + var(--pog-size) * 2);
+}
+.pog--18 .pog__inner {
+  background-color: white;
+}
+.pog--18 .pog__inner::after {
+  border-top-color: black;
+  border-bottom: 0;
+}
+#point--18:checked ~ .pog--18 {
+  animation-play-state: paused;
+}
+#point--18:checked ~ .pog--18 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--19 {
+  animation-delay: 30s;
+  left: calc(var(--part-size) * 2 + var(--pog-size));
+}
+.pog--19 .pog__inner {
+  background-color: green;
+}
+.pog--19 .pog__inner::after {
+  border-bottom-color: black;
+  border-top: 0;
+}
+#point--19:checked ~ .pog--19 {
+  animation-play-state: paused;
+}
+#point--19:checked ~ .pog--19 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--20 {
+  animation-delay: 31s;
+  left: calc(var(--part-size) * 4 + var(--pog-size) * 3);
+}
+.pog--20 .pog__inner {
+  background-color: blue;
+}
+.pog--20 .pog__inner::after {
+  border-left-color: black;
+  border-right: 0;
+}
+#point--20:checked ~ .pog--20 {
+  animation-play-state: paused;
+}
+#point--20:checked ~ .pog--20 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--21 {
+  animation-delay: 32s;
+  left: var(--part-size);
+}
+.pog--21 .pog__inner {
+  background-color: red;
+}
+.pog--21 .pog__inner::after {
+  border-right-color: black;
+  border-left: 0;
+}
+#point--21:checked ~ .pog--21 {
+  animation-play-state: paused;
+}
+#point--21:checked ~ .pog--21 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--22 {
+  animation-delay: 33.5s;
+  left: calc(var(--part-size) * 4 + var(--pog-size) * 3);
+}
+.pog--22 .pog__inner {
+  background-color: blue;
+}
+.pog--22 .pog__inner::after {
+  border-left-color: black;
+  border-right: 0;
+}
+#point--22:checked ~ .pog--22 {
+  animation-play-state: paused;
+}
+#point--22:checked ~ .pog--22 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--23 {
+  animation-delay: 34.25s;
+  left: calc(var(--part-size) * 3 + var(--pog-size) * 2);
+}
+.pog--23 .pog__inner {
+  background-color: white;
+}
+.pog--23 .pog__inner::after {
+  border-top-color: black;
+  border-bottom: 0;
+}
+#point--23:checked ~ .pog--23 {
+  animation-play-state: paused;
+}
+#point--23:checked ~ .pog--23 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--24 {
+  animation-delay: 35.25s;
+  left: calc(var(--part-size) * 2 + var(--pog-size));
+}
+.pog--24 .pog__inner {
+  background-color: green;
+}
+.pog--24 .pog__inner::after {
+  border-bottom-color: black;
+  border-top: 0;
+}
+#point--24:checked ~ .pog--24 {
+  animation-play-state: paused;
+}
+#point--24:checked ~ .pog--24 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--25 {
+  animation-delay: 36.5s;
+  left: var(--part-size);
+}
+.pog--25 .pog__inner {
+  background-color: red;
+}
+.pog--25 .pog__inner::after {
+  border-right-color: black;
+  border-left: 0;
+}
+#point--25:checked ~ .pog--25 {
+  animation-play-state: paused;
+}
+#point--25:checked ~ .pog--25 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--26 {
+  animation-delay: 38s;
+  left: calc(var(--part-size) * 4 + var(--pog-size) * 3);
+}
+.pog--26 .pog__inner {
+  background-color: blue;
+}
+.pog--26 .pog__inner::after {
+  border-left-color: black;
+  border-right: 0;
+}
+#point--26:checked ~ .pog--26 {
+  animation-play-state: paused;
+}
+#point--26:checked ~ .pog--26 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--27 {
+  animation-delay: 38.75s;
+  left: calc(var(--part-size) * 2 + var(--pog-size));
+}
+.pog--27 .pog__inner {
+  background-color: green;
+}
+.pog--27 .pog__inner::after {
+  border-bottom-color: black;
+  border-top: 0;
+}
+#point--27:checked ~ .pog--27 {
+  animation-play-state: paused;
+}
+#point--27:checked ~ .pog--27 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--28 {
+  animation-delay: 39.75s;
+  left: calc(var(--part-size) * 2 + var(--pog-size));
+}
+.pog--28 .pog__inner {
+  background-color: green;
+}
+.pog--28 .pog__inner::after {
+  border-bottom-color: black;
+  border-top: 0;
+}
+#point--28:checked ~ .pog--28 {
+  animation-play-state: paused;
+}
+#point--28:checked ~ .pog--28 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--29 {
+  animation-delay: 41s;
+  left: calc(var(--part-size) * 2 + var(--pog-size));
+}
+.pog--29 .pog__inner {
+  background-color: green;
+}
+.pog--29 .pog__inner::after {
+  border-bottom-color: black;
+  border-top: 0;
+}
+#point--29:checked ~ .pog--29 {
+  animation-play-state: paused;
+}
+#point--29:checked ~ .pog--29 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--30 {
+  animation-delay: 42.25s;
+  left: calc(var(--part-size) * 4 + var(--pog-size) * 3);
+}
+.pog--30 .pog__inner {
+  background-color: blue;
+}
+.pog--30 .pog__inner::after {
+  border-left-color: black;
+  border-right: 0;
+}
+#point--30:checked ~ .pog--30 {
+  animation-play-state: paused;
+}
+#point--30:checked ~ .pog--30 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--31 {
+  animation-delay: 43.5s;
+  left: var(--part-size);
+}
+.pog--31 .pog__inner {
+  background-color: red;
+}
+.pog--31 .pog__inner::after {
+  border-right-color: black;
+  border-left: 0;
+}
+#point--31:checked ~ .pog--31 {
+  animation-play-state: paused;
+}
+#point--31:checked ~ .pog--31 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--32 {
+  animation-delay: 44.5s;
+  left: var(--part-size);
+}
+.pog--32 .pog__inner {
+  background-color: red;
+}
+.pog--32 .pog__inner::after {
+  border-right-color: black;
+  border-left: 0;
+}
+#point--32:checked ~ .pog--32 {
+  animation-play-state: paused;
+}
+#point--32:checked ~ .pog--32 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--33 {
+  animation-delay: 45.5s;
+  left: calc(var(--part-size) * 4 + var(--pog-size) * 3);
+}
+.pog--33 .pog__inner {
+  background-color: blue;
+}
+.pog--33 .pog__inner::after {
+  border-left-color: black;
+  border-right: 0;
+}
+#point--33:checked ~ .pog--33 {
+  animation-play-state: paused;
+}
+#point--33:checked ~ .pog--33 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--34 {
+  animation-delay: 46.5s;
+  left: calc(var(--part-size) * 3 + var(--pog-size) * 2);
+}
+.pog--34 .pog__inner {
+  background-color: white;
+}
+.pog--34 .pog__inner::after {
+  border-top-color: black;
+  border-bottom: 0;
+}
+#point--34:checked ~ .pog--34 {
+  animation-play-state: paused;
+}
+#point--34:checked ~ .pog--34 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--35 {
+  animation-delay: 47.25s;
+  left: calc(var(--part-size) * 2 + var(--pog-size));
+}
+.pog--35 .pog__inner {
+  background-color: green;
+}
+.pog--35 .pog__inner::after {
+  border-bottom-color: black;
+  border-top: 0;
+}
+#point--35:checked ~ .pog--35 {
+  animation-play-state: paused;
+}
+#point--35:checked ~ .pog--35 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--36 {
+  animation-delay: 48s;
+  left: calc(var(--part-size) * 2 + var(--pog-size));
+}
+.pog--36 .pog__inner {
+  background-color: green;
+}
+.pog--36 .pog__inner::after {
+  border-bottom-color: black;
+  border-top: 0;
+}
+#point--36:checked ~ .pog--36 {
+  animation-play-state: paused;
+}
+#point--36:checked ~ .pog--36 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--37 {
+  animation-delay: 49s;
+  left: calc(var(--part-size) * 3 + var(--pog-size) * 2);
+}
+.pog--37 .pog__inner {
+  background-color: white;
+}
+.pog--37 .pog__inner::after {
+  border-top-color: black;
+  border-bottom: 0;
+}
+#point--37:checked ~ .pog--37 {
+  animation-play-state: paused;
+}
+#point--37:checked ~ .pog--37 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--38 {
+  animation-delay: 50s;
+  left: calc(var(--part-size) * 4 + var(--pog-size) * 3);
+}
+.pog--38 .pog__inner {
+  background-color: blue;
+}
+.pog--38 .pog__inner::after {
+  border-left-color: black;
+  border-right: 0;
+}
+#point--38:checked ~ .pog--38 {
+  animation-play-state: paused;
+}
+#point--38:checked ~ .pog--38 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--39 {
+  animation-delay: 50.5s;
+  left: var(--part-size);
+}
+.pog--39 .pog__inner {
+  background-color: red;
+}
+.pog--39 .pog__inner::after {
+  border-right-color: black;
+  border-left: 0;
+}
+#point--39:checked ~ .pog--39 {
+  animation-play-state: paused;
+}
+#point--39:checked ~ .pog--39 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--40 {
+  animation-delay: 51.5s;
+  left: calc(var(--part-size) * 2 + var(--pog-size));
+}
+.pog--40 .pog__inner {
+  background-color: green;
+}
+.pog--40 .pog__inner::after {
+  border-bottom-color: black;
+  border-top: 0;
+}
+#point--40:checked ~ .pog--40 {
+  animation-play-state: paused;
+}
+#point--40:checked ~ .pog--40 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--41 {
+  animation-delay: 52.25s;
+  left: calc(var(--part-size) * 2 + var(--pog-size));
+}
+.pog--41 .pog__inner {
+  background-color: green;
+}
+.pog--41 .pog__inner::after {
+  border-bottom-color: black;
+  border-top: 0;
+}
+#point--41:checked ~ .pog--41 {
+  animation-play-state: paused;
+}
+#point--41:checked ~ .pog--41 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--42 {
+  animation-delay: 53.25s;
+  left: calc(var(--part-size) * 4 + var(--pog-size) * 3);
+}
+.pog--42 .pog__inner {
+  background-color: blue;
+}
+.pog--42 .pog__inner::after {
+  border-left-color: black;
+  border-right: 0;
+}
+#point--42:checked ~ .pog--42 {
+  animation-play-state: paused;
+}
+#point--42:checked ~ .pog--42 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--43 {
+  animation-delay: 54s;
+  left: calc(var(--part-size) * 2 + var(--pog-size));
+}
+.pog--43 .pog__inner {
+  background-color: green;
+}
+.pog--43 .pog__inner::after {
+  border-bottom-color: black;
+  border-top: 0;
+}
+#point--43:checked ~ .pog--43 {
+  animation-play-state: paused;
+}
+#point--43:checked ~ .pog--43 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--44 {
+  animation-delay: 54.5s;
+  left: calc(var(--part-size) * 4 + var(--pog-size) * 3);
+}
+.pog--44 .pog__inner {
+  background-color: blue;
+}
+.pog--44 .pog__inner::after {
+  border-left-color: black;
+  border-right: 0;
+}
+#point--44:checked ~ .pog--44 {
+  animation-play-state: paused;
+}
+#point--44:checked ~ .pog--44 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--45 {
+  animation-delay: 55s;
+  left: calc(var(--part-size) * 2 + var(--pog-size));
+}
+.pog--45 .pog__inner {
+  background-color: green;
+}
+.pog--45 .pog__inner::after {
+  border-bottom-color: black;
+  border-top: 0;
+}
+#point--45:checked ~ .pog--45 {
+  animation-play-state: paused;
+}
+#point--45:checked ~ .pog--45 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--46 {
+  animation-delay: 55.75s;
+  left: calc(var(--part-size) * 2 + var(--pog-size));
+}
+.pog--46 .pog__inner {
+  background-color: green;
+}
+.pog--46 .pog__inner::after {
+  border-bottom-color: black;
+  border-top: 0;
+}
+#point--46:checked ~ .pog--46 {
+  animation-play-state: paused;
+}
+#point--46:checked ~ .pog--46 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--47 {
+  animation-delay: 56.75s;
+  left: calc(var(--part-size) * 2 + var(--pog-size));
+}
+.pog--47 .pog__inner {
+  background-color: green;
+}
+.pog--47 .pog__inner::after {
+  border-bottom-color: black;
+  border-top: 0;
+}
+#point--47:checked ~ .pog--47 {
+  animation-play-state: paused;
+}
+#point--47:checked ~ .pog--47 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--48 {
+  animation-delay: 57.25s;
+  left: calc(var(--part-size) * 4 + var(--pog-size) * 3);
+}
+.pog--48 .pog__inner {
+  background-color: blue;
+}
+.pog--48 .pog__inner::after {
+  border-left-color: black;
+  border-right: 0;
+}
+#point--48:checked ~ .pog--48 {
+  animation-play-state: paused;
+}
+#point--48:checked ~ .pog--48 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--49 {
+  animation-delay: 58.25s;
+  left: calc(var(--part-size) * 4 + var(--pog-size) * 3);
+}
+.pog--49 .pog__inner {
+  background-color: blue;
+}
+.pog--49 .pog__inner::after {
+  border-left-color: black;
+  border-right: 0;
+}
+#point--49:checked ~ .pog--49 {
+  animation-play-state: paused;
+}
+#point--49:checked ~ .pog--49 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--50 {
+  animation-delay: 59s;
+  left: calc(var(--part-size) * 3 + var(--pog-size) * 2);
+}
+.pog--50 .pog__inner {
+  background-color: white;
+}
+.pog--50 .pog__inner::after {
+  border-top-color: black;
+  border-bottom: 0;
+}
+#point--50:checked ~ .pog--50 {
+  animation-play-state: paused;
+}
+#point--50:checked ~ .pog--50 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--51 {
+  animation-delay: 59.5s;
+  left: calc(var(--part-size) * 4 + var(--pog-size) * 3);
+}
+.pog--51 .pog__inner {
+  background-color: blue;
+}
+.pog--51 .pog__inner::after {
+  border-left-color: black;
+  border-right: 0;
+}
+#point--51:checked ~ .pog--51 {
+  animation-play-state: paused;
+}
+#point--51:checked ~ .pog--51 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--52 {
+  animation-delay: 60.5s;
+  left: calc(var(--part-size) * 4 + var(--pog-size) * 3);
+}
+.pog--52 .pog__inner {
+  background-color: blue;
+}
+.pog--52 .pog__inner::after {
+  border-left-color: black;
+  border-right: 0;
+}
+#point--52:checked ~ .pog--52 {
+  animation-play-state: paused;
+}
+#point--52:checked ~ .pog--52 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--53 {
+  animation-delay: 61s;
+  left: calc(var(--part-size) * 2 + var(--pog-size));
+}
+.pog--53 .pog__inner {
+  background-color: green;
+}
+.pog--53 .pog__inner::after {
+  border-bottom-color: black;
+  border-top: 0;
+}
+#point--53:checked ~ .pog--53 {
+  animation-play-state: paused;
+}
+#point--53:checked ~ .pog--53 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--54 {
+  animation-delay: 61.75s;
+  left: var(--part-size);
+}
+.pog--54 .pog__inner {
+  background-color: red;
+}
+.pog--54 .pog__inner::after {
+  border-right-color: black;
+  border-left: 0;
+}
+#point--54:checked ~ .pog--54 {
+  animation-play-state: paused;
+}
+#point--54:checked ~ .pog--54 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--55 {
+  animation-delay: 62.75s;
+  left: var(--part-size);
+}
+.pog--55 .pog__inner {
+  background-color: red;
+}
+.pog--55 .pog__inner::after {
+  border-right-color: black;
+  border-left: 0;
+}
+#point--55:checked ~ .pog--55 {
+  animation-play-state: paused;
+}
+#point--55:checked ~ .pog--55 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--56 {
+  animation-delay: 63.5s;
+  left: calc(var(--part-size) * 4 + var(--pog-size) * 3);
+}
+.pog--56 .pog__inner {
+  background-color: blue;
+}
+.pog--56 .pog__inner::after {
+  border-left-color: black;
+  border-right: 0;
+}
+#point--56:checked ~ .pog--56 {
+  animation-play-state: paused;
+}
+#point--56:checked ~ .pog--56 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--57 {
+  animation-delay: 64s;
+  left: calc(var(--part-size) * 2 + var(--pog-size));
+}
+.pog--57 .pog__inner {
+  background-color: green;
+}
+.pog--57 .pog__inner::after {
+  border-bottom-color: black;
+  border-top: 0;
+}
+#point--57:checked ~ .pog--57 {
+  animation-play-state: paused;
+}
+#point--57:checked ~ .pog--57 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--58 {
+  animation-delay: 64.75s;
+  left: calc(var(--part-size) * 2 + var(--pog-size));
+}
+.pog--58 .pog__inner {
+  background-color: green;
+}
+.pog--58 .pog__inner::after {
+  border-bottom-color: black;
+  border-top: 0;
+}
+#point--58:checked ~ .pog--58 {
+  animation-play-state: paused;
+}
+#point--58:checked ~ .pog--58 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--59 {
+  animation-delay: 65.5s;
+  left: calc(var(--part-size) * 3 + var(--pog-size) * 2);
+}
+.pog--59 .pog__inner {
+  background-color: white;
+}
+.pog--59 .pog__inner::after {
+  border-top-color: black;
+  border-bottom: 0;
+}
+#point--59:checked ~ .pog--59 {
+  animation-play-state: paused;
+}
+#point--59:checked ~ .pog--59 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--60 {
+  animation-delay: 66s;
+  left: calc(var(--part-size) * 2 + var(--pog-size));
+}
+.pog--60 .pog__inner {
+  background-color: green;
+}
+.pog--60 .pog__inner::after {
+  border-bottom-color: black;
+  border-top: 0;
+}
+#point--60:checked ~ .pog--60 {
+  animation-play-state: paused;
+}
+#point--60:checked ~ .pog--60 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--61 {
+  animation-delay: 66.75s;
+  left: var(--part-size);
+}
+.pog--61 .pog__inner {
+  background-color: red;
+}
+.pog--61 .pog__inner::after {
+  border-right-color: black;
+  border-left: 0;
+}
+#point--61:checked ~ .pog--61 {
+  animation-play-state: paused;
+}
+#point--61:checked ~ .pog--61 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--62 {
+  animation-delay: 67.5s;
+  left: calc(var(--part-size) * 2 + var(--pog-size));
+}
+.pog--62 .pog__inner {
+  background-color: green;
+}
+.pog--62 .pog__inner::after {
+  border-bottom-color: black;
+  border-top: 0;
+}
+#point--62:checked ~ .pog--62 {
+  animation-play-state: paused;
+}
+#point--62:checked ~ .pog--62 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--63 {
+  animation-delay: 68.25s;
+  left: var(--part-size);
+}
+.pog--63 .pog__inner {
+  background-color: red;
+}
+.pog--63 .pog__inner::after {
+  border-right-color: black;
+  border-left: 0;
+}
+#point--63:checked ~ .pog--63 {
+  animation-play-state: paused;
+}
+#point--63:checked ~ .pog--63 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--64 {
+  animation-delay: 68.75s;
+  left: calc(var(--part-size) * 3 + var(--pog-size) * 2);
+}
+.pog--64 .pog__inner {
+  background-color: white;
+}
+.pog--64 .pog__inner::after {
+  border-top-color: black;
+  border-bottom: 0;
+}
+#point--64:checked ~ .pog--64 {
+  animation-play-state: paused;
+}
+#point--64:checked ~ .pog--64 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--65 {
+  animation-delay: 69.25s;
+  left: var(--part-size);
+}
+.pog--65 .pog__inner {
+  background-color: red;
+}
+.pog--65 .pog__inner::after {
+  border-right-color: black;
+  border-left: 0;
+}
+#point--65:checked ~ .pog--65 {
+  animation-play-state: paused;
+}
+#point--65:checked ~ .pog--65 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--66 {
+  animation-delay: 70s;
+  left: var(--part-size);
+}
+.pog--66 .pog__inner {
+  background-color: red;
+}
+.pog--66 .pog__inner::after {
+  border-right-color: black;
+  border-left: 0;
+}
+#point--66:checked ~ .pog--66 {
+  animation-play-state: paused;
+}
+#point--66:checked ~ .pog--66 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--67 {
+  animation-delay: 70.5s;
+  left: var(--part-size);
+}
+.pog--67 .pog__inner {
+  background-color: red;
+}
+.pog--67 .pog__inner::after {
+  border-right-color: black;
+  border-left: 0;
+}
+#point--67:checked ~ .pog--67 {
+  animation-play-state: paused;
+}
+#point--67:checked ~ .pog--67 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--68 {
+  animation-delay: 71s;
+  left: calc(var(--part-size) * 4 + var(--pog-size) * 3);
+}
+.pog--68 .pog__inner {
+  background-color: blue;
+}
+.pog--68 .pog__inner::after {
+  border-left-color: black;
+  border-right: 0;
+}
+#point--68:checked ~ .pog--68 {
+  animation-play-state: paused;
+}
+#point--68:checked ~ .pog--68 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--69 {
+  animation-delay: 71.75s;
+  left: calc(var(--part-size) * 3 + var(--pog-size) * 2);
+}
+.pog--69 .pog__inner {
+  background-color: white;
+}
+.pog--69 .pog__inner::after {
+  border-top-color: black;
+  border-bottom: 0;
+}
+#point--69:checked ~ .pog--69 {
+  animation-play-state: paused;
+}
+#point--69:checked ~ .pog--69 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--70 {
+  animation-delay: 72.25s;
+  left: calc(var(--part-size) * 2 + var(--pog-size));
+}
+.pog--70 .pog__inner {
+  background-color: green;
+}
+.pog--70 .pog__inner::after {
+  border-bottom-color: black;
+  border-top: 0;
+}
+#point--70:checked ~ .pog--70 {
+  animation-play-state: paused;
+}
+#point--70:checked ~ .pog--70 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--71 {
+  animation-delay: 72.75s;
+  left: var(--part-size);
+}
+.pog--71 .pog__inner {
+  background-color: red;
+}
+.pog--71 .pog__inner::after {
+  border-right-color: black;
+  border-left: 0;
+}
+#point--71:checked ~ .pog--71 {
+  animation-play-state: paused;
+}
+#point--71:checked ~ .pog--71 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--72 {
+  animation-delay: 73.25s;
+  left: calc(var(--part-size) * 3 + var(--pog-size) * 2);
+}
+.pog--72 .pog__inner {
+  background-color: white;
+}
+.pog--72 .pog__inner::after {
+  border-top-color: black;
+  border-bottom: 0;
+}
+#point--72:checked ~ .pog--72 {
+  animation-play-state: paused;
+}
+#point--72:checked ~ .pog--72 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--73 {
+  animation-delay: 74s;
+  left: calc(var(--part-size) * 2 + var(--pog-size));
+}
+.pog--73 .pog__inner {
+  background-color: green;
+}
+.pog--73 .pog__inner::after {
+  border-bottom-color: black;
+  border-top: 0;
+}
+#point--73:checked ~ .pog--73 {
+  animation-play-state: paused;
+}
+#point--73:checked ~ .pog--73 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--74 {
+  animation-delay: 74.5s;
+  left: calc(var(--part-size) * 3 + var(--pog-size) * 2);
+}
+.pog--74 .pog__inner {
+  background-color: white;
+}
+.pog--74 .pog__inner::after {
+  border-top-color: black;
+  border-bottom: 0;
+}
+#point--74:checked ~ .pog--74 {
+  animation-play-state: paused;
+}
+#point--74:checked ~ .pog--74 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--75 {
+  animation-delay: 75.25s;
+  left: calc(var(--part-size) * 4 + var(--pog-size) * 3);
+}
+.pog--75 .pog__inner {
+  background-color: blue;
+}
+.pog--75 .pog__inner::after {
+  border-left-color: black;
+  border-right: 0;
+}
+#point--75:checked ~ .pog--75 {
+  animation-play-state: paused;
+}
+#point--75:checked ~ .pog--75 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--76 {
+  animation-delay: 75.75s;
+  left: calc(var(--part-size) * 2 + var(--pog-size));
+}
+.pog--76 .pog__inner {
+  background-color: green;
+}
+.pog--76 .pog__inner::after {
+  border-bottom-color: black;
+  border-top: 0;
+}
+#point--76:checked ~ .pog--76 {
+  animation-play-state: paused;
+}
+#point--76:checked ~ .pog--76 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--77 {
+  animation-delay: 76.25s;
+  left: calc(var(--part-size) * 4 + var(--pog-size) * 3);
+}
+.pog--77 .pog__inner {
+  background-color: blue;
+}
+.pog--77 .pog__inner::after {
+  border-left-color: black;
+  border-right: 0;
+}
+#point--77:checked ~ .pog--77 {
+  animation-play-state: paused;
+}
+#point--77:checked ~ .pog--77 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--78 {
+  animation-delay: 76.75s;
+  left: calc(var(--part-size) * 3 + var(--pog-size) * 2);
+}
+.pog--78 .pog__inner {
+  background-color: white;
+}
+.pog--78 .pog__inner::after {
+  border-top-color: black;
+  border-bottom: 0;
+}
+#point--78:checked ~ .pog--78 {
+  animation-play-state: paused;
+}
+#point--78:checked ~ .pog--78 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--79 {
+  animation-delay: 77s;
+  left: var(--part-size);
+}
+.pog--79 .pog__inner {
+  background-color: red;
+}
+.pog--79 .pog__inner::after {
+  border-right-color: black;
+  border-left: 0;
+}
+#point--79:checked ~ .pog--79 {
+  animation-play-state: paused;
+}
+#point--79:checked ~ .pog--79 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--80 {
+  animation-delay: 77.75s;
+  left: calc(var(--part-size) * 2 + var(--pog-size));
+}
+.pog--80 .pog__inner {
+  background-color: green;
+}
+.pog--80 .pog__inner::after {
+  border-bottom-color: black;
+  border-top: 0;
+}
+#point--80:checked ~ .pog--80 {
+  animation-play-state: paused;
+}
+#point--80:checked ~ .pog--80 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--81 {
+  animation-delay: 78.5s;
+  left: calc(var(--part-size) * 2 + var(--pog-size));
+}
+.pog--81 .pog__inner {
+  background-color: green;
+}
+.pog--81 .pog__inner::after {
+  border-bottom-color: black;
+  border-top: 0;
+}
+#point--81:checked ~ .pog--81 {
+  animation-play-state: paused;
+}
+#point--81:checked ~ .pog--81 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--82 {
+  animation-delay: 79.25s;
+  left: calc(var(--part-size) * 4 + var(--pog-size) * 3);
+}
+.pog--82 .pog__inner {
+  background-color: blue;
+}
+.pog--82 .pog__inner::after {
+  border-left-color: black;
+  border-right: 0;
+}
+#point--82:checked ~ .pog--82 {
+  animation-play-state: paused;
+}
+#point--82:checked ~ .pog--82 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--83 {
+  animation-delay: 79.5s;
+  left: calc(var(--part-size) * 2 + var(--pog-size));
+}
+.pog--83 .pog__inner {
+  background-color: green;
+}
+.pog--83 .pog__inner::after {
+  border-bottom-color: black;
+  border-top: 0;
+}
+#point--83:checked ~ .pog--83 {
+  animation-play-state: paused;
+}
+#point--83:checked ~ .pog--83 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--84 {
+  animation-delay: 80s;
+  left: calc(var(--part-size) * 2 + var(--pog-size));
+}
+.pog--84 .pog__inner {
+  background-color: green;
+}
+.pog--84 .pog__inner::after {
+  border-bottom-color: black;
+  border-top: 0;
+}
+#point--84:checked ~ .pog--84 {
+  animation-play-state: paused;
+}
+#point--84:checked ~ .pog--84 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--85 {
+  animation-delay: 80.25s;
+  left: var(--part-size);
+}
+.pog--85 .pog__inner {
+  background-color: red;
+}
+.pog--85 .pog__inner::after {
+  border-right-color: black;
+  border-left: 0;
+}
+#point--85:checked ~ .pog--85 {
+  animation-play-state: paused;
+}
+#point--85:checked ~ .pog--85 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--86 {
+  animation-delay: 80.75s;
+  left: calc(var(--part-size) * 3 + var(--pog-size) * 2);
+}
+.pog--86 .pog__inner {
+  background-color: white;
+}
+.pog--86 .pog__inner::after {
+  border-top-color: black;
+  border-bottom: 0;
+}
+#point--86:checked ~ .pog--86 {
+  animation-play-state: paused;
+}
+#point--86:checked ~ .pog--86 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--87 {
+  animation-delay: 81s;
+  left: calc(var(--part-size) * 3 + var(--pog-size) * 2);
+}
+.pog--87 .pog__inner {
+  background-color: white;
+}
+.pog--87 .pog__inner::after {
+  border-top-color: black;
+  border-bottom: 0;
+}
+#point--87:checked ~ .pog--87 {
+  animation-play-state: paused;
+}
+#point--87:checked ~ .pog--87 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--88 {
+  animation-delay: 81.5s;
+  left: var(--part-size);
+}
+.pog--88 .pog__inner {
+  background-color: red;
+}
+.pog--88 .pog__inner::after {
+  border-right-color: black;
+  border-left: 0;
+}
+#point--88:checked ~ .pog--88 {
+  animation-play-state: paused;
+}
+#point--88:checked ~ .pog--88 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--89 {
+  animation-delay: 81.75s;
+  left: calc(var(--part-size) * 3 + var(--pog-size) * 2);
+}
+.pog--89 .pog__inner {
+  background-color: white;
+}
+.pog--89 .pog__inner::after {
+  border-top-color: black;
+  border-bottom: 0;
+}
+#point--89:checked ~ .pog--89 {
+  animation-play-state: paused;
+}
+#point--89:checked ~ .pog--89 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--90 {
+  animation-delay: 82.25s;
+  left: calc(var(--part-size) * 2 + var(--pog-size));
+}
+.pog--90 .pog__inner {
+  background-color: green;
+}
+.pog--90 .pog__inner::after {
+  border-bottom-color: black;
+  border-top: 0;
+}
+#point--90:checked ~ .pog--90 {
+  animation-play-state: paused;
+}
+#point--90:checked ~ .pog--90 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--91 {
+  animation-delay: 83s;
+  left: var(--part-size);
+}
+.pog--91 .pog__inner {
+  background-color: red;
+}
+.pog--91 .pog__inner::after {
+  border-right-color: black;
+  border-left: 0;
+}
+#point--91:checked ~ .pog--91 {
+  animation-play-state: paused;
+}
+#point--91:checked ~ .pog--91 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--92 {
+  animation-delay: 83.25s;
+  left: calc(var(--part-size) * 4 + var(--pog-size) * 3);
+}
+.pog--92 .pog__inner {
+  background-color: blue;
+}
+.pog--92 .pog__inner::after {
+  border-left-color: black;
+  border-right: 0;
+}
+#point--92:checked ~ .pog--92 {
+  animation-play-state: paused;
+}
+#point--92:checked ~ .pog--92 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--93 {
+  animation-delay: 83.75s;
+  left: var(--part-size);
+}
+.pog--93 .pog__inner {
+  background-color: red;
+}
+.pog--93 .pog__inner::after {
+  border-right-color: black;
+  border-left: 0;
+}
+#point--93:checked ~ .pog--93 {
+  animation-play-state: paused;
+}
+#point--93:checked ~ .pog--93 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--94 {
+  animation-delay: 84.25s;
+  left: calc(var(--part-size) * 2 + var(--pog-size));
+}
+.pog--94 .pog__inner {
+  background-color: green;
+}
+.pog--94 .pog__inner::after {
+  border-bottom-color: black;
+  border-top: 0;
+}
+#point--94:checked ~ .pog--94 {
+  animation-play-state: paused;
+}
+#point--94:checked ~ .pog--94 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--95 {
+  animation-delay: 84.5s;
+  left: var(--part-size);
+}
+.pog--95 .pog__inner {
+  background-color: red;
+}
+.pog--95 .pog__inner::after {
+  border-right-color: black;
+  border-left: 0;
+}
+#point--95:checked ~ .pog--95 {
+  animation-play-state: paused;
+}
+#point--95:checked ~ .pog--95 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--96 {
+  animation-delay: 85s;
+  left: calc(var(--part-size) * 2 + var(--pog-size));
+}
+.pog--96 .pog__inner {
+  background-color: green;
+}
+.pog--96 .pog__inner::after {
+  border-bottom-color: black;
+  border-top: 0;
+}
+#point--96:checked ~ .pog--96 {
+  animation-play-state: paused;
+}
+#point--96:checked ~ .pog--96 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--97 {
+  animation-delay: 85.25s;
+  left: calc(var(--part-size) * 3 + var(--pog-size) * 2);
+}
+.pog--97 .pog__inner {
+  background-color: white;
+}
+.pog--97 .pog__inner::after {
+  border-top-color: black;
+  border-bottom: 0;
+}
+#point--97:checked ~ .pog--97 {
+  animation-play-state: paused;
+}
+#point--97:checked ~ .pog--97 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--98 {
+  animation-delay: 85.5s;
+  left: calc(var(--part-size) * 2 + var(--pog-size));
+}
+.pog--98 .pog__inner {
+  background-color: green;
+}
+.pog--98 .pog__inner::after {
+  border-bottom-color: black;
+  border-top: 0;
+}
+#point--98:checked ~ .pog--98 {
+  animation-play-state: paused;
+}
+#point--98:checked ~ .pog--98 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--99 {
+  animation-delay: 86s;
+  left: var(--part-size);
+}
+.pog--99 .pog__inner {
+  background-color: red;
+}
+.pog--99 .pog__inner::after {
+  border-right-color: black;
+  border-left: 0;
+}
+#point--99:checked ~ .pog--99 {
+  animation-play-state: paused;
+}
+#point--99:checked ~ .pog--99 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+.pog--100 {
+  animation-delay: 86.25s;
+  left: var(--part-size);
+}
+.pog--100 .pog__inner {
+  background-color: red;
+}
+.pog--100 .pog__inner::after {
+  border-right-color: black;
+  border-left: 0;
+}
+#point--100:checked ~ .pog--100 {
+  animation-play-state: paused;
+}
+#point--100:checked ~ .pog--100 .pog__inner {
+  transform: scale(1.5);
+  opacity: 0;
+}
+
+@keyframes button-full-fade {
+  0%, 92.1875% {
+    bottom: -100%;
+  }
+  70.3125% {
+    bottom: 0;
+  }
+}
+.button {
+  position: absolute;
+  width: 4em;
+  height: 4em;
+  bottom: -100%;
+  animation: button-full-fade 2s step-end;
+}
+.button--1 {
+  animation-delay: 2.5s;
+  left: 0;
+}
+#point--1:checked ~ .button--1 {
+  display: none;
+}
+.button--2 {
+  animation-delay: 3.75s;
+  right: 4em;
+}
+#point--2:checked ~ .button--2 {
+  display: none;
+}
+.button--3 {
+  animation-delay: 5.75s;
+  right: 4em;
+}
+#point--3:checked ~ .button--3 {
+  display: none;
+}
+.button--4 {
+  animation-delay: 7s;
+  left: 4em;
+}
+#point--4:checked ~ .button--4 {
+  display: none;
+}
+.button--5 {
+  animation-delay: 8.25s;
+  right: 0;
+}
+#point--5:checked ~ .button--5 {
+  display: none;
+}
+.button--6 {
+  animation-delay: 9.75s;
+  right: 0;
+}
+#point--6:checked ~ .button--6 {
+  display: none;
+}
+.button--7 {
+  animation-delay: 11.25s;
+  right: 0;
+}
+#point--7:checked ~ .button--7 {
+  display: none;
+}
+.button--8 {
+  animation-delay: 12.5s;
+  left: 4em;
+}
+#point--8:checked ~ .button--8 {
+  display: none;
+}
+.button--9 {
+  animation-delay: 14.5s;
+  right: 4em;
+}
+#point--9:checked ~ .button--9 {
+  display: none;
+}
+.button--10 {
+  animation-delay: 16.5s;
+  left: 4em;
+}
+#point--10:checked ~ .button--10 {
+  display: none;
+}
+.button--11 {
+  animation-delay: 18.25s;
+  left: 0;
+}
+#point--11:checked ~ .button--11 {
+  display: none;
+}
+.button--12 {
+  animation-delay: 20.25s;
+  right: 0;
+}
+#point--12:checked ~ .button--12 {
+  display: none;
+}
+.button--13 {
+  animation-delay: 21.75s;
+  left: 0;
+}
+#point--13:checked ~ .button--13 {
+  display: none;
+}
+.button--14 {
+  animation-delay: 23.5s;
+  left: 0;
+}
+#point--14:checked ~ .button--14 {
+  display: none;
+}
+.button--15 {
+  animation-delay: 25.25s;
+  right: 0;
+}
+#point--15:checked ~ .button--15 {
+  display: none;
+}
+.button--16 {
+  animation-delay: 27s;
+  left: 4em;
+}
+#point--16:checked ~ .button--16 {
+  display: none;
+}
+.button--17 {
+  animation-delay: 28s;
+  left: 4em;
+}
+#point--17:checked ~ .button--17 {
+  display: none;
+}
+.button--18 {
+  animation-delay: 29s;
+  right: 4em;
+}
+#point--18:checked ~ .button--18 {
+  display: none;
+}
+.button--19 {
+  animation-delay: 30s;
+  left: 4em;
+}
+#point--19:checked ~ .button--19 {
+  display: none;
+}
+.button--20 {
+  animation-delay: 31s;
+  right: 0;
+}
+#point--20:checked ~ .button--20 {
+  display: none;
+}
+.button--21 {
+  animation-delay: 32s;
+  left: 0;
+}
+#point--21:checked ~ .button--21 {
+  display: none;
+}
+.button--22 {
+  animation-delay: 33.5s;
+  right: 0;
+}
+#point--22:checked ~ .button--22 {
+  display: none;
+}
+.button--23 {
+  animation-delay: 34.25s;
+  right: 4em;
+}
+#point--23:checked ~ .button--23 {
+  display: none;
+}
+.button--24 {
+  animation-delay: 35.25s;
+  left: 4em;
+}
+#point--24:checked ~ .button--24 {
+  display: none;
+}
+.button--25 {
+  animation-delay: 36.5s;
+  left: 0;
+}
+#point--25:checked ~ .button--25 {
+  display: none;
+}
+.button--26 {
+  animation-delay: 38s;
+  right: 0;
+}
+#point--26:checked ~ .button--26 {
+  display: none;
+}
+.button--27 {
+  animation-delay: 38.75s;
+  left: 4em;
+}
+#point--27:checked ~ .button--27 {
+  display: none;
+}
+.button--28 {
+  animation-delay: 39.75s;
+  left: 4em;
+}
+#point--28:checked ~ .button--28 {
+  display: none;
+}
+.button--29 {
+  animation-delay: 41s;
+  left: 4em;
+}
+#point--29:checked ~ .button--29 {
+  display: none;
+}
+.button--30 {
+  animation-delay: 42.25s;
+  right: 0;
+}
+#point--30:checked ~ .button--30 {
+  display: none;
+}
+.button--31 {
+  animation-delay: 43.5s;
+  left: 0;
+}
+#point--31:checked ~ .button--31 {
+  display: none;
+}
+.button--32 {
+  animation-delay: 44.5s;
+  left: 0;
+}
+#point--32:checked ~ .button--32 {
+  display: none;
+}
+.button--33 {
+  animation-delay: 45.5s;
+  right: 0;
+}
+#point--33:checked ~ .button--33 {
+  display: none;
+}
+.button--34 {
+  animation-delay: 46.5s;
+  right: 4em;
+}
+#point--34:checked ~ .button--34 {
+  display: none;
+}
+.button--35 {
+  animation-delay: 47.25s;
+  left: 4em;
+}
+#point--35:checked ~ .button--35 {
+  display: none;
+}
+.button--36 {
+  animation-delay: 48s;
+  left: 4em;
+}
+#point--36:checked ~ .button--36 {
+  display: none;
+}
+.button--37 {
+  animation-delay: 49s;
+  right: 4em;
+}
+#point--37:checked ~ .button--37 {
+  display: none;
+}
+.button--38 {
+  animation-delay: 50s;
+  right: 0;
+}
+#point--38:checked ~ .button--38 {
+  display: none;
+}
+.button--39 {
+  animation-delay: 50.5s;
+  left: 0;
+}
+#point--39:checked ~ .button--39 {
+  display: none;
+}
+.button--40 {
+  animation-delay: 51.5s;
+  left: 4em;
+}
+#point--40:checked ~ .button--40 {
+  display: none;
+}
+.button--41 {
+  animation-delay: 52.25s;
+  left: 4em;
+}
+#point--41:checked ~ .button--41 {
+  display: none;
+}
+.button--42 {
+  animation-delay: 53.25s;
+  right: 0;
+}
+#point--42:checked ~ .button--42 {
+  display: none;
+}
+.button--43 {
+  animation-delay: 54s;
+  left: 4em;
+}
+#point--43:checked ~ .button--43 {
+  display: none;
+}
+.button--44 {
+  animation-delay: 54.5s;
+  right: 0;
+}
+#point--44:checked ~ .button--44 {
+  display: none;
+}
+.button--45 {
+  animation-delay: 55s;
+  left: 4em;
+}
+#point--45:checked ~ .button--45 {
+  display: none;
+}
+.button--46 {
+  animation-delay: 55.75s;
+  left: 4em;
+}
+#point--46:checked ~ .button--46 {
+  display: none;
+}
+.button--47 {
+  animation-delay: 56.75s;
+  left: 4em;
+}
+#point--47:checked ~ .button--47 {
+  display: none;
+}
+.button--48 {
+  animation-delay: 57.25s;
+  right: 0;
+}
+#point--48:checked ~ .button--48 {
+  display: none;
+}
+.button--49 {
+  animation-delay: 58.25s;
+  right: 0;
+}
+#point--49:checked ~ .button--49 {
+  display: none;
+}
+.button--50 {
+  animation-delay: 59s;
+  right: 4em;
+}
+#point--50:checked ~ .button--50 {
+  display: none;
+}
+.button--51 {
+  animation-delay: 59.5s;
+  right: 0;
+}
+#point--51:checked ~ .button--51 {
+  display: none;
+}
+.button--52 {
+  animation-delay: 60.5s;
+  right: 0;
+}
+#point--52:checked ~ .button--52 {
+  display: none;
+}
+.button--53 {
+  animation-delay: 61s;
+  left: 4em;
+}
+#point--53:checked ~ .button--53 {
+  display: none;
+}
+.button--54 {
+  animation-delay: 61.75s;
+  left: 0;
+}
+#point--54:checked ~ .button--54 {
+  display: none;
+}
+.button--55 {
+  animation-delay: 62.75s;
+  left: 0;
+}
+#point--55:checked ~ .button--55 {
+  display: none;
+}
+.button--56 {
+  animation-delay: 63.5s;
+  right: 0;
+}
+#point--56:checked ~ .button--56 {
+  display: none;
+}
+.button--57 {
+  animation-delay: 64s;
+  left: 4em;
+}
+#point--57:checked ~ .button--57 {
+  display: none;
+}
+.button--58 {
+  animation-delay: 64.75s;
+  left: 4em;
+}
+#point--58:checked ~ .button--58 {
+  display: none;
+}
+.button--59 {
+  animation-delay: 65.5s;
+  right: 4em;
+}
+#point--59:checked ~ .button--59 {
+  display: none;
+}
+.button--60 {
+  animation-delay: 66s;
+  left: 4em;
+}
+#point--60:checked ~ .button--60 {
+  display: none;
+}
+.button--61 {
+  animation-delay: 66.75s;
+  left: 0;
+}
+#point--61:checked ~ .button--61 {
+  display: none;
+}
+.button--62 {
+  animation-delay: 67.5s;
+  left: 4em;
+}
+#point--62:checked ~ .button--62 {
+  display: none;
+}
+.button--63 {
+  animation-delay: 68.25s;
+  left: 0;
+}
+#point--63:checked ~ .button--63 {
+  display: none;
+}
+.button--64 {
+  animation-delay: 68.75s;
+  right: 4em;
+}
+#point--64:checked ~ .button--64 {
+  display: none;
+}
+.button--65 {
+  animation-delay: 69.25s;
+  left: 0;
+}
+#point--65:checked ~ .button--65 {
+  display: none;
+}
+.button--66 {
+  animation-delay: 70s;
+  left: 0;
+}
+#point--66:checked ~ .button--66 {
+  display: none;
+}
+.button--67 {
+  animation-delay: 70.5s;
+  left: 0;
+}
+#point--67:checked ~ .button--67 {
+  display: none;
+}
+.button--68 {
+  animation-delay: 71s;
+  right: 0;
+}
+#point--68:checked ~ .button--68 {
+  display: none;
+}
+.button--69 {
+  animation-delay: 71.75s;
+  right: 4em;
+}
+#point--69:checked ~ .button--69 {
+  display: none;
+}
+.button--70 {
+  animation-delay: 72.25s;
+  left: 4em;
+}
+#point--70:checked ~ .button--70 {
+  display: none;
+}
+.button--71 {
+  animation-delay: 72.75s;
+  left: 0;
+}
+#point--71:checked ~ .button--71 {
+  display: none;
+}
+.button--72 {
+  animation-delay: 73.25s;
+  right: 4em;
+}
+#point--72:checked ~ .button--72 {
+  display: none;
+}
+.button--73 {
+  animation-delay: 74s;
+  left: 4em;
+}
+#point--73:checked ~ .button--73 {
+  display: none;
+}
+.button--74 {
+  animation-delay: 74.5s;
+  right: 4em;
+}
+#point--74:checked ~ .button--74 {
+  display: none;
+}
+.button--75 {
+  animation-delay: 75.25s;
+  right: 0;
+}
+#point--75:checked ~ .button--75 {
+  display: none;
+}
+.button--76 {
+  animation-delay: 75.75s;
+  left: 4em;
+}
+#point--76:checked ~ .button--76 {
+  display: none;
+}
+.button--77 {
+  animation-delay: 76.25s;
+  right: 0;
+}
+#point--77:checked ~ .button--77 {
+  display: none;
+}
+.button--78 {
+  animation-delay: 76.75s;
+  right: 4em;
+}
+#point--78:checked ~ .button--78 {
+  display: none;
+}
+.button--79 {
+  animation-delay: 77s;
+  left: 0;
+}
+#point--79:checked ~ .button--79 {
+  display: none;
+}
+.button--80 {
+  animation-delay: 77.75s;
+  left: 4em;
+}
+#point--80:checked ~ .button--80 {
+  display: none;
+}
+.button--81 {
+  animation-delay: 78.5s;
+  left: 4em;
+}
+#point--81:checked ~ .button--81 {
+  display: none;
+}
+.button--82 {
+  animation-delay: 79.25s;
+  right: 0;
+}
+#point--82:checked ~ .button--82 {
+  display: none;
+}
+.button--83 {
+  animation-delay: 79.5s;
+  left: 4em;
+}
+#point--83:checked ~ .button--83 {
+  display: none;
+}
+.button--84 {
+  animation-delay: 80s;
+  left: 4em;
+}
+#point--84:checked ~ .button--84 {
+  display: none;
+}
+.button--85 {
+  animation-delay: 80.25s;
+  left: 0;
+}
+#point--85:checked ~ .button--85 {
+  display: none;
+}
+.button--86 {
+  animation-delay: 80.75s;
+  right: 4em;
+}
+#point--86:checked ~ .button--86 {
+  display: none;
+}
+.button--87 {
+  animation-delay: 81s;
+  right: 4em;
+}
+#point--87:checked ~ .button--87 {
+  display: none;
+}
+.button--88 {
+  animation-delay: 81.5s;
+  left: 0;
+}
+#point--88:checked ~ .button--88 {
+  display: none;
+}
+.button--89 {
+  animation-delay: 81.75s;
+  right: 4em;
+}
+#point--89:checked ~ .button--89 {
+  display: none;
+}
+.button--90 {
+  animation-delay: 82.25s;
+  left: 4em;
+}
+#point--90:checked ~ .button--90 {
+  display: none;
+}
+.button--91 {
+  animation-delay: 83s;
+  left: 0;
+}
+#point--91:checked ~ .button--91 {
+  display: none;
+}
+.button--92 {
+  animation-delay: 83.25s;
+  right: 0;
+}
+#point--92:checked ~ .button--92 {
+  display: none;
+}
+.button--93 {
+  animation-delay: 83.75s;
+  left: 0;
+}
+#point--93:checked ~ .button--93 {
+  display: none;
+}
+.button--94 {
+  animation-delay: 84.25s;
+  left: 4em;
+}
+#point--94:checked ~ .button--94 {
+  display: none;
+}
+.button--95 {
+  animation-delay: 84.5s;
+  left: 0;
+}
+#point--95:checked ~ .button--95 {
+  display: none;
+}
+.button--96 {
+  animation-delay: 85s;
+  left: 4em;
+}
+#point--96:checked ~ .button--96 {
+  display: none;
+}
+.button--97 {
+  animation-delay: 85.25s;
+  right: 4em;
+}
+#point--97:checked ~ .button--97 {
+  display: none;
+}
+.button--98 {
+  animation-delay: 85.5s;
+  left: 4em;
+}
+#point--98:checked ~ .button--98 {
+  display: none;
+}
+.button--99 {
+  animation-delay: 86s;
+  left: 0;
+}
+#point--99:checked ~ .button--99 {
+  display: none;
+}
+.button--100 {
+  animation-delay: 86.25s;
+  left: 0;
+}
+#point--100:checked ~ .button--100 {
+  display: none;
+}
+
+.point {
+  position: absolute;
+  left: -200vw;
+}
+
+.point:checked {
+  counter-increment: points;
+}
+
+.point:not(:checked) + .point:checked {
+  counter-reset: combo;
+}
+
+.point:checked + .point:checked {
+  counter-increment: combo points;
+}
+
+.score {
+  position: absolute;
+  bottom: 3em;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 1em;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.score::before {
+  content: counter(points);
+  font-size: 2em;
+  vertical-align: middle;
+}
+.score::after {
+  content: " combo: " counter(combo);
+  font-size: 1em;
+  opacity: 0.5;
+  vertical-align: middle;
+  text-transform: uppercase;
+}
+
+.arrow {
+  position: absolute;
+  width: 4em;
+  height: 4em;
+  background: rgba(0, 0, 255, 0.2);
+  bottom: 0;
+  pointer-events: none;
+}
+.arrow::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 1em solid transparent;
+}
+.arrow--left {
+  left: 0;
+}
+.arrow--left::after {
+  border-right-color: black;
+  border-left: 0;
+}
+.arrow--up {
+  left: 4em;
+}
+.arrow--up::after {
+  border-bottom-color: black;
+  border-top: 0;
+}
+.arrow--down {
+  right: 4em;
+}
+.arrow--down::after {
+  border-top-color: black;
+  border-bottom: 0;
+}
+.arrow--right {
+  right: 0;
+}
+.arrow--right::after {
+  border-left-color: black;
+  border-right: 0;
+}
+
+/*# sourceMappingURL=entry.css.map */
