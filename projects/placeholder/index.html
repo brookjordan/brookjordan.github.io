@@ -1,521 +1,819 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
     <title>Placeholder text builder</title>
-    <link rel="shortcut icon" href="./favicon.ico">
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <link rel="shortcut icon" href="./favicon.ico" />
+
     <script>
-      var favicons = [
-        './yousleptwith.ico',
-        './sheateabig.ico',
-        './hethrewher.ico'
+      let favicons = [
+        "./yousleptwith.ico",
+        "./sheateabig.ico",
+        "./hethrewher.ico"
       ];
-      document.querySelector('[rel="shortcut icon"]').href = favicons[Math.floor(Math.random() * favicons.length)];
+      document.querySelector('[rel="shortcut icon"]').href =
+        favicons[Math.floor(Math.random() * favicons.length)];
     </script>
-    <style>
-      @keyframes pop-in {
-        0% {
-          transform: scaleY(0);
-        }
-        100% {
-          transform: scaleY(1);
-        }
-      }
 
-      body.only,
-      html {
-        height:100%;
-        width:100%;
-      }
+    <link
+      href="https://fonts.googleapis.com/css?family=Coming+Soon"
+      rel="stylesheet"
+    />
 
-      a,
-      body.only {
-        display:block;
-      }
+    <script src="query-params--1.0.0.js"></script>
 
-      a,
-      html {
-        background:#fff;
-      }
-
-      body,
-      html {
-        margin:0;
-        font-family:"Open Sans","Helvetica Neue",Helvetica,sans-serif;
-      }
-
-      body {
-        display:flex;
-        flex-flow:row wrap;
-        justify-content: space-evenly;
-        align-content: flex-start;
-        align-items: center;
-        padding-bottom:100vh;
-        padding-top:150px;
-        background: #eee;
-        min-height: 100%;
-      }
-
-      body.only {
-        padding:0
-      }
-
-      a {
-        max-width:250px;
-        margin:-90px 0 0;
-        color:#2d3033;
-        text-decoration:none;
-
-        padding:10px 20px 100px;
-        border: 1px solid #ddd;
-        border-bottom-width: 0;
-        font-size: 26px;
-        background: linear-gradient(to top, rgba(255,255,255,0), white 70px);
-        transform-origin: 50% 100%;
-        animation: pop-in 0.3s cubic-bezier(.5,2,.5,1);
-        contain: content;
-      }
-
-      .only a {
-        position:relative;
-        top:50%;
-        padding:20px 40px;
-        margin:0 auto;
-        transform: translateY(-50%);
-        animation: none;
-        background: white;
-        border-bottom-width: 1px;
-      }
-    </style>
+    <script src="words--3.2.0.js"></script>
+    <script src="verbs--2.1.0.js"></script>
+    <script src="extra-people--1.1.0.js"></script>
+    <script src="people--2.1.0.js"></script>
   </head>
+
   <body>
-    <script src="words--2.3.0.js"></script>
-    <script src="verbs--1.6.2.js"></script>
-    <script src="people--1.2.0.js"></script>
     <script>
-    'use strict';
-    fixBase64(window);
-    globalisePluralise(window);
+      "use strict";
+      fixBase64(window);
+      globalisePluralise(window);
 
-    var getString;
-    var params = location.search.slice(1).split('=');
-    var begin = function() {};
-    var building = false;
+      let getString;
+      let globalGirls;
+      let globalBoys;
 
-    if (params[0] === '_') {
-      document.body.className = 'only';
-      buildWord(atobUTF8(params[1]), false);
-    } else {
-      begin = _begin;
-    }
+      class RandomString {
+        constructor(words) {
+          let o = words || {};
+          return () => {
+            const addPeople = () => {
+              if (gender === "you") {
+                phrase += "You";
+              } else if (gender === "male") {
+                phrase += fillPlaceholders(randomBoy());
+              } else if (gender === "female") {
+                phrase += fillPlaceholders(randomGirl());
+              } else {
+                throw new Error("Gender isn't set");
+              }
 
-    begin({
-      girls:      defaultGirls,
-      boys:       defaultBoys,
-      extraGirls: defaultExtraGirls,
-      extraBoys:  defaultExtraBoys,
-      prefixes:   defaultPrefixes,
-      verbs:      defaultVerbs,
+              if ([...boys, ...girls].length >= 2 && Math.random() > 0.92) {
+                phrase += `${itemFrom(peopleConnectors, true)} `;
+                isPlural = true;
 
-      sentientObjects: defaultSentientObjects,
-      inanimateObjects: defaultInanimateObjects,
+                genderRnd = Math.ceil(
+                  Math.random() * (girls.length + boys.length)
+                );
+                if (genderRnd < girls.length) {
+                  gender = "female";
+                } else {
+                  gender = "male";
+                }
 
-      pluralisedSentientObjects: defaultPluralisedSentientObjects,
-      pluralisedInanimateObjects: defaultPluralisedInanimateObjects,
-
-      places:     defaultPlaces,
-      adjectives: defaultAdjectives,
-      endings:    defaultEndings,
-    });
-
-    function _begin(words) {
-      getString = randomString(words);
-      checkForBuild();
-      window.onscroll = window.ontouchmove = window.onresize = checkForBuild;
-    }
-
-    function checkForBuild() {
-      if (!building && window.scrollY + innerHeight * 2.5 >= document.body.getBoundingClientRect().height) {
-        buildWords();
-      }
-    }
-
-    function buildWords() {
-      building = true;
-      requestAnimationFrame(function() {
-        building = false;
-        try {
-          buildWord(getString(), true);
-        } catch(e) { console.warn(`Something broke: "${e}"`); }
-        checkForBuild();
-      });
-    }
-
-    function buildWord(str, active) {
-      var a = document.createElement('a');
-      if (!!active) {
-        try {
-          a.href = `?_=${btoaUTF8(str)}`;
-          a.target="_blank";
-        } catch(e) {
-          console.warn(`Link could not be created for: "${str}"\n${e}`);
-        }
-        a.style = makeStyle(str);
-      } else {
-        a.href = "?";
-        a.target = "_self";
-      }
-      a.innerHTML = str;
-      document.body.appendChild(a);
-      document.title = str;
-    }
-
-    function makeStyle(str) {
-      return 'font-size:' + Math.max(16, len(str.length)) + 'px';
-    }
-
-    function len(x) {
-      var min = 14;
-      var max = 26;
-      return max - Math.max(0, Math.min((max - min), 15 - 1000 / x))
-    }
-
-    function randomString(options) {
-      var o = options || {};
-      return function() {
-        var usedPluralisedObjects = false;
-        var girls      = o.girls ? o.girls.slice(0) : 'Mary | Sue'.split(' | ');
-        var boys       = o.boys ? o.boys.slice(0) : 'Fred | Dave'.split(' | ');
-        var prefixes   = o.prefixes ? o.prefixes.slice(0) : 'gladly | slowly'.split(' | ');
-        var verbs      = o.verbs ? o.verbs.slice(0) : 'likes $anObject | $was happy'.split(' | ');
-        var inanimateObjects = o.inanimateObjects.slice(0);
-        var sentientObjects  = o.sentientObjects ? o.sentientObjects.slice(0) : '$themself | a turtle'.split(' | ');
-        var pluralisedInanimateObjects = o.pluralisedInanimateObjects ? o.pluralisedInanimateObjects.slice(0) : 'some $inanimateObjects | a few $inanimateObjects'.split(' | ');
-        var pluralisedSentientObjects  = o.pluralisedSentientObjects ? o.pluralisedSentientObjects.slice(0) : 'some $sentientObjects | a few $sentientObjects'.split(' | ');
-        var places     = o.places ? o.places.slice(0) : 'in the park | with $their friends'.split(' | ');
-        var adjectives = o.adjectives ? o.adjectives.slice(0) : 'a small | an enormous'.split(' | ');
-        var endings    = o.endings ? o.endings.slice(0) : ' yesterday. |  with high spirits!'.split(' | ');
-        var genders = {
-          you: {
-            they: 'you',
-            their: 'your',
-            them: 'you',
-            themself: 'yourself',
-            was: 'were'
-          },
-          male: {
-            they: 'he',
-            their: 'his',
-            them: 'him',
-            themself: 'himself',
-            was: 'was'
-          },
-          female: {
-            they: 'she',
-            their: 'her',
-            them: 'her',
-            themself: 'herself',
-            was: 'was'
-          },
-          plural: {
-            they: 'they',
-            their: 'their',
-            them: 'them',
-            themself: 'themselves',
-            was: 'were'
-          }
-        };
-        var genderRnd = Math.ceil(Math.random() * (girls.length + boys.length + 1));
-        var gender;
-        var isPlural;
-        if (genderRnd === 1) {
-          gender = 'you';
-        } else if (genderRnd < girls.length) {
-          gender = 'female';
-        } else {
-          gender = 'male';
-        };
-        var peopleConnectors = [
-          ' and',
-          ', then'
-        ];
-        var phraseConnectors = undefined;
-        var phrase = '';
-        addPeople();
-        girls = girls.concat(o.extraGirls || []);
-        boys = boys.concat(o.extraBoys || []);
-        buildPhraseConnectors();
-        addVerbObject();
-        addEnding();
-        var cleanedPhrase = cleanPhrase(phrase);
-
-        return cleanedPhrase;
-
-
-        function addPeople() {
-          if (gender === 'you') {
-            phrase += 'You';
-          } else if (gender === 'male') {
-            phrase += fillPlaceholders(randomBoy());
-          } else if (gender === 'female') {
-            phrase += fillPlaceholders(randomGirl());
-          } else {
-            throw new Error("Gender isn't set");
-          }
-
-          if ([...boys, ...girls].length >= 2 && Math.random() > 0.92) {
-            phrase += itemFrom(peopleConnectors, true) + ' ';
-            isPlural = true;
-
-            genderRnd = Math.ceil(Math.random() * (girls.length + boys.length));
-            if (genderRnd < girls.length) {
-              gender = 'female';
-            } else {
-              gender = 'male';
+                addPeople();
+              }
             };
 
-            addPeople();
-          }
-        }
+            const addVerbObject = () => {
+              const safetyNumber = 3;
+              if (
+                verbs.length < safetyNumber ||
+                boys.length < safetyNumber ||
+                girls.length < safetyNumber ||
+                sentientObjects.length < safetyNumber ||
+                inanimateObjects.length < safetyNumber ||
+                pluralisedSentientObjects.length < safetyNumber ||
+                pluralisedInanimateObjects.length < safetyNumber
+              ) {
+                return;
+              }
 
-        function addVerbObject() {
-          const safetyNumber = 3;
-          debugger;
-          if (verbs.length < safetyNumber
-           || boys.length < safetyNumber
-           || girls.length < safetyNumber
-           || sentientObjects.length < safetyNumber
-           || inanimateObjects.length < safetyNumber
-           || pluralisedSentientObjects.length < safetyNumber
-           || pluralisedInanimateObjects.length < safetyNumber) { return };
-          if (prefixes.length && Math.random() > 0.9) {
-            phrase += itemFrom(prefixes, false) + ' ';
-          }
-          phrase += randomVerb();
-          if (Math.random() > 0.8
-           && verbs.length >= safetyNumber
-           && boys.length >= safetyNumber
-           && girls.length >= safetyNumber
-           && sentientObjects.length >= safetyNumber
-           && inanimateObjects.length >= safetyNumber
-           && pluralisedSentientObjects.length >= safetyNumber
-           && pluralisedInanimateObjects.length >= safetyNumber) {
-            phrase += itemFrom(phraseConnectors, true);
-            addVerbObject();
-          }
-        }
+              if (prefixes.length && Math.random() > 0.9) {
+                phrase += `${itemFrom(prefixes, false)} `;
+              }
+              phrase += randomVerb();
 
-        function addEnding() {
-          var chance = _chance(20);
-          if (Math.random() > 0.8) {
-            phrase += randomEnding();
-          } else {
-            var rnd = Math.random() * chance;
-            phrase += chance(10) ? '.' : chance(4) ? '!' : chance(4) ? '?' : chance(1) ? '...' : '?!?';
-          }
-        }
+              if (
+                Math.random() > 0.8 &&
+                verbs.length >= safetyNumber &&
+                boys.length >= safetyNumber &&
+                girls.length >= safetyNumber &&
+                sentientObjects.length >= safetyNumber &&
+                inanimateObjects.length >= safetyNumber &&
+                pluralisedSentientObjects.length >= safetyNumber &&
+                pluralisedInanimateObjects.length >= safetyNumber
+              ) {
+                phrase += itemFrom(phraseConnectors, true);
+                addVerbObject();
+              }
+            };
 
-        function _chance(index) {
-          var rnd = Math.random() * index;
-          var upto = 0;
-          return function(val) {
-            upto += val;
-            if (upto >= rnd) {
-              return true;
+            const addEnding = () => {
+              let chance = new Chance(20);
+              if (Math.random() > 0.8) {
+                phrase += randomEnding();
+              } else {
+                let rnd = Math.random() * chance;
+                phrase += chance(15)
+                  ? "."
+                  : chance(4)
+                  ? "!"
+                  : chance(4)
+                  ? "?"
+                  : chance(1)
+                  ? "..."
+                  : "?!?";
+              }
+            };
+
+            class Chance {
+              constructor(index) {
+                let rnd = Math.random() * index;
+                let upto = 0;
+
+                return val => {
+                  upto += val;
+                  if (upto >= rnd) {
+                    return true;
+                  }
+                  return false;
+                };
+              }
             }
-            return false;
+
+            const itemFrom = (array, safe) => {
+              if (!!safe) {
+                return array[Math.floor(Math.random() * array.length)];
+              }
+              return array.splice(
+                Math.floor(Math.random() * array.length),
+                1
+              )[0];
+            };
+
+            const randomAdjective = () => genderise(itemFrom(adjectives, true));
+            const randomEnding = () =>
+              fillPlaceholders(genderise(itemFrom(endings, true)));
+
+            const randomVerb = () => {
+              let verb = itemFrom(verbs, false);
+              if (
+                places.length &&
+                Math.random() > 0.8 &&
+                !/\$place/.test(verb)
+              ) {
+                phrase += randomPlace();
+              }
+              return subjectise(prefixise(genderise(fillPlaceholders(verb))));
+            };
+
+            const randomObject = (options = {}) => {
+              let objects = objectSet(options);
+              let anObject = itemFrom(objects, false);
+              if (!/$thier/.test(anObject)) {
+                anObject = anObject.replace(/^[^ ]+ /, "");
+              }
+              return fillPlaceholders(genderise(anObject));
+            };
+
+            const randomObjects = (options = {}) => {
+              let words = randomObject(options).split(" ");
+              words[words.length - 1] = pluralise(words[words.length - 1]);
+              return words.join(" ");
+            };
+
+            const randomAnObject = (options = {}) => {
+              let objects = objectSet(options);
+              return fillPlaceholders(genderise(itemFrom(objects, false)));
+            };
+
+            const objectSet = ({
+              sentience = "either",
+              includePlurals = !usedPluralisedObjects
+            } = {}) => {
+              let objectSet;
+              if (sentience === "sentient") {
+                objectSet = includePlurals
+                  ? randomArray(sentientObjects, pluralisedSentientObjects)
+                  : sentientObjects;
+              } else if (sentience === "inanimate") {
+                objectSet = includePlurals
+                  ? randomArray(inanimateObjects, pluralisedInanimateObjects)
+                  : inanimateObjects;
+              } else {
+                objectSet = includePlurals
+                  ? randomArray(
+                      sentientObjects,
+                      inanimateObjects,
+                      pluralisedSentientObjects,
+                      pluralisedInanimateObjects
+                    )
+                  : randomArray(sentientObjects, inanimateObjects);
+              }
+
+              // two sets of pluralised objects rarely works
+              if (
+                objectSet === pluralisedSentientObjects ||
+                objectSet === pluralisedInanimateObjects
+              ) {
+                usedPluralisedObjects = true;
+              }
+
+              return objectSet;
+            };
+
+            const randomGirl = () => {
+              let girl = genderise(itemFrom(girls, false));
+              //if (Math.random() > (isPlural ? 0.8 : 0.5)) { gender = 'female'; }
+              return fillPlaceholders(girl);
+            };
+
+            const randomBoy = () => {
+              let boy = genderise(itemFrom(boys, false));
+              //if (Math.random() > (isPlural ? 0.8 : 0.5)) { gender = 'male'; }
+              return fillPlaceholders(boy);
+            };
+
+            const randomPerson = () => {
+              if (Math.random() > 0.5) {
+                return randomBoy();
+              } else {
+                return randomGirl();
+              }
+            };
+
+            const randomPlace = () =>
+              fillPlaceholders(genderise(itemFrom(places, false)));
+
+            const randomSubject = () => {
+              let chance = new Chance(2);
+              return chance(1) ? randomPerson() : randomAnObject();
+            };
+
+            const genderise = string => {
+              let genderData = genders[isPlural ? "plural" : gender];
+              return string
+                .replace("$themself", genderData.themself)
+                .replace("$them", genderData.them)
+                .replace("$their", genderData.their)
+                .replace("$they", genderData.they)
+                .replace("$was", genderData.was);
+            };
+
+            const prefixise = string =>
+              string.replace("$prefix", itemFrom(prefixes, false));
+            const subjectise = string =>
+              string.replace("$subject", randomSubject());
+
+            const fillPlaceholders = string => {
+              string = fillPlaceholder(string, "$subject", randomSubject);
+              string = fillPlaceholder(string, "$girl", randomGirl);
+              string = fillPlaceholder(string, "$boy", randomBoy);
+              string = fillPlaceholder(string, "$person", randomPerson);
+
+              string = fillPlaceholder(string, "$objects", () =>
+                randomObjects({ includePlurals: false })
+              );
+              string = fillPlaceholder(string, "$sentientObjects", () =>
+                randomObjects({ sentience: "sentient", includePlurals: false })
+              );
+              string = fillPlaceholder(string, "$inanimateObjects", () =>
+                randomObjects({ sentience: "inanimate", includePlurals: false })
+              );
+
+              string = fillPlaceholder(string, "$anObject", randomAnObject);
+              string = fillPlaceholder(string, "$aSentientObject", () =>
+                randomAnObject({ sentience: "sentient" })
+              );
+              string = fillPlaceholder(string, "$anInanimateObject", () =>
+                randomAnObject({ sentience: "inanimate" })
+              );
+
+              string = fillPlaceholder(string, "$object", randomObject);
+              string = fillPlaceholder(string, "$sentientObject", () =>
+                randomObject({ sentience: "sentient" })
+              );
+              string = fillPlaceholder(string, "$inanimateObject", () =>
+                randomObject({ sentience: "inanimate" })
+              );
+
+              string = fillPlaceholder(string, "$adj", randomAdjective);
+              string = fillPlaceholder(string, "$didSomething", randomVerb);
+              string = fillPlaceholder(string, "$place", randomPlace);
+
+              return string;
+            };
+
+            const fillPlaceholder = (string, placeholder, randomPhrase) => {
+              while (string.indexOf(placeholder) > -1) {
+                string = string.replace(placeholder, randomPhrase());
+                fillPlaceholder(string, placeholder, randomPhrase);
+              }
+              return string;
+            };
+
+            const buildPhraseConnectors = () => {
+              phraseConnectors = [
+                " and",
+                " then",
+                genderise(" as $they"),
+                genderise(" before $they"),
+                genderise(" when $they"),
+                genderise(" after $they"),
+                genderise(" because $they"),
+                genderise(" but then $they")
+              ];
+            };
+
+            const cleanPhrase = phrase =>
+              phrase.replace(/,{2}/, ",").replace(/s's/g, "s'");
+
+            const randomArray = (...arrs) => {
+              let length = [].concat(...arrs).length;
+              let rnd = Math.random();
+              let cul = 0;
+              for (let i = 0; i < arrs.length; i += 1) {
+                if (arrs[i].length === 0) {
+                  continue;
+                }
+                cul += arrs[i].length;
+                if (i === arrs.length - 1 || rnd >= cul / length) {
+                  return arrs[i];
+                }
+              }
+            };
+
+            let usedPluralisedObjects = false;
+            let girls = globalGirls.slice(0);
+            let boys = globalBoys.slice(0);
+            let prefixes = o.prefixes
+              ? o.prefixes.slice(0)
+              : "gladly | slowly".split(" | ");
+            let verbs = o.verbs
+              ? o.verbs.slice(0)
+              : "likes $anObject | $was happy".split(" | ");
+            let inanimateObjects = o.inanimateObjects.slice(0);
+            let sentientObjects = o.sentientObjects
+              ? o.sentientObjects.slice(0)
+              : "$themself | a turtle".split(" | ");
+            let pluralisedInanimateObjects = o.pluralisedInanimateObjects
+              ? o.pluralisedInanimateObjects.slice(0)
+              : "some $inanimateObjects | a few $inanimateObjects".split(" | ");
+            let pluralisedSentientObjects = o.pluralisedSentientObjects
+              ? o.pluralisedSentientObjects.slice(0)
+              : "some $sentientObjects | a few $sentientObjects".split(" | ");
+            let places = o.places
+              ? o.places.slice(0)
+              : "in the park | with $their friends".split(" | ");
+            let adjectives = o.adjectives
+              ? o.adjectives.slice(0)
+              : "a small | an enormous".split(" | ");
+            let endings = o.endings
+              ? o.endings.slice(0)
+              : " yesterday. |  with high spirits!".split(" | ");
+            let genders = {
+              you: {
+                they: "you",
+                their: "your",
+                them: "you",
+                themself: "yourself",
+                was: "were"
+              },
+              male: {
+                they: "he",
+                their: "his",
+                them: "him",
+                themself: "himself",
+                was: "was"
+              },
+              female: {
+                they: "she",
+                their: "her",
+                them: "her",
+                themself: "herself",
+                was: "was"
+              },
+              plural: {
+                they: "they",
+                their: "their",
+                them: "them",
+                themself: "themselves",
+                was: "were"
+              }
+            };
+            let genderRnd = Math.ceil(
+              Math.random() * (girls.length + boys.length + 1)
+            );
+            let gender;
+            let isPlural;
+            if (genderRnd === 1) {
+              gender = "you";
+            } else if (genderRnd <= girls.length + 1) {
+              gender = "female";
+            } else {
+              gender = "male";
+            }
+            let peopleConnectors = [" and", ", then"];
+            let phraseConnectors = undefined;
+            let phrase = "";
+            addPeople();
+            girls = girls.concat(o.extraGirls || []);
+            boys = boys.concat(o.extraBoys || []);
+            buildPhraseConnectors();
+            addVerbObject();
+            addEnding();
+            let cleanedPhrase = cleanPhrase(phrase);
+
+            return cleanedPhrase;
           };
         }
+      }
 
-        function itemFrom(array, safe) {
-          if (!!safe) {
-            return array[Math.floor(Math.random() * array.length)];
-          }
-          return array.splice(Math.floor(Math.random() * array.length), 1)[0];
-        }
+      const _begin = words => {
+        getString = new RandomString(words);
+        buildWordsIfSpaceIsAvailable();
+        window.onscroll = window.ontouchmove = window.onresize = buildWordsIfSpaceIsAvailable;
+      };
 
-        function randomAdjective() {
-          return genderise(itemFrom(adjectives, true));
-        }
-
-        function randomEnding() {
-          return fillPlaceholders(genderise(itemFrom(endings, true)));
-        }
-
-        function randomVerb() {
-          var verb = itemFrom(verbs, false);
-          if (places.length && Math.random() > 0.8 && !/\$place/.test(verb)) {
-            phrase += randomPlace();
-          }
-          return subjectise(prefixise(genderise(fillPlaceholders(verb)) ) );
-        }
-
-        function randomObject(options = {}) {
-          let objects = objectSet(options);
-          var anObject = itemFrom(objects, false);
-          if (!/$thier/.test(anObject)) {
-            anObject = anObject.replace(/^[^ ]+ /, '');
-          }
-          return fillPlaceholders(genderise(anObject));
-        }
-
-        function randomObjects(options = {}) {
-          let words = randomObject(options).split(' ');
-          words[words.length - 1] = pluralise(words[words.length - 1]);
-          return words.join(' ');
-        }
-
-        function randomAnObject(options = {}) {
-          let objects = objectSet(options);
-          return fillPlaceholders(genderise(itemFrom(objects, false)));
-        }
-
-        function objectSet({ sentience = 'either', includePlurals = !usedPluralisedObjects } = {}) {
-          let objectSet;
-          if (sentience === 'sentient') {
-            objectSet = includePlurals
-              ? randomArray(sentientObjects, pluralisedSentientObjects)
-              : sentientObjects;
-          } else if (sentience === 'inanimate') {
-            objectSet = includePlurals
-              ? randomArray(inanimateObjects, pluralisedInanimateObjects)
-              : inanimateObjects;
-          } else {
-            objectSet = includePlurals
-              ? randomArray(sentientObjects, inanimateObjects, pluralisedSentientObjects, pluralisedInanimateObjects)
-              : randomArray(sentientObjects, inanimateObjects);
-          }
-
-          // two sets of pluralised objects rarely works
-          if (objectSet === pluralisedSentientObjects || objectSet === pluralisedInanimateObjects) {
-            usedPluralisedObjects = true;
-          }
-
-          return objectSet;
-        }
-
-        function randomGirl() {
-          var girl = genderise(itemFrom(girls, false));
-          //if (Math.random() > (isPlural ? 0.8 : 0.5)) { gender = 'female'; }
-          return fillPlaceholders(girl);
-        }
-
-        function randomBoy() {
-          var boy = genderise(itemFrom(boys, false));
-          //if (Math.random() > (isPlural ? 0.8 : 0.5)) { gender = 'male'; }
-          return fillPlaceholders(boy);
-        }
-
-        function randomPerson() {
-          if (Math.random() > 0.5) {
-            return randomBoy();
-          } else {
-            return randomGirl();
-          }
-        }
-
-        function randomPlace() {
-          return fillPlaceholders(genderise(itemFrom(places, false)));
-        }
-
-        function randomSubject() {
-          var chance = _chance(2);
-          return chance(1) ? randomPerson() : randomAnObject();
-        }
-
-        function genderise(string) {
-          let genderData = genders[isPlural ? 'plural' : gender];
-          return string.replace('$themself', genderData.themself)
-                       .replace('$them', genderData.them)
-                       .replace('$their', genderData.their)
-                       .replace('$they', genderData.they)
-                       .replace('$was', genderData.was);
-        }
-
-        function prefixise(string) {
-          return string.replace('$prefix', itemFrom(prefixes, false));
-        }
-
-        function subjectise(string) {
-          return string.replace('$subject', randomSubject());
-        }
-
-        function fillPlaceholders(string) {
-          string = fillPlaceholder(string, '$subject', randomSubject);
-          string = fillPlaceholder(string, '$girl', randomGirl);
-          string = fillPlaceholder(string, '$boy', randomBoy);
-          string = fillPlaceholder(string, '$person', randomPerson);
-
-          string = fillPlaceholder(string, '$objects', () => randomObjects({ includePlurals: false }));
-          string = fillPlaceholder(string, '$sentientObjects', () => randomObjects({ sentience: 'sentient', includePlurals: false }));
-          string = fillPlaceholder(string, '$inanimateObjects', () => randomObjects({ sentience: 'inanimate', includePlurals: false }));
-
-          string = fillPlaceholder(string, '$anObject', randomAnObject);
-          string = fillPlaceholder(string, '$aSentientObject', () => randomAnObject({ sentience: 'sentient' }));
-          string = fillPlaceholder(string, '$anInanimateObject', () => randomAnObject({ sentience: 'inanimate' }));
-
-          string = fillPlaceholder(string, '$object', randomObject);
-          string = fillPlaceholder(string, '$sentientObject', () => randomObject({ sentience: 'sentient' }));
-          string = fillPlaceholder(string, '$inanimateObject', () => randomObject({ sentience: 'inanimate' }));
-
-          string = fillPlaceholder(string, '$adj', randomAdjective);
-          string = fillPlaceholder(string, '$didSomething', randomVerb);
-          string = fillPlaceholder(string, '$place', randomPlace);
-
-          return string;
-        }
-
-        function fillPlaceholder(string, placeholder, randomPhrase) {
-          while (string.indexOf(placeholder) > -1) {
-            string = string.replace(placeholder, randomPhrase());
-            fillPlaceholder(string, placeholder, randomPhrase);
-          }
-          return string;
-        }
-
-        function buildPhraseConnectors() {
-          phraseConnectors = [
-            ' and',
-            ' then',
-            genderise(' as $they'),
-            genderise(' before $they'),
-            genderise(' when $they'),
-            genderise(' after $they'),
-            genderise(' because $they'),
-            genderise(' but then $they')
-          ];
-        }
-
-        function cleanPhrase(phrase) {
-          return phrase
-            .replace(/,{2}/, ',');
-        }
-
-        function randomArray(...arrs) {
-          var length = [].concat(...arrs).length;
-          var rnd = Math.random();
-          let cul = 0;
-          for (var i = 0; i < arrs.length; i += 1) {
-            if (arrs[i].length === 0) { continue; }
-            cul += arrs[i].length;
-            if (i === arrs.length - 1 || rnd >= cul / length) {
-              return arrs[i];
-            }
-          }
+      const buildWordsIfSpaceIsAvailable = () => {
+        if (
+          !building &&
+          window.scrollY + innerHeight * 2.5 >=
+            document.body.getBoundingClientRect().height
+        ) {
+          buildWords();
         }
       };
-    }
 
-    //https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding#The_Unicode_Problem
-    function fixBase64(e){function h(b){var a=b.charCodeAt(0);if(55296<=a&&56319>=a)if(b=b.charCodeAt(1),b===b&&56320<=b&&57343>=b){if(a=1024*(a-55296)+b-56320+65536,65535<a)return d(240|a>>>18,128|a>>>12&63,128|a>>>6&63,128|a&63)}else return d(239,191,189);return 127>=a?inputString:2047>=a?d(192|a>>>6,128|a&63):d(224|a>>>12,128|a>>>6&63,128|a&63)}function k(b){var a=b.charCodeAt(0)<<24,f=l(~a),c=0,e=b.length,g="";if(5>f&&e>=f){a=a<<f>>>24+f;for(c=1;c<f;++c)a=a<<6|b.charCodeAt(c)&63;65535>=a?g+=d(a):1114111>=
-    a?(a-=65536,g+=d((a>>10)+55296,(a&1023)+56320)):c=0}for(;c<e;++c)g+="\ufffd";return g}var m=Math.log,n=Math.LN2,l=Math.clz32||function(b){return 31-m(b>>>0)/n|0},d=String.fromCharCode,p=atob,q=btoa;e.btoaUTF8=function(b,a){return q((a?"\u00ef\u00bb\u00bf":"")+b.replace(/[\x80-\uD7ff\uDC00-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]?/g,h))};e.atobUTF8=function(b,a){a||"\u00ef\u00bb\u00bf"!==b.substring(0,3)||(b=b.substring(3));return p(b).replace(/[\xc0-\xff][\x80-\xbf]*/g,k)}}
+      const buildWords = () => {
+        building = true;
+        requestAnimationFrame(() => {
+          building = false;
+          try {
+            buildWord(getString(), true);
+          } catch (e) {
+            console.warn(`Something broke: "${e}"`);
+          }
+          buildWordsIfSpaceIsAvailable();
+        });
+      };
+      const buildWord = (str, active) => {
+        let div = document.createElement("div");
+        let a = document.createElement("a");
+        if (!!active) {
+          try {
+            a.href = `?_=${encodeURIComponent(btoaUTF8(str))}`;
+            //a.target = "_blank";
+          } catch (e) {
+            console.warn(`Link could not be created for: "${str}"\n${e}`);
+          }
+          div.style = makeStyle(str);
+        } else {
+          a.href = "?";
+          a.target = "_self";
+        }
+        a.innerHTML = str;
+        div.className = "post-it closed";
+        div.appendChild(a);
 
-    //https://github.com/didanurwanda/inflector-js
-    function globalisePluralise(d){
-      let unPluralisableWords = 'fat oxygen';
-      var f=`equipment information rice money species series fish sheep moose deer news ${unPluralisableWords}`.split(" "),c=[[RegExp("(m)an$","gi"),"$1en"],[RegExp("(pe)rson$","gi"),"$1ople"],[RegExp("(child)$","gi"),"$1ren"],[RegExp("^(ox)$","gi"),"$1en"],[RegExp("(ax|test)is$","gi"),"$1es"],[RegExp("(octop|vir)us$","gi"),"$1i"],[RegExp("(alias|status)$","gi"),"$1es"],[RegExp("(bu)s$","gi"),"$1ses"],[RegExp("(buffal|tomat|potat)o$","gi"),"$1oes"],[RegExp("([ti])um$","gi"),"$1a"],[RegExp("sis$","gi"),"ses"],[RegExp("(?:([^f])fe|([lr])f)$",
-      "gi"),"$1$2ves"],[RegExp("(hive)$","gi"),"$1s"],[RegExp("([^aeiouy]|qu)y$","gi"),"$1ies"],[RegExp("(x|ch|ss|sh)$","gi"),"$1es"],[RegExp("(matr|vert|ind)ix|ex$","gi"),"$1ices"],[RegExp("([m|l])ouse$","gi"),"$1ice"],[RegExp("(quiz)$","gi"),"$1zes"],[RegExp("s$","gi"),"s"],[RegExp("$","gi"),"s"]];d.pluralise=function(d,e){var a=d;if(e)a=e;else if(!(-1<f.indexOf(a.toLowerCase())))for(var b=0;b<c.length;b++)if(a.match(c[b][0])){a=a.replace(c[b][0],c[b][1]);break}return a}}
+        requestAnimationFrame(() => {
+          document.body.appendChild(div);
+          requestAnimationFrame(() => {
+            div.classList.remove("closed");
+          });
+        });
+        document.title = str;
+      };
+
+      const makeStyle = str => `font-size:${Math.max(16, len(str.length))}px`;
+
+      const len = x => {
+        let min = 14;
+        let max = 26;
+        return max - Math.max(0, Math.min(max - min, 15 - 1000 / x));
+      };
+
+      //https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding#The_Unicode_Problem
+      // prettier-ignore
+      function fixBase64(e){function h(b){let a=b.charCodeAt(0);if(55296<=a&&56319>=a)if(b=b.charCodeAt(1),b===b&&56320<=b&&57343>=b){if(a=1024*(a-55296)+b-56320+65536,65535<a)return d(240|a>>>18,128|a>>>12&63,128|a>>>6&63,128|a&63)}else return d(239,191,189);return 127>=a?inputString:2047>=a?d(192|a>>>6,128|a&63):d(224|a>>>12,128|a>>>6&63,128|a&63)}function k(b){let a=b.charCodeAt(0)<<24,f=l(~a),c=0,e=b.length,g="";if(5>f&&e>=f){a=a<<f>>>24+f;for(c=1;c<f;++c)a=a<<6|b.charCodeAt(c)&63;65535>=a?g+=d(a):1114111>=
+        a?(a-=65536,g+=d((a>>10)+55296,(a&1023)+56320)):c=0}for(;c<e;++c)g+="\ufffd";return g}let m=Math.log,n=Math.LN2,l=Math.clz32||function(b){return 31-m(b>>>0)/n|0},d=String.fromCharCode,p=atob,q=btoa;e.btoaUTF8=function(b,a){return q((a?"\u00ef\u00bb\u00bf":"")+b.replace(/[\x80-\uD7ff\uDC00-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]?/g,h))};e.atobUTF8=function(b,a){a||"\u00ef\u00bb\u00bf"!==b.substring(0,3)||(b=b.substring(3));return p(b).replace(/[\xc0-\xff][\x80-\xbf]*/g,k)}}
+
+      //https://github.com/didanurwanda/inflector-js
+      // prettier-ignore
+      function globalisePluralise(d){
+        let unPluralisableWords = 'equipment information rice money species series fish sheep moose deer news fat oxygen poop water soap';
+        let f=unPluralisableWords.split(" "),c=[[RegExp("(m)an$","gi"),"$1en"],[RegExp("(pe)rson$","gi"),"$1ople"],[RegExp("(child)$","gi"),"$1ren"],[RegExp("^(ox)$","gi"),"$1en"],[RegExp("(ax|test)is$","gi"),"$1es"],[RegExp("(octop|vir)us$","gi"),"$1i"],[RegExp("(alias|status)$","gi"),"$1es"],[RegExp("(bu)s$","gi"),"$1ses"],[RegExp("(buffal|tomat|potat)o$","gi"),"$1oes"],[RegExp("([ti])um$","gi"),"$1a"],[RegExp("sis$","gi"),"ses"],[RegExp("(?:([^f])fe|([lr])f)$",
+        "gi"),"$1$2ves"],[RegExp("(hive)$","gi"),"$1s"],[RegExp("([^aeiouy]|qu)y$","gi"),"$1ies"],[RegExp("(x|ch|ss|sh)$","gi"),"$1es"],[RegExp("(matr|vert|ind)ix|ex$","gi"),"$1ices"],[RegExp("([m|l])ouse$","gi"),"$1ice"],[RegExp("(quiz)$","gi"),"$1zes"],[RegExp("s$","gi"),"s"],[RegExp("$","gi"),"s"]];d.pluralise=function(d,e){let a=d;if(e)a=e;else if(!(-1<f.indexOf(a.toLowerCase())))for(let b=0;b<c.length;b++)if(a.match(c[b][0])){a=a.replace(c[b][0],c[b][1]);break}return a}}
+
+      let begin = _ => _;
+      let building = false;
+
+      if (searchParams["_"]) {
+        document.body.className = "only";
+        buildWord(atobUTF8(searchParams._), false);
+      } else {
+        begin = _begin;
+      }
+
+      const setDefaultGlobalNames = () => {
+        if (typeof globalGirls === 'undefined' && searchParams.girls && (!localStorage.getItem("girls") || confirm(`Replace saved girls with ${searchParams.girls}?`))) {
+          globalGirls = searchParams.girls.split(",");
+        }  else if (!globalGirls && localStorage.getItem("girls")) {
+          globalGirls = localStorage.getItem("girls").split(",");
+        } else if (typeof defaultGirls !== "undefined") {
+          globalGirls = defaultGirls;
+        } else {
+          globalGirls = "Mary | Sue".split(" | ");
+        }
+        localStorage.setItem("girls", globalGirls);
+
+        if (typeof globalBoys === 'undefined' && searchParams.boys && (!localStorage.getItem("boys") || confirm(`Replace saved boys with ${searchParams.boys}?`))) {
+          globalBoys = searchParams.boys.split(",");
+        }  else if (!globalBoys && localStorage.getItem("boys")) {
+          globalBoys = localStorage.getItem("boys").split(",");
+        } else if (typeof defaultGirls !== "undefined") {
+          globalBoys = defaultBoys;
+        } else {
+          globalBoys = "Fred | Dave".split(" | ");
+        }
+        localStorage.setItem("boys", globalBoys);
+      };
+      setDefaultGlobalNames();
+      history.replaceState({}, '', `${location.pathname}${searchParams["_"] ? `?_=${searchParams["_"]}` : ''}`);
+
+      begin({
+        extraGirls: defaultExtraGirls,
+        extraBoys: defaultExtraBoys,
+        prefixes: defaultPrefixes,
+        verbs: defaultVerbs,
+
+        sentientObjects: defaultSentientObjects,
+        inanimateObjects: defaultInanimateObjects,
+
+        pluralisedSentientObjects: defaultPluralisedSentientObjects,
+        pluralisedInanimateObjects: defaultPluralisedInanimateObjects,
+
+        places: defaultPlaces,
+        adjectives: defaultAdjectives,
+        endings: defaultEndings
+      });
     </script>
+
+    <script>
+      CSS && CSS.paintWorklet && CSS.paintWorklet.addModule('./post-it-worklet--1.0.0.js');
+    </script>
+
+    <style>
+        * {
+          box-sizing: border-box;
+        }
+        body.only,
+        html {
+          height: 100%;
+          width: 100%;
+        }
+
+        .post-it,
+        body.only {
+          display: block;
+        }
+
+        body,
+        html {
+          margin: 0;
+          /*font-family:"Open Sans","Helvetica Neue",Helvetica,sans-serif;*/
+          font-family: "Coming Soon", cursive;
+          background: #eee;
+        }
+
+        body {
+          display: flex;
+          flex-flow: row wrap;
+          justify-content: space-evenly;
+          align-content: flex-start;
+          align-items: center;
+          padding-bottom: 100vh;
+          padding-top: 150px;
+          min-height: 100%;
+        }
+
+        body.only {
+          padding: 0;
+        }
+
+        .post-it {
+          max-width: 250px;
+          margin: -90px 0 0;
+
+          border: 1px solid #ddd;
+          border-bottom-width: 0;
+          background: #fff;
+          background: linear-gradient(to top, rgba(255, 255, 255, 0), white 70px);
+          transform-origin: 50% 100%;
+          transition: transform 0.3s cubic-bezier(0.5, 2, 0.5, 1);
+          transform: rotate(-2deg) scale(1);
+          will-change: transform;
+          /*
+          contain: content;
+          */
+        }
+        .post-it a {
+          display: block;
+          padding: 10px 20px 100px;
+          color: #2d3033;
+          text-decoration: none;
+          letter-spacing: 0.03em;
+          font-size: 26px;
+        }
+        @supports (background-image: paint(post-it)) {
+          .post-it {
+            border: 0;
+            background: transparent;
+            background-image: paint(post-it);
+          }
+        }
+        body.only .post-it {
+          max-width: 400px;
+        }
+        .post-it:nth-child(4n) {
+          transform: rotate(1deg) scale(1);
+        }
+        .post-it:nth-child(4n + 1) {
+          transform: rotate(-1deg) scale(1);
+        }
+        .post-it:nth-child(4n + 2) {
+          transform: rotate(2deg) scale(1);
+        }
+        .post-it.closed {
+          transform: rotate(0deg) scale(0);
+        }
+
+        .only .post-it {
+          --only: true;
+          position: relative;
+          top: 50%;
+          margin: 0 auto;
+          transform: translateY(-50%);
+          animation: none;
+          background: white;
+          background-image: paint(post-it);
+          border-bottom-width: 1px;
+        }
+        .only .post-it a {
+          padding: 20px 40px;
+        }
+        @supports (background-image: paint(post-it)) {
+          .only .post-it {
+            border: 0;
+            background: transparent;
+            background-image: paint(post-it);
+          }
+        }
+    </style>
+
+    <style>
+      input,
+      button {
+        font: inherit;
+      }
+      input {
+        font-size: 22px;
+        text-indent: 5px;
+        width: 190px;
+      }
+      button {
+        background: white;
+        -webkit-appearance: none;
+        border: 1px solid #ddd;
+      }
+      .remove-name {
+        margin: 5px;
+        padding: 5px 10px;
+        transition: transform 0.2s, box-shadow 0.2s;
+        cursor: pointer;
+        will-change: transform, box-shadow;
+        contain: content;
+      }
+      .remove-name:nth-child(5n) {
+        transform: rotate(2deg) scale(1);
+      }
+      .remove-name:nth-child(5n + 1) {
+        transform: rotate(-1deg) scale(1);
+      }
+      .remove-name:nth-child(5n + 2) {
+        transform: rotate(1deg) scale(1);
+      }
+      .remove-name:nth-child(5n + 3) {
+        transform: rotate(-2deg) scale(1);
+      }
+      .remove-name:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 2px 2px rgba(0,0,0,0.3);;
+      }
+      .sidebar-underlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        width: 100vw;
+        height: 100vh;
+        background: black;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.5s ease-out;
+      }
+      .sidebar-container--open + .sidebar-underlay {
+        opacity: 0.8;
+        pointer-events: auto;
+      }
+      .sidebar-container {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        z-index: 2;
+        width: 260px; /* 320 - 50 - 10 => iphoneWidth - buttonWidth - someSpacing */
+        height: 100%;
+        pointer-events: none;
+        contain: strict;
+      }
+      .sidebar-wobble {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 1600vh;
+        background: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='8000' viewBox='0 0 260 8000' version='1' preserveAspectRatio='none'%3E%3Cpath fill='%23eee' d='M296 0h-36c0 106-7 126-7 250s7 92 7 250c0 106-17 126-17 250s17 92 17 250c0 106-42 126-42 250s42 92 42 250c-21 116-77 126-77 250s56 101 77 250c-42 125-112 126-112 250s70 109 112 250c-71 127-185 126-185 250s119 115 185 250C159 3128 2 3126 2 3250s168 120 258 250h-80c-78 84-178 126-178 250s98 157 178 250h-80c-55 39-98 126-98 250s27 193 98 250H50c-92 49-26 126-26 250s-64 193 26 250H0c18 50 42 126 42 250s-16 185-42 250h1c18 50 47 126 47 250s-21 185-47 250c18 50 52 126 52 250s-26 185-52 250c18 50 27 126 27 250s-1 185-27 250c18 50 2 126 2 250s24 185-2 250h7c-11 56-7 107-5 179 1 39 6 81 2 133-8 99-4 121 1 188h290'/%3E%3C/svg%3E");
+        background-size: 260px 1600vh;
+        background-position: 0 0;
+        transform: translateY(100vh);
+        transition-property: transform;
+        transition-duration: 0.4s;
+        transition-timing-function: steps(17);
+        transition-delay: 0s;
+        will-change: transform;
+      }
+      .sidebar-container--open .sidebar-wobble {
+        transform: translateY(-1600vh);
+        transition-delay: 0s;
+      }
+      .sidebar {
+        width: 100%;
+        height: 100%;
+        transform: translateX(105%);
+        pointer-events: auto;
+        will-change: transform;
+
+        transition-property: transform, background-color;
+        transition-duration: 0.2s, 0.1s;
+        transition-delay: 0s, 0s;
+        transition-timing-function: ease-in;
+        will-change: background-color;
+      }
+      .sidebar-container--open .sidebar {
+        transition-delay: 0.2s, 0.3s;
+        transform: translateX(0%);
+        background-color: #eee;
+      }
+      .sidebar__toggle {
+        position: fixed;
+        top: 0;
+        right: 0;
+        z-index: 2;
+        padding: 5px;
+        border: 1px solid #ddd;
+        border-width: 0 0 1px 1px;
+        outline: 0;
+        margin: 0;
+        background: white;
+        -webkit-appearance: none;
+        border-bottom-left-radius: 5px;
+        box-shadow: -1px 0px 3px -1px rgba(0, 0, 0, 0.3);
+      }
+      .sidebar__toggle-icon {
+        display: block;
+        width: 50px;
+        height: 46px;
+        background: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 275 23'%3E%3Cpath d='M20.1 6.4l-2.7-2.6-5 4.8-5.1-5.4-2.5 2.6 4.9 5.3-5.4 5.2L7 19.1l5.4-5.2 5 5.4 2.6-2.9-4.9-5.1zM40 11.5c2.3-1.9 4.4-3.6 5.1-4.6a4.5 4.5 0 0 0-2.5-2.7c-1 1.2-2.9 2.8-4.8 4.5a27.8 27.8 0 0 0-4.9-5.2c-1.2.2-2.3 1.7-2.6 2.4 1.4 1.1 3 3.1 4.6 5.2a51 51 0 0 0-5.6 5.1c.3.8 2.1 2.5 2.8 2.9 1.2-1.6 3-3.3 5-5 1.8 2.4 3.4 4.6 4.6 5.4a4.8 4.8 0 0 0 3-2.5c-1.5-1.5-3.1-3.5-4.7-5.5zM56.2 5.1a3 3 0 0 1 3.7-1.7c4.2 4 2.6 9.3 8.3 13.9-.8 1.8-3.2 2-4.2 2-3.3-5.4-3.8-11.1-7.8-14.2z'/%3E%3Cpath d='M67.8 4.5c1.3.6 2 2 2.1 3.4-4.2 4-9 5.2-12.8 10.5-2-.5-2.8-2-2.8-3.2 4.2-3.8 9.6-5.7 13.5-10.7zM272.9 13.7c.2-.8.2-1.5.2-2.3 0-1-.1-1.9-.4-2.8h-3.2c-.3-.8-.7-1.6-1.3-2.3l.7-3.7c-1.1-.9-2.4-1.6-3.8-2l-2.2 2.6-1.1-.1-1.5.1-2.2-2.5c-1.7.7-3.2 1.7-4.4 3.1l1.6 2.8c-.4.5-.6 1.1-.9 1.7l-3.3 1.6-.1 1.4c0 1.1.2 2.1.4 3.1h3c.4 1 .9 1.8 1.6 2.6l-.9 3.1c1.1.9 2.4 1.6 3.8 2l2-2.6.9.1 1.7-.2 1.6 2.7c1.6-.5 3.1-1.4 4.3-2.5l-1.1-3.2c.4-.6.8-1.2 1-1.8l3.6-.9zm-10.9.9c-1.7 0-3.1-1.5-3.1-3.3S260.3 8 262 8s3.1 1.5 3.1 3.3-1.4 3.3-3.1 3.3zM247.7 8.3c-1.1-.1-1.9 0-2.6.2a9 9 0 0 0-1.5-2.7l.9-2.7c-1.8-.6-3.4-1.6-4.8-2.6-.5.6-.9 1.5-1.4 2.3l-1.4-.1-1.9.2c-.4-.7-.9-1.6-1.5-2.1a24.4 24.4 0 0 1-5.2 3.7 4 4 0 0 0 1.6 1.8c-.5.7-1 1.6-1.2 2.4a7 7 0 0 0-2.6.8c.6.6.8 4.4.4 5.6.8 0 1.6-.1 2.3-.3.4 1 .9 1.9 1.6 2.6-.3.7-.6 1.5-.7 2.5a12 12 0 0 1 4.7 2.5c.5-.5.8-1.4 1.2-2.2l1.3.1 2.1-.3c.2.8.4 1.6.8 2.3l5.1-3c-.1-1-.7-1.7-1.2-2.3l1.3-2.2c.8.1 1.7.2 2.7-.3-.5-.5-.4-5.7 0-6.2zm-10.8 7.1c-2.1 0-3.9-1.8-3.9-4.1s1.7-4.1 3.9-4.1c2.1 0 3.9 1.8 3.9 4.1s-1.8 4.1-3.9 4.1zM222.7 8.2h-2.3a11 11 0 0 0-1.7-3c.4-.7.7-1.5.8-2.2-1.8-.5-3.4-1.4-4.9-2.6-.5.5-.8 1.2-1.2 1.8l-1.5-.1-1.9.2c-.3-.6-.7-1.3-1.4-1.7a28.4 28.4 0 0 1-5.4 3.9c.2.9.7 1.4 1.2 1.7-.5.7-.9 1.5-1.1 2.4-.7.1-1.5.2-2.2.6.6.6.9 4.7.5 6 .7.1 1.4 0 2-.2.4.9.9 1.8 1.6 2.5-.3.6-.6 1.3-.6 2.2 2.1.1 3.7 1.2 5 2.6a4 4 0 0 0 1-1.8l1.3.1 2-.2c.2.7.3 1.3.7 1.8 1.5-1.2 3.3-2.4 5.5-3.2-.1-.9-.5-1.5-1-2 .5-.6.9-1.3 1.2-2.1a4 4 0 0 0 2.4-.2c-.3-1.1-.4-5.5 0-6.5zm-10.7 8c-2.8 0-5.1-2.2-5.1-4.9s2.3-4.9 5.1-4.9 5.1 2.2 5.1 4.9-2.3 4.9-5.1 4.9zM92.7 13.7c-1 .1-2.1-.5-3-1.7 2.2-1.4 4.4-4 4.4-5 0-1.1-.1-1.9-1.8-2.1-1.1-.2-1.8 0-1.9 1.6-.1 1.2-.8 2.2-2.1 3a7.9 7.9 0 0 0-7-3.8c-1.9 0-2.2 1-2.2 1.9 0 .9.1 2.3 2 1.9 1.7-.3 3.1.2 4 1.3-2.3 1.3-4.5 3.8-4.9 5.4-.5 1.9.6 2.3 1.5 2.5s2.3.4 2.3-1.5c.1-1.7 1-2.8 2.4-3.6a7.8 7.8 0 0 0 6.1 3.9c1.2.1 1.8-.4 1.7-2.1.2-1.3 0-1.9-1.5-1.7zm-5.4-2.1l-.2-.2.2-.2.2.2c0 .2-.1.3-.2.2zM194.4 14.9c4.7.1 5.4-4.9 3.9-6.1-1.3-1.1-2.3-.4-3.7.5a8 8 0 0 0-1.1-2.5c2.4-3.9-1.5-7-3.2-6.3-1.5.6-1.4 1.7-1.3 3.2-.6-.2-1.3-.3-2-.3l-1.3.1-.1-.2c-1.5-2.9-4.2-3-5.9-1.4-1.7 1.6-1.4 3.6 1.3 4.4-.6.7-1 1.5-1.4 2.4-3.2-.2-4.6 2-4.1 4.3.5 2.1 2.4 3.1 4.2 1.6.3.7.6 1.3 1 1.8-1.8 2.6-1 4.6 1.2 5.3 2 .6 3.1 0 3.5-2.3l1.6.2h.7l.1.2c2.2 4.2 6.9 2.5 7.2.7.3-1.8-1-2.2-2.5-3 .7-.7 1.2-1.4 1.6-2.3.1-.3.2-.3.3-.3zm-7.4.4c-2.1 0-3.9-1.8-3.9-4s1.7-4 3.9-4c2.1 0 3.9 1.8 3.9 4s-1.8 4-3.9 4zM167.1 16.1c5.9-.4 9.2-5.2 6.9-6.9-2.5-1.9-4.2-.4-5.6 1.1l-.3-1.1c2.3-5.2.7-9.2-2.3-8.7-3.4.6-2.1 2.9-1.1 5.1l-1.5-.4c-2.7-4.2-6.6-6.1-8.1-3-1.5 3.3 1.8 3.1 4.3 3.8l-1.2.9h-.5c-5.3.5-9.1 4.5-6.8 7.3 2.2 2.7 3.8.5 5.5-1.1l.1.5-.3.6c-2.2 4.9-1.6 8.7 1.9 8.1 2.7-.5 2.1-2.7 2-4.9.5.2 1.1.4 1.7.4 2.9 4.5 7 6.1 7.5 3.5.6-2.9-1.4-4-3.4-4.7l.4-.3c.3-.2.5-.2.8-.2zm-4.8-2.2c-1.4 0-2.6-1.1-2.6-2.6s1.1-2.6 2.6-2.6c1.4 0 2.6 1.1 2.6 2.6s-1.1 2.6-2.6 2.6zM146.9 11c-.6-1.1-2-1.2-3.1-.7-.8.4-1.6 1.3-2.5 1.8l.1-.6a5 5 0 0 0-.2-1.2 8.6 8.6 0 0 0 1.9-4.5c0-1.2-.4-3.1-2.8-2.7-1.3.2-1.8 1.4-1.8 2.6 0 .8.4 1.6.6 2.4a2 2 0 0 0-1-.3c.1-.8.1-1.4-.1-1.9-.4-1.3-1.4-1.9-2.5-1.4-.7.4-.6 1.4-.2 2.3l.7 1.3c-.4.2-.9.4-1.2.8a8 8 0 0 0-4-.4c-2.1.2-4.3 2.8-3.1 4.3 1.2 1.6 2.9 1.1 3.8-.1.5-.6 1.2-1 1.9-1.1v.1l.1 1a6.8 6.8 0 0 0-2.3 3.7c-.5 2 .4 4.3 2.4 4.2s1.9-1.9 1.7-3.6a4 4 0 0 1 0-1.9l.7.3c-.1.9 0 1.8.3 2.4.9 1.5 2.4 1 2.9.7.5-.3 1-1.6-.2-2.4l-.7-.7.9-.4c2.7 1.3 4.9.2 5.8-.2 1.4-.7 3-1.7 1.9-3.8zm-9.4 1.5c-.6 0-1.2-.5-1.2-1.1s.5-1.1 1.2-1.1c.6 0 1.2.5 1.2 1.1s-.6 1.1-1.2 1.1zM120.6 12c-.5-1-1.6-1.2-2.9-.3-.9.6-2.1.7-3.4-.1 1.9-1.6 3.5-4.4 3.4-5.4 0-1.2-.6-2.4-2.2-2.3-1.1.1-1.7 1-1.5 2.5.2 1.1-.3 2.2-1.5 3.3l.5-1.5c.1-.6 0-1-.7-1-.5 0-.8.4-.7 1l.2.9c-1.8-1.4-4.5-1.4-6.7-.4-1.7.9-2.1 2-1.7 2.9s1.6 1.7 3.2.6c1.3-.9 2.6-1.4 3.8-.9-2.1 1.5-3.8 4-3.8 5.7 0 1.9 1 2.7 2 2.7s2.1-.8 1.8-2.7c-.2-1.4.3-2.8 1.6-3.9l-.5 1.3c-.1.7.3 1 .8 1s.7-.1.7-.8l-.1-.9a7.3 7.3 0 0 0 6.5 1.1c1-.3 1.9-1.4 1.2-2.8zm-8.2-.1c-.2 0-.4-.2-.4-.5s.2-.5.4-.5.4.2.4.5-.1.5-.4.5z'/%3E%3C/svg%3E");
+        background-size: 550px 46px;
+        background-position: 100% 50%;
+        transform: scale(1);
+        transition: 0.4s steps(10);
+      }
+      .sidebar-container--open ~ .sidebar__toggle .sidebar__toggle-icon {
+        background-position: 0% 50%;
+      }
+      .people {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        padding: 10px 20px;
+        overflow-y: auto;
+      }
+      .names-manip {
+        margin: 50px 0;
+      }
+    </style>
+    <script src="settings--2.0.0.js"></script>
   </body>
 </html>
