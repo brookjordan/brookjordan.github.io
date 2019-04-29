@@ -616,6 +616,30 @@
           contain: content;
           */
         }
+        .post-it:nth-child(3n) {
+          background: linear-gradient(
+            to top,
+            hsla(350, 100%, 93%, 0),
+            hsla(350, 100%, 93%, 1)
+          );
+          border-color: hsl(370, 60%, 50%);
+        }
+        .post-it:nth-child(3n + 1) {
+          background: linear-gradient(
+            to top,
+            hsla(250, 100%, 93%, 0),
+            hsla(250, 100%, 93%, 1)
+          );
+          border-color: hsl(230, 60%, 50%);
+        }
+        .post-it:nth-child(3n + 2) {
+          background: linear-gradient(
+            to top,
+            hsla(50, 100%, 93%, 0),
+            hsla(50, 100%, 93%, 1)
+          );
+          border-color: hsl(40, 60%, 50%);
+        }
         .post-it a {
           display: block;
           padding: 10px 20px 100px;
@@ -625,7 +649,7 @@
           font-size: 26px;
         }
         @supports (background-image: paint(post-it)) {
-          .post-it {
+          .post-it:nth-child(n) {
             border: 0;
             background: transparent;
             background-image: paint(post-it);
