@@ -1,8 +1,15 @@
-<body contentEditable style="white-space:pre-wrap;">
-  <script>
-    const LS_NAME = 'my-offline-notes';
-    document.body.innerHTML = localStorage.getItem(LS_NAME, document.body.innerHTML);
-    document.body.onkeyup = () => {
-      localStorage.setItem(LS_NAME, document.body.textContent)
-    }
-  
+<style>
+  html,body,code { box-sizing: border-box; height: 100%; width: 100%; margin: 0; }
+  code { display: block; padding: 2vmin; }
+</style>
+
+<code contentEditable style="white-space:pre-wrap;"></code>
+
+<script>
+  const LS_NAME = 'my-offline-notes';
+  const code = document.querySelector('code');
+  code.innerText = localStorage.getItem(LS_NAME);
+  code.onkeyup = () => {
+    localStorage.setItem(LS_NAME, code.innerText)
+  }
+</script>
