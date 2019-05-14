@@ -1,0 +1,8 @@
+<body contentEditable style="white-space:pre-wrap;">
+  <script>
+    const LS_NAME = 'my-offline-notes';
+    document.body.innerHTML = localStorage.getItem(LS_NAME, document.body.innerHTML);
+    document.body.onkeyup = () => {
+      localStorage.setItem(LS_NAME, document.body.textContent)
+    }
+  
