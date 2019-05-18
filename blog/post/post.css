@@ -1,0 +1,59 @@
+body > small {
+  position: absolute;
+  left: 30px;
+}
+
+h1:not(:first-child),
+h2:not(:first-child),
+h3:not(:first-child),
+h4:not(:first-child),
+h5:not(:first-child),
+h6:not(:first-child) {
+  margin-top: 4em;
+}
+
+code {
+  font-family: monospace;
+  color: var(--c-code-text);
+  font-weight: 300;
+}
+
+h1 code,
+h2 code,
+h3 code,
+h4 code,
+h5 code,
+h6 code {
+  font-size: 1.2em;
+  font-weight: 700;
+}
+
+p {
+  margin-top: 2em;
+}
+h1 + p,
+h2 + p,
+h3 + p,
+h4 + p,
+h5 + p,
+h6 + p {
+  margin-top: 1em;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+td,
+th {
+  border: 1px solid var(--c-table-border);
+  padding: 5px 10px;
+}
+
+li {
+  margin-top: 10px;
+}
+li:last-child {
+  margin-bottom: 20px;
+}

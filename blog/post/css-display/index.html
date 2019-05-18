@@ -1,0 +1,104 @@
+<link rel="stylesheet" href="../../base.css">
+<link rel="stylesheet" href="../post.css">
+
+
+<a href="/blog">
+  Back&nbsp;to blog&nbsp;listing
+</a>
+
+<small>
+  Last updated: <time>Sat May 18</time>
+</small>
+
+<div></div><main>
+
+
+<h1 id="css-display">CSS <code>display</code></h1>
+<p>CSS is being updated in the possibly-not-so-near-future with a plethora of new values.</p>
+<h2 id="possible-values">Possible values</h2>
+<p>This will be one of:</p>
+<ul>
+<li>both or either of:<ul>
+<li>a <em>display outside</em> value:<ul>
+<li><code>block</code></li>
+<li><code>inline</code></li>
+<li><code>run-in</code></li>
+</ul>
+</li>
+<li>a <em>display inside</em> value:<ul>
+<li><code>flow</code></li>
+<li><code>flow-root</code></li>
+<li><code>table</code></li>
+<li><code>flex</code></li>
+<li><code>grid</code></li>
+<li><code>ruby</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>or any one of:<ul>
+<li>a <em>display list</em> value:<ul>
+<li><code>list-item</code></li>
+</ul>
+</li>
+<li>a <em>display internal</em> value:<ul>
+<li><code>table-row-group</code></li>
+<li><code>table-header-group</code></li>
+<li><code>table-footer-group</code></li>
+<li><code>table-row</code></li>
+<li><code>table-cell</code></li>
+<li><code>table-column-group</code></li>
+<li><code>table-column</code></li>
+<li><code>table-caption</code></li>
+<li><code>ruby-base</code></li>
+<li><code>ruby-text</code></li>
+<li><code>ruby-base-container</code></li>
+<li><code>ruby-text-container</code></li>
+</ul>
+</li>
+<li>a <em>display box</em> value:<ul>
+<li><code>contents</code></li>
+<li><code>none</code></li>
+</ul>
+</li>
+<li>a <em>display legacy</em> value:<ul>
+<li><code>inline-block</code></li>
+<li><code>inline-list-item</code></li>
+<li><code>inline-table</code></li>
+<li><code>inline-flex</code></li>
+<li><code>inline-grid</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="use-cases">Use cases</h2>
+<p>This breaks up the way that we currently use values like <code>inline-block</code>
+  into <code>block inline</code>… or <code>inline block</code>.<br>Legacy values like <code>inline-block</code> will likely be supported for th forseeable future
+  but using the new values, when they&#39;re available,
+  will keep legacy values looking like new values.</p>
+<h3 id="run-in"><code>run-in</code></h3>
+<p>The thing that stood out most for me here is <code>run-in</code>.<br>Not heard of it?
+I don&#39;t blame you. It&#39;s new. And not well supported.<br>The main use-case seems to be to allow headings to
+  become part of the following paragraph text.</p>
+<p>That is, if a heading is followed by another block element,
+  ie: <code>&lt;h1 display=&quot;run-in&quot;&gt;heading&lt;h1&gt;&lt;p&gt;paragraph&lt;/p&gt;</code>
+  it would behave as if it was the first child of that
+  following block, and as if it was <code>display: inline</code>.
+  However, if it is followed by an element with any other display value
+  it would take on <code>display: block</code>
+  and not insert itself into the following element.</p>
+<p>That is, it would make something like this:<br><strong>Heading</strong><br>Paragraph paragraph.</p>
+<p>Look like this:<br><strong>Heading</strong> Paragraph paragraph.</p>
+<h3 id="contents"><code>contents</code></h3>
+<p><code>display: contents;</code>, on the other hand, is fan<em>tas</em>tsic, and
+  <a href="https://caniuse.com/#feat=css-display-contents">browsers have already started implementing it</a>.<br>I only mentioned this one second because it&#39;s better known,
+  (<a href="https://hiddedevries.nl/en/blog/2018-04-21-more-accessible-markup-with-display-contents">and has issues with accessibility</a>).<br>Basically put, using <code>display: contents</code> on an element removes it from the DOM,
+  now only <code>display</code>ing its <code>contents</code>.</p>
+<p>This is a real boon for those using markup created in suboptimal situations
+  which feel the need to add markup all over the place.<br>Things like <code>display: grid</code> parents can now have better control over their children,
+  hiding any extrenuous ones that would otherwise prevent them from
+  being a direct child.</p>
+
+
+</main><div></div>
