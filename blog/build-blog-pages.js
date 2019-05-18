@@ -3,9 +3,22 @@ const { promisify } = require('util');
 const fs = require('fs');
 const marked = require('marked');
 const fileMetadata = require('file-metadata');
-marked.setOptions({
-  sanitize: true,
-});
+const htmlminifier = require('html-minifier');
+
+function minifyHTML(html) {
+  return htmlminifier.minify(html, {
+    removeComments: true,
+    removeCommentsFromCDATA: true,
+    collapseWhitespace: true,
+    collapseBooleanAttributes: true,
+    removeAttributeQuotes: true,
+    removeRedundantAttributes: true,
+    useShortDoctype: true,
+    removeEmptyAttributes: true,
+    removeOptionalTags: true,
+    removeEmptyElements: true,
+  });
+}
 
 const [
   readFile,
@@ -27,12 +40,13 @@ const directoryListingPlaceholder = '[POST_LINKS]';
 
 const postTemplateStringGetter = readFile(path.join(__dirname, 'posts', 'template.html'), 'utf8');
 const postDirectoryTemplateStringGetter = readFile(path.join(__dirname, 'index_template.html'), 'utf8');
-const postFileNamesGetter = readdir(path.join(__dirname, 'posts'))
+const postFileNamesGetter = (readdir(path.join(__dirname, 'posts'))
   .then(fileNames =>
     (fileNames
       .filter(fileName => fileName.endsWith('.md'))
     )
-  );
+  )
+);
 
 
 // build posts
@@ -46,7 +60,7 @@ async function buildPosts() {
       postFileNamesGetter,
     ]);
 
-    const indexHTMLBuilders = postFileNames
+    const indexHTMLBuilders = (postFileNames
       .map(async fileName => {
         let postName = fileName.split('.')[0];
         let markdownFilePath = path.join(__dirname, 'posts', fileName);
@@ -69,24 +83,15 @@ async function buildPosts() {
         ]);
 
         let htmlContents = marked(mdContents);
-        let indexHTMLFileContents = postTemplateString
+        let indexHTMLFileContents = (postTemplateString
           .replace(postLastUpdatedPlaceholder, `${mdMeta.contentModificationDate}`.split(/ \d{4} /)[0])
-          .replace(postContentPlaceholder, htmlContents);
-        let indexHTMLFile = await writeFile(indexHTMLFileDescriptor, indexHTMLFileContents);
+          .replace(postContentPlaceholder, htmlContents)
+        );
+        await writeFile(indexHTMLFileDescriptor, minifyHTML(indexHTMLFileContents));
 
         console.log(`Written: ${fileName}`);
-
-        return {
-          postKey: fileName,
-          mdContents,
-          indexHTMLFile,
-          indexHTMLFileDir,
-          markdownFilePath,
-          indexHTMLFilePath,
-          indexHTMLFileContents,
-          indexHTMLFileDescriptor,
-        };
-      });
+      })
+    );
 
     await Promise.all(indexHTMLBuilders);
 
@@ -123,11 +128,17 @@ async function buildPostDirectory() {
       .replace(
         directoryListingPlaceholder,
         `<nav>${
-          (await Promise.all(postFileNames
+          ((await Promise.all(postFileNames
             .map(async postFileName => {
               let markdownFilePath = path.join(__dirname, 'posts', postFileName);
               let postName = postFileName.split('.')[0];
-              let mdContents = await readFile(markdownFilePath, 'utf8');
+              let [
+                mdContents,
+                mdMeta,
+              ] = await Promise.all([
+                readFile(markdownFilePath, 'utf8'),
+                fileMetadata(markdownFilePath),
+              ]);
 
               let mdTitle;
               try {
@@ -136,18 +147,25 @@ async function buildPostDirectory() {
                 console.log(`No title found for "${postName}"`);
                 mdTitle = postName;
               }
-              return (directoryLinkTemplate
-                .replace(directoryLinkHrefPlaceholder, `./post/${postName}`)
-                .replace(directoryLinkTitlePlaceholder, `${mdTitle}`)
-                .replace(directoryMarkdownLinkHrefPlaceholder, `./posts/${postFileName}`)
-              );
+              return [
+                mdMeta.contentCreationDate,
+                (directoryLinkTemplate
+                  .replace(directoryLinkHrefPlaceholder, `./post/${postName}`)
+                  .replace(directoryLinkTitlePlaceholder, `${mdTitle}`)
+                  .replace(directoryMarkdownLinkHrefPlaceholder, `./posts/${postFileName}`)
+                ),
+              ];
             })
-          )).join('\n')
+          ))
+            .sort(([aDate], [bDate]) => new Date(bDate) - new Date(aDate))
+            .map(([,HTML]) => HTML)
+            .join('')
+          )
         }</nav>`
       )
     );
 
-    await writeFile(indexHTMLFileDescriptor, indexHTMLFileContents);
+    await writeFile(indexHTMLFileDescriptor, minifyHTML(indexHTMLFileContents));
 
     console.log(`Finished writing the blog post directory index.html`);
   } catch (error) {
