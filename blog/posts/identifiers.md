@@ -11,3 +11,7 @@ Testing | Tables
 Hello | table lover
 
 [hello](face)
+
+```js
+var a = 'hello';
+```

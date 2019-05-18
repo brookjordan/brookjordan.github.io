@@ -10,9 +10,23 @@
   --c-table-border: var(--c-body-text);
 }
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   color: inherit;
+}
+
+button,
+table {
+  font: inherit;
+}
+
+html {
+  background: var(--c-body-bg);
+  color: var(--c-body-text);
+  font-size: 20px;
+  line-height: 1.5;
   font-family:
     -apple-system,
     BlinkMacSystemFont,
@@ -24,13 +38,6 @@
     'Apple Color Emoji',
     'Segoe UI Emoji',
     'Segoe UI Symbol';
-}
-
-html {
-  background: var(--c-body-bg);
-  color: var(--c-body-text);
-  font-size: 20px;
-  line-height: 1.5;
 }
 
 body {
