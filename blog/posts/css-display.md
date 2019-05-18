@@ -95,7 +95,7 @@ Look like this:\
 
 ### `contents`
 
-`display: contents;`, on the other hand, is fan*tas*tsic, and
+`display: contents`, on the other hand, is fan*tas*tsic, and
   [browsers have already started implementing it](https://caniuse.com/#feat=css-display-contents).\
 I only mentioned this one second because it's better known,
   ([and has issues with accessibility](https://hiddedevries.nl/en/blog/2018-04-21-more-accessible-markup-with-display-contents)).\
