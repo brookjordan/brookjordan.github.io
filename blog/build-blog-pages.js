@@ -37,6 +37,7 @@ const [
 const postContentPlaceholder = '[CONTENT]';
 const postLastUpdatedPlaceholder = '[LAST_UPDATED]';
 const directoryListingPlaceholder = '[POST_LINKS]';
+const directoryPublishedDatePlaceholder = '[POST_PUBDATE]';
 
 const postTemplateStringGetter = readFile(path.join(__dirname, 'posts', 'template.html'), 'utf8');
 const postDirectoryTemplateStringGetter = readFile(path.join(__dirname, 'index_template.html'), 'utf8');
@@ -86,6 +87,7 @@ async function buildPosts() {
         let indexHTMLFileContents = (postTemplateString
           .replace(postLastUpdatedPlaceholder, `${mdMeta.contentModificationDate}`.split(/ \d{4} /)[0])
           .replace(postContentPlaceholder, htmlContents)
+          .replace(directoryPublishedDatePlaceholder, mdMeta.contentCreationDate.toISOString())
         );
         await writeFile(indexHTMLFileDescriptor, minifyHTML(indexHTMLFileContents));
 
