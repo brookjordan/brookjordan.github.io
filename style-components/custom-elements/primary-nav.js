@@ -48,16 +48,25 @@ const TEMPLATE = buildTemplate(/*html*/`
       font-size: 14px;
       font-weight: 400;
       text-decoration: none;
-      transition: background-color 0.5s;
+      transition:
+        border-color 0.7s,
+        background-color 1s;
     }
 
-    ::slotted(a:hover) {
+    ::slotted(a:not(.active):hover) {
       background-color: rgb(0 0 0 / 0.04);
+      transition:
+        border-color 0.7s,
+        background-color 0.15s;
     }
 
     ::slotted(.active) {
       color: #47841F;
-      border-color: currentColor;
+      border-color: #47841F;
+      pointer-events: none;
+      transition:
+        border-color 0.15s,
+        background-color 0.15s;
     }
 
     .row ::slotted(*) {
