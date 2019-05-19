@@ -107,12 +107,13 @@ class PrimaryNavElement extends HTMLElement {
   constructor() {
     super();
     this.DOM = attachTemplate(this, TEMPLATE);
-    this.nav = this.shadowRoot.querySelector('nav')
+    this.nav = this.shadowRoot.querySelector('nav');
   }
 
   connectedCallback() {
     this.updateDirection(this.getAttribute('direction'));
     this.updateActive();
+    window.addEventListener('hashchange', e => { this.updateActive(); });
   }
 
   attributeChangedCallback(name, oldVal, newVal) {
