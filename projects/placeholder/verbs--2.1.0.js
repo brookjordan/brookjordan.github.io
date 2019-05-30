@@ -220,6 +220,7 @@ var defaultVerbs = [
   ` shouted "Hold onto $subject!"`,
   ` sketched $subject`,
   ` smacked $subject`,
+  ` smoked $anObject`,
   ` smooched $subject`,
   ` snooped around $place`,
   ` sold many $objects`,
@@ -743,7 +744,6 @@ perceive
 pose
 practise
 satisfy
-smoke
 sustain
 tear
 adapt
