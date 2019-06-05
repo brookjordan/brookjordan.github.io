@@ -6,34 +6,35 @@
   <title>Test javascript color-function</title>
 
   <style>
-    div {
+    body > div {
       --c-outline: #0024a0;
+      --c-body-highlight: #2b99fb;
       --c-body: #3781e1;
       --c-body-shade: #1b4dd8;
-      --c-body-highlight: #2b99fb;
 
-      --direct-light: #f9e167;
-      --ambient-light: #473274;
+      --direct-light: #2b99fb;
+      --ambient-light: #1b4dd8;
+
+      --size: 85vmin;
 
 
-      position: relative;
-      height: 100px;
-      width: 100px;
-    }
 
-    div div:nth-child(1) {
       --color-function: color(
         var(--c-body-shade)
         blend(var(--ambient-light) 60%)
       );
       background-image: paint(color-function);
 
+
       position: absolute;
-      top: 0;
-      left: 0;
-      height: 100px;
-      width: 100px;
-      border-radius: 50px 50px 50px 50px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      height: var(--size);
+      width: var(--size);
+      border: calc(var(--size) * 0.05) solid var(--c-outline);
+      border-radius: 50%;
+      overflow: hidden;
     }
 
     div div:nth-child(2) {
@@ -47,9 +48,13 @@
       position: absolute;
       top: 0;
       left: 0;
-      height: 85px;
-      width: 85px;
-      border-radius: 50px 35px 50px 35px;
+      height: calc(var(--size) * 0.85);
+      width: calc(var(--size) * 0.85);
+      border-radius:
+        0
+        calc(var(--size) * 0.35)
+        calc(var(--size) * 0.5)
+        calc(var(--size) * 0.35);
     }
 
     div div:nth-child(3) {
@@ -60,16 +65,19 @@
       background-image: paint(color-function);
 
       position: absolute;
-      top: 15px;
-      left: 15px;
-      height: 30px;
-      width: 30px;
-      border-radius: 20px 10px 20px 10px;
+      top: calc(var(--size) * 0.15);
+      left: calc(var(--size) * 0.15);
+      height: calc(var(--size) * 0.3);
+      width: calc(var(--size) * 0.3);
+      border-radius:
+        calc(var(--size) * 0.2)
+        calc(var(--size) * 0.1)
+        calc(var(--size) * 0.2)
+        calc(var(--size) * 0.1);
     }
   </style>
 
 <body>
-
   <div>
     <div></div>
     <div></div>
