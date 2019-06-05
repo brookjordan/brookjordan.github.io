@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Test javascript color-function</title>
+
+  <style>
+    div {
+      --c-outline: #0024a0;
+      --c-body: #3781e1;
+      --c-body-shade: #1b4dd8;
+      --c-body-highlight: #2b99fb;
+
+      --direct-light: #f9e167;
+      --ambient-light: #473274;
+
+
+      position: relative;
+      height: 100px;
+      width: 100px;
+    }
+
+    div div:nth-child(1) {
+      --color-function: color(
+        var(--c-body-shade)
+        blend(var(--ambient-light) 60%)
+      );
+      background-image: paint(color-function);
+
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100px;
+      width: 100px;
+      border-radius: 50px 50px 50px 50px;
+    }
+
+    div div:nth-child(2) {
+      --color-function: color(
+        var(--c-body)
+        blend(var(--ambient-light) 20%)
+        blend(var(--direct-light) 10%)
+      );
+      background-image: paint(color-function);
+
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 85px;
+      width: 85px;
+      border-radius: 50px 35px 50px 35px;
+    }
+
+    div div:nth-child(3) {
+      --color-function: color(
+        var(--c-body-highlight)
+        blend(var(--direct-light) 60%)
+      );
+      background-image: paint(color-function);
+
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      height: 30px;
+      width: 30px;
+      border-radius: 20px 10px 20px 10px;
+    }
+  </style>
+
+<body>
+
+  <div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+
+  <script src="./entry.js" type="module"></script>
+</body>
+</html>
