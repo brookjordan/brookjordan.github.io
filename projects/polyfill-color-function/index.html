@@ -23,6 +23,7 @@
         var(--c-body-shade)
         blend(var(--ambient-light) 60%)
       );
+      background-color: var(--c-body-shade);
       background-image: paint(color-function);
 
 
@@ -48,8 +49,8 @@
     div::before {
       --color-function: color(
         var(--c-body)
-        blend(var(--ambient-light) 20%)
-        blend(var(--direct-light) 10%)
+        blend(var(--ambient-light) 30%)
+        blend(var(--direct-light) 15%)
       );
 
       top: 0;
@@ -61,6 +62,7 @@
         calc(var(--size) * 0.35)
         calc(var(--size) * 0.5)
         calc(var(--size) * 0.35);
+      background-color: var(--c-body);
     }
 
     div::after {
@@ -78,6 +80,7 @@
         calc(var(--size) * 0.1)
         calc(var(--size) * 0.2)
         calc(var(--size) * 0.1);
+      background-color: var(--c-body-highlight);
     }
   </style>
 
