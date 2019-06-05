@@ -37,7 +37,14 @@
       overflow: hidden;
     }
 
-    div div:nth-child(1) {
+    div::before,
+    div::after {
+      content: "";
+      display: block;
+      position: absolute;
+    }
+
+    div::before {
       --color-function: color(
         var(--c-body)
         blend(var(--ambient-light) 20%)
@@ -45,7 +52,6 @@
       );
       background-image: paint(color-function);
 
-      position: absolute;
       top: 0;
       left: 0;
       height: calc(var(--size) * 0.85);
@@ -57,14 +63,13 @@
         calc(var(--size) * 0.35);
     }
 
-    div div:nth-child(2) {
+    div::after {
       --color-function: color(
         var(--c-body-highlight)
         blend(var(--direct-light) 60%)
       );
       background-image: paint(color-function);
 
-      position: absolute;
       top: calc(var(--size) * 0.15);
       left: calc(var(--size) * 0.15);
       height: calc(var(--size) * 0.3);
@@ -78,10 +83,7 @@
   </style>
 
 <body>
-  <div>
-    <div></div>
-    <div></div>
-  </div>
+  <div></div>
 
   <script src="./entry.js" type="module"></script>
 </body>
