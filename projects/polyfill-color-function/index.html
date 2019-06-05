@@ -5,8 +5,9 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Test javascript color-function</title>
 
+  <script src="./entry.js" type="module" async></script>
   <style>
-    body > div {
+    div {
       --c-outline: #0024a0;
       --c-body-highlight: #2b99fb;
       --c-body: #3781e1;
@@ -16,7 +17,6 @@
       --ambient-light: #1b4dd8;
 
       --size: 85vmin;
-
 
 
       --color-function: color(
@@ -42,6 +42,7 @@
       content: "";
       display: block;
       position: absolute;
+      background-image: paint(color-function);
     }
 
     div::before {
@@ -50,7 +51,6 @@
         blend(var(--ambient-light) 20%)
         blend(var(--direct-light) 10%)
       );
-      background-image: paint(color-function);
 
       top: 0;
       left: 0;
@@ -68,7 +68,6 @@
         var(--c-body-highlight)
         blend(var(--direct-light) 60%)
       );
-      background-image: paint(color-function);
 
       top: calc(var(--size) * 0.15);
       left: calc(var(--size) * 0.15);
@@ -84,7 +83,5 @@
 
 <body>
   <div></div>
-
-  <script src="./entry.js" type="module"></script>
 </body>
 </html>
