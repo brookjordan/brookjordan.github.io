@@ -7,14 +7,20 @@
 
   <script src="./entry.js" type="module" async></script>
   <style>
+    :root {
+      --direct-light: #2b99fb;
+      --ambient-light: #1b4dd8;
+    }
+
+    body {
+      background-color: var(--ambient-light);
+    }
+
     div {
       --c-outline: #0024a0;
       --c-body-highlight: #2b99fb;
       --c-body: #3781e1;
       --c-body-shade: #1b4dd8;
-
-      --direct-light: #2b99fb;
-      --ambient-light: #1b4dd8;
 
       --size: 85vmin;
 
