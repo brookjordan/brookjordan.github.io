@@ -1,0 +1,10 @@
+mixin bouncy-text(string)
+  p.bouncy-text
+    - let ws = string.split(' ');
+    each w, index in ws
+      if index !== 0
+        |  
+      i #{letter}
+        - let letters = w.split('');
+        each letter in letters
+          i #{letter}

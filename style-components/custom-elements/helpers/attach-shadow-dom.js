@@ -9,5 +9,5 @@ export function attachTemplate(element, templateElement) {
     .attachShadow({
       mode: 'open',
     })
-    .appendChild(templateElement.content.cloneNode(true))
+    .append(templateElement.content.cloneNode(true))
 }

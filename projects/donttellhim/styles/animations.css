@@ -1,0 +1,86 @@
+/* init */
+[for="hi-im-brett"] {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  line-height: 100vh;
+  font-size: 5vh;
+  text-align: center;
+  background: #2b2f2e;
+  opacity: 1;
+  transition: opacity 0.25s frames(4);
+  pointer-events: auto;
+}
+#hi-im-brett:checked ~ [for="hi-im-brett"] {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 2s frames(32);
+}
+
+@keyframes speech--in {
+  from {
+    opacity: 0;
+    transform: translate(-3vh, -1vh) scale(1.2);
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+}
+@keyframes speech--out {
+  from {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(3vh, 1vh) scale(0.5);
+  }
+}
+
+#hi-im-brett:checked ~ .hi-im-brett {
+  animation-delay: 1s !important;
+}
+#hi-im-brett:checked ~ .hi-im-brett,
+#i-want-to-go-out:checked ~ .i-want-to-go-out,
+#help-me-remember:checked ~ .help-me-remember {
+  opacity: 1;
+  animation: speech--in 0.5s frames(8) backwards;
+  animation-delay: 0.5s;
+  pointer-events: auto;
+}
+#i-want-to-go-out:checked ~ .hi-im-brett,
+#help-me-remember:checked ~ .i-want-to-go-out,
+#walk--1:checked ~ .help-me-remember {
+  opacity: 0;
+  animation: speech--out 0.75s frames(12) backwards;
+  animation-delay: 0s !important;
+  pointer-events: none;
+}
+
+/* walking sections */
+#walk--1:checked ~ .bg {
+  animation:
+    bg
+    1s
+    frames(16)
+    2;
+}
+
+#walk--1:checked ~ .brett-waddle .sprite {
+  --frame-count: 8;
+  --play-count: 4;
+  background-image: url('../images/brett-waddle.png');
+}
+
+#walk--1:checked ~ .guitar {
+  transform: translate(calc(-10vh - 20vw), 1vh) rotate(40deg);
+  opacity: 1;
+  transition:
+    transform 2s,
+    opacity 2s;
+  transition-timing-function: frames(32);
+}

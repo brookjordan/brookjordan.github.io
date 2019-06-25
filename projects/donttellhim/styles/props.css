@@ -1,0 +1,49 @@
+@keyframes bg {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-70vh / 1.5));
+  }
+}
+
+.bg,
+.floor {
+  position: fixed;
+  z-index: -1;
+}
+
+.bg {
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  background-image: repeating-linear-gradient(to right,
+    #e48282,
+    #e48282 calc(70vh / 6),
+    #f5efe5 0,
+    #f5efe5 calc(70vh / 1.5)
+  );
+}
+
+.floor {
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 30%;
+  background: #fffbf3;
+}
+
+.guitar {
+  --size: 52vh;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: calc(var(--size) * (1368 / 1803));
+  width: var( --size);
+  background: transparent 50% 50% no-repeat url(../images/guitar.png);
+  background-size: contain;
+  transform: translate(calc(50vh - 20vw), 1vh) rotate(40deg);
+  opacity: 0;
+  pointer-events: none;
+}

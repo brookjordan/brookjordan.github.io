@@ -60,8 +60,8 @@ const TEMPLATE = buildTemplate(/*html*/`
   </aside>
 
   <main>
-    <slot name="main">
-      [SLOT: main]
+    <slot name="route">
+      [SLOT: route]
     </slot>
   </main>
 

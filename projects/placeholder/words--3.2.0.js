@@ -44,7 +44,7 @@ var defaultSentientObjects = [
   "$adj master",
   "$adj druggie",
   "$adj kitty cat",
-  "$adj pup",
+  "$adj puppy",
   "$adj criminal",
   "$adj dragon",
   "$adj patrolman",

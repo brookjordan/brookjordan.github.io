@@ -8,7 +8,6 @@ window.onload = e => {
   ambientLightColorInput.onchange = e => {
     root.style.setProperty('--ambient-light', ambientLightColorInput.value);
   }
-
   ambientLightColorInput.value = getComputedStyle(root).getPropertyValue('--ambient-light').trim();
   document.body.prepend(ambientLightColorInput);
 
@@ -17,7 +16,6 @@ window.onload = e => {
   directLightColorInput.onchange = e => {
     root.style.setProperty('--direct-light', directLightColorInput.value);
   }
-
   directLightColorInput.value = getComputedStyle(root).getPropertyValue('--direct-light').trim();
   document.body.prepend(directLightColorInput);
 }

@@ -1,0 +1,56 @@
+include templates/bouncy-text
+
+doctype html
+html(lang="en")
+  meta(lset="UTF-8")
+  meta(name="viewport", content="width=device-width, initial-scale=1.0")
+  meta(http-equiv="X-UA-Compatible", content="ie=edge")
+  meta(name="apple-mobile-web-app-capable", content="yes")
+  title Brett Waddles
+  link(href="https://fonts.googleapis.com/css?family=Mali&display=swap", rel="stylesheet")
+
+  link(href="./styles/base.css", rel="stylesheet")
+  link(href="./styles/props.css", rel="stylesheet")
+  link(href="./styles/sprite.css", rel="stylesheet")
+  link(href="./styles/brett.css", rel="stylesheet")
+  link(href="./styles/bouncy-text.css", rel="stylesheet")
+  link(href="./styles/animations.css", rel="stylesheet")
+  link(href="./styles/loaders.css", rel="stylesheet")
+    
+  .loader-brett-waddle
+
+  form.game
+    //- Story
+    input(type="checkbox", id="hi-im-brett")
+    input(type="checkbox", id="i-want-to-go-out")
+    input(type="checkbox", id="help-me-remember")
+    input(type="checkbox", id="walk--1")
+
+    label.hi-im-brett(for="i-want-to-go-out")
+      +bouncy-text("Oh, hi there!")
+      +bouncy-text("I'm Brett.")
+    label.i-want-to-go-out(for="help-me-remember")
+      +bouncy-text("I was about to go out, but I'm getting old...")
+      +bouncy-text("I forgot what I was planning to do!")
+    label.help-me-remember(for="walk--1")
+      +bouncy-text("Come and help me remember!")
+
+    //- Props
+    .bg
+    .floor
+
+    .guitar
+    .bag
+
+    //- Brett
+    .brett-waddle
+      .shadow
+      .sprite-container
+          .sprite
+
+
+    //- Init and reset
+    input(type="reset")
+    
+    label(for="hi-im-brett")
+      +bouncy-text("Click to play")

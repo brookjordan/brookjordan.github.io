@@ -26,6 +26,14 @@ const TEMPLATE = buildTemplate(/*html*/`
       align-self: center;
     }
 
+    ::slotted(input) {
+      -webkit-appearance: textfield;
+      height: 32px;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      margin-left: 20px;
+    }
+
     ::slotted(h3),
     ::slotted(a) {
       align-self: stretch;
@@ -67,10 +75,6 @@ const TEMPLATE = buildTemplate(/*html*/`
       transition:
         border-color 0.15s,
         background-color 0.15s;
-    }
-
-    .row ::slotted(*) {
-      margin-top: 5px;
     }
 
     .row ::slotted(h3),
