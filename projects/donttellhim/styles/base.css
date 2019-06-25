@@ -16,9 +16,6 @@ body {
   margin: 0;
   font-family: 'Mali', cursive;
 }
-input {
-  font: inherit;
-}
 
 h2 {
   position: fixed;
@@ -35,6 +32,13 @@ form {
   position: relative;
 }
 
+input,
+button {
+  font: inherit;
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0;
+}
 input {
   display: none;
   border: 0;
