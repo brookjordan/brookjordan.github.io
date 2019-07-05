@@ -1,3 +1,6 @@
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,19 +23,11 @@
       will-change: background-color;
     }
 
-    .color-sets {
-      display: flex;
-      width: 200%;
-      transition: transform 0.4s ease-in-out;
-      will-change: transform;
-    }
-
     .colors {
       display: flex;
-      flex-wrap: wrap;
+      flex-flow: row wrap;
       justify-content: center;
       margin: 0;
-      flex-basis: 100%;
     }
 
     [data-clipboard-text="null"] {
@@ -309,285 +304,162 @@
         line-height: 150px;
       }
     }
-
-    .show-app-input {
-      display: none;
-    }
-    .show-app-label {
-      color: #2d3033;
-      font-family: "Proxima Nova", "Open sans", "Helvetica Neue", sans-serif;
-      display: block;
-      position: fixed;
-      bottom: 10px;
-      left: 10px;
-      z-index: 150;
-      opacity: 0.8;
-      background: white;
-      padding: 10px 15px;
-      border-radius: 10px;
-      box-shadow: 0 0 5px;
-      transform-origin: 0 100%;
-      cursor: pointer;
-      transition:
-        background-color 0.3s,
-        transform 0.15s;
-    }
-    .show-app-label:hover {
-      opacity: 1;
-      transform: scale(1.1);
-    }
-    .show-app-label::after {
-      content: "Showing marketing colours";
-    }
-    .show-app-input:checked + .show-app-label::after {
-      content: "Showing app colours";
-    }
-    .show-app-input:checked ~ .color-sets {
-      transform: translateX(-50%);
-    }
   </style>
 </head>
-
 <body>
-  <input type="checkbox" id="show-app" class="show-app-input">
-  <label for="show-app" class="show-app-label"></label>
-
-  <div class="compare">
-    <input class="compare__input" type="text" placeholder="test" />
-  </div>
-
-  <div class="color-sets">
-    <div class="colors colors--marketing">
-      <color name="Moko" hex="70cf32"></color>
-      <color name="Storm" hex="6c7279"></color>
-      <color name="Slate" hex="2d3033"></color>
-
-      <color name="White" hex="ffffff"></color>
-      <color name="Gray 1" hex="f4f6fa"></color>
-      <color name="Gray 2" hex="e5e9f1"></color>
-      <color name="Gray 3" hex="d2d9e8"></color>
-      <color name="Gray 4" hex="c1c9de"></color>
-      <color name="Gray 5" hex="9faac6"></color>
-      <color name="Gray 6" hex="606a84"></color>
-      <color name="Gray 7" hex="434b5f"></color>
-      <color name="Gray 8" hex="393d45"></color>
-      <color name="Gray 9" hex="2d3033"></color>
-      <color name="Black" hex="000000"></color>
-
-      <color name="Moko light" hex="8ce437"></color>
-      <color name="Moko dark" hex="63bf1b"></color>
-      <color name="Moko" hex="70cf32"></color>
-
-      <color name="Oops light" hex="ffd580"></color>
-      <color name="Oops dark" hex="f6bb42"></color>
-      <color name="Oops" hex="ffc95b"></color>
-
-      <color name="Mayhem light" hex="e13d33"></color>
-      <color name="Mayhem dark" hex="af0000"></color>
-      <color name="Mayhem" hex="c61c1c"></color>
-
-      <color name="Dragonfruit light" hex="f4399a"></color>
-      <color name="Dragonfruit dark" hex="cc076d"></color>
-      <color name="Dragonfruit" hex="db2182"></color>
-
-      <color name="Haze light" hex="bc72d4"></color>
-      <color name="Haze dark" hex="8939a4"></color>
-      <color name="Haze" hex="a058b8"></color>
-
-      <color name="Royal light" hex="757be4"></color>
-      <color name="Royal dark" hex="5055c0"></color>
-      <color name="Royal" hex="5960ce"></color>
-
-      <color name="Vhs light" hex="255d80"></color>
-      <color name="Vhs dark" hex="113855"></color>
-      <color name="Vhs" hex="1c4561"></color>
-
-      <color name="Ocean light" hex="6f9bff"></color>
-      <color name="Ocean dark" hex="3169e8"></color>
-      <color name="Ocean" hex="4b82ff"></color>
-
-      <color name="Sky light" hex="75ecf1"></color>
-      <color name="Sky dark" hex="3dd2d7"></color>
-      <color name="Sky" hex="5cdee3"></color>
-
-      <color name="Surf light" hex="4debc6"></color>
-      <color name="Surf dark" hex="13c69b"></color>
-      <color name="Surf" hex="30d4ad"></color>
-
-      <color name="Snot light" hex="cbf300"></color>
-      <color name="Snot dark" hex="a2d500"></color>
-      <color name="Snot" hex="b2e60c"></color>
-
-      <color name="Prosper light" hex="faee57"></color>
-      <color name="Prosper dark" hex="f7d800"></color>
-      <color name="Prosper" hex="f4e200"></color>
-
-      <color name="Watermelon light" hex="ff6f66"></color>
-      <color name="Watermelon dark" hex="e13d33"></color>
-      <color name="Watermelon" hex="f6574d"></color>
-
-      <color name="Elite light" hex="f0cd80"></color>
-      <color name="Elite dark" hex="cb9a47"></color>
-      <color name="Elite" hex="e4b462"></color>
-
-      <color name="Velvet light" hex="a82981"></color>
-      <color name="Velvet dark" hex="620044"></color>
-      <color name="Velvet" hex="810f5e"></color>
-
-      <color name="Peachy light" hex="ff7ea2"></color>
-      <color name="Peachy dark" hex="f5376c"></color>
-      <color name="Peachy" hex="ff5f8b"></color>
-
-      <color name="Cadbury light" hex="68399d"></color>
-      <color name="Cadbury dark" hex="330666"></color>
-      <color name="Cadbury" hex="421476"></color>
-
-      <color name="Reef light" hex="5ec4ff"></color>
-      <color name="Reef dark" hex="1399e6"></color>
-      <color name="Reef" hex="32b4ff"></color>
-
-      <color name="Mint light" hex="0b96a7"></color>
-      <color name="Mint dark" hex="005863"></color>
-      <color name="Mint" hex="00717f"></color>
-
-      <color name="Aloe light" hex="15bf7f"></color>
-      <color name="Aloe dark" hex="008654"></color>
-      <color name="Aloe" hex="00a164"></color>
-
-      <!--Backgrounds gradients-->
-      <color name="Wash" hex="ffffff,f4f4f5"></color>
-      <color name="Sign" hex="a058b8,5960ce"></color>
-      <color name="Show" hex="1b4868,2071a9"></color>
-      <color name="Discover" hex="56b8dd,2f68a3"></color>
-      <color name="Platform" hex="3b79cb,47b1ed"></color>
-
-      <!--Icon/button gradients-->
-      <color name="Zenith" hex="3c6ecd,69d5f5"></color>
-      <color name="Solstice" hex="f6497f,584cd1"></color>
-      <color name="Click" hex="6ccb34,32b76b"></color>
-      <color name="Grass" hex="e3e170,09b1c3"></color>
-      <color name="Wave" hex="00e691,70bcfc"></color>
-      <color name="Malibu" hex="585cd1,ff38d6"></color>
-      <color name="Rise" hex="f65b86,ffce6c"></color>
-      <color name="Set" hex="ffa750,ff4cbf"></color>
-      <color name="Flight" hex="fb97ca,4895e7"></color>
-      <color name="Wash" hex="ffffff,f4f4f5"></color>
-
-      <color empty></color>
-      <color empty></color>
-      <color empty></color>
-      <color empty></color>
-      <color empty></color>
-      <color empty></color>
-      <color empty></color>
-      <color empty></color>
-      <color empty></color>
-      <color empty></color>
+  <div class="colors">
+    <div class="compare">
+      <input class="compare__input" type="text" placeholder="test" />
     </div>
 
-    <div class="colors colors--app">
-      <color name="Moko" hex="70cf32"></color>
-      <color name="Slate" hex="2d3033"></color>
+    <color name="Moko" hex="70cf32"></color>
+    <color name="Storm" hex="6c7279"></color>
+    <color name="Slate" hex="2d3033"></color>
 
-      <color name="White" hex="ffffff"></color>
-      <color name="Gray 1" hex="f4f4f5"></color>
-      <color name="Gray 2" hex="e2e6e8"></color>
-      <color name="Gray 3" hex="c4ced1"></color>
-      <color name="Gray 4" hex="a4aeb3"></color>
-      <color name="Gray 5" hex="889096"></color>
-      <color name="Gray 6" hex="6c7279"></color>
-      <color name="Gray 7" hex="585d64"></color>
-      <color name="Gray 8" hex="393c40"></color>
-      <color name="Gray 9" hex="2d3033"></color>
-      <color name="Gray 10" hex="242629"></color>
-      <color name="Black" hex="000000"></color>
+    <color name="White" hex="ffffff"></color>
+    <color name="Gray 1" hex="f4f4f5"></color>
+    <color name="Gray 2" hex="e2e6e8"></color>
+    <color name="Gray 3" hex="c4ced1"></color>
+    <color name="Gray 4" hex="a4aeb3"></color>
+    <color name="Gray 5" hex="889096"></color>
+    <color name="Gray 6" hex="6c7279"></color>
+    <color name="Gray 7" hex="585d64"></color>
+    <color name="Gray 8" hex="393c40"></color>
+    <color name="Gray 9" hex="2d3033"></color>
+    <color name="Gray 10" hex="242629"></color>
+    <color name="Black" hex="000000"></color>
 
-      <!-- complete -->
-      <color name="UI purple darkest" hex="421476"></color>
-      <color name="UI purple darker" hex="5a1ba1"></color>
-      <color name="UI purple dark" hex="7323cd"></color>
-      <color name="UI purple" hex="8d43df"></color>
-      <color name="UI purple light" hex="a76fe7"></color>
-      <color name="UI purple lighter" hex="e1c0ec"></color>
-      <color name="UI purple lightest" hex="f4e8f8"></color>
+    <color name="Gray 1" hex="f4f6fa"></color>
+    <color name="Gray 2" hex="e5e9f1"></color>
+    <color name="Gray 3" hex="d2d9e8"></color>
+    <color name="Gray 4" hex="c1c9de"></color>
+    <color name="Gray 5" hex="9faac6"></color>
+    <color name="Gray 6" hex="606a84"></color>
+    <color name="Gray 7" hex="434b5f"></color>
+    <color name="Gray 8" hex="393d45"></color>
+    <color name="Gray 9" hex="2d3033"></color>
 
-      <!-- danger -->
-      <color name="UI red darkest" hex="a01108"></color>
-      <color name="UI red darker" hex="d1160b"></color>
-      <color name="UI red dark" hex="f3281b"></color>
-      <color name="UI red" hex="f6574d"></color>
-      <color name="UI red light" hex="f8837c"></color>
-      <color name="UI red lighter" hex="fbb1ac"></color>
-      <color name="UI red lightest" hex="fde8e8"></color>
+    <color name="Moko light" hex="8ce437"></color>
+    <color name="Moko" hex="70cf32"></color>
+    <color name="Moko dark" hex="63bf1b"></color>
 
-      <!-- info -->
-      <color name="UI blue darkest" hex="081a45"></color>
-      <color name="UI blue darker" hex="123ea1"></color>
-      <color name="UI blue dark" hex="174fce"></color>
-      <color name="UI blue" hex="3169e8"></color>
-      <color name="UI blue light" hex="8cabf2"></color>
-      <color name="UI blue lighter" hex="bacdf7"></color>
-      <color name="UI blue lightest" hex="e7edfb"></color>
+    <color name="Oops light" hex="ffd580"></color>
+    <color name="Oops" hex="ffc95b"></color>
+    <color name="Oops dark" hex="f6bb42"></color>
 
-      <!-- neutral -->
-      <color name="UI gray darkest" hex="242628"></color>
-      <color name="UI gray darker" hex="3c3f43"></color>
-      <color name="UI gray dark" hex="54595e"></color>
-      <color name="UI gray" hex="6c7279"></color>
-      <color name="UI gray light" hex="a1a5ab"></color>
-      <color name="UI gray lighter" hex="c5d0d1"></color>
-      <color name="UI gray lightest" hex="e2e6e8"></color>
+    <color name="Mayhem light" hex="e13d33"></color>
+    <color name="Mayhem" hex="c61c1c"></color>
+    <color name="Mayhem dark" hex="af0000"></color>
 
-      <!-- success -->
-      <color name="UI green darkest" hex="1e3a08"></color>
-      <color name="UI green darker" hex="34670e"></color>
-      <color name="UI green dark" hex="4c9316"></color>
-      <color name="UI green" hex="62bf1a"></color>
-      <color name="UI green light" hex="97e859"></color>
-      <color name="UI green lighter" hex="b4ee86"></color>
-      <color name="UI green lightest" hex="def8c9"></color>
+    <color name="Dragonfruit light" hex="f4399a"></color>
+    <color name="Dragonfruit" hex="db2182"></color>
+    <color name="Dragonfruit dark" hex="cc076d"></color>
 
-      <!-- warning -->
-      <color name="UI yellow darkest" hex="a84600"></color>
-      <color name="UI yellow darker" hex="f57a00"></color>
-      <color name="UI yellow dark" hex="ff9429"></color>
-      <color name="UI yellow" hex="ffc95b"></color>
-      <color name="UI yellow light" hex="ffda8f"></color>
-      <color name="UI yellow lighter" hex="ffebc2"></color>
-      <color name="UI yellow lightest" hex="fff3db"></color>
+    <color name="Haze light" hex="bc72d4"></color>
+    <color name="Haze" hex="a058b8"></color>
+    <color name="Haze dark" hex="8939a4"></color>
 
-      <!-- 'allo! -->
-      <color name="UI aloe darkest" hex="005736"></color>
-      <color name="UI aloe darker" hex="007046"></color>
-      <color name="UI aloe dark" hex="008a56"></color>
-      <color name="UI aloe" hex="00a164"></color>
-      <color name="UI aloe light" hex="24cc8c"></color>
-      <color name="UI aloe lighter" hex="64d8ac"></color>
-      <color name="UI aloe lightest" hex="bae8d7"></color>
+    <color name="Royal light" hex="757be4"></color>
+    <color name="Royal" hex="5960ce"></color>
+    <color name="Royal dark" hex="5055c0"></color>
 
-      <!--External company colours-->
-      <color name="Magento" hex="ed4a19"></color>
-      <color name="Woocommerce" hex="9b5c8f"></color>
-      <color name="Bigcommerce" hex="6bcbdd"></color>
-      <color name="Stripe" hex="0065c8"></color>
-      <color name="Amazon" hex="ff9900"></color>
-      <color name="Xero" hex="00b7e3"></color>
-      <color name="Quickbooks" hex="2ca01c"></color>
-      <color name="Shipstation" hex="92c43f"></color>
-      <color name="Shopify" hex="8cbf44"></color>
-      <color name="Zapier" hex="ff4a00"></color>
+    <color name="Vhs light" hex="255d80"></color>
+    <color name="Vhs" hex="1c4561"></color>
+    <color name="Vhs dark" hex="113855"></color>
 
-      <color empty></color>
-      <color empty></color>
-      <color empty></color>
-      <color empty></color>
-      <color empty></color>
-      <color empty></color>
-      <color empty></color>
-      <color empty></color>
-      <color empty></color>
-      <color empty></color>
-    </div>
+    <color name="Ocean light" hex="6f9bff"></color>
+    <color name="Ocean" hex="4b82ff"></color>
+    <color name="Ocean dark" hex="3169e8"></color>
+
+    <color name="Sky light" hex="75ecf1"></color>
+    <color name="Sky" hex="5cdee3"></color>
+    <color name="Sky dark" hex="3dd2d7"></color>
+
+    <color name="Surf light" hex="4debc6"></color>
+    <color name="Surf" hex="30d4ad"></color>
+    <color name="Surf dark" hex="13c69b"></color>
+
+    <color name="Snot light" hex="cbf300"></color>
+    <color name="Snot" hex="b2e60c"></color>
+    <color name="Snot dark" hex="a2d500"></color>
+
+    <color name="Prosper light" hex="faee57"></color>
+    <color name="Prosper" hex="f4e200"></color>
+    <color name="Prosper dark" hex="f7d800"></color>
+
+    <color name="Watermelon light" hex="ff6f66"></color>
+    <color name="Watermelon" hex="f6574d"></color>
+    <color name="Watermelon dark" hex="e13d33"></color>
+
+    <color name="Elite light" hex="f0cd80"></color>
+    <color name="Elite" hex="e4b462"></color>
+    <color name="Elite dark" hex="cb9a47"></color>
+
+    <color name="Velvet light" hex="a82981"></color>
+    <color name="Velvet" hex="810f5e"></color>
+    <color name="Velvet dark" hex="620044"></color>
+
+    <color name="Peachy light" hex="ff7ea2"></color>
+    <color name="Peachy" hex="ff5f8b"></color>
+    <color name="Peachy dark" hex="f5376c"></color>
+
+    <color name="Cadbury light" hex="68399d"></color>
+    <color name="Cadbury" hex="421476"></color>
+    <color name="Cadbury dark" hex="330666"></color>
+
+    <color name="Reef light" hex="5ec4ff"></color>
+    <color name="Reef" hex="32b4ff"></color>
+    <color name="Reef dark" hex="1399e6"></color>
+
+    <color name="Mint light" hex="0b96a7"></color>
+    <color name="Mint" hex="00717f"></color>
+    <color name="Mint dark" hex="005863"></color>
+
+    <color name="Aloe light" hex="15bf7f"></color>
+    <color name="Aloe" hex="00a164"></color>
+    <color name="Aloe dark" hex="008654"></color>
+
+    <!--Backgrounds gradients-->
+    <color name="Wash" hex="ffffff,f4f4f5"></color>
+    <color name="Sign" hex="a058b8,5960ce"></color>
+    <color name="Show" hex="1b4868,2071a9"></color>
+    <color name="Discover" hex="56b8dd,2f68a3"></color>
+    <color name="Platform" hex="3b79cb,47b1ed"></color>
+
+    <!--Icon/button gradients-->
+    <color name="Zenith" hex="3c6ecd,69d5f5"></color>
+    <color name="Solstice" hex="f6497f,584cd1"></color>
+    <color name="Click" hex="6ccb34,32b76b"></color>
+    <color name="Grass" hex="e3e170,09b1c3"></color>
+    <color name="Wave" hex="00e691,70bcfc"></color>
+    <color name="Malibu" hex="585cd1,ff38d6"></color>
+    <color name="Rise" hex="f65b86,ffce6c"></color>
+    <color name="Set" hex="ffa750,ff4cbf"></color>
+    <color name="Flight" hex="fb97ca,4895e7"></color>
+    <color name="Wash" hex="ffffff,f4f4f5"></color>
+
+    <!--External companies gradients-->
+    <color name="Magento" hex="ed4a19"></color>
+    <color name="Woocommerce" hex="9b5c8f"></color>
+    <color name="Bigcommerce" hex="6bcbdd"></color>
+    <color name="Stripe" hex="0065c8"></color>
+    <color name="Amazon" hex="ff9900"></color>
+    <color name="Xero" hex="00b7e3"></color>
+    <color name="Quickbooks" hex="2ca01c"></color>
+    <color name="Shipstation" hex="92c43f"></color>
+    <color name="Shopify" hex="8cbf44"></color>
+    <color name="Zapier" hex="ff4a00"></color>
+
+    <color empty></color>
+    <color empty></color>
+    <color empty></color>
+    <color empty></color>
+    <color empty></color>
+    <color empty></color>
+    <color empty></color>
+    <color empty></color>
+    <color empty></color>
+    <color empty></color>
   </div>
   <small>*CMYK values, when provided, should be based on the <strong>sRGB IEC61966-2.1</strong> profile.</small>
 
