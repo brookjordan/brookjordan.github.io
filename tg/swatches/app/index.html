@@ -337,10 +337,10 @@
       transform: scale(1.1);
     }
     .show-app-label::after {
-      content: "Showing app colours";
+      content: "Showing marketing colours";
     }
     .show-app-input:checked + .show-app-label::after {
-      content: "Showing marketing colours";
+      content: "Showing app colours";
     }
     .show-app-input:checked ~ .color-sets {
       transform: translateX(-50%);
@@ -349,7 +349,7 @@
 </head>
 
 <body>
-  <input type="checkbox" id="show-app" class="show-app-input">
+  <input checked type="checkbox" id="show-app" class="show-app-input">
   <label for="show-app" class="show-app-label"></label>
 
   <div class="compare">
@@ -357,110 +357,6 @@
   </div>
 
   <div class="color-sets">
-    <div class="colors colors--app">
-      <color name="Moko" hex="70cf32"></color>
-      <color name="Slate" hex="2d3033"></color>
-
-      <color name="White" hex="ffffff"></color>
-      <color name="Gray 1" hex="f4f4f5"></color>
-      <color name="Gray 2" hex="e2e6e8"></color>
-      <color name="Gray 3" hex="c4ced1"></color>
-      <color name="Gray 4" hex="a4aeb3"></color>
-      <color name="Gray 5" hex="889096"></color>
-      <color name="Gray 6" hex="6c7279"></color>
-      <color name="Gray 7" hex="585d64"></color>
-      <color name="Gray 8" hex="393c40"></color>
-      <color name="Gray 9" hex="2d3033"></color>
-      <color name="Gray 10" hex="242629"></color>
-      <color name="Black" hex="000000"></color>
-
-      <!-- complete -->
-      <color name="UI purple darkest" hex="421476"></color>
-      <color name="UI purple darker" hex="5a1ba1"></color>
-      <color name="UI purple dark" hex="7323cd"></color>
-      <color name="UI purple" hex="8d43df"></color>
-      <color name="UI purple light" hex="a76fe7"></color>
-      <color name="UI purple lighter" hex="e1c0ec"></color>
-      <color name="UI purple lightest" hex="f4e8f8"></color>
-
-      <!-- danger -->
-      <color name="UI red darkest" hex="a01108"></color>
-      <color name="UI red darker" hex="d1160b"></color>
-      <color name="UI red dark" hex="f3281b"></color>
-      <color name="UI red" hex="f6574d"></color>
-      <color name="UI red light" hex="f8837c"></color>
-      <color name="UI red lighter" hex="fbb1ac"></color>
-      <color name="UI red lightest" hex="fde8e8"></color>
-
-      <!-- info -->
-      <color name="UI blue darkest" hex="081a45"></color>
-      <color name="UI blue darker" hex="123ea1"></color>
-      <color name="UI blue dark" hex="174fce"></color>
-      <color name="UI blue" hex="3169e8"></color>
-      <color name="UI blue light" hex="8cabf2"></color>
-      <color name="UI blue lighter" hex="bacdf7"></color>
-      <color name="UI blue lightest" hex="e7edfb"></color>
-
-      <!-- neutral -->
-      <color name="UI gray darkest" hex="242628"></color>
-      <color name="UI gray darker" hex="3c3f43"></color>
-      <color name="UI gray dark" hex="54595e"></color>
-      <color name="UI gray" hex="6c7279"></color>
-      <color name="UI gray light" hex="a1a5ab"></color>
-      <color name="UI gray lighter" hex="c5d0d1"></color>
-      <color name="UI gray lightest" hex="e2e6e8"></color>
-
-      <!-- success -->
-      <color name="UI green darkest" hex="1e3a08"></color>
-      <color name="UI green darker" hex="34670e"></color>
-      <color name="UI green dark" hex="4c9316"></color>
-      <color name="UI green" hex="62bf1a"></color>
-      <color name="UI green light" hex="97e859"></color>
-      <color name="UI green lighter" hex="b4ee86"></color>
-      <color name="UI green lightest" hex="def8c9"></color>
-
-      <!-- warning -->
-      <color name="UI yellow darkest" hex="a84600"></color>
-      <color name="UI yellow darker" hex="f57a00"></color>
-      <color name="UI yellow dark" hex="ff9429"></color>
-      <color name="UI yellow" hex="ffc95b"></color>
-      <color name="UI yellow light" hex="ffda8f"></color>
-      <color name="UI yellow lighter" hex="ffebc2"></color>
-      <color name="UI yellow lightest" hex="fff3db"></color>
-
-      <!-- 'allo! -->
-      <color name="UI aloe darkest" hex="005736"></color>
-      <color name="UI aloe darker" hex="007046"></color>
-      <color name="UI aloe dark" hex="008a56"></color>
-      <color name="UI aloe" hex="00a164"></color>
-      <color name="UI aloe light" hex="24cc8c"></color>
-      <color name="UI aloe lighter" hex="64d8ac"></color>
-      <color name="UI aloe lightest" hex="bae8d7"></color>
-
-      <!--External company colours-->
-      <color name="Magento" hex="ed4a19"></color>
-      <color name="Woocommerce" hex="9b5c8f"></color>
-      <color name="Bigcommerce" hex="6bcbdd"></color>
-      <color name="Stripe" hex="0065c8"></color>
-      <color name="Amazon" hex="ff9900"></color>
-      <color name="Xero" hex="00b7e3"></color>
-      <color name="Quickbooks" hex="2ca01c"></color>
-      <color name="Shipstation" hex="92c43f"></color>
-      <color name="Shopify" hex="8cbf44"></color>
-      <color name="Zapier" hex="ff4a00"></color>
-
-      <color empty></color>
-      <color empty></color>
-      <color empty></color>
-      <color empty></color>
-      <color empty></color>
-      <color empty></color>
-      <color empty></color>
-      <color empty></color>
-      <color empty></color>
-      <color empty></color>
-    </div>
-
     <div class="colors colors--marketing">
       <color name="Moko" hex="70cf32"></color>
       <color name="Storm" hex="6c7279"></color>
@@ -576,6 +472,110 @@
       <color name="Set" hex="ffa750,ff4cbf"></color>
       <color name="Flight" hex="fb97ca,4895e7"></color>
       <color name="Wash" hex="ffffff,f4f4f5"></color>
+
+      <color empty></color>
+      <color empty></color>
+      <color empty></color>
+      <color empty></color>
+      <color empty></color>
+      <color empty></color>
+      <color empty></color>
+      <color empty></color>
+      <color empty></color>
+      <color empty></color>
+    </div>
+
+    <div class="colors colors--app">
+      <color name="Moko" hex="70cf32"></color>
+      <color name="Slate" hex="2d3033"></color>
+
+      <color name="White" hex="ffffff"></color>
+      <color name="Gray 1" hex="f4f4f5"></color>
+      <color name="Gray 2" hex="e2e6e8"></color>
+      <color name="Gray 3" hex="c4ced1"></color>
+      <color name="Gray 4" hex="a4aeb3"></color>
+      <color name="Gray 5" hex="889096"></color>
+      <color name="Gray 6" hex="6c7279"></color>
+      <color name="Gray 7" hex="585d64"></color>
+      <color name="Gray 8" hex="393c40"></color>
+      <color name="Gray 9" hex="2d3033"></color>
+      <color name="Gray 10" hex="242629"></color>
+      <color name="Black" hex="000000"></color>
+
+      <!-- complete -->
+      <color name="UI purple darkest" hex="421476"></color>
+      <color name="UI purple darker" hex="5a1ba1"></color>
+      <color name="UI purple dark" hex="7323cd"></color>
+      <color name="UI purple" hex="8d43df"></color>
+      <color name="UI purple light" hex="a76fe7"></color>
+      <color name="UI purple lighter" hex="e1c0ec"></color>
+      <color name="UI purple lightest" hex="f4e8f8"></color>
+
+      <!-- danger -->
+      <color name="UI red darkest" hex="a01108"></color>
+      <color name="UI red darker" hex="d1160b"></color>
+      <color name="UI red dark" hex="f3281b"></color>
+      <color name="UI red" hex="f6574d"></color>
+      <color name="UI red light" hex="f8837c"></color>
+      <color name="UI red lighter" hex="fbb1ac"></color>
+      <color name="UI red lightest" hex="fde8e8"></color>
+
+      <!-- info -->
+      <color name="UI blue darkest" hex="081a45"></color>
+      <color name="UI blue darker" hex="123ea1"></color>
+      <color name="UI blue dark" hex="174fce"></color>
+      <color name="UI blue" hex="3169e8"></color>
+      <color name="UI blue light" hex="8cabf2"></color>
+      <color name="UI blue lighter" hex="bacdf7"></color>
+      <color name="UI blue lightest" hex="e7edfb"></color>
+
+      <!-- neutral -->
+      <color name="UI gray darkest" hex="242628"></color>
+      <color name="UI gray darker" hex="3c3f43"></color>
+      <color name="UI gray dark" hex="54595e"></color>
+      <color name="UI gray" hex="6c7279"></color>
+      <color name="UI gray light" hex="a1a5ab"></color>
+      <color name="UI gray lighter" hex="c5d0d1"></color>
+      <color name="UI gray lightest" hex="e2e6e8"></color>
+
+      <!-- success -->
+      <color name="UI green darkest" hex="1e3a08"></color>
+      <color name="UI green darker" hex="34670e"></color>
+      <color name="UI green dark" hex="4c9316"></color>
+      <color name="UI green" hex="62bf1a"></color>
+      <color name="UI green light" hex="97e859"></color>
+      <color name="UI green lighter" hex="b4ee86"></color>
+      <color name="UI green lightest" hex="def8c9"></color>
+
+      <!-- warning -->
+      <color name="UI yellow darkest" hex="a84600"></color>
+      <color name="UI yellow darker" hex="f57a00"></color>
+      <color name="UI yellow dark" hex="ff9429"></color>
+      <color name="UI yellow" hex="ffc95b"></color>
+      <color name="UI yellow light" hex="ffda8f"></color>
+      <color name="UI yellow lighter" hex="ffebc2"></color>
+      <color name="UI yellow lightest" hex="fff3db"></color>
+
+      <!-- 'allo! -->
+      <color name="UI aloe darkest" hex="005736"></color>
+      <color name="UI aloe darker" hex="007046"></color>
+      <color name="UI aloe dark" hex="008a56"></color>
+      <color name="UI aloe" hex="00a164"></color>
+      <color name="UI aloe light" hex="24cc8c"></color>
+      <color name="UI aloe lighter" hex="64d8ac"></color>
+      <color name="UI aloe lightest" hex="bae8d7"></color>
+
+      <!--External company colours-->
+      <color name="Magento" hex="ed4a19"></color>
+      <color name="Woocommerce" hex="9b5c8f"></color>
+      <color name="Bigcommerce" hex="6bcbdd"></color>
+      <color name="Stripe" hex="0065c8"></color>
+      <color name="Amazon" hex="ff9900"></color>
+      <color name="Xero" hex="00b7e3"></color>
+      <color name="Quickbooks" hex="2ca01c"></color>
+      <color name="Shipstation" hex="92c43f"></color>
+      <color name="Shopify" hex="8cbf44"></color>
+      <color name="Zapier" hex="ff4a00"></color>
 
       <color empty></color>
       <color empty></color>
@@ -1034,6 +1034,13 @@
       return result;
     }
 
+    const colourSetToggleElt = document.getElementById('show-app');
+    colourSetToggleElt.onchange = e => {
+      let newPos = colourSetToggleElt.checked
+        ? 'app'
+        : 'marketing';
+      history.pushState({}, null, `${location.protocol}//${location.hostname}:${location.port}/tg/swatches/${newPos}`);
+    }
   </script>
 </body>
 </html>
