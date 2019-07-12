@@ -1,0 +1,68 @@
+@keyframes letter-wobble {
+  0% {
+    transform: translateY(0.05em);
+  }
+
+  50% {
+    transform: translateY(-0.05em);
+  }
+
+  100% {
+    transform: translateY(0.05em);
+  }
+}
+
+.bouncy-text {
+  position: relative;
+  padding: 2vh 3vh;
+  margin: 0 -3vh;
+  background: rgba(51, 68, 64, 0.7);
+  color: white;
+  font-size: 3vh;
+}
+
+.bouncy-text + .bouncy-text {
+  padding-top: 0;
+}
+
+.bouncy-text:first-child {
+  border-top-left-radius: 1vh;
+  border-top-right-radius: 1vh;
+}
+
+.bouncy-text:last-child {
+  border-bottom-left-radius: 1vh;
+  border-bottom-right-radius: 1vh;
+}
+
+.bouncy-text i {
+  display: inline-block;
+  font-style: normal;
+  letter-spacing: 0.03em;
+  animation: letter-wobble ease-in-out infinite;
+}
+
+/* Durations and delays are chosen for their primeness */
+.bouncy-text i:nth-child(4n + 0) {
+  animation-delay: -0.503s;
+  animation-duration: 2.003s;
+  animation-timing-function: frames(32);
+}
+
+.bouncy-text i:nth-child(4n + 1) {
+  animation-delay: -1.543s;
+  animation-duration: 2.099s;
+  animation-timing-function: frames(33);
+}
+
+.bouncy-text i:nth-child(4n + 2) {
+  animation-delay: -1.021s;
+  animation-duration: 2.137s;
+  animation-timing-function: frames(34);
+}
+
+.bouncy-text i:nth-child(4n + 3) {
+  animation-delay: -0s;
+  animation-duration: 2.221s;
+  animation-timing-function: frames(35);
+}

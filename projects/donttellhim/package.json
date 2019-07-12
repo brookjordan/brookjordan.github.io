@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "pug": "pug index.pug"
+    "html": "pug index.pug --watch",
+    "css": "sass ./styles/entry.scss:./styles/main.css --watch"
   },
   "author": "",
   "license": "ISC"

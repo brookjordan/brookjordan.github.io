@@ -1,0 +1,20 @@
+@keyframes load {
+  0% {
+    opacity: 0.1;
+  }
+  100% {
+    opacity: 0.1;
+  }
+}
+.loader--brett-waddle {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  animation: load 0.5s;
+  background-image:
+    url("../images/brett-waddle.png"),
+    url("../images/guitar-strap.png"),
+    url("../images/bag-strap.png");
+}

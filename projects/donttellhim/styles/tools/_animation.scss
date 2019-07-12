@@ -1,0 +1,3 @@
+@function frame-duration($frame-count) {
+  @return ($frame-count * $mspf) * 1ms;
+}

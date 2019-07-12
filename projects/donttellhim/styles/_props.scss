@@ -1,0 +1,162 @@
+@keyframes bg {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-70vh / 1.5));
+  }
+}
+
+.bg,
+.floor {
+  position: fixed;
+  z-index: -1;
+}
+
+.bg {
+  $red: #e48282;
+  $white: #f5efe5;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  background-image: repeating-linear-gradient(to right,
+    $red,
+    $red calc(70vh / 6),
+    $white 0,
+    $white calc(70vh / 1.5)
+  );
+}
+
+.floor {
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 30%;
+  background: #fffbf3;
+}
+
+.guitar {
+  $size: 52vh;
+
+  position: absolute;
+  bottom: 0;
+  left: -20vw;
+  height: $size * (1368 / 1803);
+  width: $size;
+  background: transparent 50% 50% no-repeat url(../images/guitar.png);
+  background-size: contain;
+  transform: translate(200vh, 1vh) rotate(40deg);
+  opacity: 0;
+  pointer-events: none;
+}
+.guitar-strap {
+  $size: 18vh;
+  --size: #{$size};
+
+  position: absolute;
+  left: 10.5vh;
+  bottom: 32vh;
+  height: $size * (629 / 725);
+  width: $size;
+  // height: calc(var(--size) * (629 / 725));
+  // width: var(--size);
+  background: transparent 50% 50% no-repeat url(../images/guitar-strap.png);
+  background-size: contain;
+  pointer-events: none;
+  z-index: 1;
+  transform: rotate(90deg) scale(0);
+}
+
+.bag {
+  $size: 19.5vh;
+  // --size: #{$size};
+
+  position: absolute;
+  bottom: 26vh;
+  left: 9vw;
+  height: $size * (948 / 714);
+  width: $size;
+  // height: calc(var(--size) * (948 / 714));
+  // width: var(--size);
+  background: transparent 50% 50% no-repeat url(../images/bag.png);
+  background-size: contain;
+  transform: translate(226vh, 10vh) rotate(98deg);
+  opacity: 0;
+  pointer-events: none;
+}
+.bag-strap {
+  $size: 5vh;
+  --size: #{$size};
+
+  position: absolute;
+  left: 7vh;
+  bottom: 34vh;
+  height: $size * (597 / 217);
+  width: $size;
+  height: calc(var(--size) * (597 / 217));
+  width: var(--size);
+  background: transparent 50% 50% no-repeat url(../images/bag-strap.png);
+  background-size: contain;
+  pointer-events: none;
+  z-index: 1;
+  transform: rotate(90deg) scale(0);
+}
+
+.ipad-container {
+  perspective: 55vh;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  pointer-events: none;
+}
+.ipad {
+  $size: 19.5vh;
+  --size: #{$size};
+
+  position: absolute;
+  bottom: 22vh;
+  left: -20vw;
+  height: $size * (661 / 640);
+  width: $size;
+  height: calc(var(--size) * (661 / 640));
+  width: var(--size);
+  background: transparent 50% 50% no-repeat url(../images/ipad.png);
+  background-size: contain;
+  transform:
+    translate(210vh, 8vh)
+    rotateX(66deg)
+    rotateY(8deg)
+    rotateZ(-65deg);
+  // TO: transform:
+  //   translate(0vh, 8vh)
+  //   rotateX(66deg)
+  //   rotateY(8deg)
+  //   rotateZ(-65deg);
+  /* transform:
+     translate(5vh, 10.5vh)
+     rotateX(0)
+     rotateY(0)
+     rotateZ(0); */
+  pointer-events: none;
+}
+
+.book {
+  $size: 19.5vh;
+  --size: #{$size};
+
+  position: absolute;
+  bottom: 17vh;
+  left: 22vw;
+  height: $size * (537 / 551);
+  width: $size;
+  height: calc(var(--size) * (537 / 551));
+  width: var(--size);
+  background: transparent 50% 50% no-repeat url(../images/book.png);
+  background-size: contain;
+  transform: translate(226vh, 10vh) rotate(0);
+  // TO: transform: translate(16vh, 10vh) rotate(0);
+  pointer-events: none;
+}

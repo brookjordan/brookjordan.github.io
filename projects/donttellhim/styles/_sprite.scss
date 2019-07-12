@@ -1,0 +1,38 @@
+@mixin sprite(
+  $frame-count: null,
+  $play-count: infinite,
+) {
+  @if ($frame-count) {
+    --frame-count: #{$frame-count};
+    width: $frame-count * 100%;
+    animation:
+      sprite
+      ($frame-count / $fps * 1s)
+      frames($frame-count)
+      $play-count;
+  } @else {
+    width: 100%;
+  }
+
+  height: 100%;
+  background: 0 0 / auto 100%;
+  will-change: transform;
+}
+
+@keyframes sprite {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-100% + calc(100% / var(--frame-count))));
+  }
+}
+
+.sprite-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}

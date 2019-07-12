@@ -1,0 +1,66 @@
+
+:root {
+  --fps: 16;
+}
+
+body,html {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+body {
+  position: relative;
+  display: grid;
+  justify-content: center;
+  align-items: flex-end;
+  margin: 0;
+  font-family: 'Mali', cursive;
+}
+
+h2 {
+  position: fixed;
+  top: 2vh;
+  left: 2vw;
+  font-size: 7vh;
+  background: rgba(255,255,255,0.5);
+  padding: 1vh 4vh;
+  border-radius: 1vh;
+  transition: opacity 0.5s;
+}
+
+form {
+  position: relative;
+}
+
+input,
+button {
+  font: inherit;
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0;
+}
+input {
+  display: none;
+  border: 0;
+}
+input[type="reset"] {
+  display: block;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  padding: 1vh 3vh;
+  color: white;
+  font-size: 2vh;
+  background: rgba(51, 68, 64, 0.7);
+  border-top-right-radius: 1vh;
+}
+
+label {
+  display: block;
+  position: absolute;
+  bottom: 71vh;
+  width: 35vh;
+  color: #fffbf3;
+  opacity: 0;
+  pointer-events: none;
+}

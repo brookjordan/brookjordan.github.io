@@ -1,0 +1,258 @@
+@mixin stepped-transition($duration) {
+  $step-count: $fps * $duration;
+
+  transition-duration: $duration;
+  transition-timing-function: steps($step-count);
+}
+@mixin stepped-animation($duration) {
+  $step-count: $fps * $duration;
+
+  animation-duration: $duration;
+  animation-timing-function: steps($step-count);
+}
+
+/* init */
+[for="hi-im-brett"] {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  line-height: 100vh;
+  font-size: 5vh;
+  text-align: center;
+  background: #2b2f2e;
+  opacity: 1;
+  transition: opacity 0.25s steps(4);
+  pointer-events: auto;
+}
+#hi-im-brett:checked ~ [for="hi-im-brett"] {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 2s steps(32);
+}
+
+@keyframes speech--in {
+  from {
+    opacity: 0;
+    transform: translate(-3vh, -1vh) scale(1.2);
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+}
+@keyframes speech--out {
+  from {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(3vh, 1vh) scale(0.5);
+  }
+}
+
+#hi-im-brett:checked ~ .hi-im-brett,
+#i-want-to-go-out:checked ~ .i-want-to-go-out,
+#help-me-remember:checked ~ .help-me-remember,
+
+#walk--1:checked ~ .here-are-my-big-things,
+#i-can-only-take-one:checked ~ .i-can-only-take-one,
+#what-should-i-bring:checked ~ .what-should-i-bring,
+
+#bag:checked ~ .ill-take-my-bag,
+#guitar:checked ~ .ill-take-my-guitar,
+#oh-no-im-late:checked ~ .oh-no-im-late,
+
+#walk--2:checked ~ .here-are-my-small-things,
+#i-only-have-2-hands:checked ~ .i-only-have-2-hands,
+#which-small-item:checked ~ .which-small-item {
+  opacity: 1;
+  animation: speech--in 0.5s steps(8) backwards;
+  animation-delay: 0.5s;
+  pointer-events: auto;
+}
+#hi-im-brett:checked ~ .hi-im-brett {
+  animation-delay: 1s !important;
+}
+#walk--1:checked ~ .here-are-my-big-things {
+  animation-delay: 2s !important;
+}
+#walk--1:checked ~ .here-are-my-small-things {
+  animation-delay: 2s !important;
+}
+
+#i-want-to-go-out:checked ~ .hi-im-brett,
+#help-me-remember:checked ~ .i-want-to-go-out,
+#walk--1:checked ~ .help-me-remember,
+
+#i-can-only-take-one:checked ~ .here-are-my-big-things,
+#what-should-i-bring:checked ~ .i-can-only-take-one,
+#pick-big-item:checked ~ .what-should-i-bring,
+
+#pick-big-item:checked ~ .what-should-i-bring,
+
+#bag:checked ~ #oh-no-im-late:checked ~ .ill-take-my-bag,
+#guitar:checked ~ #oh-no-im-late:checked ~ .ill-take-my-guitar,
+#walk--2:checked ~ .oh-no-im-late,
+
+#i-only-have-2-hands:checked ~ .here-are-my-small-things,
+#which-small-item:checked ~ .i-only-have-2-hands,
+#pick-one-small-item:checked ~ .which-small-item {
+  opacity: 0;
+  animation: speech--out 0.75s steps(12) backwards;
+  animation-delay: 0s !important;
+  pointer-events: none;
+}
+
+/* walking sections */
+@mixin brett-static {
+  animation: none;
+  background-image: url('../images/brett.png');
+}
+@mixin brett-waddle {
+  @include sprite(
+    $frame-count: 16,
+    $play-count: 3,
+  );
+  background-image: url('../images/brett-waddle.png');
+}
+@mixin bg-static {
+  animation: none;
+}
+@mixin bg-waddle {
+  animation:
+    bg
+    1s
+    steps(16);
+  animation-iteration-count: 3;
+}
+.brett-waddle .sprite {
+  @include brett-static; }
+#walk--1:checked {
+  ~ .brett-waddle .sprite {
+    @include brett-waddle;
+  }
+  ~ .bg {
+    @include bg-waddle;
+  }
+}
+#i-can-only-take-one:checked {
+  ~ .brett-waddle .sprite {
+    @include brett-static;
+  }
+  ~ .bg {
+    @include bg-static;
+  }
+}
+#walk--2:checked {
+  ~ .brett-waddle .sprite {
+    @include brett-waddle;
+  }
+  ~ .bg {
+    @include bg-waddle;
+  }
+}
+#i-only-have-2-hands:checked {
+  ~ .brett-waddle .sprite {
+    @include brett-static;
+  }
+  ~ .bg {
+    @include bg-static;
+  }
+}
+
+#walk--1:checked ~ .guitar {
+  transform: translate(-10vh, 1vh) rotate(40deg);
+  opacity: 1;
+  transition-property:
+    transform,
+    opacity;
+  transition-duration:
+    3s,
+    1s;
+  transition-timing-function:
+    frames(48),
+    frames(16);
+}
+
+#walk--1:checked ~ .bag {
+  transform: translate(16vh, 10vh) rotate(98deg);
+  opacity: 1;
+  transition-property:
+    transform,
+    opacity;
+  transition-duration:
+    3s,
+    1s;
+  transition-timing-function:
+    frames(48),
+    frames(16);
+}
+
+// TODO: should happen after speech
+#pick-big-item:checked {
+  ~ .bag,
+  ~ .guitar {
+    cursor: pointer;
+    pointer-events: initial;
+  }
+
+  ~ .bag-strap,
+  ~ .guitar-strap {
+    will-change: transform;
+  }
+}
+
+#bag:checked ~ .bag,
+#guitar:checked ~ .guitar {
+  left: 0;
+  transition-property: left, transform;
+  transition-duration:
+    frame-duration(11),
+    frame-duration(11);
+  transition-delay:
+    0s,
+    frame-duration(5);
+  transition-timing-function:
+    frames(11),
+    frames(11);
+}
+#bag:checked ~ .bag-strap,
+#guitar:checked ~ .guitar-strap {
+  transition: transform 0.25s 0.75s steps(4);
+  transform: rotate(0deg) scale(1);
+}
+
+#bag:checked ~ .guitar,
+#guitar:checked ~ .bag {
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  transition-property: opacity;
+  transition-duration: 1s;
+  transition-timing-function: frames(8);
+}
+
+#bag:checked ~ .bag {
+  transform: translate(4vh, -2vh) rotate(0deg);
+}
+
+#guitar:checked ~ .guitar {
+  transform: translate(0vh, -20vh) rotate(-10deg);
+}
+
+#walk--2:checked ~ .ipad {
+  transition:
+    opacity 1s steps(16),
+    transform 2s steps(32);
+}
+
+#walk--2:checked ~ .book {
+  transition:
+    opacity 1s steps(16),
+    transform 2s steps(32);
+}

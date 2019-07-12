@@ -9,22 +9,35 @@ html(lang="en")
   title Brett Waddles
   link(href="https://fonts.googleapis.com/css?family=Mali&display=swap", rel="stylesheet")
 
-  link(href="./styles/base.css", rel="stylesheet")
-  link(href="./styles/props.css", rel="stylesheet")
-  link(href="./styles/sprite.css", rel="stylesheet")
-  link(href="./styles/brett.css", rel="stylesheet")
-  link(href="./styles/bouncy-text.css", rel="stylesheet")
-  link(href="./styles/animations.css", rel="stylesheet")
-  link(href="./styles/loaders.css", rel="stylesheet")
+  
+  link(href="./styles/main.css", rel="stylesheet")
     
-  .loader-brett-waddle
+  .loaders
 
   form.game
-    //- Story
+    //- Story begins
     input(type="checkbox", id="hi-im-brett")
     input(type="checkbox", id="i-want-to-go-out")
     input(type="checkbox", id="help-me-remember")
     input(type="checkbox", id="walk--1")
+
+    //- Tells you to choose something
+    input(type="checkbox", id="i-can-only-take-one")
+    input(type="checkbox", id="what-should-i-bring")
+    input(type="checkbox", id="pick-big-item")
+
+    //- Choose bag or guitar
+    input(type="radio", id="bag", name="big-items")
+    input(type="radio", id="guitar", name="big-items")
+
+    //- Choose bag or guitar
+    input(type="checkbox", id="oh-no-im-late")
+    input(type="checkbox", id="walk--2")
+
+    input(type="checkbox", id="i-only-have-2-hands")
+    input(type="checkbox", id="which-small-item")
+    input(type="checkbox", id="pick-one-small-item")
+
 
     label.hi-im-brett(for="i-want-to-go-out")
       +bouncy-text("Oh, hi there!")
@@ -35,18 +48,53 @@ html(lang="en")
     label.help-me-remember(for="walk--1")
       +bouncy-text("Come and help me remember!")
 
+    label.here-are-my-big-things(for="i-can-only-take-one")
+      +bouncy-text("Aha, here are my things.")
+      +bouncy-text("My bag and my guitar.")
+    label.i-can-only-take-one(for="what-should-i-bring")
+      +bouncy-text("Hmm... they're quite big.")
+      +bouncy-text("I can only carry one.")
+    label.what-should-i-bring(for="pick-big-item")
+      +bouncy-text("Which one should I bring?")
+
+    label.ill-take-my-bag(for="oh-no-im-late")
+      +bouncy-text("Good idea! I should bring my bag.")
+      +bouncy-text("Where else would I put my things?")
+    label.ill-take-my-guitar(for="oh-no-im-late")
+      +bouncy-text("Oh yeah, my guitar Of course...")
+      +bouncy-text("Less pragmatic, but it sounds better!")
+    label.oh-no-im-late(for="walk--2")
+      +bouncy-text("Oh no, I'm late!")
+      +bouncy-text("We'd better keep moving.")
+
+    label.here-are-my-small-things(for="i-only-have-2-hands")
+      +bouncy-text("Oh, my ipad is here.")
+      +bouncy-text("And my favourite book.")
+    label.i-only-have-2-hands(for="which-small-item")
+      +bouncy-text("I only have two hands.")
+      +bouncy-text("And I'll need one to drive!")
+    label.which-small-item(for="pick-one-small-item")
+      +bouncy-text("Which one shall I bring?")
+
+
     //- Props
     .bg
     .floor
 
-    .guitar
-    .bag
+    label.guitar(for="guitar")
+    .guitar-strap
+    label.bag(for="bag")
+    .bag-strap
+
+    .ipad-container
+      label.ipad(for="ipad")
+    label.book(for="book")
 
     //- Brett
     .brett-waddle
       .shadow
       .sprite-container
-          .sprite
+        .sprite
 
 
     //- Init and reset
