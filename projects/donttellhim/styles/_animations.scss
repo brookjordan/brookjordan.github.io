@@ -180,8 +180,8 @@
     3s,
     1s;
   transition-timing-function:
-    frames(48),
-    frames(16);
+    steps(48),
+    steps(16);
 }
 
 #walk--1:checked ~ .bag {
@@ -194,8 +194,8 @@
     3s,
     1s;
   transition-timing-function:
-    frames(48),
-    frames(16);
+    steps(48),
+    steps(16);
 }
 
 // TODO: should happen after speech
@@ -223,8 +223,8 @@
     0s,
     frame-duration(5);
   transition-timing-function:
-    frames(11),
-    frames(11);
+    steps(11),
+    steps(11);
 }
 #bag:checked ~ .bag-strap,
 #guitar:checked ~ .guitar-strap {
@@ -239,7 +239,7 @@
   opacity: 0;
   transition-property: opacity;
   transition-duration: 1s;
-  transition-timing-function: frames(8);
+  transition-timing-function: steps(8);
 }
 
 #bag:checked ~ .bag {
@@ -264,8 +264,8 @@
     3s,
     1s;
   transition-timing-function:
-    frames(48),
-    frames(16);
+    steps(48),
+    steps(16);
 }
 
 #walk--2:checked ~ .book {
@@ -278,8 +278,8 @@
     3s,
     1s;
   transition-timing-function:
-    frames(48),
-    frames(16);
+    steps(48),
+    steps(16);
 }
 
 #pick-one-small-item:checked {

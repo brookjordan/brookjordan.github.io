@@ -8,7 +8,7 @@
     animation:
       sprite
       ($frame-count / $fps * 1s)
-      frames($frame-count)
+      steps($frame-count - 1)
       $play-count;
   } @else {
     width: 100%;
