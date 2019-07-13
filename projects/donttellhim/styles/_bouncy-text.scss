@@ -13,12 +13,33 @@
 }
 
 .bouncy-text {
-  position: relative;
   padding: 2vh 3vh;
   margin: 0 -3vh;
   background: rgba(51, 68, 64, 0.7);
   color: white;
   font-size: 3vh;
+}
+
+.dialogue {
+  will-change: opacity;
+  cursor: pointer;
+
+  &::after {
+    content: "click here to continue";
+    display: block;
+    width: 5vh;
+    position: absolute;
+    right: -2.5vh;
+    top: 0.5vh;
+    font-size: 1.5vh;
+    z-index: 1;
+    writing-mode: vertical-rl;
+    line-height: 2vh;
+    text-transform: uppercase;
+    opacity: inherit;
+    transition: opacity 2s 6s steps(32);
+    height: calc(100% - 1vh);
+  }
 }
 
 .bouncy-text + .bouncy-text {

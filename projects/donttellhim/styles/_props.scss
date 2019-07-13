@@ -104,7 +104,7 @@
 }
 
 .ipad-container {
-  perspective: 55vh;
+  perspective: 200vh;
   height: 100%;
   width: 100%;
   position: absolute;
@@ -130,16 +130,6 @@
     rotateX(66deg)
     rotateY(8deg)
     rotateZ(-65deg);
-  // TO: transform:
-  //   translate(0vh, 8vh)
-  //   rotateX(66deg)
-  //   rotateY(8deg)
-  //   rotateZ(-65deg);
-  /* transform:
-     translate(5vh, 10.5vh)
-     rotateX(0)
-     rotateY(0)
-     rotateZ(0); */
   pointer-events: none;
 }
 
@@ -157,6 +147,5 @@
   background: transparent 50% 50% no-repeat url(../images/book.png);
   background-size: contain;
   transform: translate(226vh, 10vh) rotate(0);
-  // TO: transform: translate(16vh, 10vh) rotate(0);
   pointer-events: none;
 }

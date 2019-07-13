@@ -1,3 +1,4 @@
+include templates/dialogue
 include templates/bouncy-text
 
 doctype html
@@ -30,71 +31,80 @@ html(lang="en")
     input(type="radio", id="bag", name="big-items")
     input(type="radio", id="guitar", name="big-items")
 
-    //- Choose bag or guitar
+    //- Choose Walk to second section
     input(type="checkbox", id="oh-no-im-late")
     input(type="checkbox", id="walk--2")
 
+    //- I can only hold one small item
     input(type="checkbox", id="i-only-have-2-hands")
     input(type="checkbox", id="which-small-item")
     input(type="checkbox", id="pick-one-small-item")
 
+    //- Choose ipad or book
+    input(type="radio", id="ipad", name="small-items")
+    input(type="radio", id="book", name="small-items")
 
-    label.hi-im-brett(for="i-want-to-go-out")
-      +bouncy-text("Oh, hi there!")
-      +bouncy-text("I'm Brett.")
-    label.i-want-to-go-out(for="help-me-remember")
-      +bouncy-text("I was about to go out, but I'm getting old...")
-      +bouncy-text("I forgot what I was planning to do!")
-    label.help-me-remember(for="walk--1")
-      +bouncy-text("Come and help me remember!")
 
-    label.here-are-my-big-things(for="i-can-only-take-one")
-      +bouncy-text("Aha, here are my things.")
-      +bouncy-text("My bag and my guitar.")
-    label.i-can-only-take-one(for="what-should-i-bring")
-      +bouncy-text("Hmm... they're quite big.")
-      +bouncy-text("I can only carry one.")
-    label.what-should-i-bring(for="pick-big-item")
-      +bouncy-text("Which one should I bring?")
+    +dialogue("hi-im-brett", "i-want-to-go-out",
+      "Oh, hi there!",
+      "I'm Brett.")
+    +dialogue("i-want-to-go-out", "help-me-remember",
+      "I was about to go out, but I'm getting old...",
+      "I forgot what I was planning to do!")
+    +dialogue("help-me-remember", "walk--1",
+      "Come and help me remember!")
 
-    label.ill-take-my-bag(for="oh-no-im-late")
-      +bouncy-text("Good idea! I should bring my bag.")
-      +bouncy-text("Where else would I put my things?")
-    label.ill-take-my-guitar(for="oh-no-im-late")
-      +bouncy-text("Oh yeah, my guitar Of course...")
-      +bouncy-text("Less pragmatic, but it sounds better!")
-    label.oh-no-im-late(for="walk--2")
-      +bouncy-text("Oh no, I'm late!")
-      +bouncy-text("We'd better keep moving.")
+    +dialogue("here-are-my-big-things", "i-can-only-take-one",
+      "Aha, here are my things.",
+      "My bag and my guitar.")
+    +dialogue("i-can-only-take-one", "what-should-i-bring",
+      "Hmm... they're quite big.",
+      "I can only carry one.")
+    +dialogue("what-should-i-bring", "pick-big-item",
+      "Which one should I bring?")
 
-    label.here-are-my-small-things(for="i-only-have-2-hands")
-      +bouncy-text("Oh, my ipad is here.")
-      +bouncy-text("And my favourite book.")
-    label.i-only-have-2-hands(for="which-small-item")
-      +bouncy-text("I only have two hands.")
-      +bouncy-text("And I'll need one to drive!")
-    label.which-small-item(for="pick-one-small-item")
-      +bouncy-text("Which one shall I bring?")
+    +dialogue("ill-take-my-bag", "oh-no-im-late",
+      "Good idea! I should bring my bag.",
+      "Where else would I put my things?")
+    +dialogue("ill-take-my-guitar", "oh-no-im-late",
+      "Oh yeah, my guitar Of course...",
+      "Less pragmatic, but it sounds better!")
+    +dialogue("oh-no-im-late", "walk--2",
+      "Oh no, I'm late!",
+      "We'd better keep moving.")
+
+    +dialogue("here-are-my-small-things", "i-only-have-2-hands",
+      "Oh, my ipad is here.",
+      "And my favourite book.")
+    +dialogue("here-are-my-small-things", "i-only-have-2-hands",
+      "Oh, my ipad is here.",
+      "And my favourite book.")
+    +dialogue("i-only-have-2-hands", "which-small-item",
+      "I only have two hands.",
+      "And I'll need one to drive!")
+    +dialogue("which-small-item", "pick-one-small-item",
+      "Which one shall I bring?")
 
 
     //- Props
     .bg
     .floor
 
+    .ipad-container
+      label.ipad(for="ipad")
+    label.book(for="book")
+
     label.guitar(for="guitar")
     .guitar-strap
     label.bag(for="bag")
     .bag-strap
-
-    .ipad-container
-      label.ipad(for="ipad")
-    label.book(for="book")
 
     //- Brett
     .brett-waddle
       .shadow
       .sprite-container
         .sprite
+    .brett-thumb
 
 
     //- Init and reset

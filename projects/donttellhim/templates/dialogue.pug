@@ -1,0 +1,6 @@
+include bouncy-text
+
+mixin dialogue(className, forID, ...texts)
+  label(class=`dialogue ${className}`, for=forID)
+    each text in texts
+      +bouncy-text(text)

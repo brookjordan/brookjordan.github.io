@@ -1,8 +1,18 @@
-.brett-waddle {
+.brett-waddle,
+.brett-thumb {
   --ratio: calc(1092 / 521);
   position: relative;
   width: calc(70vh / 2);
   height: calc(var(--ratio) * calc(70vh / 2));
+  pointer-events: none;
+}
+
+.brett-thumb {
+  z-index: 2;
+  visibility: hidden;
+  background-image: url("../images/brett-thumb.png");
+  margin-top: calc(var(--ratio) * calc(-70vh / 2));
+  background-size: contain;
 }
 
 .brett-waddle > .shadow {

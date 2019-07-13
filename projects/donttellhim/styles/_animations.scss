@@ -27,6 +27,11 @@
   opacity: 1;
   transition: opacity 0.25s steps(4);
   pointer-events: auto;
+
+  .bouncy-text::after {
+    content: none;
+    display: none;
+  }
 }
 #hi-im-brett:checked ~ [for="hi-im-brett"] {
   opacity: 0;
@@ -245,14 +250,94 @@
   transform: translate(0vh, -20vh) rotate(-10deg);
 }
 
-#walk--2:checked ~ .ipad {
-  transition:
-    opacity 1s steps(16),
-    transform 2s steps(32);
+#walk--2:checked ~ .ipad-container .ipad {
+  opacity: 1;
+  transform:
+    translate(0vh, 8vh)
+    rotateX(66deg)
+    rotateY(8deg)
+    rotateZ(-65deg);
+  transition-property:
+    transform,
+    opacity;
+  transition-duration:
+    3s,
+    1s;
+  transition-timing-function:
+    frames(48),
+    frames(16);
 }
 
 #walk--2:checked ~ .book {
-  transition:
-    opacity 1s steps(16),
-    transform 2s steps(32);
+  opacity: 1;
+  transform: translate(16vh, 10vh) rotate(0);
+  transition-property:
+    transform,
+    opacity;
+  transition-duration:
+    3s,
+    1s;
+  transition-timing-function:
+    frames(48),
+    frames(16);
+}
+
+#pick-one-small-item:checked {
+  ~ .ipad-container .ipad,
+  ~ .book {
+    cursor: pointer;
+    pointer-events: initial;
+  }
+}
+
+#ipad:checked,
+#book:checked {
+  ~ .brett-thumb {
+    visibility: visible;
+  }
+  ~ .ipad-container,
+  ~ .book {
+    pointer-events: none;
+  }
+}
+
+#ipad:checked {
+  ~ .ipad-container {
+    z-index: 1;
+
+    .ipad {
+      left: 0;
+      transform:
+        translate(14.5vh, 10.5vh)
+        rotateX(0)
+        rotateY(0)
+        rotateZ(0);
+      transition-property: left, transform;
+      transition-duration: 1s;
+      transition-timing-function: steps(16);
+    }
+  }
+
+  ~ .book {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s steps(8);
+  }
+}
+
+#book:checked {
+  ~ .book {
+    left: 0;
+    z-index: 1;
+    transform: translate(14vh, 7vh) rotate(60deg);
+    transition-property: left, transform;
+    transition-duration: 1s;
+    transition-timing-function: steps(16);
+  }
+
+  ~ .ipad-container .ipad {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s steps(8);
+  }
 }
