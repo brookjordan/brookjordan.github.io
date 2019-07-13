@@ -110,6 +110,35 @@ label {
   pointer-events: none;
 }
 
+.guitar::after,
+.bag::after,
+.tablet::after,
+.book::after {
+  content: "Click me";
+  position: absolute;
+  display: block;
+  padding: 2vh 3vh;
+  background: rgba(51, 68, 64, 0.7);
+  font-size: 3vh;
+  border-radius: 1vh;
+  opacity: 0;
+  transition: opacity 2s steps(16);
+  text-align: center;
+  transition-delay: 10s;
+}
+
+.guitar::after {
+  transform: rotate(-40deg);
+  top: 7vh;
+  left: 5vh;
+}
+
+.bag::after {
+  transform: rotate(-98deg);
+  top: 3vh;
+  left: -12vh;
+}
+
 .guitar-strap {
   --size: 18vh;
   position: absolute;
@@ -117,7 +146,7 @@ label {
   bottom: 32vh;
   height: 15.6165517241vh;
   width: 18vh;
-  background: transparent 50% 50% no-repeat url(../images/guitar-strap.png);
+  background: transparent 50% 50% no-repeat url("../images/guitar-strap.png");
   background-size: contain;
   pointer-events: none;
   z-index: 1;
@@ -153,7 +182,7 @@ label {
   transform: rotate(90deg) scale(0);
 }
 
-.ipad-container {
+.tablet-container {
   perspective: 200vh;
   height: 100%;
   width: 100%;
@@ -163,7 +192,7 @@ label {
   pointer-events: none;
 }
 
-.ipad {
+.tablet {
   --size: 19.5vh;
   position: absolute;
   bottom: 22vh;
@@ -172,10 +201,14 @@ label {
   width: 19.5vh;
   height: calc(var(--size) * (661 / 640));
   width: var(--size);
-  background: transparent 50% 50% no-repeat url(../images/ipad.png);
+  background: transparent 50% 50% no-repeat url(../images/tablet.png);
   background-size: contain;
   transform: translate(210vh, 8vh) rotateX(66deg) rotateY(8deg) rotateZ(-65deg);
   pointer-events: none;
+  transform-style: preserve-3d;
+}
+.tablet::after {
+  transform: rotateZ(65deg) rotateY(-8deg) rotateX(-66deg) translate3D(7vh, 10vh, 0vh);
 }
 
 .book {
@@ -191,6 +224,9 @@ label {
   background-size: contain;
   transform: translate(226vh, 10vh) rotate(0);
   pointer-events: none;
+}
+.book::after {
+  transform: translateY(-6vh);
 }
 
 @keyframes sprite {
@@ -376,7 +412,19 @@ label {
 #oh-no-im-late:checked ~ .oh-no-im-late,
 #walk--2:checked ~ .here-are-my-small-things,
 #i-only-have-2-hands:checked ~ .i-only-have-2-hands,
-#which-small-item:checked ~ .which-small-item {
+#which-small-item:checked ~ .which-small-item,
+#tablet:checked ~ .i-choose-my-tablet,
+#book:checked ~ .i-choose-my-book,
+#guitar:checked ~ #tablet:checked ~ #ill-take-my-small-item:checked ~ .remember-chords,
+#out-of-tune:checked ~ .out-of-tune,
+#guitar:checked ~ #book:checked ~ #ill-take-my-small-item:checked ~ .church-with-autoscroll,
+#convinced-the-kidz:checked ~ .convinced-the-kidz,
+#bag:checked ~ #tablet:checked ~ #ill-take-my-small-item:checked ~ .gill-dandy,
+#dont-worry-about-it:checked ~ .dont-worry-about-it,
+#bag:checked ~ #book:checked ~ #ill-take-my-small-item:checked ~ .soggy-book,
+#camping-trip:checked ~ .camping-trip,
+#i-need-to-go:checked ~ .i-need-to-go,
+#thank-you-see-you:checked ~ .thank-you-see-you {
   opacity: 1;
   animation: speech--in 0.5s steps(8) backwards;
   animation-delay: 0.5s;
@@ -407,7 +455,19 @@ label {
 #walk--2:checked ~ .oh-no-im-late,
 #i-only-have-2-hands:checked ~ .here-are-my-small-things,
 #which-small-item:checked ~ .i-only-have-2-hands,
-#pick-one-small-item:checked ~ .which-small-item {
+#pick-small-item:checked ~ .which-small-item,
+#tablet:checked ~ #ill-take-my-small-item:checked ~ .i-choose-my-tablet,
+#book:checked ~ #ill-take-my-small-item:checked ~ .i-choose-my-book,
+#guitar:checked ~ #tablet:checked ~ #out-of-tune:checked:checked ~ .remember-chords,
+#guitar:checked ~ #book:checked ~ #convinced-the-kidz:checked:checked ~ .church-with-autoscroll,
+#bag:checked ~ #tablet:checked ~ #dont-worry-about-it:checked:checked ~ .gill-dandy,
+#bag:checked ~ #book:checked ~ #camping-trip:checked:checked ~ .soggy-book,
+#guitar:checked ~ #tablet:checked ~ #i-need-to-go:checked ~ .out-of-tune,
+#guitar:checked ~ #book:checked ~ #i-need-to-go:checked ~ .convinced-the-kidz,
+#bag:checked ~ #tablet:checked ~ #i-need-to-go:checked ~ .dont-worry-about-it,
+#bag:checked ~ #book:checked ~ #i-need-to-go:checked ~ .camping-trip,
+#thank-you-see-you:checked ~ .i-need-to-go,
+#good-bye:checked ~ .thank-you-see-you {
   opacity: 0;
   animation: speech--out 0.75s steps(12) backwards;
   animation-delay: 0s !important;
@@ -464,6 +524,27 @@ label {
   animation: none;
 }
 
+#good-bye:checked ~ .brett-waddle .sprite {
+  --frame-count: 16;
+  width: 1600%;
+  animation: sprite 1s steps(15) 10;
+  height: 100%;
+  background: 0 0/auto 100%;
+  will-change: transform;
+  background-image: url("../images/brett-waddle.png");
+}
+#good-bye:checked ~ .brett-waddle,
+#good-bye:checked ~ .brett-thumb,
+#good-bye:checked ~ .guitar,
+#good-bye:checked ~ .guitar-strap,
+#good-bye:checked ~ .bag,
+#good-bye:checked ~ .bag-strap,
+#good-bye:checked ~ .book,
+#good-bye:checked ~ .tablet-container {
+  transition: opacity 3s steps(48) !important;
+  opacity: 0 !important;
+}
+
 #walk--1:checked ~ .guitar {
   transform: translate(-10vh, 1vh) rotate(40deg);
   opacity: 1;
@@ -485,9 +566,29 @@ label {
   cursor: pointer;
   pointer-events: initial;
 }
+#pick-big-item:checked ~ .bag::after,
+#pick-big-item:checked ~ .guitar::after {
+  opacity: 1;
+}
 #pick-big-item:checked ~ .bag-strap,
 #pick-big-item:checked ~ .guitar-strap {
   will-change: transform;
+}
+
+#bag:checked ~ .guitar,
+#bag:checked ~ .bag,
+#guitar:checked ~ .guitar,
+#guitar:checked ~ .bag {
+  pointer-events: none;
+}
+#bag:checked ~ .guitar::after,
+#bag:checked ~ .bag::after,
+#guitar:checked ~ .guitar::after,
+#guitar:checked ~ .bag::after {
+  opacity: 0;
+  transition-duration: 0.25s;
+  transition-delay: 0s;
+  transition-timing-function: steps(4);
 }
 
 #bag:checked ~ .bag,
@@ -508,7 +609,6 @@ label {
 #bag:checked ~ .guitar,
 #guitar:checked ~ .bag {
   z-index: -1;
-  pointer-events: none;
   opacity: 0;
   transition-property: opacity;
   transition-duration: 1s;
@@ -523,7 +623,7 @@ label {
   transform: translate(0vh, -20vh) rotate(-10deg);
 }
 
-#walk--2:checked ~ .ipad-container .ipad {
+#walk--2:checked ~ .tablet-container .tablet {
   opacity: 1;
   transform: translate(0vh, 8vh) rotateX(66deg) rotateY(8deg) rotateZ(-65deg);
   transition-property: transform, opacity;
@@ -539,34 +639,47 @@ label {
   transition-timing-function: steps(48), steps(16);
 }
 
-#pick-one-small-item:checked ~ .ipad-container .ipad,
-#pick-one-small-item:checked ~ .book {
+#pick-small-item:checked ~ .tablet-container .tablet,
+#pick-small-item:checked ~ .book {
   cursor: pointer;
   pointer-events: initial;
 }
+#pick-small-item:checked ~ .tablet-container .tablet::after,
+#pick-small-item:checked ~ .book::after {
+  opacity: 1;
+}
 
-#ipad:checked ~ .brett-thumb,
+#tablet:checked ~ .brett-thumb,
 #book:checked ~ .brett-thumb {
   visibility: visible;
 }
-#ipad:checked ~ .ipad-container,
-#ipad:checked ~ .book,
-#book:checked ~ .ipad-container,
+#tablet:checked ~ .tablet-container .tablet,
+#tablet:checked ~ .book,
+#book:checked ~ .tablet-container .tablet,
 #book:checked ~ .book {
   pointer-events: none;
 }
+#tablet:checked ~ .tablet-container .tablet::after,
+#tablet:checked ~ .book::after,
+#book:checked ~ .tablet-container .tablet::after,
+#book:checked ~ .book::after {
+  opacity: 0;
+  transition-delay: 0s;
+  transition-duration: 0.5s;
+  transition-timing-function: steps(8);
+}
 
-#ipad:checked ~ .ipad-container {
+#tablet:checked ~ .tablet-container {
   z-index: 1;
 }
-#ipad:checked ~ .ipad-container .ipad {
+#tablet:checked ~ .tablet-container .tablet {
   left: 0;
   transform: translate(14.5vh, 10.5vh) rotateX(0) rotateY(0) rotateZ(0);
   transition-property: left, transform;
   transition-duration: 1s;
   transition-timing-function: steps(16);
 }
-#ipad:checked ~ .book {
+#tablet:checked ~ .book {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.5s steps(8);
@@ -580,7 +693,7 @@ label {
   transition-duration: 1s;
   transition-timing-function: steps(16);
 }
-#book:checked ~ .ipad-container .ipad {
+#book:checked ~ .tablet-container .tablet {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.5s steps(8);

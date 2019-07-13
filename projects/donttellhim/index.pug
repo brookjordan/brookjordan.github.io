@@ -38,11 +38,31 @@ html(lang="en")
     //- I can only hold one small item
     input(type="checkbox", id="i-only-have-2-hands")
     input(type="checkbox", id="which-small-item")
-    input(type="checkbox", id="pick-one-small-item")
+    input(type="checkbox", id="pick-small-item")
 
-    //- Choose ipad or book
-    input(type="radio", id="ipad", name="small-items")
+    //- Choose tablet or book
+    input(type="radio", id="tablet", name="small-items")
     input(type="radio", id="book", name="small-items")
+    input(type="checkbox", id="ill-take-my-small-item")
+    
+
+    //- Choose guitar and tablet
+    input(type="checkbox", id="out-of-tune")
+
+    //- Choose guitar and book
+    input(type="checkbox", id="convinced-the-kidz")
+
+    //- Choose bag and tablet
+    input(type="checkbox", id="dont-worry-about-it")
+
+    //- Choose bag and book
+    input(type="checkbox", id="camping-trip")
+
+
+
+    input(type="checkbox", id="i-need-to-go")
+    input(type="checkbox", id="thank-you-see-you")
+    input(type="checkbox", id="good-bye")
 
 
     +dialogue("hi-im-brett", "i-want-to-go-out",
@@ -74,24 +94,70 @@ html(lang="en")
       "We'd better keep moving.")
 
     +dialogue("here-are-my-small-things", "i-only-have-2-hands",
-      "Oh, my ipad is here.",
-      "And my favourite book.")
-    +dialogue("here-are-my-small-things", "i-only-have-2-hands",
-      "Oh, my ipad is here.",
+      "Oh, my tablet is here.",
       "And my favourite book.")
     +dialogue("i-only-have-2-hands", "which-small-item",
       "I only have two hands.",
       "And I'll need one to drive!")
-    +dialogue("which-small-item", "pick-one-small-item",
+    +dialogue("which-small-item", "pick-small-item",
       "Which one shall I bring?")
+
+    //- Tablet
+    +dialogue("i-choose-my-tablet", "ill-take-my-small-item",
+      "My tablet!",
+      "How could I not remember...")
+
+    //- Guitar and tablet
+    +dialogue("remember-chords", "out-of-tune",
+      "I may be good at guitar,",
+      "but I would be playing ALL the wrong chords!")
+    +dialogue("out-of-tune", "i-need-to-go",
+      "Besides, this is the best tuner.",
+      "Guitars sound better in tune.")
+
+    //- Bag and tablet
+    +dialogue("gill-dandy", "dont-worry-about-it",
+      "Gill would be upset if I didn't bring it.",
+      "I promised I'd show her how to use it to... umm...")
+    +dialogue("dont-worry-about-it", "i-need-to-go",
+      "Don't worry about it.",
+      "(What was it... I hope she can remind me.)")
+
+    //- Book
+    +dialogue("i-choose-my-book", "ill-take-my-small-item",
+      "Yes yes, my book.",
+      "Sometimes real, tangible pages make most sense.")
+
+    //- Guitar and book
+    +dialogue("church-with-autoscroll", "convinced-the-kidz",
+      "Reading in church wouldn't be the same with auto-scroll.",
+      "And I know all the choir chords by heart.")
+    +dialogue("convinced-the-kidz", "i-need-to-go",
+      "I'm not really sure how...",
+      "... but I even convinced the kidz to come today!")
+
+    //- Bag and book
+    +dialogue("soggy-book", "camping-trip",
+      "I mean, a soggy book can be dried off.",
+      "And it looks like it might rain!")
+    +dialogue("camping-trip", "i-need-to-go",
+      "Getting my tablet wet at the church camping trip would be a bummer.",
+      "(Why am I going?)")
+
+    +dialogue("i-need-to-go", "thank-you-see-you",
+      "I'm sorry, I hear the kidz getting impatient.",
+      "Ugh, I love them... but they're SUCH a hassle.")
+    +dialogue("thank-you-see-you", "good-bye",
+      "Thank you so much for your help!",
+      "I hope I'll see you again next time I go on a trip.")
 
 
     //- Props
     .bg
     .floor
 
-    .ipad-container
-      label.ipad(for="ipad")
+    .tablet-container
+      label.tablet(for="tablet")
     label.book(for="book")
 
     label.guitar(for="guitar")
@@ -108,7 +174,7 @@ html(lang="en")
 
 
     //- Init and reset
-    input(type="reset")
+    input(type="reset", value="Start another trip")
     
     label(for="hi-im-brett")
       +bouncy-text("Click to play")

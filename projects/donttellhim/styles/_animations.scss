@@ -74,7 +74,25 @@
 
 #walk--2:checked ~ .here-are-my-small-things,
 #i-only-have-2-hands:checked ~ .i-only-have-2-hands,
-#which-small-item:checked ~ .which-small-item {
+#which-small-item:checked ~ .which-small-item,
+
+#tablet:checked ~ .i-choose-my-tablet,
+#book:checked ~ .i-choose-my-book,
+
+#guitar:checked ~ #tablet:checked ~ #ill-take-my-small-item:checked ~ .remember-chords,
+#out-of-tune:checked ~ .out-of-tune,
+
+#guitar:checked ~ #book:checked ~ #ill-take-my-small-item:checked ~ .church-with-autoscroll,
+#convinced-the-kidz:checked ~ .convinced-the-kidz,
+
+#bag:checked ~ #tablet:checked ~ #ill-take-my-small-item:checked ~ .gill-dandy,
+#dont-worry-about-it:checked ~ .dont-worry-about-it,
+
+#bag:checked ~ #book:checked ~ #ill-take-my-small-item:checked ~ .soggy-book,
+#camping-trip:checked ~ .camping-trip,
+
+#i-need-to-go:checked ~ .i-need-to-go,
+#thank-you-see-you:checked ~ .thank-you-see-you {
   opacity: 1;
   animation: speech--in 0.5s steps(8) backwards;
   animation-delay: 0.5s;
@@ -106,7 +124,23 @@
 
 #i-only-have-2-hands:checked ~ .here-are-my-small-things,
 #which-small-item:checked ~ .i-only-have-2-hands,
-#pick-one-small-item:checked ~ .which-small-item {
+#pick-small-item:checked ~ .which-small-item,
+
+#tablet:checked ~ #ill-take-my-small-item:checked ~ .i-choose-my-tablet,
+#book:checked ~ #ill-take-my-small-item:checked ~ .i-choose-my-book,
+
+#guitar:checked ~ #tablet:checked ~ #out-of-tune:checked:checked ~ .remember-chords,
+#guitar:checked ~ #book:checked ~ #convinced-the-kidz:checked:checked ~ .church-with-autoscroll,
+#bag:checked ~ #tablet:checked ~ #dont-worry-about-it:checked:checked ~ .gill-dandy,
+#bag:checked ~ #book:checked ~ #camping-trip:checked:checked ~ .soggy-book,
+
+#guitar:checked ~ #tablet:checked ~ #i-need-to-go:checked ~ .out-of-tune,
+#guitar:checked ~ #book:checked ~ #i-need-to-go:checked ~ .convinced-the-kidz,
+#bag:checked ~ #tablet:checked ~ #i-need-to-go:checked ~ .dont-worry-about-it,
+#bag:checked ~ #book:checked ~ #i-need-to-go:checked ~ .camping-trip,
+
+#thank-you-see-you:checked ~ .i-need-to-go,
+#good-bye:checked ~ .thank-you-see-you {
   opacity: 0;
   animation: speech--out 0.75s steps(12) backwards;
   animation-delay: 0s !important;
@@ -169,6 +203,27 @@
     @include bg-static;
   }
 }
+#good-bye:checked {
+  ~ .brett-waddle .sprite {
+    @include sprite(
+      $frame-count: 16,
+      $play-count: 10,
+    );
+    background-image: url('../images/brett-waddle.png');
+  }
+
+  ~ .brett-waddle,
+  ~ .brett-thumb,
+  ~ .guitar,
+  ~ .guitar-strap,
+  ~ .bag,
+  ~ .bag-strap,
+  ~ .book,
+  ~ .tablet-container {
+    transition: opacity 3s steps(48) !important;
+    opacity: 0 !important;
+  }
+}
 
 #walk--1:checked ~ .guitar {
   transform: translate(-10vh, 1vh) rotate(40deg);
@@ -204,11 +259,30 @@
   ~ .guitar {
     cursor: pointer;
     pointer-events: initial;
+
+    &::after {
+      opacity: 1;
+    }
   }
 
   ~ .bag-strap,
   ~ .guitar-strap {
     will-change: transform;
+  }
+}
+
+#bag:checked,
+#guitar:checked {
+  ~ .guitar,
+  ~ .bag {
+    pointer-events: none;
+
+    &::after {
+      opacity: 0;
+      transition-duration: 0.25s;
+      transition-delay: 0s;
+      transition-timing-function: steps(4);
+    }
   }
 }
 
@@ -235,7 +309,6 @@
 #bag:checked ~ .guitar,
 #guitar:checked ~ .bag {
   z-index: -1;
-  pointer-events: none;
   opacity: 0;
   transition-property: opacity;
   transition-duration: 1s;
@@ -250,7 +323,7 @@
   transform: translate(0vh, -20vh) rotate(-10deg);
 }
 
-#walk--2:checked ~ .ipad-container .ipad {
+#walk--2:checked ~ .tablet-container .tablet {
   opacity: 1;
   transform:
     translate(0vh, 8vh)
@@ -282,30 +355,41 @@
     steps(16);
 }
 
-#pick-one-small-item:checked {
-  ~ .ipad-container .ipad,
+#pick-small-item:checked {
+  ~ .tablet-container .tablet,
   ~ .book {
     cursor: pointer;
     pointer-events: initial;
+
+    &::after {
+      opacity: 1;
+    }
   }
 }
 
-#ipad:checked,
+#tablet:checked,
 #book:checked {
   ~ .brett-thumb {
     visibility: visible;
   }
-  ~ .ipad-container,
+  ~ .tablet-container .tablet,
   ~ .book {
     pointer-events: none;
+
+    &::after {
+      opacity: 0;
+      transition-delay: 0s;
+      transition-duration: 0.5s;
+      transition-timing-function: steps(8);
+    }
   }
 }
 
-#ipad:checked {
-  ~ .ipad-container {
+#tablet:checked {
+  ~ .tablet-container {
     z-index: 1;
 
-    .ipad {
+    .tablet {
       left: 0;
       transform:
         translate(14.5vh, 10.5vh)
@@ -335,7 +419,7 @@
     transition-timing-function: steps(16);
   }
 
-  ~ .ipad-container .ipad {
+  ~ .tablet-container .tablet {
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.5s steps(8);

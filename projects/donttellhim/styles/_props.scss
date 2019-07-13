@@ -50,6 +50,32 @@
   opacity: 0;
   pointer-events: none;
 }
+.guitar::after,
+.bag::after,
+.tablet::after,
+.book::after {
+  content: "Click me";
+  position: absolute;
+  display: block;
+  padding: 2vh 3vh;
+  background: $c-label-bg;
+  font-size: 3vh;
+  border-radius: 1vh;
+  opacity: 0;
+  transition: opacity 2s steps(16);
+  text-align: center;
+  transition-delay: 10s;
+}
+.guitar::after {
+  transform: rotate(-40deg);
+  top: 7vh;
+  left: 5vh;
+}
+.bag::after {
+  transform: rotate(-98deg);
+  top: 3vh;
+  left: -12vh;
+}
 .guitar-strap {
   $size: 18vh;
   --size: #{$size};
@@ -61,7 +87,7 @@
   width: $size;
   // height: calc(var(--size) * (629 / 725));
   // width: var(--size);
-  background: transparent 50% 50% no-repeat url(../images/guitar-strap.png);
+  background: transparent 50% 50% no-repeat url("../images/guitar-strap.png");
   background-size: contain;
   pointer-events: none;
   z-index: 1;
@@ -103,7 +129,7 @@
   transform: rotate(90deg) scale(0);
 }
 
-.ipad-container {
+.tablet-container {
   perspective: 200vh;
   height: 100%;
   width: 100%;
@@ -112,7 +138,7 @@
   left: 0;
   pointer-events: none;
 }
-.ipad {
+.tablet {
   $size: 19.5vh;
   --size: #{$size};
 
@@ -123,7 +149,7 @@
   width: $size;
   height: calc(var(--size) * (661 / 640));
   width: var(--size);
-  background: transparent 50% 50% no-repeat url(../images/ipad.png);
+  background: transparent 50% 50% no-repeat url(../images/tablet.png);
   background-size: contain;
   transform:
     translate(210vh, 8vh)
@@ -131,6 +157,15 @@
     rotateY(8deg)
     rotateZ(-65deg);
   pointer-events: none;
+  transform-style: preserve-3d;
+
+  &::after {
+    transform:
+      rotateZ(65deg)
+      rotateY(-8deg)
+      rotateX(-66deg)
+      translate3D(7vh, 10vh, 0vh);
+  }
 }
 
 .book {
@@ -148,4 +183,9 @@
   background-size: contain;
   transform: translate(226vh, 10vh) rotate(0);
   pointer-events: none;
+
+  &::after {
+    transform: translateY(-6vh);
+  }
+
 }
