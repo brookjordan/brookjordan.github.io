@@ -1,0 +1,47 @@
+#happy-birthday-dad {
+  display: none;
+}
+
+#happy-birthday-dad:target {
+  display: block;
+  position: absolute;
+  top: -5vh;
+  left: -5vh;
+  width: calc(100% + 10vh);
+  height: calc(100% + 10vh);
+  margin: -5vh;
+  padding: 5vh;
+  border-radius: 1vh;
+  box-sizing: border-box;
+  background: $c-label-bg;
+  color: white;
+  font-size: 2.5vh;
+  opacity: 0;
+  pointer-events: none;
+
+  #good-bye:checked ~ & {
+    opacity: 1;
+  }
+
+  &::before {
+    content:
+      "Happy Birthday dad!\
+      Greetings from half way across the world.\
+      It's it amazing how I can send this to you so easily these days?\
+      (However, it turns out that animation isn't so easy after such a long haitus… who knew?)\
+      I hope you've enjoyed your galavanting across your screen and your trip ended up well.\
+      (those kids, am I right?)\
+      I love you so much!\
+       - Brook";
+    display: block;
+  }
+
+  &::after {
+    display: block;
+    margin-top: 4vh;
+  }
+
+  #guitar:checked ~ #book:checked &::after {
+    content: "(And, really? You chose your iPad instead of your Bible? I hope God isn't looking…)";
+  }
+}
