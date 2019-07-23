@@ -2,6 +2,10 @@
   --fps: 16;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 body, html {
   width: 100vw;
   height: 100vh;
@@ -487,7 +491,7 @@ label {
   height: 100%;
   background: 0 0/auto 100%;
   will-change: transform;
-  background-image: url("../images/brett-waddle.png");
+  background-image: url("../images/brett-waddle.min.svg");
 }
 #walk--1:checked ~ .bg {
   animation: bg 1s steps(16);
@@ -509,7 +513,7 @@ label {
   height: 100%;
   background: 0 0/auto 100%;
   will-change: transform;
-  background-image: url("../images/brett-waddle.png");
+  background-image: url("../images/brett-waddle.min.svg");
 }
 #walk--2:checked ~ .bg {
   animation: bg 1s steps(16);
@@ -527,11 +531,11 @@ label {
 #good-bye:checked ~ .brett-waddle .sprite {
   --frame-count: 16;
   width: 1600%;
-  animation: sprite 1s steps(15) 10;
+  animation: sprite 1s steps(15) 3;
   height: 100%;
   background: 0 0/auto 100%;
   will-change: transform;
-  background-image: url("../images/brett-waddle.png");
+  background-image: url("../images/brett-waddle.min.svg");
 }
 #good-bye:checked ~ .brett-waddle,
 #good-bye:checked ~ .brett-thumb,
@@ -704,7 +708,7 @@ label {
     opacity: 0.1;
   }
   100% {
-    opacity: 0.1;
+    opacity: 0;
   }
 }
 .loaders {
@@ -714,7 +718,59 @@ label {
   width: 10px;
   height: 10px;
   animation: load 0.5s;
-  background-image: url("../images/brett-waddle.png"), url("../images/guitar-strap.png"), url("../images/bag-strap.png");
+  opacity: 0;
+  z-index: 999999999;
+  background-image: url("../images/brett-waddle.min.svg"), url("../images/guitar-strap.png"), url("../images/bag-strap.png");
+}
+
+.happy-birthday-message {
+  display: none;
+}
+
+#show-happy-birthday-message:target .happy-birthday-message {
+  display: block;
+  position: fixed;
+  width: auto;
+  height: auto;
+  width: 80vw;
+  max-width: 450px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 5vh;
+  border-radius: 1vh;
+  box-sizing: border-box;
+  background: rgba(51, 68, 64, 0.7);
+  color: white;
+  font-size: 2.5vh;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 2s steps(32);
+}
+#show-happy-birthday-message:target .happy-birthday-message::before, #show-happy-birthday-message:target .happy-birthday-message::after {
+  display: block;
+  white-space: pre-wrap;
+}
+#show-happy-birthday-message:target .happy-birthday-message::before {
+  content: "Happy Birthday Dad!\a And, greetings from half way across the world.\aIsn't it amazing how I can send something like this to you so easily these days?\aI hope you've enjoyed your oddly-elegant galavanting across the screen.\a(And those kids, am I right? Ruining everything.)\aI love you so much! And I think I'll be trying to grab a flight in September, especially now that there's a conference I want to go to.\a- Brook";
+}
+#show-happy-birthday-message:target .happy-birthday-message::after {
+  margin-top: 4vh;
+}
+#show-happy-birthday-message:target #good-bye:checked ~ .happy-birthday-message {
+  opacity: 1;
+}
+#show-happy-birthday-message:target #guitar:checked ~ #tablet:checked ~ .happy-birthday-message::after {
+  content: "(And, wow, You chose your iPad instead of your Bible. Bold move!)";
+}
+#show-happy-birthday-message:target #guitar:checked ~ #book:checked ~ .happy-birthday-message::after {
+  content: "(I'm glad to see you're sticking to your guns. Bible all the way, baby!)";
+}
+#show-happy-birthday-message:target #bag:checked ~ #tablet:checked ~ .happy-birthday-message::after {
+  content: "(I knew you'd pick your iPad. And what better place to put it than your bag.)";
+}
+#show-happy-birthday-message:target #bag:checked ~ #book:checked ~ .happy-birthday-message::after {
+  content: "(Did you really need to bring your bag if all you have to put in it is your bible, though?)";
 }
 
 /*# sourceMappingURL=entry.css.map */

@@ -1,3 +1,22 @@
+-
+  let usedLetters = [
+    'Start another trip',
+    'CLICK HERE TO CONTINUE',
+    'Click me',
+
+    "Happy Birthday dad!",
+    "Greetings from half way across the world.",
+    "Isn't it amazing how I can send this to you so easily these days?",
+    "(However, it turns out that animation isn't so easy after such a long haitus… who knew?)",
+    "I hope you've enjoyed your galavanting across your screen and your trip ended up well.",
+    "(those kids, am I right?)",
+    "I love you so much!",
+    "- Brook",
+
+    "(And, wow, You chose your iPad instead of your Bible. Bold move!)",
+  ]
+    .join(' ')
+    .split('');
 include templates/dialogue
 include templates/bouncy-text
 
@@ -8,173 +27,175 @@ html(lang="en")
   meta(http-equiv="X-UA-Compatible", content="ie=edge")
   meta(name="apple-mobile-web-app-capable", content="yes")
   title Brett Waddles
-  link(href="https://fonts.googleapis.com/css?family=Mali&display=swap", rel="stylesheet")
-
-  
   link(href="./styles/entry.css", rel="stylesheet")
-    
-  .loaders
 
-  form.game
-    //- Story begins
-    input(type="checkbox", id="hi-im-brett")
-    input(type="checkbox", id="i-want-to-go-out")
-    input(type="checkbox", id="help-me-remember")
-    input(type="checkbox", id="walk--1")
+  body#show-happy-birthday-message
+    .loaders
 
-    //- Tells you to choose something
-    input(type="checkbox", id="i-can-only-take-one")
-    input(type="checkbox", id="what-should-i-bring")
-    input(type="checkbox", id="pick-big-item")
+    form.game
+      //- Story begins
+      input(type="checkbox", id="hi-im-brett")
+      input(type="checkbox", id="i-want-to-go-out")
+      input(type="checkbox", id="help-me-remember")
+      input(type="checkbox", id="walk--1")
 
-    //- Choose bag or guitar
-    input(type="radio", id="bag", name="big-items")
-    input(type="radio", id="guitar", name="big-items")
+      //- Tells you to choose something
+      input(type="checkbox", id="i-can-only-take-one")
+      input(type="checkbox", id="what-should-i-bring")
+      input(type="checkbox", id="pick-big-item")
 
-    //- Choose Walk to second section
-    input(type="checkbox", id="oh-no-im-late")
-    input(type="checkbox", id="walk--2")
+      //- Choose bag or guitar
+      input(type="radio", id="bag", name="big-items")
+      input(type="radio", id="guitar", name="big-items")
 
-    //- I can only hold one small item
-    input(type="checkbox", id="i-only-have-2-hands")
-    input(type="checkbox", id="which-small-item")
-    input(type="checkbox", id="pick-small-item")
+      //- Choose Walk to second section
+      input(type="checkbox", id="oh-no-im-late")
+      input(type="checkbox", id="walk--2")
 
-    //- Choose tablet or book
-    input(type="radio", id="tablet", name="small-items")
-    input(type="radio", id="book", name="small-items")
-    input(type="checkbox", id="ill-take-my-small-item")
-    
+      //- I can only hold one small item
+      input(type="checkbox", id="i-only-have-2-hands")
+      input(type="checkbox", id="which-small-item")
+      input(type="checkbox", id="pick-small-item")
 
-    //- Choose guitar and tablet
-    input(type="checkbox", id="out-of-tune")
+      //- Choose tablet or book
+      input(type="radio", id="tablet", name="small-items")
+      input(type="radio", id="book", name="small-items")
+      input(type="checkbox", id="ill-take-my-small-item")
+      
 
-    //- Choose guitar and book
-    input(type="checkbox", id="convinced-the-kidz")
+      //- Choose guitar and tablet
+      input(type="checkbox", id="out-of-tune")
 
-    //- Choose bag and tablet
-    input(type="checkbox", id="dont-worry-about-it")
+      //- Choose guitar and book
+      input(type="checkbox", id="convinced-the-kidz")
 
-    //- Choose bag and book
-    input(type="checkbox", id="camping-trip")
+      //- Choose bag and tablet
+      input(type="checkbox", id="dont-worry-about-it")
 
-
-
-    input(type="checkbox", id="i-need-to-go")
-    input(type="checkbox", id="thank-you-see-you")
-    input(type="checkbox", id="good-bye")
+      //- Choose bag and book
+      input(type="checkbox", id="camping-trip")
 
 
-    +dialogue("hi-im-brett", "i-want-to-go-out",
-      "Oh, hi there!",
-      "I'm Brett.")
-    +dialogue("i-want-to-go-out", "help-me-remember",
-      "I was about to go out, but I'm getting old...",
-      "I forgot what I was planning to do!")
-    +dialogue("help-me-remember", "walk--1",
-      "Come and help me remember!")
 
-    +dialogue("here-are-my-big-things", "i-can-only-take-one",
-      "Aha, here are my things.",
-      "My bag and my guitar.")
-    +dialogue("i-can-only-take-one", "what-should-i-bring",
-      "Hmm... they're quite big.",
-      "I can only carry one.")
-    +dialogue("what-should-i-bring", "pick-big-item",
-      "Which one should I bring?")
-
-    +dialogue("ill-take-my-bag", "oh-no-im-late",
-      "Good idea! I should bring my bag.",
-      "Where else would I put my things?")
-    +dialogue("ill-take-my-guitar", "oh-no-im-late",
-      "Oh yeah, my guitar Of course...",
-      "Less pragmatic, but it sounds better!")
-    +dialogue("oh-no-im-late", "walk--2",
-      "Oh no, I'm late!",
-      "We'd better keep moving.")
-
-    +dialogue("here-are-my-small-things", "i-only-have-2-hands",
-      "Oh, my tablet is here.",
-      "And my favourite book.")
-    +dialogue("i-only-have-2-hands", "which-small-item",
-      "I only have two hands.",
-      "And I'll need one to drive!")
-    +dialogue("which-small-item", "pick-small-item",
-      "Which one shall I bring?")
-
-    //- Tablet
-    +dialogue("i-choose-my-tablet", "ill-take-my-small-item",
-      "My tablet!",
-      "How could I not remember...")
-
-    //- Guitar and tablet
-    +dialogue("remember-chords", "out-of-tune",
-      "I may be good at guitar,",
-      "but I would be playing ALL the wrong chords!")
-    +dialogue("out-of-tune", "i-need-to-go",
-      "Besides, this is the best tuner.",
-      "Guitars sound better in tune.")
-
-    //- Bag and tablet
-    +dialogue("gill-dandy", "dont-worry-about-it",
-      "Gill would be upset if I didn't bring it.",
-      "I promised I'd show her how to use it to... umm...")
-    +dialogue("dont-worry-about-it", "i-need-to-go",
-      "Don't worry about it.",
-      "(What was it... I hope she can remind me.)")
-
-    //- Book
-    +dialogue("i-choose-my-book", "ill-take-my-small-item",
-      "Yes yes, my book.",
-      "Sometimes real, tangible pages make most sense.")
-
-    //- Guitar and book
-    +dialogue("church-with-autoscroll", "convinced-the-kidz",
-      "Reading in church wouldn't be the same with auto-scroll.",
-      "And I know all the choir chords by heart.")
-    +dialogue("convinced-the-kidz", "i-need-to-go",
-      "I'm not really sure how...",
-      "... but I even convinced the kidz to come today!")
-
-    //- Bag and book
-    +dialogue("soggy-book", "camping-trip",
-      "I mean, a soggy book can be dried off.",
-      "And it looks like it might rain!")
-    +dialogue("camping-trip", "i-need-to-go",
-      "Getting my tablet wet at the church camping trip would be a bummer.",
-      "(Why am I going?)")
-
-    +dialogue("i-need-to-go", "thank-you-see-you",
-      "I'm sorry, I hear the kidz getting impatient.",
-      "Ugh, I love them... but they're SUCH a hassle.")
-    +dialogue("thank-you-see-you", "good-bye",
-      "Thank you so much for your help!",
-      "I hope I'll see you again next time I go on a trip.")
+      input(type="checkbox", id="i-need-to-go")
+      input(type="checkbox", id="thank-you-see-you")
+      input(type="checkbox", id="good-bye")
 
 
-    //- Props
-    .bg
-    .floor
+      +dialogue("hi-im-brett", "i-want-to-go-out",
+        "Oh, hi there!",
+        "I'm Brett.")
+      +dialogue("i-want-to-go-out", "help-me-remember",
+        "I was about to go out, but I'm getting old...",
+        "I forgot what I was planning to do!")
+      +dialogue("help-me-remember", "walk--1",
+        "Come and help me remember!")
 
-    .tablet-container
-      label.tablet(for="tablet")
-    label.book(for="book")
+      +dialogue("here-are-my-big-things", "i-can-only-take-one",
+        "Aha, here are my things.",
+        "My bag and my guitar.")
+      +dialogue("i-can-only-take-one", "what-should-i-bring",
+        "Hmm... they're quite big.",
+        "I can only carry one.")
+      +dialogue("what-should-i-bring", "pick-big-item",
+        "Which one should I bring?")
 
-    label.guitar(for="guitar")
-    .guitar-strap
-    label.bag(for="bag")
-    .bag-strap
+      +dialogue("ill-take-my-bag", "oh-no-im-late",
+        "Good idea! I should bring my bag.",
+        "Where else would I put my things?")
+      +dialogue("ill-take-my-guitar", "oh-no-im-late",
+        "Oh yeah, my guitar Of course...",
+        "Less pragmatic, but it sounds better!")
+      +dialogue("oh-no-im-late", "walk--2",
+        "Oh no, I'm late!",
+        "We'd better keep moving.")
 
-    //- Brett
-    .brett-waddle
-      .shadow
-      .sprite-container
-        .sprite
-    .brett-thumb
+      +dialogue("here-are-my-small-things", "i-only-have-2-hands",
+        "Oh, my tablet is here.",
+        "And my favourite book.")
+      +dialogue("i-only-have-2-hands", "which-small-item",
+        "I only have two hands.",
+        "And I'll need one to drive!")
+      +dialogue("which-small-item", "pick-small-item",
+        "Which one shall I bring?")
+
+      //- Tablet
+      +dialogue("i-choose-my-tablet", "ill-take-my-small-item",
+        "My tablet!",
+        "How could I not remember...")
+
+      //- Guitar and tablet
+      +dialogue("remember-chords", "out-of-tune",
+        "I may be good at guitar,",
+        "but I would be playing ALL the wrong chords!")
+      +dialogue("out-of-tune", "i-need-to-go",
+        "Besides, this is the best tuner.",
+        "Guitars sound better in tune.")
+
+      //- Bag and tablet
+      +dialogue("gill-dandy", "dont-worry-about-it",
+        "Gill would be upset if I didn't bring it.",
+        "I promised I'd show her how to use it to... umm...")
+      +dialogue("dont-worry-about-it", "i-need-to-go",
+        "Don't worry about it.",
+        "(What was it... I hope she can remind me.)")
+
+      //- Book
+      +dialogue("i-choose-my-book", "ill-take-my-small-item",
+        "Yes yes, my book.",
+        "Sometimes real, tangible pages make most sense.")
+
+      //- Guitar and book
+      +dialogue("church-with-autoscroll", "convinced-the-kidz",
+        "Reading in church wouldn't be the same with auto-scroll.",
+        "And I know all the choir chords by heart.")
+      +dialogue("convinced-the-kidz", "i-need-to-go",
+        "I'm not really sure how...",
+        "... but I even convinced the kidz to come today!")
+
+      //- Bag and book
+      +dialogue("soggy-book", "camping-trip",
+        "I mean, a soggy book can be dried off.",
+        "And it looks like it might rain!")
+      +dialogue("camping-trip", "i-need-to-go",
+        "Getting my tablet wet at the church camping trip would be a bummer.",
+        "(Why am I going?)")
+
+      +dialogue("i-need-to-go", "thank-you-see-you",
+        "I'm sorry, I hear the kidz getting impatient.",
+        "Ugh, I love them... but they're SUCH a hassle.")
+      +dialogue("thank-you-see-you", "good-bye",
+        "Thank you so much for your help!",
+        "I hope I'll see you again next time I go on a trip.")
 
 
-    //- Init and reset
-    input(type="reset", value="Start another trip")
-    
-    label(for="hi-im-brett")
-      +bouncy-text("Click to play")
+      //- Props
+      .bg
+      .floor
+
+      .tablet-container
+        label.tablet(for="tablet")
+      label.book(for="book")
+
+      label.guitar(for="guitar")
+      .guitar-strap
+      label.bag(for="bag")
+      .bag-strap
+
+      //- Brett
+      .brett-waddle
+        .shadow
+        .sprite-container
+          .sprite
+      .brett-thumb
+
+
+      //- Init and reset
+      input(type="reset", value="Start another trip")
+      
+      label(for="hi-im-brett")
+        +bouncy-text("Click to play")
+
+      .happy-birthday-message
+
+  link(href=`https://fonts.googleapis.com/css?family=Mali&display=swap&text=${encodeURIComponent(usedLetters.filter((char,i,arr) => arr.indexOf(char) === i).join(''))}`, rel="stylesheet")

@@ -1,4 +1,4 @@
-mixin bouncy-text(string)
+mixin bouncy-text(string, letterList = usedLetters)
   p.bouncy-text
     - let ws = string.split(' ');
     each w, index in ws
@@ -7,4 +7,5 @@ mixin bouncy-text(string)
       i #{letter}
         - let letters = w.split('');
         each letter in letters
+          - letterList.push(letter)
           i #{letter}

@@ -157,7 +157,7 @@
     $frame-count: 16,
     $play-count: 3,
   );
-  background-image: url('../images/brett-waddle.png');
+  background-image: url('../images/brett-waddle.min.svg');
 }
 @mixin bg-static {
   animation: none;
@@ -205,11 +205,7 @@
 }
 #good-bye:checked {
   ~ .brett-waddle .sprite {
-    @include sprite(
-      $frame-count: 16,
-      $play-count: 10,
-    );
-    background-image: url('../images/brett-waddle.png');
+    @include brett-waddle;
   }
 
   ~ .brett-waddle,

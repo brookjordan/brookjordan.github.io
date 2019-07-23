@@ -3,7 +3,7 @@
     opacity: 0.1;
   }
   100% {
-    opacity: 0.1;
+    opacity: 0;
   }
 }
 .loaders {
@@ -13,8 +13,11 @@
   width: 10px;
   height: 10px;
   animation: load 0.5s;
+  opacity: 0;
+  z-index: 999999999;
   background-image:
-    url("../images/brett-waddle.png"),
+    //url("../images/brett-waddle.png"),
+    url("../images/brett-waddle.min.svg"),
     url("../images/guitar-strap.png"),
     url("../images/bag-strap.png");
 }

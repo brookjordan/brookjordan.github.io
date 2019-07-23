@@ -1,47 +1,94 @@
-#happy-birthday-dad {
+.happy-birthday-message {
   display: none;
 }
 
-#happy-birthday-dad:target {
-  display: block;
-  position: absolute;
-  top: -5vh;
-  left: -5vh;
-  width: calc(100% + 10vh);
-  height: calc(100% + 10vh);
-  margin: -5vh;
-  padding: 5vh;
-  border-radius: 1vh;
-  box-sizing: border-box;
-  background: $c-label-bg;
-  color: white;
-  font-size: 2.5vh;
-  opacity: 0;
-  pointer-events: none;
+@function to-string($list, $glue: "") {
+  $result: "";
 
-  #good-bye:checked ~ & {
+  @for $i from 1 through length($list) {
+    $result: $result + nth($list, $i);
+    @if $i != length($list) {
+      $result: $result + $glue;
+    }
+  }
+
+  @return $result;
+}
+
+#show-happy-birthday-message:target {
+  .happy-birthday-message {
+    display: block;
+    position: fixed;
+    width: auto;
+    height: auto;
+    width: 80vw;
+    max-width: 450px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    padding: 5vh;
+    border-radius: 1vh;
+    box-sizing: border-box;
+    background: $c-label-bg;
+    color: white;
+    font-size: 2.5vh;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 2s steps(32);
+
+    &::before,
+    &::after {
+      display: block;
+      white-space: pre-wrap;
+    }
+
+    &::before {
+      $texts: (
+        "Happy Birthday Dad!",
+        "And, greetings from half way across the world.",
+        "Isn't it amazing how I can send something like this to you so easily these days?",
+        "I hope you've enjoyed your oddly-elegant galavanting across the screen.",
+        "(And those kids, am I right? Ruining everything.)",
+        "I love you so much! And I think I'll be trying to grab a flight in September, especially now that there's a conference I want to go to.",
+        "- Brook",
+      );
+      content: to-string($texts, "\A");
+    }
+
+    &::after {
+      margin-top: 4vh;
+    }
+  }
+
+  #good-bye:checked ~ .happy-birthday-message {
     opacity: 1;
   }
 
-  &::before {
-    content:
-      "Happy Birthday dad!\
-      Greetings from half way across the world.\
-      It's it amazing how I can send this to you so easily these days?\
-      (However, it turns out that animation isn't so easy after such a long haitus… who knew?)\
-      I hope you've enjoyed your galavanting across your screen and your trip ended up well.\
-      (those kids, am I right?)\
-      I love you so much!\
-       - Brook";
-    display: block;
+  #guitar:checked ~ #tablet:checked ~ .happy-birthday-message::after {
+    $texts: (
+      "(And, wow, You chose your iPad instead of your Bible. Bold move!)",
+    );
+    content: to-string($texts, "\A");
   }
 
-  &::after {
-    display: block;
-    margin-top: 4vh;
+  #guitar:checked ~ #book:checked ~ .happy-birthday-message::after {
+    $texts: (
+      "(I'm glad to see you're sticking to your guns. Bible all the way, baby!)",
+    );
+    content: to-string($texts, "\A");
   }
 
-  #guitar:checked ~ #book:checked &::after {
-    content: "(And, really? You chose your iPad instead of your Bible? I hope God isn't looking…)";
+  #bag:checked ~ #tablet:checked ~ .happy-birthday-message::after {
+    $texts: (
+      "(I knew you'd pick your iPad. And what better place to put it than your bag.)",
+    );
+    content: to-string($texts, "\A");
+  }
+
+  #bag:checked ~ #book:checked ~ .happy-birthday-message::after {
+    $texts: (
+      "(Did you really need to bring your bag if all you have to put in it is your bible, though?)",
+    );
+    content: to-string($texts, "\A");
   }
 }
