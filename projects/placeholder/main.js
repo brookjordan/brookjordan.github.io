@@ -444,9 +444,9 @@ const buildWord = (str, active) => {
       shareButton.addEventListener('click', event => {
         event.preventDefault();
           window.navigator.share({
-            url: "location.href",
-            text: "str",
-            title: "I promise, it's true!",
+            url: location.href,
+            text: str,
+            title: "You won't believe this…",
           })
           .then(data => {
             console.log(data);
