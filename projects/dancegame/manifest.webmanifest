@@ -1,0 +1,90 @@
+{
+  "name": "CSS Dance Game",
+  "description": "Proof-of-concept dance game using only HTML and CSS!",
+  "icons": [
+    {
+      "src": "./images/maskable.svg",
+      "type": "image/svg",
+      "purpose": "maskable"
+    },
+    {
+      "src": "./images/maskable@192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "./images/maskable@512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "./images/maskable@1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "./images/maskable@4096.png",
+      "sizes": "4096x4096",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+
+    {
+      "src": "./images/badge.svg",
+      "type": "image/svg",
+      "purpose": "badge"
+    },
+    {
+      "src": "./images/badge@192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "badge"
+    },
+    {
+      "src": "./images/badge@512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "badge"
+    },
+    {
+      "src": "./images/badge@1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "badge"
+    },
+    {
+      "src": "./images/badge@4096.png",
+      "sizes": "4096x4096",
+      "type": "image/png",
+      "purpose": "badge"
+    }
+  ],
+
+  "display": "standalone",
+  "orientation": "portrait",
+  "lang": "en-UK",
+  "dir": "ltr",
+  "short_name": "DDR CSS",
+  "categories": ["games"],
+  "background_color": "#1d172c",
+  "theme_color": "#1d172c",
+  "screenshots": [
+    {
+      "src": "./f.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    }
+  ],
+  "serviceworker": {
+    "src": "./sw.js",
+    "scope": "./",
+    "type": "",
+    "update_via_cache": "none"
+  },
+
+  "start_url": "./",
+  "scope": "./"
+}
