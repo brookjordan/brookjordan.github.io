@@ -57,6 +57,9 @@ body.only {
   );
   border-color: hsl(370, 60%, 50%);
 }
+.only .post-it:nth-child(3n) {
+  background: hsl(350, 100%, 93%);
+}
 
 .post-it:nth-child(3n + 1) {
   background: linear-gradient(to top,
@@ -65,6 +68,9 @@ body.only {
   );
   border-color: hsl(230, 60%, 50%);
 }
+.only .post-it:nth-child(3n + 1) {
+  background: hsl(250, 100%, 93%);
+}
 
 .post-it:nth-child(3n + 2) {
   background: linear-gradient(to top,
@@ -72,6 +78,9 @@ body.only {
     hsla(50, 100%, 93%, 1) 10%
   );
   border-color: hsl(40, 60%, 50%);
+}
+.only .post-it:nth-child(3n + 2) {
+  background: hsl(50, 100%, 93%);
 }
 
 .post-it a {
