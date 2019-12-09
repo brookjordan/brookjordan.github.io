@@ -389,6 +389,7 @@ var defaultEndings = [
   "… on a Windows machine!",
   "… twice!",
   "… YOLO!",
+  " while tripping.",
   " 😢",
   " 😕",
   " 🤭",
