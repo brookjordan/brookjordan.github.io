@@ -1,6 +1,6 @@
 :root {
   --font-size: 1;
-  --fps: 8;
+  --fps: 6;
 
   --canvas-width-ratio: 340;
   --canvas-height-ratio: 200;
@@ -46,7 +46,8 @@ h1 {
   font-family: 'Merienda One', cursive;
 }
 
-p {
+p,
+li {
   color: #4e5c84;
   margin: 0;
   margin-top: 0.6em;
@@ -126,6 +127,7 @@ p {
 
 .text {
   position: absolute;
+  transform: translateY(-1px);
   bottom: 1%;
   right: 1%;
   width: 50%;
