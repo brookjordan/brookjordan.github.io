@@ -7,45 +7,23 @@ function addInstallPWAModal(beforeInstallPromptEvent) {
     z-index: 999999999;
     transform: translateX(-50%);
     background: white;
-    padding: 20px 30px;
+    padding: 1.5em 2em;
     font-size: 0.8em;
     filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.2));
+    border-radius: 3px;
+    display: flex;
   `;
   promptModal.innerHTML = `
-    <button
-      class="install-pwa-dismiss"
-      type="button"
-      style="
-        position: absolute;
-        left: 100%;
-        top: 0;
-        border: 0;
-        font-size: 2em;
-        padding: 0 0.5em;
-      "
-    >
-      ×
-    </button>
-
-    <h1
-      style="
-        font-size: 1.5em;
-        margin: 0;
-      "
-    >
-      Add to your homescreen?
-    </h1>
-    
     <button
       class="install-pwa-accept"
       type="button"
       style="
         width: 100%;
         font-size: 1.5em;
-        margin: 0.5em 0;
+        border-radius: 3px;
       "
     >
-      Hell yeah!
+      Add to my home&nbsp;screen
     </button>
 
     <button
@@ -54,6 +32,8 @@ function addInstallPWAModal(beforeInstallPromptEvent) {
       style="
         width: 100%;
         font-size: 1.5em;
+        border-radius: 3px;
+        margin-left: 0.5em;
       "
     >
       No thanks.
@@ -62,7 +42,6 @@ function addInstallPWAModal(beforeInstallPromptEvent) {
 
   let killPrompt = () => { document.body.removeChild(promptModal); };
   promptModal.querySelector('.install-pwa-decline').addEventListener('click', killPrompt);
-  promptModal.querySelector('.install-pwa-dismiss').addEventListener('click', killPrompt);
   promptModal.querySelector('.install-pwa-accept')
     .addEventListener('click', () => {
       killPrompt();
