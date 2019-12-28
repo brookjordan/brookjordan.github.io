@@ -16,12 +16,12 @@ function addInstallPWAModal(beforeInstallPromptEvent) {
       class="install-pwa-dismiss"
       type="button"
       style="
-          position: absolute;
-          left: 100%;
-          top: 0;
-          border: 0;
-          font-size: 2em;
-          padding: 0 0.5em;
+        position: absolute;
+        left: 100%;
+        top: 0;
+        border: 0;
+        font-size: 2em;
+        padding: 0 0.5em;
       "
     >
       ×
@@ -59,51 +59,22 @@ function addInstallPWAModal(beforeInstallPromptEvent) {
       No thanks.
     </button>
   `;
-  promptModal.querySelector('.install-pwa-accept').addEventListener('click', event => {
-    document.body.removeChild(promptModal);
-    beforeInstallPromptEvent.prompt();
-  });
-  promptModal.querySelector('.install-pwa-decline').addEventListener('click', event => {
-    document.body.removeChild(promptModal);
-  });
-  promptModal.querySelector('.install-pwa-dismiss').addEventListener('click', event => {
-    document.body.removeChild(promptModal);
-  });
+
+  let killPrompt = () => { document.body.removeChild(promptModal); };
+  promptModal.querySelector('.install-pwa-decline').addEventListener('click', killPrompt);
+  promptModal.querySelector('.install-pwa-dismiss').addEventListener('click', killPrompt);
+  promptModal.querySelector('.install-pwa-accept')
+    .addEventListener('click', () => {
+      killPrompt();
+      beforeInstallPromptEvent.prompt();
+    });
   document.body.appendChild(promptModal);
 }
 
 if ('serviceWorker' in navigator) {
-  window.addEventListener("beforeinstallprompt", async function(beforeInstallPromptEvent) {
-    /** event props
-     * isTrusted
-     * platforms
-     * userChoice
-     * type
-     * target
-     * currentTarget
-     * eventPhase
-     * bubbles
-     * cancelable
-     * defaultPrevented
-     * composed
-     * timeStamp
-     * srcElement
-     * returnValue
-     * cancelBubble
-     * path
-     */
-    
+  window.addEventListener("beforeinstallprompt", (beforeInstallPromptEvent) => {
     beforeInstallPromptEvent.preventDefault();
     addInstallPWAModal(beforeInstallPromptEvent);
-    
-    // TODO: Show when the app was installed
-    // try {
-    //   let userChoice = await beforeInstallPromptEvent.userChoice;
-    //   debugger;
-    //   console.log(JSON.stringify(userChoice, null, 2));
-    // } catch (error) {
-    //   console.log(error);
-    // }
   });
 
   navigator.serviceWorker.register('./service-worker.js')
