@@ -56,7 +56,7 @@ if ('serviceWorker' in navigator) {
     addInstallPWAModal(beforeInstallPromptEvent);
   });
 
-  navigator.serviceWorker.register('./service-worker.js')
+  navigator.serviceWorker.register('./pwa--service-worker.js')
     .catch(error => {
       console.warn(`ServiceWorker registration failed: ${error}`); 
     });
