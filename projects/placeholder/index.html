@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <title>Placeholder text builder</title>
-    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
     <link rel="shortcut icon" href="./favicon.ico" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <link rel="manifest" href="./manifest.json">
 
     <script>
       let favicons = [
@@ -18,25 +19,21 @@
         favicons[Math.floor(Math.random() * favicons.length)];
     </script>
 
-    <link
-      href="https://fonts.googleapis.com/css?family=Coming+Soon"
-      rel="stylesheet"
-    />
-
-    <script src="query-params--1.0.0.js"></script>
-
-    <script src="words--3.2.1.js"></script>
-    <script src="verbs--2.2.1.js"></script>
-    <script src="extra-people--1.1.0.js"></script>
-    <script src="people--2.2.1.js"></script>
-  </head>
-
-  <body>
-    <script src="main.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Coming+Soon&display=swap">
     <script>
       CSS && CSS.paintWorklet && CSS.paintWorklet.addModule('./post-it-worklet--1.0.0.js');
     </script>
     <link rel="stylesheet" href="main.1.0.2.css">
-    <script src="settings--2.0.0.js"></script>
+  </head>
+
+  <body>
+    <script src="./query-params--1.0.0.js"></script>
+    <script src="./words--3.2.1.js"></script>
+    <script src="./verbs--2.2.1.js"></script>
+    <script src="./extra-people--1.1.0.js"></script>
+    <script src="./people--2.2.1.js"></script>
+    <script src="./main.js"></script>
+    <script src="./settings--2.0.0.js"></script>
+    <script src="./init-pwa.js" defer type="module"></script>
   </body>
 </html>
