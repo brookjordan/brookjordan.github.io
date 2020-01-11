@@ -17,6 +17,7 @@ sidebarContainer.appendChild(sidebar);
 
 let sidebarToggle = document.createElement('button');
 sidebarToggle.className = 'sidebar__toggle';
+sidebarToggle.setAttribute('aria-label', 'Toggle settings');
 
 let sidebarToggleIcon = document.createElement('i');
 sidebarToggleIcon.className = 'sidebar__toggle-icon';
@@ -69,6 +70,7 @@ function printPeople(focus) {
   let addGirl = document.createElement('form');
   let addGirlName = document.createElement('input');
   addGirlName.placeholder = 'Cecil';
+  addBoyName.setAttribute('aria-label', 'Girl’s name');
   let addGirlButton = document.createElement('button');
   addGirlButton.textContent = '+';
   addGirl.addEventListener('submit', e => {
@@ -103,6 +105,7 @@ function printPeople(focus) {
   let addBoy = document.createElement('form');
   let addBoyName = document.createElement('input');
   addBoyName.placeholder = 'Hendrick';
+  addBoyName.setAttribute('aria-label', 'Boy’s name');
   let addBoyButton = document.createElement('button');
   addBoyButton.textContent = '+';
   addBoy.addEventListener('submit', e => {

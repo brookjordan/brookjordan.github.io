@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <link rel="preload" href="https://fonts.googleapis.com/css?family=Coming+Soon&display=swap">
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="theme-color" content="#FFF"/>
+
     <title>Placeholder text builder</title>
+    <meta name="Description"
+          content="Ever wanted to know what weird things you didn’t know your friends were doing?">
+
     <link rel="shortcut icon" href="./favicon.ico" />
     <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
-    <link rel="manifest" href="./manifest.json">
+    <link rel="manifest" href="./manifest.webmanifest">
 
     <script>
       let favicons = [
@@ -20,13 +27,14 @@
     </script>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Coming+Soon&display=swap">
-    <script>
-      CSS && CSS.paintWorklet && CSS.paintWorklet.addModule('./post-it-worklet--1.0.0.js');
-    </script>
     <link rel="stylesheet" href="./main.1.0.2.css">
   </head>
 
   <body>
+    <noscript>
+      I'm sorry, but you're not going to see anything without JavaScript.
+    </noscript>
+
     <script src="./query-params--1.0.0.js"></script>
     <script src="./words--3.2.1.js"></script>
     <script src="./verbs--2.2.1.js"></script>
@@ -35,6 +43,9 @@
     <script src="./main.js"></script>
     <script src="./settings--2.0.0.js"></script>
 
+    <script>
+      CSS && CSS.paintWorklet && CSS.paintWorklet.addModule('./post-it-worklet--1.0.0.js');
+    </script>
     <script src="./pwa--init.js" defer type="module"></script>
   </body>
 </html>

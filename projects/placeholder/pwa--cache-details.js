@@ -3,7 +3,6 @@ const cacheName = 'placeholder-v1';
 const staticAssets = [
   './',
   './index.html',
-  './manifest.json',
   './main.1.0.2.css',
   'https://fonts.googleapis.com/css?family=Coming+Soon&display=swap',
 
