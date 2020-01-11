@@ -70,7 +70,7 @@ function printPeople(focus) {
   let addGirl = document.createElement('form');
   let addGirlName = document.createElement('input');
   addGirlName.placeholder = 'Cecil';
-  addBoyName.setAttribute('aria-label', 'Girl’s name');
+  addGirlName.setAttribute('aria-label', 'Girl’s name');
   let addGirlButton = document.createElement('button');
   addGirlButton.textContent = '+';
   addGirl.addEventListener('submit', e => {
