@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <link rel="preload" href="https://fonts.googleapis.com/css?family=Coming+Soon&display=swap">
+    <link rel="preload" href="./main.1.0.2.css">
 
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -25,9 +26,6 @@
       document.querySelector('[rel="shortcut icon"]').href =
         favicons[Math.floor(Math.random() * favicons.length)];
     </script>
-
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Coming+Soon&display=swap">
-    <link rel="stylesheet" href="./main.1.0.2.css">
   </head>
 
   <body>
@@ -44,6 +42,8 @@
     <script src="./main.js"></script>
     <script src="./settings--2.0.0.js"></script>
 
+    <link rel="stylesheet" href="./main.1.0.2.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Coming+Soon&display=swap">
     <script>
       CSS && CSS.paintWorklet && CSS.paintWorklet.addModule('./post-it-worklet--1.0.0.js');
     </script>
