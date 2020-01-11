@@ -6,6 +6,8 @@ let getString;
 let globalGirls;
 let globalBoys;
 
+let main = document.querySelector('main');
+
 class RandomString {
   constructor(words) {
     let o = words || {};
@@ -462,7 +464,7 @@ const buildWord = (str, active) => {
   div.appendChild(a);
 
   requestAnimationFrame(() => {
-    document.body.appendChild(div);
+    main.appendChild(div);
     requestAnimationFrame(() => {
       div.classList.remove("closed");
     });
