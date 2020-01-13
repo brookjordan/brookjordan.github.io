@@ -6,7 +6,9 @@ let pokemonElt = document.createElement('div');
 
 function addNextPokemon() {
   if (pokemonToAdd.length) {
-    let { name } = pokemonToAdd.pop();
+    let {
+      name
+    } = pokemonToAdd.pop();
     let elt = document.createElement('div');
     let label = document.createElement('h3');
     label.textContent = name;
