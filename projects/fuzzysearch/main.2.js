@@ -17,7 +17,7 @@ let Matches = React.createClass({displayName: "Matches",
 				),
 				React.createElement("img",
 					{
-						src:  `./cache-poke-api/pokemon-images/${match.string}.png`,
+						src:  `./pokemon-images/${match.string}.png`,
 						loading: "lazy",
 						role: "presentation"
 					}
