@@ -11,7 +11,7 @@ class Matches extends preact.Component {
 				preact.createElement("span",
 					{
 						dangerouslySetInnerHTML: {
-							__html: match.formatted
+							__html: match.formatted.replace(/-/g, ' ')
 						}
 					}
 				),
