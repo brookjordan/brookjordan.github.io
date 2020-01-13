@@ -19,7 +19,9 @@ class Matches extends preact.Component {
 					{
 						src:  `./pokemon-images/${match.string}.png`,
 						loading: "lazy",
-						role: "presentation"
+						role: "presentation",
+						width: 50,
+						height: 50
 					}
 				)
 			));
