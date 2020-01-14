@@ -21,7 +21,10 @@
 </script>
 
 <svelte:head>
-	<title>Fuzzy search</title>
+	<title>Svelte Fuzzy Search</title>
+	<meta
+	  name=description
+		content="Can’t quite remember the name of that Pokémon you’re thinking of, but it’s on the tip of your tongue?">
 </svelte:head>
 
 <main>
@@ -81,37 +84,27 @@
 	ul {
 		display: flex;
 		flex-wrap: wrap;
+    justify-content: space-evenly;
 		padding: 0;
 		margin: 0;
 	}
 
 	li {
+		position: relative;
+    contain: layout;
 		display: flex;
-    justify-content: center;
-		min-width: 137px; /* min with with text and image */
-		padding: 5px 20px;
-		margin: 5px;
-		box-shadow: 0 1px 2px #999;
-
-		flex-grow: 1;
-
-		list-style: none;
-
-		text-align: center;
 		height: 50px;
-		line-height: 50px;
-
-		background: white;
-
-		animation-name: resultBuild;
-		animation-duration: .15s;
+    padding: 5px 20px;
+    margin: 5px;
+    line-height: 50px;
+    box-shadow: 0 1px 2px #999;
+    background: white;
 	}
 
 	li > h4 {
 		margin: 0;
 		font: inherit;
 	}
-
 
 	li img {
 		vertical-align: middle;
@@ -123,10 +116,12 @@
 		pointer-events: none;
 	}
 
+	li:hover {
+		z-index: 1;
+	}
+
 	li:hover img {
-		position: relative;
 		transform: scale(4);
-		z-index: 2;
 	}
 
 	#search {
