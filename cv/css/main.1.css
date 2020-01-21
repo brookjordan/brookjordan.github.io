@@ -1,14 +1,16 @@
+html {
+	background-color: #d7dadb;
+	font-size: 110%;
+}
+
 body {
 	position: relative;
-
-	padding: 12%;
-	padding-top: 3.5em;
-	background-color: white;
-
+	padding: 5vw;
 	font-family: 'Gentium Book Basic', serif;
-	font-size: 1.5em;
 	line-height: 1.4;
 	color: #2c3e50;
+	max-width: 800px;
+	background-color: white;
 }
 
 .cf:before,
@@ -51,10 +53,10 @@ a:hover {
 }
 
 .contact a {
-	float: left;
-	padding-right: 10%;
+	display: block;
+	text-align: right;
 }
-	
+
 .font-sectionHead,
 .job-company,
 .job-date,
@@ -65,12 +67,12 @@ a:hover {
 
 
 .font-sectionHead {
-	margin-top: 3em;
+	margin-top: 3rem;
 
 	font-weight: 600;
-	font-size: 1.4em;
+	font-size: 1.6rem;
 	color: #fc4349;
-	
+
 }
 .font-sectionHead:first-child {
 	margin-top: 0;
@@ -78,56 +80,58 @@ a:hover {
 }
 
 .job-head {
-	margin-top: 1.5em;
+	margin-top: 1.5rem;
 }
 
 .job-company {
-	margin-top: 1.3em;
+	margin-top: 1.3rem;
 
 	font-weight: 600;
 	color: #2c3e50;
 }
 p + .job-head .job-company {
-	margin-top: 3em;
+	margin-top: 3rem;
 }
 
 .job-date {
 	float: right;
 	clear: both;
-	
-	padding-left: 1.5em;
+
+	padding-left: 1.5rem;
 
 	line-height: 2.3;
 }
 
 .job-title {
-	margin-top: 1.5em;
+	margin-top: 1.5rem;
 
-	font-size: 1.2em;
+	font-size: 1.2rem;
 	color: #fc4349;
 }
 .job-head .job-title {
 	margin-top: 0;
-	margin-bottom: 1em;
-	padding-top: 0.3em;
-	font-size: 0.9em;
+	margin-bottom: 1rem;
+	padding-top: 0.3rem;
+	font-size: 0.9rem;
 	text-transform: uppercase;
 	font-weight: 100;
 }
 
 .font-body {
-	margin-top: 1em;
-
+	margin-top: 1rem;
 }
-.job-head    + .font-body,
+.font-body:empty::after {
+	content: "—";
+	color: #d7dadb;
+}
+.job-head + .font-body,
 .job-company + .font-body {
 	margin-top: 0;
-
 }
 
 .font-subtle {
 	color: #d7dadb;
-	font-size: 0.8em;
+	font-size: 0.8rem;
 	font-weight: 400;
 }
 
@@ -173,11 +177,20 @@ p + .job-head .job-company {
 }
 
 
-
-
-@media all and (max-width: 1300px) {
+@media (min-width: 450px) {
+	html {
+		font-size: 125%;
+	}
 	body {
-		font-size: 1.2em;
+		padding: 8vw;
+		margin: 3vw;
+	}
+}
+
+
+@media all and (min-width: 800px) {
+	html {
+		font-size: 140%;
 	}
 }
 
@@ -185,11 +198,6 @@ p + .job-head .job-company {
 
 
 @media all and (max-width: 650px) {
-	body {
-		padding: 10%;
-		padding-top: 2.5em;
-	}
-	
 	.double-bullet {
 		width: 96%;
 	}
