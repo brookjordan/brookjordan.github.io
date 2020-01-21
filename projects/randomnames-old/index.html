@@ -81,103 +81,62 @@
       transition-duration: 0.02s;
     }
   </style>
-</head>
-<body>
-  <h1 id="title-elt"></h1>
 
-  <header>
-    <button id="new-name">New Name</button>
-    <button id="lots-of-names">Lots of names</button>
-  </header>
-
-  <div></div>
-
-  <footer>
-    <button id="speak-name">Speak name</button>
-    <button id="stop-generation">Stop generation</button>
-  </footer>
-
-  <style>
-    @font-face {
-    font-family: 'Lobster Two';
-    font-style: normal;
-    font-weight: 400;
-    src: local('Lobster Two'),
-         local('LobsterTwo'),
-         url(https://fonts.gstatic.com/s/lobstertwo/v9/Law3VVulBOoxyKPkrNsAaIgp9Q8gbYrhqGlRav_IXfk.woff2) format('woff2');
-    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
-  }
-  </style>
-
-	<script src="./surnames.js"></script>
-	<script src="./givennames.js"></script>
-	<script src="./make-name.js"></script>
-  <!--script src="./responsivevoice.js"></script-->
-  <script src="https://code.responsivevoice.org/responsivevoice.js"></script>
+  <script src="random-name.js"></script>
   <script>
-    'use strict';
-
-    var timer = void 0;
-
-    setActions();
-    initialName();
-
-    function setActions() {
-      document.getElementById('title-elt').addEventListener('click', setLink);
-      document.getElementById('new-name').addEventListener('mousedown', setNameToRandom);
-      document.getElementById('lots-of-names').addEventListener('mousedown', randomNamePeriodically);
-      document.getElementById('speak-name').addEventListener('mousedown', speakName);
-      document.getElementById('stop-generation').addEventListener('mousedown', stopRandomNamePeriod);
-    }
-
+    var timer;
     function initialName() {
-      setName(getSetName() || randomFullName());
+      setName(getSetName() || randomNames.n);
     }
-
-    function setNameToRandom() {
-      setName(randomFullName());
+    function randomName() {
+      setName(randomNames.n);
     }
-
     function getSetName() {
       if (location.search) {
         var queries = location.search.slice(1).split('&');
-        var query = queries.find(function (query) {
-          return (/name=/.test(query)
-          );
-        });
+        var query = queries.find(query => /name=/.test(query));
         if (query) {
           return decodeURIComponent(query.slice(query.indexOf('=') + 1));
         }
       }
     }
-
     function randomNamePeriodically() {
-      var name = randomFullName();
+      var name = randomNames.n;
       setName(name);
-      if (timer) {
-        clearTimeout(timer);
-      }
+      if (timer) { clearTimeout(timer) }
       timer = setTimeout(randomNamePeriodically, Math.sqrt(name.length) * 1000);
     }
-
     function stopRandomNamePeriod() {
-      if (timer) {
-        clearTimeout(timer);
-      }
+      if (timer) { clearTimeout(timer) }
     }
-
     function setName(newName) {
       document.getElementById('title-elt').innerHTML = newName;
       speakName();
     }
-
     function speakName() {
       responsiveVoice && responsiveVoice.speak(document.getElementById('title-elt').innerHTML);
     }
-
     function setLink() {
-      location.href = location.href.split('?')[0] + '?name=' + document.getElementById('title-elt').innerHTML;
+      location.href =`${location.href.split('?')[0]}?name=${document.getElementById('title-elt').innerHTML}`;
     }
   </script>
+</head>
+<body onload=initialName()>
+  <h1 id="title-elt" onclick=setLink()></h1>
+
+  <header>
+    <button onmousedown=randomName()>New Name</button>
+    <button onmousedown=randomNamePeriodically()>Lots of names</button>
+  </header>
+
+  <div></div>
+
+  <footer>
+    <button onmousedown=speakName()>Speak name</button>
+    <button onmousedown=stopRandomNamePeriod()>Stop generation</button>
+  </footer>
+
+  <link href="https://fonts.googleapis.com/css?family=Lobster+Two" rel="stylesheet">
+  <script src='https://code.responsivevoice.org/responsivevoice.js'></script>
 </body>
 </html>
