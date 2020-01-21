@@ -47,11 +47,11 @@ function getMostCommonColour(src, count=4) {
           count -= 1;
         }
       }
-      
+
       resolve(domCol);
     }
   });
-      
+
   function chooseDominant(a, b) {
     const [hueA, satA, briA] = rgbToHsl(...a.rgba);
     const [hueB, satB, briB] = rgbToHsl(...b.rgba);
@@ -76,9 +76,9 @@ function getMostCommonColour(src, count=4) {
       var max = Math.max(r, g, b), min = Math.min(r, g, b);
       var h, s, l = (max + min) / 2;
 
-      if(max == min){
+      if (max == min){
           h = s = 0; // achromatic
-      }else{
+      } else {
           var d = max - min;
           s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
           switch(max){
