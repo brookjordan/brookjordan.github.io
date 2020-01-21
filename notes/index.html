@@ -1,15 +1,54 @@
 <style>
-  html,body,code { box-sizing: border-box; height: 100%; width: 100%; margin: 0; }
-  code { display: block; padding: 2vmin; }
+  code {
+    --text-color: black;
+    --line-color-1: white;
+    --line-color-2: #eee;
+  }
+
+  html,
+  body,
+  code {
+    height: 100%;
+    width: 100%;
+    margin: 0
+  }
+
+  code {
+    box-sizing: border-box;
+    white-space: pre-wrap;
+    display: block;
+    padding: 2vmin;
+    font-size: 16px;
+    line-height: 20px;
+    color: var(--text-color);
+    background:
+      0 calc(-200px + 2vmin) / 100vw calc(100vh + 200px)
+      repeating-linear-gradient(to bottom,
+        var(--line-color-1),
+        var(--line-color-1) 20px,
+        var(--line-color-2) 0,
+        var(--line-color-2) 40px
+      );
+  }
+
+  @media (prefers-color-scheme: dark) {
+    code {
+      --text-color: white;
+      --line-color-1: black;
+      --line-color-2: #222;
+    }
+  }
 </style>
 
-<code contentEditable style="white-space:pre-wrap;"></code>
-
-<script>
-  const LS_NAME = 'my-offline-notes';
-  const code = document.querySelector('code');
-  code.innerText = localStorage.getItem(LS_NAME);
-  code.onkeyup = () => {
-    localStorage.setItem(LS_NAME, code.innerText)
-  }
-</script>
+<body
+  onload="
+    document.querySelector('code').innerText = localStorage.getItem('my-offline-notes')
+  "
+>
+  <code
+    contentEditable
+    oninput="
+      localStorage.setItem('my-offline-notes', code.innerText)
+    "
+  ></code>
+</body>
