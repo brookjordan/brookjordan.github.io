@@ -19,7 +19,9 @@ a {
 
 .font-body {
 	margin-top: 0.8em;
-
+}
+.font-body:empty::after {
+	content: none;
 }
 
 .print-inline,
