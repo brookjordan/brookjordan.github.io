@@ -1,98 +1,87 @@
+html {
+	font-size: 12pt !important;
+}
+
 body {
-	font-size: 12pt;
-	padding: 0 10%;
-	padding-top: 3em;
+	padding: 0 !important;
+	margin: 0 !important;
+	max-width: none !important;
+	line-height: 18pt !important;
+}
+
+.section-about,
+.section-employment {
+	column-count: 2;
+	column-gap: 0.8cm;
+}
+
+.job {
+	break-inside: avoid;
+	break-before: avoid;
+}
+
+.job-date {
+	line-height: 16pt !important;
+	font-size: 10pt !important;
 }
 
 a {
-	color: #2c3e50;
-	text-decoration: none;
-}
-.contact a {
-	width: 33.33%;
-	padding: 0;
+	color: inherit !important;
+	text-decoration: none !important;
 }
 
 .font-sectionHead {
-	margin-top: 2em;
+	font-size: 15pt !important;
+	margin-top: 15pt !important;
+}
+
+.job-head,
+.job-company {
+	margin-top: 7pt !important;
+}
+
+.job:first-child .job-head,
+.job:first-child .job-company {
+	margin-top: 0 !important;
+}
+
+.job-title {
+	padding: 0 !important;
+	font-size: 11pt !important;
 }
 
 .font-body {
-	margin-top: 0.8em;
+	margin-top: 6pt !important;
+}
+.section-hobbies .font-body {
+	display: none;
+}
+.section-hobbies .definitionlist {
+	display: flex;
+}
+.section-hobbies .job-company {
+	flex-basis: auto;
+	font: inherit;
+	margin: 0 !important;
+}
+.section-hobbies .font-body + .job-company::before {
+	content: ", ";
 }
 .font-body:empty::after {
-	content: none;
+	content: '' !important;
 }
 
-.print-inline,
-.print-inline.only {
+.section-education .bullet,
+.section-education .bullet p {
 	display: inline;
-}
-
-.print-block,
-.print-block.only {
-	display: block;
-}
-
-.screen-inline.only {
-	display: none;
-}
-
-.screen-block.only {
-	display: none;
-}
-
-
-
-.definitionlist .job-company {
-	display: inline;
-}
-.definitionlist .job-company::after {
-	content: ' — '
-}
-.definitionlist .job-company.last::after {
-	content: '. '
-}
-
-.definitionlist .font-body {
-	display: none;
-}
-
-
-.definitionlist .job-company {
-	font-weight: 400;
-	font-family: 'Gentium Book Basic', serif;
-}
-
-
-.bullets.print-inline {
-	list-style-type: none;
-	display: inline;
-	padding: 0;
-}
-
-.bullets.print-inline .bullet > p::after {
-	content: ' — ';
-}
-
-/*
-.bullets.print-inline .bullet:last-child > p::before {
-	content: ' and ';
-}
-*/
-
-.bullets.print-inline .bullet:last-child > p::after {
-	content: '. ';
-}
-
-.bullets.print-inline .bullet,
-.bullets.print-inline .bullet > p {
-	display: inline;
-	float: none;
 	width: auto;
 	margin: 0;
 }
 
-.treble-bullet {
-	width: 45%;
+.section-education .bullet + .bullet::before {
+	content: ', ';
+}
+
+.screenOnly {
+	display: none;
 }
