@@ -2,12 +2,6 @@ var genn    = gen();
 var running = false;
 var itr     = false;
 
-getGen();
-
-window.onscroll = attemptGetGen;
-window.onresize = attemptGetGen;
-
-
 function attemptGetGen() {
   !running && getGen();
 }
@@ -89,3 +83,21 @@ function*gen() {
 function needMore() {
   return innerHeight + (document.body.scrollTop || document.documentElement.scrollTop) + 300 > document.body.getBoundingClientRect().height;
 }
+
+function init() {
+  if (window.a) {
+    window.onscroll = attemptGetGen;
+    window.onresize = attemptGetGen;
+
+    attemptGetGen();
+  } else {
+    requestAnimationFrame(init);
+  }
+}
+
+let logicScript = document.createElement('script');
+logicScript.src = './test.js';
+logicScript.setAttribute('async', 'async');
+document.head.appendChild(logicScript);
+
+init();
