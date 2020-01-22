@@ -123,7 +123,6 @@
     initialName();
 
     function setActions() {
-      document.getElementById('title-elt').addEventListener('click', setLink);
       document.getElementById('new-name').addEventListener('mousedown', setNameToRandom);
       document.getElementById('lots-of-names').addEventListener('mousedown', randomNamePeriodically);
       document.getElementById('speak-name').addEventListener('mousedown', speakName);
@@ -139,14 +138,10 @@
     }
 
     function getSetName() {
-      if (location.search) {
-        var queries = location.search.slice(1).split('&');
-        var query = queries.find(function (query) {
-          return (/name=/.test(query)
-          );
-        });
-        if (query) {
-          return decodeURIComponent(query.slice(query.indexOf('=') + 1));
+      if (location.hash && location.hash.startsWith('#/name/')) {
+        var name = location.hash.slice(7);
+        if (name) {
+          return decodeURIComponent(name);
         }
       }
     }
@@ -168,6 +163,7 @@
 
     function setName(newName) {
       document.getElementById('title-elt').innerHTML = newName;
+      setLink(newName);
       speakName();
     }
 
@@ -176,7 +172,7 @@
     }
 
     function setLink() {
-      location.href = location.href.split('?')[0] + '?name=' + document.getElementById('title-elt').innerHTML;
+      location.href = location.href.split('#')[0] + '#/name/' + document.getElementById('title-elt').innerHTML;
     }
   </script>
 </body>
