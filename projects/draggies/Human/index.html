@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Human</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../main.css">
+</head>
+<body>
+
+	<p>
+		<a href="/">&laquo; Home</a>
+		<a href="../Artichoke">Artichoke</a>
+		<a href="../Banana">Banana</a>
+		<a href="../Brocolli">Brocolli</a>
+		<a href="../Head">Head</a>
+		<a href="../Human">Human</a>
+	</p>
+
+	<div class="description">
+		<p>Click&nbsp;and drag&nbsp;to&nbsp;drag the&nbsp;'draggy'.</p>
+		<p>Double click to flip it.</p>
+	</div>
+
+	<script src="../js/shivs.js"></script>
+	<script src="../js/main.js"></script>
+	<script src="../js/killDescription.js"></script>
+
+<script>
+	buildDraggy({
+		container: document.body,
+		prefix:    '2512---',
+		suffix:    '',
+		pad:       4,
+		start:     1,
+		end:       93,
+		speed:     0.2,
+		width:     360,
+		height:    209,
+	});
+</script>
+
+</body>
+</html>
