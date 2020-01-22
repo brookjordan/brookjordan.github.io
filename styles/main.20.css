@@ -131,6 +131,10 @@ p {
   -webkit-border-radius: 2px;
   border-radius: 2px
 }
+.carousel {
+  border-top-width: 0;
+  border-bottom-width: 0;
+}
 
 .builtSites,
 .containerWidth,
@@ -177,7 +181,13 @@ p {
 .carousel {
   position: relative;
   top: 0;
-  left: 0
+  left: 0;
+  height: 210px;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  overflow: hidden;
 }
 
 .film,
@@ -193,28 +203,47 @@ p {
 
 .item {
   position: relative;
-  float: left
+  float: left;
+  -webkit-transition: -webkit-box-shadow .4s;
+  transition: box-shadow .4s;
 }
+
+.item img {
+  display: block;
+  width: 100%;
+  height: auto;
+  -webkit-border-radius: 0;
+  border-radius: 0
+}
+
 .item h4 {
-  position: absolute;
-  bottom: -6px;
-  left: 2px;
   width: calc(100% - 4px);
-  color: #fcf5f0;
-  background: linear-gradient(to bottom, rgba(76, 62, 17, 0), rgba(76, 62, 17, 0.8) 20px);
   padding: 10px 15px;
-  padding-top: 20px;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.15s, transform 0.1s ease-out;
-  will-change: opacity, transform;
 }
-.item:hover h4 {
-  opacity: 1;
-  transform: translateY(-10px);
-}
-.item:hover h4:empty {
-  opacity: 0;
+
+@media (hover: hover) {
+  .carousel {
+    height: 133.33px;
+  }
+  .item h4 {
+    position: absolute;
+    bottom: -7px;
+    left: 2px;
+    pointer-events: none;
+    color: #fcf5f0;
+    opacity: 0;
+    padding-top: 20px;
+    background: linear-gradient(to bottom, rgba(76, 62, 17, 0), rgba(76, 62, 17, 0.8) 20px);
+    transition: opacity 0.15s, transform 0.1s ease-out;
+    will-change: opacity, transform;
+  }
+  .item:hover h4 {
+    opacity: 1;
+    transform: translateY(-10px);
+  }
+  .item:hover h4:empty {
+    opacity: 0;
+  }
 }
 
 .mainHeadContainer {
@@ -637,15 +666,14 @@ p {
   height: auto
 }
 
-.carousel,
-.item,
 .viewFinder {
-  height: 133.33px
+  height: auto;
 }
 
-@media (max-height:400px),
-(max-width:700px) {
-
+@media
+  (max-height:400px),
+  (max-width:700px)
+{
   .imageViewer,
   .imageViewerImageContainer {
     -webkit-transition: opacity !important;
@@ -699,14 +727,6 @@ p {
   display: none
 }
 
-.carousel {
-  overflow: hidden;
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1
-}
-
 .viewFinder {
   -webkit-transition-property: left, margin-left;
   transition-property: left, margin-left;
@@ -726,19 +746,6 @@ p {
   transition-duration: .3s;
   -webkit-transition-timing-function: ease-out;
   transition-timing-function: ease-out
-}
-
-.item {
-  background: #CCC;
-  -webkit-transition: -webkit-box-shadow .4s;
-  transition: box-shadow .4s
-}
-
-.item img {
-  width: 100%;
-  height: auto;
-  -webkit-border-radius: 0;
-  border-radius: 0
 }
 
 .carouselContainer--inactive .carousel {
