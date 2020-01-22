@@ -1,1 +1,231 @@
-*,*::before,*::after{box-sizing:border-box;font-size:100%;font-weight:inherit;color:inherit;line-height:inherit}html{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;text-size-adjust:100%}html,body,p,h1,h2,h3,h4,h5,h6,article,div,nav,section{display:block;margin:0;padding:0}ul,ol,li{margin:0;padding:0;list-style:none}a{text-decoration:none}input,button,select,option{outline:0;font:inherit;padding:0;background:none;border:none}button{display:block;cursor:pointer}.racer{position:absolute;left:0;height:1.8vw;width:1.8vw}.racer.seb{border-color:red;top:0vw;z-index:1}.racer.abhi{top:1vw;z-index:2}.racer.melissa{top:2vw;z-index:3}.racer.kyle{top:3vw;z-index:4}.racer.shek{top:4vw;z-index:5}.racer:hover{z-index:10 !important}.figure{position:absolute;top:0;left:0;z-index:5;width:1.8vw;height:1.8vw;background:transparent 50% 100% no-repeat;background-size:contain}.abhi .figure{background-image:url("../images/gecko-race-abhi.svg")}.melissa .figure{background-image:url("../images/gecko-race-melissa.svg")}.kyle .figure{background-image:url("../images/gecko-race-kyle.svg")}.shek .figure{background-image:url("../images/gecko-race-shek.svg")}.seb .figure{top:-100%;left:-100%;width:300%;height:300%;background-image:url("../images/gecko-race-seb.svg")}.banner{position:absolute;left:1vw;width:2vw;height:2vw;border:0.1vw solid #fff;-webkit-transform:translateX(-50%);transform:translateX(-50%);border-radius:50%;background:transparent 50% 50% no-repeat;background-size:50% auto}.seb .banner{bottom:2vw;background-image:url("")}.abhi .banner{bottom:5.5vw;background-image:url("../images/gecko-race-icon-abhi.svg")}.melissa .banner{bottom:9vw;background-image:url("../images/gecko-race-icon-mel.svg")}.kyle .banner{bottom:12.5vw;background-image:url("../images/gecko-race-icon-kyle.svg")}.shek .banner{bottom:16vw;background-image:url("../images/gecko-race-icon-shek.svg")}.counter{position:absolute;top:50%;left:0;z-index:4;width:0;padding:1vw;padding-left:2vw;font-size:2vw;background:rgba(255,255,255,0.5);color:black;opacity:0;border-radius:0.1vw;-webkit-transform:translateY(-50%);transform:translateY(-50%);overflow:hidden;-webkit-transition:opacity .2s .2s, width .4s;transition:opacity .2s .2s, width .4s}.racer:hover .counter{opacity:1;width:10vw;-webkit-transition:opacity .2s, width .4s;transition:opacity .2s, width .4s}html,body{height:100%;font-family:raleway, "open sans", sans-serif;font-weight:200}body{background:transparent 24% 0 no-repeat url("../images/gecko-race-landscape.svg");background-size:127% auto}.mountain{position:absolute;top:0vw;width:100vw;height:50vw;min-height:100%;background:transparent 0 0 no-repeat url("../images/gecko-race-mountain.svg");background-size:100% auto}.track{position:relative;left:5%;top:28.3vw;width:90vw;-webkit-transform-origin:100% 0;transform-origin:100% 0;-webkit-transform:rotate(-10deg);transform:rotate(-10deg)}
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  font-size: 100%;
+  font-weight: inherit;
+  color: inherit;
+  line-height: inherit
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%
+}
+
+html,
+body,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+article,
+div,
+nav,
+section {
+  display: block;
+  margin: 0;
+  padding: 0
+}
+
+ul,
+ol,
+li {
+  margin: 0;
+  padding: 0;
+  list-style: none
+}
+
+a {
+  text-decoration: none
+}
+
+input,
+button,
+select,
+option {
+  outline: 0;
+  font: inherit;
+  padding: 0;
+  background: none;
+  border: none
+}
+
+button {
+  display: block;
+  cursor: pointer
+}
+
+.racer {
+  position: absolute;
+  left: 0;
+  height: 1.8vw;
+  width: 1.8vw
+}
+
+.racer.seb {
+  border-color: red;
+  top: 0vw;
+  z-index: 1
+}
+
+.racer.abhi {
+  top: 1vw;
+  z-index: 2
+}
+
+.racer.melissa {
+  top: 2vw;
+  z-index: 3
+}
+
+.racer.kyle {
+  top: 3vw;
+  z-index: 4
+}
+
+.racer.shek {
+  top: 4vw;
+  z-index: 5
+}
+
+.racer:hover {
+  z-index: 10 !important
+}
+
+.figure {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  width: 1.8vw;
+  height: 1.8vw;
+  background: transparent 50% 100% no-repeat;
+  background-size: contain
+}
+
+.abhi .figure {
+  background-image: url("../images/race-abhi.svg")
+}
+
+.melissa .figure {
+  background-image: url("../images/race-melissa.svg")
+}
+
+.kyle .figure {
+  background-image: url("../images/race-kyle.svg")
+}
+
+.shek .figure {
+  background-image: url("../images/race-shek.svg")
+}
+
+.seb .figure {
+  top: -100%;
+  left: -100%;
+  width: 300%;
+  height: 300%;
+  background-image: url("../images/race-seb.svg")
+}
+
+.banner {
+  position: absolute;
+  left: 1vw;
+  width: 2vw;
+  height: 2vw;
+  border: 0.1vw solid #fff;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: transparent 50% 50% no-repeat;
+  background-size: 50% auto
+}
+
+.seb .banner {
+  bottom: 2vw;
+  background-image: url("")
+}
+
+.abhi .banner {
+  bottom: 5.5vw;
+  background-image: url("../images/race-icon-abhi.svg")
+}
+
+.melissa .banner {
+  bottom: 9vw;
+  background-image: url("../images/race-icon-mel.svg")
+}
+
+.kyle .banner {
+  bottom: 12.5vw;
+  background-image: url("../images/race-icon-kyle.svg")
+}
+
+.shek .banner {
+  bottom: 16vw;
+  background-image: url("../images/race-icon-shek.svg")
+}
+
+.counter {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  z-index: 4;
+  width: 0;
+  padding: 1vw;
+  padding-left: 2vw;
+  font-size: 2vw;
+  background: rgba(255, 255, 255, 0.5);
+  color: black;
+  opacity: 0;
+  border-radius: 0.1vw;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+  overflow: hidden;
+  -webkit-transition: opacity .2s .2s, width .4s;
+  transition: opacity .2s .2s, width .4s
+}
+
+.racer:hover .counter {
+  opacity: 1;
+  width: 10vw;
+  -webkit-transition: opacity .2s, width .4s;
+  transition: opacity .2s, width .4s
+}
+
+html,
+body {
+  height: 100%;
+  font-family: raleway, "open sans", sans-serif;
+  font-weight: 200
+}
+
+body {
+  background: transparent 24% 0 no-repeat url("../images/race-landscape.svg");
+  background-size: 127% auto
+}
+
+.mountain {
+  position: absolute;
+  top: 0vw;
+  width: 100vw;
+  height: 50vw;
+  min-height: 100%;
+  background: transparent 0 0 no-repeat url("../images/race-mountain.svg");
+  background-size: 100% auto
+}
+
+.track {
+  position: relative;
+  left: 5%;
+  top: 28.3vw;
+  width: 90vw;
+  -webkit-transform-origin: 100% 0;
+  transform-origin: 100% 0;
+  -webkit-transform: rotate(-10deg);
+  transform: rotate(-10deg)
+}

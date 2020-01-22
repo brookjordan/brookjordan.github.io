@@ -107,7 +107,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = promptForNumber;
 function promptForNumber(_message) {
   var message = _message ? message : 'How many seconds should the race be?';
-  var dur = parseInt(prompt(message, 1000));
+  var dur = parseInt(prompt(message, 60));
 
   if (isNaN(dur)) {
     return getDuration('That\s not a number.\nHow may seconds should the race be?');
