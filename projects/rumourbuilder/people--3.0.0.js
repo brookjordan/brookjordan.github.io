@@ -1,0 +1,31 @@
+var defaultGirls = [
+  "Olivia",
+  "Emma",
+  "Charlotte",
+  "Louise",
+  "Lucia",
+  "Sofia",
+  "Emilía",
+  "Maria",
+  "Precious",
+  "Li",
+  "Nozomi",
+  "Ha Yoon",
+  "Ayesha",
+  "Tamar",
+];
+
+var defaultBoys = [
+  "Oliver",
+  "Liam",
+  "Gabriel",
+  "Hugo",
+  "Francesco",
+  "Alexander",
+  "Jose",
+  "Junior",
+  "Wei",
+  "Hiroshi",
+  "Do Yoon",
+  "Mohammed",
+];
