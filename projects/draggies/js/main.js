@@ -1,144 +1,138 @@
-function buildDraggy ( options ) {
+function buildDraggy({
+  images: imageDir = "i",
+  prefix: imagePrefix = "Head",
+  suffix: imageSuffix = "",
+  start: imageStart = 1,
+  end: imageEnd = 297,
+  pad: imagePad = 3,
+  speed: speed = 0.02,
+  width: width = 100,
+  height: height = 100,
+}) {
+  const moveElt = createMoveEltFunc();
+  const images = Array.from(
+    { length: imageEnd - imageStart },
+    (_, i) => `${imagePrefix + pad(imageEnd - i, imagePad, "0") + imageSuffix}.png`
+  );
+  const elts = images.map(imageName => {
+    const elt = document.createElement("div");
+    moveElt(elt, 0, 0);
+    elt.style.backgroundImage = `url(${imageDir}/${imageName})`;
+    return {
+      elt,
+      x: 0,
+      y: 0,
+    };
+  });
+  const styleElt = document.createElement('style');
 
-	function followMouse( e ) {
-		var curr, prevX, prevY;
+  let XX = 0;
+  let YY = 0;
+  let position = 1;
 
-		requestAnimationFrame( followMouse );
+  function followMouse() {
+    let prevX;
+    let prevY;
 
-		for ( var i=elts.length-1; i>-1; i-=1 ) {
-			if ( typeof prevX === 'undefined' ) {
-				xx = XX;
-				yy = YY;
-			} else {
-				xx = prevX;
-				yy = prevY;
-			}
+    [...elts].forEach(elt => {
+      if (typeof prevX === "undefined") {
+        xx = XX;
+        yy = YY;
+      } else {
+        xx = prevX;
+        yy = prevY;
+      }
 
-			curr = elts[ i ];
+      elt.x = (elt.x * speed + xx) / (1 + speed);
+      elt.y = (elt.y * speed + yy) / (1 + speed);
 
-			curr.x = (curr.x*speed + xx)/(1+speed);
-			curr.y = (curr.y*speed + yy)/(1+speed);
+      moveElt(elt.elt, elt.x, elt.y);
 
-			moveElt( curr.elt, curr.x, curr.y );
+      prevX = elt.x;
+      prevY = elt.y;
+    });
 
-			prevX = curr.x;
-			prevY = curr.y;
-		}
-	}
+    requestAnimationFrame(followMouse);
+  }
 
-	function createMoveEltFunc () {
-		if ( transform2D ) {
-			return function ( elt, x, y ) {
-				elt.style[ transform2D ] = 'translate(' + x + 'px,' + y +  'px)';
-			}
-		} else {
-			return function ( elt, x, y ) {
-				elt.style.left = x + 'px';
-				elt.style.top  = y + 'px';
-			}
-		}
-		
-	}
+  function createMoveEltFunc() {
+    if (transform2D) {
+      return ({ style }, x, y) => {
+        style[transform2D] = `translate(${x}px,${y}px)`;
+      };
+    } else {
+      return ({ style }, x, y) => {
+        style.left = `${x}px`;
+        style.top = `${y}px`;
+      };
+    }
+  }
 
+  function setMouse({ pageX, pageY }) {
+    XX = pageX - width / 2;
+    YY = pageY - height / 2;
+  }
 
-	function setMouse( e ) {
-		XX = e.pageX - width/ 2;
-		YY = e.pageY - height/2;
-		
-	}
+  function allowDrag() {
+    window.removeEventListener("mousedown", allowDrag, false);
+    window.addEventListener("mouseup", stopDrag, false);
+    window.addEventListener("mouseleave", stopDrag, false);
 
-	function allowDrag ( func ) {
-		window.removeEventListener( 'mousedown', allowDrag, false );
-		window.addEventListener( 'mouseup', stopDrag, false );
-		window.addEventListener( 'mouseleave', stopDrag, false );
-		
-		window.addEventListener( 'mousemove', setMouse, false );
-	}
+    window.addEventListener("mousemove", setMouse, false);
+  }
 
-	function stopDrag ( func ) {
-		window.removeEventListener( 'mouseup', stopDrag, false );
-		window.removeEventListener( 'mouseleave', stopDrag, false );
-		window.removeEventListener( 'mousemove', setMouse, false );
+  function stopDrag() {
+    window.removeEventListener("mouseup", stopDrag, false);
+    window.removeEventListener("mouseleave", stopDrag, false);
+    window.removeEventListener("mousemove", setMouse, false);
 
-		window.addEventListener( 'mousedown', allowDrag, false );
-	}
+    window.addEventListener("mousedown", allowDrag, false);
+  }
 
-	function switchPosition () {
-		if ( position === 1 ) {
-			rebuildFeetup();
-		} else {
-			rebuildHeadup();
-		}
-	}
+  function flipDraggy() {
+    if (position === 1) {
+      rebuildFeetup();
+    } else {
+      rebuildHeadup();
+    }
+  }
 
-	function rebuildHeadup () {
-		for (var i=elts.length-1; i>-1; i-=1 ) {
-			switchSoon( i, i );
-		}
-		position = 1;
-	}
+  function rebuildHeadup() {
+    elts.forEach((_elt, i) => {
+      switchSoon(i, i);
+    });
+    position = 1;
+  }
 
-	function rebuildFeetup () {
-		for (var i=0; i<elts.length; i+=1 ) {
-			switchSoon( i, elts.length-i-1 );
-		}
-		position = 0;
-	}
+  function rebuildFeetup() {
+    elts.forEach((_elt, i, elts) => {
+      switchSoon(i, elts.length - i - 1);
+    });
+    position = 0;
+  }
 
-	function switchSoon( i, j ) {
-		setTimeout( function(){
-			document.body.appendChild( elts[i].elt );
-		}, 18*j );
-	}
+  function switchSoon(i, j) {
+    setTimeout(() => {
+      document.body.appendChild(elts[i].elt);
+    }, 18 * j);
+  }
 
-	var o           = options || {},
-	    images      = [],
-		elts        = [],
+  styleElt.innerHTML = `
+    div {
+      width: ${width}px;
+      height: ${height}px;
+    }
+  `;
+  document.body.appendChild(styleElt);
 
-		container   = o.container || document.body,
-		imageDir    = o.images    || 'i',
-		imagePrefix = o.prefix    || 'Head',
-		imageSuffix = o.suffix    || '',
-		imageStart  = o.start     || 1,
-		imageEnd    = o.end       || 297,
-		imagePad    = o.pad       || 3,
+  document.body.appendChild(elts.reduce((spritesFragment, elt) => {
+    spritesFragment.append(elt.elt);
+    return spritesFragment;
+  }, document.createDocumentFragment()));
 
-		speed     = o.speed     || 0.02,
+  window.addEventListener("mousedown", allowDrag, false);
+  window.addEventListener("mousedown", setMouse, false);
+  window.addEventListener("dblclick", flipDraggy, false);
 
-		width     = o.width     || 100,
-		height    = o.height    || 100,
-
-		XX        = 0,
-		YY        = 0,
-
-		position  = 1,
-		moveElt   = createMoveEltFunc();
-
-	for ( var i=imageStart; i<imageEnd+1; i+=1 ) {
-		images.push( imagePrefix + pad( i, imagePad, '0' ) + imageSuffix + '.png' );
-
-	}
-
-	for ( i=images.length-1; i>-1; i-=1 ) {
-		var elt = document.createElement( 'div' );
-		elt.style.width           = width + 'px';
-		elt.style.height          = height + 'px';
-		moveElt( elt, 0, 0 )
-		elt.style.backgroundImage = 'url(' + imageDir + '/' + images[ i ] + ')';
-
-		document.body.appendChild( elt );
-		elts.push( {
-			elt:  elt,
-			x:    0,
-			y:    0
-		});
-
-	}
-
-	window.addEventListener( 'mousedown', allowDrag, false );
-	window.addEventListener( 'mousedown', setMouse, false );
-	window.addEventListener( 'dblclick', switchPosition, false );
-
-	requestAnimationFrame( followMouse );
-
+  requestAnimationFrame(followMouse);
 }
