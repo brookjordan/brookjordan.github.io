@@ -7,6 +7,13 @@
   <title>Document</title>
 
   <style>
+    *,
+    ::before,
+    ::after {
+      font-family: "Raleway", "Open Sans", sans-serif;
+      box-sizing: border-box;
+    }
+
     body {
       padding-top: 70px;
       margin: 0;
@@ -58,6 +65,29 @@
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     }
   </style>
+
+  <script>
+    if (!'customElements' in window) {
+      document.write(`
+        <p
+          style="
+            font-size: 100px;
+            position: fixed;
+            z-index: 100;
+            background: white;
+            padding: 5%;
+            top: 0;
+            left: 0;
+            margin: 0;
+            height: 100%;
+            width: 100%;
+          "
+        >
+          Your web browser doesn’t support custom elements.
+        </p>
+      `);
+    }
+  </script>
 
   <script>
     class HSV {
