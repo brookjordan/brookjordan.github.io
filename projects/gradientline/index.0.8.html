@@ -222,11 +222,10 @@
       document.body.style.backgroundColor = backgroundcolorelt.value;
     }
 
-    function startDraw(event) {
-      event.preventDefault();
-      let pointerEvent = event.touches ? event.touches[0] : event;
+    function startDraw(e) {
+      e.preventDefault();
 
-      coords = [[pointerEvent.pageX, pointerEvent.pageY]];
+      coords = [[e.pageX, e.pageY]];
       newlineelt.addEventListener('mousemove', addToDraw);
       newlineelt.addEventListener('touchmove', addToDraw);
 
@@ -239,10 +238,9 @@
       }
     }
 
-    function addToDraw(event) {
-      event.preventDefault();
-      let pointerEvent = event.touches ? event.touches[0] : event;
-      coords.push([pointerEvent.pageX, pointerEvent.pageY]);
+    function addToDraw(e) {
+      e.preventDefault();
+      coords.push([e.pageX, e.pageY]);
       render(
         coords.length < highFidelityLimit
           ? polishCoords(coords)
