@@ -1,5 +1,5 @@
 html {
-	background-color: #d7dadb;
+	background-color: #a1acb1;
 	font-size: 100%;
 }
 
@@ -54,7 +54,8 @@ a:hover {
 .font-sectionHead,
 .job-company,
 .job-date,
-.job-title {
+.job-title,
+h4 {
 	font-family: 'PT Sans Caption', sans-serif;
 }
 
@@ -112,15 +113,18 @@ a:hover {
 }
 h4 {
 	font-weight: 600;
-	text-transform: uppercase;
-	margin-top: 1rem;
+	margin-top: 0.7rem;
+	font-size: 0.8rem;
+	margin-bottom: 0.2rem;
+	letter-spacing: 0.05em;
+	border-bottom: 1px solid #d7dadb;
 }
 h4 + .font-body {
 	margin-top: 0;
 }
 .font-body:empty::after {
 	content: "—";
-	color: #d7dadb;
+	color: #a1acb1;
 }
 .job-head + .font-body,
 .job-company + .font-body {
@@ -128,7 +132,7 @@ h4 + .font-body {
 }
 
 .font-subtle {
-	color: #d7dadb;
+	color: #a1acb1;
 	font-size: 0.8rem;
 	font-weight: 400;
 }
