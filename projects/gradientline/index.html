@@ -211,9 +211,9 @@
     });
 
     window.addEventListener('load', e => {
-      if (BROWSER_HAS_COLOR_INPUT) {
+      if (!BROWSER_HAS_COLOR_INPUT) {
         const jscolorScript = document.createElement('script');
-        jscolorScript.src = './jscolor.min.js';
+        jscolorScript.src = './ink/jscolor.min.js';
         document.head.appendChild(jscolorScript);
       }
     });
@@ -475,6 +475,6 @@
     }
   </script>
 
-  <script src="jscolor.min.js"></script>
+  <script src="./ink/jscolor.min.js"></script>
 </body>
 </html>
