@@ -68,25 +68,37 @@ function buildDraggy({
     }
   }
 
-  function setMouse({ pageX, pageY }) {
+  function setMouse(pointerEvent) {
+    if (event.touches) {
+      pointerEvent = event.touches[event.touches.length - 1];
+    }
+    let { pageX, pageY } = pointerEvent;
     XX = pageX - width / 2;
     YY = pageY - height / 2;
   }
 
   function allowDrag() {
-    window.removeEventListener("mousedown", allowDrag, false);
-    window.addEventListener("mouseup", stopDrag, false);
     window.addEventListener("mouseleave", stopDrag, false);
+    window.addEventListener("mouseup", stopDrag, false);
+    window.addEventListener("touchend", stopDrag, false);
+
+    window.removeEventListener("mousedown", allowDrag, false);
+    window.removeEventListener("touchstart", allowDrag, false);
 
     window.addEventListener("mousemove", setMouse, false);
+    window.addEventListener("touchmove", setMouse, false);
   }
 
   function stopDrag() {
-    window.removeEventListener("mouseup", stopDrag, false);
     window.removeEventListener("mouseleave", stopDrag, false);
+    window.removeEventListener("mouseup", stopDrag, false);
+    window.removeEventListener("touchend", stopDrag, false);
+
     window.removeEventListener("mousemove", setMouse, false);
+    window.removeEventListener("touchmove", setMouse, false);
 
     window.addEventListener("mousedown", allowDrag, false);
+    window.addEventListener("touchstart", allowDrag, false);
   }
 
   function flipDraggy() {
@@ -132,6 +144,8 @@ function buildDraggy({
 
   window.addEventListener("mousedown", allowDrag, false);
   window.addEventListener("mousedown", setMouse, false);
+  window.addEventListener("touchstart", allowDrag, false);
+  window.addEventListener("touchstart", setMouse, false);
   window.addEventListener("dblclick", flipDraggy, false);
 
   requestAnimationFrame(followMouse);
