@@ -43,13 +43,13 @@
 <body
   onload="
     window.code = document.querySelector('code');
-    window.code.innerText = localStorage.getItem('my-offline-notes')
+    window.code.textContent = localStorage.getItem('my-offline-notes')
   "
 >
   <code
     contentEditable
     oninput="
-      localStorage.setItem('my-offline-notes', window.code.innerText)
+      localStorage.setItem('my-offline-notes', window.code.textContent)
     "
   ></code>
 </body>
