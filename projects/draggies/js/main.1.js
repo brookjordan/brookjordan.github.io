@@ -129,6 +129,22 @@ function buildDraggy({
     }, 18 * j);
   }
 
+  const doubleTap = function buildDoubleTap() {
+    let tappedOnce = false;
+
+    return function(event) {
+      if (tappedOnce) {
+        tappedOnce = false;
+        flipDraggy();
+      } else {
+        tappedOnce = true;
+        setTimeout(() => {
+          tappedOnce = false;
+        }, 200);
+      }
+    };
+  }();
+
   styleElt.innerHTML = `
     div {
       width: ${width}px;
@@ -146,6 +162,7 @@ function buildDraggy({
   window.addEventListener("mousedown", setMouse, false);
   window.addEventListener("touchstart", allowDrag, false);
   window.addEventListener("touchstart", setMouse, false);
+  window.addEventListener("touchstart", doubleTap, false);
   window.addEventListener("dblclick", flipDraggy, false);
 
   requestAnimationFrame(followMouse);
