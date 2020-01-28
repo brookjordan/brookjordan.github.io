@@ -17,7 +17,6 @@ input, button {
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
-  border-radius: 0;
   outline: 0;
   margin: 0;
 }
@@ -31,12 +30,16 @@ canvas {
 }
 
 .app {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-areas:
+    "brush"
+    "canvas"
+    "background"
+    "tools";
+  grid-template-rows: auto 1fr auto auto;
 }
 
 .color-menu {
-  order: 1;
   display: flex;
   justify-content: space-between;
   background: #eef;
@@ -50,7 +53,6 @@ canvas {
   height: 32px;
   line-height: 32px;
   padding: 0;
-  border: 0;
   margin: 0;
   background: #eef;
   outline: 0;
@@ -70,7 +72,6 @@ canvas {
   height: 32px;
   line-height: 32px;
   padding: 0;
-  border: 0;
   background: #eef;
 }
 
@@ -80,30 +81,34 @@ canvas {
 
 .canvas {
   position: relative;
-  order: 2;
   flex-grow: 1;
   flex-basis: 0;
 }
 
 .background {
   display: flex;
-  order: 3;
 }
 
-.background input {
+.background .input {
+  position: relative;
   flex-grow: 1;
   width: 0;
   flex-basis: 0;
   height: 32px;
   line-height: 32px;
   padding: 0;
-  border: 0;
+}
+.background .input input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background: #eef;
 }
 
 .buttons {
   display: flex;
-  order: 4;
 }
 
 .buttons input {
@@ -111,7 +116,6 @@ canvas {
   height: 32px;
   line-height: 32px;
   padding: 0;
-  border: 0;
   margin: 0;
   background: #eef;
   outline: 0;
