@@ -16,7 +16,6 @@ body {
 	line-height: 18pt !important;
 }
 
-.section-about,
 .section-employment {
 	column-count: 2;
 	column-gap: 0.8cm;
@@ -39,12 +38,15 @@ a {
 
 .font-sectionHead {
 	font-size: 15pt !important;
-	margin-top: 15pt !important;
+	margin-top: 10pt !important;
+}
+.myName br {
+	display: none;
 }
 
 .job-head,
 .job-company {
-	margin-top: 7pt !important;
+	margin-top: 5pt !important;
 }
 
 .job:first-child .job-head,
@@ -59,6 +61,16 @@ a {
 
 .font-body {
 	margin-top: 6pt !important;
+}
+.font-body.contact {
+	display: flex;
+}
+.font-body.contact a + a::before {
+	content: '|';
+	margin: 0 1em;
+}
+h4 + .font-body {
+	margin-top: 0 !important;
 }
 .section-hobbies .font-body {
 	display: none;

@@ -110,7 +110,12 @@ a:hover {
 .font-body {
 	margin-top: 1rem;
 }
-.bullet:first-child .font-body {
+h4 {
+	font-weight: 600;
+	text-transform: uppercase;
+	margin-top: 1rem;
+}
+h4 + .font-body {
 	margin-top: 0;
 }
 .font-body:empty::after {
