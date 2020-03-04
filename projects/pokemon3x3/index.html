@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pokemon 3x3</title>
+
+  <style>
+    body,
+    html {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+    }
+
+    img,
+    canvas {
+      display: block;
+      image-rendering: crisp-edges;
+      image-rendering: pixelated;
+      width: 100%;
+      height: auto;
+    }
+
+    canvas {
+      object-fit: contain;
+    }
+
+    .pokemon-images {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(44px, 1fr));
+      grid-gap: 10px;
+      align-items: stretch;
+      justify-content: stretch;
+      padding: 5vw;
+    }
+  </style>
+</head>
+<body>
+  <div class="pokemon-images"></div>
+
+  <script src="./main.js" type="module"></script>
+</body>
+</html>
