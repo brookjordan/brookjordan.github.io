@@ -26,6 +26,7 @@
       image-rendering: pixelated;
       width: 100%;
       height: auto;
+      transition: opacity 0.15s;
     }
 
     h3 {
@@ -73,6 +74,22 @@
     }
     .pokemon-images > div:hover > div h3 {
       opacity: 1;
+    }
+
+    .realistic-image {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      width: calc(100% - 5px);
+      height: calc(100% - 5px);
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+    .pokemon-images > div:hover .realistic-image {
+      opacity: 1;
+    }
+    .pokemon-images > div:hover .realistic-image + img {
+      opacity: 0;
     }
   </style>
 </head>

@@ -18,6 +18,15 @@ async function printPokemon() {
     singlePokemonImageWrapper.append(singlePokemonLabel);
     singlePokemonImageContainer.append(singlePokemonImageWrapper);
     pokemonImagesContainer.append(singlePokemonImageContainer);
+
+    singlePokemonImageContainer.addEventListener("mouseenter", e => {
+      let realisticPokemonImage = new Image;
+      realisticPokemonImage.src = `./i/${name}.png`;
+      realisticPokemonImage.classList.add("realistic-image");
+      realisticPokemonImage.onload = e => {
+        singlePokemonImageWrapper.prepend(realisticPokemonImage);
+      };
+    }, { once: true });
   });
 }
 
