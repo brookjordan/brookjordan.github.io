@@ -18,8 +18,6 @@ async function getImages() {
   singlePokemonCanvas.height = 3;
   let singlePokemonContext = singlePokemonCanvas.getContext("2d");
 
-  console.log(pokemonCountX * pokemonCountY);
-
   return Array.from({ length: pokemonCountY }, (_, i) => i).flatMap(y => (
     Array.from({ length: pokemonCountX }, (_, i) => i).map(x => {
       singlePokemonContext.clearRect(0, 0, 3, 3);
