@@ -575,7 +575,7 @@ let POKEMON_NAMES = [
   "Gothita",
   "Gothorita",
   "Gothitelle",
-  "Solosis ",
+  "Solosis",
   "Duosion",
   "Reuniclus",
   "Ducklett",
