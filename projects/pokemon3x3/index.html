@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pokemon 3x3</title>
+  <link href="https://fonts.googleapis.com/css?family=VT323&display=swap" rel="stylesheet">
+
 
   <style>
     body,
@@ -27,13 +29,31 @@
       object-fit: contain;
     }
 
+    h3 {
+      margin: 0;
+      margin-top: 3px;
+      color: white;
+      word-break: break-word;
+      hyphens: auto;
+
+      font-size: 14px;
+      line-height: 1;
+      font-family: 'VT323', monospace;
+      font-weight: 100;
+      text-align: center;
+    }
+
     .pokemon-images {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(44px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
       grid-gap: 10px;
       align-items: stretch;
       justify-content: stretch;
       padding: 5vw;
+    }
+
+    .pokemon-images > div {
+      overflow: hidden;
     }
   </style>
 </head>

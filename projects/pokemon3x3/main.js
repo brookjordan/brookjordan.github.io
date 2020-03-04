@@ -1,4 +1,5 @@
 import getLoadedImage from "./get-loaded-image.js";
+import POKEMON_NAMES from "./pokemon-names.js";
 
 const IMAGE_SRC = "./pokemon-3x3-27w.png";
 
@@ -36,13 +37,17 @@ async function getImages() {
 async function printPokemon() {
   let pokemonImagesContainer = document.querySelector(".pokemon-images");
   let pokemonImages = await getImages();
-  pokemonImages.forEach(src => {
+  pokemonImages.forEach((src, i) => {
     let singlePokemonImageContainer = document.createElement("div");
+    let singlePokemonLabel = document.createElement("h3");
     let singlePokemonImg = new Image;
     singlePokemonImg.width = 3;
     singlePokemonImg.height = 3;
     singlePokemonImg.src = src;
+    singlePokemonLabel.textContent = POKEMON_NAMES[i];
+
     singlePokemonImageContainer.append(singlePokemonImg);
+    singlePokemonImageContainer.append(singlePokemonLabel);
     pokemonImagesContainer.append(singlePokemonImageContainer);
   });
 }
