@@ -1,0 +1,248 @@
+:root {
+  --fps: 16;
+  --spf: calc(1 / var(--fps));
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  background: #999;
+  font-family: sans-serif;
+}
+
+[type="radio"] {
+  display: none;
+}
+
+label {
+  display: none;
+  position: absolute;
+  top: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  padding: 5px 10px;
+  border-radius: 3px;
+  background: white;
+}
+
+#look-left-to-look-center:checked ~ [for="look-center-to-look-left"],
+#look-right-to-look-center:checked ~ [for="look-center-to-look-left"],
+#look-left-to-look-center:checked ~ [for="look-center-to-look-right"],
+#look-right-to-look-center:checked ~ [for="look-center-to-look-right"],
+#look-center-to-look-left:checked ~ [for="look-left-to-look-center"],
+#walk-left-to-look-left:checked ~ [for="look-left-to-look-center"],
+#look-center-to-look-left:checked ~ [for="look-left-to-walk-left"],
+#walk-left-to-look-left:checked ~ [for="look-left-to-walk-left"],
+#look-center-to-look-right:checked ~ [for="look-right-to-look-center"],
+#look-left-to-walk-left:checked ~ [for="walk-left-to-look-left"] {
+  display: block;
+}
+
+[for="look-center-to-look-left"],
+[for="look-left-to-walk-left"],
+[for="look-right-to-look-center"] {
+  right: calc(50% - 110px);
+}
+
+[for="look-center-to-look-right"],
+[for="look-left-to-look-center"],
+[for="walk-left-to-look-left"] {
+  left: calc(50% - 110px);
+}
+
+.squire-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.squire {
+  width: calc(200px + 50vmin);
+  height: calc(200px + 50vmin);
+  overflow: hidden;
+}
+
+.squire::after {
+  content: "";
+  display: block;
+  height: 100%;
+  width: 100%;
+
+  background-size: cover;
+  will-change:
+    transform,
+    width,
+    background-image,
+    animation-name,
+    animation-timing-function,
+    animation-duration;
+}
+
+@keyframes look-center-to-look-left {
+  0% {
+    background-image: url("./i/look-center-to-look-left.png");
+    transform: translateX(0);
+    width: calc(var(--frame-count) * 100%);
+  }
+
+  100% {
+    background-image: url("./i/look-center-to-look-left.png");
+    transform: translateX(-100%);
+    width: calc(var(--frame-count) * 100%);
+  }
+}
+#look-center-to-look-left:checked ~ .squire-container .squire::after {
+  --frame-count: 5;
+
+  background-image: url("./i/look-left.png");
+  animation-name: look-center-to-look-left;
+  animation-duration: calc(var(--spf) * var(--frame-count) * 1s);
+  animation-timing-function: steps(var(--frame-count), end);
+}
+
+@keyframes look-left-to-look-center {
+  0% {
+    background-image: url("./i/look-left-to-look-center.png");
+    transform: translateX(0);
+    width: calc(var(--frame-count) * 100%);
+  }
+
+  100% {
+    background-image: url("./i/look-left-to-look-center.png");
+    transform: translateX(-100%);
+    width: calc(var(--frame-count) * 100%);
+  }
+}
+#look-left-to-look-center:checked ~ .squire-container .squire::after {
+  --frame-count: 5;
+
+  background-image: url("./i/look-center.png");
+  animation-name: look-left-to-look-center;
+  animation-duration: calc(var(--spf) * var(--frame-count) * 1s);
+  animation-timing-function: steps(var(--frame-count), end);
+}
+
+@keyframes look-center-to-look-right {
+  0% {
+    background-image: url("./i/look-center-to-look-right.png");
+    transform: translateX(0);
+    width: calc(var(--frame-count) * 100%);
+  }
+
+  100% {
+    background-image: url("./i/look-center-to-look-right.png");
+    transform: translateX(-100%);
+    width: calc(var(--frame-count) * 100%);
+  }
+}
+#look-center-to-look-right:checked ~ .squire-container .squire::after {
+  --frame-count: 5;
+
+  background-image: url("./i/look-right.png");
+  animation-name: look-center-to-look-right;
+  animation-duration: calc(var(--spf) * var(--frame-count) * 1s);
+  animation-timing-function: steps(var(--frame-count), end);
+}
+
+@keyframes look-right-to-look-center {
+  0% {
+    background-image: url("./i/look-right-to-look-center.png");
+    transform: translateX(0);
+    width: calc(var(--frame-count) * 100%);
+  }
+
+  100% {
+    background-image: url("./i/look-right-to-look-center.png");
+    transform: translateX(-100%);
+    width: calc(var(--frame-count) * 100%);
+  }
+}
+#look-right-to-look-center:checked ~ .squire-container .squire::after {
+  --frame-count: 5;
+
+  background-image: url("./i/look-center.png");
+  animation-name: look-right-to-look-center;
+  animation-duration: calc(var(--spf) * var(--frame-count) * 1s);
+  animation-timing-function: steps(var(--frame-count), end);
+}
+
+@keyframes look-left-to-walk-left {
+  0% {
+    background-image: url("./i/look-left-to-walk-left.png");
+    transform: translateX(0);
+    width: calc(var(--frame-count-1) * 100%);
+  }
+
+  100% {
+    background-image: url("./i/look-left-to-walk-left.png");
+    transform: translateX(-100%);
+    width: calc(var(--frame-count-1) * 100%);
+  }
+}
+@keyframes walk-left-loop {
+  0% {
+    background-image: url("./i/walk-left-loop.png");
+    transform: translateX(0);
+    width: calc(var(--frame-count-2) * 100%);
+  }
+
+  100% {
+    background-image: url("./i/walk-left-loop.png");
+    transform: translateX(-100%);
+    width: calc(var(--frame-count-2) * 100%);
+  }
+}
+#look-left-to-walk-left:checked ~ .squire-container .squire::after {
+  --frame-count-1: 5;
+  --frame-count-2: 16;
+
+  background-image: url("./i/look-center.png");
+  animation-name:
+    look-left-to-walk-left,
+    walk-left-loop;
+  animation-delay:
+    0s,
+    calc(var(--spf) * var(--frame-count-1) * 1s);
+  animation-duration:
+    calc(var(--spf) * var(--frame-count-1) * 1s),
+    calc(var(--spf) * var(--frame-count-2) * 1s);
+  animation-timing-function:
+    steps(var(--frame-count-1), end),
+    steps(var(--frame-count-2), end);
+  animation-iteration-count: infinite;
+}
+
+@keyframes walk-left-to-look-left {
+  0% {
+    background-image: url("./i/walk-left-to-look-left.png");
+    transform: translateX(0);
+    width: calc(var(--frame-count) * 100%);
+  }
+
+  100% {
+    background-image: url("./i/walk-left-to-look-left.png");
+    transform: translateX(-100%);
+    width: calc(var(--frame-count) * 100%);
+  }
+}
+#walk-left-to-look-left:checked ~ .squire-container .squire::after {
+  --frame-count: 12;
+
+  background-image: url("./i/look-left.png");
+  animation-name: walk-left-to-look-left;
+  animation-duration: calc(var(--spf) * var(--frame-count) * 1s);
+  animation-timing-function: steps(var(--frame-count), end);
+}
