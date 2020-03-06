@@ -182,7 +182,7 @@ var defaultPlaces = [
   "in a volcanic crater",
   "in $person’s tomb",
   "through the haunted graveyard",
-  "on $person’s grave",
+  "all over $person’s grave",
   ", running from $anObject",
   "between $person’s legs",
   "in $their pants",
