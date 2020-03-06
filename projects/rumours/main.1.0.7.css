@@ -165,6 +165,8 @@ body.only .post-it {
   top: calc(100% + 10px);
   bottom: auto;
   right: 0;
+  opacity: 1;
+  transform: translateY(0);
 }
 
 @supports (background-image: paint(post-it)) {

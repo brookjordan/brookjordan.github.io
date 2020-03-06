@@ -1,8 +1,8 @@
-self.importScripts('./pwa--cache-details.js');
+self.importScripts("./pwa--cache-details.js");
 
-self.addEventListener('install', event => {
+self.addEventListener("install", event => {
   let preCache = async () => {
-    const cache = await caches.open(cacheName); 
+    const cache = await caches.open(cacheName);
     await cache.addAll(staticAssets);
   };
   event.waitUntil(preCache());
@@ -15,7 +15,7 @@ let cacheFetchRequest = async (request, cache) => {
     response = await fetch(request);
     cache.put(request, response.clone());
   } catch (error) {
-    throw 'fetch failed';
+    throw "fetch failed";
   }
   return response;
 }
@@ -25,8 +25,8 @@ let cacheFirst = async request => {
   let fetchResponse = cacheFetchRequest(request, cache);
   let response;
   try {
-    response = await cache.match(request); 
-    if (!response) { throw 'No cache'; }
+    response = await cache.match(request);
+    if (!response) { throw "No cache"; }
   } catch (error) {
     response = await fetchResponse;
   }
@@ -36,17 +36,17 @@ let cacheFirst = async request => {
 let networkFirst = async request => {
   let cache = await caches.open(cacheName);
   let response;
-  try { 
+  try {
     response = await cacheFetchRequest(request, cache);
-  } catch (e) { 
+  } catch (e) {
     response = await cache.match(request);
   }
   return response;
 }
 
-self.addEventListener('fetch', async event => {
-  if(!event.request.url.startsWith('http')) { return };
-  
+self.addEventListener("fetch", async event => {
+  if(!event.request.url.startsWith("http")) { return };
+
   if (/\.json(\?|$)/.test(event.request.url)) {
     event.respondWith(networkFirst(event.request));
   } else {

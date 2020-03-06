@@ -6,7 +6,7 @@ let getString;
 let globalGirls;
 let globalBoys;
 
-let main = document.querySelector('main');
+let main = document.querySelector("main");
 
 class RandomString {
   constructor(words) {
@@ -20,7 +20,7 @@ class RandomString {
         } else if (gender === "female") {
           phrase += fillPlaceholders(randomGirl());
         } else {
-          throw new Error("Gender isn't set");
+          throw new Error("Gender isn’t set");
         }
 
         if ([...boys, ...girls].length >= 2 && Math.random() > 0.92) {
@@ -190,13 +190,13 @@ class RandomString {
 
       const randomGirl = () => {
         let girl = genderise(itemFrom(girls, false));
-        //if (Math.random() > (isPlural ? 0.8 : 0.5)) { gender = 'female'; }
+        //if (Math.random() > (isPlural ? 0.8 : 0.5)) { gender = "female"; }
         return fillPlaceholders(girl);
       };
 
       const randomBoy = () => {
         let boy = genderise(itemFrom(boys, false));
-        //if (Math.random() > (isPlural ? 0.8 : 0.5)) { gender = 'male'; }
+        //if (Math.random() > (isPlural ? 0.8 : 0.5)) { gender = "male"; }
         return fillPlaceholders(boy);
       };
 
@@ -292,7 +292,7 @@ class RandomString {
       };
 
       const cleanPhrase = phrase =>
-        phrase.replace(/,{2}/, ",").replace(/s's/g, "s'");
+        phrase.replace(/,{2}/, ",").replace(/s’s/g, "s’");
 
       const randomArray = (...arrs) => {
         let length = [].concat(...arrs).length;
@@ -444,16 +444,16 @@ const buildWord = (str, active) => {
       ? navigator.canShare()
       : "share" in window.navigator
   ) {
-    let shareButton = document.createElement('button');
+    let shareButton = document.createElement("button");
     shareButton.classList.add("share-button");
     shareButton.innerText = "Share";
     div.appendChild(shareButton);
-    shareButton.addEventListener('click', event => {
+    shareButton.addEventListener("click", event => {
       event.preventDefault();
         window.navigator.share({
           url: location.href,
           text: str,
-          title: "You won't believe this…",
+          title: "You won’t believe this…",
         })
         .then(data => {
           console.log(data);
@@ -493,7 +493,7 @@ function fixBase64(e){function h(b){let a=b.charCodeAt(0);if(55296<=a&&56319>=a)
 //https://github.com/didanurwanda/inflector-js
 // prettier-ignore
 function globalisePluralise(d){
-  let unPluralisableWords = 'equipment information rice money species series fish sheep moose deer news fat oxygen poop water soap';
+  let unPluralisableWords = "equipment information rice money species series fish sheep moose deer news fat oxygen poop water soap";
   let f=unPluralisableWords.split(" "),c=[[RegExp("(m)an$","gi"),"$1en"],[RegExp("(pe)rson$","gi"),"$1ople"],[RegExp("(child)$","gi"),"$1ren"],[RegExp("^(ox)$","gi"),"$1en"],[RegExp("(ax|test)is$","gi"),"$1es"],[RegExp("(octop|vir)us$","gi"),"$1i"],[RegExp("(alias|status)$","gi"),"$1es"],[RegExp("(bu)s$","gi"),"$1ses"],[RegExp("(buffal|tomat|potat)o$","gi"),"$1oes"],[RegExp("([ti])um$","gi"),"$1a"],[RegExp("sis$","gi"),"ses"],[RegExp("(?:([^f])fe|([lr])f)$",
   "gi"),"$1$2ves"],[RegExp("(hive)$","gi"),"$1s"],[RegExp("([^aeiouy]|qu)y$","gi"),"$1ies"],[RegExp("(x|ch|ss|sh)$","gi"),"$1es"],[RegExp("(matr|vert|ind)ix|ex$","gi"),"$1ices"],[RegExp("([m|l])ouse$","gi"),"$1ice"],[RegExp("(quiz)$","gi"),"$1zes"],[RegExp("s$","gi"),"s"],[RegExp("$","gi"),"s"]];d.pluralise=function(d,e){let a=d;if(e)a=e;else if(!(-1<f.indexOf(a.toLowerCase())))for(let b=0;b<c.length;b++)if(a.match(c[b][0])){a=a.replace(c[b][0],c[b][1]);break}return a}}
 
@@ -508,7 +508,7 @@ if (searchParams["_"]) {
 }
 
 const setDefaultGlobalNames = () => {
-  if (typeof globalGirls === 'undefined' && searchParams.girls && (!localStorage.getItem("girls") || confirm(`Replace saved girls with ${searchParams.girls}?`))) {
+  if (typeof globalGirls === "undefined" && searchParams.girls && (!localStorage.getItem("girls") || confirm(`Replace saved girls with ${searchParams.girls}?`))) {
     globalGirls = searchParams.girls.split(",");
   }  else if (!globalGirls && localStorage.getItem("girls")) {
     globalGirls = localStorage.getItem("girls").split(",");
@@ -519,7 +519,7 @@ const setDefaultGlobalNames = () => {
   }
   localStorage.setItem("girls", globalGirls);
 
-  if (typeof globalBoys === 'undefined' && searchParams.boys && (!localStorage.getItem("boys") || confirm(`Replace saved boys with ${searchParams.boys}?`))) {
+  if (typeof globalBoys === "undefined" && searchParams.boys && (!localStorage.getItem("boys") || confirm(`Replace saved boys with ${searchParams.boys}?`))) {
     globalBoys = searchParams.boys.split(",");
   }  else if (!globalBoys && localStorage.getItem("boys")) {
     globalBoys = localStorage.getItem("boys").split(",");
@@ -531,7 +531,7 @@ const setDefaultGlobalNames = () => {
   localStorage.setItem("boys", globalBoys);
 };
 setDefaultGlobalNames();
-history.replaceState({}, '', `${location.pathname}${searchParams["_"] ? `?_=${searchParams["_"]}` : ''}`);
+history.replaceState({}, "", `${location.pathname}${searchParams["_"] ? `?_=${searchParams["_"]}` : ""}`);
 
 begin({
   extraGirls: defaultExtraGirls,

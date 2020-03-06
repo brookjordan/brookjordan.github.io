@@ -24,7 +24,7 @@ function rnd(n1, n2) {
 }
 
 class PostItPainter {
-  static get inputProperties() { return ['--only']; }
+  static get inputProperties() { return ["--only"]; }
 
   paint(ctx, geometry, properties) {
     const PD = { // postItDefinition
@@ -78,7 +78,7 @@ class PostItPainter {
         -PD.acc
       )
     );
-    let isOnly = properties.get('--only').toString().trim() === 'true';
+    let isOnly = properties.get("--only").toString().trim() === "true";
     if (isOnly) {
       ctx.closePath();
     }
@@ -88,7 +88,7 @@ class PostItPainter {
     ctx.fill();
 
     if (!isOnly) {
-      ctx.globalCompositeOperation = 'destination-out';
+      ctx.globalCompositeOperation = "destination-out";
       let tH = 75; // transparencyHeight
       let grd = ctx.createLinearGradient(0, PD.h - tH, 0, PD.h);
       grd.addColorStop(0, "transparent");
@@ -96,7 +96,7 @@ class PostItPainter {
       ctx.fillStyle = grd;
       ctx.fillRect(0, PD.h - tH, PD.w, tH);
 
-      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalCompositeOperation = "source-over";
     }
 
     ctx.lineWidth = PD.strokeWidth;
@@ -105,4 +105,4 @@ class PostItPainter {
   }
 }
 
-registerPaint('post-it', PostItPainter);
+registerPaint("post-it", PostItPainter);

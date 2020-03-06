@@ -16,26 +16,26 @@
     <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
     <link rel="manifest" href="./manifest.webmanifest">
 
-    <link rel="stylesheet" href="./main.1.0.6.css" media="all">
+    <link rel="stylesheet" href="./main.1.0.7.css" media="all">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Coming+Soon&display=swap" media="all">
   </head>
 
   <body>
     <noscript>
-      I'm sorry, but you're not going to see anything without JavaScript.
+      I’m sorry, but you’re not going to see anything without JavaScript.
     </noscript>
     <main></main>
 
     <script src="./query-params--1.0.0.js"></script>
-    <script src="./words--3.2.2.js"></script>
-    <script src="./verbs--2.2.1.js"></script>
-    <script src="./extra-people--1.1.0.js"></script>
+    <script src="./words--3.2.3.js"></script>
+    <script src="./verbs--2.2.2.js"></script>
+    <script src="./extra-people--1.1.1.js"></script>
     <script src="./people--3.0.0.js"></script>
-    <script src="./main.1.0.1.js"></script>
-    <script src="./settings--2.0.0.js"></script>
+    <script src="./main.1.0.2.js"></script>
+    <script src="./settings--2.0.1.js"></script>
 
     <script>
-      CSS && CSS.paintWorklet && CSS.paintWorklet.addModule('./post-it-worklet--1.0.0.js');
+      CSS && CSS.paintWorklet && CSS.paintWorklet.addModule("./post-it-worklet--1.0.1.js");
     </script>
     <script src="./pwa--init.js" defer type="module"></script>
     <script>
@@ -44,7 +44,7 @@
         "./sheateabig.ico",
         "./hethrewher.ico"
       ];
-      document.querySelector('[rel="shortcut icon"]').href =
+      document.querySelector("[rel=\"shortcut icon\"]").href =
         favicons[Math.floor(Math.random() * favicons.length)];
     </script>
   </body>

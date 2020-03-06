@@ -1,5 +1,5 @@
 function addInstallPWAModal(beforeInstallPromptEvent) {
-  let promptModal = document.createElement('div');
+  let promptModal = document.createElement("div");
   promptModal.style.cssText = `
     position: fixed;
     bottom: 20px;
@@ -41,23 +41,23 @@ function addInstallPWAModal(beforeInstallPromptEvent) {
   `;
 
   let killPrompt = () => { document.body.removeChild(promptModal); };
-  promptModal.querySelector('.install-pwa-decline').addEventListener('click', killPrompt);
-  promptModal.querySelector('.install-pwa-accept')
-    .addEventListener('click', () => {
+  promptModal.querySelector(".install-pwa-decline").addEventListener("click", killPrompt);
+  promptModal.querySelector(".install-pwa-accept")
+    .addEventListener("click", () => {
       killPrompt();
       beforeInstallPromptEvent.prompt();
     });
   document.body.appendChild(promptModal);
 }
 
-if ('serviceWorker' in navigator) {
+if ("serviceWorker" in navigator) {
   window.addEventListener("beforeinstallprompt", (beforeInstallPromptEvent) => {
     beforeInstallPromptEvent.preventDefault();
     addInstallPWAModal(beforeInstallPromptEvent);
   });
 
-  navigator.serviceWorker.register('./pwa--service-worker.js')
+  navigator.serviceWorker.register("./pwa--service-worker.js")
     .catch(error => {
-      console.warn(`ServiceWorker registration failed: ${error}`); 
+      console.warn(`ServiceWorker registration failed: ${error}`);
     });
 }
