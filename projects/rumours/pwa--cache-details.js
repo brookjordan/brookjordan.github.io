@@ -1,9 +1,9 @@
-const cacheName = 'placeholder-v1';
+const cacheName = 'placeholder-v2';
 
 const staticAssets = [
   './',
   './index.html',
-  './main.1.0.3.css',
+  './main.1.0.4.css',
   'https://fonts.googleapis.com/css?family=Coming+Soon&display=swap',
 
   './favicon.ico',

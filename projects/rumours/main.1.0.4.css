@@ -51,36 +51,39 @@ body.only main {
 }
 
 .post-it:nth-child(3n) {
-  background: linear-gradient(to top,
+  background-image: linear-gradient(to top,
     hsla(350, 100%, 93%, 0),
     hsla(350, 100%, 93%, 1) 10%
   );
   border-color: hsl(370, 60%, 50%);
 }
 .only .post-it:nth-child(3n) {
-  background: hsl(350, 100%, 93%);
+  background-image: none;
+  background-color: hsl(350, 100%, 93%);
 }
 
 .post-it:nth-child(3n + 1) {
-  background: linear-gradient(to top,
+  background-image: linear-gradient(to top,
     hsla(250, 100%, 93%, 0),
     hsla(250, 100%, 93%, 1) 10%
   );
   border-color: hsl(230, 60%, 50%);
 }
 .only .post-it:nth-child(3n + 1) {
-  background: hsl(250, 100%, 93%);
+  background-image: none;
+  background-color: hsl(250, 100%, 93%);
 }
 
 .post-it:nth-child(3n + 2) {
-  background: linear-gradient(to top,
+  background-image: linear-gradient(to top,
     hsla(50, 100%, 93%, 0),
     hsla(50, 100%, 93%, 1) 10%
   );
   border-color: hsl(40, 60%, 50%);
 }
 .only .post-it:nth-child(3n + 2) {
-  background: hsl(50, 100%, 93%);
+  background-image: none;
+  background-color: hsl(50, 100%, 93%);
 }
 
 .post-it a {
@@ -91,12 +94,23 @@ body.only main {
   letter-spacing: 0.03em;
   font-size: 26px;
 }
+.only .post-it a::after {
+  content: "Give me more rumours…";
+  position: absolute;
+  top: calc(100% + 15px);
+  left: 0;
+  width: calc(100% - 80px);
+  font-size: 0.5em;
+  text-transform: uppercase;
+  color: rgba(0,0,0,0.5);
+  margin: 0;
+}
 
 @supports (background-image: paint(post-it)) {
-  .post-it:nth-child(n) {
+  .post-it.post-it:nth-child(n) {
     border: 0;
-    background: transparent;
     background-image: paint(post-it);
+    background-color: transparent;
   }
 }
 
