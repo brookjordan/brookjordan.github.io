@@ -439,7 +439,11 @@ const buildWord = (str, active) => {
     a.target = "_self";
   }
 
-  if ("share" in window.navigator) {
+  if (
+    navigator.canShare
+      ? navigator.canShare()
+      : "share" in window.navigator
+  ) {
     let shareButton = document.createElement('button');
     shareButton.classList.add("share-button");
     shareButton.innerText = "Share";
