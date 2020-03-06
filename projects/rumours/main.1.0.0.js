@@ -437,28 +437,29 @@ const buildWord = (str, active) => {
   } else {
     a.href = "?";
     a.target = "_self";
-
-    if ("share" in window.navigator) {
-      let shareButton = document.createElement('button');
-      shareButton.classList.add("share-button");
-      shareButton.innerText = "Share";
-      div.appendChild(shareButton);
-      shareButton.addEventListener('click', event => {
-        event.preventDefault();
-          window.navigator.share({
-            url: location.href,
-            text: str,
-            title: "You won't believe this…",
-          })
-          .then(data => {
-            console.log(data);
-          })
-          .catch(error => {
-            console.log(error);
-          });
-      });
-    }
   }
+
+  if ("share" in window.navigator) {
+    let shareButton = document.createElement('button');
+    shareButton.classList.add("share-button");
+    shareButton.innerText = "Share";
+    div.appendChild(shareButton);
+    shareButton.addEventListener('click', event => {
+      event.preventDefault();
+        window.navigator.share({
+          url: location.href,
+          text: str,
+          title: "You won't believe this…",
+        })
+        .then(data => {
+          console.log(data);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    });
+  }
+
   a.innerHTML = str;
   div.className = "post-it closed";
   div.appendChild(a);

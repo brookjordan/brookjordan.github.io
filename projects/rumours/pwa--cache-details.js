@@ -3,7 +3,7 @@ const cacheName = 'placeholder-v2';
 const staticAssets = [
   './',
   './index.html',
-  './main.1.0.5.css',
+  './main.1.0.6.css',
   'https://fonts.googleapis.com/css?family=Coming+Soon&display=swap',
 
   './favicon.ico',
@@ -11,7 +11,7 @@ const staticAssets = [
   './hethrewher.ico',
   './yousleptwith.ico',
 
-  './main.js',
+  './main.1.0.0.js',
   './words--3.2.2.js',
   './verbs--2.2.1.js',
   './people--3.0.0.js',

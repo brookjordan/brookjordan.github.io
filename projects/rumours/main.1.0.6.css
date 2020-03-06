@@ -150,7 +150,20 @@ body.only .post-it {
 
 .share-button {
   position: absolute;
+  bottom: 100%;
+  right: 0;
+  transform: translateY(200%);
+  opacity: 0;
+  transition: opacity 0.1s, transform 0.1s;
+}
+.post-it:hover .share-button {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.only.only.only .share-button {
   top: calc(100% + 10px);
+  bottom: auto;
   right: 0;
 }
 
