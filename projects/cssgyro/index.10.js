@@ -45,8 +45,8 @@ handleOrientationChange();
 handleDeviceOrientation();
 handleDeviceMotion();
 
-window.addEventListener("orientationchange", handleOrientationChange, true);
-window.addEventListener("deviceorientation", handleDeviceOrientation, true);
-window.addEventListener("devicemotion", handleDeviceMotion, true);
+window.addEventListener("orientationchange", handleOrientationChange);
+window.addEventListener("deviceorientation", handleDeviceOrientation);
+window.addEventListener("devicemotion", handleDeviceMotion);
 
 alert("working");
