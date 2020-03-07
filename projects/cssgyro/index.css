@@ -1,3 +1,9 @@
+*,
+::before,
+::after {
+  box-sizing: border-box;
+}
+
 :root {
   --rotation--angle: 0;
 
@@ -25,6 +31,7 @@ html,
 body {
   height: 100%;
   margin: 0;
+  perspective: 80vmin;
 }
 
 .grid {
@@ -115,18 +122,38 @@ body {
 }
 
 .disc {
+  --x-dir: 1;
+  --y-dir: -1;
+  --z-dir: 1;
+
   position: fixed;
   top: 50%;
   left: 50%;
   z-index: 1;
   width: 80vmin;
   height: 80vmin;
-  background: black;
   border-radius: 50%;
+  transition: transform 0.05s;
+  backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15vmin;
+}
+.disc--bottom {
+  background: blue;
   transform:
     translate(-50%, -50%)
-    rotateY(calc(var(--gyro--y, 0) * 1deg))
-    rotateX(calc(var(--gyro--x, 0) * 1deg))
-    rotateZ(calc(var(--gyro--z, 0) * 1deg));
+    rotateY(calc(var(--gyro--y, 0) * var(--y-dir) * 1deg))
+    rotateX(calc(calc(var(--gyro--x, 0) * var(--x-dir) + 180) * 1deg))
+    rotateZ(calc(var(--gyro--z, 0) * var(--z-dir) * -1deg));
+}
+.disc--top {
+  background: yellow;
+  transform:
+    translate(-50%, -50%)
+    rotateY(calc(var(--gyro--y, 0) * var(--y-dir) * 1deg))
+    rotateX(calc(var(--gyro--x, 0) * var(--x-dir) * 1deg))
+    rotateZ(calc(var(--gyro--z, 0) * var(--z-dir) * -1deg));
 }
 
