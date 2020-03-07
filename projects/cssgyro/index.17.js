@@ -27,7 +27,7 @@ function handleDeviceOrientation(event) {
   event || (event = {});
   workingEventTypes.DeviceOrientationEvent = true;
 
-  setGolbalCSSNumber("gyro--absolute", event.absolute);
+  setGolbalCSSNumber("gyro--absolute", event.absolute ? 0 : 180);
   setGolbalCSSNumber("gyro--z", event.alpha);
   setGolbalCSSNumber("gyro--x", event.beta);
   setGolbalCSSNumber("gyro--y", event.gamma);
