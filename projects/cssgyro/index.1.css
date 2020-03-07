@@ -148,6 +148,11 @@ body {
     rotateX(calc(calc(var(--gyro--x, 0) * var(--x-dir) + 180) * 1deg))
     rotateZ(calc(var(--gyro--z, 0) * var(--z-dir) * -1deg));
 }
+.disc--bottom::before {
+  content: "Bottom";
+  text-transform: uppercase;
+}
+
 .disc--top {
   background: yellow;
   transform:
@@ -156,4 +161,9 @@ body {
     rotateX(calc(var(--gyro--x, 0) * var(--x-dir) * 1deg))
     rotateZ(calc(var(--gyro--z, 0) * var(--z-dir) * -1deg));
 }
+.disc--top::before {
+  content: "Top";
+  text-transform: uppercase;
+}
+
 
