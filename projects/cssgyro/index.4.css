@@ -134,6 +134,7 @@ body {
   height: 80vmin;
   border-radius: 50%;
   transition: transform 0.05s;
+  -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   display: flex;
   align-items: center;

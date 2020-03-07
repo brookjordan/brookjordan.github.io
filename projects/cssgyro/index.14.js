@@ -1,3 +1,6 @@
+let orientationEventWorking = false;
+let motionEventWorking = false;
+
 function setGolbalCSSNumber(name, value) {
   document.documentElement.style.setProperty(
     `--${name}`,
@@ -17,6 +20,8 @@ function handleDeviceOrientation(event) {event || (event = {});
 
   setGolbalCSSNumber("compass--heading", event.compassHeading || event.webkitCompassHeading);
   setGolbalCSSNumber("compass--accuracy", event.compassAccuracy || event.webkitCompassAccuracy);
+
+  orientationEventWorking = true;
 }
 
 function handleDeviceMotion(event) {event || (event = {});
@@ -33,11 +38,64 @@ function handleDeviceMotion(event) {event || (event = {});
   setGolbalCSSNumber("motion--rotation-rate-y", (event.rotationRate && event.rotationRate.gamma));
 
   setGolbalCSSNumber("motion--interval", event.interval * 20);
+
+  motionEventWorking = true;
 }
 
-handleOrientationChange();
-handleDeviceOrientation();
-handleDeviceMotion();
+function addOrientationEvent() {
+  if (orientationEventWorking) { return; }
+  window.addEventListener("deviceorientation", handleDeviceOrientation);
+}
+
+function addMotionEvent() {
+  if (motionEventWorking) { return; }
+  window.addEventListener("devicemotion", handleDeviceMotion);
+}
+
+function prepareOrientationAccessRequest() {
+  document.body.addEventListener("touchend", () => {
+    if (orientationEventWorking) { return; }
+
+    DeviceOrientationEvent.requestPermission()
+    .then(permission => {
+      if (permission === "granted") {
+        addOrientationEvent();
+      } else {
+        document.body.innerHTML = "<h1>Sorry, you denied required permissions, this won’t work. ☹️</h1>";
+      }
+    })
+    .catch(error => {
+      prompt("Something went wrong with permissions", error);
+    });
+  }, { once: true });
+}
+
+function prepareMotionAccessRequest() {
+  document.body.addEventListener("touchend", () => {
+    if (motionEventWorking) { return; }
+
+    DeviceMotionEvent.requestPermission()
+    .then(permission => {
+      if (permission === "granted") {
+        addMotionEvent();
+      } else {
+        document.body.innerHTML = "<h1>Sorry, you denied required permissions, this won’t work. ☹️</h1>";
+      }
+    })
+    .catch(error => {
+      prompt("Something went wrong with permissions", error);
+    });
+  }, { once: true });
+}
+
 window.addEventListener("orientationchange", handleOrientationChange);
-window.addEventListener("deviceorientation", handleDeviceOrientation);
-window.addEventListener("devicemotion", handleDeviceMotion);
+
+addOrientationEvent();
+if (window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === "function") {
+  prepareOrientationAccessRequest();
+}
+
+addMotionEvent();
+if (window.DeviceMotionEvent && typeof DeviceMotionEvent.requestPermission === "function") {
+  prepareMotionAccessRequest();
+}
