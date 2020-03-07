@@ -9,7 +9,14 @@ function setGolbalCSSNumber(name, value) {
 }
 
 function handleOrientationChange(event) {event || (event = {});
-  setGolbalCSSNumber("rotation--angle", (screen.orientation && screen.orientation.angle));
+  setGolbalCSSNumber(
+    "rotation--angle",
+    (
+      (screen && screen.orientation)
+        ? screen.orientation.angle
+        : window.orientation
+    )
+  );
 }
 
 function handleDeviceOrientation(event) {event || (event = {});
