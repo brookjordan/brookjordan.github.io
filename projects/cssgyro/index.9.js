@@ -6,12 +6,14 @@ function setGolbalCSSNumber(name, value) {
 }
 
 function handleOrientationChange(event) {event || (event = {});
-  setGolbalCSSNumber("rotation--angle", (screen.orientation && screen.orientation.angle));
-
   alert("handleOrientationChange");
+
+  setGolbalCSSNumber("rotation--angle", (screen.orientation && screen.orientation.angle));
 }
 
 function handleDeviceOrientation(event) {event || (event = {});
+  alert("handleDeviceOrientation");
+
   setGolbalCSSNumber("gyro--absolute", event.absolute);
   setGolbalCSSNumber("gyro--z", event.alpha);
   setGolbalCSSNumber("gyro--x", event.beta);
@@ -19,11 +21,11 @@ function handleDeviceOrientation(event) {event || (event = {});
 
   setGolbalCSSNumber("compass--heading", event.compassHeading || event.webkitCompassHeading);
   setGolbalCSSNumber("compass--accuracy", event.compassAccuracy || event.webkitCompassAccuracy);
-
-  alert("handleDeviceOrientation");
 }
 
 function handleDeviceMotion(event) {event || (event = {});
+  alert("handleDeviceMotion");
+
   setGolbalCSSNumber("motion--acceleration-x", (event.acceleration && event.acceleration.x) * 20);
   setGolbalCSSNumber("motion--acceleration-y", (event.acceleration && event.acceleration.y) * 20);
   setGolbalCSSNumber("motion--acceleration-z", (event.acceleration && event.acceleration.z) * 20);
@@ -37,8 +39,6 @@ function handleDeviceMotion(event) {event || (event = {});
   setGolbalCSSNumber("motion--rotation-rate-y", (event.rotationRate && event.rotationRate.gamma));
 
   setGolbalCSSNumber("motion--interval", event.interval * 20);
-
-  alert("handleDeviceMotion");
 }
 
 handleOrientationChange();
