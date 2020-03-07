@@ -1,0 +1,132 @@
+:root {
+  --rotation--angle: 0;
+
+  --gyro--absolute: 0;
+  --gyro--z: 0;
+  --gyro--x: 0;
+  --gyro--y: 0;
+
+  --compass--heading: 0;
+  --compass--hccuracy: 0;
+
+  --motion--acceleration-x: 0;
+  --motion--acceleration-y: 0;
+  --motion--acceleration-z: 0;
+  --motion--acceleration-including-gravity-x: 0;
+  --motion--acceleration-including-gravity-y: 0;
+  --motion--acceleration-including-gravity-z: 0;
+  --motion--rotation-rate-z: 0;
+  --motion--rotation-rate-x: 0;
+  --motion--rotation-rate-y: 0;
+  --motion--interval: 0;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-gap: 10px;
+  height: 100%;
+}
+
+.box {
+  background-color: hsl(
+    calc(var(--hue, 0) * 1deg),
+    50%,
+    50%
+  );
+  transition: background-color 0.05s;
+}
+.box::after {
+  content: attr(data-type);
+}
+
+.box[data-type="rotation--angle"]{
+  --hue: var(--rotation--angle);
+}
+
+.box[data-type="gyro--absolute"]{
+  --hue: var(--gyro--absolute);
+}
+
+.box[data-type="gyro--z"]{
+  --hue: var(--gyro--z);
+}
+
+.box[data-type="gyro--x"]{
+  --hue: var(--gyro--x);
+}
+
+.box[data-type="gyro--y"]{
+  --hue: var(--gyro--y);
+}
+
+.box[data-type="compass--heading"]{
+  --hue: var(--compass--heading);
+}
+
+.box[data-type="compass--accuracy"]{
+  --hue: var(--compass--accuracy);
+}
+
+.box[data-type="motion--acceleration-x"]{
+  --hue: var(--motion--acceleration-x);
+}
+
+.box[data-type="motion--acceleration-y"]{
+  --hue: var(--motion--acceleration-y);
+}
+
+.box[data-type="motion--acceleration-z"] {
+  --hue: var(--motion--acceleration-z);
+}
+
+.box[data-type="motion--acceleration-including-gravity-x"] {
+  --hue: var(--motion--acceleration-including-gravity-x);
+}
+
+.box[data-type="motion--acceleration-including-gravity-y"] {
+  --hue: var(--motion--acceleration-including-gravity-y);
+}
+
+.box[data-type="motion--acceleration-including-gravity-z"] {
+  --hue: var(--motion--acceleration-including-gravity-z);
+}
+
+.box[data-type="motion--rotation-rate-z"] {
+  --hue: var(--motion--rotation-rate-z);
+}
+
+.box[data-type="motion--rotation-rate-x"] {
+  --hue: var(--motion--rotation-rate-x);
+}
+
+.box[data-type="motion--rotation-rate-y"] {
+  --hue: var(--motion--rotation-rate-y);
+}
+
+.box[data-type="motion--interval"] {
+  --hue: var(--motion--interval);
+}
+
+.disc {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  width: 80vmin;
+  height: 80vmin;
+  background: black;
+  border-radius: 50%;
+  transform:
+    translate(-50%, -50%)
+    rotateY(calc(var(--gyro--y, 0) * 1deg))
+    rotateX(calc(var(--gyro--x, 0) * 1deg))
+    rotateZ(calc(var(--gyro--z, 0) * 1deg));
+}
+
