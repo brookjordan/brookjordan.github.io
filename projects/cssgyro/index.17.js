@@ -90,7 +90,8 @@ function prepareMotionAccessRequest(type) {
 window.addEventListener("orientationchange", handleOrientationChange);
 
 tryToAddOrientationEventListener();
-prepareMotionAccessRequest("DeviceOrientationEvent");
-
 tryToAddMotionEventListener();
+
+// iOS needs permissions to add the events
+prepareMotionAccessRequest("DeviceOrientationEvent");
 prepareMotionAccessRequest("DeviceMotionEvent");
