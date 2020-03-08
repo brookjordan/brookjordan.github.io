@@ -78,7 +78,7 @@ function prepareMotionAccessRequest(type) {
       let permission = EventClass.requestPermission();
       if (permission === "granted") {
         tryToAddOrientationEventListener();
-      } else {
+      } else if (permission === "denied") {
         document.body.innerHTML = "<h1>Sorry, you denied required permissions, this won’t work. ☹️</h1>";
       }
     } catch (error) {
