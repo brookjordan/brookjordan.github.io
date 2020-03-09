@@ -1,10 +1,14 @@
-import { requestOrientationAPIPermission } from "./get-motion-permissions.js";
+import { requestOrientationAPIPermission } from "./get-motion-permissions.1.js";
 import { setGlobalCSSCustomProperty } from "./set-css-custom-property.js";
 
 function handleDeviceOrientation(event) {
   setGlobalCSSCustomProperty("gyro--z", event.alpha || 0);
   setGlobalCSSCustomProperty("gyro--x", event.beta || 0);
   setGlobalCSSCustomProperty("gyro--y", event.gamma || 0);
+
+  setGlobalCSSCustomProperty("gyro-int--z", Math.round(event.alpha) || 0);
+  setGlobalCSSCustomProperty("gyro-int--x", Math.round(event.beta) || 0);
+  setGlobalCSSCustomProperty("gyro-int--y", Math.round(event.gamma) || 0);
 }
 
 requestOrientationAPIPermission()

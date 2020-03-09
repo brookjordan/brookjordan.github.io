@@ -8,9 +8,9 @@ html,
 body {
   height: 100%;
   margin: 0;
-  perspective: 150vmin;
   font-family: sans-serif;
   overflow: hidden;
+  transform-style: preserve-3d;
 }
 
 .grid {
@@ -69,6 +69,7 @@ body {
   left: 50%;
   transform-style: preserve-3d;
   font-size: 12vmin;
+  perspective: 150vmin;
 
   transform:
     translate(-50%, -50%)

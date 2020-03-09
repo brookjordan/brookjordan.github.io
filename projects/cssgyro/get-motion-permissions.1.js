@@ -71,20 +71,25 @@ function getEventPermission(eventType) {
         -moz-appearance: none;
         appearance: none;
         position: fixed;
-        bottom: 10px;
+        top: 50%;
         left: 50%;
         z-index: 99999999999;
-        transform: translateX(-50%);
+        transform: translateZ(100000vw) translate(-50%, -50%);
         max-width: 80vw;
         border: none;
         background: white;
         font: inherit;
-        box-shadow: inset -2px -2px 2px rgba(0, 0, 0, 0.2), 0 1px 4px rgba(0, 0, 0, 0.3);
-        border-radius: 5px;
-        font-size: 22px;
-        padding: 5px 10px;
+        box-shadow:
+          inset -1vw -2vw 2vw rgba(0, 0, 0, 0.2),
+          0 1vw 4vw rgba(0, 0, 0, 0.3)
+        ;
+        border-radius: 10vw;
+        font-size: 10vmin;
+        padding: 10vw;
+        opacity: 0.9;
+        line-height: 1.4;
       `;
-      dialogueElement.textContent = "Click here to let me read your device’s orientation.";
+      dialogueElement.textContent = "Click here to let me read your device’s orientation";
       dialogueElement.addEventListener("touchend", async () => {
         requestPromise = EventClass.requestPermission();
         resolveRequestPermissionWithTiming(resolve);
