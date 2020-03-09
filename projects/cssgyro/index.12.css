@@ -47,15 +47,15 @@ body {
 
 .box[data-type="gyro--z"] {
   --hue: var(--gyro--z, 0);
-  --display-value: var(--gyro--z);
+  --display-value: var(--gyro-int--z);
 }
 .box[data-type="gyro--x"] {
   --hue: var(--gyro--x, 0);
-  --display-value: var(--gyro--x);
+  --display-value: var(--gyro-int--x);
 }
 .box[data-type="gyro--y"] {
   --hue: var(--gyro--y, 0);
-  --display-value: var(--gyro--y);
+  --display-value: var(--gyro-int--y);
 }
 
 .cube {
