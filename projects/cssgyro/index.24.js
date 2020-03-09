@@ -2,15 +2,10 @@ import { requestOrientationAPIPermission } from "./get-motion-permissions.js";
 import { setGlobalCSSCustomProperty } from "./set-css-custom-property.js";
 
 function handleDeviceOrientation(event) {
-  setGlobalCSSCustomProperty("gyro--z", +event.alpha || 0);
-  setGlobalCSSCustomProperty("gyro--x", +event.beta || 0);
-  setGlobalCSSCustomProperty("gyro--y", +event.gamma || 0);
-  console.log(event.alpha);
+  setGlobalCSSCustomProperty("gyro--z", Math.round(event.alpha) || 0);
+  setGlobalCSSCustomProperty("gyro--x", Math.round(event.beta) || 0);
+  setGlobalCSSCustomProperty("gyro--y", Math.round(event.gamma) || 0);
 }
-
-setGlobalCSSCustomProperty("gyro--z", 0);
-setGlobalCSSCustomProperty("gyro--x", 0);
-setGlobalCSSCustomProperty("gyro--y", 0);
 
 requestOrientationAPIPermission()
   .then(grantedReason => {
@@ -22,7 +17,7 @@ requestOrientationAPIPermission()
         document.body.innerHTML = `
           <h2>Not supported</h2>
           <p>Sorry, Your browser doesn’t support this experiment</p>
-          <p>This is mostly for mobile devices, although a few laptops support it too.</p>
+          <p>This mostly only works on modern mobile devices, although a few laptops support it too.</p>
         `;
         break;
       default:

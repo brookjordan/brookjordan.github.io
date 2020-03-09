@@ -26,6 +26,7 @@ body {
 
 .box {
   display: flex;
+  flex-direction: column;
   background-color: hsl(
     calc(var(--hue, 0) * 1deg),
     50%,
@@ -34,20 +35,33 @@ body {
   transition: background-color 0.05s;
   justify-content: center;
   align-items: center;
-  font-size: 30vh;
+  font-size: 7vmin;
+}
+.box::before {
+  color: hsl(0, 0%, 70%);
+  content: attr(data-label);
+  mix-blend-mode: overlay;
+}
+.box::after {
+  content: counter(gyro) "°";
+  counter-reset: gyro;
+  counter-increment: gyro var(--display-value);
+  font-size: 2em;
   color: white;
+  mix-blend-mode: overlay;
 }
 
-.box[data-type="gyro--z"]{
+.box[data-type="gyro--z"] {
   --hue: var(--gyro--z);
+  --display-value: var(--gyro--z);
 }
-
-.box[data-type="gyro--x"]{
+.box[data-type="gyro--x"] {
   --hue: var(--gyro--x);
+  --display-value: var(--gyro--x);
 }
-
-.box[data-type="gyro--y"]{
+.box[data-type="gyro--y"] {
   --hue: var(--gyro--y);
+  --display-value: var(--gyro--y);
 }
 
 .cube {
@@ -76,8 +90,6 @@ body {
   margin: -2em;
   width: 4em;
   height: 4em;
-  -webkit-backface-visibility: hidden;
-          backface-visibility: hidden;
   transform:
     rotate3d(
       var(--i),
@@ -97,30 +109,48 @@ body {
 
 .cube__face:nth-child(1) {
   --a: 0deg;
-  --gs: #feffaa, #b2ff90;
+  --gs:
+    hsla(61, 90%, 80%, 0.85),
+    hsla(102, 90%, 80%, 0.85)
+  ;
 }
 
 .cube__face:nth-child(2) {
   --a: 90deg;
-  --gs: #fbc2eb, #a6c1ee;
+  --gs:
+    hsla(317, 90%, 80%, 0.85),
+    hsla(218, 90%, 80%, 0.85)
+  ;
 }
 
 .cube__face:nth-child(3) {
   --a: 180deg;
-  --gs: #84fab0, #8fd3f4;
+  --gs:
+    hsla(142, 90%, 80%, 0.85),
+    hsla(200, 90%, 80%, 0.85)
+  ;
 }
 
 .cube__face:nth-child(4) {
   --a: 270deg;
-  --gs: #a1c4fd, #c2e9fb;
+  --gs:
+    hsla(217, 90%, 80%, 0.85),
+    hsla(199, 90%, 80%, 0.85)
+  ;
 }
 
 .cube__face:nth-child(5) {
   --a: 90deg;
-  --gs: #f6d365, #fda085;
+  --gs:
+    hsla(46, 90%, 80%, 0.85),
+    hsla(13, 90%, 80%, 0.85)
+  ;
 }
 
 .cube__face:nth-child(6) {
   --a: -90deg;
-  --gs: #ffecd2, #fcb69f;
+  --gs:
+    hsla(35, 90%, 80%, 0.85),
+    hsla(15, 90%, 80%, 0.85)
+  ;
 }
