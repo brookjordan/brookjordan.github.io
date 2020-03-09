@@ -21,6 +21,8 @@ PERMISSION_DEFINITIONS.forEach((definition) => {
   }
 });
 
+let requestPromise;
+
 function checkIfEventRuns(eventType) {
   let permissionDefinition = PERMISSIONS[eventType];
   let eventName = permissionDefinition.eventName;
@@ -43,45 +45,53 @@ function checkIfEventRuns(eventType) {
   });
 }
 
+async function resolveRequestPermissionWithTiming(resolve) {
+  try {
+    let reason = "previously";
+    let reasonTimeout = requestAnimationFrame(() => { reason = "newly"; });
+    let permission = await requestPromise;
+    cancelAnimationFrame(reasonTimeout);
+    resolve(`${permission}:${reason}`);
+  } catch (error) {
+    resolve(`denied:${error}`);
+  }
+}
+
 function getEventPermission(eventType) {
   let permissionDefinition = PERMISSIONS[eventType];
   let EventClass = permissionDefinition.EventClass;
 
   return new Promise(async (resolve, reject) => {
-    let dialogueElement = document.createElement("button");
-    dialogueElement.style.cssText = `
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      appearance: none;
-      position: fixed;
-      bottom: 10px;
-      left: 50%;
-      z-index: 99999999999;
-      transform: translateX(-50%);
-      max-width: 80vw;
-      border: none;
-      background: white;
-      font: inherit;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-      border-radius: 5px;
-      font-size: 22px;
-      padding: 5px 10px;
-    `;
-    dialogueElement.textContent = "Let me read your device’s orientation.";
-    dialogueElement.addEventListener("touchend", async () => {
-      try {
-        let reason = "previously";
-        let reasonTimeout = requestAnimationFrame(() => { reason = "newly"; });
-        let permission = await EventClass.requestPermission();
-        resolve(`${permission}:${reason}`);
-        cancelAnimationFrame(reasonTimeout);
-      } catch (error) {
-        resolve(`denied:${error}`);
-      } finally {
+    if (requestPromise) {
+      resolveRequestPermissionWithTiming(resolve);
+    } else {
+      let dialogueElement = document.createElement("button");
+      dialogueElement.style.cssText = `
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        position: fixed;
+        bottom: 10px;
+        left: 50%;
+        z-index: 99999999999;
+        transform: translateX(-50%);
+        max-width: 80vw;
+        border: none;
+        background: white;
+        font: inherit;
+        box-shadow: inset -2px -2px 2px rgba(0, 0, 0, 0.2), 0 1px 4px rgba(0, 0, 0, 0.3);
+        border-radius: 5px;
+        font-size: 22px;
+        padding: 5px 10px;
+      `;
+      dialogueElement.textContent = "Click here to let me read your device’s orientation.";
+      dialogueElement.addEventListener("touchend", async () => {
+        requestPromise = EventClass.requestPermission();
+        resolveRequestPermissionWithTiming(resolve);
         dialogueElement.remove();
-      }
-    }, { once: true });
-    document.body.appendChild(dialogueElement);
+      }, { once: true });
+      document.body.appendChild(dialogueElement);
+    }
   });
 }
 

@@ -27,7 +27,7 @@ requestOrientationAPIPermission()
         break;
       default:
         document.body.innerHTML = `
-          <h2>Permissions required</h2>
+          <h2>Permissions required: ${deniedReason}</h2>
           <p>Sorry, you’ve denied required permissions.</p>
           <p>You will need to quit and reopen your browser to continue</p>
         `;
