@@ -1,0 +1,88 @@
+*,
+::before,
+::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  perspective: 150vmin;
+  font-family: sans-serif;
+}
+
+.cube {
+  --x-dir: 1;
+  --y-dir: -1;
+  --z-dir: -1;
+
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform-style: preserve-3d;
+  font-size: 20vmin;
+
+  transform:
+    translate(-50%, -50%)
+    rotateY(calc(var(--gyro--y, 0) * var(--y-dir) * 1deg))
+    rotateX(calc(var(--gyro--x, 0) * var(--x-dir) * 1deg))
+    rotateZ(calc(var(--gyro--z, 0) * var(--z-dir) * -1deg));
+}
+
+.cube__face {
+  --i: 0;
+  --j: 1;
+
+  position: absolute;
+  margin: -2em;
+  width: 4em;
+  height: 4em;
+  transform:
+    rotate3d(
+      var(--i),
+      var(--j),
+      0,
+      var(--a)
+    )
+    translateZ(2em)
+  ;
+  background-position: 50% 50%;
+  background-size: cover;
+  opacity: 0.85;
+}
+
+.cube__face:nth-child(n + 5) {
+  --i: 1;
+  --j: 0;
+}
+
+.cube__face:nth-child(1) {
+  --a: 0deg;
+  background-image: url("./i/1.jpg");
+}
+
+.cube__face:nth-child(2) {
+  --a: 90deg;
+  background-image: url("./i/2.jpg");
+}
+
+.cube__face:nth-child(3) {
+  --a: 180deg;
+  background-image: url("./i/3.jpg");
+}
+
+.cube__face:nth-child(4) {
+  --a: 270deg;
+  background-image: url("./i/4.jpg");
+}
+
+.cube__face:nth-child(5) {
+  --a: 90deg;
+  background-image: url("./i/5.jpg");
+}
+
+.cube__face:nth-child(6) {
+  --a: -90deg;
+  background-image: url("./i/6.jpg");
+}
