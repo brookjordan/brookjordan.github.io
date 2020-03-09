@@ -76,7 +76,7 @@ function getEventPermission(eventType) {
         top: 50%;
         left: 50%;
         z-index: 99999999999;
-        transform: translateZ(100000vw) translate(-50%, -50%);
+        transform: translate(-50%, -50%);
         max-width: 90vw;
         min-width: 320px;
         border: none;

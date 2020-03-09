@@ -15,7 +15,10 @@ body,
 }
 
 .container {
+  position: relative;
   perspective: 150vmin;
+  transform-style: preserve-3d;
+  z-index: 0;
 }
 
 .cube {
