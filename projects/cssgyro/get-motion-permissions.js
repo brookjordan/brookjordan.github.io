@@ -61,7 +61,7 @@ function getEventPermission(eventType) {
   let permissionDefinition = PERMISSIONS[eventType];
   let EventClass = permissionDefinition.EventClass;
 
-  return new Promise(async (resolve, reject) => {
+  return new Promise(async resolve => {
     if (requestPromise) {
       resolveRequestPermissionWithTiming(resolve);
     } else {

@@ -15,25 +15,27 @@ body {
   height: 100%;
   margin: 0;
   perspective: 150vmin;
+  font-family: sans-serif;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  grid-gap: 10px;
+  grid-template-columns: repeat(auto-fill, 50%);
   height: 100%;
 }
 
 .box {
+  display: flex;
   background-color: hsl(
     calc(var(--hue, 0) * 1deg),
     50%,
     50%
   );
   transition: background-color 0.05s;
-}
-.box::after {
-  content: attr(data-type);
+  justify-content: center;
+  align-items: center;
+  font-size: 30vh;
+  color: white;
 }
 
 .box[data-type="gyro--z"]{
