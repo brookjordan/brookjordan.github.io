@@ -78,6 +78,7 @@ function getEventPermission(eventType) {
         z-index: 99999999999;
         transform: translateZ(100000vw) translate(-50%, -50%);
         max-width: 90vw;
+        min-width: 320px;
         border: none;
         background: white;
         font: inherit;
@@ -96,10 +97,10 @@ function getEventPermission(eventType) {
           Click&nbsp;here to&nbsp;start
         </span>
         <span style="display: block; font-size: 0.7em; margin-top: 0.5em">
-          You&nbsp;will&nbsp;be&nbsp;asked&nbsp;to give permission to see your phone’s rotation.
+          You will be asked to give permission to see your phone’s rotation.
         </span>
         <span style="display: block; font-size: 0.5em; margin-top: 0.5em">
-          This&nbsp;is&nbsp;a&nbsp;requirement&nbsp;by&nbsp;iOS.
+          This is a requirement by iOS.
           It lets me know how much you’ve turned your phone and how fast it’s moving.
         </span>
       `;

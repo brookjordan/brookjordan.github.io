@@ -1,4 +1,4 @@
-import { requestOrientationAPIPermission } from "./get-motion-permissions.2.js";
+import { requestOrientationAPIPermission } from "./get-motion-permissions.3.js";
 import { setGlobalCSSCustomProperty } from "./set-css-custom-property.js";
 
 function handleDeviceOrientation(event) {
