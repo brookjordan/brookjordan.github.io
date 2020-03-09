@@ -5,12 +5,17 @@
 }
 
 html,
-body {
+body,
+.container {
   height: 100%;
   margin: 0;
   font-family: sans-serif;
   background: linear-gradient(to bottom right, #222, black);
   overflow: hidden;
+}
+
+.container {
+  perspective: 150vmin;
 }
 
 .cube {
@@ -21,9 +26,8 @@ body {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform-style: preserve-3d;
-  perspective: 150vmin;
   font-size: 20vmin;
+  transform-style: preserve-3d;
 
   transform:
     translate(-50%, -50%)
