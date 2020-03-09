@@ -67,6 +67,8 @@ function getEventPermission(eventType) {
     } else {
       let dialogueElement = document.createElement("button");
       dialogueElement.style.cssText = `
+        display: block;
+        box-sizing: border-box;
         -webkit-appearance: none;
         -moz-appearance: none;
         appearance: none;
@@ -75,7 +77,7 @@ function getEventPermission(eventType) {
         left: 50%;
         z-index: 99999999999;
         transform: translateZ(100000vw) translate(-50%, -50%);
-        max-width: 80vw;
+        max-width: 90vw;
         border: none;
         background: white;
         font: inherit;
@@ -84,12 +86,23 @@ function getEventPermission(eventType) {
           0 1vw 4vw rgba(0, 0, 0, 0.3)
         ;
         border-radius: 10vw;
-        font-size: 10vmin;
+        font-size: 8vmin;
         padding: 10vw;
         opacity: 0.9;
         line-height: 1.4;
       `;
-      dialogueElement.textContent = "Click here to let me read your device’s orientation";
+      dialogueElement.innerHTML = `
+        <span style="display: block; font-weight: 900">
+          Click&nbsp;here to&nbsp;start
+        </span>
+        <span style="display: block; font-size: 0.7em; margin-top: 0.5em">
+          You&nbsp;will&nbsp;be&nbsp;asked&nbsp;to give permission to see your phone’s rotation.
+        </span>
+        <span style="display: block; font-size: 0.5em; margin-top: 0.5em">
+          This&nbsp;is&nbsp;a&nbsp;requirement&nbsp;by&nbsp;iOS.
+          It lets me know how much you’ve turned your phone and how fast it’s moving.
+        </span>
+      `;
       dialogueElement.addEventListener("touchend", async () => {
         requestPromise = EventClass.requestPermission();
         resolveRequestPermissionWithTiming(resolve);
