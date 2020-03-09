@@ -99,7 +99,11 @@ body {
     )
     translateZ(2em)
   ;
-  background: linear-gradient(to bottom right, var(--gs));
+  background: linear-gradient(
+    to bottom right,
+    hsla(var(--hue-1), 100%, 50%, 0.85),
+    hsla(var(--hue-1), 100%, 50%, 0.85)
+  );
 }
 
 .cube__face:nth-child(n + 5) {
@@ -109,48 +113,36 @@ body {
 
 .cube__face:nth-child(1) {
   --a: 0deg;
-  --gs:
-    hsla(61, 90%, 80%, 0.85),
-    hsla(102, 90%, 80%, 0.85)
-  ;
+  --hue-1: 61;
+  --hue-2: 102;
 }
 
 .cube__face:nth-child(2) {
   --a: 90deg;
-  --gs:
-    hsla(317, 90%, 80%, 0.85),
-    hsla(218, 90%, 80%, 0.85)
-  ;
+  --hue-1: 317;
+  --hue-2: 218;
 }
 
 .cube__face:nth-child(3) {
   --a: 180deg;
-  --gs:
-    hsla(142, 90%, 80%, 0.85),
-    hsla(200, 90%, 80%, 0.85)
-  ;
+  --hue-1: 142;
+  --hue-2: 200;
 }
 
 .cube__face:nth-child(4) {
   --a: 270deg;
-  --gs:
-    hsla(217, 90%, 80%, 0.85),
-    hsla(199, 90%, 80%, 0.85)
-  ;
+  --hue-1: 217;
+  --hue-2: 199;
 }
 
 .cube__face:nth-child(5) {
   --a: 90deg;
-  --gs:
-    hsla(46, 90%, 80%, 0.85),
-    hsla(13, 90%, 80%, 0.85)
-  ;
+  --hue-1: 46;
+  --hue-2: 13;
 }
 
 .cube__face:nth-child(6) {
   --a: -90deg;
-  --gs:
-    hsla(35, 90%, 80%, 0.85),
-    hsla(15, 90%, 80%, 0.85)
-  ;
+  --hue-1: 35;
+  --hue-2: 15;
 }
