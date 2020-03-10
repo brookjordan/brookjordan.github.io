@@ -190,7 +190,6 @@ window.customElements.define("pokemon-3x3",
 
     addImageElt() {
       if (this.imageElt || !this.reveal) { return; }
-      console.log(this.name);
       this.imageElt = new Image();
       this.gridElt.removeEventListener("mouseenter", this.addImageElt);
       this.imageElt.src = this.pokemon.imageSrc;
