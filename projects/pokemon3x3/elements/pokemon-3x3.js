@@ -43,14 +43,27 @@ let css = /*css*/`
   }
 
   .grid {
+    --fade: 200ms;
     display: grid;
     grid-template-columns: repeat(3, calc(100% / 3));
     transition:
       opacity 150ms ease-in;
   }
   .grid > div {
+    --fade-order: 0;
     padding: 50%;
+    background-color: transparent;
+    transition: background-color var(--fade) ease-out;
+    transition-delay: calc(var(--fade) / 3 * var(--fade-order));
   }
+  .grid > div:nth-child(2) { --fade-order: 1; }
+  .grid > div:nth-child(3) { --fade-order: 2; }
+  .grid > div:nth-child(6) { --fade-order: 3; }
+  .grid > div:nth-child(9) { --fade-order: 4; }
+  .grid > div:nth-child(8) { --fade-order: 5; }
+  .grid > div:nth-child(7) { --fade-order: 6; }
+  .grid > div:nth-child(4) { --fade-order: 7; }
+  .grid > div:nth-child(5) { --fade-order: 8; }
   :host([reveal]:hover) img + .grid {
     opacity: 0.3;
   }
@@ -94,7 +107,11 @@ let css = /*css*/`
 let pokemon3x3Template = document.createElement("template");
 pokemon3x3Template.innerHTML = `
   <style>${css}</style>
-  <div class="grid" id="grid"></div>
+  <div class="grid" id="grid">
+    <div></div><div></div><div></div>
+    <div></div><div></div><div></div>
+    <div></div><div></div><div></div>
+  </div>
   <h3 class="name" id="name"></h3>
 `;
 
@@ -114,6 +131,7 @@ window.customElements.define("pokemon-3x3",
 
       this.gridElt = this.shadowRoot.querySelector("#grid");
       this.nameElt = this.shadowRoot.querySelector("#name");
+      this.colorElts = [...this.shadowRoot.querySelectorAll("#grid > div")];
 
       this.pokemon = null;
       this.imageElt = null;
@@ -140,9 +158,10 @@ window.customElements.define("pokemon-3x3",
       }
     }
 
-    async connectedCallback() {
-      await this.definePokemon();
-      this.connectedCallbackCalled = true;
+    connectedCallback() {
+      this.definePokemon().then(() => {
+        this.connectedCallbackCalled = true;
+      });
     }
 
     async attributeChangedCallback(key, oldValue, newValue) {
@@ -164,15 +183,14 @@ window.customElements.define("pokemon-3x3",
       this.pokemon = (await getPokemon()).find(aPokemon => aPokemon.name.toLowerCase() === this.name.toLowerCase());
       if (!this.pokemon) { throw `missing-pokemon-error: No pokémon exists with the name ${this.name}`; }
 
-      let colorElts = this.pokemon.colors
-        .map(rgb => {
-          let colorElt = document.createElement("div");
+      this.colors = await this.pokemon.colors;
+      this.colors.forEach((rgb, i) => {
           if (rgb) {
-            colorElt.style.backgroundColor = `rgb(${rgb})`;
+            this.colorElts[i].style.backgroundColor = `rgb(${rgb})`;
+          } else {
+            this.colorElts[i].style.backgroundColor = `transparent`;
           }
-          return colorElt;
         });
-      this.gridElt.append(...colorElts);
 
       this.nameElt.textContent = this.pokemon.name;
 
@@ -180,17 +198,20 @@ window.customElements.define("pokemon-3x3",
         this.imageElt.remove();
         this.imageElt = null;
         this.gridElt.removeEventListener("mouseenter", this.handleGridMouseEnter);
+        this.gridElt.removeEventListener("touchstart", this.handleGridMouseEnter);
       }
 
       if (this.reveal) {
         this.handleGridMouseEnter = () => this.addImageElt();
         this.gridElt.addEventListener("mouseenter", this.handleGridMouseEnter);
+        this.gridElt.addEventListener("touchstart", this.handleGridMouseEnter);
       }
     }
 
     addImageElt() {
       if (this.imageElt || !this.reveal) { return; }
       this.gridElt.removeEventListener("mouseenter", this.handleGridMouseEnter);
+      this.gridElt.removeEventListener("touchstart", this.handleGridMouseEnter);
       this.imageElt = new Image();
       this.imageElt.src = this.pokemon.imageSrc;
       this.imageElt.onload = () => {

@@ -17,13 +17,17 @@
       width: 100%;
       height: 100%;
       background: black;
-      display: flex;
-      justify-content: center;
     }
 
     .container {
       width: 100%;
       padding: 5vw;
+    }
+    .container::before,
+    .container::after {
+      content: "";
+      display: table;
+      clear: both;
     }
 
     .pokemon-images {
