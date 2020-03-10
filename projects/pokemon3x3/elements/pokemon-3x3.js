@@ -1,17 +1,6 @@
 import getPokemon from "../pokemon.js";
 
 let css = /*css*/`
-  @keyframes fade-in {
-    0% {
-      opacity: 0;
-      transform: scale(1);
-    }
-    100% {
-      opacity: 1;
-      transform: scale(1.5);
-    }
-  }
-
   *,
   ::before,
   ::after {
@@ -46,7 +35,6 @@ let css = /*css*/`
     display: block;
   }
   :host([reveal]:hover) img {
-    animation: fade-in ease-out 100ms;
     opacity: 1;
     transform:
       translateY(-5px)
@@ -123,11 +111,34 @@ window.customElements.define("pokemon-3x3",
       super();
       this.attachShadow({ mode: "open" });
       this.shadowRoot.appendChild(pokemon3x3Template.content.cloneNode(true));
+
       this.gridElt = this.shadowRoot.querySelector("#grid");
       this.nameElt = this.shadowRoot.querySelector("#name");
+      this.reveal = false;
+
       this.pokemon = null;
       this.imageElt = null;
       this.imageEltAddEvent = null;
+    }
+
+    get name() {
+      return this.getAttribute("name");
+    }
+
+    set name(value) {
+      this.setAttribute("name", value);
+    }
+
+    get reveal() {
+      return typeof this.getAttribute("reveal") === "string";
+    }
+
+    set reveal(value) {
+      if (typeof this.getAttribute("reveal") === "string") {
+        this.setAttribute("reveal", "");
+      } else {
+        this.removeAttribute("reveal");
+      }
     }
 
     async connectedCallback() {
@@ -135,9 +146,13 @@ window.customElements.define("pokemon-3x3",
       this.connectedCallbackCalled = true;
     }
 
-    async attributeChangedCallback(name, oldValue, newValue) {
-      if (this.connectedCallbackCalled) {
-        if (oldValue !== newValue) {
+    async attributeChangedCallback(key, oldValue, newValue) {
+      if (oldValue !== newValue && this.connectedCallbackCalled) {
+        if (key === "reveal") {
+          this.addImageElt();
+        }
+
+        else if (key === "name") {
           this.definePokemon();
         }
       }
@@ -146,11 +161,9 @@ window.customElements.define("pokemon-3x3",
     async definePokemon() {
       if (this.pokemon) { return; }
 
-      let nameAttr = this.getAttribute("name");
-
-      if (!nameAttr) { throw "required-attr-error: Missing name attribute"; }
-      this.pokemon = (await getPokemon()).find(aPokemon => aPokemon.name.toLowerCase() === nameAttr.toLowerCase());
-      if (!this.pokemon) { throw `missing-pokemon-error: No pokémon exists with the name ${nameAttr}`; }
+      if (!this.name) { throw "required-attr-error: Missing name attribute"; }
+      this.pokemon = (await getPokemon()).find(aPokemon => aPokemon.name.toLowerCase() === this.name.toLowerCase());
+      if (!this.pokemon) { throw `missing-pokemon-error: No pokémon exists with the name ${this.name}`; }
 
       let colorElts = this.pokemon.colors
         .map(rgb => {
@@ -166,16 +179,24 @@ window.customElements.define("pokemon-3x3",
 
       if (this.imageElt) {
         this.imageElt.remove();
-        this.gridElt.removeEventListener("mouseenter", this.imageEltAddEvent, { once: true });
+        this.imageElt = null;
+        this.gridElt.removeEventListener("mouseenter", this.addImageElt);
       }
+
+      if (this.reveal) {
+        this.gridElt.addEventListener("mouseenter", () => this.addImageElt());
+      }
+    }
+
+    addImageElt() {
+      if (this.imageElt || !this.reveal) { return; }
+      console.log(this.name);
       this.imageElt = new Image();
-      this.imageEltAddEvent = e => {
-        this.imageElt.src = this.pokemon.imageSrc;
-        this.imageElt.onload = () => {
-          this.shadowRoot.insertBefore(this.imageElt, this.gridElt);
-        };
+      this.gridElt.removeEventListener("mouseenter", this.addImageElt);
+      this.imageElt.src = this.pokemon.imageSrc;
+      this.imageElt.onload = () => {
+        this.shadowRoot.insertBefore(this.imageElt, this.gridElt);
       };
-      this.gridElt.addEventListener("mouseenter", this.imageEltAddEvent, { once: true });
     }
   },
 );
