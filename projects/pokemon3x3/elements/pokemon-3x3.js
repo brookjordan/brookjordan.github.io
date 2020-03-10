@@ -114,7 +114,6 @@ window.customElements.define("pokemon-3x3",
 
       this.gridElt = this.shadowRoot.querySelector("#grid");
       this.nameElt = this.shadowRoot.querySelector("#name");
-      this.reveal = false;
 
       this.pokemon = null;
       this.imageElt = null;
@@ -134,7 +133,7 @@ window.customElements.define("pokemon-3x3",
     }
 
     set reveal(value) {
-      if (typeof this.getAttribute("reveal") === "string") {
+      if (typeof value === "string") {
         this.setAttribute("reveal", "");
       } else {
         this.removeAttribute("reveal");
