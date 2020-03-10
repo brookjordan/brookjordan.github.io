@@ -117,7 +117,7 @@ window.customElements.define("pokemon-3x3",
 
       this.pokemon = null;
       this.imageElt = null;
-      this.imageEltAddEvent = null;
+      this.handleGridMouseEnter = null;
     }
 
     get name() {
@@ -129,12 +129,12 @@ window.customElements.define("pokemon-3x3",
     }
 
     get reveal() {
-      return typeof this.getAttribute("reveal") === "string";
+      return this.hasAttribute("reveal");
     }
 
     set reveal(value) {
       if (typeof value === "string") {
-        this.setAttribute("reveal", "");
+        this.setAttribute("reveal", value);
       } else {
         this.removeAttribute("reveal");
       }
@@ -179,18 +179,19 @@ window.customElements.define("pokemon-3x3",
       if (this.imageElt) {
         this.imageElt.remove();
         this.imageElt = null;
-        this.gridElt.removeEventListener("mouseenter", this.addImageElt);
+        this.gridElt.removeEventListener("mouseenter", this.handleGridMouseEnter);
       }
 
       if (this.reveal) {
-        this.gridElt.addEventListener("mouseenter", () => this.addImageElt());
+        this.handleGridMouseEnter = () => this.addImageElt();
+        this.gridElt.addEventListener("mouseenter", this.handleGridMouseEnter);
       }
     }
 
     addImageElt() {
       if (this.imageElt || !this.reveal) { return; }
+      this.gridElt.removeEventListener("mouseenter", this.handleGridMouseEnter);
       this.imageElt = new Image();
-      this.gridElt.removeEventListener("mouseenter", this.addImageElt);
       this.imageElt.src = this.pokemon.imageSrc;
       this.imageElt.onload = () => {
         this.shadowRoot.insertBefore(this.imageElt, this.gridElt);
