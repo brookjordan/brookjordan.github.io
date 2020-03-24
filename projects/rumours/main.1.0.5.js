@@ -40,9 +40,9 @@ class RandomString {
           throw new Error("Gender isn’t set");
         }
 
-        if ([...boys, ...girls].length >= 2 && Math.random() > 0.92) {
-          phrase += `${itemFrom(peopleConnectors, true)} `;
+        if ((boys.length + girls.length >= 2) && Math.random() > isPlural ? 0.95 : 0.92) {
           isPlural = true;
+          phrase += `${itemFrom(peopleConnectors, true)} `;
 
           genderRnd = Math.ceil(
             Math.random() * (girls.length + boys.length)
