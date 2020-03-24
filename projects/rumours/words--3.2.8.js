@@ -128,6 +128,8 @@ var defaultInanimateObjects = [
   "$their background story",
   "$their mood",
   "some nibblets",
+  "some chicken nuggets",
+  "some beef jerkey",
   "a virus",
   "a weed whacker",
 ];
