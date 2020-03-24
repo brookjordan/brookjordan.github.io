@@ -93,6 +93,7 @@ var defaultInanimateObjects = [
   "a knife",
   "$their sandwich",
   "some lettuce",
+  "a Mars bar",
   "some soap",
   "some antidepressant drugs",
   "some corn cake",
