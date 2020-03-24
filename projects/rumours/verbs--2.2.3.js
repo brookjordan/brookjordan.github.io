@@ -139,6 +139,7 @@ var defaultVerbs = [
   ` fried $anObject`,
   ` gave $anObject to $person`,
   ` gave $person a virus`,
+  ` caught a dealy virus`,
   ` got $anObject`,
   ` got arrested`,
   ` got splattered by $subject`,

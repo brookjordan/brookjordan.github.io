@@ -99,7 +99,7 @@ var defaultInanimateObjects = [
   "$person’s ashes",
   "$adj candlestick maker",
   "a coffee pot",
-  "light bulb",
+  "a light bulb",
   "the national security agency",
   "a tank",
   "$their useless brakes",
