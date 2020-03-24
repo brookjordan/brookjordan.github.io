@@ -141,7 +141,8 @@ var defaultPluralisedInanimateObjects = [
   "some $inanimateObjects",
   "a smattering of $inanimateObjects",
   "a small number of $inanimateObjects",
-  "all o’ them $inanimateObjects",
+  "all-o’-them $inanimateObjects",
+  "the $inanimateObjects",
 ];
 
 var defaultPlaces = [

@@ -122,7 +122,6 @@ var defaultVerbs = [
   ` didn’t like $their $object`,
   ` died`,
   ` passed out`,
-  //` dove deep $place`, //  rarely makes good sentences
   ` dressed up as $subject`,
   ` drove around $subject`,
   ` expected more from $person`,
