@@ -37,11 +37,10 @@ async function getStreamData(stream) {
 
 let cacheFetchRequest = async (request, cache, { clientId } = {}) => {
   let response;
-  let work = Promise.resolve();
   try {
     response = await fetch(request);
     if (clientId) {
-      work = Promise.all([
+      Promise.all([
         clients.get(clientId),
         cache.match(request)
           .then(cacheStream => getStreamData(cacheStream.body)),
@@ -56,7 +55,7 @@ let cacheFetchRequest = async (request, cache, { clientId } = {}) => {
           }
         });
     }
-    work.then(() => cache.put(request, response.clone()));
+    cache.put(request, response.clone());
   } catch (error) {
     throw `fetch failed: ${error}`;
   }

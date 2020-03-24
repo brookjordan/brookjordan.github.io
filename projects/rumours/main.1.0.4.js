@@ -146,7 +146,16 @@ class RandomString {
 
       const randomObjects = (options = {}) => {
         let words = randomObject(options).split(" ");
-        words[words.length - 1] = pluralise(words[words.length - 1]);
+        let wordIndex = 0;
+        for (; wordIndex < words.length; wordIndex += 1) {
+          let aWord = words[wordIndex];
+          if (aWord.endsWith("$s")) {
+            words[wordIndex] = pluralise(aWord.slice(0, -2));
+            break;
+          } else if (wordIndex === words.length - 1) {
+            words[wordIndex] = pluralise(aWord);
+          }
+        }
         return words.join(" ");
       };
 
@@ -162,21 +171,35 @@ class RandomString {
         let objectSet;
         if (sentience === "sentient") {
           objectSet = includePlurals
-            ? randomArray(sentientObjects, pluralisedSentientObjects)
+            ? randomItemFromArray([
+              sentientObjects,
+              sentientObjects,
+              sentientObjects,
+              pluralisedSentientObjects,
+            ])
             : sentientObjects;
         } else if (sentience === "inanimate") {
           objectSet = includePlurals
-            ? randomArray(inanimateObjects, pluralisedInanimateObjects)
+            ? randomItemFromArray([
+              inanimateObjects,
+              inanimateObjects,
+              inanimateObjects,
+              pluralisedInanimateObjects,
+            ])
             : inanimateObjects;
         } else {
           objectSet = includePlurals
-            ? randomArray(
+            ? randomItemFromArray([
+                sentientObjects,
+                inanimateObjects,
+                sentientObjects,
+                inanimateObjects,
                 sentientObjects,
                 inanimateObjects,
                 pluralisedSentientObjects,
-                pluralisedInanimateObjects
-              )
-            : randomArray(sentientObjects, inanimateObjects);
+                pluralisedInanimateObjects,
+              ])
+            : randomItemFromArray([sentientObjects, inanimateObjects]);
         }
 
         // two sets of pluralised objects rarely works
@@ -303,21 +326,10 @@ class RandomString {
       };
 
       const cleanPhrase = phrase =>
-        phrase.replace(/,{2}/, ",").replace(/s’s/g, "s’");
+        phrase.replace(/,{2}/, ",").replace(/s’s/g, "s’").replace(/\$s/g, "");
 
-      const randomArray = (...arrs) => {
-        let length = [].concat(...arrs).length;
-        let rnd = Math.random();
-        let cul = 0;
-        for (let i = 0; i < arrs.length; i += 1) {
-          if (arrs[i].length === 0) {
-            continue;
-          }
-          cul += arrs[i].length;
-          if (i === arrs.length - 1 || rnd >= cul / length) {
-            return arrs[i];
-          }
-        }
+      const randomItemFromArray = (items) => {
+        return items[Math.floor(Math.random() * items.length)];
       };
 
       let usedPluralisedObjects = false;
