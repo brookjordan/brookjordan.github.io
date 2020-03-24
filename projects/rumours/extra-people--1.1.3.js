@@ -10,7 +10,6 @@ var defaultExtraGirls = [
   "$person’s $sentientObject",
   "$person’s mum",
   "the love of $their life",
-  "$themself",
   "the last of the dodos",
 ];
 

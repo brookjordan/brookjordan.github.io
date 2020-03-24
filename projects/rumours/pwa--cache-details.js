@@ -17,6 +17,6 @@ const staticAssets = [
   "./people--3.0.0.js",
   "./settings--2.0.1.js",
   "./query-params--1.0.0.js",
-  "./extra-people--1.1.2.js",
+  "./extra-people--1.1.3.js",
   "./post-it-worklet--1.0.1.js",
 ];
