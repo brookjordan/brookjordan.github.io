@@ -12,7 +12,7 @@ const staticAssets = [
   "./yousleptwith.ico",
 
   "./main.1.0.4.js",
-  "./words--3.2.6.js",
+  "./words--3.2.7.js",
   "./verbs--2.2.2.js",
   "./people--3.0.0.js",
   "./settings--2.0.1.js",
