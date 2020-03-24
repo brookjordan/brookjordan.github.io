@@ -3,8 +3,9 @@ var defaultExtraGirls = [
   "The Queen",
   "Cleopatra",
 
-  "$person’s wife",
   "$person’s pet $sentientObject",
+
+  "$their wife",
   "$their mum",
   "the love of $their life",
   "the last of the dodos",
@@ -16,8 +17,9 @@ var defaultExtraBoys = [
   "Jesus",
   "Yoda",
 
-  "$person’s husband",
-  "$person’s favourite $object",
+  "$person’s favourite $sentientObject",
+
+  "$their husband",
   "$their dirty uncle",
   "some guy",
   "$their dad",
