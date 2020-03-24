@@ -15,7 +15,7 @@ var defaultPrefixes = [
   " drunkenly",
   " TOTALLY",
   " painfully",
-  ", without a second thought,",
+  ", without a second thought, ",
 ];
 
 var defaultSentientObjects = [
@@ -166,7 +166,7 @@ var defaultPlaces = [
   "nowhere",
   "all alone",
   "in the basement",
-  "in $person’s basement",
+  "in $person’s basement ",
   "in the office",
   "around level 3",
   "on the second floor",
