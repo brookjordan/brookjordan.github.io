@@ -167,7 +167,7 @@ var defaultPlaces = [
   "all alone",
   "in the basement",
   "in $person’s basement",
-  "in the TradeGecko office",
+  "in the office",
   "around level 3",
   "on the second floor",
   "yesterday",
