@@ -8,10 +8,27 @@ let globalBoys;
 
 let main = document.querySelector("main");
 
+class Chance {
+  constructor(index) {
+    let rnd = Math.random() * index;
+    let upto = 0;
+
+    return val => {
+      upto += val;
+      if (upto >= rnd) {
+        return true;
+      }
+      return false;
+    };
+  }
+}
+
 class RandomString {
   constructor(words) {
     let o = words || {};
     return () => {
+      const USED_PEOPLE = [];
+
       const addPeople = () => {
         if (gender === "you") {
           phrase += "You";
@@ -91,21 +108,6 @@ class RandomString {
             : "?!?";
         }
       };
-
-      class Chance {
-        constructor(index) {
-          let rnd = Math.random() * index;
-          let upto = 0;
-
-          return val => {
-            upto += val;
-            if (upto >= rnd) {
-              return true;
-            }
-            return false;
-          };
-        }
-      }
 
       const itemFrom = (array, safe) => {
         if (!!safe) {
@@ -190,12 +192,14 @@ class RandomString {
 
       const randomGirl = () => {
         let girl = genderise(itemFrom(girls, false));
+        USED_PEOPLE.push(girl);
         //if (Math.random() > (isPlural ? 0.8 : 0.5)) { gender = "female"; }
         return fillPlaceholders(girl);
       };
 
       const randomBoy = () => {
         let boy = genderise(itemFrom(boys, false));
+        USED_PEOPLE.push(boy);
         //if (Math.random() > (isPlural ? 0.8 : 0.5)) { gender = "male"; }
         return fillPlaceholders(boy);
       };
@@ -217,7 +221,14 @@ class RandomString {
       };
 
       const genderise = string => {
-        let genderData = genders[isPlural ? "plural" : gender];
+        let hasYou = USED_PEOPLE.includes("You");
+        let genderData = genders[
+          isPlural
+            ? "plural"
+            : hasYou && Math.random() > 0.5
+              ? "you"
+              : gender
+        ];
         return string
           .replace("$themself", genderData.themself)
           .replace("$them", genderData.them)
