@@ -1,12 +1,12 @@
-let m;
+let l;
 let i;
 
 export default function shuffle(array) {
-  m = array.length;
+  l = array.length;
 
-  while (m) {
-    i = Math.floor(Math.random() * m--);
-    [array[i], array[m]] = [array[m], array[i]];
+  while (l) {
+    i = Math.floor(Math.random() * l--);
+    [array[i], array[l]] = [array[l], array[i]];
   }
 
   return array;

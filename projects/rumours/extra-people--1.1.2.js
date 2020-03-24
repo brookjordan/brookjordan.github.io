@@ -28,5 +28,5 @@ var defaultExtraBoys = [
   "Cthulu",
   "$their brethren",
   "$their dog",
-  "Uncle Saleh",
+  "the janitor",
 ];
