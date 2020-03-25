@@ -1,4 +1,4 @@
-let POKEMON_NAMES = [
+const POKEMON_NAMES = [
   "Bulbasaur",
   "Ivysaur",
   "Venusaur",
@@ -889,7 +889,7 @@ let POKEMON_NAMES = [
   "Zacian",
   "Zamazenta",
   "Eternatus",
-  "Missing No",
+  "Zarude",
 ];
 
 export default POKEMON_NAMES;

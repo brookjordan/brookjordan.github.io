@@ -40,10 +40,13 @@ function getPokemon() {
         let pokemonData = {
           x, y, i,
           name: POKEMON_NAMES[i],
-          imageSrc: `./i/${POKEMON_NAMES[i]}.png`,
+          image: {
+            bigSrc: `./i/big-named/${POKEMON_NAMES[i]}.png`,
+            smallSrc: `./i/small-named/${POKEMON_NAMES[i]}.png`,
+          },
         };
 
-        pokemonData.image = new Promise(res => {
+        pokemonData.image.abstractData = new Promise(res => {
           pokemonData[imageResolverSymbol] = res;
         });
 

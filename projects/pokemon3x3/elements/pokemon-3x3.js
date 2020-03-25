@@ -1,4 +1,5 @@
 import getPokemon from "../pokemon.js";
+import connection from "../connection-details.js";
 
 let css = /*css*/`
   *,
@@ -213,7 +214,11 @@ window.customElements.define("pokemon-3x3",
       this.gridElt.removeEventListener("mouseenter", this.handleGridMouseEnter);
       this.gridElt.removeEventListener("touchstart", this.handleGridMouseEnter);
       this.imageElt = new Image();
-      this.imageElt.src = this.pokemon.imageSrc;
+      if (connection.isStrong) {
+        this.imageElt.src = this.pokemon.image.bigSrc;
+      } else {
+        this.imageElt.src = this.pokemon.image.smallSrc;
+      }
       this.imageElt.onload = () => {
         this.shadowRoot.insertBefore(this.imageElt, this.gridElt);
       };
