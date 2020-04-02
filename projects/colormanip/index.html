@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color manip</title>
+  <style>
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+    }
+    html {
+      transition: background-color 0.5s;
+    }
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    form {
+      text-align: center;
+    }
+    select {
+      height: 50px;
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+  <form>
+    <select id="manip_select"></select>
+    <select id="color_select"></select>
+  </form>
+
+  <script src="./color-utils.js" defer></script>
+  <script src="./color-manip.js" defer></script>
+  <script src="./colors.js" defer></script>
+  <script src="./color-selector.js" defer></script>
+</body>
+</html>
