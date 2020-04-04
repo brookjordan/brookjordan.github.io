@@ -62,9 +62,9 @@ async function printPokemon() {
     singlePokemonContainerElt.append(singlePokemonElt);
     singlePokemonElt.addEventListener("guess", event => {
       if (singlePokemonElt.name === event.guess) {
-        alert(`That’s right! It’s ${singlePokemonElt.name}`);
+        alert(`That’s right, it’s ${singlePokemonElt.name}!`);
       } else {
-        alert(`Nope, it’s ${singlePokemonElt.name}`);
+        alert(`Nope, it’s ${singlePokemonElt.name}.`);
       }
       revealPokemon(singlePokemonElt);
       singlePokemonElt.classList.add("guessed-pokemon");

@@ -122,6 +122,10 @@ let css = /*css*/`
     transform: scale(1) translate(-50%, -50%);
     opacity: 1;
   }
+  [list="pokemon-list"] {
+    font-size: 20px;
+    font-size: min(26px, max(20px, 4vmin));
+  }
 `;
 
 let pokemon3x3Template = document.createElement("template");
@@ -250,7 +254,9 @@ window.customElements.define("pokemon-3x3",
         }
 
         else if (key === "guessing") {
-          // no-op
+          if (newValue != null && newValue !== false) {
+            this.guessInput.focus();
+          }
         }
       }
     }
