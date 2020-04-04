@@ -36,7 +36,7 @@ function addInstallPWAModal(beforeInstallPromptEvent) {
         margin-left: 0.5em;
       "
     >
-      No thanks.
+      Eer… no
     </button>
   `;
 
