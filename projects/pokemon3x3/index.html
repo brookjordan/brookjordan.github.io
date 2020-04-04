@@ -43,13 +43,39 @@
       max-width: 2450px;
       margin: 0 auto;
     }
+    .pokemon-images > * {
+      position: relative;
+      padding-bottom: 100%;
+    }
 
-    pokemon-3x3:not([reveal]) {
+    pokemon-3x3 {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      will-change: transform;
+      background-color: rgba(0, 0, 0, 0.8);
+      border: 5px solid black;
+    }
+    pokemon-3x3:not([reveal]):not([guessing]) {
       cursor: pointer;
       cursor: zoom-in;
     }
     pokemon-3x3:hover {
       z-index: 1;
+    }
+    pokemon-3x3[guessing] {
+      position: fixed;
+      z-index: 2;
+      position: fixed;
+      z-index: 2;
+      top: 50%;
+      left: 50%;
+      width: 80vmin;
+      height: 80vmin;
+      transform-origin: 0 0;
+      transform: translate(-50%, -50%);
     }
 
     footer {

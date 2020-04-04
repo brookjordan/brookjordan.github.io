@@ -10,10 +10,10 @@ let colourManupulators = {
   }),
 
   ablaze: cleanManipulator((h, s, l, a) => { // Radiant with bright color
-    h = bringHueCloser(h, 18, 1/3);
+    h = bringHueCloser(h, 18, 1 / 3);
 
     if (s !== 0) {
-      s = bringCloser(s, 100, 1/3);
+      s = bringCloser(s, 100, 1 / 3);
     }
 
     return [h, s, l, a];
@@ -32,29 +32,29 @@ let colourManupulators = {
   }),
 
   beaming: cleanManipulator((h, s, l, a) => { // Bright; shining
-    h = bringHueCloser(h, 60, 1/5);
+    h = bringHueCloser(h, 60, 1 / 5);
 
     if (s !== 0) {
-      s = bringCloser(s, 100, 1/5);
+      s = bringCloser(s, 100, 1 / 5);
     }
 
-    l = bringCloser(l, 98, 1/2);
+    l = bringCloser(l, 98, 1 / 2);
 
     return [h, s, l, a];
   }),
 
   bold: cleanManipulator((h, s, l, a) => { // Bright; vivid
-    s = bringCloser(s, 100, 1/2);
+    s = bringCloser(s, 100, 1 / 2);
 
-    l = bringCloser(l, 50, 1/2);
+    l = bringCloser(l, 50, 1 / 2);
 
     return [h, s, l, a];
   }),
 
   bright: cleanManipulator((h, s, l, a) => { // Brilliant in color
-    s = bringCloser(s, 100, 3/4);
+    s = bringCloser(s, 100, 3 / 4);
 
-    l = bringCloser(l, 80, 1/2);
+    l = bringCloser(l, 80, 1 / 2);
 
     return [h, s, l, a];
   }),
@@ -302,21 +302,27 @@ let colourManupulators = {
   }),
 
   primary: cleanManipulator((h, s, l, a) => { // Basic color
+    h = Math.round(nearestHue(h) / 120) * 120;
+
+    s = bringCloser(s, 100, 3 / 4);
+
+    l = bringCloser(s, 50, 3 / 4);
+
     return [h, s, l, a];
   }),
 
   rustic: cleanManipulator((h, s, l, a) => { // Plain; simple
-      h = bringHueCloser(h, 20, 1/3);
+    h = bringHueCloser(h, 20, 1 / 3);
 
-      if (s !== 0) {
-        s = bringCloser(s, 15, 1/3);
-      }
+    if (s !== 0) {
+      s = bringCloser(s, 15, 1 / 3);
+    }
 
     return [h, s, l, a];
   }),
 
   tinged: cleanManipulator((h, s, l, a) => { // A small amount of color
-      s = (s + 30) / 2;
+    s = (s + 30) / 2;
 
     return [h, s, l, a];
   }),

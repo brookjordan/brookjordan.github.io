@@ -2,7 +2,7 @@ function HSLAString([ h, s, l, a = 1 ]) {
   return `hsla(${h},${s}%,${l}%,${a})`;
 }
 
-function nearestHue(hueFrom, hueTo = 180) {
+function nearestHue(hueFrom, hueTo = 360) {
   let newHue = hueFrom;
   while (newHue > hueTo + 180) {
     newHue -= 360;
