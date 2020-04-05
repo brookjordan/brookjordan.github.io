@@ -3,7 +3,7 @@ import * as colors from "./colors.js";
 let raf;
 let lastFrameDrawnAt = 0;
 
-quality.max = Math.ceil(Math.min(Math.round(innerWidth / 2), Math.round(innerHeight / 2), 500) / 50) * 25;
+quality.max = Math.ceil(Math.min(Math.round(innerWidth / 2), Math.round(innerHeight / 2), 500) / 25) * 25;
 let thickness = +quality.value;
 let size = thickness * 2 + 1;
 canvas.width = canvas.height = size;
