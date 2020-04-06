@@ -1,4 +1,4 @@
-import * as colors from "./colors.js";
+import * as colors from "./colors.1.js";
 
 let raf;
 let lastFrameDrawnAt = 0;
