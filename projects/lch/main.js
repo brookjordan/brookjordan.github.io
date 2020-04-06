@@ -8,6 +8,8 @@ let thickness = +quality.value;
 let size = thickness * 2 + 1;
 canvas.width = canvas.height = size;
 
+let clipOpacity = +clip_opacity.value;
+
 let MAX_CHROMA = +max_chroma.value;
 let ctx = canvas.getContext("2d");
 
@@ -34,11 +36,11 @@ function drawCross(lightness) {
       let yy = y - thickness;
       let angle = xyAngle(xx, yy);
 
-      let color = colors.LCH_to_sRGB_string(
+      let color = colors.LCH_to_sRGB_string([
         lightness,
         (MAX_CHROMA / (thickness + 1)) * (Math.sqrt(xx * xx + yy * yy)),
         angle
-      );
+      ], clipOpacity);
       if (color) {
         drawBlock(
           color,
@@ -50,7 +52,7 @@ function drawCross(lightness) {
 
     if (y < size) {
       let timeNow = new Date().getTime();
-      if (lastFrameDrawnAt < timeNow - 1000 / 30) {
+      if (lastFrameDrawnAt < timeNow - 1000 / 15) {
         lastFrameDrawnAt = timeNow;
         raf = requestAnimationFrame(() => {
           drawRow(y + 1);
@@ -70,6 +72,10 @@ drawCross(50);
 range.oninput = e => drawCross(+range.value);
 max_chroma.oninput = e => {
   MAX_CHROMA = +max_chroma.value;
+  drawCross(+range.value)
+};
+clip_opacity.oninput = e => {
+  clipOpacity = +clip_opacity.value;
   drawCross(+range.value)
 };
 quality.oninput = e => {
