@@ -1,0 +1,1076 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Color Swatches</title>
+
+  <style>
+    *,
+    ::before,
+    ::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      padding-top: 70px;
+      margin: 0;
+      font-family: sans-serif;
+    }
+    input {
+      font-family: inherit;
+    }
+    color-swatch {
+      flex-basis: 200px;
+      flex-grow: 1;
+    }
+
+    .compare {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 50;
+      width: 100%;
+      background: #fff;
+      transition: background-color .5s;
+      will-change: background-color;
+    }
+    .compare__input {
+      display: block;
+      width: 100%;
+      height: 70px;
+      line-height: 70px;
+      padding: 0;
+      border: 0;
+      margin: 0;
+      text-indent: 0.5em;
+      background: rgba(255, 255, 255, 0);
+      outline: 0;
+      text-align: center;
+      font-weight: 100;
+      font-size: 30px;
+      transition: color .5s, height .5s, line-height .5s;
+      will-change: color, height, line-height;
+      box-shadow: inset 0 0 0 red;
+      transition: box-shadow 0.15s;
+    }
+    .compare__input:invalid {
+      box-shadow: inset 0 0 10px red;
+    }
+    .theme--dark .compare__input {
+      color: white;
+    }
+
+    .colors {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+  </style>
+
+  <script>
+    if (!'customElements' in window) {
+      document.write(`
+        <p
+          style="
+            font-size: 100px;
+            position: fixed;
+            z-index: 100;
+            background: white;
+            padding: 5%;
+            top: 0;
+            left: 0;
+            margin: 0;
+            height: 100%;
+            width: 100%;
+          "
+        >
+          Your web browser doesn’t support custom elements.
+        </p>
+      `);
+    }
+  </script>
+
+  <script>
+    class HSV {
+      constructor(h, s, v) {
+        if (h <= 0) {
+          h = 0;
+        }
+        if (s <= 0) {
+          s = 0;
+        }
+        if (v <= 0) {
+          v = 0;
+        }
+
+        if (h > 360) {
+          h = 360;
+        }
+        if (s > 100) {
+          s = 100;
+        }
+        if (v > 100) {
+          v = 100;
+        }
+
+        this.h = h;
+        this.s = s;
+        this.v = v;
+      }
+
+      get array() {
+        return [this.h, this.s, this.v];
+      }
+
+      get cssString() {
+        return `hsv(${this.h},${this.s},${this.v})`;
+      }
+    }
+
+    class HSL {
+      constructor(h, s, l) {
+        if (h <= 0) {
+          h = 0;
+        }
+        if (s <= 0) {
+          s = 0;
+        }
+        if (l <= 0) {
+          l = 0;
+        }
+
+        if (h > 360) {
+          h = 360;
+        }
+        if (s > 100) {
+          s = 100;
+        }
+        if (l > 100) {
+          l = 100;
+        }
+
+        this.h = h;
+        this.s = s;
+        this.l = l;
+      }
+
+      get array() {
+        return [this.h, this.s, this.l];
+      }
+
+      get cssString() {
+        return `hsl(${this.h},${this.s},${this.l})`;
+      }
+    }
+
+    class RGB {
+      constructor(r, g, b) {
+        if (r <= 0) {
+          r = 0;
+        }
+        if (g <= 0) {
+          g = 0;
+        }
+        if (b <= 0) {
+          b = 0;
+        }
+
+        if (r > 255) {
+          r = 255;
+        }
+        if (g > 255) {
+          g = 255;
+        }
+        if (b > 255) {
+          b = 255;
+        }
+
+        this.r = +r;
+        this.g = +g;
+        this.b = +b;
+      }
+
+      get array() {
+        return [this.r, this.g, this.b];
+      }
+
+      get cssString() {
+        return `rgb(${this.r},${this.g},${this.b})`;
+      }
+    }
+
+    class CMYK {
+      constructor(c, m, y, k) {
+        if (c <= 0) {
+          c = 0;
+        }
+        if (m <= 0) {
+          m = 0;
+        }
+        if (y <= 0) {
+          y = 0;
+        }
+        if (k <= 0) {
+          k = 0;
+        }
+
+        if (c > 100) {
+          c = 100;
+        }
+        if (m > 100) {
+          m = 100;
+        }
+        if (y > 100) {
+          y = 100;
+        }
+        if (k > 100) {
+          k = 100;
+        }
+
+        this.c = c;
+        this.m = m;
+        this.y = y;
+        this.k = k;
+      }
+
+      get array() {
+        return [this.c, this.m, this.y, this.k];
+      }
+
+      get cssString() {
+          return `cmyk(${this.c},${this.m},${this.y},${this.k})`;
+      }
+    }
+
+    function hexify(val) {
+      val = val.toUpperCase()
+      val = val && String(val).match(/[0-9A-Z]+/);
+      val = val ? val[0] : '';
+      if (val.length < 7) {
+        if (val.length === 6) {
+          return `#${val}`;
+        }
+        if (val.length === 3) {
+          return `#${val[0]}${val[0]}${val[1]}${val[1]}${val[2]}${val[2]}`;
+        }
+      }
+    }
+
+    function isHex(val) {
+      return /^#(([0-9A-F]{3})|([0-9A-F]{6}))$/i.test(val);
+    }
+
+    function toRGB(HEX) {
+      let result = new RGB(0, 0, 0);
+      let parts;
+      if (HEX.match(/[0-9a-f]{2}/gi).length === 3) {
+        parts = HEX.match(/[0-9a-f]{2}/gi);
+      } else {
+        parts = HEX.match(/[0-9a-f]/gi)
+          .map(a => `${a}${a}`);
+      }
+
+      parts = parts.map((part, i) => parseInt(part, 16));
+
+      result.r = parts[0];
+      result.g = parts[1];
+      result.b = parts[2];
+
+      return result;
+    }
+
+    function toHex({ r, g, b }) {
+      let R = (+r).toString(16);
+      let G = (+g).toString(16);
+      let B = (+b).toString(16);
+      return `${R.length === 1 ? "0" : ""}${R}${G.length === 1 ? "0" : ""}${G}${
+        B.length === 1 ? "0" : ""
+      }${B}`;
+    }
+
+    function toHSV(RGB) {
+      let result = new HSV(0, 0, 0);
+
+      let r = RGB.r / 255;
+      let g = RGB.g / 255;
+      let b = RGB.b / 255;
+
+      let minVal = Math.min(r, g, b);
+      let maxVal = Math.max(r, g, b);
+      let delta = maxVal - minVal;
+
+      result.v = maxVal;
+
+      if (delta == 0) {
+        result.h = 0;
+        result.s = 0;
+      } else {
+        result.s = delta / maxVal;
+        let del_R = ((maxVal - r) / 6 + delta / 2) / delta;
+        let del_G = ((maxVal - g) / 6 + delta / 2) / delta;
+        let del_B = ((maxVal - b) / 6 + delta / 2) / delta;
+
+        if (r == maxVal) {
+          result.h = del_B - del_G;
+        } else if (g == maxVal) {
+          result.h = 1 / 3 + del_R - del_B;
+        } else if (b == maxVal) {
+          result.h = 2 / 3 + del_G - del_R;
+        }
+
+        if (result.h < 0) {
+          result.h += 1;
+        }
+        if (result.h > 1) {
+          result.h -= 1;
+        }
+      }
+
+      result.h = Math.round(result.h * 360);
+      result.s = Math.round(result.s * 100);
+      result.v = Math.round(result.v * 100);
+
+      return result;
+    }
+
+    function toHSL(RGB) {
+      let result = new HSL(0, 0, 0);
+
+      let r = RGB.r / 255;
+      let g = RGB.g / 255;
+      let b = RGB.b / 255;
+
+      let max = Math.max(r, g, b);
+      let min = Math.min(r, g, b);
+      let h;
+      let s;
+      let l = (max + min) / 2;
+
+      if (max == min) {
+        h = s = 0; // achromatic
+      } else {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+          case r:
+            h = (g - b) / d + (g < b ? 6 : 0);
+            break;
+          case g:
+            h = (b - r) / d + 2;
+            break;
+          case b:
+            h = (r - g) / d + 4;
+            break;
+        }
+        h /= 6;
+      }
+
+      result.h = Math.round(h * 360);
+      result.s = Math.round(s * 100);
+      result.l = Math.round(l * 100);
+
+      return result;
+    }
+  </script>
+
+  <script>
+    (function() {
+
+      let css = `
+        *,
+        ::before,
+        ::after {
+          box-sizing: border-box;
+        }
+
+        :host {
+          display: block;
+          overflow: hidden;
+        }
+
+        h3 {
+          font-weight: 100;
+          font-size: 40px;
+          line-height: 2;
+          text-align: center;
+          opacity: 0.6;
+          cursor: pointer;
+          margin: 0;
+        }
+
+        p {
+          display: flex;
+          justify-content: space-between;
+          font-weight: 300;
+          font-size: 15px;
+          padding: 2% 0;
+          line-height: 1;
+          opacity: 0.8;
+          cursor: pointer;
+        }
+
+        h3,
+        p {
+          padding-left: 20px;
+          padding-right: 20px;
+          transition:
+            transform 0.2s;
+          will-change: transform;
+        }
+
+        .data--hex {
+          margin-top: 10px;
+          margin-bottom: 15px;
+          line-height: 1.1;
+        }
+        .data--name {
+          font-weight: 600;
+        }
+        .data span {
+          text-align: right;
+          font-variant-numeric: lining-nums;
+        }
+
+        h3:hover,
+        p:hover {
+          transform: scale(1.1);
+          background-color: rgb(128,128,128);
+        }
+
+        .constrain {
+          position: relative;
+        }
+
+        .wrapper {
+          padding: 10px 0;
+        }
+
+        .notification {
+          position: absolute;
+          top: 5%;
+          left: 5%;
+          background: rgba(0, 0, 0, 0.7);
+          padding: 10px;
+          border-radius: 15px;
+          font-weight: 100;
+          font-size: 20px;
+          pointer-events: none;
+          opacity: 0;
+          transition: opacity 1s;
+          color: white;
+          letter-spacing: 0.02em;
+          text-align: center;
+          max-width: 90%;
+        }
+        .notification--open {
+          opacity: 1;
+          transition: opacity 0.15s;
+        }
+
+        .theme--dark {
+          color: white;
+        }
+      `;
+
+      function colourName(clrName, clrHex, isGradient) {
+        let clr = clrName
+          ? clrName
+              .trim()
+              .replace(/ /g, "-")
+              .toLowerCase()
+          : clrHex
+              .trim()
+              .replace(/ /g, "-")
+              .toLowerCase();
+
+        return `$${isGradient ? "lg" : "c"}-${clr}`;
+      }
+
+      let colourSwatchTemplate = document.createElement('template');
+      colourSwatchTemplate.innerHTML = `
+        <style>${css}</style>
+
+        <div class="constrain">
+          <div class="sizer">
+            <div class="wrapper">
+              <h3 data-clipboard-text="" class="data data--hex">
+                #<span></span>
+              </h3>
+              <p data-clipboard-text="" class="data data--name">
+                <span></span>
+              </p>
+              <p data-clipboard-text="" class="data data--rgb">
+                RGB:
+                <span></span>
+              </p>
+              <p data-clipboard-text="" class="data data--hsl">
+                HSL:
+                <span></span>
+              </p>
+            </div>
+          </div>
+
+          <div class="notification"></div>
+        </div>
+      `;
+
+      window.copyValue = (value, callback) => {
+        let input = document.createElement('input');
+        input.value = value;
+        document.body.appendChild(input);
+        input.select();
+        let copyWasSuccessful = document.execCommand('copy');
+        if (copyWasSuccessful) {
+          callback();
+        } else {
+          prompt("Your text:", value);
+        }
+        input.remove(input);
+      }
+
+      window.customElements.define(
+        'color-swatch',
+        class extends HTMLElement {
+          static get observedAttributes() {
+            return [];
+          }
+
+          constructor() {
+            super();
+
+            let shadowRoot = this.attachShadow({ mode: 'open' });
+            shadowRoot.appendChild(colourSwatchTemplate.content.cloneNode(true));
+
+            this.onclickname = () => { };
+            this.onclickhex = () => { };
+            this.onclickrgb = () => { };
+            this.onclickhsl = () => { };
+            this.showAlertMessage = (messageText) => {
+              clearTimeout(this.alertHideTimeout);
+
+              let notification = this.shadowRoot.querySelector('.notification');
+              notification.classList.add('notification--open');
+              this.alertHideTimeout = setTimeout(() => {
+                notification.classList.remove('notification--open');
+              }, 1000);
+              notification.textContent = messageText
+            };
+          }
+
+          connectedCallback() {
+            if (typeof this.getAttribute("empty") === "string") { return; }
+
+            let $ = this.shadowRoot;
+            let containerElt = $.querySelector('.constrain');
+            let dataHEXElt = $.querySelector('.data--hex');
+            let dataNameElt = $.querySelector('.data--name');
+            let dataRGBElt = $.querySelector('.data--rgb');
+            let dataHSLElt = $.querySelector('.data--hsl');
+
+            let name = this.getAttribute("name");
+            let hex = this
+              .getAttribute("hex")
+              .replace(/#/g, "")
+              .split(",");
+            let rgb = hex.map(hh => toRGB(hh));
+            let hsl = rgb.map(rr => toHSL(rr));
+
+            if (hsl.reduce((acc, { l }) => acc + l, 0) / hsl.length < 42) {
+              containerElt.classList.add("theme--dark");
+            }
+
+            this.name = name;
+            dataNameElt.querySelector('span').textContent = name;
+            dataNameElt.setAttribute('data-clipboard-text', name);
+            dataNameElt.onclick = (e) => {
+              window.copyValue(
+                this.name,
+                () => this.showAlertMessage(`Copied “${name}” to clipboard.`)
+              );
+              this.onclickname(Object.freeze({
+                ...e,
+                currentTarget: this,
+              }));
+            }
+
+            this.hex = hex;
+            dataHEXElt.querySelector('span').textContent = hex.join(', #');
+            dataHEXElt.setAttribute('data-clipboard-text', `#${hex[0]}`);
+            dataHEXElt.onclick = (e) => {
+              window.copyValue(
+                `#${this.hex[0]}`,
+                () => this.showAlertMessage(`Copied “#${hex[0]}” to clipboard.`)
+              );
+              this.onclickhex(Object.freeze({
+                ...e,
+                currentTarget: this,
+              }));
+            }
+
+            this.rgb = rgb;
+            dataRGBElt.querySelector('span').innerHTML = rgb.map(a => a.cssString).join('<br>');
+            dataRGBElt.setAttribute('data-clipboard-text', rgb.map(a => a.cssString).join(','));
+            dataRGBElt.onclick = (e) => {
+              window.copyValue(
+                rgb.map(a => a.cssString).join(','),
+                () => this.showAlertMessage(`Copied “${rgb.map(a => a.cssString).join(',')}” to clipboard.`)
+              );
+              this.onclickrgb(Object.freeze({
+                ...e,
+                currentTarget: this,
+              }));
+            }
+
+            this.hsl = hsl;
+            dataHSLElt.querySelector('span').innerHTML = hsl.map(a => a.cssString).join('<br>');
+            dataHSLElt.setAttribute('data-clipboard-text', hsl.map(a => a.cssString).join(','));
+            dataHSLElt.onclick = (e) => {
+              window.copyValue(
+                hsl.map(a => a.cssString).join(','),
+                () => this.showAlertMessage(`Copied “${hsl.map(a => a.cssString).join(',')}” to clipboard.`)
+              );
+              this.onclickhsl(Object.freeze({
+                ...e,
+                currentTarget: this,
+              }));
+            }
+
+            if (hex.length === 1) {
+              this.style.backgroundColor = `#${hex[0]}`;
+            } else {
+              this.style.background = `linear-gradient(to bottom right,
+                ${hex.map(a => `#${a}`).join(',')}
+              )`;
+            }
+          }
+        }
+      );
+    })();
+  </script>
+</head>
+
+<body>
+  <div class="compare">
+    <input
+      class="compare__input"
+      placeholder="ffffff"
+      pattern="[0-9a-fA-F]{3}|[0-9a-fA-F]{6}"
+    />
+  </div>
+
+  <div class="colors">
+    <color-swatch
+      name="000"
+      hex="#000"
+    ></color-swatch>
+
+    <color-swatch
+      name="000000"
+      hex="#000000"
+    ></color-swatch>
+
+    <color-swatch
+      name="212121"
+      hex="#212121"
+    ></color-swatch>
+
+    <color-swatch
+      name="333333"
+      hex="#333333"
+    ></color-swatch>
+
+    <color-swatch
+      name="424242"
+      hex="#424242"
+    ></color-swatch>
+
+    <color-swatch
+      name="616161"
+      hex="#616161"
+    ></color-swatch>
+
+    <color-swatch
+      name="656565"
+      hex="#656565"
+    ></color-swatch>
+
+    <color-swatch
+      name="666666"
+      hex="#666666"
+    ></color-swatch>
+
+    <color-swatch
+      name="757575"
+      hex="#757575"
+    ></color-swatch>
+
+    <color-swatch
+      name="9e9e9e"
+      hex="#9e9e9e"
+    ></color-swatch>
+
+    <color-swatch
+      name="aeaeae"
+      hex="#aeaeae"
+    ></color-swatch>
+
+    <color-swatch
+      name="c7c7c7"
+      hex="#c7c7c7"
+    ></color-swatch>
+
+    <color-swatch
+      name="e1e1e1"
+      hex="#e1e1e1"
+    ></color-swatch>
+
+    <color-swatch
+      name="e2e2e2"
+      hex="#e2e2e2"
+    ></color-swatch>
+
+    <color-swatch
+      name="e8e8e8"
+      hex="#e8e8e8"
+    ></color-swatch>
+
+    <color-swatch
+      name="ededed"
+      hex="#ededed"
+    ></color-swatch>
+
+    <color-swatch
+      name="eee"
+      hex="#eee"
+    ></color-swatch>
+
+    <color-swatch
+      name="eeeeee"
+      hex="#eeeeee"
+    ></color-swatch>
+
+    <color-swatch
+      name="f5f5f5"
+      hex="#f5f5f5"
+    ></color-swatch>
+
+    <color-swatch
+      name="fff"
+      hex="#fff"
+    ></color-swatch>
+
+    <color-swatch
+      name="ffffff"
+      hex="#ffffff"
+    ></color-swatch>
+
+    <color-swatch
+      name="f5f3f3"
+      hex="#f5f3f3"
+    ></color-swatch>
+
+    <color-swatch
+      name="f74018"
+      hex="#f74018"
+    ></color-swatch>
+
+    <color-swatch
+      name="f84018"
+      hex="#f84018"
+    ></color-swatch>
+
+    <color-swatch
+      name="e27b00"
+      hex="#e27b00"
+    ></color-swatch>
+
+    <color-swatch
+      name="ffa211"
+      hex="#ffa211"
+    ></color-swatch>
+
+    <color-swatch
+      name="e5e1da"
+      hex="#e5e1da"
+    ></color-swatch>
+
+    <color-swatch
+      name="d9f28b"
+      hex="#d9f28b"
+    ></color-swatch>
+
+    <color-swatch
+      name="f5f9eb"
+      hex="#f5f9eb"
+    ></color-swatch>
+
+    <color-swatch
+      name="323925"
+      hex="#323925"
+    ></color-swatch>
+
+    <color-swatch
+      name="009e1e"
+      hex="#009e1e"
+    ></color-swatch>
+
+    <color-swatch
+      name="929d96"
+      hex="#929d96"
+    ></color-swatch>
+
+    <color-swatch
+      name="9eebba"
+      hex="#9eebba"
+    ></color-swatch>
+
+    <color-swatch
+      name="1dbe9c"
+      hex="#1dbe9c"
+    ></color-swatch>
+
+    <color-swatch
+      name="004d40"
+      hex="#004d40"
+    ></color-swatch>
+
+    <color-swatch
+      name="00ac9e"
+      hex="#00ac9e"
+    ></color-swatch>
+
+    <color-swatch
+      name="00cfbf"
+      hex="#00cfbf"
+    ></color-swatch>
+
+    <color-swatch
+      name="b7d1cf"
+      hex="#b7d1cf"
+    ></color-swatch>
+
+    <color-swatch
+      name="006b63"
+      hex="#006b63"
+    ></color-swatch>
+
+    <color-swatch
+      name="aae2ed"
+      hex="#aae2ed"
+    ></color-swatch>
+
+    <color-swatch
+      name="4e7c88"
+      hex="#4e7c88"
+    ></color-swatch>
+
+    <color-swatch
+      name="3bc6eb"
+      hex="#3bc6eb"
+    ></color-swatch>
+
+    <color-swatch
+      name="0e4557"
+      hex="#0e4557"
+    ></color-swatch>
+
+    <color-swatch
+      name="003f57"
+      hex="#003f57"
+    ></color-swatch>
+
+    <color-swatch
+      name="7d9098"
+      hex="#7d9098"
+    ></color-swatch>
+
+    <color-swatch
+      name="023e58"
+      hex="#023e58"
+    ></color-swatch>
+
+    <color-swatch
+      name="8a9aa4"
+      hex="#8a9aa4"
+    ></color-swatch>
+
+    <color-swatch
+      name="112430"
+      hex="#112430"
+    ></color-swatch>
+
+    <color-swatch
+      name="082a3f"
+      hex="#082a3f"
+    ></color-swatch>
+
+    <color-swatch
+      name="748692"
+      hex="#748692"
+    ></color-swatch>
+
+    <color-swatch
+      name="3c6687"
+      hex="#3c6687"
+    ></color-swatch>
+
+    <color-swatch
+      name="182d3e"
+      hex="#182d3e"
+    ></color-swatch>
+
+    <color-swatch
+      name="e6e7e8"
+      hex="#e6e7e8"
+    ></color-swatch>
+
+    <color-swatch
+      name="7e8ea5"
+      hex="#7e8ea5"
+    ></color-swatch>
+
+    <color-swatch
+      name="3d4554"
+      hex="#3d4554"
+    ></color-swatch>
+
+    <color-swatch
+      name="16233b"
+      hex="#16233b"
+    ></color-swatch>
+
+    <color-swatch
+      name="eeeff1"
+      hex="#eeeff1"
+    ></color-swatch>
+
+    <color-swatch
+      name="1b1f27"
+      hex="#1b1f27"
+    ></color-swatch>
+
+    <color-swatch
+      name="0e1626"
+      hex="#0e1626"
+    ></color-swatch>
+
+    <color-swatch
+      name="232936"
+      hex="#232936"
+    ></color-swatch>
+
+    <color-swatch
+      name="2e3442"
+      hex="#2e3442"
+    ></color-swatch>
+
+    <color-swatch
+      name="12161f"
+      hex="#12161f"
+    ></color-swatch>
+
+    <color-swatch
+      name="1a1e2a"
+      hex="#1a1e2a"
+    ></color-swatch>
+
+    <color-swatch
+      name="a8adbf"
+      hex="#a8adbf"
+    ></color-swatch>
+
+    <color-swatch
+      name="c7cbd9"
+      hex="#c7cbd9"
+    ></color-swatch>
+
+    <color-swatch
+      name="5b7ae6"
+      hex="#5b7ae6"
+    ></color-swatch>
+
+    <color-swatch
+      name="8c8e96"
+      hex="#8c8e96"
+    ></color-swatch>
+
+    <color-swatch
+      name="b5b6bb"
+      hex="#b5b6bb"
+    ></color-swatch>
+
+    <color-swatch
+      name="354180"
+      hex="#354180"
+    ></color-swatch>
+
+    <color-swatch
+      name="6579e2"
+      hex="#6579e2"
+    ></color-swatch>
+
+    <color-swatch
+      name="000a40"
+      hex="#000a40"
+    ></color-swatch>
+
+    <color-swatch
+      name="41424a"
+      hex="#41424a"
+    ></color-swatch>
+
+    <color-swatch
+      name="383942"
+      hex="#383942"
+    ></color-swatch>
+
+    <color-swatch
+      name="cf3335"
+      hex="#cf3335"
+    ></color-swatch>
+  </div>
+
+  <script id="compare-element-script">
+    let compareElement = document.querySelector(".compare");
+    let compareInputElement = document.querySelector(".compare__input");
+
+    function updateCompare(e) {
+      let val = compareInputElement.value.split(",")[0].toUpperCase();
+      let hexxed = hexify(val);
+
+      if (isHex(hexxed)) {
+        val = hexxed;
+      } else {
+        val = "#fff";
+      }
+
+      compareElement.style.backgroundColor = document.body.style.backgroundColor = val;
+
+      let inputColor = toHSL(toRGB(val));
+      if (inputColor.l < 43) {
+        compareElement.classList.add("theme--dark");
+      } else {
+        compareElement.classList.remove("theme--dark");
+      }
+    }
+
+    compareInputElement.addEventListener("input", updateCompare, false);
+  </script>
+
+  <script id="update-compare-element-script">
+    let inputEvent = new Event("input", {
+      bubbles: true,
+      cancelable: true,
+    });
+
+    [...document.querySelectorAll("color-swatch")].forEach(colorSwatch => {
+      colorSwatch.onclick = e => {
+        compareInputElement.value = colorSwatch.hex[0];
+        compareInputElement.dispatchEvent(inputEvent);
+      };
+    });
+  </script>
+</body>
+</html>
