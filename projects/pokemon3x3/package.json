@@ -1,6 +1,6 @@
 {
 	"scripts": {
-		"dev": "tsc --project ./tsconfig.dev.json",
+		"dev": "tsc --project ./tsconfig.dev.json --watch",
 		"prod": "tsc --project ./tsconfig.prod.json && rollup --config ./rollup.config.js"
 	},
 	"devDependencies": {
