@@ -1,4 +1,5 @@
 import "./elements/pokemon-3x3.js";
+import { guessListenerEvent, Pokemon3x3 } from "./elements/pokemon-3x3.js";
 import shuffleArray from "./shuffle-array.js";
 import findClosest from "./find-closest.js";
 import getPokemon from "./pokemon.js";
@@ -57,12 +58,13 @@ async function printPokemon() {
 
   shuffledPokemon.forEach(({ name }) => {
     let singlePokemonContainerElt = document.createElement("div");
-    let singlePokemonElt = document.createElement("pokemon-3x3");
+    let singlePokemonElt = <Pokemon3x3> document.createElement("pokemon-3x3");
     singlePokemonElt.setAttribute("name", name);
     singlePokemonContainerElt.append(singlePokemonElt);
-    singlePokemonElt.addEventListener("guess", event => {
-      if (!event.guess) { return; }
+    singlePokemonElt.addEventListener("guess", (_event: guessListenerEvent | Event) => {
+      if (!_event.hasOwnProperty("guess")) { return; }
 
+      let event = <guessListenerEvent> _event;
       if (singlePokemonElt.name === event.guess) {
         alert(`That’s right, it’s ${singlePokemonElt.name}!`);
       } else {

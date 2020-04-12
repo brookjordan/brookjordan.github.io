@@ -2,11 +2,26 @@ import getLoadedImage from "./get-loaded-image.js";
 import batchArray from "./batch-array.js";
 import POKEMON_NAMES from "./pokemon-names.js";
 
+interface pokemonImage {
+  bigSrc: string,
+  smallSrc: string,
+  abstractData?: Promise<string>,
+};
+
+export interface pokemon {
+  x: number,
+  y: number,
+  i: number,
+  name: string,
+  image: pokemonImage,
+  colors?: Promise<Array<Array<number>>>,
+};
+
 const IMAGE_SRC = "./pokemon-3x3-27w.png";
 const POKEMON = [];
 let pokemonLoader = null;
 
-function getPokemon() {
+function getPokemon(): pokemon[] {
   pokemonLoader = new Promise(async resolveLoader => {
     if (POKEMON.length) {
       resolveLoader(POKEMON)
@@ -19,7 +34,7 @@ function getPokemon() {
       return;
     }
 
-    let allPokemonImg = await getLoadedImage(IMAGE_SRC);
+    let allPokemonImg: HTMLImageElement = await getLoadedImage(IMAGE_SRC);
     let pokemonCountX = (allPokemonImg.naturalWidth + 1) / 4;
     let pokemonCountY = (allPokemonImg.naturalHeight + 1) / 4;
     let imageResolverSymbol = Symbol("image resolver");
@@ -33,20 +48,20 @@ function getPokemon() {
         if (checkTime < new Date().getTime() - 100) {
           checkTime = new Date().getTime();
           await new Promise(r => requestAnimationFrame(() => r()));
-          console.log("wait");
         }
 
         let i = y * pokemonCountX + x;
-        let pokemonData = {
+        let pokemonImage: pokemonImage = {
+          bigSrc: `./i/big-named/${POKEMON_NAMES[i]}.png`,
+          smallSrc: `./i/small-named/${POKEMON_NAMES[i]}.png`,
+        };
+        let pokemonData: pokemon = {
           x, y, i,
           name: POKEMON_NAMES[i],
-          image: {
-            bigSrc: `./i/big-named/${POKEMON_NAMES[i]}.png`,
-            smallSrc: `./i/small-named/${POKEMON_NAMES[i]}.png`,
-          },
+          image: pokemonImage,
         };
 
-        pokemonData.image.abstractData = new Promise(res => {
+        pokemonImage.abstractData = new Promise(res => {
           pokemonData[imageResolverSymbol] = res;
         });
 

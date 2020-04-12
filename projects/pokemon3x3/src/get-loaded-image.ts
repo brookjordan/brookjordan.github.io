@@ -1,4 +1,4 @@
-export default async function getLoadedImage(src) {
+export default async function getLoadedImage(src): Promise<HTMLImageElement>  {
   let imageResponse = await fetch(src);
   if (!["2", "3"].includes(String(imageResponse.status).slice(0, 1))) {
     throw `Image is borked with status: ${imageResponse.status}`;
@@ -9,11 +9,11 @@ export default async function getLoadedImage(src) {
   let img = new Image();
   img.src = imageDataURL;
   return new Promise((resolve, reject) => {
-    img.onload = event => {
+    img.addEventListener("load", () => {
       resolve(img);
-    };
-    img.onerror = event => {
+    }, { once: true });
+    img.addEventListener("error", () => {
       reject("Image creation failed");
-    };
+    }, { once: true });
   });
 }

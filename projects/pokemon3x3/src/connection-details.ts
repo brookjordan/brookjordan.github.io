@@ -1,3 +1,10 @@
+declare var navigator: any;
+interface connectionDetails {
+  speed?: string,
+  type?: string,
+  isStrong?: boolean,
+};
+
 const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
 const TYPES = [
   {
@@ -44,7 +51,8 @@ function updateConnectionStatus() {
     connectionDetails.type = connection.type;
     connectionDetails.isStrong =
       !EXPENSIVE_TYPE_NAMES.includes(connection.type)
-      && FAST_EFFECTIVE_TYPE_NAMES.includes(connection.effectiveType);
+      && FAST_EFFECTIVE_TYPE_NAMES.includes(connection.effectiveType)
+    ;
   } else {
     connectionDetails.speed = "4g";
     connectionDetails.type = "ethernet";
@@ -52,7 +60,7 @@ function updateConnectionStatus() {
   }
 }
 
-const connectionDetails = {};
+const connectionDetails: connectionDetails = {};
 updateConnectionStatus();
 if (connection) {
   connection.addEventListener("change", updateConnectionStatus);

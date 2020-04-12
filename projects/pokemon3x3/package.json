@@ -1,0 +1,10 @@
+{
+	"scripts": {
+		"dev": "tsc --project ./tsconfig.dev.json",
+		"prod": "tsc --project ./tsconfig.prod.json && rollup --config ./rollup.config.js"
+	},
+	"devDependencies": {
+		"rollup": "^2.6.0",
+		"typescript": "^3.8.3"
+	}
+}
