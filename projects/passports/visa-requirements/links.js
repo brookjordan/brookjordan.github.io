@@ -3034,4 +3034,4 @@ export default [
       }
     ]
   }
-]
+];
