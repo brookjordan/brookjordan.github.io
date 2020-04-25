@@ -1982,7 +1982,7 @@ export default [
       {
         "citizenship": [
           "Hong Kong",
-          "Hong Kong Special Administrative Region of the People's Republic of China (HKSAR)"
+          "Hong Kong Special Administrative Region of the People’s Republic of China (HKSAR)"
         ],
         "demonym": [
           "Chinese",
@@ -2448,7 +2448,7 @@ export default [
     "countries": [
       {
         "citizenship": [
-          "Côte d'Ivoire"
+          "Côte d’Ivoire"
         ],
         "demonym": [
           "Ivoirian",
@@ -2718,7 +2718,7 @@ export default [
         "citizenship": [
           "Korea, North",
           "North Korea",
-          "Democratic People's Republic of Korea (DPRK)"
+          "Democratic People’s Republic of Korea (DPRK)"
         ],
         "demonym": [
           "North Korean",
@@ -2898,7 +2898,7 @@ export default [
       {
         "citizenship": [
           "China",
-          "People's Republic of China (PRC)"
+          "People’s Republic of China (PRC)"
         ],
         "demonym": [
           "Chinese"
@@ -2908,7 +2908,7 @@ export default [
         "citizenship": [
           "Macau",
           "Macao",
-          "Macao Special Administrative Region of the People's Republic of China"
+          "Macao Special Administrative Region of the People’s Republic of China"
         ],
         "demonym": [
           "Macau",

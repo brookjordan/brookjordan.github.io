@@ -47,7 +47,7 @@ function getPassportStrength(table = document.querySelector("table"), {
     if (visaRequirementsCol) {
       visaRequirements = row.querySelector(`td:nth-child(${visaRequirementsCol})`)
         .textContent.trim().toLowerCase()
-        .replace(/'s/g, "")
+        .replace(/’s/g, "")
         .replace(/e\-visa/g, "evisa")
         .replace(/\[\d+\]/g, "")
         .split("/").map(a => a.trim().replace(/\s+/g, "-"))
