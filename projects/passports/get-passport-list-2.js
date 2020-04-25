@@ -30,12 +30,12 @@ let countryLinks = [...document.querySelectorAll("[href$='_passport']")].map((pa
         let countryLabelElt = [...window2.document.querySelectorAll("th,td")].find(a => a.textContent.toLowerCase().includes("issued by"));
         countryLabel = countryLabelElt && countryLabelElt.nextElementSibling && countryLabelElt.nextElementSibling.textContent.trim();
       }
-      let countryPosessiveMatch = window2.location.href.match(/\/([^/]+?)_passport/);
-      let countryPosessive = countryPosessiveMatch && countryPosessiveMatch[1];
+      let demonymMatch = window2.location.href.match(/\/([^/]+?)_passport/);
+      let demonym = demonymMatch && demonymMatch[1];
       data = {
         requirementsURL,
         countryLabel,
-        countryPosessive,
+        demonym,
       };
     } catch (error) {
       console.log(error);

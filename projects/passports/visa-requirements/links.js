@@ -1,11 +1,14 @@
-[
+export default [
   {
     "passportType": "Vanuatuan citizens",
     "requirementsURL": "https://en.wikipedia.org/wiki/Visa_requirements_for_Vanuatuan_citizens",
     "countryNames": [
       {
         "citizenship": ["Vanuatu"],
-        "demonym": ["Vanuatu"]
+        "demonym": [
+          "Ni-Vanuatu",
+          "Vanuatuan"
+        ]
       }
     ]
   },
@@ -27,7 +30,10 @@
     "countryNames": [
       {
         "citizenship": ["Solomon Islands"],
-        "demonym": ["Solomon Islands"]
+        "demonym": [
+          "Solomon Island",
+          "Solomon Islander"
+        ]
       }
     ]
   },
@@ -38,7 +44,11 @@
     "countryNames": [
       {
         "citizenship": ["Papua New Guinea"],
-        "demonym": ["Papua New Guinean"]
+        "demonym": [
+          "Papua New Guinean",
+          "Papuans",
+          "Melanesians"
+        ]
       }
     ]
   },
@@ -60,7 +70,10 @@
     "countryNames": [
       {
         "citizenship": ["New Zealand"],
-        "demonym": ["New Zealand"]
+        "demonym": [
+          "Kiwi",
+          "New Zealanders"
+        ]
       }
     ]
   },
@@ -125,8 +138,11 @@
     "requirementsURL": "https://en.wikipedia.org/wiki/Visa_requirements_for_Vatican_citizens",
     "countryNames": [
       {
-        "citizenship": ["Vatican"],
-        "demonym": ["Vatican"]
+        "citizenship": ["Vatican City State"],
+        "demonym": [
+          "Vatican",
+          "Vatican citizen"
+        ]
       }
     ]
   },
@@ -181,7 +197,7 @@
     "countryNames": [
       {
         "citizenship": ["San Marino"],
-        "demonym": ["San Marino"]
+        "demonym": ["Sammarinese"]
       }
     ]
   },
@@ -214,7 +230,7 @@
     "countryNames": [
       {
         "citizenship": ["Liechtenstein"],
-        "demonym": ["Liechtenstein"]
+        "demonym": ["Liechtensteiner"]
       }
     ]
   },
@@ -247,7 +263,13 @@
     "countryNames": [
       {
         "citizenship": ["Bosnia and Herzegovina"],
-        "demonym": ["Bosnia and Herzegovina"]
+        "demonym": [
+          "Serb",
+          "Croat",
+          "Bosniak",
+          "Bosnian",
+          "Herzegovian"
+        ]
       }
     ]
   },
@@ -335,7 +357,7 @@
     "countryNames": [
       {
         "citizenship": ["Singapore"],
-        "demonym": ["Singapore"]
+        "demonym": ["Singaporean"]
       }
     ]
   },
@@ -346,7 +368,10 @@
     "countryNames": [
       {
         "citizenship": ["Philippines"],
-        "demonym": ["Philippine"]
+        "demonym": [
+          "Filipino",
+          "Philippine"
+        ]
       }
     ]
   },
@@ -601,7 +626,10 @@
     "requirementsURL": "https://en.wikipedia.org/wiki/Visa_requirements_for_United_States_citizens",
     "countryNames": [
       {
-        "citizenship": ["United States"],
+        "citizenship": [
+          "United States",
+          "United States of America (USA)"
+        ],
         "demonym": [
           "United States",
           "American"
@@ -638,7 +666,10 @@
     "countryNames": [
       {
         "citizenship": ["Dominican Republic"],
-        "demonym": ["Dominican Republic"]
+        "demonym": [
+          "Dominican",
+          "Dominican Republic"
+        ]
       }
     ]
   },
@@ -1018,10 +1049,7 @@
     "countryNames": [
       {
         "citizenship": ["Central African Republic"],
-        "demonym": [
-          "Central African",
-          "Central African Republic"
-        ]
+        "demonym": ["Central African"]
       }
     ]
   },
@@ -1152,7 +1180,11 @@
     "requirementsURL": "https://en.wikipedia.org/wiki/Visa_requirements_for_Artsakh_citizens",
     "countryNames": [
       {
-        "citizenship": ["Artsakh"],
+        "citizenship": [
+          "Artsakh",
+          "Republic of Artsakh",
+          "Nagorno-Karabakh Republic"
+        ],
         "demonym": ["Artsakh"]
       }
     ]
@@ -1611,7 +1643,10 @@
     "countryNames": [
       {
         "citizenship": ["Argentina"],
-        "demonym": ["Argentine"]
+        "demonym": [
+          "Argentinian",
+          "Argentine"
+        ]
       }
     ]
   },
@@ -1743,7 +1778,10 @@
     "countryNames": [
       {
         "citizenship": ["Trinidad and Tobago"],
-        "demonym": ["Trinidad and Tobago"]
+        "demonym": [
+          "Trinidadian",
+          "Tobagonian"
+        ]
       }
     ]
   },
@@ -1754,7 +1792,11 @@
     "countryNames": [
       {
         "citizenship": ["Saint Vincent and the Grenadines"],
-        "demonym": ["Saint Vincent and the Grenadines"]
+        "demonym": [
+          "Saint Vincentian",
+          "Vincentian",
+          "Vincy"
+        ]
       }
     ]
   },
@@ -1776,7 +1818,10 @@
     "countryNames": [
       {
         "citizenship": ["Saint Kitts and Nevis"],
-        "demonym": ["Saint Kitts and Nevis"]
+        "demonym": [
+          "Kittitian",
+          "Nevisian"
+        ]
       }
     ]
   },
@@ -1819,8 +1864,14 @@
     "requirementsURL": "https://en.wikipedia.org/wiki/Visa_requirements_for_Dominica_citizens",
     "countryNames": [
       {
-        "citizenship": ["Dominica"],
-        "demonym": ["Dominica"]
+        "citizenship": [
+          "Dominica",
+          "Commonwealth of Dominica"
+        ],
+        "demonym": [
+          "Carib",
+          "Dominican"
+        ]
       }
     ]
   },
@@ -1831,7 +1882,10 @@
     "countryNames": [
       {
         "citizenship": ["Barbados"],
-        "demonym": ["Barbados"]
+        "demonym": [
+          "Barbadians",
+          "Bajans"
+        ]
       }
     ]
   },
@@ -1853,7 +1907,11 @@
     "countryNames": [
       {
         "citizenship": ["Antigua and Barbuda"],
-        "demonym": ["Antigua and Barbuda"]
+        "demonym": [
+          "Antiguan",
+          "Barbudan",
+          "Antigua and Barbuda"
+        ]
       }
     ]
   },
@@ -1897,7 +1955,10 @@
     "countryNames": [
       {
         "citizenship": ["Côte d'Ivoire"],
-        "demonym": ["Ivorian"]
+        "demonym": [
+          "Ivoirian",
+          "Ivorian"
+        ]
       }
     ]
   },
@@ -1908,7 +1969,10 @@
     "countryNames": [
       {
         "citizenship": ["Lesotho"],
-        "demonym": ["Lesotho"]
+        "demonym": [
+          "Mosotho",
+          "Basotho"
+        ]
       }
     ]
   },
@@ -1919,7 +1983,10 @@
     "countryNames": [
       {
         "citizenship": ["Botswana"],
-        "demonym": ["Botswana"]
+        "demonym": [
+          "Motswana",
+          "Batswana"
+        ]
       }
     ]
   },
@@ -2035,7 +2102,10 @@
     "countryNames": [
       {
         "citizenship": ["Montserrat"],
-        "demonym": ["British"]
+        "demonym": [
+          "Montserratians",
+          "British"
+        ]
       }
     ]
   },
@@ -2046,10 +2116,16 @@
     "countryNames": [
       {
         "citizenship": [
-          "Sovereign Military Order of Malta",
+          "Order of Malta",
+          "Knights of Malta",
+          "Sovereign Military Hospitaller Order of Saint John of Jerusalem, of Rhodes and of Malta",
+          "Sovereign Military Order of Malta (SMOM)",
           "Malta, Sovereign Military Order of"
         ],
-        "demonym": ["Sovereign Military Order of Malta"]
+        "demonym": [
+          "Knight of Malta",
+          "Sovereign Military Order of Malta"
+        ]
       }
     ]
   },
@@ -2303,12 +2379,17 @@
         "citizenship": ["Saint Helena, Ascension and Tristan da Cunha"],
         "demonym": [
           "British",
-          "St. Helena"
+          "Saint Helenian",
+          "Saint"
         ]
       },
       {
         "citizenship": ["Turks and Caicos Islands"],
-        "demonym": ["British"]
+        "demonym": [
+          "Turks and Caicos Island",
+          "Turks and Caicos Islander",
+          "British"
+        ]
       },
       {
         "citizenship": ["Bermuda"],
@@ -2316,7 +2397,10 @@
       },
       {
         "citizenship": ["Anguilla"],
-        "demonym": ["British"]
+        "demonym": [
+          "Anguillian",
+          "British"
+        ]
       }
     ]
   },
@@ -2370,8 +2454,11 @@
           "Taiwan",
           "Republic of China, (Taiwan)"
         ],
-        "demonym": ["Taiwanese"]
+        "demonym": [
+          "Taiwanese",
+          "Formosan"
+        ]
       }
     ]
   }
-]
+];
