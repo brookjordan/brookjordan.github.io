@@ -1,10 +1,10 @@
 import links from "../visa-requirements/links.js";
 
-let individualCountryNames = links.flatMap((link) => (
-  link.countryNames
+let individualcountries = links.flatMap((link) => (
+  link.countries
 ));
 
-let individualCitizenshipNamings = individualCountryNames.flatMap((countryNaming) =>
+let individualCitizenshipNamings = individualcountries.flatMap((countryNaming) =>
   countryNaming.citizenship.map((citizenship) => ({
     citizenship,
     demonym: countryNaming.demonym,
