@@ -161,7 +161,11 @@
       }
 
       get cssString() {
-        return `hsl(${this.h},${this.s},${this.l})`;
+        return `hsl(${Math.round(this.h)},${Math.round(this.s)},${Math.round(this.l)})`;
+      }
+
+      get cssLongString() {
+        return `hsl(${this.h}deg, ${this.s}%, ${this.l}%)`;
       }
     }
 
@@ -367,9 +371,9 @@
         h /= 6;
       }
 
-      result.h = Math.round(h * 360);
-      result.s = Math.round(s * 100);
-      result.l = Math.round(l * 100);
+      result.h = +(h * 360).toFixed(2);
+      result.s = +(s * 100).toFixed(2);
+      result.l = +(l * 100).toFixed(2);
 
       return result;
     }
@@ -629,8 +633,8 @@
             dataHSLElt.setAttribute('data-clipboard-text', hsl.map(a => a.cssString).join(','));
             dataHSLElt.onclick = (e) => {
               window.copyValue(
-                hsl.map(a => a.cssString).join(','),
-                () => this.showAlertMessage(`Copied “${hsl.map(a => a.cssString).join(',')}” to clipboard.`)
+                hsl.map(a => a.cssLongString).join(','),
+                () => this.showAlertMessage(`Copied “${hsl.map(a => a.cssLongString).join(',')}” to clipboard.`)
               );
               this.onclickhsl(Object.freeze({
                 ...e,
