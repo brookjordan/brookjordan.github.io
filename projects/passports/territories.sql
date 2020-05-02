@@ -256,6 +256,148 @@ ALTER SEQUENCE public.demonym_id_seq OWNED BY public.demonym.id;
 
 
 --
+-- Name: language; Type: TABLE; Schema: public; Owner: brook
+--
+
+CREATE TABLE public.language (
+    id integer NOT NULL,
+    uuid character(36) DEFAULT public.uuid_generate_v4() NOT NULL,
+    name text NOT NULL
+);
+
+
+ALTER TABLE public.language OWNER TO brook;
+
+--
+-- Name: language_id_seq; Type: SEQUENCE; Schema: public; Owner: brook
+--
+
+CREATE SEQUENCE public.language_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.language_id_seq OWNER TO brook;
+
+--
+-- Name: language_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: brook
+--
+
+ALTER SEQUENCE public.language_id_seq OWNED BY public.language.id;
+
+
+--
+-- Name: language_label; Type: TABLE; Schema: public; Owner: brook
+--
+
+CREATE TABLE public.language_label (
+    id integer NOT NULL,
+    uuid character(36) DEFAULT public.uuid_generate_v4() NOT NULL,
+    label text NOT NULL,
+    language character(36) NOT NULL
+);
+
+
+ALTER TABLE public.language_label OWNER TO brook;
+
+--
+-- Name: language_label_id_seq; Type: SEQUENCE; Schema: public; Owner: brook
+--
+
+CREATE SEQUENCE public.language_label_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.language_label_id_seq OWNER TO brook;
+
+--
+-- Name: language_label_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: brook
+--
+
+ALTER SEQUENCE public.language_label_id_seq OWNED BY public.language_label.id;
+
+
+--
+-- Name: language_relationship; Type: TABLE; Schema: public; Owner: brook
+--
+
+CREATE TABLE public.language_relationship (
+    id integer NOT NULL,
+    uuid character(36) DEFAULT public.uuid_generate_v4() NOT NULL,
+    language character(36) NOT NULL,
+    related_language character(36) NOT NULL,
+    type text NOT NULL
+);
+
+
+ALTER TABLE public.language_relationship OWNER TO brook;
+
+--
+-- Name: language_relationship_id_seq; Type: SEQUENCE; Schema: public; Owner: brook
+--
+
+CREATE SEQUENCE public.language_relationship_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.language_relationship_id_seq OWNER TO brook;
+
+--
+-- Name: language_relationship_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: brook
+--
+
+ALTER SEQUENCE public.language_relationship_id_seq OWNED BY public.language_relationship.id;
+
+
+--
+-- Name: language_relationship_type; Type: TABLE; Schema: public; Owner: brook
+--
+
+CREATE TABLE public.language_relationship_type (
+    id integer NOT NULL,
+    name text NOT NULL
+);
+
+
+ALTER TABLE public.language_relationship_type OWNER TO brook;
+
+--
+-- Name: language_relationship_type_id_seq; Type: SEQUENCE; Schema: public; Owner: brook
+--
+
+CREATE SEQUENCE public.language_relationship_type_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.language_relationship_type_id_seq OWNER TO brook;
+
+--
+-- Name: language_relationship_type_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: brook
+--
+
+ALTER SEQUENCE public.language_relationship_type_id_seq OWNED BY public.language_relationship_type.id;
+
+
+--
 -- Name: passport_travel_requirements; Type: TABLE; Schema: public; Owner: brook
 --
 
@@ -265,7 +407,8 @@ CREATE TABLE public.passport_travel_requirements (
     destination_territory character(36) NOT NULL,
     visa_type text NOT NULL,
     stay_length interval,
-    notes text
+    notes text,
+    uuid character(36) DEFAULT public.uuid_generate_v4() NOT NULL
 );
 
 
@@ -399,6 +542,42 @@ ALTER TABLE public.territory_label_id_seq OWNER TO brook;
 --
 
 ALTER SEQUENCE public.territory_label_id_seq OWNED BY public.territory_label.id;
+
+
+--
+-- Name: territory_language; Type: TABLE; Schema: public; Owner: brook
+--
+
+CREATE TABLE public.territory_language (
+    id integer NOT NULL,
+    uuid character(36) DEFAULT public.uuid_generate_v4() NOT NULL,
+    territory character(36) NOT NULL,
+    language character(36) NOT NULL
+);
+
+
+ALTER TABLE public.territory_language OWNER TO brook;
+
+--
+-- Name: territory_language_id_seq; Type: SEQUENCE; Schema: public; Owner: brook
+--
+
+CREATE SEQUENCE public.territory_language_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.territory_language_id_seq OWNER TO brook;
+
+--
+-- Name: territory_language_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: brook
+--
+
+ALTER SEQUENCE public.territory_language_id_seq OWNED BY public.territory_language.id;
 
 
 --
@@ -653,6 +832,34 @@ ALTER TABLE ONLY public.demonym ALTER COLUMN id SET DEFAULT nextval('public.demo
 
 
 --
+-- Name: language id; Type: DEFAULT; Schema: public; Owner: brook
+--
+
+ALTER TABLE ONLY public.language ALTER COLUMN id SET DEFAULT nextval('public.language_id_seq'::regclass);
+
+
+--
+-- Name: language_label id; Type: DEFAULT; Schema: public; Owner: brook
+--
+
+ALTER TABLE ONLY public.language_label ALTER COLUMN id SET DEFAULT nextval('public.language_label_id_seq'::regclass);
+
+
+--
+-- Name: language_relationship id; Type: DEFAULT; Schema: public; Owner: brook
+--
+
+ALTER TABLE ONLY public.language_relationship ALTER COLUMN id SET DEFAULT nextval('public.language_relationship_id_seq'::regclass);
+
+
+--
+-- Name: language_relationship_type id; Type: DEFAULT; Schema: public; Owner: brook
+--
+
+ALTER TABLE ONLY public.language_relationship_type ALTER COLUMN id SET DEFAULT nextval('public.language_relationship_type_id_seq'::regclass);
+
+
+--
 -- Name: passport_travel_requirements id; Type: DEFAULT; Schema: public; Owner: brook
 --
 
@@ -678,6 +885,13 @@ ALTER TABLE ONLY public.territory ALTER COLUMN id SET DEFAULT nextval('public.te
 --
 
 ALTER TABLE ONLY public.territory_label ALTER COLUMN id SET DEFAULT nextval('public.territory_label_id_seq'::regclass);
+
+
+--
+-- Name: territory_language id; Type: DEFAULT; Schema: public; Owner: brook
+--
+
+ALTER TABLE ONLY public.territory_language ALTER COLUMN id SET DEFAULT nextval('public.territory_language_id_seq'::regclass);
 
 
 --
@@ -878,21 +1092,195 @@ COPY public.demonym (id, uuid, label, territory) FROM stdin;
 
 
 --
+-- Data for Name: language; Type: TABLE DATA; Schema: public; Owner: brook
+--
+
+COPY public.language (id, uuid, name) FROM stdin;
+1	c037e229-3731-4118-bea4-64cd069afbc8	english
+2	e6611c19-fe1f-4086-8eb1-bb0d5620e5d0	uk english
+3	08260f08-1fec-456d-ad5e-660cbc7f1c4c	standard english
+4	edc7faab-cc45-48a1-8a42-8794e36b1e56	northern england english
+5	3a64b4cc-a944-4de5-b4a1-e43aa06bd453	cheshire
+6	aab443fd-b97f-4227-8460-252bdc963676	cumbrian
+7	93d099c3-e59f-4fac-8626-61aea08da79c	geordie
+8	ef358155-beed-4d7c-a192-3292d36cdb5a	hartlepudlian
+9	ec559dcd-d33e-408f-ade4-ede2fdb8f268	lancastrian
+10	642175da-eae4-4c57-8738-a788b222f53e	mackem
+11	d4abb8bb-abc0-4e68-8de7-509b25e49aeb	mancunian
+12	153f0c0d-19e4-4daa-b8ce-96f17e02cff2	northumbrian
+13	ccb43e2a-a80b-4928-9eda-e7cf1cc40869	pitmatic
+14	6e24223b-f5ff-4fad-aadc-bc408804a96e	scouse
+15	a94ba838-0739-4e4e-a8c6-6395925a0d47	smoggie
+16	308f62f4-ed24-4044-a357-8e4002758712	yorkshire
+17	1d6f2e5b-cf55-4610-82a3-554550bbafec	east midlands english
+18	7e0f0c88-617e-4fdc-b932-6014095c40d7	lincolnshire
+19	568df935-3bd4-4ad7-b15d-a5207ad55d7b	east lincolnshire
+20	805c0a97-3a1f-4dd4-be40-d010fa1ef649	west midlands english
+21	1c793214-2fa9-4fd8-8c6a-12bf2323f6f7	black country
+22	8b6fd7bc-a736-46e0-9302-ef7b3085989c	brummie
+23	25c92819-94eb-4a2b-a90c-30487f971e99	potteries
+24	bc8387d0-dcfd-4218-b98a-4474fddbd7e4	coventry
+25	34736690-6d67-45f9-a131-ba50f97b42b3	east anglian english
+26	73fd776f-97f0-4c33-a08e-0d2dc5d38ad8	norfolk
+27	e8eb5128-600f-4cd2-88d5-1f6d7f082975	suffolk
+28	f1d5efe1-8d4d-40eb-87e1-095e984a6ad4	southern english
+29	17653e00-0701-492a-9027-98e9011ba117	cockney
+30	5953e4ea-1028-47aa-8f40-43c896c6ac75	essaxon
+31	bbf336ff-f76d-4785-a84f-43e2d7a69fc7	estuary
+32	64bd2f79-1385-4c3f-9d01-d3a1dcdae9f4	pompey dialect
+33	b82db911-e952-4a8a-b6db-511e58eb6a3a	kentish
+34	16ab38f0-d2e0-46ca-83e6-a924e92ad743	multicultural london
+35	8bd7f9cd-36e1-44b2-9d48-bcb0c2a75152	sussex
+36	d5b9bc9b-6b19-4986-b5d8-1ab08f914fd1	west country english
+37	2b3ba231-a783-4c17-a25c-6436be10dc9e	anglo-cornis
+38	5f06c74e-ba40-447f-9bc3-0229aca25c25	bristolia
+39	fb4c3bce-35b2-4c42-9c6d-5d938cc8a695	janne
+40	80772a3b-361f-4960-9dc3-3ddb5278659d	dorse
+41	d9477607-b4ca-46a3-a583-3fe1d0efacc2	international english
+42	0be0340a-e78b-4846-9feb-74d73c34e450	received pronunciation english
+\.
+
+
+--
+-- Data for Name: language_label; Type: TABLE DATA; Schema: public; Owner: brook
+--
+
+COPY public.language_label (id, uuid, label, language) FROM stdin;
+2	2a15fedf-e156-480c-a129-1180e9c13e03	English	c037e229-3731-4118-bea4-64cd069afbc8
+3	21102d76-a9e1-4eb9-9064-48f0a2cfc41f	English English	e6611c19-fe1f-4086-8eb1-bb0d5620e5d0
+4	35a959ba-4315-4ab0-a2ee-49150eb93658	Anglo-English	e6611c19-fe1f-4086-8eb1-bb0d5620e5d0
+5	5f3c5135-0ad5-4b2c-a2da-d5ffee7c48ea	British English in England	e6611c19-fe1f-4086-8eb1-bb0d5620e5d0
+6	67a6df85-88bd-4213-8692-a592be3483ce	Standard English	08260f08-1fec-456d-ad5e-660cbc7f1c4c
+7	ed9038ca-3062-4abc-8d7c-8d09d78365ce	Northern England English	edc7faab-cc45-48a1-8a42-8794e36b1e56
+8	8b17683e-4940-4950-9570-6f5099aa642b	Northern English	edc7faab-cc45-48a1-8a42-8794e36b1e56
+9	bee5ce83-cef8-476d-b40b-71bbca6e84d6	Cheshire	3a64b4cc-a944-4de5-b4a1-e43aa06bd453
+10	59c206bd-c18b-4581-b24a-21ad3705edd3	Cumbrian	aab443fd-b97f-4227-8460-252bdc963676
+11	2f7ba6e1-4f8f-4bd9-a1f5-86d6c48db8e6	Barrovian	aab443fd-b97f-4227-8460-252bdc963676
+12	4fbbd431-7f20-4b62-a8f0-f683165aa8e3	Geordie	93d099c3-e59f-4fac-8626-61aea08da79c
+13	46b3167b-ffbd-46a6-ae7f-4a936f94b77c	Hartlepudlian	ef358155-beed-4d7c-a192-3292d36cdb5a
+14	62963806-5913-4ea5-9ee1-02fa9adb0462	Lancastrian	ec559dcd-d33e-408f-ade4-ede2fdb8f268
+15	761b63fc-a3ba-4352-9009-057970c833ed	Mackem	642175da-eae4-4c57-8738-a788b222f53e
+16	c259d541-242d-414a-84e2-65220987d287	Mancunian	d4abb8bb-abc0-4e68-8de7-509b25e49aeb
+17	7d82966b-ae91-4841-9007-14ffa652d455	Northumbrian	153f0c0d-19e4-4daa-b8ce-96f17e02cff2
+18	e7f39bc1-41f7-4ab8-9aa1-4c34c638664f	Pitmatic	ccb43e2a-a80b-4928-9eda-e7cf1cc40869
+19	5557138b-3be8-4682-a20c-8fb8906cc998	Scouse	6e24223b-f5ff-4fad-aadc-bc408804a96e
+20	0ebc991a-5e9c-46fc-b8ee-3996570fcb65	Smoggie	a94ba838-0739-4e4e-a8c6-6395925a0d47
+21	bed972d4-1c7f-4a2a-b74b-a92eb437f8e0	Yorkshire	308f62f4-ed24-4044-a357-8e4002758712
+22	0bc88f01-1bb1-41cc-b257-e02a67782dbb	East Midlands English	1d6f2e5b-cf55-4610-82a3-554550bbafec
+23	0e22e3b7-2cba-40c9-8acf-54129a09091c	Lincolnshire English	7e0f0c88-617e-4fdc-b932-6014095c40d7
+24	d463cfc1-0185-4787-bc8a-32a6adf0e7c1	East Lincolnshire English	568df935-3bd4-4ad7-b15d-a5207ad55d7b
+25	79187494-272c-4a1e-a2a1-dd955eddce31	West Midlands English	805c0a97-3a1f-4dd4-be40-d010fa1ef649
+26	c0e1c32a-b487-4a97-a5cd-7e679ba5762a	Black Country	1c793214-2fa9-4fd8-8c6a-12bf2323f6f7
+27	fd9c9c05-a385-4b87-aab1-78bc005715e3	Brummie	8b6fd7bc-a736-46e0-9302-ef7b3085989c
+28	490fc46e-c7b6-4f4b-9be2-7e45b0747e25	Potteries	25c92819-94eb-4a2b-a90c-30487f971e99
+29	2bcdd884-d584-46d4-970b-ebe76a27394d	Coventry	bc8387d0-dcfd-4218-b98a-4474fddbd7e4
+30	175b9e81-0ccf-4245-a755-06b7c5a19521	East Anglian English	34736690-6d67-45f9-a131-ba50f97b42b3
+31	d7e6d4bf-f01b-45f6-ae44-442c31e29a6f	Norfolk	73fd776f-97f0-4c33-a08e-0d2dc5d38ad8
+32	bb39f9a9-3ead-46ee-9363-599bf9e22f53	Suffolk	e8eb5128-600f-4cd2-88d5-1f6d7f082975
+33	c81d051a-bac9-4977-ba2d-3c44d8139390	English in southern England	f1d5efe1-8d4d-40eb-87e1-095e984a6ad4
+34	d14bb4a5-0552-4980-bfbe-a00348ade52e	Southern English English	f1d5efe1-8d4d-40eb-87e1-095e984a6ad4
+35	5a7478b6-53fd-4786-814f-a0791f5c6f0c	Southern English	f1d5efe1-8d4d-40eb-87e1-095e984a6ad4
+36	f3abbadd-9f64-4eaa-a484-da22de61ed2c	Cockney	17653e00-0701-492a-9027-98e9011ba117
+37	7210a733-1d5b-49f8-8d84-f4771e067aca	Essaxon	5953e4ea-1028-47aa-8f40-43c896c6ac75
+38	2a8a0063-8d6d-4529-8c0c-31c1bfa51dc1	Estuary	bbf336ff-f76d-4785-a84f-43e2d7a69fc7
+39	7f6dad56-1ac8-4139-978a-6249cb67c121	Pompey dialect	64bd2f79-1385-4c3f-9d01-d3a1dcdae9f4
+40	ed6e4f9f-8e1a-4eeb-ab8e-6c7f0ab61857	Kentish	b82db911-e952-4a8a-b6db-511e58eb6a3a
+41	20aa5106-024c-428f-8fae-8a634549830d	Multicultural London	16ab38f0-d2e0-46ca-83e6-a924e92ad743
+42	59c97b78-2e2f-4614-8bee-7868e6b64ed3	Sussex	8bd7f9cd-36e1-44b2-9d48-bcb0c2a75152
+43	f9654e8f-ddf6-4922-9427-1feac0b3b356	West Country English	d5b9bc9b-6b19-4986-b5d8-1ab08f914fd1
+44	e7ac5f66-e781-4b4b-8255-6583486bb51b	Anglo-Cornish	2b3ba231-a783-4c17-a25c-6436be10dc9e
+45	da8c0ab6-60d7-46fd-9f38-75456253acc8	Bristolian	5f06c74e-ba40-447f-9bc3-0229aca25c25
+46	4bd49b5e-2b91-4885-a1c1-7b84be437a54	Janner	fb4c3bce-35b2-4c42-9c6d-5d938cc8a695
+47	0ad31f47-2df2-4090-873c-fb20f15b1870	Dorset	80772a3b-361f-4960-9dc3-3ddb5278659d
+48	e6c2d388-2900-4f4d-a858-2841cb1587ec	International English	d9477607-b4ca-46a3-a583-3fe1d0efacc2
+49	22de869b-55a7-41b7-9cf4-d8bbf8447a25	Global English	d9477607-b4ca-46a3-a583-3fe1d0efacc2
+50	6823572a-9b3c-4afc-a744-1738d3dfeaf8	World English	d9477607-b4ca-46a3-a583-3fe1d0efacc2
+51	1499ae78-981d-43ca-8558-b69a10128f58	Common English	d9477607-b4ca-46a3-a583-3fe1d0efacc2
+52	795cf96c-a444-46a2-ba51-ffaab05bc069	Continental English	d9477607-b4ca-46a3-a583-3fe1d0efacc2
+53	56509c73-0bfd-416e-aa2f-2800732aa34d	General English	d9477607-b4ca-46a3-a583-3fe1d0efacc2
+54	c9a9cdcd-06ce-4464-a2cc-17b8f3d9e1d2	Engas	d9477607-b4ca-46a3-a583-3fe1d0efacc2
+55	11c7d8a0-f58f-452b-9dc7-eb9f137d5bf4	Globish	d9477607-b4ca-46a3-a583-3fe1d0efacc2
+56	e93a6013-df51-4384-bcdf-f2727f4f0068	Received Pronunciation	0be0340a-e78b-4846-9feb-74d73c34e450
+57	934527db-663d-4de5-9272-d2bbd94aaeb1	BBC English	0be0340a-e78b-4846-9feb-74d73c34e450
+58	5c5d6a86-a921-422e-8080-c9e3c79461fc	Standard British pronunciation	0be0340a-e78b-4846-9feb-74d73c34e450
+59	779434e6-f8ae-4994-af9c-507a270b4321	Southern British pronunciation	0be0340a-e78b-4846-9feb-74d73c34e450
+\.
+
+
+--
+-- Data for Name: language_relationship; Type: TABLE DATA; Schema: public; Owner: brook
+--
+
+COPY public.language_relationship (id, uuid, language, related_language, type) FROM stdin;
+5	f793d9c9-00a8-4607-9c47-e9746436e561	e6611c19-fe1f-4086-8eb1-bb0d5620e5d0	c037e229-3731-4118-bea4-64cd069afbc8	dialect of
+6	54ac6e2d-a8fd-48a6-bb69-531b91445a07	08260f08-1fec-456d-ad5e-660cbc7f1c4c	e6611c19-fe1f-4086-8eb1-bb0d5620e5d0	dialect of
+7	b949bb5f-1538-4c0d-8601-c518411e8ce6	edc7faab-cc45-48a1-8a42-8794e36b1e56	e6611c19-fe1f-4086-8eb1-bb0d5620e5d0	dialect of
+8	b7eabfdd-a299-4257-b87a-ca9503ce751b	3a64b4cc-a944-4de5-b4a1-e43aa06bd453	edc7faab-cc45-48a1-8a42-8794e36b1e56	dialect of
+9	a3c7b1c0-eb72-4c69-87d6-b6791c266739	aab443fd-b97f-4227-8460-252bdc963676	edc7faab-cc45-48a1-8a42-8794e36b1e56	dialect of
+10	05a8f72e-50a9-465f-a972-5cb133959061	93d099c3-e59f-4fac-8626-61aea08da79c	edc7faab-cc45-48a1-8a42-8794e36b1e56	dialect of
+11	1fa947ce-2a46-4b6b-b417-1e14b0ff394e	ef358155-beed-4d7c-a192-3292d36cdb5a	edc7faab-cc45-48a1-8a42-8794e36b1e56	dialect of
+12	d5f46c91-b15b-41d5-b135-8d290bd0f16f	ec559dcd-d33e-408f-ade4-ede2fdb8f268	edc7faab-cc45-48a1-8a42-8794e36b1e56	dialect of
+13	ca2c830c-622c-40c1-9f38-73313cadde85	642175da-eae4-4c57-8738-a788b222f53e	edc7faab-cc45-48a1-8a42-8794e36b1e56	dialect of
+14	30e9705d-db33-42f0-8832-a4f8f36d8b04	d4abb8bb-abc0-4e68-8de7-509b25e49aeb	edc7faab-cc45-48a1-8a42-8794e36b1e56	dialect of
+15	4f82dc19-20ea-4603-8247-2ef1470bdaf3	153f0c0d-19e4-4daa-b8ce-96f17e02cff2	edc7faab-cc45-48a1-8a42-8794e36b1e56	dialect of
+16	4c2abdf4-cd2e-49ad-b8f6-bb55c7f039b8	ccb43e2a-a80b-4928-9eda-e7cf1cc40869	edc7faab-cc45-48a1-8a42-8794e36b1e56	dialect of
+17	cac4307d-bde6-4ed5-8f71-f3a7daad129e	6e24223b-f5ff-4fad-aadc-bc408804a96e	edc7faab-cc45-48a1-8a42-8794e36b1e56	dialect of
+18	9851c5a9-3831-451b-8f4f-4510925d7b84	a94ba838-0739-4e4e-a8c6-6395925a0d47	edc7faab-cc45-48a1-8a42-8794e36b1e56	dialect of
+19	1cf455fc-38a6-4aee-a8f3-f7b8bd0e1c59	308f62f4-ed24-4044-a357-8e4002758712	edc7faab-cc45-48a1-8a42-8794e36b1e56	dialect of
+20	b33f4894-e2d1-4e0d-8c62-37f289c80c1b	1d6f2e5b-cf55-4610-82a3-554550bbafec	e6611c19-fe1f-4086-8eb1-bb0d5620e5d0	dialect of
+21	6e2ccbdf-72b9-4bbf-8d6b-c3cad5f736bf	7e0f0c88-617e-4fdc-b932-6014095c40d7	1d6f2e5b-cf55-4610-82a3-554550bbafec	dialect of
+22	9b8725ef-2e29-47fa-bc9b-a3d5395bc38d	568df935-3bd4-4ad7-b15d-a5207ad55d7b	1d6f2e5b-cf55-4610-82a3-554550bbafec	dialect of
+23	e97755d5-de17-456d-90bd-2df3e836f693	805c0a97-3a1f-4dd4-be40-d010fa1ef649	e6611c19-fe1f-4086-8eb1-bb0d5620e5d0	dialect of
+24	b34bf43a-7ea0-4b18-a69f-9f97ed049ec5	1c793214-2fa9-4fd8-8c6a-12bf2323f6f7	805c0a97-3a1f-4dd4-be40-d010fa1ef649	dialect of
+25	c517a760-8136-49a3-b509-9d9108ee4b12	8b6fd7bc-a736-46e0-9302-ef7b3085989c	805c0a97-3a1f-4dd4-be40-d010fa1ef649	dialect of
+26	50bfeb00-fdc4-4ee7-88af-fb69c1dae11f	25c92819-94eb-4a2b-a90c-30487f971e99	805c0a97-3a1f-4dd4-be40-d010fa1ef649	dialect of
+27	0253f529-ac69-438b-b5cc-e2d39da03b0b	bc8387d0-dcfd-4218-b98a-4474fddbd7e4	805c0a97-3a1f-4dd4-be40-d010fa1ef649	dialect of
+28	cf974bea-4397-4145-b14b-aaef07723a3f	34736690-6d67-45f9-a131-ba50f97b42b3	e6611c19-fe1f-4086-8eb1-bb0d5620e5d0	dialect of
+29	7e52e41e-0ff7-40c1-95ef-e5cdbfa3a1e2	73fd776f-97f0-4c33-a08e-0d2dc5d38ad8	34736690-6d67-45f9-a131-ba50f97b42b3	dialect of
+30	a4081b3b-1b57-49f0-9493-4bb1062dbc40	e8eb5128-600f-4cd2-88d5-1f6d7f082975	34736690-6d67-45f9-a131-ba50f97b42b3	dialect of
+31	3eecf94b-ac2c-444a-b999-4b8d215a55ef	f1d5efe1-8d4d-40eb-87e1-095e984a6ad4	e6611c19-fe1f-4086-8eb1-bb0d5620e5d0	dialect of
+32	4b93a082-d882-4d18-8f31-bfabf1083772	17653e00-0701-492a-9027-98e9011ba117	f1d5efe1-8d4d-40eb-87e1-095e984a6ad4	dialect of
+33	41ef8637-ac65-4201-894d-27801682f69d	5953e4ea-1028-47aa-8f40-43c896c6ac75	f1d5efe1-8d4d-40eb-87e1-095e984a6ad4	dialect of
+34	208a27d5-fbc9-431c-945d-b4268352115b	bbf336ff-f76d-4785-a84f-43e2d7a69fc7	f1d5efe1-8d4d-40eb-87e1-095e984a6ad4	dialect of
+35	a822a3ba-65fa-40e2-8ddb-677d4f82d827	64bd2f79-1385-4c3f-9d01-d3a1dcdae9f4	f1d5efe1-8d4d-40eb-87e1-095e984a6ad4	dialect of
+36	5c71f7b7-1e50-481f-a87e-5a26fba714c3	b82db911-e952-4a8a-b6db-511e58eb6a3a	f1d5efe1-8d4d-40eb-87e1-095e984a6ad4	dialect of
+37	8f7bc50f-7196-4f30-961e-27b98ae8ea98	16ab38f0-d2e0-46ca-83e6-a924e92ad743	f1d5efe1-8d4d-40eb-87e1-095e984a6ad4	dialect of
+38	a730d9d5-5175-4353-a145-25eccc01cd7d	8bd7f9cd-36e1-44b2-9d48-bcb0c2a75152	f1d5efe1-8d4d-40eb-87e1-095e984a6ad4	dialect of
+39	377c7807-33c8-40d0-b675-8b03e7f2a80c	d5b9bc9b-6b19-4986-b5d8-1ab08f914fd1	e6611c19-fe1f-4086-8eb1-bb0d5620e5d0	dialect of
+40	79c58446-3bd0-4ddf-83c5-4128bfa1fc1c	2b3ba231-a783-4c17-a25c-6436be10dc9e	d5b9bc9b-6b19-4986-b5d8-1ab08f914fd1	dialect of
+41	4c1ade3b-22b0-485f-ba18-f193e51697f3	5f06c74e-ba40-447f-9bc3-0229aca25c25	d5b9bc9b-6b19-4986-b5d8-1ab08f914fd1	dialect of
+42	5fe86fd8-4c38-45a0-abcc-a556b20f4334	fb4c3bce-35b2-4c42-9c6d-5d938cc8a695	d5b9bc9b-6b19-4986-b5d8-1ab08f914fd1	dialect of
+43	4586cf49-1109-4f15-8083-de7dff9f09c7	80772a3b-361f-4960-9dc3-3ddb5278659d	d5b9bc9b-6b19-4986-b5d8-1ab08f914fd1	dialect of
+44	9028146a-6273-4a9b-858a-67fbb70f8c95	d9477607-b4ca-46a3-a583-3fe1d0efacc2	c037e229-3731-4118-bea4-64cd069afbc8	dialect of
+45	ad01dcaf-674d-43f8-ac8d-008ddf2831d5	0be0340a-e78b-4846-9feb-74d73c34e450	c037e229-3731-4118-bea4-64cd069afbc8	dialect of
+\.
+
+
+--
+-- Data for Name: language_relationship_type; Type: TABLE DATA; Schema: public; Owner: brook
+--
+
+COPY public.language_relationship_type (id, name) FROM stdin;
+1	dialect of
+\.
+
+
+--
 -- Data for Name: passport_travel_requirements; Type: TABLE DATA; Schema: public; Owner: brook
 --
 
-COPY public.passport_travel_requirements (id, passport_territory, destination_territory, visa_type, stay_length, notes) FROM stdin;
-1	0f433ba9-47e1-4fe6-902c-632bf40355a9	1965c743-cf9a-4021-9ed1-b9e4e77486a2	visa not required	90 days	\N
-2	0f433ba9-47e1-4fe6-902c-632bf40355a9	2b1a33fe-be25-452b-8a1c-c7d5f1dce9c2	free visa on arrival	30 days	\N
-3	0f433ba9-47e1-4fe6-902c-632bf40355a9	793360a3-aa91-4703-acfe-60287e3f9b74	visa not required	3 mons	\N
-4	0f433ba9-47e1-4fe6-902c-632bf40355a9	ca1a8efc-5d84-4e75-9f3b-5d005b9afca5	freedom of movement	\N	\N
-5	0f433ba9-47e1-4fe6-902c-632bf40355a9	49494a5b-205f-4756-9145-2784c9269a99	visa not required	6 mons	\N
-6	0f433ba9-47e1-4fe6-902c-632bf40355a9	c5db5d6b-ebcd-4642-9604-0f1ebf2fdf9d	visa not required	\N	\N
-7	0f433ba9-47e1-4fe6-902c-632bf40355a9	2dd507e0-8e57-4924-a57f-8fc2e22555e2	visa not required	\N	\N
-8	0f433ba9-47e1-4fe6-902c-632bf40355a9	ac8b13ec-0d98-4fad-852e-a351d68e6a16	evisa	28 days	eVisa holders must arrive via Yangon, Nay Pyi Taw or Mandalay airports or via land border crossings with Thailand — Tachileik, Myawaddy and Kawthaung or India — Rih Khaw Dar and Tamu.\n\neVisa available for both tourism (allowed stay is 28 days) or business purposes (allowed stay is 70 days).
-9	0f433ba9-47e1-4fe6-902c-632bf40355a9	6702177a-fbed-4cf3-aa32-22da244beab0	visa not required	90 days	Must register with the local police station (either through a tourist organisation or at hotel reception) within 24 hours of arrival.
-10	0f433ba9-47e1-4fe6-902c-632bf40355a9	aae2ba87-a67d-43bd-8516-e403843d61d9	visa not required	90 days	\N
-11	0f433ba9-47e1-4fe6-902c-632bf40355a9	0b48c87c-ddaa-49d2-b736-61d9c44636e0	evisa	31 days	\N
+COPY public.passport_travel_requirements (id, passport_territory, destination_territory, visa_type, stay_length, notes, uuid) FROM stdin;
+1	0f433ba9-47e1-4fe6-902c-632bf40355a9	1965c743-cf9a-4021-9ed1-b9e4e77486a2	visa not required	90 days	\N	25fa7777-29b1-49ed-9813-c7ac202a74ec
+2	0f433ba9-47e1-4fe6-902c-632bf40355a9	2b1a33fe-be25-452b-8a1c-c7d5f1dce9c2	free visa on arrival	30 days	\N	fbd633ef-2c7c-4b7b-a91c-347f49da89d5
+3	0f433ba9-47e1-4fe6-902c-632bf40355a9	793360a3-aa91-4703-acfe-60287e3f9b74	visa not required	3 mons	\N	3fb617a8-6f66-488a-956d-b533f20daf5a
+4	0f433ba9-47e1-4fe6-902c-632bf40355a9	ca1a8efc-5d84-4e75-9f3b-5d005b9afca5	freedom of movement	\N	\N	e6acb079-da2a-4b9c-b2e6-f18d423d01d0
+5	0f433ba9-47e1-4fe6-902c-632bf40355a9	49494a5b-205f-4756-9145-2784c9269a99	visa not required	6 mons	\N	c6bc9e09-56e3-4952-9e09-103fdab616c6
+6	0f433ba9-47e1-4fe6-902c-632bf40355a9	c5db5d6b-ebcd-4642-9604-0f1ebf2fdf9d	visa not required	\N	\N	cae05655-eff4-4d28-970a-c37dedc3b99e
+7	0f433ba9-47e1-4fe6-902c-632bf40355a9	2dd507e0-8e57-4924-a57f-8fc2e22555e2	visa not required	\N	\N	cb57eeda-784b-4b91-8731-240ab57c4ed4
+8	0f433ba9-47e1-4fe6-902c-632bf40355a9	ac8b13ec-0d98-4fad-852e-a351d68e6a16	evisa	28 days	eVisa holders must arrive via Yangon, Nay Pyi Taw or Mandalay airports or via land border crossings with Thailand — Tachileik, Myawaddy and Kawthaung or India — Rih Khaw Dar and Tamu.  eVisa available for both tourism (allowed stay is 28 days) or business purposes (allowed stay is 70 days).	2fb37c86-a666-4684-85cf-7f637922a0a4
+9	0f433ba9-47e1-4fe6-902c-632bf40355a9	6702177a-fbed-4cf3-aa32-22da244beab0	visa not required	90 days	Must register with the local police station (either through a tourist organisation or at hotel reception) within 24 hours of arrival.	64384ee4-02d8-4140-9cb2-dc29c6a49a6f
+10	0f433ba9-47e1-4fe6-902c-632bf40355a9	aae2ba87-a67d-43bd-8516-e403843d61d9	visa not required	90 days	\N	8abf0369-f4a9-4729-9d06-94d2342e9182
+11	0f433ba9-47e1-4fe6-902c-632bf40355a9	0b48c87c-ddaa-49d2-b736-61d9c44636e0	evisa	31 days	\N	1bed4fe6-a491-4fac-8099-a6e1a72db7d8
 \.
 
 
@@ -1413,6 +1801,45 @@ COPY public.territory_label (id, uuid, label, territory, the) FROM stdin;
 45	efb6db14-cca5-416d-ad2e-7bd6a7e7f39c	Northern Ireland	c639dcd9-0e03-4f83-bdba-8a5a921b021a	f
 46	2c26329e-4aab-4a2e-a9ce-cb64fb3db043	Djibouti	0b48c87c-ddaa-49d2-b736-61d9c44636e0	t
 47	a1e0b5dc-ba47-435f-bae9-02e28c45eef2	Republic of Djibouti	0b48c87c-ddaa-49d2-b736-61d9c44636e0	f
+50	698a9c73-7e0e-4c14-9a5d-90c31d899eda	Aruba	44344c65-9381-42d7-a573-6a9e38ead0f0	f
+51	4032590f-9f5a-418e-8ef8-70cf22b608e1	Bermuda	5cbe7035-cbba-4ba4-9e59-1338db15983a	f
+52	632a1730-db03-44b1-8bc3-2987954ce762	British Virgin islands	4fe94a12-77e5-4a49-94c4-6bff7b9f1b2e	t
+53	fcb25527-9f4d-4a1e-a322-5da55fd3e75f	Canary islands	b4a2b89a-1d72-4928-becb-eb198ed494be	t
+54	d9b40c94-81fa-4b22-b4ba-8e051c3b3b10	Cape Verde	3e77325d-7fea-46ad-a8fa-b2d31056b3ea	f
+55	6cc799fd-d80d-43b4-b3b9-47be2e6e67df	Cayman islands	8372a0ad-58ad-41f7-af06-dea7df6ef891	t
+56	5b658463-94f0-4949-a36f-8cc7818b5e18	Curaco	3ba46aea-ed4b-48bc-919d-a93a4d6f1d6e	f
+57	9d6255ea-3264-409b-8898-7a3c9d159cca	Faeroe islands	38c4b24f-a7d0-4af2-9d09-724ab4ad9017	t
+58	8a304963-b3d1-4f8e-8969-d18ef1b9fcd2	Falkland islands	ff772da3-5cb8-4833-a427-2651adf6fbd6	t
+59	6e13565c-23bf-4ea7-9989-128380b86680	French Polynesia	472108f0-b6a2-410c-9885-d4fa3b3412bd	f
+60	886e9595-ff14-4687-85c7-e2a53a3cf8e6	French Guiana	fef2c7ae-f872-4a71-9c87-0d0727258c26	f
+61	1c24ea70-903e-495f-b8dd-93d6c5b3627b	Greenland	5f5fad3d-69c4-41b1-bc88-d9b8cff77027	f
+62	fe50eee7-33f1-4f8e-8970-1747316a7ecf	Guadeloupe	ba5a63e1-7feb-4d40-ae2f-d0a9f2123c0c	f
+63	5fdc6aa0-f227-4239-bf87-b37258ad8574	Hong Kong	ae7c2b6b-a504-4e11-a52c-97175217c0a7	f
+64	9d28f56d-5d57-4d40-8497-42cd81472493	Liechtenstein	8510166b-62a4-475f-8afe-891fe1cb22a0	f
+65	e00b2246-31ea-48b8-bdb7-44cc94f04a91	Martinique	07546102-9696-4e5b-80fb-c435267230aa	f
+66	cb0144e8-3eab-4107-8c1d-6c6b4b4b6401	Mayotte	4f7bf3fc-1cdd-42ea-acc1-2325444ea405	f
+67	50e678bb-2dfa-47fe-8177-195473594107	Montserrat	adc6de52-b3d9-4448-a7d6-39622cf3261f	f
+68	da076945-8aa2-4eeb-a35b-d05beeb8ca29	New Caledonia	17b783e7-ad5c-473c-8787-aab9c9397fed	f
+69	f0351434-10a7-439e-89df-b1a3017c8fae	Palestine	6ed0c70e-c6ab-4148-aae3-fbf474467390	f
+70	59d70527-42bb-4d1a-a74f-a01c656c1b83	Pitcairn islands	6fda58dd-3eb4-49f9-8f07-8e0c4562675b	t
+71	51cce0c0-c13d-4aee-954e-89d4fdf30cfc	Puerto Rico	f18ec7fe-184e-4e4b-9ac5-14c5bfbf1fb7	f
+72	6258af45-2ce2-48b9-9bed-c56307391208	Reunion	e600ef6e-e2fa-42cd-a54e-60cd0a48c98f	f
+73	0bb44753-4600-44f7-a2bd-7aa30574334f	Sint Maarten	f873ab5f-e175-4a90-9e0e-1efe1d0880ff	f
+74	0cc1ca5b-8338-4fbb-bef6-fbc8710e2b9d	Swaziland	188c245e-16ba-4c8b-a894-dcfd252e6735	f
+75	d42e9a1c-9756-474f-82a6-2a28332fda87	Taiwan	1f6e1df0-b5ff-4eb0-89b2-0bd06cf52883	f
+76	d83f4654-70e9-47de-9bd4-e8c2bab35de5	Turks and Caicos islands	29c528d3-2b84-4b14-adec-78d0f7a06fc1	t
+77	086a57aa-fd82-4884-be13-f15210793c6b	US Virgin islands	cd560671-9a56-4d59-a90b-3fc5876c54a8	t
+78	3bedb04a-e623-45a5-a27f-2b4d6090238a	Western Sahara	7c843d31-a3b7-4fd6-854d-a41fd456ab79	f
+\.
+
+
+--
+-- Data for Name: territory_language; Type: TABLE DATA; Schema: public; Owner: brook
+--
+
+COPY public.territory_language (id, uuid, territory, language) FROM stdin;
+1	799b648f-4d7f-479e-96f7-b1b163ed6a5c	0f433ba9-47e1-4fe6-902c-632bf40355a9	e6611c19-fe1f-4086-8eb1-bb0d5620e5d0
+2	45a496f9-6c2d-4cab-b962-fd9b953a5cd3	56c6dacf-b4d9-401b-874a-6518da0cd567	08260f08-1fec-456d-ad5e-660cbc7f1c4c
 \.
 
 
@@ -5167,6 +5594,34 @@ SELECT pg_catalog.setval('public.demonym_id_seq', 45, true);
 
 
 --
+-- Name: language_id_seq; Type: SEQUENCE SET; Schema: public; Owner: brook
+--
+
+SELECT pg_catalog.setval('public.language_id_seq', 42, true);
+
+
+--
+-- Name: language_label_id_seq; Type: SEQUENCE SET; Schema: public; Owner: brook
+--
+
+SELECT pg_catalog.setval('public.language_label_id_seq', 59, true);
+
+
+--
+-- Name: language_relationship_id_seq; Type: SEQUENCE SET; Schema: public; Owner: brook
+--
+
+SELECT pg_catalog.setval('public.language_relationship_id_seq', 45, true);
+
+
+--
+-- Name: language_relationship_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: brook
+--
+
+SELECT pg_catalog.setval('public.language_relationship_type_id_seq', 1, true);
+
+
+--
 -- Name: passport_travel_requirements_id_seq; Type: SEQUENCE SET; Schema: public; Owner: brook
 --
 
@@ -5191,7 +5646,14 @@ SELECT pg_catalog.setval('public.territory_id_seq', 29, true);
 -- Name: territory_label_id_seq; Type: SEQUENCE SET; Schema: public; Owner: brook
 --
 
-SELECT pg_catalog.setval('public.territory_label_id_seq', 49, true);
+SELECT pg_catalog.setval('public.territory_label_id_seq', 78, true);
+
+
+--
+-- Name: territory_language_id_seq; Type: SEQUENCE SET; Schema: public; Owner: brook
+--
+
+SELECT pg_catalog.setval('public.territory_language_id_seq', 2, true);
 
 
 --
@@ -5333,11 +5795,91 @@ ALTER TABLE ONLY public.demonym
 
 
 --
+-- Name: language_label language_label_pkey; Type: CONSTRAINT; Schema: public; Owner: brook
+--
+
+ALTER TABLE ONLY public.language_label
+    ADD CONSTRAINT language_label_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: language_label language_label_uuid_key; Type: CONSTRAINT; Schema: public; Owner: brook
+--
+
+ALTER TABLE ONLY public.language_label
+    ADD CONSTRAINT language_label_uuid_key UNIQUE (uuid);
+
+
+--
+-- Name: language language_name_key; Type: CONSTRAINT; Schema: public; Owner: brook
+--
+
+ALTER TABLE ONLY public.language
+    ADD CONSTRAINT language_name_key UNIQUE (name);
+
+
+--
+-- Name: language language_pkey; Type: CONSTRAINT; Schema: public; Owner: brook
+--
+
+ALTER TABLE ONLY public.language
+    ADD CONSTRAINT language_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: language_relationship language_relationship_pkey; Type: CONSTRAINT; Schema: public; Owner: brook
+--
+
+ALTER TABLE ONLY public.language_relationship
+    ADD CONSTRAINT language_relationship_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: language_relationship_type language_relationship_type_name_key; Type: CONSTRAINT; Schema: public; Owner: brook
+--
+
+ALTER TABLE ONLY public.language_relationship_type
+    ADD CONSTRAINT language_relationship_type_name_key UNIQUE (name);
+
+
+--
+-- Name: language_relationship_type language_relationship_type_pkey; Type: CONSTRAINT; Schema: public; Owner: brook
+--
+
+ALTER TABLE ONLY public.language_relationship_type
+    ADD CONSTRAINT language_relationship_type_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: language_relationship language_relationship_uuid_key; Type: CONSTRAINT; Schema: public; Owner: brook
+--
+
+ALTER TABLE ONLY public.language_relationship
+    ADD CONSTRAINT language_relationship_uuid_key UNIQUE (uuid);
+
+
+--
+-- Name: language language_uuid_key; Type: CONSTRAINT; Schema: public; Owner: brook
+--
+
+ALTER TABLE ONLY public.language
+    ADD CONSTRAINT language_uuid_key UNIQUE (uuid);
+
+
+--
 -- Name: passport_travel_requirements passport_travel_requirements_pkey; Type: CONSTRAINT; Schema: public; Owner: brook
 --
 
 ALTER TABLE ONLY public.passport_travel_requirements
     ADD CONSTRAINT passport_travel_requirements_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: passport_travel_requirements passport_travel_requirements_uuid_key; Type: CONSTRAINT; Schema: public; Owner: brook
+--
+
+ALTER TABLE ONLY public.passport_travel_requirements
+    ADD CONSTRAINT passport_travel_requirements_uuid_key UNIQUE (uuid);
 
 
 --
@@ -5362,6 +5904,22 @@ ALTER TABLE ONLY public.svg_path
 
 ALTER TABLE ONLY public.territory_label
     ADD CONSTRAINT territory_label_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: territory_language territory_language_pkey; Type: CONSTRAINT; Schema: public; Owner: brook
+--
+
+ALTER TABLE ONLY public.territory_language
+    ADD CONSTRAINT territory_language_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: territory_language territory_language_uuid_key; Type: CONSTRAINT; Schema: public; Owner: brook
+--
+
+ALTER TABLE ONLY public.territory_language
+    ADD CONSTRAINT territory_language_uuid_key UNIQUE (uuid);
 
 
 --
@@ -5493,6 +6051,38 @@ ALTER TABLE ONLY public.visa_type
 
 
 --
+-- Name: language_label language; Type: FK CONSTRAINT; Schema: public; Owner: brook
+--
+
+ALTER TABLE ONLY public.language_label
+    ADD CONSTRAINT language FOREIGN KEY (language) REFERENCES public.language(uuid) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- Name: territory_language language; Type: FK CONSTRAINT; Schema: public; Owner: brook
+--
+
+ALTER TABLE ONLY public.territory_language
+    ADD CONSTRAINT language FOREIGN KEY (language) REFERENCES public.language(uuid) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- Name: language_relationship language_relationship_language_fkey; Type: FK CONSTRAINT; Schema: public; Owner: brook
+--
+
+ALTER TABLE ONLY public.language_relationship
+    ADD CONSTRAINT language_relationship_language_fkey FOREIGN KEY (language) REFERENCES public.language(uuid) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- Name: language_relationship language_relationship_related_language_fkey; Type: FK CONSTRAINT; Schema: public; Owner: brook
+--
+
+ALTER TABLE ONLY public.language_relationship
+    ADD CONSTRAINT language_relationship_related_language_fkey FOREIGN KEY (related_language) REFERENCES public.language(uuid) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
 -- Name: passport_travel_requirements passport_territory; Type: FK CONSTRAINT; Schema: public; Owner: brook
 --
 
@@ -5522,6 +6112,14 @@ ALTER TABLE ONLY public.territory_reltionship
 
 ALTER TABLE ONLY public.territory_reltionship
     ADD CONSTRAINT relationship FOREIGN KEY (relationship) REFERENCES public.territory_reltionship_type(name) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- Name: territory_language teritorry; Type: FK CONSTRAINT; Schema: public; Owner: brook
+--
+
+ALTER TABLE ONLY public.territory_language
+    ADD CONSTRAINT teritorry FOREIGN KEY (territory) REFERENCES public.territory(uuid) ON UPDATE CASCADE ON DELETE RESTRICT;
 
 
 --
@@ -5618,6 +6216,14 @@ ALTER TABLE ONLY public."ISO_3166-1_alpha-3"
 
 ALTER TABLE ONLY public."ISO_3166-3"
     ADD CONSTRAINT type FOREIGN KEY (type) REFERENCES public."ISO_3166-3_type"(name) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- Name: language_relationship type; Type: FK CONSTRAINT; Schema: public; Owner: brook
+--
+
+ALTER TABLE ONLY public.language_relationship
+    ADD CONSTRAINT type FOREIGN KEY (type) REFERENCES public.language_relationship_type(name) ON UPDATE CASCADE ON DELETE RESTRICT;
 
 
 --
