@@ -164,8 +164,12 @@
         return `hsl(${Math.round(this.h)},${Math.round(this.s)},${Math.round(this.l)})`;
       }
 
-      get cssLongString() {
-        return `hsl(${this.h}deg, ${this.s}%, ${this.l}%)`;
+      get cssAccurateString() {
+        return `hsl(${this.h}deg,${this.s}%,${this.l}%)`;
+      }
+
+      get cssNewString() {
+        return `hsl(${this.h}deg ${this.s}% ${this.l}%)`;
       }
     }
 
@@ -202,6 +206,16 @@
 
       get cssString() {
         return `rgb(${this.r},${this.g},${this.b})`;
+      }
+
+      get cssNewString() {
+        return `rgb(${
+          +(this.r / 255 * 100).toFixed(2)
+        }% ${
+          +(this.g / 255 * 100).toFixed(2)
+        }% ${
+          +(this.b / 255 * 100).toFixed(2)
+        }%)`;
       }
     }
 
@@ -627,18 +641,32 @@
                 currentTarget: this,
               }));
             }
+            dataRGBElt.oncontextmenu = (e) => {
+              e.preventDefault();
+              window.copyValue(
+                rgb.map(a => a.cssNewString).join(','),
+                () => this.showAlertMessage(`Copied “${rgb.map(a => a.cssNewString).join(',')}” to clipboard.`)
+              );
+            }
 
             this.hsl = hsl;
             dataHSLElt.querySelector('span').innerHTML = hsl.map(a => a.cssString).join('<br>');
             dataHSLElt.onclick = (e) => {
               window.copyValue(
-                hsl.map(a => a.cssLongString).join(','),
-                () => this.showAlertMessage(`Copied “${hsl.map(a => a.cssLongString).join(',')}” to clipboard.`)
+                hsl.map(a => a.cssString).join(','),
+                () => this.showAlertMessage(`Copied “${hsl.map(a => a.cssString).join(',')}” to clipboard.`)
               );
               this.onclickhsl(Object.freeze({
                 ...e,
                 currentTarget: this,
               }));
+            }
+            dataHSLElt.oncontextmenu = (e) => {
+              e.preventDefault();
+              window.copyValue(
+                hsl.map(a => a.cssNewString).join(','),
+                () => this.showAlertMessage(`Copied “${hsl.map(a => a.cssNewString).join(',')}” to clipboard.`)
+              );
             }
 
             if (hex.length === 1) {
