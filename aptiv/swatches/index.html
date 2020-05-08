@@ -396,12 +396,12 @@
 
         h3 {
           font-weight: 100;
-          font-size: 40px;
-          line-height: 2;
+          font-size: 25px;
+          line-height: 1.2;
           text-align: center;
           opacity: 0.6;
           cursor: pointer;
-          margin: 0;
+          margin: 0.5em 0;
         }
 
         p {
@@ -483,11 +483,11 @@
         let clr = clrName
           ? clrName
               .trim()
-              .replace(/ /g, "-")
+              .replace(/ |\&nbsp;/g, "-")
               .toLowerCase()
           : clrHex
               .trim()
-              .replace(/ /g, "-")
+              .replace(/ |\&nbsp;/g, "-")
               .toLowerCase();
 
         return `${isGradient ? "lg" : "c"}.$${clr}`;
@@ -500,10 +500,11 @@
         <div class="constrain">
           <div class="sizer">
             <div class="wrapper">
-              <h3 class="data data--hex">
-                #<span></span>
+              <h3 class="data data--name">
+                <span></span>
               </h3>
-              <p class="data data--name">
+              <p class="data data--hex">
+                Hex:
                 <span></span>
               </p>
               <p class="data data--rgb">
@@ -586,21 +587,23 @@
               containerElt.classList.add("theme--dark");
             }
 
-            this.name = name;
-            dataNameElt.querySelector('span').textContent = name;
-            dataNameElt.onclick = (e) => {
-              window.copyValue(
-                colourName(this.name),
-                () => this.showAlertMessage(`Copied “${colourName(this.name)}” to clipboard.`)
-              );
-              this.onclickname(Object.freeze({
-                ...e,
-                currentTarget: this,
-              }));
+            if (name) {
+              this.name = name;
+              dataNameElt.querySelector('span').textContent = name || hex.map(a => `#${a}`).join(', ');
+              dataNameElt.onclick = (e) => {
+                window.copyValue(
+                  colourName(this.name),
+                  () => this.showAlertMessage(`Copied “${colourName(this.name)}” to clipboard.`)
+                );
+                this.onclickname(Object.freeze({
+                  ...e,
+                  currentTarget: this,
+                }));
+              }
             }
 
             this.hex = hex;
-            dataHEXElt.querySelector('span').textContent = hex.join(', #');
+            dataHEXElt.querySelector('span').textContent = hex.map(a => `#${a}`).join(', ');
             dataHEXElt.onclick = (e) => {
               window.copyValue(
                 `#${this.hex[0]}`,
@@ -879,162 +882,130 @@
 
 
     <color-swatch
-      name="000"
       hex="000"
     ></color-swatch>
 
     <color-swatch
-      name="212121"
       hex="212121"
     ></color-swatch>
 
     <color-swatch
-      name="424242"
       hex="424242"
     ></color-swatch>
 
     <color-swatch
-      name="616161"
       hex="616161"
     ></color-swatch>
 
     <color-swatch
-      name="666666"
       hex="666666"
     ></color-swatch>
 
     <color-swatch
-      name="757575"
       hex="757575"
     ></color-swatch>
 
     <color-swatch
-      name="9e9e9e"
       hex="9e9e9e"
     ></color-swatch>
 
     <color-swatch
-      name="C7c7c7"
       hex="c7c7c7"
     ></color-swatch>
 
     <color-swatch
-      name="E1e1e1"
       hex="e1e1e1"
     ></color-swatch>
 
     <color-swatch
-      name="E2e2e2"
       hex="e2e2e2"
     ></color-swatch>
 
     <color-swatch
-      name="E8e8e8"
       hex="e8e8e8"
     ></color-swatch>
 
     <color-swatch
-      name="Eee"
       hex="eee"
     ></color-swatch>
 
     <color-swatch
-      name="Eeeeee"
       hex="eeeeee"
     ></color-swatch>
 
     <color-swatch
-      name="F5f5f5"
       hex="f5f5f5"
     ></color-swatch>
 
     <color-swatch
-      name="Fff"
       hex="fff"
     ></color-swatch>
 
     <color-swatch
-      name="F74018"
       hex="f74018"
     ></color-swatch>
 
     <color-swatch
-      name="F5f9eb"
       hex="f5f9eb"
     ></color-swatch>
 
     <color-swatch
-      name="323925"
       hex="323925"
     ></color-swatch>
 
     <color-swatch
-      name="9eebba"
       hex="9eebba"
     ></color-swatch>
 
     <color-swatch
-      name="004d40"
       hex="004d40"
     ></color-swatch>
 
     <color-swatch
-      name="Aae2ed"
       hex="aae2ed"
     ></color-swatch>
 
     <color-swatch
-      name="E6e7e8"
       hex="e6e7e8"
     ></color-swatch>
 
     <color-swatch
-      name="7e8ea5"
       hex="7e8ea5"
     ></color-swatch>
 
     <color-swatch
-      name="16233b"
       hex="16233b"
     ></color-swatch>
 
     <color-swatch
-      name="Eeeff1"
       hex="eeeff1"
     ></color-swatch>
 
     <color-swatch
-      name="232936"
       hex="232936"
     ></color-swatch>
 
     <color-swatch
-      name="12161f"
       hex="12161f"
     ></color-swatch>
 
     <color-swatch
-      name="1a1e2a"
       hex="1a1e2a"
     ></color-swatch>
 
     <color-swatch
-      name="A8adbf"
       hex="a8adbf"
     ></color-swatch>
 
     <color-swatch
-      name="C7cbd9"
       hex="c7cbd9"
     ></color-swatch>
 
     <color-swatch
-      name="5b7ae6"
       hex="5b7ae6"
     ></color-swatch>
 
     <color-swatch
-      name="8c8e96"
       hex="8c8e96"
     ></color-swatch>
   </div>
