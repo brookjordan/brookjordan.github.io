@@ -490,7 +490,7 @@
               .replace(/ /g, "-")
               .toLowerCase();
 
-        return `$${isGradient ? "lg" : "c"}-${clr}`;
+        return `c.$${isGradient ? "lg" : "c"}-${clr}`;
       }
 
       let colourSwatchTemplate = document.createElement('template');
