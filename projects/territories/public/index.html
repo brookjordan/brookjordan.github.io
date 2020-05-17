@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Territories</title>
+  <style>
+    html,
+    body {
+      height: 100%;
+      width: 100%;
+      margin: 0;
+    }
+    body {
+      font-size: calc(4px + 1vmin);
+      font-family: sans-serif;
+    }
+    svg {
+      display: block;
+      height: 100%;
+      width: 100%;
+    }
+    @keyframes boop {
+      0% {
+        transform: translate(-50%, -150%) scale(0);
+      }
+      100% {
+        transform: translate(-50%, -150%) scale(1);
+      }
+    }
+    .territory-label {
+      position: fixed;
+      transform: translate(-50%, -150%);
+      transform-origin: 50% 150%;
+      min-width: 50px;
+      padding: 3px 5px;
+      background: rgb(255 255 255 / 0.9);
+      border-radius: 3px;
+      box-shadow: 0 1px 3px rgb(0 0 0 / 0.3);
+      text-align: center;
+      animation: boop 0.3s cubic-bezier(.5, 1.5, .8, .95);
+      pointer-events: none;
+    }
+    .not-required:not(:hover),
+    .on-arrival:not(:hover),
+    .pre-purchase:not(:hover) {
+      --saturation: 60% !important;
+      --lightness: 70% !important;
+    }
+    .not-required:not(:hover) {
+      --hue: 100 !important;
+    }
+    .on-arrival:not(:hover) {
+      --hue: 65 !important;
+    }
+    .pre-purchase:not(:hover) {
+      --hue: 40 !important;
+    }
+    ul {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <script>
+    document.body.innerHTML = `
+      <h1>Loading</h1>
+    `;
+  </script>
+  <script>
+    const createSVGElement = (nodeName) => document.createElementNS("http://www.w3.org/2000/svg", nodeName);
+
+    const getTravelEase = async (territory) => {
+      let travelRequirementsURL = location.href.includes("localhost") ? "http://localhost:3000/territory-travel-requirements" : "/.netlify/functions/territory-travel-requirements";
+      pathsPayload = await fetch(travelRequirementsURL, {
+        method: 'POST',
+        body: JSON.stringify({
+          territory,
+        }),
+      });
+      return (await pathsPayload.json()).data;
+    }
+
+    (async () => {
+      let pathsURL = location.href.includes("localhost") ? "http://localhost:3000/paths" : "/.netlify/functions/territory-paths";
+      let pathsPayload = await fetch(pathsURL);
+      let { data: pathData } = await pathsPayload.json();
+
+      let sVGElt = createSVGElement("svg");
+      //sVGElt.setAttribute("viewBox", "0 0 2000 1001");
+      sVGElt.setAttribute("viewBox", "180 70 1800 880");
+
+      let sVGStlyeElt = createSVGElement("style");
+      sVGStlyeElt.innerHTML = `
+        path {
+          --saturation: 10%;
+          --lightness: 90%;
+
+          position: relative;
+          stroke: hsl(var(--hue) 100% 10% / 0.1);
+          stroke-width: 0.3;
+          fill: hsl(var(--hue) var(--saturation) var(--lightness));
+          transition: fill 0.2s;
+        }
+
+        path:hover {
+          --saturation: 25%;
+          --lightness: 70%;
+          z-index: 1;
+        }
+
+        path.active {
+          --saturation: 60%;
+          --lightness: 50%;
+          z-index: 2;
+        }
+      `;
+      sVGElt.append(sVGStlyeElt);
+
+      let activeTerritory;
+      let activeLabelElt;
+      let territoryElts = [];
+      let territoryEltsFragment = document.createDocumentFragment();
+      pathData.sort((a, b) => a.labels[0].localeCompare(b.labels[0]));
+      pathData.forEach(path => {
+        let pathElt = createSVGElement("path");
+        pathElt.setAttribute("d", path.path);
+        pathElt.setAttribute("title", path.labels[0]);
+        pathElt.setAttribute("data-uuid", path.territory);
+        pathElt.setAttribute("style", `
+          --hue: ${Math.random() * 360}deg;
+        `);
+        territoryElts.push(pathElt);
+        territoryEltsFragment.append(pathElt);
+        pathElt.addEventListener("click", async () => {
+          territoryElts.forEach(territoryElt => territoryElt.setAttribute("class", ""));
+          activeTerritory && activeTerritory.classList.remove("active");
+          pathElt.classList.add("active");
+          activeTerritory = pathElt;
+
+          activeLabelElt && activeLabelElt.remove();
+          let labelElt = document.createElement("div");
+          activeLabelElt = labelElt;
+          let boundingRect = pathElt.getBoundingClientRect();
+          let top = (boundingRect.top + boundingRect.bottom) / 2;
+          let left = (boundingRect.left + boundingRect.right) / 2;
+          activeLabelElt.classList.add("territory-label");
+          activeLabelElt.style.cssText += `
+            top: ${Math.round(top)}px;
+            left: ${Math.round(left)}px;
+          `;
+          activeLabelElt.innerText = path.labels[0];
+          document.body.append(activeLabelElt);
+
+          let travelData = await getTravelEase(path.territory);
+          if (activeLabelElt === labelElt) {
+            if (travelData.length) {
+              travelData.forEach(ease => {
+                let easeTerritoryElt = document.querySelector(`[data-uuid="${ease.uuid}"]`);
+                if (!easeTerritoryElt) { return; }
+                easeTerritoryElt.classList.add(ease.ease.replace(/\s/, '-'));
+              });
+            }
+          }
+        });
+      });
+      sVGElt.append(territoryEltsFragment);
+
+      document.body.innerHTML = '';
+      document.body.appendChild(sVGElt);
+    })();
+  </script>
+</body>
+</html>
