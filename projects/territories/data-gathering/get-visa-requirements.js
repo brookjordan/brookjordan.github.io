@@ -15,50 +15,51 @@ function getPassportStrength(table = document.querySelector("table"), {
    */
 
   const VISA_EASES = {
-    "visa-not-required": 0,
-    "right-of-abode": 0,
-    "visa-waiver-program": 0,
-    "freedom-of-movement": 0,
-    "visa-on-arrival": 1,
-    "free-visa-on-arrival": 1,
-    "entry-permit-on-arrival": 1,
-    "tourist-card-on-arrival": 1,
-    "visitor-permit-on-arrival": 1,
-    "conditional-visa-on-arrival": 1,
-    "free-visitor-permit-on-arrival": 1,
+    "visa not required": 0,
+    "right of abode": 0,
+    "visa waiver program": 0,
+    "freedom of movement": 0,
+    "visa on arrival": 1,
+    "free visa on arrival": 1,
+    "entry permit on arrival": 1,
+    "tourist card on arrival": 1,
+    "visitor permit on arrival": 1,
+    "conditional visa on arrival": 1,
+    "free entry permit on arrival": 1,
+    "free visitor permit on arrival": 1,
     "evisa": 2,
     "evisitor": 2,
-    "ttp-required": 2,
-    "e-tourist-card": 2,
-    "electronic-authorisation": 2,
-    "electronic-travel-authority": 2,
-    "online-visa": 2,
-    "visa-required": 2,
-    "permit-required": 2,
-    "permission-required": 2,
-    "electronic-entry-visa": 2,
-    "tourist-card-required": 2,
-    "electronic-travel-authorization": 2,
-    "travel-permit-required": 2,
-    "pap-or-rap-required": 2,
-    "ovir-permit-required": 2,
-    "entry-permit-required": 2,
-    "pre-registration-required": 2,
-    "restricted-area": 3,
-    "special-permit-required": 3,
-    "special-permission-required": 3,
-    "access-permit-required": 3,
-    "special-authorisation-required": 3,
-    "special-permits-required": 3,
-    "restricted-zone": 3,
-    "admission-refused": 4,
+    "ttp required": 2,
+    "e tourist card": 2,
+    "electronic authorisation": 2,
+    "electronic travel authority": 2,
+    "online visa": 2,
+    "visa required": 2,
+    "permit required": 2,
+    "permission required": 2,
+    "electronic entry visa": 2,
+    "tourist card required": 2,
+    "electronic travel authorization": 2,
+    "travel permit required": 2,
+    "pap or rap required": 2,
+    "ovir permit required": 2,
+    "entry permit required": 2,
+    "pre registration required": 2,
+    "restricted area": 3,
+    "special permit required": 3,
+    "special permission required": 3,
+    "access permit required": 3,
+    "special authorisation required": 3,
+    "special permits required": 3,
+    "restricted zone": 3,
+    "admission refused": 4,
   };
 
   const VISA_TYPES = [
     "evisa",
   ];
 
-  return JSON.stringify([...table.querySelectorAll("tr")].slice(1).map(row => {
+  return JSON.stringify([...table.querySelectorAll("tr")].slice(1).map((row, rowIndex) => {
     if (row.querySelectorAll("td").length < 2) { return; }
 
     let visaRequirements;
@@ -71,7 +72,7 @@ function getPassportStrength(table = document.querySelector("table"), {
         .replace(/e\-visa/g, "evisa")
         .replace(/\[\d+\]/g, "")
         .replace("pap/rap", "pap or rap")
-        .split("/").map(a => a.trim().replace(/\s+/g, "-"))
+        .split("/").map(a => a.trim().replace(/[-\s]+/g, " "))
         .filter(_ => _);
 
 
@@ -106,7 +107,7 @@ function getPassportStrength(table = document.querySelector("table"), {
       let countryName = row.querySelector(`td:nth-child(${countryNameCol})`).textContent.trim();
       country = {
         label: countryName,
-        name: countryName.toLowerCase().replace(/\s+/g, '-')
+        name: countryName.toLowerCase().replace(/\s+/g, ' ')
       };
     }
     let stayLength = null;
@@ -115,7 +116,11 @@ function getPassportStrength(table = document.querySelector("table"), {
     }
     let notes = null;
     if (notesCol) {
-      notes = row.querySelector(`td:nth-child(${notesCol})`).textContent.trim() || null;
+      let notesColElt = row.querySelector(`td:nth-child(${notesCol})`);
+      if (!notesColElt) { console.warn(`Missing notes col ${rowIndex}`); }
+      else {
+        notes = notesColElt.textContent.trim() || null;
+      }
     }
 
     return {
