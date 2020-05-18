@@ -66,12 +66,31 @@
       list-style: none;
       text-align: left;
     }
+    .attribution {
+      position: absolute;
+      bottom: 2px;
+      left: 5px;
+      color: #e8fb06;
+      mix-blend-mode: color-dodge;
+      font-size: 10px;
+      text-transform: uppercase;
+      margin: 0;
+      font-weight: 100;
+    }
+    .attribution a {
+      color: #eef1cb;
+    }
+    .attribution a:hover {
+      text-decoration: none;
+    }
   </style>
 </head>
 <body>
+  <p class="attribution">Map from <a href="https://simplemaps.com/resources/svg-world">simplemaps.com</a></p>
+
   <script>
-    document.body.innerHTML = `
-      <h1>Loading</h1>
+    document.body.innerHTML += `
+      <h1 id="loading-text">Loading</h1>
     `;
   </script>
   <script>
@@ -197,7 +216,7 @@
       });
       sVGElt.append(territoryEltsFragment);
 
-      document.body.innerHTML = "";
+      document.querySelector("#loading-text").remove();
       document.body.appendChild(sVGElt);
     })();
   </script>
