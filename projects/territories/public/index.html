@@ -10,6 +10,8 @@
       height: 100%;
       width: 100%;
       margin: 0;
+      background: black;
+      background: radial-gradient(#0c3438, #03022b, #0e0013);
     }
     body {
       font-size: calc(4px + 1vmin);
@@ -22,39 +24,41 @@
     }
     @keyframes boop {
       0% {
-        transform: translate(-50%, -150%) scale(0);
+        transform: translate(-50%, -100%) scale(0);
       }
       100% {
-        transform: translate(-50%, -150%) scale(1);
+        transform: translate(-50%, -100%) scale(1);
       }
     }
     .territory-label {
       position: fixed;
-      transform: translate(-50%, -150%);
-      transform-origin: 50% 150%;
+      transform: translate(-50%, -100%);
       min-width: 50px;
       padding: 3px 5px;
-      background: rgb(255 255 255 / 0.9);
+      background: rgb(255 255 255 / 0.8);
       border-radius: 3px;
       box-shadow: 0 1px 3px rgb(0 0 0 / 0.3);
       text-align: center;
       animation: boop 0.3s cubic-bezier(.5, 1.5, .8, .95);
       pointer-events: none;
+      opacity: 0.7;
+      mix-blend-mode: linea;
     }
     .not-required:not(:hover),
     .on-arrival:not(:hover),
     .pre-purchase:not(:hover) {
-      --saturation: 60% !important;
+      --saturation: 80% !important;
       --lightness: 70% !important;
+      --alpha: 50%;
     }
     .not-required:not(:hover) {
-      --hue: 100 !important;
+      --hue: 120 !important;
     }
     .on-arrival:not(:hover) {
-      --hue: 65 !important;
+      --hue: 75 !important;
     }
     .pre-purchase:not(:hover) {
-      --hue: 40 !important;
+      --hue: 30 !important;
     }
     ul {
       padding: 0;
@@ -72,11 +76,16 @@
   </script>
   <script>
     const createSVGElement = (nodeName) => document.createElementNS("http://www.w3.org/2000/svg", nodeName);
+    const priorityTerritories = {
+      "1965c743-cf9a-4021-9ed1-b9e4e77486a2": "Andorra",
+      "8510166b-62a4-475f-8afe-891fe1cb22a0": "Liechtenstein",
+      "6e83ec38-7e2d-4c2d-8a9d-6991d4e876db": "Singapore",
+    };
 
     const getTravelEase = async (territory) => {
       let travelRequirementsURL = location.href.includes("localhost") ? "http://localhost:3000/territory-travel-requirements" : "/.netlify/functions/territory-travel-requirements";
       pathsPayload = await fetch(travelRequirementsURL, {
-        method: 'POST',
+        method: "POST",
         body: JSON.stringify({
           territory,
         }),
@@ -88,6 +97,15 @@
       let pathsURL = location.href.includes("localhost") ? "http://localhost:3000/paths" : "/.netlify/functions/territory-paths";
       let pathsPayload = await fetch(pathsURL);
       let { data: pathData } = await pathsPayload.json();
+      pathData = pathData
+        .sort((a, b) => {
+          let priority = +(!!priorityTerritories[a.territory]) - !!priorityTerritories[b.territory];
+          if (priority) {
+            return priority;
+          } else {
+            a.labels[0].localeCompare(b.labels[0]);
+          }
+        });
 
       let sVGElt = createSVGElement("svg");
       //sVGElt.setAttribute("viewBox", "0 0 2000 1001");
@@ -96,35 +114,36 @@
       let sVGStlyeElt = createSVGElement("style");
       sVGStlyeElt.innerHTML = `
         path {
-          --saturation: 10%;
+          --saturation: 60%;
           --lightness: 90%;
+          --alpha: 20%;
 
           position: relative;
           stroke: hsl(var(--hue) 100% 10% / 0.1);
           stroke-width: 0.3;
-          fill: hsl(var(--hue) var(--saturation) var(--lightness));
+          fill: hsl(var(--hue) var(--saturation) var(--lightness) /  var(--alpha));
           transition: fill 0.2s;
         }
 
         path:hover {
-          --saturation: 25%;
           --lightness: 70%;
+          --alpha: 60%;
           z-index: 1;
         }
 
         path.active {
           --saturation: 60%;
           --lightness: 50%;
+          --alpha: 100%;
           z-index: 2;
         }
       `;
       sVGElt.append(sVGStlyeElt);
 
       let activeTerritory;
-      let activeLabelElt;
+      let hoveredLabelElt;
       let territoryElts = [];
       let territoryEltsFragment = document.createDocumentFragment();
-      pathData.sort((a, b) => a.labels[0].localeCompare(b.labels[0]));
       pathData.forEach(path => {
         let pathElt = createSVGElement("path");
         pathElt.setAttribute("d", path.path);
@@ -135,33 +154,42 @@
         `);
         territoryElts.push(pathElt);
         territoryEltsFragment.append(pathElt);
+
+        pathElt.addEventListener("mouseenter", async () => {
+          hoveredLabelElt && hoveredLabelElt.remove();
+          let labelElt = document.createElement("div");
+          hoveredLabelElt = labelElt;
+          let boundingRect = pathElt.getBoundingClientRect();
+          let top = boundingRect.top;
+          let height = boundingRect.height;
+          let center = (boundingRect.left + boundingRect.right) / 2;
+          hoveredLabelElt.classList.add("territory-label");
+          hoveredLabelElt.style.cssText += `
+            top: calc(${Math.round(top)}px - 0.5vh);
+            left: ${Math.round(center)}px;
+            transform-origin: 50% calc(100% + ${Math.ceil(height / 2)}px);
+          `;
+          hoveredLabelElt.innerText = path.labels[0];
+          document.body.append(hoveredLabelElt);
+        });
+
+        pathElt.addEventListener("mouseleave", async () => {
+          hoveredLabelElt && hoveredLabelElt.remove();
+        });
+
         pathElt.addEventListener("click", async () => {
           territoryElts.forEach(territoryElt => territoryElt.setAttribute("class", ""));
           activeTerritory && activeTerritory.classList.remove("active");
-          pathElt.classList.add("active");
           activeTerritory = pathElt;
-
-          activeLabelElt && activeLabelElt.remove();
-          let labelElt = document.createElement("div");
-          activeLabelElt = labelElt;
-          let boundingRect = pathElt.getBoundingClientRect();
-          let top = (boundingRect.top + boundingRect.bottom) / 2;
-          let left = (boundingRect.left + boundingRect.right) / 2;
-          activeLabelElt.classList.add("territory-label");
-          activeLabelElt.style.cssText += `
-            top: ${Math.round(top)}px;
-            left: ${Math.round(left)}px;
-          `;
-          activeLabelElt.innerText = path.labels[0];
-          document.body.append(activeLabelElt);
+          activeTerritory.classList.add("active");
 
           let travelData = await getTravelEase(path.territory);
-          if (activeLabelElt === labelElt) {
+          if (activeTerritory === pathElt) {
             if (travelData.length) {
               travelData.forEach(ease => {
                 let easeTerritoryElt = document.querySelector(`[data-uuid="${ease.uuid}"]`);
                 if (!easeTerritoryElt) { return; }
-                easeTerritoryElt.classList.add(ease.ease.replace(/\s/, '-'));
+                easeTerritoryElt.classList.add(ease.ease.replace(/\s/, "-"));
               });
             }
           }
@@ -169,7 +197,7 @@
       });
       sVGElt.append(territoryEltsFragment);
 
-      document.body.innerHTML = '';
+      document.body.innerHTML = "";
       document.body.appendChild(sVGElt);
     })();
   </script>
