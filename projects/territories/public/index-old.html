@@ -114,29 +114,21 @@
 
     (async () => {
       let pathsURL = location.href.includes("localhost") ? "http://localhost:3000/paths" : "/.netlify/functions/territory-paths";
-      let pathsPayload = await fetch(pathsURL, {
-        method: "POST",
-        body: JSON.stringify({
-          type: "authagraph",
-        }),
-      });
-      let { data: pathData, viewBox } = await pathsPayload.json();
+      let pathsPayload = await fetch(pathsURL);
+      let { data: pathData } = await pathsPayload.json();
       pathData = pathData
         .sort((a, b) => {
           let priority = +(!!priorityTerritories[a.territory]) - !!priorityTerritories[b.territory];
           if (priority) {
             return priority;
           } else {
-            (a.labels[0] || "aaaa").localeCompare(b.labels[0] || "aaaa");
+            a.labels[0].localeCompare(b.labels[0]);
           }
         });
 
       let sVGElt = createSVGElement("svg");
       //sVGElt.setAttribute("viewBox", "0 0 2000 1001");
-      // sVGElt.setAttribute("viewBox", "180 70 1800 880"); //=> default
-      sVGElt.setAttribute("viewBox", viewBox); //=> authagraph
-      let viewBoxParts = viewBox.split(" ");
-      let strokeWidth = ((+viewBoxParts[2] - +viewBoxParts[0]) + (+viewBoxParts[3] - +viewBoxParts[1])) / 8000;
+      sVGElt.setAttribute("viewBox", "180 70 1800 880");
 
       let sVGStlyeElt = createSVGElement("style");
       sVGStlyeElt.innerHTML = `
@@ -146,8 +138,8 @@
           --alpha: 20%;
 
           position: relative;
-          stroke: hsl(var(--hue) 100% 10% / 1);
-          stroke-width: ${strokeWidth};
+          stroke: hsl(var(--hue) 100% 10% / 0.1);
+          stroke-width: 0.3;
           fill: hsl(var(--hue) var(--saturation) var(--lightness) /  var(--alpha));
           transition: fill 0.2s;
         }

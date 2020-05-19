@@ -20,6 +20,17 @@ exports.handler = async ({
   let error;
   let client = new Client();
   let clientConnection = client.connect();
+  const pathTables = {
+    default: {
+      table: "svg_path",
+      viewBox: "180 70 1800 880",
+      // viewBox: "0 0 2000 1001",
+    },
+    authagraph: {
+      table: "authograph_svg_path",
+      viewBox: "0 0 360 155.885",
+    },
+  };
 
   try {
     await clientConnection.catch(e => error = e);
@@ -31,26 +42,30 @@ exports.handler = async ({
     }
 
     let WHERE = "";
+    let type = "default";
     if (body) {
       let bodyData = JSON.parse(body);
+
+      type = bodyData.type || type;
+
       if (bodyData.territory && isUUID(bodyData.territory)) {
         WHERE = `
       WHERE
-        svg_path.territory = '${bodyData.territory}'`;
+        ${pathTables[type].table}.territory = '${bodyData.territory}'`;
       }
     }
     let query = tidyQuery(`
       SELECT
-        svg_path.path,
-        svg_path.uuid,
-        svg_path.territory,
+        ${pathTables[type].table}.path,
+        ${pathTables[type].table}.uuid,
+        ${pathTables[type].table}.territory,
         territory_label.label
       FROM
-        svg_path
+        ${pathTables[type].table}
       LEFT JOIN
         territory_label
       ON
-        svg_path .territory = territory_label.territory${
+        ${pathTables[type].table} .territory = territory_label.territory${
       WHERE};
     `);
 
@@ -77,6 +92,7 @@ exports.handler = async ({
       body: stringify({
         query,
         data: Object.values(paths),
+        viewBox: pathTables[type].viewBox
       }),
       headers: {
         "Cache-Control": "max-age=300"
