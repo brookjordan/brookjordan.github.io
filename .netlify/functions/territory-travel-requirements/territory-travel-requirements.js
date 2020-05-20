@@ -51,6 +51,7 @@ exports.handler = async ({
         visa_type.ease,
         territory_label.label,
         passport_travel_requirements.uuid,
+        passport_travel_requirements.notes,
         passport_travel_requirements.destination_territory
       FROM
         passport_travel_requirements
@@ -74,20 +75,21 @@ exports.handler = async ({
       };
     }
 
-    let paths = {};
+    let requirements = {};
     rows.forEach(row => {
-      paths[row.uuid] || (paths[row.uuid] = {
+      requirements[row.uuid] || (requirements[row.uuid] = {
         labels: [],
         ease: row.ease,
         uuid: row.destination_territory,
+        notes: row.notes,
       });
-      paths[row.uuid].labels.push(row.label);
+      requirements[row.uuid].labels.push(row.label);
     })
     callback(null, {
       statusCode: 200,
       body: stringify({
         query,
-        data: Object.values(paths),
+        data: Object.values(requirements),
       }),
       headers: {
         "Cache-Control": "max-age=300"
