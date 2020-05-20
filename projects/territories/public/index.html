@@ -171,6 +171,7 @@
       let hoveredLabelElt;
       let territoryElts = [];
       let territoryEltsFragment = document.createDocumentFragment();
+      let notes = {};
       pathData.forEach(path => {
         let pathElt = createSVGElement("path");
         pathElt.setAttribute("d", path.path);
@@ -185,6 +186,7 @@
         pathElt.addEventListener("mouseenter", async () => {
           hoveredLabelElt && hoveredLabelElt.remove();
           let labelElt = document.createElement("div");
+          let labelHeaderElt = document.createElement("h5");
           hoveredLabelElt = labelElt;
           let boundingRect = pathElt.getBoundingClientRect();
           let top = boundingRect.top;
@@ -196,7 +198,13 @@
             left: ${Math.round(center)}px;
             transform-origin: 50% calc(100% + ${Math.ceil(height / 2)}px);
           `;
-          hoveredLabelElt.innerText = path.labels[0];
+          labelHeaderElt.innerText = path.labels[0];
+          hoveredLabelElt.append(labelHeaderElt);
+          if (notes[path.territory]) {
+            let labelNotesElt = document.createElement("p");
+            labelNotesElt.innerText = notes[path.territory];
+            labelNotesElt.append(labelHeaderElt);
+          }
           document.body.append(hoveredLabelElt);
         });
 
@@ -205,6 +213,7 @@
         });
 
         pathElt.addEventListener("click", async () => {
+          notes = {};
           territoryElts.forEach(territoryElt => territoryElt.setAttribute("class", ""));
           activeTerritory && activeTerritory.classList.remove("active");
           activeTerritory = pathElt;
@@ -218,6 +227,7 @@
                 if (!easeTerritoryElt) { return; }
                 easeTerritoryElt.classList.add(ease.ease.replace(/\s/, "-"));
               });
+              notes = Object.fromEntries(travelData.map(({ territory, notes }) => [territory, notes]));
             }
           }
         });
