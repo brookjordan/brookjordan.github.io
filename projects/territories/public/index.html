@@ -7,14 +7,16 @@
   <style>
     html,
     body {
+      --spacer: calc(4px + 1vmin);
+
       height: 100%;
       width: 100%;
       margin: 0;
-      background: black;
-      background: radial-gradient(#0c3438, #03022b, #0e0013);
+      background-color: black;
+      background-image: radial-gradient(#0c3438, #03022b, #0e0013);
     }
     body {
-      font-size: calc(4px + 1vmin);
+      font-size: var(--spacer);
       font-family: sans-serif;
     }
     svg {
@@ -22,49 +24,111 @@
       height: 100%;
       width: 100%;
     }
+    .initial-text {
+      display: inline-block;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      margin: 0;
+      color: white;
+    }
     @keyframes boop {
       0% {
-        transform: translate(-50%, -100%) scale(0);
-      }
-      100% {
-        transform: translate(-50%, -100%) scale(1);
+        transform: translateX(-50%) translateY(50%) scale(0);
       }
     }
-    .territory-label {
+    .territory-info {
       position: fixed;
-      transform: translate(-50%, -100%);
-      min-width: 50px;
-      padding: 3px 5px;
-      background: rgb(255 255 255 / 0.8);
+      top: var(--top);
+      left: var(--left);
+      left: max(var(--spacer), var(--left));
+      transform-origin:
+        50%
+        calc(100% + var(--height) * 0.5px);
+      transform: translateX(-50%) translateY(0) scale(1);
+      transform:
+        translateX(max(
+          calc(-1 * var(--left)),
+          -50%
+        ))
+        translateY(max(
+          calc(-1 * var(--top)),
+          calc(-100% - var(--spacer) * 0.25)
+        ))
+        scale(1);
+      max-width: 280px;
+      padding:
+        calc(var(--spacer) * 0.5)
+        calc(var(--spacer) * 0.7);
+      background-color: rgb(255 255 255 / 0.8);
       border-radius: 3px;
       box-shadow: 0 1px 3px rgb(0 0 0 / 0.3);
-      text-align: center;
       animation: boop 0.3s cubic-bezier(.5, 1.5, .8, .95);
       pointer-events: none;
       opacity: 0.7;
-      mix-blend-mode: linea;
     }
+    .territory-info:empty {
+      min-width: 50px;
+    }
+    .territory-info__label {
+      margin: 0;
+      text-transform: uppercase;
+    }
+    .territory-info__notes {
+      margin: 0;
+      margin-top: calc(var(--spacer) * 0.15);
+      white-space: pre-wrap;
+    }
+    .territory-info--not-required::after,
+    .territory-info--on-arrival::after,
+    .territory-info--pre-purchase::after,
+    .territory-info--disallowed::after {
+      content: var(--ease-label);
+      position: absolute;
+      left: 100%;
+      top: 0;
+      display: block;
+      padding: calc(var(--spacer) * 0.25) calc(var(--spacer) * 0.5);
+      border-radius: var(--spacer);
+      transform: translate(calc(-0.5 * var(--spacer)), calc(-0.5 * var(--spacer)));
+      background-color: hsl(var(--hue) 50% 60%);
+    }
+
     .not-required:not(:hover),
     .on-arrival:not(:hover),
-    .pre-purchase:not(:hover) {
+    .pre-purchase:not(:hover),
+    .disallowed:not(:hover) {
       --saturation: 80% !important;
       --lightness: 70% !important;
       --alpha: 50%;
     }
+
+    .territory-info--not-required,
     .not-required:not(:hover) {
+      --ease-label: "No visa required";
       --hue: 120 !important;
     }
+    .territory-info--on-arrival,
     .on-arrival:not(:hover) {
+      --ease-label: "Visa on arrival";
       --hue: 75 !important;
     }
+    .territory-info--pre-purchase,
     .pre-purchase:not(:hover) {
+      --ease-label: "Get visa before travel";
       --hue: 30 !important;
     }
+    .territory-info--disallowed,
+    .disallowed:not(:hover) {
+      --ease-label: "Travel disallowed";
+      --hue: 0 !important;
+    }
+
     ul {
       padding: 0;
       margin: 0;
       list-style: none;
-      text-align: left;
     }
     .attribution {
       position: absolute;
@@ -88,11 +152,17 @@
 <body>
   <p class="attribution">Map from <a href="https://simplemaps.com/resources/svg-world">simplemaps.com</a></p>
 
+  <h1 class="initial-text">Sorry, you need JavaScript to use this</h1>
   <script>
-    document.body.innerHTML += `
-      <h1 id="loading-text">Loading</h1>
-    `;
+    document.querySelector(".initial-text").textContent = "Loading…";
   </script>
+
+  <script>
+    function toQueryString(data) {
+      return Object.entries(data).map(([key, value]) => `${key}=${value}`).join('&')
+    }
+  </script>
+
   <script>
     const createSVGElement = (nodeName) => document.createElementNS("http://www.w3.org/2000/svg", nodeName);
     const priorityTerritories = {
@@ -102,7 +172,7 @@
     };
 
     const getTravelEase = async (territory) => {
-      let travelRequirementsURL = location.href.includes("localhost") ? "http://localhost:3000/territory-travel-requirements" : "/.netlify/functions/territory-travel-requirements";
+      let travelRequirementsURL = "https://brook.dev/.netlify/functions/territory-travel-requirements";
       pathsPayload = await fetch(travelRequirementsURL, {
         method: "POST",
         body: JSON.stringify({
@@ -113,12 +183,13 @@
     }
 
     (async () => {
-      let pathsURL = location.href.includes("localhost") ? "http://localhost:3000/paths" : "/.netlify/functions/territory-paths";
-      let pathsPayload = await fetch(pathsURL, {
-        method: "POST",
-        body: JSON.stringify({
-          type: "authagraph",
-        }),
+      let pathsURL = "https://brook.dev/.netlify/functions/territory-paths";
+      let hydratedPathsURL = `${pathsURL}?${toQueryString({ type: "authagraph" })}`;
+      let pathsPayload = await fetch(hydratedPathsURL, {
+        method: "GET",
+        // body: JSON.stringify({
+        //   type: "authagraph",
+        // }),
       });
       let { data: pathData, viewBox } = await pathsPayload.json();
       pathData = pathData
@@ -146,9 +217,9 @@
           --alpha: 20%;
 
           position: relative;
-          stroke: hsl(var(--hue) 100% 10% / 1);
+          stroke: hsl(var(--hue) 100% 10%);
           stroke-width: ${strokeWidth};
-          fill: hsl(var(--hue) var(--saturation) var(--lightness) /  var(--alpha));
+          fill: hsl(var(--hue) var(--saturation) var(--lightness) / var(--alpha));
           transition: fill 0.2s;
         }
 
@@ -171,7 +242,7 @@
       let hoveredLabelElt;
       let territoryElts = [];
       let territoryEltsFragment = document.createDocumentFragment();
-      let notes = {};
+      let relatedNotes = {};
       pathData.forEach(path => {
         let pathElt = createSVGElement("path");
         pathElt.setAttribute("d", path.path);
@@ -184,27 +255,36 @@
         territoryEltsFragment.append(pathElt);
 
         pathElt.addEventListener("mouseenter", async () => {
-          hoveredLabelElt && hoveredLabelElt.remove();
-          let labelElt = document.createElement("div");
-          let labelHeaderElt = document.createElement("h5");
-          hoveredLabelElt = labelElt;
           let boundingRect = pathElt.getBoundingClientRect();
           let top = boundingRect.top;
           let height = boundingRect.height;
           let center = (boundingRect.left + boundingRect.right) / 2;
-          hoveredLabelElt.classList.add("territory-label");
+
+          hoveredLabelElt && hoveredLabelElt.remove();
+          hoveredLabelElt = document.createElement("div");
+          hoveredLabelElt.classList.add("territory-info");
           hoveredLabelElt.style.cssText += `
-            top: calc(${Math.round(top)}px - 0.5vh);
-            left: ${Math.round(center)}px;
-            transform-origin: 50% calc(100% + ${Math.ceil(height / 2)}px);
+            --top: calc(${Math.round(top)}px - 0.5vh);
+            --left: ${Math.round(center)}px;
+            --height: ${Math.ceil(height / 2)}px;
           `;
+
+          let labelHeaderElt = document.createElement("h5");
+          labelHeaderElt.classList.add("territory-info__label");
           labelHeaderElt.innerText = path.labels[0];
           hoveredLabelElt.append(labelHeaderElt);
-          if (notes[path.territory]) {
+
+          let { notes, ease } = relatedNotes[path.territory] || {};
+          if (notes) {
             let labelNotesElt = document.createElement("p");
-            labelNotesElt.innerText = notes[path.territory];
-            labelNotesElt.append(labelHeaderElt);
+            labelNotesElt.classList.add('territory-info__notes');
+            labelNotesElt.innerText = notes;
+            hoveredLabelElt.append(labelNotesElt);
           }
+          if (ease) {
+            hoveredLabelElt.classList.add(`territory-info--${ease}`);
+          }
+
           document.body.append(hoveredLabelElt);
         });
 
@@ -213,7 +293,7 @@
         });
 
         pathElt.addEventListener("click", async () => {
-          notes = {};
+          relatedNotes = {};
           territoryElts.forEach(territoryElt => territoryElt.setAttribute("class", ""));
           activeTerritory && activeTerritory.classList.remove("active");
           activeTerritory = pathElt;
@@ -222,19 +302,23 @@
           let travelData = await getTravelEase(path.territory);
           if (activeTerritory === pathElt) {
             if (travelData.length) {
-              travelData.forEach(ease => {
-                let easeTerritoryElt = document.querySelector(`[data-uuid="${ease.uuid}"]`);
+              travelData.forEach(({ uuid, notes, ease }) => {
+                let _ease = ease?.replace(/\s/, "-");
+                let easeTerritoryElt = document.querySelector(`[data-uuid="${uuid}"]`);
                 if (!easeTerritoryElt) { return; }
-                easeTerritoryElt.classList.add(ease.ease.replace(/\s/, "-"));
+                easeTerritoryElt.classList.add(_ease);
+                relatedNotes[uuid] = {
+                  ease: _ease,
+                  notes: notes?.replace(/\\n/g, '\n').trim(),
+                };
               });
-              notes = Object.fromEntries(travelData.map(({ territory, notes }) => [territory, notes]));
             }
           }
         });
       });
       sVGElt.append(territoryEltsFragment);
 
-      document.querySelector("#loading-text").remove();
+      document.querySelector(".initial-text").remove();
       document.body.appendChild(sVGElt);
     })();
   </script>

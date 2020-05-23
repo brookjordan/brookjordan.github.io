@@ -92,7 +92,8 @@ exports.handler = async ({
         data: Object.values(requirements),
       }),
       headers: {
-        "Cache-Control": "max-age=300"
+        "Cache-Control": "max-age=300",
+        "Access-Control-Allow-Origin": "*"
       },
       //isBase64Encoded: false,
     });

@@ -42,16 +42,13 @@ exports.handler = async ({
     }
 
     let WHERE = "";
-    let type = "default";
-    if (body) {
-      let bodyData = JSON.parse(body);
-
-      type = bodyData.type || type;
-
-      if (bodyData.territory && isUUID(bodyData.territory)) {
+    let payload = (body ? JSON.parse(body) : queryStringParameters) || {};
+    let type = payload.type || "default";
+    if (Object.keys(payload).length > 0) {
+      if (payload.territory && isUUID(payload.territory)) {
         WHERE = `
       WHERE
-        ${pathTables[type].table}.territory = '${bodyData.territory}'`;
+        ${pathTables[type].table}.territory = '${payload.territory}'`;
       }
     }
     let query = tidyQuery(`
@@ -95,7 +92,8 @@ exports.handler = async ({
         viewBox: pathTables[type].viewBox
       }),
       headers: {
-        "Cache-Control": "max-age=300"
+        "Cache-Control": "max-age=300",
+        "Access-Control-Allow-Origin": "*"
       },
       //isBase64Encoded: false,
     });
