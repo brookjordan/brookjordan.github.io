@@ -12,12 +12,33 @@
       height: 100%;
       width: 100%;
       margin: 0;
-      background-color: black;
-      background-image: radial-gradient(#0c3438, #03022b, #0e0013);
+    }
+    @keyframes loading {
+      0% {
+        background-color: #0c3438;
+      }
+      50% {
+        background-color: #145047;
+      }
+      100% {
+        background-color: #0c3438;
+      }
+    }
+    html {
+      background-color: #0c3438;
+      animation: loading 2s infinite paused;
+    }
+    html.loading {
+      animation-play-state: running;
+    }
+    html.error {
+      animation: none;
+      background-color: #571710;
     }
     body {
       font-size: var(--spacer);
       font-family: sans-serif;
+      background-image: radial-gradient(rgb(3 2 43 / 0), #03022b, #0e0013);
     }
     svg {
       display: block;
@@ -86,7 +107,8 @@
     .territory-info--not-required::after,
     .territory-info--on-arrival::after,
     .territory-info--pre-purchase::after,
-    .territory-info--special-requirements::after {
+    .territory-info--special-requirements::after,
+    .territory-info--disallowed::after {
       content: var(--ease-label);
       position: absolute;
       left: 100%;
@@ -101,7 +123,8 @@
     .not-required:not(:hover),
     .on-arrival:not(:hover),
     .pre-purchase:not(:hover),
-    .special-requirements:not(:hover) {
+    .special-requirements:not(:hover),
+    .disallowed:not(:hover) {
       --saturation: 80% !important;
       --lightness: 70% !important;
       --alpha: 50%;
@@ -170,18 +193,28 @@
     const initiaHeaderElt = document.querySelector(".initial-header");
     const initialMessagesElt = document.querySelector(".initial-messages");
     initiaHeaderElt.textContent = "Loading…";
+    document.documentElement.classList.add("loading");
 
+    let lastMessage;
     function showError(message) {
       initiaHeaderElt.textContent = "An error occurred";
       addMessage(message);
+      document.documentElement.className = "error";
+      throw message;
     }
     function addMessage(message) {
-      initialMessagesElt.textContent += `\n${message}`;
+      lastMessage = document.createTextNode(`\n${message}`);
+      initialMessagesElt.append(lastMessage);
+    }
+    function updateLastMessage(message) {
+      lastMessage.textContent = message;
     }
 
     function toQueryString(data) {
       try {
-        return Object.entries(data).map(([key, value]) => `${key}=${value}`).join('&')
+        return Object.entries(data).map(
+          function queryEntry([key, value]) { return `${key}=${value}`; }
+        ).join('&');
       } catch (error) {
         showError(error);
       }
@@ -190,7 +223,10 @@
 
   <script>
     addMessage("Started…");
-    const createSVGElement = (nodeName) => document.createElementNS("http://www.w3.org/2000/svg", nodeName);
+
+    function createSVGElement(nodeName) {
+      return document.createElementNS("http://www.w3.org/2000/svg", nodeName);
+    }
     const priorityTerritories = {
       "1965c743-cf9a-4021-9ed1-b9e4e77486a2": "Andorra",
       "8510166b-62a4-475f-8afe-891fe1cb22a0": "Liechtenstein",
@@ -199,7 +235,7 @@
 
     let getTravelEase;
     try {
-      getTravelEase = async (territory) => {
+      getTravelEase = async function _getTravelEase(territory) {
         let travelRequirementsURL = "https://brook.dev/.netlify/functions/territory-travel-requirements";
         pathsPayload = await fetch(travelRequirementsURL, {
           method: "POST",
@@ -213,29 +249,62 @@
       showError(error);
     }
 
-    (async () => {
+    async function setupMap() {
       try {
         let pathsURL = "https://brook.dev/.netlify/functions/territory-paths";
         let hydratedPathsURL = `${pathsURL}?${toQueryString({ type: "authagraph" })}`;
         addMessage("Fetching map…");
-        let pathsFetch = fetch(hydratedPathsURL, {
+        addMessage(' 0%');
+        let pathsResponse = await fetch(hydratedPathsURL, {
           method: "GET",
           // body: JSON.stringify({
           //   type: "authagraph",
           // }),
         }).catch(showError);
-        const reader = response.body.getReader();
+        const mapSize = +pathsResponse.headers.get('Content-Length');
+        const reader = pathsResponse.body.getReader();
+        const chunks = [];
         let done = false;
         let value;
-        while(({done, value} = await reader.read()) && !done) {
-          console.log(`Received ${value.length} bytes`);
-        }
-        pathsPayload = await pathsFetch;
+        let receivedLength = 0;
+        do {
+          updateLastMessage(` ${Math.floor(receivedLength && (receivedLength / mapSize * 100))}%`);
+          ({
+            done,
+            value
+          } = await reader.read());
+          if (value) {
+            receivedLength += value.length;
+            chunks.push(value);
+          }
+        } while (!done);
+        updateLastMessage(` 100%`);
 
         addMessage("Organising map parts…");
-        let { data: pathData, viewBox } = await pathsPayload.json().catch(showError);
+
+        let {
+          data: pathData,
+          viewBox
+        } = JSON.parse(
+          new TextDecoder("utf-8")
+            .decode(
+              chunks.reduce(function concatUint8ArrayParts({
+                data,
+                position
+              }, chunk) {
+                data.set(chunk, position);
+                return {
+                  data,
+                  position: position + chunk.length,
+                };
+              }, {
+                data: new Uint8Array(receivedLength),
+                position: 0
+              }).data
+            )
+        );
         pathData = pathData
-          .sort((a, b) => {
+          .sort(function sortPathData(a, b) {
             let priority = +(!!priorityTerritories[a.territory]) - !!priorityTerritories[b.territory];
             if (priority) {
               return priority;
@@ -286,18 +355,18 @@
         let territoryElts = [];
         let territoryEltsFragment = document.createDocumentFragment();
         let relatedNotes = {};
-        pathData.forEach(path => {
+        pathData.forEach(function buildTerritory(path) {
           let pathElt = createSVGElement("path");
           pathElt.setAttribute("d", path.path);
           pathElt.setAttribute("title", path.labels[0]);
           pathElt.setAttribute("data-uuid", path.territory);
           pathElt.setAttribute("style", `
-            --hue: ${Math.random() * 360}deg;
-          `);
+                --hue: ${Math.random() * 360}deg;
+              `);
           territoryElts.push(pathElt);
           territoryEltsFragment.append(pathElt);
 
-          pathElt.addEventListener("mouseenter", async () => {
+          pathElt.addEventListener("mouseenter", async function handleMouseEnter() {
             let boundingRect = pathElt.getBoundingClientRect();
             let top = boundingRect.top;
             let height = boundingRect.height;
@@ -317,7 +386,10 @@
             labelHeaderElt.innerText = path.labels[0];
             hoveredLabelElt.append(labelHeaderElt);
 
-            let { notes, ease } = relatedNotes[path.territory] || {};
+            let {
+              notes,
+              ease
+            } = relatedNotes[path.territory] || {};
             if (notes) {
               let labelNotesElt = document.createElement("p");
               labelNotesElt.classList.add('territory-info__notes');
@@ -331,24 +403,35 @@
             document.body.append(hoveredLabelElt);
           });
 
-          pathElt.addEventListener("mouseleave", async () => {
+          pathElt.addEventListener("mouseleave", function handleMouseLeave() {
             hoveredLabelElt && hoveredLabelElt.remove();
           });
 
-          pathElt.addEventListener("click", async () => {
+          pathElt.addEventListener("click", async function handleClick() {
             relatedNotes = {};
-            territoryElts.forEach(territoryElt => territoryElt.setAttribute("class", ""));
+            territoryElts.forEach(function emptyTerritoryClass(territoryElt) {
+              territoryElt.setAttribute("class", "");
+              document.documentElement.classList.add("loading");
+            });
             activeTerritory && activeTerritory.classList.remove("active");
             activeTerritory = pathElt;
             activeTerritory.classList.add("active");
 
             let travelData = await getTravelEase(path.territory).catch(showError);
             if (activeTerritory === pathElt) {
+              document.documentElement.classList.remove("loading");
+              hoveredLabelElt && hoveredLabelElt.remove();
               if (travelData.length) {
-                travelData.forEach(({ uuid, notes, ease }) => {
+                travelData.forEach(function updateNotesAndEase({
+                  uuid,
+                  notes,
+                  ease
+                }) {
                   let _ease = ease && ease.replace(/\s/, "-");
                   let easeTerritoryElt = document.querySelector(`[data-uuid="${uuid}"]`);
-                  if (!easeTerritoryElt) { return; }
+                  if (!easeTerritoryElt) {
+                    return;
+                  }
                   easeTerritoryElt.classList.add(_ease);
                   relatedNotes[uuid] = {
                     ease: _ease,
@@ -364,10 +447,12 @@
 
         initiaTextElt.remove();
         document.body.appendChild(sVGElt);
+        document.documentElement.classList.remove("loading");
       } catch (error) {
         showError(error);
       }
-    })();
+    }
+    setupMap();
   </script>
 </body>
 </html>
