@@ -83,7 +83,7 @@
     .territory-info--not-required::after,
     .territory-info--on-arrival::after,
     .territory-info--pre-purchase::after,
-    .territory-info--disallowed::after {
+    .territory-info--special-requirements::after {
       content: var(--ease-label);
       position: absolute;
       left: 100%;
@@ -98,7 +98,7 @@
     .not-required:not(:hover),
     .on-arrival:not(:hover),
     .pre-purchase:not(:hover),
-    .disallowed:not(:hover) {
+    .special-requirements:not(:hover) {
       --saturation: 80% !important;
       --lightness: 70% !important;
       --alpha: 50%;
@@ -107,22 +107,27 @@
     .territory-info--not-required,
     .not-required:not(:hover) {
       --ease-label: "No visa required";
-      --hue: 120 !important;
+      --hue: 140 !important;
     }
     .territory-info--on-arrival,
     .on-arrival:not(:hover) {
       --ease-label: "Visa on arrival";
-      --hue: 75 !important;
+      --hue: 100 !important;
     }
     .territory-info--pre-purchase,
     .pre-purchase:not(:hover) {
       --ease-label: "Get visa before travel";
-      --hue: 30 !important;
+      --hue: 60 !important;
+    }
+    .territory-info--special-requirements,
+    .special-requirements:not(:hover) {
+      --ease-label: "Has special requirements";
+      --hue: 20 !important;
     }
     .territory-info--disallowed,
     .disallowed:not(:hover) {
       --ease-label: "Travel disallowed";
-      --hue: 0 !important;
+      --hue: -20 !important;
     }
 
     ul {
