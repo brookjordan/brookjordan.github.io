@@ -1,1596 +1,4016 @@
-<style>
-  section {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  }
-  div {
-    position: relative;
-  }
-  img {
-    width: 100%;
-    height: auto;
-  }
-  h3 {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    margin: 0;
-    padding: 5px 10px;
-    padding-top: 30px;
-    color: white;
-    background: linear-gradient(to bottom, rgb(0,0,0,0), rgb(0,0,0,0.8) 70%);
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
-  div:hover h3 {
-    opacity: 1;
-  }
-</style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animal crossing villagers</title>
 
-<section>
-  <div>
-    <img src="./i/Admiral.png" />
-    <h3>Admiral</h3>
-  </div>
-  <div>
-    <img src="./i/Agent S.png" />
-    <h3>Agent S</h3>
-  </div>
-  <div>
-    <img src="./i/Agnes.png" />
-    <h3>Agnes</h3>
-  </div>
-  <div>
-    <img src="./i/Al.png" />
-    <h3>Al</h3>
-  </div>
-  <div>
-    <img src="./i/Alfonso.png" />
-    <h3>Alfonso</h3>
-  </div>
-  <div>
-    <img src="./i/Alice.png" />
-    <h3>Alice</h3>
-  </div>
-  <div>
-    <img src="./i/Alli.png" />
-    <h3>Alli</h3>
-  </div>
-  <div>
-    <img src="./i/Amelia.png" />
-    <h3>Amelia</h3>
-  </div>
-  <div>
-    <img src="./i/Anabelle.png" />
-    <h3>Anabelle</h3>
-  </div>
-  <div>
-    <img src="./i/Anchovy.png" />
-    <h3>Anchovy</h3>
-  </div>
-  <div>
-    <img src="./i/Ankha.png" />
-    <h3>Ankha</h3>
-  </div>
-  <div>
-    <img src="./i/Angus.png" />
-    <h3>Angus</h3>
-  </div>
-  <div>
-    <img src="./i/Anicotti.png" />
-    <h3>Anicotti</h3>
-  </div>
-  <div>
-    <img src="./i/Annalisa.png" />
-    <h3>Annalisa</h3>
-  </div>
-  <div>
-    <img src="./i/Annalise.png" />
-    <h3>Annalise</h3>
-  </div>
-  <div>
-    <img src="./i/Antonio.png" />
-    <h3>Antonio</h3>
-  </div>
-  <div>
-    <img src="./i/Apollo.png" />
-    <h3>Apollo</h3>
-  </div>
-  <div>
-    <img src="./i/Apple.png" />
-    <h3>Apple</h3>
-  </div>
-  <div>
-    <img src="./i/Astrid.png" />
-    <h3>Astrid</h3>
-  </div>
-  <div>
-    <img src="./i/Audie.png" />
-    <h3>Audie</h3>
-  </div>
-  <div>
-    <img src="./i/Aurora.png" />
-    <h3>Aurora</h3>
-  </div>
-  <div>
-    <img src="./i/Ava.png" />
-    <h3>Ava</h3>
-  </div>
-  <div>
-    <img src="./i/Avery.png" />
-    <h3>Avery</h3>
-  </div>
-  <div>
-    <img src="./i/Axel.png" />
-    <h3>Axel</h3>
-  </div>
-  <div>
-    <img src="./i/Baabara.png" />
-    <h3>Baabara</h3>
-  </div>
-  <div>
-    <img src="./i/Bam.png" />
-    <h3>Bam</h3>
-  </div>
-  <div>
-    <img src="./i/Bangle.png" />
-    <h3>Bangle</h3>
-  </div>
-  <div>
-    <img src="./i/Barold.png" />
-    <h3>Barold</h3>
-  </div>
-  <div>
-    <img src="./i/Bea.png" />
-    <h3>Bea</h3>
-  </div>
-  <div>
-    <img src="./i/Beardo.png" />
-    <h3>Beardo</h3>
-  </div>
-  <div>
-    <img src="./i/Beau.png" />
-    <h3>Beau</h3>
-  </div>
-  <div>
-    <img src="./i/Becky.png" />
-    <h3>Becky</h3>
-  </div>
-  <div>
-    <img src="./i/Bella.png" />
-    <h3>Bella</h3>
-  </div>
-  <div>
-    <img src="./i/Benedict.png" />
-    <h3>Benedict</h3>
-  </div>
-  <div>
-    <img src="./i/Benjamin.png" />
-    <h3>Benjamin</h3>
-  </div>
-  <div>
-    <img src="./i/Bertha.png" />
-    <h3>Bertha</h3>
-  </div>
-  <div>
-    <img src="./i/Bettina.png" />
-    <h3>Bettina</h3>
-  </div>
-  <div>
-    <img src="./i/Bianca.png" />
-    <h3>Bianca</h3>
-  </div>
-  <div>
-    <img src="./i/Biff.png" />
-    <h3>Biff</h3>
-  </div>
-  <div>
-    <img src="./i/Big Top.png" />
-    <h3>Big Top</h3>
-  </div>
-  <div>
-    <img src="./i/Bill.png" />
-    <h3>Bill</h3>
-  </div>
-  <div>
-    <img src="./i/Billy.png" />
-    <h3>Billy</h3>
-  </div>
-  <div>
-    <img src="./i/Biskit.png" />
-    <h3>Biskit</h3>
-  </div>
-  <div>
-    <img src="./i/Bitty.png" />
-    <h3>Bitty</h3>
-  </div>
-  <div>
-    <img src="./i/Blaire.png" />
-    <h3>Blaire</h3>
-  </div>
-  <div>
-    <img src="./i/Blanche.png" />
-    <h3>Blanche</h3>
-  </div>
-  <div>
-    <img src="./i/Bluebear.png" />
-    <h3>Bluebear</h3>
-  </div>
-  <div>
-    <img src="./i/Bob.png" />
-    <h3>Bob</h3>
-  </div>
-  <div>
-    <img src="./i/Bonbon.png" />
-    <h3>Bonbon</h3>
-  </div>
-  <div>
-    <img src="./i/Bones.png" />
-    <h3>Bones</h3>
-  </div>
-  <div>
-    <img src="./i/Boomer.png" />
-    <h3>Boomer</h3>
-  </div>
-  <div>
-    <img src="./i/Boone.png" />
-    <h3>Boone</h3>
-  </div>
-  <div>
-    <img src="./i/Boots.png" />
-    <h3>Boots</h3>
-  </div>
-  <div>
-    <img src="./i/Boris.png" />
-    <h3>Boris</h3>
-  </div>
-  <div>
-    <img src="./i/Boyd.png" />
-    <h3>Boyd</h3>
-  </div>
-  <div>
-    <img src="./i/Bree.png" />
-    <h3>Bree</h3>
-  </div>
-  <div>
-    <img src="./i/Broccolo.png" />
-    <h3>Broccolo</h3>
-  </div>
-  <div>
-    <img src="./i/Broffina.png" />
-    <h3>Broffina</h3>
-  </div>
-  <div>
-    <img src="./i/Bruce.png" />
-    <h3>Bruce</h3>
-  </div>
-  <div>
-    <img src="./i/Bubbles.png" />
-    <h3>Bubbles</h3>
-  </div>
-  <div>
-    <img src="./i/Buck.png" />
-    <h3>Buck</h3>
-  </div>
-  <div>
-    <img src="./i/Bud.png" />
-    <h3>Bud</h3>
-  </div>
-  <div>
-    <img src="./i/Bunnie.png" />
-    <h3>Bunnie</h3>
-  </div>
-  <div>
-    <img src="./i/Butch.png" />
-    <h3>Butch</h3>
-  </div>
-  <div>
-    <img src="./i/Buzz.png" />
-    <h3>Buzz</h3>
-  </div>
-  <div>
-    <img src="./i/Cally.png" />
-    <h3>Cally</h3>
-  </div>
-  <div>
-    <img src="./i/Camofrog.png" />
-    <h3>Camofrog</h3>
-  </div>
-  <div>
-    <img src="./i/Canberra.png" />
-    <h3>Canberra</h3>
-  </div>
-  <div>
-    <img src="./i/Candi.png" />
-    <h3>Candi</h3>
-  </div>
-  <div>
-    <img src="./i/Carmen.png" />
-    <h3>Carmen</h3>
-  </div>
-  <div>
-    <img src="./i/Caroline.png" />
-    <h3>Caroline</h3>
-  </div>
-  <div>
-    <img src="./i/Carrie.png" />
-    <h3>Carrie</h3>
-  </div>
-  <div>
-    <img src="./i/Cashmere.png" />
-    <h3>Cashmere</h3>
-  </div>
-  <div>
-    <img src="./i/Celia.png" />
-    <h3>Celia</h3>
-  </div>
-  <div>
-    <img src="./i/Cesar.png" />
-    <h3>Cesar</h3>
-  </div>
-  <div>
-    <img src="./i/Chadder.png" />
-    <h3>Chadder</h3>
-  </div>
-  <div>
-    <img src="./i/Charlise.png" />
-    <h3>Charlise</h3>
-  </div>
-  <div>
-    <img src="./i/Cheri.png" />
-    <h3>Cheri</h3>
-  </div>
-  <div>
-    <img src="./i/Cherry.png" />
-    <h3>Cherry</h3>
-  </div>
-  <div>
-    <img src="./i/Chester.png" />
-    <h3>Chester</h3>
-  </div>
-  <div>
-    <img src="./i/Chevre.png" />
-    <h3>Chevre</h3>
-  </div>
-  <div>
-    <img src="./i/Chief.png" />
-    <h3>Chief</h3>
-  </div>
-  <div>
-    <img src="./i/Chops.png" />
-    <h3>Chops</h3>
-  </div>
-  <div>
-    <img src="./i/Chow.png" />
-    <h3>Chow</h3>
-  </div>
-  <div>
-    <img src="./i/Chrissy.png" />
-    <h3>Chrissy</h3>
-  </div>
-  <div>
-    <img src="./i/Claude.png" />
-    <h3>Claude</h3>
-  </div>
-  <div>
-    <img src="./i/Claudia.png" />
-    <h3>Claudia</h3>
-  </div>
-  <div>
-    <img src="./i/Clay.png" />
-    <h3>Clay</h3>
-  </div>
-  <div>
-    <img src="./i/Cleo.png" />
-    <h3>Cleo</h3>
-  </div>
-  <div>
-    <img src="./i/Clyde.png" />
-    <h3>Clyde</h3>
-  </div>
-  <div>
-    <img src="./i/Coach.png" />
-    <h3>Coach</h3>
-  </div>
-  <div>
-    <img src="./i/Cobb.png" />
-    <h3>Cobb</h3>
-  </div>
-  <div>
-    <img src="./i/Coco.png" />
-    <h3>Coco</h3>
-  </div>
-  <div>
-    <img src="./i/Cole.png" />
-    <h3>Cole</h3>
-  </div>
-  <div>
-    <img src="./i/Colton.png" />
-    <h3>Colton</h3>
-  </div>
-  <div>
-    <img src="./i/Cookie.png" />
-    <h3>Cookie</h3>
-  </div>
-  <div>
-    <img src="./i/Cousteau.png" />
-    <h3>Cousteau</h3>
-  </div>
-  <div>
-    <img src="./i/Cranston.png" />
-    <h3>Cranston</h3>
-  </div>
-  <div>
-    <img src="./i/Croque.png" />
-    <h3>Croque</h3>
-  </div>
-  <div>
-    <img src="./i/Cube.png" />
-    <h3>Cube</h3>
-  </div>
-  <div>
-    <img src="./i/Curlos.png" />
-    <h3>Curlos</h3>
-  </div>
-  <div>
-    <img src="./i/Curly.png" />
-    <h3>Curly</h3>
-  </div>
-  <div>
-    <img src="./i/Curt.png" />
-    <h3>Curt</h3>
-  </div>
-  <div>
-    <img src="./i/Cyd.png" />
-    <h3>Cyd</h3>
-  </div>
-  <div>
-    <img src="./i/Cyrano.png" />
-    <h3>Cyrano</h3>
-  </div>
-  <div>
-    <img src="./i/Daisy.png" />
-    <h3>Daisy</h3>
-  </div>
-  <div>
-    <img src="./i/Deena.png" />
-    <h3>Deena</h3>
-  </div>
-  <div>
-    <img src="./i/Deirdre.png" />
-    <h3>Deirdre</h3>
-  </div>
-  <div>
-    <img src="./i/Del.png" />
-    <h3>Del</h3>
-  </div>
-  <div>
-    <img src="./i/Deli.png" />
-    <h3>Deli</h3>
-  </div>
-  <div>
-    <img src="./i/Derwin.png" />
-    <h3>Derwin</h3>
-  </div>
-  <div>
-    <img src="./i/Diana.png" />
-    <h3>Diana</h3>
-  </div>
-  <div>
-    <img src="./i/Diva.png" />
-    <h3>Diva</h3>
-  </div>
-  <div>
-    <img src="./i/Dizzy.png" />
-    <h3>Dizzy</h3>
-  </div>
-  <div>
-    <img src="./i/Dobie.png" />
-    <h3>Dobie</h3>
-  </div>
-  <div>
-    <img src="./i/Doc.png" />
-    <h3>Doc</h3>
-  </div>
-  <div>
-    <img src="./i/Dom.png" />
-    <h3>Dom</h3>
-  </div>
-  <div>
-    <img src="./i/Dora.png" />
-    <h3>Dora</h3>
-  </div>
-  <div>
-    <img src="./i/Dotty.png" />
-    <h3>Dotty</h3>
-  </div>
-  <div>
-    <img src="./i/Drago.png" />
-    <h3>Drago</h3>
-  </div>
-  <div>
-    <img src="./i/Drake.png" />
-    <h3>Drake</h3>
-  </div>
-  <div>
-    <img src="./i/Drift.png" />
-    <h3>Drift</h3>
-  </div>
-  <div>
-    <img src="./i/Ed.png" />
-    <h3>Ed</h3>
-  </div>
-  <div>
-    <img src="./i/Egbert.png" />
-    <h3>Egbert</h3>
-  </div>
-  <div>
-    <img src="./i/Elise.png" />
-    <h3>Elise</h3>
-  </div>
-  <div>
-    <img src="./i/Ellie.png" />
-    <h3>Ellie</h3>
-  </div>
-  <div>
-    <img src="./i/Elmer.png" />
-    <h3>Elmer</h3>
-  </div>
-  <div>
-    <img src="./i/Eloise.png" />
-    <h3>Eloise</h3>
-  </div>
-  <div>
-    <img src="./i/Elvis.png" />
-    <h3>Elvis</h3>
-  </div>
-  <div>
-    <img src="./i/Erik.png" />
-    <h3>Erik</h3>
-  </div>
-  <div>
-    <img src="./i/Eunice.png" />
-    <h3>Eunice</h3>
-  </div>
-  <div>
-    <img src="./i/Eugene.png" />
-    <h3>Eugene</h3>
-  </div>
-  <div>
-    <img src="./i/Fang.png" />
-    <h3>Fang</h3>
-  </div>
-  <div>
-    <img src="./i/Fauna.png" />
-    <h3>Fauna</h3>
-  </div>
-  <div>
-    <img src="./i/Felicity.png" />
-    <h3>Felicity</h3>
-  </div>
-  <div>
-    <img src="./i/Filbert.png" />
-    <h3>Filbert</h3>
-  </div>
-  <div>
-    <img src="./i/Flip.png" />
-    <h3>Flip</h3>
-  </div>
-  <div>
-    <img src="./i/Flo.png" />
-    <h3>Flo</h3>
-  </div>
-  <div>
-    <img src="./i/Flora.png" />
-    <h3>Flora</h3>
-  </div>
-  <div>
-    <img src="./i/Flurry.png" />
-    <h3>Flurry</h3>
-  </div>
-  <div>
-    <img src="./i/Francine.png" />
-    <h3>Francine</h3>
-  </div>
-  <div>
-    <img src="./i/Frank.png" />
-    <h3>Frank</h3>
-  </div>
-  <div>
-    <img src="./i/Freckles.png" />
-    <h3>Freckles</h3>
-  </div>
-  <div>
-    <img src="./i/Freya.png" />
-    <h3>Freya</h3>
-  </div>
-  <div>
-    <img src="./i/Friga.png" />
-    <h3>Friga</h3>
-  </div>
-  <div>
-    <img src="./i/Frita.png" />
-    <h3>Frita</h3>
-  </div>
-  <div>
-    <img src="./i/Frobert.png" />
-    <h3>Frobert</h3>
-  </div>
-  <div>
-    <img src="./i/Fuchsia.png" />
-    <h3>Fuchsia</h3>
-  </div>
-  <div>
-    <img src="./i/Gabi.png" />
-    <h3>Gabi</h3>
-  </div>
-  <div>
-    <img src="./i/Gala.png" />
-    <h3>Gala</h3>
-  </div>
-  <div>
-    <img src="./i/Gaston.png" />
-    <h3>Gaston</h3>
-  </div>
-  <div>
-    <img src="./i/Gayle.png" />
-    <h3>Gayle</h3>
-  </div>
-  <div>
-    <img src="./i/Genji.png" />
-    <h3>Genji</h3>
-  </div>
-  <div>
-    <img src="./i/Gigi.png" />
-    <h3>Gigi</h3>
-  </div>
-  <div>
-    <img src="./i/Gladys.png" />
-    <h3>Gladys</h3>
-  </div>
-  <div>
-    <img src="./i/Gloria.png" />
-    <h3>Gloria</h3>
-  </div>
-  <div>
-    <img src="./i/Goldie.png" />
-    <h3>Goldie</h3>
-  </div>
-  <div>
-    <img src="./i/Gonzo.png" />
-    <h3>Gonzo</h3>
-  </div>
-  <div>
-    <img src="./i/Goose.png" />
-    <h3>Goose</h3>
-  </div>
-  <div>
-    <img src="./i/Graham.png" />
-    <h3>Graham</h3>
-  </div>
-  <div>
-    <img src="./i/Greta.png" />
-    <h3>Greta</h3>
-  </div>
-  <div>
-    <img src="./i/Grizzly.png" />
-    <h3>Grizzly</h3>
-  </div>
-  <div>
-    <img src="./i/Groucho.png" />
-    <h3>Groucho</h3>
-  </div>
-  <div>
-    <img src="./i/Gruff.png" />
-    <h3>Gruff</h3>
-  </div>
-  <div>
-    <img src="./i/Gwen.png" />
-    <h3>Gwen</h3>
-  </div>
-  <div>
-    <img src="./i/Hamlet.png" />
-    <h3>Hamlet</h3>
-  </div>
-  <div>
-    <img src="./i/Hamphrey.png" />
-    <h3>Hamphrey</h3>
-  </div>
-  <div>
-    <img src="./i/Hans.png" />
-    <h3>Hans</h3>
-  </div>
-  <div>
-    <img src="./i/Harry.png" />
-    <h3>Harry</h3>
-  </div>
-  <div>
-    <img src="./i/Hazel.png" />
-    <h3>Hazel</h3>
-  </div>
-  <div>
-    <img src="./i/Henry.png" />
-    <h3>Henry</h3>
-  </div>
-  <div>
-    <img src="./i/Hippeux.png" />
-    <h3>Hippeux</h3>
-  </div>
-  <div>
-    <img src="./i/Hopkins.png" />
-    <h3>Hopkins</h3>
-  </div>
-  <div>
-    <img src="./i/Hopper.png" />
-    <h3>Hopper</h3>
-  </div>
-  <div>
-    <img src="./i/Hornsby.png" />
-    <h3>Hornsby</h3>
-  </div>
-  <div>
-    <img src="./i/Huck.png" />
-    <h3>Huck</h3>
-  </div>
-  <div>
-    <img src="./i/Hugh.png" />
-    <h3>Hugh</h3>
-  </div>
-  <div>
-    <img src="./i/Iggly.png" />
-    <h3>Iggly</h3>
-  </div>
-  <div>
-    <img src="./i/Ike.png" />
-    <h3>Ike</h3>
-  </div>
-  <div>
-    <img src="./i/JacobNAJakeyPAL.png" />
-    <h3>JacobNAJakeyPAL</h3>
-  </div>
-  <div>
-    <img src="./i/Jacques.png" />
-    <h3>Jacques</h3>
-  </div>
-  <div>
-    <img src="./i/Jambette.png" />
-    <h3>Jambette</h3>
-  </div>
-  <div>
-    <img src="./i/Jay.png" />
-    <h3>Jay</h3>
-  </div>
-  <div>
-    <img src="./i/Jeremiah.png" />
-    <h3>Jeremiah</h3>
-  </div>
-  <div>
-    <img src="./i/Jitters.png" />
-    <h3>Jitters</h3>
-  </div>
-  <div>
-    <img src="./i/Joey.png" />
-    <h3>Joey</h3>
-  </div>
-  <div>
-    <img src="./i/Judy.png" />
-    <h3>Judy</h3>
-  </div>
-  <div>
-    <img src="./i/Julia.png" />
-    <h3>Julia</h3>
-  </div>
-  <div>
-    <img src="./i/Julian.png" />
-    <h3>Julian</h3>
-  </div>
-  <div>
-    <img src="./i/June.png" />
-    <h3>June</h3>
-  </div>
-  <div>
-    <img src="./i/Kabuki.png" />
-    <h3>Kabuki</h3>
-  </div>
-  <div>
-    <img src="./i/Katt.png" />
-    <h3>Katt</h3>
-  </div>
-  <div>
-    <img src="./i/Keaton.png" />
-    <h3>Keaton</h3>
-  </div>
-  <div>
-    <img src="./i/Ken.png" />
-    <h3>Ken</h3>
-  </div>
-  <div>
-    <img src="./i/Ketchup.png" />
-    <h3>Ketchup</h3>
-  </div>
-  <div>
-    <img src="./i/Kevin.png" />
-    <h3>Kevin</h3>
-  </div>
-  <div>
-    <img src="./i/Kid Cat.png" />
-    <h3>Kid Cat</h3>
-  </div>
-  <div>
-    <img src="./i/Kidd.png" />
-    <h3>Kidd</h3>
-  </div>
-  <div>
-    <img src="./i/Kiki.png" />
-    <h3>Kiki</h3>
-  </div>
-  <div>
-    <img src="./i/Kitt.png" />
-    <h3>Kitt</h3>
-  </div>
-  <div>
-    <img src="./i/Kitty.png" />
-    <h3>Kitty</h3>
-  </div>
-  <div>
-    <img src="./i/Klaus.png" />
-    <h3>Klaus</h3>
-  </div>
-  <div>
-    <img src="./i/Knox.png" />
-    <h3>Knox</h3>
-  </div>
-  <div>
-    <img src="./i/Kody.png" />
-    <h3>Kody</h3>
-  </div>
-  <div>
-    <img src="./i/Kyle.png" />
-    <h3>Kyle</h3>
-  </div>
-  <div>
-    <img src="./i/Leonardo.png" />
-    <h3>Leonardo</h3>
-  </div>
-  <div>
-    <img src="./i/Leopold.png" />
-    <h3>Leopold</h3>
-  </div>
-  <div>
-    <img src="./i/Lily.png" />
-    <h3>Lily</h3>
-  </div>
-  <div>
-    <img src="./i/Limberg.png" />
-    <h3>Limberg</h3>
-  </div>
-  <div>
-    <img src="./i/Lionel.png" />
-    <h3>Lionel</h3>
-  </div>
-  <div>
-    <img src="./i/Lobo.png" />
-    <h3>Lobo</h3>
-  </div>
-  <div>
-    <img src="./i/Lolly.png" />
-    <h3>Lolly</h3>
-  </div>
-  <div>
-    <img src="./i/Lopez.png" />
-    <h3>Lopez</h3>
-  </div>
-  <div>
-    <img src="./i/Louie.png" />
-    <h3>Louie</h3>
-  </div>
-  <div>
-    <img src="./i/Lucha.png" />
-    <h3>Lucha</h3>
-  </div>
-  <div>
-    <img src="./i/Lucky.png" />
-    <h3>Lucky</h3>
-  </div>
-  <div>
-    <img src="./i/Lucy.png" />
-    <h3>Lucy</h3>
-  </div>
-  <div>
-    <img src="./i/Lyman.png" />
-    <h3>Lyman</h3>
-  </div>
-  <div>
-    <img src="./i/Mac.png" />
-    <h3>Mac</h3>
-  </div>
-  <div>
-    <img src="./i/Maddie.png" />
-    <h3>Maddie</h3>
-  </div>
-  <div>
-    <img src="./i/Maelle.png" />
-    <h3>Maelle</h3>
-  </div>
-  <div>
-    <img src="./i/Maggie.png" />
-    <h3>Maggie</h3>
-  </div>
-  <div>
-    <img src="./i/Mallary.png" />
-    <h3>Mallary</h3>
-  </div>
-  <div>
-    <img src="./i/Maple.png" />
-    <h3>Maple</h3>
-  </div>
-  <div>
-    <img src="./i/Marcel.png" />
-    <h3>Marcel</h3>
-  </div>
-  <div>
-    <img src="./i/Marcie.png" />
-    <h3>Marcie</h3>
-  </div>
-  <div>
-    <img src="./i/Margie.png" />
-    <h3>Margie</h3>
-  </div>
-  <div>
-    <img src="./i/Marina.png" />
-    <h3>Marina</h3>
-  </div>
-  <div>
-    <img src="./i/Marshal.png" />
-    <h3>Marshal</h3>
-  </div>
-  <div>
-    <img src="./i/Mathilda.png" />
-    <h3>Mathilda</h3>
-  </div>
-  <div>
-    <img src="./i/Megan.png" />
-    <h3>Megan</h3>
-  </div>
-  <div>
-    <img src="./i/Melba.png" />
-    <h3>Melba</h3>
-  </div>
-  <div>
-    <img src="./i/Merengue.png" />
-    <h3>Merengue</h3>
-  </div>
-  <div>
-    <img src="./i/Merry.png" />
-    <h3>Merry</h3>
-  </div>
-  <div>
-    <img src="./i/Midge.png" />
-    <h3>Midge</h3>
-  </div>
-  <div>
-    <img src="./i/Mint.png" />
-    <h3>Mint</h3>
-  </div>
-  <div>
-    <img src="./i/Mira.png" />
-    <h3>Mira</h3>
-  </div>
-  <div>
-    <img src="./i/Miranda.png" />
-    <h3>Miranda</h3>
-  </div>
-  <div>
-    <img src="./i/Mitzi.png" />
-    <h3>Mitzi</h3>
-  </div>
-  <div>
-    <img src="./i/Moe.png" />
-    <h3>Moe</h3>
-  </div>
-  <div>
-    <img src="./i/Molly.png" />
-    <h3>Molly</h3>
-  </div>
-  <div>
-    <img src="./i/Monique.png" />
-    <h3>Monique</h3>
-  </div>
-  <div>
-    <img src="./i/Monty.png" />
-    <h3>Monty</h3>
-  </div>
-  <div>
-    <img src="./i/Moose.png" />
-    <h3>Moose</h3>
-  </div>
-  <div>
-    <img src="./i/Mott.png" />
-    <h3>Mott</h3>
-  </div>
-  <div>
-    <img src="./i/Muffy.png" />
-    <h3>Muffy</h3>
-  </div>
-  <div>
-    <img src="./i/Murphy.png" />
-    <h3>Murphy</h3>
-  </div>
-  <div>
-    <img src="./i/Nan.png" />
-    <h3>Nan</h3>
-  </div>
-  <div>
-    <img src="./i/Nana.png" />
-    <h3>Nana</h3>
-  </div>
-  <div>
-    <img src="./i/Naomi.png" />
-    <h3>Naomi</h3>
-  </div>
-  <div>
-    <img src="./i/Nate.png" />
-    <h3>Nate</h3>
-  </div>
-  <div>
-    <img src="./i/Nibbles.png" />
-    <h3>Nibbles</h3>
-  </div>
-  <div>
-    <img src="./i/Norma.png" />
-    <h3>Norma</h3>
-  </div>
-  <div>
-    <img src="./i/Octavian.png" />
-    <h3>Octavian</h3>
-  </div>
-  <div>
-    <img src="./i/O'Hare.png" />
-    <h3>O'Hare</h3>
-  </div>
-  <div>
-    <img src="./i/Olaf.png" />
-    <h3>Olaf</h3>
-  </div>
-  <div>
-    <img src="./i/Olive.png" />
-    <h3>Olive</h3>
-  </div>
-  <div>
-    <img src="./i/Olivia.png" />
-    <h3>Olivia</h3>
-  </div>
-  <div>
-    <img src="./i/Opal.png" />
-    <h3>Opal</h3>
-  </div>
-  <div>
-    <img src="./i/Ozzie.png" />
-    <h3>Ozzie</h3>
-  </div>
-  <div>
-    <img src="./i/Pancetti.png" />
-    <h3>Pancetti</h3>
-  </div>
-  <div>
-    <img src="./i/Pango.png" />
-    <h3>Pango</h3>
-  </div>
-  <div>
-    <img src="./i/Paolo.png" />
-    <h3>Paolo</h3>
-  </div>
-  <div>
-    <img src="./i/Papi.png" />
-    <h3>Papi</h3>
-  </div>
-  <div>
-    <img src="./i/Pashmina.png" />
-    <h3>Pashmina</h3>
-  </div>
-  <div>
-    <img src="./i/Pate.png" />
-    <h3>Pate</h3>
-  </div>
-  <div>
-    <img src="./i/Patty.png" />
-    <h3>Patty</h3>
-  </div>
-  <div>
-    <img src="./i/Paula.png" />
-    <h3>Paula</h3>
-  </div>
-  <div>
-    <img src="./i/Peaches.png" />
-    <h3>Peaches</h3>
-  </div>
-  <div>
-    <img src="./i/Peanut.png" />
-    <h3>Peanut</h3>
-  </div>
-  <div>
-    <img src="./i/Pecan.png" />
-    <h3>Pecan</h3>
-  </div>
-  <div>
-    <img src="./i/Peck.png" />
-    <h3>Peck</h3>
-  </div>
-  <div>
-    <img src="./i/Peewee.png" />
-    <h3>Peewee</h3>
-  </div>
-  <div>
-    <img src="./i/Peggy.png" />
-    <h3>Peggy</h3>
-  </div>
-  <div>
-    <img src="./i/Pekoe.png" />
-    <h3>Pekoe</h3>
-  </div>
-  <div>
-    <img src="./i/Penelope.png" />
-    <h3>Penelope</h3>
-  </div>
-  <div>
-    <img src="./i/Phil.png" />
-    <h3>Phil</h3>
-  </div>
-  <div>
-    <img src="./i/Phoebe.png" />
-    <h3>Phoebe</h3>
-  </div>
-  <div>
-    <img src="./i/Pierce.png" />
-    <h3>Pierce</h3>
-  </div>
-  <div>
-    <img src="./i/Pietro.png" />
-    <h3>Pietro</h3>
-  </div>
-  <div>
-    <img src="./i/Pinky.png" />
-    <h3>Pinky</h3>
-  </div>
-  <div>
-    <img src="./i/Piper.png" />
-    <h3>Piper</h3>
-  </div>
-  <div>
-    <img src="./i/Pippy.png" />
-    <h3>Pippy</h3>
-  </div>
-  <div>
-    <img src="./i/Plucky.png" />
-    <h3>Plucky</h3>
-  </div>
-  <div>
-    <img src="./i/Pompom.png" />
-    <h3>Pompom</h3>
-  </div>
-  <div>
-    <img src="./i/Poncho.png" />
-    <h3>Poncho</h3>
-  </div>
-  <div>
-    <img src="./i/Poppy.png" />
-    <h3>Poppy</h3>
-  </div>
-  <div>
-    <img src="./i/Portia.png" />
-    <h3>Portia</h3>
-  </div>
-  <div>
-    <img src="./i/Prince.png" />
-    <h3>Prince</h3>
-  </div>
-  <div>
-    <img src="./i/Puck.png" />
-    <h3>Puck</h3>
-  </div>
-  <div>
-    <img src="./i/Puddles.png" />
-    <h3>Puddles</h3>
-  </div>
-  <div>
-    <img src="./i/Pudge.png" />
-    <h3>Pudge</h3>
-  </div>
-  <div>
-    <img src="./i/Punchy.png" />
-    <h3>Punchy</h3>
-  </div>
-  <div>
-    <img src="./i/Purrl.png" />
-    <h3>Purrl</h3>
-  </div>
-  <div>
-    <img src="./i/Queenie.png" />
-    <h3>Queenie</h3>
-  </div>
-  <div>
-    <img src="./i/Quillson.png" />
-    <h3>Quillson</h3>
-  </div>
-  <div>
-    <img src="./i/Raddle.png" />
-    <h3>Raddle</h3>
-  </div>
-  <div>
-    <img src="./i/Rasher.png" />
-    <h3>Rasher</h3>
-  </div>
-  <div>
-    <img src="./i/Raymond.png" />
-    <h3>Raymond</h3>
-  </div>
-  <div>
-    <img src="./i/Renée.png" />
-    <h3>Renée</h3>
-  </div>
-  <div>
-    <img src="./i/Reneigh.png" />
-    <h3>Reneigh</h3>
-  </div>
-  <div>
-    <img src="./i/Rex.png" />
-    <h3>Rex</h3>
-  </div>
-  <div>
-    <img src="./i/Rhonda.png" />
-    <h3>Rhonda</h3>
-  </div>
-  <div>
-    <img src="./i/Ribbot.png" />
-    <h3>Ribbot</h3>
-  </div>
-  <div>
-    <img src="./i/Ricky.png" />
-    <h3>Ricky</h3>
-  </div>
-  <div>
-    <img src="./i/Rizzo.png" />
-    <h3>Rizzo</h3>
-  </div>
-  <div>
-    <img src="./i/Roald.png" />
-    <h3>Roald</h3>
-  </div>
-  <div>
-    <img src="./i/Robin.png" />
-    <h3>Robin</h3>
-  </div>
-  <div>
-    <img src="./i/Rocco.png" />
-    <h3>Rocco</h3>
-  </div>
-  <div>
-    <img src="./i/Rocket.png" />
-    <h3>Rocket</h3>
-  </div>
-  <div>
-    <img src="./i/Rod.png" />
-    <h3>Rod</h3>
-  </div>
-  <div>
-    <img src="./i/Rodeo.png" />
-    <h3>Rodeo</h3>
-  </div>
-  <div>
-    <img src="./i/Rodney.png" />
-    <h3>Rodney</h3>
-  </div>
-  <div>
-    <img src="./i/Rolf.png" />
-    <h3>Rolf</h3>
-  </div>
-  <div>
-    <img src="./i/Rooney.png" />
-    <h3>Rooney</h3>
-  </div>
-  <div>
-    <img src="./i/Rory.png" />
-    <h3>Rory</h3>
-  </div>
-  <div>
-    <img src="./i/Roscoe.png" />
-    <h3>Roscoe</h3>
-  </div>
-  <div>
-    <img src="./i/Rosie.png" />
-    <h3>Rosie</h3>
-  </div>
-  <div>
-    <img src="./i/Rowan.png" />
-    <h3>Rowan</h3>
-  </div>
-  <div>
-    <img src="./i/Ruby.png" />
-    <h3>Ruby</h3>
-  </div>
-  <div>
-    <img src="./i/Rudy.png" />
-    <h3>Rudy</h3>
-  </div>
-  <div>
-    <img src="./i/Sally.png" />
-    <h3>Sally</h3>
-  </div>
-  <div>
-    <img src="./i/Samson.png" />
-    <h3>Samson</h3>
-  </div>
-  <div>
-    <img src="./i/Sandy.png" />
-    <h3>Sandy</h3>
-  </div>
-  <div>
-    <img src="./i/Savannah.png" />
-    <h3>Savannah</h3>
-  </div>
-  <div>
-    <img src="./i/Scoot.png" />
-    <h3>Scoot</h3>
-  </div>
-  <div>
-    <img src="./i/Shari.png" />
-    <h3>Shari</h3>
-  </div>
-  <div>
-    <img src="./i/Sheldon.png" />
-    <h3>Sheldon</h3>
-  </div>
-  <div>
-    <img src="./i/Shep.png" />
-    <h3>Shep</h3>
-  </div>
-  <div>
-    <img src="./i/Sherb.png" />
-    <h3>Sherb</h3>
-  </div>
-  <div>
-    <img src="./i/Simon.png" />
-    <h3>Simon</h3>
-  </div>
-  <div>
-    <img src="./i/Skye.png" />
-    <h3>Skye</h3>
-  </div>
-  <div>
-    <img src="./i/Sly.png" />
-    <h3>Sly</h3>
-  </div>
-  <div>
-    <img src="./i/Snake.png" />
-    <h3>Snake</h3>
-  </div>
-  <div>
-    <img src="./i/Snooty.png" />
-    <h3>Snooty</h3>
-  </div>
-  <div>
-    <img src="./i/Soleil.png" />
-    <h3>Soleil</h3>
-  </div>
-  <div>
-    <img src="./i/Sparro.png" />
-    <h3>Sparro</h3>
-  </div>
-  <div>
-    <img src="./i/Spike.png" />
-    <h3>Spike</h3>
-  </div>
-  <div>
-    <img src="./i/SporkNACracklePAL.png" />
-    <h3>SporkNACracklePAL</h3>
-  </div>
-  <div>
-    <img src="./i/Sprinkle.png" />
-    <h3>Sprinkle</h3>
-  </div>
-  <div>
-    <img src="./i/Sprocket.png" />
-    <h3>Sprocket</h3>
-  </div>
-  <div>
-    <img src="./i/Static.png" />
-    <h3>Static</h3>
-  </div>
-  <div>
-    <img src="./i/Stella.png" />
-    <h3>Stella</h3>
-  </div>
-  <div>
-    <img src="./i/Sterling.png" />
-    <h3>Sterling</h3>
-  </div>
-  <div>
-    <img src="./i/Stinky.png" />
-    <h3>Stinky</h3>
-  </div>
-  <div>
-    <img src="./i/Stitches.png" />
-    <h3>Stitches</h3>
-  </div>
-  <div>
-    <img src="./i/Stu.png" />
-    <h3>Stu</h3>
-  </div>
-  <div>
-    <img src="./i/Sydney.png" />
-    <h3>Sydney</h3>
-  </div>
-  <div>
-    <img src="./i/Sylvana.png" />
-    <h3>Sylvana</h3>
-  </div>
-  <div>
-    <img src="./i/Sylvia.png" />
-    <h3>Sylvia</h3>
-  </div>
-  <div>
-    <img src="./i/Tabby.png" />
-    <h3>Tabby</h3>
-  </div>
-  <div>
-    <img src="./i/Tad.png" />
-    <h3>Tad</h3>
-  </div>
-  <div>
-    <img src="./i/Tammi.png" />
-    <h3>Tammi</h3>
-  </div>
-  <div>
-    <img src="./i/Tammy.png" />
-    <h3>Tammy</h3>
-  </div>
-  <div>
-    <img src="./i/Tangy.png" />
-    <h3>Tangy</h3>
-  </div>
-  <div>
-    <img src="./i/Tank.png" />
-    <h3>Tank</h3>
-  </div>
-  <div>
-    <img src="./i/Tasha.png" />
-    <h3>Tasha</h3>
-  </div>
-  <div>
-    <img src="./i/T-Bone.png" />
-    <h3>T-Bone</h3>
-  </div>
-  <div>
-    <img src="./i/Teddy.png" />
-    <h3>Teddy</h3>
-  </div>
-  <div>
-    <img src="./i/Tex.png" />
-    <h3>Tex</h3>
-  </div>
-  <div>
-    <img src="./i/Tia.png" />
-    <h3>Tia</h3>
-  </div>
-  <div>
-    <img src="./i/Tiffany.png" />
-    <h3>Tiffany</h3>
-  </div>
-  <div>
-    <img src="./i/Timbra.png" />
-    <h3>Timbra</h3>
-  </div>
-  <div>
-    <img src="./i/Tipper.png" />
-    <h3>Tipper</h3>
-  </div>
-  <div>
-    <img src="./i/Tom.png" />
-    <h3>Tom</h3>
-  </div>
-  <div>
-    <img src="./i/Truffles.png" />
-    <h3>Truffles</h3>
-  </div>
-  <div>
-    <img src="./i/Tucker.png" />
-    <h3>Tucker</h3>
-  </div>
-  <div>
-    <img src="./i/Tutu.png" />
-    <h3>Tutu</h3>
-  </div>
-  <div>
-    <img src="./i/Twiggy.png" />
-    <h3>Twiggy</h3>
-  </div>
-  <div>
-    <img src="./i/Tybalt.png" />
-    <h3>Tybalt</h3>
-  </div>
-  <div>
-    <img src="./i/Ursala.png" />
-    <h3>Ursala</h3>
-  </div>
-  <div>
-    <img src="./i/Velma.png" />
-    <h3>Velma</h3>
-  </div>
-  <div>
-    <img src="./i/Vesta.png" />
-    <h3>Vesta</h3>
-  </div>
-  <div>
-    <img src="./i/Vic.png" />
-    <h3>Vic</h3>
-  </div>
-  <div>
-    <img src="./i/Victoria.png" />
-    <h3>Victoria</h3>
-  </div>
-  <div>
-    <img src="./i/Violet.png" />
-    <h3>Violet</h3>
-  </div>
-  <div>
-    <img src="./i/Vivian.png" />
-    <h3>Vivian</h3>
-  </div>
-  <div>
-    <img src="./i/Vladimir.png" />
-    <h3>Vladimir</h3>
-  </div>
-  <div>
-    <img src="./i/Wade.png" />
-    <h3>Wade</h3>
-  </div>
-  <div>
-    <img src="./i/Walker.png" />
-    <h3>Walker</h3>
-  </div>
-  <div>
-    <img src="./i/Walt.png" />
-    <h3>Walt</h3>
-  </div>
-  <div>
-    <img src="./i/Wart Jr..png" />
-    <h3>Wart Jr.</h3>
-  </div>
-  <div>
-    <img src="./i/Weber.png" />
-    <h3>Weber</h3>
-  </div>
-  <div>
-    <img src="./i/Wendy.png" />
-    <h3>Wendy</h3>
-  </div>
-  <div>
-    <img src="./i/Whitney.png" />
-    <h3>Whitney</h3>
-  </div>
-  <div>
-    <img src="./i/Willow.png" />
-    <h3>Willow</h3>
-  </div>
-  <div>
-    <img src="./i/Winnie.png" />
-    <h3>Winnie</h3>
-  </div>
-  <div>
-    <img src="./i/Wolfgang.png" />
-    <h3>Wolfgang</h3>
-  </div>
-  <div>
-    <img src="./i/Yuka.png" />
-    <h3>Yuka</h3>
-  </div>
-  <div>
-    <img src="./i/Zell.png" />
-    <h3>Zell</h3>
-  </div>
-  <div>
-    <img src="./i/Zucker.png" />
-    <h3>Zucker</h3>
-  </div>
-</section>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-weight: 200;
+    }
+    body {
+      font-family: sans-serif;
+      font-size: 12px;
+      margin: 0;
+    }
+    section {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      grid-gap: 5px;
+    }
+    div {
+      position: relative;
+    }
+    img {
+      width: 100%;
+      height: auto;
+    }
+    h1 {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: white;
+    }
+    h3 {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      margin: 0;
+      padding: 5px 10px;
+      padding-top: 40px;
+      color: white;
+      background: linear-gradient(to bottom, rgb(0,0,0,0), rgb(0,0,0,0.8) 60px);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    div:hover h3 {
+      opacity: 1;
+    }
+    /*@media (hover: hover) {*/
+      div {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+      }
+      h3 {
+        position: static;
+        opacity: 1;
+        background: white;
+        color: black;
+        padding-top: 5px;
+      }
+    /*}*/
+  </style>
+</head>
+<body>
+  <h1>Sorted by <span>name</span></h1>
+  <section></section>
+
+  <script>
+    let villagers = [
+      {
+        "name": "Admiral",
+        "img": "./i/Admiral.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Bird",
+        "birthday": "January 27",
+        "birthdaysort": "01 27",
+        "catchphrase": "aye aye"
+      },
+      {
+        "name": "Agent S",
+        "img": "./i/Agent S.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Squirrel",
+        "birthday": "July 2",
+        "birthdaysort": "07 02",
+        "catchphrase": "sidekick"
+      },
+      {
+        "name": "Agnes",
+        "img": "./i/Agnes.png",
+        "sex": "female",
+        "attitude": "Sisterly",
+        "animal": "Pig",
+        "birthday": "April 21",
+        "birthdaysort": "04 21",
+        "catchphrase": "snuffle"
+      },
+      {
+        "name": "Al",
+        "img": "./i/Al.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Gorilla",
+        "birthday": "October 18",
+        "birthdaysort": "10 18",
+        "catchphrase": "Ayyeeee"
+      },
+      {
+        "name": "Alfonso",
+        "img": "./i/Alfonso.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Alligator",
+        "birthday": "June 9",
+        "birthdaysort": "06 09",
+        "catchphrase": "it'sa me"
+      },
+      {
+        "name": "Alice",
+        "img": "./i/Alice.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Koala",
+        "birthday": "August 19",
+        "birthdaysort": "08 19",
+        "catchphrase": "guvnor"
+      },
+      {
+        "name": "Alli",
+        "img": "./i/Alli.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Alligator",
+        "birthday": "November 8",
+        "birthdaysort": "11 08",
+        "catchphrase": "graaagh"
+      },
+      {
+        "name": "Amelia",
+        "img": "./i/Amelia.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Eagle",
+        "birthday": "November 19",
+        "birthdaysort": "11 19",
+        "catchphrase": "cuz"
+      },
+      {
+        "name": "Anabelle",
+        "img": "./i/Anabelle.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Anteater",
+        "birthday": "February 16",
+        "birthdaysort": "02 16",
+        "catchphrase": "snorty"
+      },
+      {
+        "name": "Anchovy",
+        "img": "./i/Anchovy.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Bird",
+        "birthday": "March 4",
+        "birthdaysort": "03 04",
+        "catchphrase": "chuurp"
+      },
+      {
+        "name": "Ankha",
+        "img": "./i/Ankha.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Cat",
+        "birthday": "September 22",
+        "birthdaysort": "09 22",
+        "catchphrase": "me meow"
+      },
+      {
+        "name": "Angus",
+        "img": "./i/Angus.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Cow",
+        "birthday": "April 30",
+        "birthdaysort": "04 30",
+        "catchphrase": "macmoo"
+      },
+      {
+        "name": "Anicotti",
+        "img": "./i/Anicotti.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Mouse",
+        "birthday": "February 24",
+        "birthdaysort": "02 24",
+        "catchphrase": "cannoli"
+      },
+      {
+        "name": "Annalisa",
+        "img": "./i/Annalisa.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Anteater",
+        "birthday": "February 6",
+        "birthdaysort": "02 06",
+        "catchphrase": "gumdrop"
+      },
+      {
+        "name": "Annalise",
+        "img": "./i/Annalise.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Horse",
+        "birthday": "December 2",
+        "birthdaysort": "12 02",
+        "catchphrase": "nipper"
+      },
+      {
+        "name": "Antonio",
+        "img": "./i/Antonio.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Anteater",
+        "birthday": "October 20",
+        "birthdaysort": "10 20",
+        "catchphrase": "honk"
+      },
+      {
+        "name": "Apollo",
+        "img": "./i/Apollo.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Eagle",
+        "birthday": "July 4",
+        "birthdaysort": "07 04",
+        "catchphrase": "pah"
+      },
+      {
+        "name": "Apple",
+        "img": "./i/Apple.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Hamster",
+        "birthday": "September 24",
+        "birthdaysort": "09 24",
+        "catchphrase": "cheekers"
+      },
+      {
+        "name": "Astrid",
+        "img": "./i/Astrid.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Kangaroo",
+        "birthday": "September 8",
+        "birthdaysort": "09 08",
+        "catchphrase": "my pet"
+      },
+      {
+        "name": "Audie",
+        "img": "./i/Audie.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Wolf",
+        "birthday": "August 31",
+        "birthdaysort": "08 31",
+        "catchphrase": "Foxtrot"
+      },
+      {
+        "name": "Aurora",
+        "img": "./i/Aurora.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Penguin",
+        "birthday": "January 27",
+        "birthdaysort": "01 27",
+        "catchphrase": "b-b-baby"
+      },
+      {
+        "name": "Ava",
+        "img": "./i/Ava.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Chicken",
+        "birthday": "April 28",
+        "birthdaysort": "04 28",
+        "catchphrase": "beaker"
+      },
+      {
+        "name": "Avery",
+        "img": "./i/Avery.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Eagle",
+        "birthday": "February 22",
+        "birthdaysort": "02 22",
+        "catchphrase": "skree-haw"
+      },
+      {
+        "name": "Axel",
+        "img": "./i/Axel.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Elephant",
+        "birthday": "March 23",
+        "birthdaysort": "03 23",
+        "catchphrase": "WHONK"
+      },
+      {
+        "name": "Baabara",
+        "img": "./i/Baabara.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Sheep",
+        "birthday": "March 28",
+        "birthdaysort": "03 28",
+        "catchphrase": "daahling"
+      },
+      {
+        "name": "Bam",
+        "img": "./i/Bam.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Deer",
+        "birthday": "November 7",
+        "birthdaysort": "11 07",
+        "catchphrase": "kablang"
+      },
+      {
+        "name": "Bangle",
+        "img": "./i/Bangle.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Tiger",
+        "birthday": "August 27",
+        "birthdaysort": "08 27",
+        "catchphrase": "growf"
+      },
+      {
+        "name": "Barold",
+        "img": "./i/Barold.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Bear Cub",
+        "birthday": "March 2",
+        "birthdaysort": "03 02",
+        "catchphrase": "cubby"
+      },
+      {
+        "name": "Bea",
+        "img": "./i/Bea.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Dog",
+        "birthday": "October 15",
+        "birthdaysort": "10 15",
+        "catchphrase": "bingo"
+      },
+      {
+        "name": "Beardo",
+        "img": "./i/Beardo.png",
+        "sex": "male",
+        "attitude": "Smug",
+        "animal": "Bear",
+        "birthday": "September 27",
+        "birthdaysort": "09 27",
+        "catchphrase": "whiskers"
+      },
+      {
+        "name": "Beau",
+        "img": "./i/Beau.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Deer",
+        "birthday": "April 5",
+        "birthdaysort": "04 05",
+        "catchphrase": "saltlick"
+      },
+      {
+        "name": "Becky",
+        "img": "./i/Becky.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Chicken",
+        "birthday": "December 9",
+        "birthdaysort": "12 09",
+        "catchphrase": "chicklet"
+      },
+      {
+        "name": "Bella",
+        "img": "./i/Bella.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Mouse",
+        "birthday": "December 28",
+        "birthdaysort": "12 28",
+        "catchphrase": "eeks"
+      },
+      {
+        "name": "Benedict",
+        "img": "./i/Benedict.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Chicken",
+        "birthday": "October 10",
+        "birthdaysort": "10 10",
+        "catchphrase": "uh-hoo"
+      },
+      {
+        "name": "Benjamin",
+        "img": "./i/Benjamin.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Dog",
+        "birthday": "August 3",
+        "birthdaysort": "08 03",
+        "catchphrase": "alrighty"
+      },
+      {
+        "name": "Bertha",
+        "img": "./i/Bertha.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Hippo",
+        "birthday": "April 25",
+        "birthdaysort": "04 25",
+        "catchphrase": "bloop"
+      },
+      {
+        "name": "Bettina",
+        "img": "./i/Bettina.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Mouse",
+        "birthday": "June 12",
+        "birthdaysort": "06 12",
+        "catchphrase": "eekers"
+      },
+      {
+        "name": "Bianca",
+        "img": "./i/Bianca.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Tiger",
+        "birthday": "December 13",
+        "birthdaysort": "12 13",
+        "catchphrase": "glimmer"
+      },
+      {
+        "name": "Biff",
+        "img": "./i/Biff.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Hippo",
+        "birthday": "March 29",
+        "birthdaysort": "03 29",
+        "catchphrase": "squirt"
+      },
+      {
+        "name": "Big Top",
+        "img": "./i/Big Top.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Elephant",
+        "birthday": "October 3",
+        "birthdaysort": "10 03",
+        "catchphrase": "villain"
+      },
+      {
+        "name": "Bill",
+        "img": "./i/Bill.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Duck",
+        "birthday": "February 1",
+        "birthdaysort": "02 01",
+        "catchphrase": "quacko"
+      },
+      {
+        "name": "Billy",
+        "img": "./i/Billy.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Goat",
+        "birthday": "March 25",
+        "birthdaysort": "03 25",
+        "catchphrase": "dagnaabit"
+      },
+      {
+        "name": "Biskit",
+        "img": "./i/Biskit.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Dog",
+        "birthday": "May 13",
+        "birthdaysort": "May 13",
+        "catchphrase": "dog"
+      },
+      {
+        "name": "Bitty",
+        "img": "./i/Bitty.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Hippo",
+        "birthday": "October 6",
+        "birthdaysort": "10 06",
+        "catchphrase": "my dear"
+      },
+      {
+        "name": "Blaire",
+        "img": "./i/Blaire.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Squirrel",
+        "birthday": "July 3",
+        "birthdaysort": "07 03",
+        "catchphrase": "nutlet"
+      },
+      {
+        "name": "Blanche",
+        "img": "./i/Blanche.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Ostrich",
+        "birthday": "December 21",
+        "birthdaysort": "12 21",
+        "catchphrase": "quite so"
+      },
+      {
+        "name": "Bluebear",
+        "img": "./i/Bluebear.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Bear Cub",
+        "birthday": "June 24",
+        "birthdaysort": "06 24",
+        "catchphrase": "peach"
+      },
+      {
+        "name": "Bob",
+        "img": "./i/Bob.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Cat",
+        "birthday": "January 1",
+        "birthdaysort": "01 01",
+        "catchphrase": "pthhhpth"
+      },
+      {
+        "name": "Bonbon",
+        "img": "./i/Bonbon.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Rabbit",
+        "birthday": "March 3",
+        "birthdaysort": "03 03",
+        "catchphrase": "deelish"
+      },
+      {
+        "name": "Bones",
+        "img": "./i/Bones.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Dog",
+        "birthday": "August 4",
+        "birthdaysort": "08 04",
+        "catchphrase": "yip yip"
+      },
+      {
+        "name": "Boomer",
+        "img": "./i/Boomer.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Penguin",
+        "birthday": "February 7",
+        "birthdaysort": "02 07",
+        "catchphrase": "human"
+      },
+      {
+        "name": "Boone",
+        "img": "./i/Boone.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Gorilla",
+        "birthday": "September 12",
+        "birthdaysort": "09 12",
+        "catchphrase": "baboom"
+      },
+      {
+        "name": "Boots",
+        "img": "./i/Boots.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Alligator",
+        "birthday": "August 7",
+        "birthdaysort": "08 07",
+        "catchphrase": "munchie"
+      },
+      {
+        "name": "Boris",
+        "img": "./i/Boris.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Pig",
+        "birthday": "November 6",
+        "birthdaysort": "11 06",
+        "catchphrase": "schnort"
+      },
+      {
+        "name": "Boyd",
+        "img": "./i/Boyd.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Gorilla",
+        "birthday": "October 1",
+        "birthdaysort": "10 01",
+        "catchphrase": "uh-oh"
+      },
+      {
+        "name": "Bree",
+        "img": "./i/Bree.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Mouse",
+        "birthday": "July 7",
+        "birthdaysort": "07 07",
+        "catchphrase": "cheeseball"
+      },
+      {
+        "name": "Broccolo",
+        "img": "./i/Broccolo.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Mouse",
+        "birthday": "June 30",
+        "birthdaysort": "06 30",
+        "catchphrase": "eat it"
+      },
+      {
+        "name": "Broffina",
+        "img": "./i/Broffina.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Chicken",
+        "birthday": "October 24",
+        "birthdaysort": "10 24",
+        "catchphrase": "cluckadoo"
+      },
+      {
+        "name": "Bruce",
+        "img": "./i/Bruce.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Deer",
+        "birthday": "May 26",
+        "birthdaysort": "May 26",
+        "catchphrase": "gruff"
+      },
+      {
+        "name": "Bubbles",
+        "img": "./i/Bubbles.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Hippo",
+        "birthday": "September 18",
+        "birthdaysort": "09 18",
+        "catchphrase": "hipster"
+      },
+      {
+        "name": "Buck",
+        "img": "./i/Buck.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Horse",
+        "birthday": "April 4",
+        "birthdaysort": "04 04",
+        "catchphrase": "pardner"
+      },
+      {
+        "name": "Bud",
+        "img": "./i/Bud.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Lion",
+        "birthday": "August 8",
+        "birthdaysort": "08 08",
+        "catchphrase": "shredded"
+      },
+      {
+        "name": "Bunnie",
+        "img": "./i/Bunnie.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Rabbit",
+        "birthday": "May 9",
+        "birthdaysort": "May 09",
+        "catchphrase": "tee-hee"
+      },
+      {
+        "name": "Butch",
+        "img": "./i/Butch.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Dog",
+        "birthday": "November 1",
+        "birthdaysort": "11 01",
+        "catchphrase": "ROOOOOWF"
+      },
+      {
+        "name": "Buzz",
+        "img": "./i/Buzz.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Eagle",
+        "birthday": "December 7",
+        "birthdaysort": "12 07",
+        "catchphrase": "captain"
+      },
+      {
+        "name": "Cally",
+        "img": "./i/Cally.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Squirrel",
+        "birthday": "September 4",
+        "birthdaysort": "09 04",
+        "catchphrase": "WHEE"
+      },
+      {
+        "name": "Camofrog",
+        "img": "./i/Camofrog.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Frog",
+        "birthday": "June 5",
+        "birthdaysort": "06 05",
+        "catchphrase": "ten-hut"
+      },
+      {
+        "name": "Canberra",
+        "img": "./i/Canberra.png",
+        "sex": "female",
+        "attitude": "Sisterly",
+        "animal": "Koala",
+        "birthday": "May 14",
+        "birthdaysort": "May 14",
+        "catchphrase": "nuh uh"
+      },
+      {
+        "name": "Candi",
+        "img": "./i/Candi.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Mouse",
+        "birthday": "April 13",
+        "birthdaysort": "04 13",
+        "catchphrase": "sweetie"
+      },
+      {
+        "name": "Carmen",
+        "img": "./i/Carmen.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Rabbit",
+        "birthday": "January 6",
+        "birthdaysort": "01 06",
+        "catchphrase": "nougat"
+      },
+      {
+        "name": "Caroline",
+        "img": "./i/Caroline.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Squirrel",
+        "birthday": "July 15",
+        "birthdaysort": "07 15",
+        "catchphrase": "hulaaaa"
+      },
+      {
+        "name": "Carrie",
+        "img": "./i/Carrie.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Kangaroo",
+        "birthday": "December 5",
+        "birthdaysort": "12 05",
+        "catchphrase": "little one"
+      },
+      {
+        "name": "Cashmere",
+        "img": "./i/Cashmere.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Sheep",
+        "birthday": "April 2",
+        "birthdaysort": "04 02",
+        "catchphrase": "baaaby"
+      },
+      {
+        "name": "Celia",
+        "img": "./i/Celia.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Eagle",
+        "birthday": "March 25",
+        "birthdaysort": "03 25",
+        "catchphrase": "feathers"
+      },
+      {
+        "name": "Cesar",
+        "img": "./i/Cesar.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Gorilla",
+        "birthday": "September 6",
+        "birthdaysort": "09 06",
+        "catchphrase": "highness"
+      },
+      {
+        "name": "Chadder",
+        "img": "./i/Chadder.png",
+        "sex": "male",
+        "attitude": "Smug",
+        "animal": "Mouse",
+        "birthday": "December 15",
+        "birthdaysort": "12 15",
+        "catchphrase": "fromage"
+      },
+      {
+        "name": "Charlise",
+        "img": "./i/Charlise.png",
+        "sex": "female",
+        "attitude": "Sisterly",
+        "animal": "Bear",
+        "birthday": "April 17",
+        "birthdaysort": "04 17",
+        "catchphrase": "urgh"
+      },
+      {
+        "name": "Cheri",
+        "img": "./i/Cheri.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Bear Cub",
+        "birthday": "March 17",
+        "birthdaysort": "03 17",
+        "catchphrase": "tralala"
+      },
+      {
+        "name": "Cherry",
+        "img": "./i/Cherry.png",
+        "sex": "female",
+        "attitude": "Sisterly",
+        "animal": "Dog",
+        "birthday": "May 11",
+        "birthdaysort": "May 11",
+        "catchphrase": "what what"
+      },
+      {
+        "name": "Chester",
+        "img": "./i/Chester.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Bear Cub",
+        "birthday": "August 6",
+        "birthdaysort": "08 06",
+        "catchphrase": "rookie"
+      },
+      {
+        "name": "Chevre",
+        "img": "./i/Chevre.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Goat",
+        "birthday": "March 6",
+        "birthdaysort": "03 06",
+        "catchphrase": "la baa"
+      },
+      {
+        "name": "Chief",
+        "img": "./i/Chief.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Wolf",
+        "birthday": "December 19",
+        "birthdaysort": "12 19",
+        "catchphrase": "harrumph"
+      },
+      {
+        "name": "Chops",
+        "img": "./i/Chops.png",
+        "sex": "male",
+        "attitude": "Smug",
+        "animal": "Pig",
+        "birthday": "October 13",
+        "birthdaysort": "10 13",
+        "catchphrase": "zoink"
+      },
+      {
+        "name": "Chow",
+        "img": "./i/Chow.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Bear",
+        "birthday": "July 22",
+        "birthdaysort": "07 22",
+        "catchphrase": "aiya"
+      },
+      {
+        "name": "Chrissy",
+        "img": "./i/Chrissy.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Rabbit",
+        "birthday": "August 28",
+        "birthdaysort": "08 28",
+        "catchphrase": "sparkles"
+      },
+      {
+        "name": "Claude",
+        "img": "./i/Claude.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Rabbit",
+        "birthday": "December 3",
+        "birthdaysort": "12 03",
+        "catchphrase": "hopalong"
+      },
+      {
+        "name": "Claudia",
+        "img": "./i/Claudia.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Tiger",
+        "birthday": "November 22",
+        "birthdaysort": "11 22",
+        "catchphrase": "ooh la la"
+      },
+      {
+        "name": "Clay",
+        "img": "./i/Clay.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Hamster",
+        "birthday": "October 19",
+        "birthdaysort": "10 19",
+        "catchphrase": "thump"
+      },
+      {
+        "name": "Cleo",
+        "img": "./i/Cleo.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Horse",
+        "birthday": "February 9",
+        "birthdaysort": "02 09",
+        "catchphrase": "sugar"
+      },
+      {
+        "name": "Clyde",
+        "img": "./i/Clyde.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Horse",
+        "birthday": "May 1",
+        "birthdaysort": "May 01",
+        "catchphrase": "clip-clawp"
+      },
+      {
+        "name": "Coach",
+        "img": "./i/Coach.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Cow",
+        "birthday": "April 29",
+        "birthdaysort": "04 29",
+        "catchphrase": "stubble"
+      },
+      {
+        "name": "Cobb",
+        "img": "./i/Cobb.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Pig",
+        "birthday": "October 7",
+        "birthdaysort": "10 07",
+        "catchphrase": "hot dog"
+      },
+      {
+        "name": "Coco",
+        "img": "./i/Coco.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Rabbit",
+        "birthday": "March 1",
+        "birthdaysort": "03 01",
+        "catchphrase": "doyoing"
+      },
+      {
+        "name": "Cole",
+        "img": "./i/Cole.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Rabbit",
+        "birthday": "August 10",
+        "birthdaysort": "08 10",
+        "catchphrase": "duuude"
+      },
+      {
+        "name": "Colton",
+        "img": "./i/Colton.png",
+        "sex": "male",
+        "attitude": "Smug",
+        "animal": "Horse",
+        "birthday": "May 22",
+        "birthdaysort": "May 22",
+        "catchphrase": "check it"
+      },
+      {
+        "name": "Cookie",
+        "img": "./i/Cookie.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Dog",
+        "birthday": "June 18",
+        "birthdaysort": "06 18",
+        "catchphrase": "arfer"
+      },
+      {
+        "name": "Cousteau",
+        "img": "./i/Cousteau.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Frog",
+        "birthday": "December 17",
+        "birthdaysort": "12 17",
+        "catchphrase": "oui oui"
+      },
+      {
+        "name": "Cranston",
+        "img": "./i/Cranston.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Ostrich",
+        "birthday": "September 23",
+        "birthdaysort": "09 23",
+        "catchphrase": "sweatband"
+      },
+      {
+        "name": "Croque",
+        "img": "./i/Croque.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Frog",
+        "birthday": "July 18",
+        "birthdaysort": "07 18",
+        "catchphrase": "as if"
+      },
+      {
+        "name": "Cube",
+        "img": "./i/Cube.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Penguin",
+        "birthday": "January 29",
+        "birthdaysort": "01 29",
+        "catchphrase": "brainfreeze"
+      },
+      {
+        "name": "Curlos",
+        "img": "./i/Curlos.png",
+        "sex": "male",
+        "attitude": "Smug",
+        "animal": "Sheep",
+        "birthday": "May 8",
+        "birthdaysort": "May 08",
+        "catchphrase": "shearly"
+      },
+      {
+        "name": "Curly",
+        "img": "./i/Curly.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Pig",
+        "birthday": "July 26",
+        "birthdaysort": "07 26",
+        "catchphrase": "nyoink"
+      },
+      {
+        "name": "Curt",
+        "img": "./i/Curt.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Bear",
+        "birthday": "July 1",
+        "birthdaysort": "07 01",
+        "catchphrase": "fuzzball"
+      },
+      {
+        "name": "Cyd",
+        "img": "./i/Cyd.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Elephant",
+        "birthday": "June 9",
+        "birthdaysort": "06 09",
+        "catchphrase": "rockin'"
+      },
+      {
+        "name": "Cyrano",
+        "img": "./i/Cyrano.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Anteater",
+        "birthday": "March 9",
+        "birthdaysort": "03 09",
+        "catchphrase": "ah-CHOO"
+      },
+      {
+        "name": "Daisy",
+        "img": "./i/Daisy.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Dog",
+        "birthday": "November 16",
+        "birthdaysort": "11 16",
+        "catchphrase": "bow-WOW"
+      },
+      {
+        "name": "Deena",
+        "img": "./i/Deena.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Duck",
+        "birthday": "June 27",
+        "birthdaysort": "06 27",
+        "catchphrase": "woowoo"
+      },
+      {
+        "name": "Deirdre",
+        "img": "./i/Deirdre.png",
+        "sex": "female",
+        "attitude": "Sisterly",
+        "animal": "Deer",
+        "birthday": "May 4",
+        "birthdaysort": "May 04",
+        "catchphrase": "whatevs"
+      },
+      {
+        "name": "Del",
+        "img": "./i/Del.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Alligator",
+        "birthday": "May 27",
+        "birthdaysort": "May 27",
+        "catchphrase": "gronk"
+      },
+      {
+        "name": "Deli",
+        "img": "./i/Deli.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Monkey",
+        "birthday": "May 24",
+        "birthdaysort": "May 24",
+        "catchphrase": "monch"
+      },
+      {
+        "name": "Derwin",
+        "img": "./i/Derwin.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Duck",
+        "birthday": "May 25",
+        "birthdaysort": "May 25",
+        "catchphrase": "derrrrr"
+      },
+      {
+        "name": "Diana",
+        "img": "./i/Diana.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Deer",
+        "birthday": "January 4",
+        "birthdaysort": "01 04",
+        "catchphrase": "no doy"
+      },
+      {
+        "name": "Diva",
+        "img": "./i/Diva.png",
+        "sex": "female",
+        "attitude": "Sisterly",
+        "animal": "Frog",
+        "birthday": "October 2",
+        "birthdaysort": "10 02",
+        "catchphrase": "ya know"
+      },
+      {
+        "name": "Dizzy",
+        "img": "./i/Dizzy.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Elephant",
+        "birthday": "January 14",
+        "birthdaysort": "01 14",
+        "catchphrase": "woo-oo"
+      },
+      {
+        "name": "Dobie",
+        "img": "./i/Dobie.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Wolf",
+        "birthday": "February 17",
+        "birthdaysort": "02 17",
+        "catchphrase": "ohmmm"
+      },
+      {
+        "name": "Doc",
+        "img": "./i/Doc.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Rabbit",
+        "birthday": "March 16",
+        "birthdaysort": "03 16",
+        "catchphrase": "ol' bunny"
+      },
+      {
+        "name": "Dom",
+        "img": "./i/Dom.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Sheep",
+        "birthday": "March 18",
+        "birthdaysort": "03 18",
+        "catchphrase": "indeedaroo"
+      },
+      {
+        "name": "Dora",
+        "img": "./i/Dora.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Mouse",
+        "birthday": "February 18",
+        "birthdaysort": "02 18",
+        "catchphrase": "squeaky"
+      },
+      {
+        "name": "Dotty",
+        "img": "./i/Dotty.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Rabbit",
+        "birthday": "March 14",
+        "birthdaysort": "03 14",
+        "catchphrase": "wee one"
+      },
+      {
+        "name": "Drago",
+        "img": "./i/Drago.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Alligator",
+        "birthday": "February 12",
+        "birthdaysort": "02 12",
+        "catchphrase": "burrrn"
+      },
+      {
+        "name": "Drake",
+        "img": "./i/Drake.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Duck",
+        "birthday": "June 25",
+        "birthdaysort": "06 25",
+        "catchphrase": "quacko"
+      },
+      {
+        "name": "Drift",
+        "img": "./i/Drift.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Frog",
+        "birthday": "October 9",
+        "birthdaysort": "10 09",
+        "catchphrase": "brah"
+      },
+      {
+        "name": "Ed",
+        "img": "./i/Ed.png",
+        "sex": "male",
+        "attitude": "Smug",
+        "animal": "Horse",
+        "birthday": "September 16",
+        "birthdaysort": "09 16",
+        "catchphrase": "greenhorn"
+      },
+      {
+        "name": "Egbert",
+        "img": "./i/Egbert.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Chicken",
+        "birthday": "October 14",
+        "birthdaysort": "10 14",
+        "catchphrase": "doodle-duh"
+      },
+      {
+        "name": "Elise",
+        "img": "./i/Elise.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Monkey",
+        "birthday": "March 21",
+        "birthdaysort": "03 21",
+        "catchphrase": "puh-lease"
+      },
+      {
+        "name": "Ellie",
+        "img": "./i/Ellie.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Elephant",
+        "birthday": "May 12",
+        "birthdaysort": "May 12",
+        "catchphrase": "li'l one"
+      },
+      {
+        "name": "Elmer",
+        "img": "./i/Elmer.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Horse",
+        "birthday": "October 5",
+        "birthdaysort": "10 05",
+        "catchphrase": "tenderfoot"
+      },
+      {
+        "name": "Eloise",
+        "img": "./i/Eloise.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Elephant",
+        "birthday": "December 8",
+        "birthdaysort": "12 08",
+        "catchphrase": "tooooot"
+      },
+      {
+        "name": "Elvis",
+        "img": "./i/Elvis.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Lion",
+        "birthday": "July 23",
+        "birthdaysort": "07 23",
+        "catchphrase": "unh-hunh"
+      },
+      {
+        "name": "Erik",
+        "img": "./i/Erik.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Deer",
+        "birthday": "July 27",
+        "birthdaysort": "07 27",
+        "catchphrase": "chow down"
+      },
+      {
+        "name": "Eunice",
+        "img": "./i/Eunice.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Sheep",
+        "birthday": "April 3",
+        "birthdaysort": "04 03",
+        "catchphrase": "lambchop"
+      },
+      {
+        "name": "Eugene",
+        "img": "./i/Eugene.png",
+        "sex": "male",
+        "attitude": "Smug",
+        "animal": "Koala",
+        "birthday": "October 26",
+        "birthdaysort": "10 26",
+        "catchphrase": "yeah buddy"
+      },
+      {
+        "name": "Fang",
+        "img": "./i/Fang.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Wolf",
+        "birthday": "December 18",
+        "birthdaysort": "12 18",
+        "catchphrase": "cha-chomp"
+      },
+      {
+        "name": "Fauna",
+        "img": "./i/Fauna.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Deer",
+        "birthday": "March 26",
+        "birthdaysort": "03 26",
+        "catchphrase": "dearie"
+      },
+      {
+        "name": "Felicity",
+        "img": "./i/Felicity.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Cat",
+        "birthday": "March 30",
+        "birthdaysort": "03 30",
+        "catchphrase": "mimimi"
+      },
+      {
+        "name": "Filbert",
+        "img": "./i/Filbert.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Squirrel",
+        "birthday": "June 3",
+        "birthdaysort": "06 03",
+        "catchphrase": "bucko"
+      },
+      {
+        "name": "Flip",
+        "img": "./i/Flip.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Monkey",
+        "birthday": "November 21",
+        "birthdaysort": "11 21",
+        "catchphrase": "rerack"
+      },
+      {
+        "name": "Flo",
+        "img": "./i/Flo.png",
+        "sex": "female",
+        "attitude": "Sisterly",
+        "animal": "Penguin",
+        "birthday": "September 2",
+        "birthdaysort": "09 02",
+        "catchphrase": "cha"
+      },
+      {
+        "name": "Flora",
+        "img": "./i/Flora.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Ostrich",
+        "birthday": "February 9",
+        "birthdaysort": "02 09",
+        "catchphrase": "pinky"
+      },
+      {
+        "name": "Flurry",
+        "img": "./i/Flurry.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Hamster",
+        "birthday": "January 30",
+        "birthdaysort": "01 30",
+        "catchphrase": "powderpuff"
+      },
+      {
+        "name": "Francine",
+        "img": "./i/Francine.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Rabbit",
+        "birthday": "January 22",
+        "birthdaysort": "01 22",
+        "catchphrase": "karat"
+      },
+      {
+        "name": "Frank",
+        "img": "./i/Frank.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Eagle",
+        "birthday": "July 30",
+        "birthdaysort": "07 30",
+        "catchphrase": "crushy"
+      },
+      {
+        "name": "Freckles",
+        "img": "./i/Freckles.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Duck",
+        "birthday": "February 19",
+        "birthdaysort": "02 19",
+        "catchphrase": "ducky"
+      },
+      {
+        "name": "Freya",
+        "img": "./i/Freya.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Wolf",
+        "birthday": "December 14",
+        "birthdaysort": "12 14",
+        "catchphrase": "uff da"
+      },
+      {
+        "name": "Friga",
+        "img": "./i/Friga.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Penguin",
+        "birthday": "October 16",
+        "birthdaysort": "10 16",
+        "catchphrase": "brrmph"
+      },
+      {
+        "name": "Frita",
+        "img": "./i/Frita.png",
+        "sex": "female",
+        "attitude": "Sisterly",
+        "animal": "Sheep",
+        "birthday": "July 16",
+        "birthdaysort": "07 16",
+        "catchphrase": "oh ewe"
+      },
+      {
+        "name": "Frobert",
+        "img": "./i/Frobert.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Frog",
+        "birthday": "February 8",
+        "birthdaysort": "02 08",
+        "catchphrase": "fribbit"
+      },
+      {
+        "name": "Fuchsia",
+        "img": "./i/Fuchsia.png",
+        "sex": "female",
+        "attitude": "Sisterly",
+        "animal": "Deer",
+        "birthday": "September 19",
+        "birthdaysort": "09 19",
+        "catchphrase": "precious"
+      },
+      {
+        "name": "Gabi",
+        "img": "./i/Gabi.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Rabbit",
+        "birthday": "December 16",
+        "birthdaysort": "12 16",
+        "catchphrase": "honeybun"
+      },
+      {
+        "name": "Gala",
+        "img": "./i/Gala.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Pig",
+        "birthday": "March 5",
+        "birthdaysort": "03 05",
+        "catchphrase": "snortie"
+      },
+      {
+        "name": "Gaston",
+        "img": "./i/Gaston.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Rabbit",
+        "birthday": "October 28",
+        "birthdaysort": "10 28",
+        "catchphrase": "mon chou"
+      },
+      {
+        "name": "Gayle",
+        "img": "./i/Gayle.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Alligator",
+        "birthday": "May 17",
+        "birthdaysort": "May 17",
+        "catchphrase": "snacky"
+      },
+      {
+        "name": "Genji",
+        "img": "./i/Genji.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Rabbit",
+        "birthday": "January 21",
+        "birthdaysort": "01 21",
+        "catchphrase": "mochi"
+      },
+      {
+        "name": "Gigi",
+        "img": "./i/Gigi.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Frog",
+        "birthday": "August 11",
+        "birthdaysort": "08 11",
+        "catchphrase": "ribette"
+      },
+      {
+        "name": "Gladys",
+        "img": "./i/Gladys.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Ostrich",
+        "birthday": "January 15",
+        "birthdaysort": "01 15",
+        "catchphrase": "stretch"
+      },
+      {
+        "name": "Gloria",
+        "img": "./i/Gloria.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Duck",
+        "birthday": "August 12",
+        "birthdaysort": "08 12",
+        "catchphrase": "quacker"
+      },
+      {
+        "name": "Goldie",
+        "img": "./i/Goldie.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Dog",
+        "birthday": "December 27",
+        "birthdaysort": "12 27",
+        "catchphrase": "woof"
+      },
+      {
+        "name": "Gonzo",
+        "img": "./i/Gonzo.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Koala",
+        "birthday": "October 13",
+        "birthdaysort": "10 13",
+        "catchphrase": "mate"
+      },
+      {
+        "name": "Goose",
+        "img": "./i/Goose.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Chicken",
+        "birthday": "October 4",
+        "birthdaysort": "10 04",
+        "catchphrase": "buh-kay"
+      },
+      {
+        "name": "Graham",
+        "img": "./i/Graham.png",
+        "sex": "male",
+        "attitude": "Smug",
+        "animal": "Hamster",
+        "birthday": "June 20",
+        "birthdaysort": "06 20",
+        "catchphrase": "indeed"
+      },
+      {
+        "name": "Greta",
+        "img": "./i/Greta.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Mouse",
+        "birthday": "September 5",
+        "birthdaysort": "09 05",
+        "catchphrase": "yelp"
+      },
+      {
+        "name": "Grizzly",
+        "img": "./i/Grizzly.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Bear",
+        "birthday": "July 31",
+        "birthdaysort": "07 31",
+        "catchphrase": "grrr..."
+      },
+      {
+        "name": "Groucho",
+        "img": "./i/Groucho.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Bear",
+        "birthday": "October 23",
+        "birthdaysort": "10 23",
+        "catchphrase": "grumble"
+      },
+      {
+        "name": "Gruff",
+        "img": "./i/Gruff.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Goat",
+        "birthday": "August 29",
+        "birthdaysort": "08 29",
+        "catchphrase": "bleh eh eh"
+      },
+      {
+        "name": "Gwen",
+        "img": "./i/Gwen.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Penguin",
+        "birthday": "January 23",
+        "birthdaysort": "01 23",
+        "catchphrase": "h-h-hon"
+      },
+      {
+        "name": "Hamlet",
+        "img": "./i/Hamlet.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Hamster",
+        "birthday": "May 30",
+        "birthdaysort": "May 30",
+        "catchphrase": "hammie"
+      },
+      {
+        "name": "Hamphrey",
+        "img": "./i/Hamphrey.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Hamster",
+        "birthday": "February 25",
+        "birthdaysort": "02 25",
+        "catchphrase": "snort"
+      },
+      {
+        "name": "Hans",
+        "img": "./i/Hans.png",
+        "sex": "male",
+        "attitude": "Smug",
+        "animal": "Gorilla",
+        "birthday": "December 5",
+        "birthdaysort": "12 05",
+        "catchphrase": "groovy"
+      },
+      {
+        "name": "Harry",
+        "img": "./i/Harry.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Hippo",
+        "birthday": "January 7",
+        "birthdaysort": "01 07",
+        "catchphrase": "beach bum"
+      },
+      {
+        "name": "Hazel",
+        "img": "./i/Hazel.png",
+        "sex": "female",
+        "attitude": "Sisterly",
+        "animal": "Squirrel",
+        "birthday": "August 30",
+        "birthdaysort": "08 30",
+        "catchphrase": "uni-wow"
+      },
+      {
+        "name": "Henry",
+        "img": "./i/Henry.png",
+        "sex": "male",
+        "attitude": "Smug",
+        "animal": "Frog",
+        "birthday": "September 21",
+        "birthdaysort": "09 21",
+        "catchphrase": "snoozit"
+      },
+      {
+        "name": "Hippeux",
+        "img": "./i/Hippeux.png",
+        "sex": "male",
+        "attitude": "Smug",
+        "animal": "Hippo",
+        "birthday": "October 15",
+        "birthdaysort": "10 15",
+        "catchphrase": "natch"
+      },
+      {
+        "name": "Hopkins",
+        "img": "./i/Hopkins.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Rabbit",
+        "birthday": "March 11",
+        "birthdaysort": "03 11",
+        "catchphrase": "thumper"
+      },
+      {
+        "name": "Hopper",
+        "img": "./i/Hopper.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Penguin",
+        "birthday": "April 6",
+        "birthdaysort": "04 06",
+        "catchphrase": "slushie"
+      },
+      {
+        "name": "Hornsby",
+        "img": "./i/Hornsby.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Rhino",
+        "birthday": "March 20",
+        "birthdaysort": "03 20",
+        "catchphrase": "schnozzle"
+      },
+      {
+        "name": "Huck",
+        "img": "./i/Huck.png",
+        "sex": "male",
+        "attitude": "Smug",
+        "animal": "Frog",
+        "birthday": "July 9",
+        "birthdaysort": "07 09",
+        "catchphrase": "hopper"
+      },
+      {
+        "name": "Hugh",
+        "img": "./i/Hugh.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Pig",
+        "birthday": "December 30",
+        "birthdaysort": "12 30",
+        "catchphrase": "snortle"
+      },
+      {
+        "name": "Iggly",
+        "img": "./i/Iggly.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Penguin",
+        "birthday": "November 2",
+        "birthdaysort": "11 02",
+        "catchphrase": "waddler"
+      },
+      {
+        "name": "Ike",
+        "img": "./i/Ike.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Bear",
+        "birthday": "May 16",
+        "birthdaysort": "May 16",
+        "catchphrase": "roadie"
+      },
+      {
+        "name": "Jacob / Jakey",
+        "img": "./i/JacobNAJakeyPAL.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Bird",
+        "birthday": "August 24",
+        "birthdaysort": "08 24",
+        "catchphrase": "chuuuuurp"
+      },
+      {
+        "name": "Jacques",
+        "img": "./i/Jacques.png",
+        "sex": "male",
+        "attitude": "Smug",
+        "animal": "Bird",
+        "birthday": "June 22",
+        "birthdaysort": "06 22",
+        "catchphrase": "zut alors"
+      },
+      {
+        "name": "Jambette",
+        "img": "./i/Jambette.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Frog",
+        "birthday": "October 27",
+        "birthdaysort": "10 27",
+        "catchphrase": "croak-kay"
+      },
+      {
+        "name": "Jay",
+        "img": "./i/Jay.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Bird",
+        "birthday": "July 17",
+        "birthdaysort": "07 17",
+        "catchphrase": "heeeeeyy"
+      },
+      {
+        "name": "Jeremiah",
+        "img": "./i/Jeremiah.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Frog",
+        "birthday": "July 8",
+        "birthdaysort": "07 08",
+        "catchphrase": "nee-deep"
+      },
+      {
+        "name": "Jitters",
+        "img": "./i/Jitters.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Bird",
+        "birthday": "February 2",
+        "birthdaysort": "02 02",
+        "catchphrase": "bzzert"
+      },
+      {
+        "name": "Joey",
+        "img": "./i/Joey.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Duck",
+        "birthday": "January 3",
+        "birthdaysort": "01 03",
+        "catchphrase": "bleeeeeck"
+      },
+      {
+        "name": "Judy",
+        "img": "./i/Judy.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Bear Cub",
+        "birthday": "March 10",
+        "birthdaysort": "03 10",
+        "catchphrase": "myohmy"
+      },
+      {
+        "name": "Julia",
+        "img": "./i/Julia.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Ostrich",
+        "birthday": "July 31",
+        "birthdaysort": "07 31",
+        "catchphrase": "dahling"
+      },
+      {
+        "name": "Julian",
+        "img": "./i/Julian.png",
+        "sex": "male",
+        "attitude": "Smug",
+        "animal": "Horse",
+        "birthday": "March 15",
+        "birthdaysort": "03 15",
+        "catchphrase": "glitter"
+      },
+      {
+        "name": "June",
+        "img": "./i/June.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Bear Cub",
+        "birthday": "May 21",
+        "birthdaysort": "May 21",
+        "catchphrase": "rainbow"
+      },
+      {
+        "name": "Kabuki",
+        "img": "./i/Kabuki.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Cat",
+        "birthday": "November 29",
+        "birthdaysort": "11 29",
+        "catchphrase": "meooo-OH"
+      },
+      {
+        "name": "Katt",
+        "img": "./i/Katt.png",
+        "sex": "female",
+        "attitude": "Sisterly",
+        "animal": "Cat",
+        "birthday": "April 27",
+        "birthdaysort": "04 27",
+        "catchphrase": "purrty"
+      },
+      {
+        "name": "Keaton",
+        "img": "./i/Keaton.png",
+        "sex": "male",
+        "attitude": "Smug",
+        "animal": "Eagle",
+        "birthday": "June 1",
+        "birthdaysort": "06 01",
+        "catchphrase": "wingo"
+      },
+      {
+        "name": "Ken",
+        "img": "./i/Ken.png",
+        "sex": "male",
+        "attitude": "Smug",
+        "animal": "Chicken",
+        "birthday": "December 23",
+        "birthdaysort": "12 23",
+        "catchphrase": "no doubt"
+      },
+      {
+        "name": "Ketchup",
+        "img": "./i/Ketchup.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Duck",
+        "birthday": "July 27",
+        "birthdaysort": "07 27",
+        "catchphrase": "bitty"
+      },
+      {
+        "name": "Kevin",
+        "img": "./i/Kevin.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Pig",
+        "birthday": "April 26",
+        "birthdaysort": "04 26",
+        "catchphrase": "weeweewee"
+      },
+      {
+        "name": "Kid Cat",
+        "img": "./i/Kid Cat.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Cat",
+        "birthday": "August 1",
+        "birthdaysort": "08 01",
+        "catchphrase": "psst"
+      },
+      {
+        "name": "Kidd",
+        "img": "./i/Kidd.png",
+        "sex": "male",
+        "attitude": "Smug",
+        "animal": "Goat",
+        "birthday": "June 28",
+        "birthdaysort": "06 28",
+        "catchphrase": "wut"
+      },
+      {
+        "name": "Kiki",
+        "img": "./i/Kiki.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Cat",
+        "birthday": "October 8",
+        "birthdaysort": "10 08",
+        "catchphrase": "kitty cat"
+      },
+      {
+        "name": "Kitt",
+        "img": "./i/Kitt.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Kangaroo",
+        "birthday": "October 11",
+        "birthdaysort": "10 11",
+        "catchphrase": "child"
+      },
+      {
+        "name": "Kitty",
+        "img": "./i/Kitty.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Cat",
+        "birthday": "February 15",
+        "birthdaysort": "02 15",
+        "catchphrase": "mrowrr"
+      },
+      {
+        "name": "Klaus",
+        "img": "./i/Klaus.png",
+        "sex": "male",
+        "attitude": "Smug",
+        "animal": "Bear",
+        "birthday": "March 31",
+        "birthdaysort": "03 31",
+        "catchphrase": "strudel"
+      },
+      {
+        "name": "Knox",
+        "img": "./i/Knox.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Chicken",
+        "birthday": "November 23",
+        "birthdaysort": "11 23",
+        "catchphrase": "cluckling"
+      },
+      {
+        "name": "Kody",
+        "img": "./i/Kody.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Bear Cub",
+        "birthday": "September 28",
+        "birthdaysort": "09 28",
+        "catchphrase": "grah-grah"
+      },
+      {
+        "name": "Kyle",
+        "img": "./i/Kyle.png",
+        "sex": "male",
+        "attitude": "Smug",
+        "animal": "Wolf",
+        "birthday": "December 6",
+        "birthdaysort": "12 06",
+        "catchphrase": "alpha"
+      },
+      {
+        "name": "Leonardo",
+        "img": "./i/Leonardo.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Tiger",
+        "birthday": "May 15",
+        "birthdaysort": "May 15",
+        "catchphrase": "flexin"
+      },
+      {
+        "name": "Leopold",
+        "img": "./i/Leopold.png",
+        "sex": "male",
+        "attitude": "Smug",
+        "animal": "Lion",
+        "birthday": "August 14",
+        "birthdaysort": "08 14",
+        "catchphrase": "lion cub"
+      },
+      {
+        "name": "Lily",
+        "img": "./i/Lily.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Frog",
+        "birthday": "February 4",
+        "birthdaysort": "02 04",
+        "catchphrase": "toady"
+      },
+      {
+        "name": "Limberg",
+        "img": "./i/Limberg.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Mouse",
+        "birthday": "October 17",
+        "birthdaysort": "10 17",
+        "catchphrase": "squinky"
+      },
+      {
+        "name": "Lionel",
+        "img": "./i/Lionel.png",
+        "sex": "male",
+        "attitude": "Smug",
+        "animal": "Lion",
+        "birthday": "July 29",
+        "birthdaysort": "07 29",
+        "catchphrase": "precisely"
+      },
+      {
+        "name": "Lobo",
+        "img": "./i/Lobo.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Wolf",
+        "birthday": "November 5",
+        "birthdaysort": "11 05",
+        "catchphrase": "ah-rooooo"
+      },
+      {
+        "name": "Lolly",
+        "img": "./i/Lolly.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Cat",
+        "birthday": "March 27",
+        "birthdaysort": "03 27",
+        "catchphrase": "bonbon"
+      },
+      {
+        "name": "Lopez",
+        "img": "./i/Lopez.png",
+        "sex": "male",
+        "attitude": "Smug",
+        "animal": "Deer",
+        "birthday": "August 20",
+        "birthdaysort": "08 20",
+        "catchphrase": "buckaroo"
+      },
+      {
+        "name": "Louie",
+        "img": "./i/Louie.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Gorilla",
+        "birthday": "March 26",
+        "birthdaysort": "03 26",
+        "catchphrase": "hoo hoo ha"
+      },
+      {
+        "name": "Lucha",
+        "img": "./i/Lucha.png",
+        "sex": "male",
+        "attitude": "Smug",
+        "animal": "Bird",
+        "birthday": "December 12",
+        "birthdaysort": "12 12",
+        "catchphrase": "cacaw"
+      },
+      {
+        "name": "Lucky",
+        "img": "./i/Lucky.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Dog",
+        "birthday": "November 4",
+        "birthdaysort": "11 04",
+        "catchphrase": "rrr-owch"
+      },
+      {
+        "name": "Lucy",
+        "img": "./i/Lucy.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Pig",
+        "birthday": "June 2",
+        "birthdaysort": "06 02",
+        "catchphrase": "snoooink"
+      },
+      {
+        "name": "Lyman",
+        "img": "./i/Lyman.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Koala",
+        "birthday": "October 12",
+        "birthdaysort": "10 12",
+        "catchphrase": "chips"
+      },
+      {
+        "name": "Mac",
+        "img": "./i/Mac.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Dog",
+        "birthday": "November 11",
+        "birthdaysort": "11 11",
+        "catchphrase": "woo woof"
+      },
+      {
+        "name": "Maddie",
+        "img": "./i/Maddie.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Dog",
+        "birthday": "January 11",
+        "birthdaysort": "01 11",
+        "catchphrase": "yippee"
+      },
+      {
+        "name": "Maelle",
+        "img": "./i/Maelle.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Duck",
+        "birthday": "April 8",
+        "birthdaysort": "04 08",
+        "catchphrase": "duckling"
+      },
+      {
+        "name": "Maggie",
+        "img": "./i/Maggie.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Pig",
+        "birthday": "September 3",
+        "birthdaysort": "09 03",
+        "catchphrase": "schep"
+      },
+      {
+        "name": "Mallary",
+        "img": "./i/Mallary.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Duck",
+        "birthday": "November 17",
+        "birthdaysort": "11 17",
+        "catchphrase": "quackpth"
+      },
+      {
+        "name": "Maple",
+        "img": "./i/Maple.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Bear Cub",
+        "birthday": "June 15",
+        "birthdaysort": "06 15",
+        "catchphrase": "honey"
+      },
+      {
+        "name": "Marcel",
+        "img": "./i/Marcel.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Dog",
+        "birthday": "December 31",
+        "birthdaysort": "12 31",
+        "catchphrase": "non"
+      },
+      {
+        "name": "Marcie",
+        "img": "./i/Marcie.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Kangaroo",
+        "birthday": "May 31",
+        "birthdaysort": "May 31",
+        "catchphrase": "pouches"
+      },
+      {
+        "name": "Margie",
+        "img": "./i/Margie.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Elephant",
+        "birthday": "January 28",
+        "birthdaysort": "01 28",
+        "catchphrase": "tootie"
+      },
+      {
+        "name": "Marina",
+        "img": "./i/Marina.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Octopus",
+        "birthday": "June 26",
+        "birthdaysort": "06 26",
+        "catchphrase": "blurp"
+      },
+      {
+        "name": "Marshal",
+        "img": "./i/Marshal.png",
+        "sex": "male",
+        "attitude": "Smug",
+        "animal": "Squirrel",
+        "birthday": "September 29",
+        "birthdaysort": "09 29",
+        "catchphrase": "sulky"
+      },
+      {
+        "name": "Mathilda",
+        "img": "./i/Mathilda.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Kangaroo",
+        "birthday": "November 12",
+        "birthdaysort": "11 12",
+        "catchphrase": "wee baby"
+      },
+      {
+        "name": "Megan",
+        "img": "./i/Megan.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Bear",
+        "birthday": "March 13",
+        "birthdaysort": "03 13",
+        "catchphrase": "sundae"
+      },
+      {
+        "name": "Melba",
+        "img": "./i/Melba.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Koala",
+        "birthday": "April 12",
+        "birthdaysort": "04 12",
+        "catchphrase": "toasty"
+      },
+      {
+        "name": "Merengue",
+        "img": "./i/Merengue.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Rhino",
+        "birthday": "March 19",
+        "birthdaysort": "03 19",
+        "catchphrase": "shortcake"
+      },
+      {
+        "name": "Merry",
+        "img": "./i/Merry.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Cat",
+        "birthday": "June 29",
+        "birthdaysort": "06 29",
+        "catchphrase": "mweee"
+      },
+      {
+        "name": "Midge",
+        "img": "./i/Midge.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Bird",
+        "birthday": "March 12",
+        "birthdaysort": "03 12",
+        "catchphrase": "tweedledee"
+      },
+      {
+        "name": "Mint",
+        "img": "./i/Mint.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Squirrel",
+        "birthday": "May 2",
+        "birthdaysort": "May 02",
+        "catchphrase": "ahhhhhh"
+      },
+      {
+        "name": "Mira",
+        "img": "./i/Mira.png",
+        "sex": "female",
+        "attitude": "Sisterly",
+        "animal": "Rabbit",
+        "birthday": "July 6",
+        "birthdaysort": "07 06",
+        "catchphrase": "cottontail"
+      },
+      {
+        "name": "Miranda",
+        "img": "./i/Miranda.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Duck",
+        "birthday": "April 23",
+        "birthdaysort": "04 23",
+        "catchphrase": "quackulous"
+      },
+      {
+        "name": "Mitzi",
+        "img": "./i/Mitzi.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Cat",
+        "birthday": "September 25",
+        "birthdaysort": "09 25",
+        "catchphrase": "mew"
+      },
+      {
+        "name": "Moe",
+        "img": "./i/Moe.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Cat",
+        "birthday": "January 12",
+        "birthdaysort": "01 12",
+        "catchphrase": "myawn"
+      },
+      {
+        "name": "Molly",
+        "img": "./i/Molly.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Duck",
+        "birthday": "March 7",
+        "birthdaysort": "03 07",
+        "catchphrase": "quackidee"
+      },
+      {
+        "name": "Monique",
+        "img": "./i/Monique.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Cat",
+        "birthday": "September 30",
+        "birthdaysort": "09 30",
+        "catchphrase": "pffffft"
+      },
+      {
+        "name": "Monty",
+        "img": "./i/Monty.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Monkey",
+        "birthday": "December 7",
+        "birthdaysort": "12 07",
+        "catchphrase": "g'tang"
+      },
+      {
+        "name": "Moose",
+        "img": "./i/Moose.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Mouse",
+        "birthday": "September 13",
+        "birthdaysort": "09 13",
+        "catchphrase": "shorty"
+      },
+      {
+        "name": "Mott",
+        "img": "./i/Mott.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Lion",
+        "birthday": "July 10",
+        "birthdaysort": "07 10",
+        "catchphrase": "cagey"
+      },
+      {
+        "name": "Muffy",
+        "img": "./i/Muffy.png",
+        "sex": "female",
+        "attitude": "Sisterly",
+        "animal": "Sheep",
+        "birthday": "February 14",
+        "birthdaysort": "02 14",
+        "catchphrase": "nightshade"
+      },
+      {
+        "name": "Murphy",
+        "img": "./i/Murphy.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Bear Cub",
+        "birthday": "December 29",
+        "birthdaysort": "12 29",
+        "catchphrase": "laddie"
+      },
+      {
+        "name": "Nan",
+        "img": "./i/Nan.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Goat",
+        "birthday": "August 24",
+        "birthdaysort": "08 24",
+        "catchphrase": "kid"
+      },
+      {
+        "name": "Nana",
+        "img": "./i/Nana.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Monkey",
+        "birthday": "August 23",
+        "birthdaysort": "08 23",
+        "catchphrase": "po po"
+      },
+      {
+        "name": "Naomi",
+        "img": "./i/Naomi.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Cow",
+        "birthday": "February 28",
+        "birthdaysort": "02 28",
+        "catchphrase": "moolah"
+      },
+      {
+        "name": "Nate",
+        "img": "./i/Nate.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Bear",
+        "birthday": "August 16",
+        "birthdaysort": "08 16",
+        "catchphrase": "yawwwn"
+      },
+      {
+        "name": "Nibbles",
+        "img": "./i/Nibbles.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Squirrel",
+        "birthday": "July 19",
+        "birthdaysort": "07 19",
+        "catchphrase": "niblet"
+      },
+      {
+        "name": "Norma",
+        "img": "./i/Norma.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Cow",
+        "birthday": "September 20",
+        "birthdaysort": "09 20",
+        "catchphrase": "hoof hoo"
+      },
+      {
+        "name": "Octavian",
+        "img": "./i/Octavian.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Octopus",
+        "birthday": "September 20",
+        "birthdaysort": "09 20",
+        "catchphrase": "sucker"
+      },
+      {
+        "name": "O'Hare",
+        "img": "./i/O'Hare.png",
+        "sex": "male",
+        "attitude": "Smug",
+        "animal": "Rabbit",
+        "birthday": "July 24",
+        "birthdaysort": "07 24",
+        "catchphrase": "amigo"
+      },
+      {
+        "name": "Olaf",
+        "img": "./i/Olaf.png",
+        "sex": "male",
+        "attitude": "Smug",
+        "animal": "Anteater",
+        "birthday": "May 19",
+        "birthdaysort": "May 19",
+        "catchphrase": "whiffa"
+      },
+      {
+        "name": "Olive",
+        "img": "./i/Olive.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Bear Cub",
+        "birthday": "July 12",
+        "birthdaysort": "07 12",
+        "catchphrase": "sweet pea"
+      },
+      {
+        "name": "Olivia",
+        "img": "./i/Olivia.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Cat",
+        "birthday": "February 3",
+        "birthdaysort": "02 03",
+        "catchphrase": "purrr"
+      },
+      {
+        "name": "Opal",
+        "img": "./i/Opal.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Elephant",
+        "birthday": "January 20",
+        "birthdaysort": "01 20",
+        "catchphrase": "snoot"
+      },
+      {
+        "name": "Ozzie",
+        "img": "./i/Ozzie.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Koala",
+        "birthday": "May 7",
+        "birthdaysort": "May 07",
+        "catchphrase": "ol' bear"
+      },
+      {
+        "name": "Pancetti",
+        "img": "./i/Pancetti.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Pig",
+        "birthday": "November 14",
+        "birthdaysort": "11 14",
+        "catchphrase": "sooey"
+      },
+      {
+        "name": "Pango",
+        "img": "./i/Pango.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Anteater",
+        "birthday": "November 9",
+        "birthdaysort": "11 09",
+        "catchphrase": "snooooof"
+      },
+      {
+        "name": "Paolo",
+        "img": "./i/Paolo.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Elephant",
+        "birthday": "May 5",
+        "birthdaysort": "May 05",
+        "catchphrase": "pal"
+      },
+      {
+        "name": "Papi",
+        "img": "./i/Papi.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Horse",
+        "birthday": "January 10",
+        "birthdaysort": "01 10",
+        "catchphrase": "haaay"
+      },
+      {
+        "name": "Pashmina",
+        "img": "./i/Pashmina.png",
+        "sex": "female",
+        "attitude": "Sisterly",
+        "animal": "Goat",
+        "birthday": "December 26",
+        "birthdaysort": "12 26",
+        "catchphrase": "kidders"
+      },
+      {
+        "name": "Pate",
+        "img": "./i/Pate.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Duck",
+        "birthday": "February 23",
+        "birthdaysort": "02 23",
+        "catchphrase": "quackle"
+      },
+      {
+        "name": "Patty",
+        "img": "./i/Patty.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Cow",
+        "birthday": "May 10",
+        "birthdaysort": "May 10",
+        "catchphrase": "how-now"
+      },
+      {
+        "name": "Paula",
+        "img": "./i/Paula.png",
+        "sex": "female",
+        "attitude": "Sisterly",
+        "animal": "Bear",
+        "birthday": "March 22",
+        "birthdaysort": "03 22",
+        "catchphrase": "yodelay"
+      },
+      {
+        "name": "Peaches",
+        "img": "./i/Peaches.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Horse",
+        "birthday": "November 28",
+        "birthdaysort": "11 28",
+        "catchphrase": "neighbor"
+      },
+      {
+        "name": "Peanut",
+        "img": "./i/Peanut.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Squirrel",
+        "birthday": "June 8",
+        "birthdaysort": "06 08",
+        "catchphrase": "slacker"
+      },
+      {
+        "name": "Pecan",
+        "img": "./i/Pecan.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Squirrel",
+        "birthday": "September 10",
+        "birthdaysort": "09 10",
+        "catchphrase": "chipmunk"
+      },
+      {
+        "name": "Peck",
+        "img": "./i/Peck.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Bird",
+        "birthday": "July 25",
+        "birthdaysort": "07 25",
+        "catchphrase": "crunch"
+      },
+      {
+        "name": "Peewee",
+        "img": "./i/Peewee.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Gorilla",
+        "birthday": "September 11",
+        "birthdaysort": "09 11",
+        "catchphrase": "li'l dude"
+      },
+      {
+        "name": "Peggy",
+        "img": "./i/Peggy.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Pig",
+        "birthday": "May 23",
+        "birthdaysort": "May 23",
+        "catchphrase": "shweetie"
+      },
+      {
+        "name": "Pekoe",
+        "img": "./i/Pekoe.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Bear Cub",
+        "birthday": "May 18",
+        "birthdaysort": "May 18",
+        "catchphrase": "bud"
+      },
+      {
+        "name": "Penelope",
+        "img": "./i/Penelope.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Mouse",
+        "birthday": "February 5",
+        "birthdaysort": "02 05",
+        "catchphrase": "oh bow"
+      },
+      {
+        "name": "Phil",
+        "img": "./i/Phil.png",
+        "sex": "male",
+        "attitude": "Smug",
+        "animal": "Ostrich",
+        "birthday": "November 27",
+        "birthdaysort": "11 27",
+        "catchphrase": "hurk"
+      },
+      {
+        "name": "Phoebe",
+        "img": "./i/Phoebe.png",
+        "sex": "female",
+        "attitude": "Sisterly",
+        "animal": "Ostrich",
+        "birthday": "April 22",
+        "birthdaysort": "04 22",
+        "catchphrase": "sparky"
+      },
+      {
+        "name": "Pierce",
+        "img": "./i/Pierce.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Eagle",
+        "birthday": "January 8",
+        "birthdaysort": "01 08",
+        "catchphrase": "hawkeye"
+      },
+      {
+        "name": "Pietro",
+        "img": "./i/Pietro.png",
+        "sex": "male",
+        "attitude": "Smug",
+        "animal": "Sheep",
+        "birthday": "April 19",
+        "birthdaysort": "04 19",
+        "catchphrase": "honk honk"
+      },
+      {
+        "name": "Pinky",
+        "img": "./i/Pinky.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Bear",
+        "birthday": "September 9",
+        "birthdaysort": "09 09",
+        "catchphrase": "wah"
+      },
+      {
+        "name": "Piper",
+        "img": "./i/Piper.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Bird",
+        "birthday": "April 18",
+        "birthdaysort": "04 18",
+        "catchphrase": "chickadee"
+      },
+      {
+        "name": "Pippy",
+        "img": "./i/Pippy.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Rabbit",
+        "birthday": "June 14",
+        "birthdaysort": "06 14",
+        "catchphrase": "li'l hare"
+      },
+      {
+        "name": "Plucky",
+        "img": "./i/Plucky.png",
+        "sex": "female",
+        "attitude": "Sisterly",
+        "animal": "Chicken",
+        "birthday": "October 12",
+        "birthdaysort": "10 12",
+        "catchphrase": "chicky-poo"
+      },
+      {
+        "name": "Pompom",
+        "img": "./i/Pompom.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Duck",
+        "birthday": "February 11",
+        "birthdaysort": "02 11",
+        "catchphrase": "rah rah"
+      },
+      {
+        "name": "Poncho",
+        "img": "./i/Poncho.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Bear Cub",
+        "birthday": "January 2",
+        "birthdaysort": "01 02",
+        "catchphrase": "li'l bear"
+      },
+      {
+        "name": "Poppy",
+        "img": "./i/Poppy.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Squirrel",
+        "birthday": "August 5",
+        "birthdaysort": "08 05",
+        "catchphrase": "nutty"
+      },
+      {
+        "name": "Portia",
+        "img": "./i/Portia.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Dog",
+        "birthday": "October 25",
+        "birthdaysort": "10 25",
+        "catchphrase": "ruffian"
+      },
+      {
+        "name": "Prince",
+        "img": "./i/Prince.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Frog",
+        "birthday": "July 21",
+        "birthdaysort": "07 21",
+        "catchphrase": "burrup"
+      },
+      {
+        "name": "Puck",
+        "img": "./i/Puck.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Penguin",
+        "birthday": "February 21",
+        "birthdaysort": "02 21",
+        "catchphrase": "brrrrrrrrr"
+      },
+      {
+        "name": "Puddles",
+        "img": "./i/Puddles.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Frog",
+        "birthday": "January 13",
+        "birthdaysort": "01 13",
+        "catchphrase": "splish"
+      },
+      {
+        "name": "Pudge",
+        "img": "./i/Pudge.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Bear Cub",
+        "birthday": "June 11",
+        "birthdaysort": "06 11",
+        "catchphrase": "pudgy"
+      },
+      {
+        "name": "Punchy",
+        "img": "./i/Punchy.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Cat",
+        "birthday": "April 11",
+        "birthdaysort": "04 11",
+        "catchphrase": "mrmpht"
+      },
+      {
+        "name": "Purrl",
+        "img": "./i/Purrl.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Cat",
+        "birthday": "May 29",
+        "birthdaysort": "May 29",
+        "catchphrase": "kitten"
+      },
+      {
+        "name": "Queenie",
+        "img": "./i/Queenie.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Ostrich",
+        "birthday": "November 13",
+        "birthdaysort": "11 13",
+        "catchphrase": "chicken"
+      },
+      {
+        "name": "Quillson",
+        "img": "./i/Quillson.png",
+        "sex": "male",
+        "attitude": "Smug",
+        "animal": "Duck",
+        "birthday": "December 22",
+        "birthdaysort": "12 22",
+        "catchphrase": "ridukulous"
+      },
+      {
+        "name": "Raddle",
+        "img": "./i/Raddle.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Frog",
+        "birthday": "June 6",
+        "birthdaysort": "06 06",
+        "catchphrase": "aaach-"
+      },
+      {
+        "name": "Rasher",
+        "img": "./i/Rasher.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Pig",
+        "birthday": "April 7",
+        "birthdaysort": "04 07",
+        "catchphrase": "swine"
+      },
+      {
+        "name": "Raymond",
+        "img": "./i/Raymond.png",
+        "sex": "male",
+        "attitude": "Smug",
+        "animal": "Cat",
+        "birthday": "October 1",
+        "birthdaysort": "10 01",
+        "catchphrase": "crisp"
+      },
+      {
+        "name": "Renée",
+        "img": "./i/Renée.png",
+        "sex": "female",
+        "attitude": "Sisterly",
+        "animal": "Rhino",
+        "birthday": "May 28",
+        "birthdaysort": "May 28",
+        "catchphrase": "yo yo yo"
+      },
+      {
+        "name": "Reneigh",
+        "img": "./i/Reneigh.png",
+        "sex": "female",
+        "attitude": "Sisterly",
+        "animal": "Horse",
+        "birthday": "June 4",
+        "birthdaysort": "06 04",
+        "catchphrase": "ayup, yup"
+      },
+      {
+        "name": "Rex",
+        "img": "./i/Rex.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Lion",
+        "birthday": "July 24",
+        "birthdaysort": "07 24",
+        "catchphrase": "cool cat"
+      },
+      {
+        "name": "Rhonda",
+        "img": "./i/Rhonda.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Rhino",
+        "birthday": "January 24",
+        "birthdaysort": "01 24",
+        "catchphrase": "bigfoot"
+      },
+      {
+        "name": "Ribbot",
+        "img": "./i/Ribbot.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Frog",
+        "birthday": "February 13",
+        "birthdaysort": "02 13",
+        "catchphrase": "zzrrbbitt"
+      },
+      {
+        "name": "Ricky",
+        "img": "./i/Ricky.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Squirrel",
+        "birthday": "September 14",
+        "birthdaysort": "09 14",
+        "catchphrase": "nutcase"
+      },
+      {
+        "name": "Rizzo",
+        "img": "./i/Rizzo.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Mouse",
+        "birthday": "January 17",
+        "birthdaysort": "01 17",
+        "catchphrase": "squee"
+      },
+      {
+        "name": "Roald",
+        "img": "./i/Roald.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Penguin",
+        "birthday": "January 5",
+        "birthdaysort": "01 05",
+        "catchphrase": "b-b-buddy"
+      },
+      {
+        "name": "Robin",
+        "img": "./i/Robin.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Bird",
+        "birthday": "December 4",
+        "birthdaysort": "12 04",
+        "catchphrase": "la-di-da"
+      },
+      {
+        "name": "Rocco",
+        "img": "./i/Rocco.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Hippo",
+        "birthday": "August 18",
+        "birthdaysort": "08 18",
+        "catchphrase": "hippie"
+      },
+      {
+        "name": "Rocket",
+        "img": "./i/Rocket.png",
+        "sex": "female",
+        "attitude": "Sisterly",
+        "animal": "Gorilla",
+        "birthday": "April 14",
+        "birthdaysort": "04 14",
+        "catchphrase": "vroom"
+      },
+      {
+        "name": "Rod",
+        "img": "./i/Rod.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Mouse",
+        "birthday": "August 14",
+        "birthdaysort": "08 14",
+        "catchphrase": "ace"
+      },
+      {
+        "name": "Rodeo",
+        "img": "./i/Rodeo.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Cow",
+        "birthday": "October 29",
+        "birthdaysort": "10 29",
+        "catchphrase": "chaps"
+      },
+      {
+        "name": "Rodney",
+        "img": "./i/Rodney.png",
+        "sex": "male",
+        "attitude": "Smug",
+        "animal": "Hamster",
+        "birthday": "November 10",
+        "birthdaysort": "11 10",
+        "catchphrase": "le ham"
+      },
+      {
+        "name": "Rolf",
+        "img": "./i/Rolf.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Tiger",
+        "birthday": "August 22",
+        "birthdaysort": "08 22",
+        "catchphrase": "grrrolf"
+      },
+      {
+        "name": "Rooney",
+        "img": "./i/Rooney.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Kangaroo",
+        "birthday": "December 1",
+        "birthdaysort": "12 01",
+        "catchphrase": "punches"
+      },
+      {
+        "name": "Rory",
+        "img": "./i/Rory.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Lion",
+        "birthday": "August 7",
+        "birthdaysort": "08 07",
+        "catchphrase": "capital"
+      },
+      {
+        "name": "Roscoe",
+        "img": "./i/Roscoe.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Horse",
+        "birthday": "June 16",
+        "birthdaysort": "06 16",
+        "catchphrase": "nay"
+      },
+      {
+        "name": "Rosie",
+        "img": "./i/Rosie.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Cat",
+        "birthday": "February 27",
+        "birthdaysort": "02 27",
+        "catchphrase": "silly"
+      },
+      {
+        "name": "Rowan",
+        "img": "./i/Rowan.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Tiger",
+        "birthday": "August 26",
+        "birthdaysort": "08 26",
+        "catchphrase": "mango"
+      },
+      {
+        "name": "Ruby",
+        "img": "./i/Ruby.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Rabbit",
+        "birthday": "December 25",
+        "birthdaysort": "12 25",
+        "catchphrase": "li'l ears"
+      },
+      {
+        "name": "Rudy",
+        "img": "./i/Rudy.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Cat",
+        "birthday": "December 20",
+        "birthdaysort": "12 20",
+        "catchphrase": "mush"
+      },
+      {
+        "name": "Sally",
+        "img": "./i/Sally.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Squirrel",
+        "birthday": "June 19",
+        "birthdaysort": "06 19",
+        "catchphrase": "nutmeg"
+      },
+      {
+        "name": "Samson",
+        "img": "./i/Samson.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Mouse",
+        "birthday": "July 5",
+        "birthdaysort": "07 05",
+        "catchphrase": "pipsqueak"
+      },
+      {
+        "name": "Sandy",
+        "img": "./i/Sandy.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Ostrich",
+        "birthday": "October 21",
+        "birthdaysort": "10 21",
+        "catchphrase": "speedy"
+      },
+      {
+        "name": "Savannah",
+        "img": "./i/Savannah.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Horse",
+        "birthday": "January 25",
+        "birthdaysort": "01 25",
+        "catchphrase": "y'all"
+      },
+      {
+        "name": "Scoot",
+        "img": "./i/Scoot.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Duck",
+        "birthday": "June 13",
+        "birthdaysort": "06 13",
+        "catchphrase": "zip zoom"
+      },
+      {
+        "name": "Shari",
+        "img": "./i/Shari.png",
+        "sex": "female",
+        "attitude": "Sisterly",
+        "animal": "Monkey",
+        "birthday": "April 10",
+        "birthdaysort": "04 10",
+        "catchphrase": "cheeky"
+      },
+      {
+        "name": "Sheldon",
+        "img": "./i/Sheldon.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Squirrel",
+        "birthday": "February 26",
+        "birthdaysort": "02 26",
+        "catchphrase": "cardio"
+      },
+      {
+        "name": "Shep",
+        "img": "./i/Shep.png",
+        "sex": "male",
+        "attitude": "Smug",
+        "animal": "Dog",
+        "birthday": "November 24",
+        "birthdaysort": "11 24",
+        "catchphrase": "baa baa baa"
+      },
+      {
+        "name": "Sherb",
+        "img": "./i/Sherb.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Goat",
+        "birthday": "January 18",
+        "birthdaysort": "01 18",
+        "catchphrase": "bawwww"
+      },
+      {
+        "name": "Simon",
+        "img": "./i/Simon.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Monkey",
+        "birthday": "January 19",
+        "birthdaysort": "01 19",
+        "catchphrase": "zzzook"
+      },
+      {
+        "name": "Skye",
+        "img": "./i/Skye.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Wolf",
+        "birthday": "March 24",
+        "birthdaysort": "03 24",
+        "catchphrase": "airmail"
+      },
+      {
+        "name": "Sly",
+        "img": "./i/Sly.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Alligator",
+        "birthday": "November 15",
+        "birthdaysort": "11 15",
+        "catchphrase": "hoo-rah"
+      },
+      {
+        "name": "Snake",
+        "img": "./i/Snake.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Rabbit",
+        "birthday": "November 3",
+        "birthdaysort": "11 03",
+        "catchphrase": "bunyip"
+      },
+      {
+        "name": "Snooty",
+        "img": "./i/Snooty.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Anteater",
+        "birthday": "August 24",
+        "birthdaysort": "08 24",
+        "catchphrase": "snifffff"
+      },
+      {
+        "name": "Soleil",
+        "img": "./i/Soleil.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Hamster",
+        "birthday": "August 9",
+        "birthdaysort": "08 09",
+        "catchphrase": "tarnation"
+      },
+      {
+        "name": "Sparro",
+        "img": "./i/Sparro.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Bird",
+        "birthday": "November 20",
+        "birthdaysort": "11 20",
+        "catchphrase": "like whoa"
+      },
+      {
+        "name": "Spike",
+        "img": "./i/Spike.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Rhino",
+        "birthday": "June 17",
+        "birthdaysort": "06 17",
+        "catchphrase": "punk"
+      },
+      {
+        "name": "Spork / Crackle",
+        "img": "./i/SporkNACracklePAL.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Pig",
+        "birthday": "September 3",
+        "birthdaysort": "09 03",
+        "catchphrase": "snork"
+      },
+      {
+        "name": "Sprinkle",
+        "img": "./i/Sprinkle.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Penguin",
+        "birthday": "February 20",
+        "birthdaysort": "02 20",
+        "catchphrase": "frappe"
+      },
+      {
+        "name": "Sprocket",
+        "img": "./i/Sprocket.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Ostrich",
+        "birthday": "December 1",
+        "birthdaysort": "12 01",
+        "catchphrase": "zort"
+      },
+      {
+        "name": "Static",
+        "img": "./i/Static.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Squirrel",
+        "birthday": "July 9",
+        "birthdaysort": "07 09",
+        "catchphrase": "krzzt"
+      },
+      {
+        "name": "Stella",
+        "img": "./i/Stella.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Sheep",
+        "birthday": "April 9",
+        "birthdaysort": "04 09",
+        "catchphrase": "baa-dabing"
+      },
+      {
+        "name": "Sterling",
+        "img": "./i/Sterling.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Eagle",
+        "birthday": "December 11",
+        "birthdaysort": "12 11",
+        "catchphrase": "skraaaaw"
+      },
+      {
+        "name": "Stinky",
+        "img": "./i/Stinky.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Cat",
+        "birthday": "August 17",
+        "birthdaysort": "08 17",
+        "catchphrase": "GAHHHH"
+      },
+      {
+        "name": "Stitches",
+        "img": "./i/Stitches.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Bear Cub",
+        "birthday": "February 10",
+        "birthdaysort": "02 10",
+        "catchphrase": "stuffin'"
+      },
+      {
+        "name": "Stu",
+        "img": "./i/Stu.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Cow",
+        "birthday": "April 20",
+        "birthdaysort": "04 20",
+        "catchphrase": "moo-dude"
+      },
+      {
+        "name": "Sydney",
+        "img": "./i/Sydney.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Koala",
+        "birthday": "June 21",
+        "birthdaysort": "06 21",
+        "catchphrase": "sunshine"
+      },
+      {
+        "name": "Sylvana",
+        "img": "./i/Sylvana.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Squirrel",
+        "birthday": "October 22",
+        "birthdaysort": "10 22",
+        "catchphrase": "hubbub"
+      },
+      {
+        "name": "Sylvia",
+        "img": "./i/Sylvia.png",
+        "sex": "female",
+        "attitude": "Sisterly",
+        "animal": "Kangaroo",
+        "birthday": "May 3",
+        "birthdaysort": "May 03",
+        "catchphrase": "boing"
+      },
+      {
+        "name": "Tabby",
+        "img": "./i/Tabby.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Cat",
+        "birthday": "August 13",
+        "birthdaysort": "08 13",
+        "catchphrase": "me-WOW"
+      },
+      {
+        "name": "Tad",
+        "img": "./i/Tad.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Frog",
+        "birthday": "August 3",
+        "birthdaysort": "08 03",
+        "catchphrase": "sluuuurp"
+      },
+      {
+        "name": "Tammi",
+        "img": "./i/Tammi.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Monkey",
+        "birthday": "April 2",
+        "birthdaysort": "04 02",
+        "catchphrase": "chimpy"
+      },
+      {
+        "name": "Tammy",
+        "img": "./i/Tammy.png",
+        "sex": "female",
+        "attitude": "Sisterly",
+        "animal": "Bear Cub",
+        "birthday": "June 23",
+        "birthdaysort": "06 23",
+        "catchphrase": "ya heard"
+      },
+      {
+        "name": "Tangy",
+        "img": "./i/Tangy.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Cat",
+        "birthday": "June 17",
+        "birthdaysort": "06 17",
+        "catchphrase": "reeeeOWR"
+      },
+      {
+        "name": "Tank",
+        "img": "./i/Tank.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Rhino",
+        "birthday": "May 6",
+        "birthdaysort": "May 06",
+        "catchphrase": "kerPOW"
+      },
+      {
+        "name": "Tasha",
+        "img": "./i/Tasha.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Squirrel",
+        "birthday": "November 30",
+        "birthdaysort": "11 30",
+        "catchphrase": "nice nice"
+      },
+      {
+        "name": "T-Bone",
+        "img": "./i/T-Bone.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Cow",
+        "birthday": "May 20",
+        "birthdaysort": "May 20",
+        "catchphrase": "moocher"
+      },
+      {
+        "name": "Teddy",
+        "img": "./i/Teddy.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Bear",
+        "birthday": "September 26",
+        "birthdaysort": "09 26",
+        "catchphrase": "grooof"
+      },
+      {
+        "name": "Tex",
+        "img": "./i/Tex.png",
+        "sex": "male",
+        "attitude": "Smug",
+        "animal": "Penguin",
+        "birthday": "October 6",
+        "birthdaysort": "10 06",
+        "catchphrase": "picante"
+      },
+      {
+        "name": "Tia",
+        "img": "./i/Tia.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Elephant",
+        "birthday": "November 18",
+        "birthdaysort": "11 18",
+        "catchphrase": "teacup"
+      },
+      {
+        "name": "Tiffany",
+        "img": "./i/Tiffany.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Rabbit",
+        "birthday": "January 9",
+        "birthdaysort": "01 09",
+        "catchphrase": "bun bun"
+      },
+      {
+        "name": "Timbra",
+        "img": "./i/Timbra.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Sheep",
+        "birthday": "October 21",
+        "birthdaysort": "10 21",
+        "catchphrase": "pine nut"
+      },
+      {
+        "name": "Tipper",
+        "img": "./i/Tipper.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Cow",
+        "birthday": "August 25",
+        "birthdaysort": "08 25",
+        "catchphrase": "pushy"
+      },
+      {
+        "name": "Tom",
+        "img": "./i/Tom.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Cat",
+        "birthday": "December 10",
+        "birthdaysort": "12 10",
+        "catchphrase": "me-YOWZA"
+      },
+      {
+        "name": "Truffles",
+        "img": "./i/Truffles.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Pig",
+        "birthday": "July 28",
+        "birthdaysort": "07 28",
+        "catchphrase": "snoutie"
+      },
+      {
+        "name": "Tucker",
+        "img": "./i/Tucker.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Elephant",
+        "birthday": "September 7",
+        "birthdaysort": "09 07",
+        "catchphrase": "fuzzers"
+      },
+      {
+        "name": "Tutu",
+        "img": "./i/Tutu.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Bear",
+        "birthday": "November 15",
+        "birthdaysort": "11 15",
+        "catchphrase": "twinkles"
+      },
+      {
+        "name": "Twiggy",
+        "img": "./i/Twiggy.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Bird",
+        "birthday": "July 13",
+        "birthdaysort": "07 13",
+        "catchphrase": "cheepers"
+      },
+      {
+        "name": "Tybalt",
+        "img": "./i/Tybalt.png",
+        "sex": "male",
+        "attitude": "Jock",
+        "animal": "Tiger",
+        "birthday": "August 19",
+        "birthdaysort": "08 19",
+        "catchphrase": "grrRAH"
+      },
+      {
+        "name": "Ursala",
+        "img": "./i/Ursala.png",
+        "sex": "female",
+        "attitude": "Sisterly",
+        "animal": "Bear",
+        "birthday": "January 16",
+        "birthdaysort": "01 16",
+        "catchphrase": "grooomph"
+      },
+      {
+        "name": "Velma",
+        "img": "./i/Velma.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Goat",
+        "birthday": "January 14",
+        "birthdaysort": "01 14",
+        "catchphrase": "blih"
+      },
+      {
+        "name": "Vesta",
+        "img": "./i/Vesta.png",
+        "sex": "female",
+        "attitude": "Normal",
+        "animal": "Sheep",
+        "birthday": "April 16",
+        "birthdaysort": "04 16",
+        "catchphrase": "baaaffo"
+      },
+      {
+        "name": "Vic",
+        "img": "./i/Vic.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Cow",
+        "birthday": "December 29",
+        "birthdaysort": "12 29",
+        "catchphrase": "cud"
+      },
+      {
+        "name": "Victoria",
+        "img": "./i/Victoria.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Horse",
+        "birthday": "July 11",
+        "birthdaysort": "07 11",
+        "catchphrase": "sugar cube"
+      },
+      {
+        "name": "Violet",
+        "img": "./i/Violet.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Gorilla",
+        "birthday": "September 1",
+        "birthdaysort": "09 01",
+        "catchphrase": "sweetie"
+      },
+      {
+        "name": "Vivian",
+        "img": "./i/Vivian.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Wolf",
+        "birthday": "January 26",
+        "birthdaysort": "01 26",
+        "catchphrase": "piffle"
+      },
+      {
+        "name": "Vladimir",
+        "img": "./i/Vladimir.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Bear Cub",
+        "birthday": "August 2",
+        "birthdaysort": "08 02",
+        "catchphrase": "nyet"
+      },
+      {
+        "name": "Wade",
+        "img": "./i/Wade.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Penguin",
+        "birthday": "October 30",
+        "birthdaysort": "10 30",
+        "catchphrase": "so it goes"
+      },
+      {
+        "name": "Walker",
+        "img": "./i/Walker.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Dog",
+        "birthday": "June 10",
+        "birthdaysort": "06 10",
+        "catchphrase": "wuh"
+      },
+      {
+        "name": "Walt",
+        "img": "./i/Walt.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Kangaroo",
+        "birthday": "April 24",
+        "birthdaysort": "04 24",
+        "catchphrase": "pockets"
+      },
+      {
+        "name": "Wart Jr.",
+        "img": "./i/Wart Jr..png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Frog",
+        "birthday": "August 21",
+        "birthdaysort": "08 21",
+        "catchphrase": "grr-ribbit"
+      },
+      {
+        "name": "Weber",
+        "img": "./i/Weber.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Duck",
+        "birthday": "June 30",
+        "birthdaysort": "06 30",
+        "catchphrase": "quaa"
+      },
+      {
+        "name": "Wendy",
+        "img": "./i/Wendy.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Sheep",
+        "birthday": "August 15",
+        "birthdaysort": "08 15",
+        "catchphrase": "lambkins"
+      },
+      {
+        "name": "Whitney",
+        "img": "./i/Whitney.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Wolf",
+        "birthday": "September 17",
+        "birthdaysort": "09 17",
+        "catchphrase": "snappy"
+      },
+      {
+        "name": "Willow",
+        "img": "./i/Willow.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Sheep",
+        "birthday": "November 26",
+        "birthdaysort": "11 26",
+        "catchphrase": "bo peep"
+      },
+      {
+        "name": "Winnie",
+        "img": "./i/Winnie.png",
+        "sex": "female",
+        "attitude": "Peppy",
+        "animal": "Horse",
+        "birthday": "January 31",
+        "birthdaysort": "01 31",
+        "catchphrase": "hay-OK"
+      },
+      {
+        "name": "Wolfgang",
+        "img": "./i/Wolfgang.png",
+        "sex": "male",
+        "attitude": "Cranky",
+        "animal": "Wolf",
+        "birthday": "November 25",
+        "birthdaysort": "11 25",
+        "catchphrase": "snarrrl"
+      },
+      {
+        "name": "Yuka",
+        "img": "./i/Yuka.png",
+        "sex": "female",
+        "attitude": "Snooty",
+        "animal": "Koala",
+        "birthday": "July 20",
+        "birthdaysort": "07 20",
+        "catchphrase": "tsk tsk"
+      },
+      {
+        "name": "Zell",
+        "img": "./i/Zell.png",
+        "sex": "male",
+        "attitude": "Smug",
+        "animal": "Deer",
+        "birthday": "June 7",
+        "birthdaysort": "06 07",
+        "catchphrase": "pronk"
+      },
+      {
+        "name": "Zucker",
+        "img": "./i/Zucker.png",
+        "sex": "male",
+        "attitude": "Lazy",
+        "animal": "Octopus",
+        "birthday": "March 8",
+        "birthdaysort": "03 08",
+        "catchphrase": "bloop"
+      }
+    ];
+
+    let sorts = [
+      'name',
+      'animal',
+      'sex',
+      'birthdaysort',
+    ];
+
+    let currentSort = 'birthdaysort';
+    printAnimals();
+    document.body.onclick = printAnimals;
+
+    function printAnimals() {
+      currentSort = sorts[(sorts.indexOf(currentSort) + 1) % sorts.length];
+      let frag = document.createDocumentFragment();
+      let sorted = villagers.slice(0).sort((a, b) => a[currentSort].localeCompare(b[currentSort]));
+      sorted.forEach(a => {
+        let elt = document.createElement('div');
+        elt.innerHTML = `
+          <img src="${a.img}" />
+          <h3>${a.name.replace(/\s+/g, '&nbsp;')} <small><small>the</small></small>&nbsp;${a.animal}<br><small>${a.sex === "female" ? "♀" : "♂"} ${a.birthday.replace(/\s+/g, '&nbsp;')}</small></h3>
+        `;
+        frag.append(elt);
+      });
+      document.querySelector('section').innerHTML = "";
+      document.querySelector('section').append(frag);
+      document.querySelector('span').innerHTML = currentSort;
+    }
+  </script>
+
+</body>
+</html>
