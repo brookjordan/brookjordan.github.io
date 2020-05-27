@@ -12,18 +12,22 @@
     }
     body {
       font-family: sans-serif;
-      font-size: 12px;
+      font-size: calc(10px + 0.5vw);
       margin: 0;
     }
     section {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(calc(6vw + 90px), 1fr));
       grid-gap: 5px;
+      padding: 5px;
     }
     div {
       position: relative;
+      border-radius: calc(2px + 0.5vw);
+      overflow: hidden;
     }
     img {
+      display: block;
       width: 100%;
       height: auto;
     }
@@ -32,6 +36,10 @@
       top: 0;
       z-index: 1;
       background: white;
+      text-align: center;
+      padding: 1vh 1vw;
+      opacity: 0.8;
+      mix-blend-mode: screen;
     }
     h3 {
       position: absolute;
