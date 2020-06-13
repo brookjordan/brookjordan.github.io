@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A 9gag story…</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      height: 100%;
+      line-height: 1.5;
+    }
+
+    html {
+      font-size: 22px;
+      font-family: sans-serif;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    h1,
+    p {
+      margin: 0;
+    }
+
+    div,
+    section {
+      padding: 20px;
+    }
+
+    section {
+      flex-grow: 1;
+      overflow-y: auto;
+    }
+
+    button {
+      width: 100%;
+      font-size: 1.3em;
+      border-radius: 10px;
+      border: 0;
+      background: #ddd;
+      padding: 10px;
+      opacity: 0.2;
+      pointer-events: none;
+      transition: opacity 0.5s;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <h1>A 9gag story…</h1>
+  </div>
+  <section>
+    <p>Loading…</p>
+  </section>
+  <div>
+    <button>Add more words</button>
+  </div>
+
+  <script type="module" src="write-sentence.js" defer></script>
+</body>
+</html>
