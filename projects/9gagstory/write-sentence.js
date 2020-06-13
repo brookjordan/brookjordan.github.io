@@ -7,8 +7,9 @@ import combos251 from './combo-strings/batch-251-400.js';import combos252 from '
 import combos301 from './combo-strings/batch-301-400.js';import combos302 from './combo-strings/batch-302-400.js';import combos303 from './combo-strings/batch-303-400.js';import combos304 from './combo-strings/batch-304-400.js';import combos305 from './combo-strings/batch-305-400.js';import combos306 from './combo-strings/batch-306-400.js';import combos307 from './combo-strings/batch-307-400.js';import combos308 from './combo-strings/batch-308-400.js';import combos309 from './combo-strings/batch-309-400.js';import combos310 from './combo-strings/batch-310-400.js';import combos311 from './combo-strings/batch-311-400.js';import combos312 from './combo-strings/batch-312-400.js';import combos313 from './combo-strings/batch-313-400.js';import combos314 from './combo-strings/batch-314-400.js';import combos315 from './combo-strings/batch-315-400.js';import combos316 from './combo-strings/batch-316-400.js';import combos317 from './combo-strings/batch-317-400.js';import combos318 from './combo-strings/batch-318-400.js';import combos319 from './combo-strings/batch-319-400.js';import combos320 from './combo-strings/batch-320-400.js';import combos321 from './combo-strings/batch-321-400.js';import combos322 from './combo-strings/batch-322-400.js';import combos323 from './combo-strings/batch-323-400.js';import combos324 from './combo-strings/batch-324-400.js';import combos325 from './combo-strings/batch-325-400.js';import combos326 from './combo-strings/batch-326-400.js';import combos327 from './combo-strings/batch-327-400.js';import combos328 from './combo-strings/batch-328-400.js';import combos329 from './combo-strings/batch-329-400.js';import combos330 from './combo-strings/batch-330-400.js';import combos331 from './combo-strings/batch-331-400.js';import combos332 from './combo-strings/batch-332-400.js';import combos333 from './combo-strings/batch-333-400.js';import combos334 from './combo-strings/batch-334-400.js';import combos335 from './combo-strings/batch-335-400.js';import combos336 from './combo-strings/batch-336-400.js';import combos337 from './combo-strings/batch-337-400.js';import combos338 from './combo-strings/batch-338-400.js';import combos339 from './combo-strings/batch-339-400.js';import combos340 from './combo-strings/batch-340-400.js';import combos341 from './combo-strings/batch-341-400.js';import combos342 from './combo-strings/batch-342-400.js';import combos343 from './combo-strings/batch-343-400.js';import combos344 from './combo-strings/batch-344-400.js';import combos345 from './combo-strings/batch-345-400.js';import combos346 from './combo-strings/batch-346-400.js';import combos347 from './combo-strings/batch-347-400.js';import combos348 from './combo-strings/batch-348-400.js';import combos349 from './combo-strings/batch-349-400.js';import combos350 from './combo-strings/batch-350-400.js';
 import combos351 from './combo-strings/batch-351-400.js';import combos352 from './combo-strings/batch-352-400.js';import combos353 from './combo-strings/batch-353-400.js';import combos354 from './combo-strings/batch-354-400.js';import combos355 from './combo-strings/batch-355-400.js';import combos356 from './combo-strings/batch-356-400.js';import combos357 from './combo-strings/batch-357-400.js';import combos358 from './combo-strings/batch-358-400.js';import combos359 from './combo-strings/batch-359-400.js';import combos360 from './combo-strings/batch-360-400.js';import combos361 from './combo-strings/batch-361-400.js';import combos362 from './combo-strings/batch-362-400.js';import combos363 from './combo-strings/batch-363-400.js';import combos364 from './combo-strings/batch-364-400.js';import combos365 from './combo-strings/batch-365-400.js';import combos366 from './combo-strings/batch-366-400.js';import combos367 from './combo-strings/batch-367-400.js';import combos368 from './combo-strings/batch-368-400.js';import combos369 from './combo-strings/batch-369-400.js';import combos370 from './combo-strings/batch-370-400.js';import combos371 from './combo-strings/batch-371-400.js';import combos372 from './combo-strings/batch-372-400.js';import combos373 from './combo-strings/batch-373-400.js';import combos374 from './combo-strings/batch-374-400.js';import combos375 from './combo-strings/batch-375-400.js';import combos376 from './combo-strings/batch-376-400.js';import combos377 from './combo-strings/batch-377-400.js';import combos378 from './combo-strings/batch-378-400.js';import combos379 from './combo-strings/batch-379-400.js';import combos380 from './combo-strings/batch-380-400.js';import combos381 from './combo-strings/batch-381-400.js';import combos382 from './combo-strings/batch-382-400.js';import combos383 from './combo-strings/batch-383-400.js';import combos384 from './combo-strings/batch-384-400.js';import combos385 from './combo-strings/batch-385-400.js';import combos386 from './combo-strings/batch-386-400.js';import combos387 from './combo-strings/batch-387-400.js';import combos388 from './combo-strings/batch-388-400.js';import combos389 from './combo-strings/batch-389-400.js';import combos390 from './combo-strings/batch-390-400.js';import combos391 from './combo-strings/batch-391-400.js';import combos392 from './combo-strings/batch-392-400.js';import combos393 from './combo-strings/batch-393-400.js';import combos394 from './combo-strings/batch-394-400.js';import combos395 from './combo-strings/batch-395-400.js';import combos396 from './combo-strings/batch-396-400.js';import combos397 from './combo-strings/batch-397-400.js';import combos398 from './combo-strings/batch-398-400.js';import combos399 from './combo-strings/batch-399-400.js';import combos400 from './combo-strings/batch-400-400.js';
 
-console.log('Loaded. Parsing…');
-const combos = JSON.parse(
+
+console.log('Loaded. Combining…');
+const combosString =
   combos1 + combos2 + combos3 + combos4 + combos5 + combos6 + combos7 + combos8 + combos9 + combos10 + combos11 + combos12 + combos13 + combos14 + combos15 + combos16 + combos17 + combos18 + combos19 + combos20 + combos21 + combos22 + combos23 + combos24 + combos25 + combos26 + combos27 + combos28 + combos29 + combos30 + combos31 + combos32 + combos33 + combos34 + combos35 + combos36 + combos37 + combos38 + combos39 + combos40 + combos41 + combos42 + combos43 + combos44 + combos45 + combos46 + combos47 + combos48 + combos49 + combos50 +
   combos51 + combos52 + combos53 + combos54 + combos55 + combos56 + combos57 + combos58 + combos59 + combos60 + combos61 + combos62 + combos63 + combos64 + combos65 + combos66 + combos67 + combos68 + combos69 + combos70 + combos71 + combos72 + combos73 + combos74 + combos75 + combos76 + combos77 + combos78 + combos79 + combos80 + combos81 + combos82 + combos83 + combos84 + combos85 + combos86 + combos87 + combos88 + combos89 + combos90 + combos91 + combos92 + combos93 + combos94 + combos95 + combos96 + combos97 + combos98 + combos99 + combos100 +
   combos101 + combos102 + combos103 + combos104 + combos105 + combos106 + combos107 + combos108 + combos109 + combos110 + combos111 + combos112 + combos113 + combos114 + combos115 + combos116 + combos117 + combos118 + combos119 + combos120 + combos121 + combos122 + combos123 + combos124 + combos125 + combos126 + combos127 + combos128 + combos129 + combos130 + combos131 + combos132 + combos133 + combos134 + combos135 + combos136 + combos137 + combos138 + combos139 + combos140 + combos141 + combos142 + combos143 + combos144 + combos145 + combos146 + combos147 + combos148 + combos149 + combos150 +
@@ -16,18 +17,29 @@ const combos = JSON.parse(
   combos201 + combos202 + combos203 + combos204 + combos205 + combos206 + combos207 + combos208 + combos209 + combos210 + combos211 + combos212 + combos213 + combos214 + combos215 + combos216 + combos217 + combos218 + combos219 + combos220 + combos221 + combos222 + combos223 + combos224 + combos225 + combos226 + combos227 + combos228 + combos229 + combos230 + combos231 + combos232 + combos233 + combos234 + combos235 + combos236 + combos237 + combos238 + combos239 + combos240 + combos241 + combos242 + combos243 + combos244 + combos245 + combos246 + combos247 + combos248 + combos249 + combos250 +
   combos251 + combos252 + combos253 + combos254 + combos255 + combos256 + combos257 + combos258 + combos259 + combos260 + combos261 + combos262 + combos263 + combos264 + combos265 + combos266 + combos267 + combos268 + combos269 + combos270 + combos271 + combos272 + combos273 + combos274 + combos275 + combos276 + combos277 + combos278 + combos279 + combos280 + combos281 + combos282 + combos283 + combos284 + combos285 + combos286 + combos287 + combos288 + combos289 + combos290 + combos291 + combos292 + combos293 + combos294 + combos295 + combos296 + combos297 + combos298 + combos299 + combos300 +
   combos301 + combos302 + combos303 + combos304 + combos305 + combos306 + combos307 + combos308 + combos309 + combos310 + combos311 + combos312 + combos313 + combos314 + combos315 + combos316 + combos317 + combos318 + combos319 + combos320 + combos321 + combos322 + combos323 + combos324 + combos325 + combos326 + combos327 + combos328 + combos329 + combos330 + combos331 + combos332 + combos333 + combos334 + combos335 + combos336 + combos337 + combos338 + combos339 + combos340 + combos341 + combos342 + combos343 + combos344 + combos345 + combos346 + combos347 + combos348 + combos349 + combos350 +
-  combos351 + combos352 + combos353 + combos354 + combos355 + combos356 + combos357 + combos358 + combos359 + combos360 + combos361 + combos362 + combos363 + combos364 + combos365 + combos366 + combos367 + combos368 + combos369 + combos370 + combos371 + combos372 + combos373 + combos374 + combos375 + combos376 + combos377 + combos378 + combos379 + combos380 + combos381 + combos382 + combos383 + combos384 + combos385 + combos386 + combos387 + combos388 + combos389 + combos390 + combos391 + combos392 + combos393 + combos394 + combos395 + combos396 + combos397 + combos398 + combos399 + combos400
-);
+  combos351 + combos352 + combos353 + combos354 + combos355 + combos356 + combos357 + combos358 + combos359 + combos360 + combos361 + combos362 + combos363 + combos364 + combos365 + combos366 + combos367 + combos368 + combos369 + combos370 + combos371 + combos372 + combos373 + combos374 + combos375 + combos376 + combos377 + combos378 + combos379 + combos380 + combos381 + combos382 + combos383 + combos384 + combos385 + combos386 + combos387 + combos388 + combos389 + combos390 + combos391 + combos392 + combos393 + combos394 + combos395 + combos396 + combos397 + combos398 + combos399 + combos400;
 
+
+console.log('Combined. Parsing…');
+const combos = JSON.parse(combosString);
+
+
+console.log('Parsed. Building app logic…');
 const p = document.querySelector("p");
-const button = document.querySelector("button");
+const add_words_button = document.querySelector("#add_words_button");
+const reset_sentence_button = document.querySelector("#reset_sentence_button");
 
-console.log('Building logic…');
 const comboKeys = Object.keys(combos);
 const comboCount = comboKeys.length;
 
-let sentence = comboKeys[Math.floor(Math.random() * comboCount)];
-const words = sentence.split(' ');
+let sentence;
+let words;
+
+function resetSentence() {
+  sentence = comboKeys[Math.floor(Math.random() * comboCount)];
+  words = sentence.split(' ');
+  add100Words();
+}
 
 function addWord() {
   let _words = [...words];
@@ -52,20 +64,27 @@ function addWord() {
   }
 }
 
-button.onclick = async () => {
+async function add100Words() {
   console.log('Writing words…');
 
-  button.style.pointerEvents = "none";
-  button.style.opacity = "0.2";
+  add_words_button.style.pointerEvents = "none";
+  add_words_button.style.opacity = "0.2";
+  reset_sentence_button.style.pointerEvents = "none";
+  reset_sentence_button.style.opacity = "0.2";
   for (let i = 0; i < 100; i += 1) {
-    await new Promise(_ => setTimeout(_, 100));
+    await new Promise(_ => requestAnimationFrame(_));
     addWord();
     p.textContent = sentence;
   }
-  button.style.pointerEvents = "initial";
-  button.style.opacity = "1";
+  add_words_button.style.opacity = "1";
+  add_words_button.style.pointerEvents = "initial";
+  reset_sentence_button.style.opacity = "1";
+  reset_sentence_button.style.pointerEvents = "initial";
 
   console.log('App ready.');
 }
 
-button.onclick();
+add_words_button.onclick = add100Words;
+reset_sentence_button.onclick = resetSentence;
+
+resetSentence();
