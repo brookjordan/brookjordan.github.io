@@ -30,6 +30,8 @@ import combos351 from './combo-strings/batch-351-400.js';import combos352 from '
 
   p.textContent = 'Parsed. Building app logic…';
   await new Promise(_ => requestAnimationFrame(_));
+
+
   const add_words_button = document.querySelector("#add_words_button");
   const reset_sentence_button = document.querySelector("#reset_sentence_button");
 
@@ -47,7 +49,7 @@ import combos351 from './combo-strings/batch-351-400.js';import combos352 from '
 
   function addWord() {
     let _words = [...words];
-    while (!combos[_words.join(' ')]) {
+    while (!combos[_words.join(' ')] || (_words.length > 1 && Math.random() > 0.98)) {
       _words.shift();
     }
     const data = combos[_words.join(' ')];
