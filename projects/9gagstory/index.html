@@ -20,6 +20,8 @@
     html {
       font-size: 22px;
       font-family: sans-serif;
+      color: #999;
+      background-color: #222;
     }
 
     body {
@@ -32,14 +34,27 @@
       margin: 0;
     }
 
+    p {
+      color: #ccc;
+    }
+
     div,
     section {
       padding: 20px;
     }
 
+    div {
+      background-color: #222;
+    }
+
     section {
       flex-grow: 1;
+      position: relative;
       overflow-y: auto;
+      background-color: #111;
+      background-image:
+        linear-gradient(to bottom, rgb(0, 0, 0, 0.5), transparent 50px 500px, transparent 100%),
+        linear-gradient(to top, rgb(0, 0, 0, 0.5), transparent 50px 500px, transparent 100%);
     }
 
     button {
@@ -47,11 +62,12 @@
       font-size: 1.3em;
       border-radius: 10px;
       border: 0;
-      background: #ddd;
+      background: #444;
       padding: 10px;
       opacity: 0.2;
       pointer-events: none;
       transition: opacity 0.5s;
+      color: inherit;
     }
   </style>
 </head>
@@ -59,9 +75,11 @@
   <div>
     <h1>A 9gag story…</h1>
   </div>
+
   <section>
     <p>Loading…</p>
   </section>
+
   <div>
     <button id="add_words_button">Add more words</button>
     <button id="reset_sentence_button">Restart sentence</button>
