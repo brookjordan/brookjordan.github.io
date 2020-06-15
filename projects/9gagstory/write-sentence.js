@@ -47,9 +47,10 @@ import combos351 from './combo-strings/batch-351-400.js';import combos352 from '
     add100Words();
   }
 
+  const CIRCUIT_BREAKER = 0.9;
   function addWord() {
     let _words = [...words];
-    while (!combos[_words.join(' ')] || (_words.length > 1 && Math.random() > 0.98)) {
+    while (!combos[_words.join(' ')] || (_words.length > 1 && Math.random() > CIRCUIT_BREAKER)) {
       _words.shift();
     }
     const data = combos[_words.join(' ')];
