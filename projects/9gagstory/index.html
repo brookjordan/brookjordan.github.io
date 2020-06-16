@@ -39,7 +39,9 @@
     }
 
     div,
-    section {
+    section,
+    menu {
+      margin: 0;
       padding: 20px;
     }
 
@@ -55,6 +57,11 @@
       background-image:
         linear-gradient(to bottom, rgb(0, 0, 0, 0.5), transparent 50px 500px, transparent 100%),
         linear-gradient(to top, rgb(0, 0, 0, 0.5), transparent 50px 500px, transparent 100%);
+      padding-bottom: 500px;
+    }
+
+    menu:empty {
+      padding: 0;
     }
 
     button {
@@ -80,10 +87,7 @@
     <p>Loading…</p>
   </section>
 
-  <div>
-    <button id="add_words_button">Add more words</button>
-    <button id="reset_sentence_button">Restart sentence</button>
-  </div>
+  <menu></menu>
 
   <script type="module" src="write-sentence.js" defer></script>
 </body>
