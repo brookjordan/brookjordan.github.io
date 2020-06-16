@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text Edit</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    html,body,body > div {
+      margin: 0;
+      height: 100%;
+    }
+    body {
+      padding: 1em;
+    }
+    div {
+      font-family: "Comic Sans MS", "comic sans ms", "comic sans", "comic-sans", sans-serif;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+  <div id="content_editable" contentEditable></div>
+
+  <script>
+    try {
+      content_editable.textContent = localStorage.getItem("contentEditable") || "";
+      let callbackType = window.requestIdleCallback ? 'requestIdleCallback' : 'requestAnimationFrame';
+      let waiting = false;
+      window.onkeyup = () => {
+        try {
+          if (!waiting) {
+            waiting = true;
+            window[callbackType](() => {
+              try {
+                localStorage.setItem("contentEditable", content_editable.textContent);
+                console.log(`Saved! ${Date()}`);
+              } catch (error) {
+                console.log(`Error saving. ${Date()}`);
+              } finally {
+                waiting = false;
+              }
+            });
+          }
+        } catch (error) {
+          console.log(`Error saving. ${Date()}`);
+        }
+      };
+    } catch (error) {
+      alert("App setup failed. Please refresh.");
+    }
+  </script>
+</body>
+</html>
