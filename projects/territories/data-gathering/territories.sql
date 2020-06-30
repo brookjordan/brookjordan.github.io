@@ -3,7 +3,7 @@
 --
 
 -- Dumped from database version 12.2
--- Dumped by pg_dump version 12.2
+-- Dumped by pg_dump version 12.3
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -33,6 +33,43 @@ COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UU
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
+
+--
+-- Name: ISO_3166-1_alpha-2; Type: TABLE; Schema: public; Owner: brook
+--
+
+CREATE TABLE public."ISO_3166-1_alpha-2" (
+    id integer NOT NULL,
+    territory character(36),
+    name character(2),
+    uuid character(36) DEFAULT public.uuid_generate_v4(),
+    type text DEFAULT 'current'::text
+);
+
+
+ALTER TABLE public."ISO_3166-1_alpha-2" OWNER TO brook;
+
+--
+-- Name: ISO_3166-1_alpha-2_id_seq; Type: SEQUENCE; Schema: public; Owner: brook
+--
+
+CREATE SEQUENCE public."ISO_3166-1_alpha-2_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."ISO_3166-1_alpha-2_id_seq" OWNER TO brook;
+
+--
+-- Name: ISO_3166-1_alpha-2_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: brook
+--
+
+ALTER SEQUENCE public."ISO_3166-1_alpha-2_id_seq" OWNED BY public."ISO_3166-1_alpha-2".id;
+
 
 --
 -- Name: ISO_3166-1_alpha-3; Type: TABLE; Schema: public; Owner: brook
@@ -517,7 +554,8 @@ ALTER SEQUENCE public.svg_path_id_seq OWNED BY public.svg_path.id;
 CREATE TABLE public.territory (
     id integer NOT NULL,
     uuid character(36) DEFAULT public.uuid_generate_v4() NOT NULL,
-    name text NOT NULL
+    name text NOT NULL,
+    modern_country boolean DEFAULT false NOT NULL
 );
 
 
@@ -828,6 +866,13 @@ ALTER SEQUENCE public.visa_types_id_seq OWNED BY public.visa_type.id;
 
 
 --
+-- Name: ISO_3166-1_alpha-2 id; Type: DEFAULT; Schema: public; Owner: brook
+--
+
+ALTER TABLE ONLY public."ISO_3166-1_alpha-2" ALTER COLUMN id SET DEFAULT nextval('public."ISO_3166-1_alpha-2_id_seq"'::regclass);
+
+
+--
 -- Name: ISO_3166-1_alpha-3 id; Type: DEFAULT; Schema: public; Owner: brook
 --
 
@@ -979,6 +1024,273 @@ ALTER TABLE ONLY public.visa_ease_of_entry ALTER COLUMN id SET DEFAULT nextval('
 --
 
 ALTER TABLE ONLY public.visa_type ALTER COLUMN id SET DEFAULT nextval('public.visa_types_id_seq'::regclass);
+
+
+--
+-- Data for Name: ISO_3166-1_alpha-2; Type: TABLE DATA; Schema: public; Owner: brook
+--
+
+COPY public."ISO_3166-1_alpha-2" (id, territory, name, uuid, type) FROM stdin;
+1	ca1a8efc-5d84-4e75-9f3b-5d005b9afca5	AX	f2ad691a-ed3f-4a92-b325-cd9c3144833e	current
+2	b33be079-39b7-4a1d-b689-97c224d5fece	AF	58c099d2-92ad-4ca7-8400-d4b2e452a7ca	current
+3	6c7e4e7d-9bf4-4e47-b2e4-c925f54bcd1a	AL	7f4d3301-03b4-4790-b4fe-25cba16a0a28	current
+4	d9b8f8c8-5b5a-41ef-8538-26d822a4c9bd	DZ	8368eb8b-77ff-48a2-b31b-9aef103c7246	current
+5	cd5de581-fe44-456f-8b40-1e601666502c	AS	3a7add62-58ea-45ec-9948-a0f01e639b7e	current
+6	1965c743-cf9a-4021-9ed1-b9e4e77486a2	AD	17cbe207-dd95-43b0-a5bb-806005cada3d	current
+7	bf07965f-f874-453e-a725-54c5a1254ee8	AO	c88198e3-9b44-4b46-bf74-56d9be770046	current
+8	793360a3-aa91-4703-acfe-60287e3f9b74	AI	7e9120f7-7869-4328-9a4e-62fe2313d840	current
+9	f2cdea77-ac81-4009-a139-487fed267132	AQ	7b51f016-2f89-4389-a83c-79a488ea45bc	current
+10	90de1527-d5a5-446f-a960-eccda43af198	AG	316936c2-2e5d-4a82-a237-f13fe15fc962	current
+11	78219cc6-d1b2-4193-9da7-e7abc92863ee	AR	353a06d2-59fd-4f80-85fc-2eb938f5440b	current
+12	f2f3e704-bb03-467a-a1a0-1d56b6faadce	AM	d4702b27-c2a8-4116-bb9c-29363cfd931f	current
+13	44344c65-9381-42d7-a573-6a9e38ead0f0	AW	b61ca341-e059-478a-a08c-bc578c47aa04	current
+14	0a3e548d-7e30-426f-840c-07ff9b6772f7	AU	0c54337b-4c3c-43ac-9088-d1ef1bc99279	current
+15	e14f7607-8074-4eeb-8b3f-3093575719a4	AT	d1918aeb-046b-4bde-b67a-a4720ba278d9	current
+16	319530a8-8cd2-4dc3-84a6-29ac720c51da	AZ	6a9fa514-ee36-440b-91b4-7d05c371ceb3	current
+17	ac6434f1-bbb9-4242-a393-d78d367f034a	BS	83d22a1b-5656-43ba-a293-f480d8792131	current
+18	497550d7-f9e9-4f1a-a5e0-8c9019c7bc31	BH	740082a5-d202-472e-8a1c-dc6ef8badb25	current
+19	bb3fa754-b35e-45ee-8d66-fb159c96d821	BD	b69a9b73-1ea2-4cba-9a58-2c2904d61285	current
+20	49494a5b-205f-4756-9145-2784c9269a99	BB	4cd0cb33-d412-454c-9834-3f75e2affa9f	current
+21	ac612169-1567-4c5e-a203-3987fa26c267	BY	ff676d4b-92e7-4f21-9a91-1cd69a97dfcf	current
+22	1f4dd261-dc57-49ec-b872-8b1917703616	BE	36e63d3b-145d-4062-8994-2c5298d28154	current
+23	3e62d48d-717d-4421-91c2-abb059a80576	BZ	9329bd8d-7ab8-4d56-89a0-077b992eb231	current
+24	5fbebc32-e410-4faa-94e5-822252f8b499	BJ	2a759fb7-c125-4d49-b89d-259a187cb637	current
+25	5cbe7035-cbba-4ba4-9e59-1338db15983a	BM	c98c157a-ff1a-4240-be55-c9cd22a882ec	current
+26	1d58bd18-8519-4e53-8cd1-6a7e93cda614	BT	436b339b-8979-4064-aa36-d42ecbe63dc4	current
+27	546440bf-236c-4f99-bd12-3bba52d50e02	BO	dd88fe8d-6f22-4abc-b97e-0cc3af0b0ce2	current
+28	57781bac-bb12-4862-9e29-a3eb6ebed059	BQ	12e2080d-2049-4f7e-bccc-af5c8391e45f	current
+29	c103dabb-a386-4a6a-bce5-c0c0fa5f43f6	BA	79e9f4a5-9fc8-4ee5-9572-bd9ad1ba8248	current
+30	ff4c5033-aee4-4325-90cc-1f96ef10bbce	BW	2082f008-75e5-4532-9c8f-170155f34d68	current
+31	2c927bd6-e6c1-4aa7-810e-6f544f2137dc	BV	efa2aeea-158c-4dc1-bbf5-3ccf799b676c	current
+32	1b558876-4f84-41fb-8215-93143842ba53	BR	46c0faad-bc13-495a-98e6-c1d626c634a8	current
+33	f7847a1c-6403-474c-862d-a0f9e079b11d	IO	7eeba4e5-b480-4bfa-8849-32174dd43b7a	current
+34	49ca53d4-0d59-4be8-9724-70b0eff911ce	BN	ec8f8a65-52e5-4be6-b2ed-cf393132a0c5	current
+35	dde93861-da65-40d4-8159-3e67e8d58e02	BG	a18be96a-af90-4d5a-91ab-d00f09b0f876	current
+36	a22c7473-248e-4447-8bc7-1fc51c00ca3e	BF	4babc3f8-aa20-4aec-b73e-8bbf91db5bfd	current
+37	4f0fe689-81e0-4b91-a093-cad33a305482	BI	71f51124-cddd-44ff-b14a-66d424203e03	current
+38	723de35c-616a-4b10-b479-c08378f3765b	KH	6f225cec-8bf0-409f-bbae-f5a5cc71dc0d	current
+39	526f75ae-3c43-45a3-924e-1d7e11177a68	CM	17e9679d-433c-4956-b4f0-349f9757210f	current
+40	e242cbe2-dc75-4807-a7c9-c171d164ec2d	CA	0b3d793e-61d7-4ab8-bd7b-f664f8d8bb45	current
+41	3e77325d-7fea-46ad-a8fa-b2d31056b3ea	CV	cda46420-fc8c-4f0a-9991-0ca505fbfe0b	current
+42	8372a0ad-58ad-41f7-af06-dea7df6ef891	KY	eed6228e-f2c7-4fb9-a7ba-e74b49ef1538	current
+43	2b1aaccb-5846-45c1-8481-12bb8b5e0aa4	CF	5bdab598-b7dc-4ca5-9fdd-06ee9274e675	current
+44	3f759fc5-8287-4acb-b58d-f235c5ef4981	TD	6e411c30-cb1e-454a-81bf-943a87dd145c	current
+45	c5a755fa-0935-4ec5-a880-3d4854beabfd	CL	46a4c8d0-3642-47c0-9270-752850d15404	current
+46	7178da96-360e-4b0a-ada4-9640c498daf8	CN	f26cd1b9-c906-4531-933c-fa84880d47bd	current
+47	d6807de6-9eb7-4470-89e6-785b74a33137	CX	d8bbfd7f-efd2-435c-8fa2-fea439aa0dab	current
+48	8b58bd46-c2d7-4df7-8871-378dbe921468	CO	ea0500fa-874d-40b5-8020-3b4f3380e8dd	current
+49	48847459-b1b2-4092-9bf0-f0c08b928c74	KM	2fecae1b-3a6f-49cf-8de3-54f212d0a5a8	current
+50	196ed632-cc17-4b9f-87cb-cbc9832e8617	CG	037a4a6b-4888-463b-b60e-e97a81623635	current
+51	9982d96a-7b45-4e8a-93c5-83056d6b0fc8	CK	094f6da4-de5f-4cc8-9f4f-ee88dd6b9aa6	current
+52	cf56f0da-daf4-4437-9ad9-4b61bbedc31a	CR	a4b47ed1-fd49-4741-a1c3-cec6405687ed	current
+53	14730d5f-e0e5-43a8-bc67-ca9f92c8502a	HR	3cc80c7c-1f39-4758-8500-43ea4db955a9	current
+54	16a55dd1-2e47-489d-830c-3a88aad464a9	CU	cd4de0b4-e982-4293-8e58-64e1c69fbfdd	current
+55	f36ec987-ed66-4a88-9157-b1d4a934e515	CY	cb8b2a7a-e86a-4eb6-bb36-31a1fd03ba68	current
+56	c5db5d6b-ebcd-4642-9604-0f1ebf2fdf9d	CZ	f5682e20-6ade-49d0-a6bc-078d48c471dc	current
+57	870d8300-9c56-4b34-9447-bcdfedf8454c	DK	e9de869b-509b-4d98-9f9d-14d69873c80a	current
+58	0b48c87c-ddaa-49d2-b736-61d9c44636e0	DJ	9232d137-5fc2-4db6-bcde-65f18a38566f	current
+59	a66c6aaf-f010-4056-8928-1653d670edf3	DM	9fcbff51-09a3-4c39-8c71-f8ed52681182	current
+60	7caae20c-20fa-4ce0-a987-cca304a302b9	DO	754f8a5f-21ee-4505-b6a0-a4280f639dbc	current
+61	41fa1fc8-a7c9-4045-ac6a-92fe36c27bd9	EC	cc035dd9-65d7-4d77-aba8-fca7ca4a65a3	current
+62	0d0a18fd-d424-4a69-b646-38fffd942dd5	EG	de5929c7-1c4e-4e9d-86c7-801937e81fb9	current
+63	bae2df87-ee9b-4efe-8482-2b05b54ebb11	SV	bd10d858-451c-4af0-a27d-02df16a5f652	current
+64	43d35de8-4ed4-4bd7-9fce-54d9adcdeec6	GQ	d71fc119-f681-4a91-bfdd-fdd5e510dc0b	current
+65	b2db2210-e9b8-4d51-b3c0-ed8e3d6adc9b	ER	03a4bd83-7631-4ced-9540-2d8de3559581	current
+66	061c7757-87bb-4acc-bfb5-ebb5a4dc9429	EE	6b57c750-64c4-424d-86d5-f2df53a4ace4	current
+67	f76a50d7-c955-4658-a2da-f191b746b434	ET	c82e590f-bae1-4b14-9697-ce6da06932b5	current
+68	13ba7194-35d8-4666-bc59-4eb69058dc48	FO	51588c71-3730-4cab-a4c0-a5a47fb9a1ce	current
+69	923566be-1a81-4281-a9f5-fc3d8e59e53e	FJ	352d463c-4744-4559-b764-d31951c892f9	current
+70	d322fe64-203a-4eb4-8316-2c6c1af401a3	FI	f2efa9af-2a44-4483-91da-bce582fa3934	current
+71	b7b802fe-8789-4b6d-b085-7c25a92dab7b	FR	60c32e84-0fb5-47e3-8354-dcede3b4c16a	current
+72	fef2c7ae-f872-4a71-9c87-0d0727258c26	GF	c97fa502-ea9a-4e22-8a77-501372979a97	current
+73	472108f0-b6a2-410c-9885-d4fa3b3412bd	PF	4f0a0541-71be-47d4-a64e-fbc1d248a545	current
+74	4579b4bb-57c1-454e-a91c-b545e8f713e4	TF	99a579c9-1e26-47fa-900f-df47564f1d09	current
+75	6a95dca7-5bc9-438d-ba51-5cc4603d70a4	GA	b99b770a-5057-4f3a-87c0-8aa5e74dbc12	current
+76	81e9890e-9239-4c33-b429-66950b214814	GM	e6f0a240-f8d7-4bf3-a5e3-8a87e30a87e0	current
+77	f2e17057-cb16-4fd3-92ef-07a6320c1818	GE	1b6da888-20f1-490e-9be4-6973617a6d10	current
+78	d80301ed-7cdc-4f2c-8093-cfec014b077a	DE	33e87689-a169-447c-be7e-7de2cf20fe38	current
+79	53618499-ed33-49f9-aeae-e24d02029f1e	GH	1eb1fbc3-7e4b-4582-af5e-73bd8640f653	current
+80	c4d460f0-d8f6-49c2-a75d-076d40c3bf4e	GI	784e863b-5b9c-4c70-a2e1-54d80d9c62b1	current
+81	1a76eb8a-5fca-4552-a0dd-9728217998b0	GR	82360684-2703-4901-92e6-a25187c5d6da	current
+82	5f5fad3d-69c4-41b1-bc88-d9b8cff77027	GL	774e4118-41d3-4a7f-af11-6e85e383fb00	current
+83	aedfe3b8-fc01-41f8-a152-516e139dc8b6	GD	f9498493-c1ed-4cca-89d5-49cb36900672	current
+84	ba5a63e1-7feb-4d40-ae2f-d0a9f2123c0c	GP	3021c49c-d41a-45d7-ad4b-ce925f1f3ce8	current
+85	dbb53edf-6817-4a18-89b0-f6e2747c95ba	GU	38c4d086-7706-4682-b381-23ea9c6b5cd2	current
+86	0e291c7e-51a2-466f-94b9-de8d9dec9dd2	GT	b0b35930-cea4-4bcf-8d17-d351c918392f	current
+87	99436fc3-8e6d-41af-9a25-f9ff3f9eadc5	GG	5c02d095-afba-49b2-88d2-a6de2e73490c	current
+88	b3e98c98-8a15-45bf-8f86-f26f6a07a425	GN	bf5ab202-0ddb-46f5-86eb-80401143dd62	current
+89	98fd5d7d-6f4c-434d-bd97-6fabe502db00	GW	82b36359-344d-4128-98cf-76578c2b4fcb	current
+90	f11d746c-8b82-4fe1-acb0-788067f0071c	GY	dc92f618-a160-4017-bb7e-be1c3f8c468e	current
+91	99530f46-46c4-4263-bd88-dca23dc0383f	HT	074a05cf-1853-4803-9ee7-ebfa69f46e8a	current
+92	7ebcc568-e95d-4ebd-b55d-9fed5d9b87cb	HM	c81b5542-99b4-4d66-b37d-3f14b6cc1b18	current
+93	3e33cfe7-603b-4d88-a6e3-f4dcc331d9f2	HN	d9dac2af-762f-46f4-bcc4-487a1472810c	current
+94	ae7c2b6b-a504-4e11-a52c-97175217c0a7	HK	632675cd-089c-4504-bd3b-0bbd15c067d2	current
+95	8287bea9-2349-46e4-9ac0-fb1e799497af	HU	b7263f65-876a-4972-99a9-1cdfb2e39230	current
+96	68563b3e-8866-4310-bdce-659b3cc9c2ac	IS	858d1ac6-9ed7-476a-ad41-095605ab59d3	current
+97	83f3b190-021f-4694-a033-57058c22cbf4	IN	f78a76c7-f56e-4ea2-b3b3-bd7a432146f9	current
+98	a3122035-5d20-411c-a94d-17360ed55678	ID	4eab6f11-5531-454d-bbc8-a1af7b835118	current
+99	1baa5d83-2707-4a0d-8f86-45efc106dffd	IR	b814384f-70a3-4d50-9c1a-10f433dc8a7a	current
+100	e130f15d-7a37-4ddf-a6b5-e9c1266e128a	IQ	5e06928c-ef24-423c-9347-cdacd60cd62c	current
+101	48d25a4f-6bcb-4595-bf82-1492334695ec	IE	58ce0e88-b8d9-42a0-8fa8-15ded070b437	current
+102	534d150e-315d-40fa-ae9d-6876e3ab6aa1	IM	2de61a04-fbd8-4af8-b1a1-6035db742286	current
+103	fc3338b4-47f1-4342-8def-3acabc77a994	IL	c46999e2-d6b7-47f2-9222-f7e6786c6949	current
+104	161a32a0-755e-430b-86dc-8f153f7de9b1	IT	35e042d2-970f-4e64-a9c3-0d1c0e3d4377	current
+105	96abeca6-c08e-4df8-b22f-2fefc55a8d5b	JM	aabdc360-40f9-49e4-a325-fc8370079bc4	current
+106	8e5a125d-73cb-45c1-a511-f0c65d7448e7	JP	af5da206-caff-4d9f-9e61-cefd0c9802a8	current
+107	242bc52e-221a-4254-b523-8b339182f620	JE	448ed505-c5aa-46bc-934a-d24c1b4ac739	current
+108	c728bbe4-373f-4d0a-9a3f-985679759733	JO	9835addc-0067-4a93-bf81-4b7e37ee1c8b	current
+109	c6a8ea7c-3fed-4a1d-9929-5569db7ab968	KZ	1b5ee355-b281-4636-ba9d-d349bbab0eaa	current
+110	e91cae72-f62c-407e-b388-3f3b86f7a0c3	KE	6dbfff89-c997-4a6a-a061-b7d807b621ac	current
+111	8275007a-70b9-4a04-bcfa-1c23825d4874	KI	f6b46f9e-03d8-4614-bc6b-fc29d6b57697	current
+112	ab2a946c-f1e3-43f5-bbfd-4b54adae333a	KW	a9b567de-0b60-4da9-9f0f-d61e379335df	current
+113	6cec735b-3406-430f-be56-71d96ff8f41e	KG	f791f149-cc43-47b2-9865-8b77bd6b524e	current
+114	85b0fd58-f24b-4249-a31c-46e40023744c	LV	207320fc-cd9e-4b22-8c00-54b56f05a160	current
+115	6a6a8869-35f4-4d7f-af9f-c881d3b4bc19	LB	5e65203c-e65c-4567-bf10-15fd82d531df	current
+116	f7ca89ef-b000-416a-b9f4-6059b2d8a3ca	LS	3a83775f-6500-4706-9b63-88af6d727ef8	current
+117	e3c9a7c1-e5ec-46aa-be24-13a63b23c24a	LR	6c2cdc8d-71ff-4f8b-86e8-598b4a7d5a3e	current
+118	a9bc64d6-1f2e-4882-90bc-4930614667da	LY	af5c67fa-0bd2-4553-a4ed-e7f00f5c952d	current
+119	8510166b-62a4-475f-8afe-891fe1cb22a0	LI	8488ffb1-bb21-4371-80c0-566f56a4a7e8	current
+120	d4d24a30-2184-4fd3-8315-248ddc094526	LT	6451ae91-9124-4fb2-a86a-2e0cac6e83b9	current
+121	a94b35b0-c269-4e9f-9d66-80d8f3081989	LU	70d4c1a0-754a-40f8-8d13-d31ca2c36a07	current
+122	b7206cc1-2cca-454d-9447-3788640f7b5e	MG	febd29e2-3479-448f-a218-91c03e60ba32	current
+123	413fe813-55c0-49e9-8853-47654b4ae73b	MW	2c09282d-c66c-4653-b750-0c262343431c	current
+124	d42ac9fd-1e10-4995-8dc1-4d25cee7a022	MY	a123b04e-c2c9-4e53-89e5-048b964033c2	current
+125	2b8d132e-e3b8-4a97-aa78-a265bf65836d	MV	72340b85-d4f7-4020-8c73-5d91cf47e840	current
+126	a8c0bf67-69a5-4293-8282-622c6b61962c	ML	faa9d514-2a74-4fb4-a0f2-dcd623eeb664	current
+127	ca8f94ef-b748-47c8-b040-b996e3cf2581	MT	99220a3a-dc11-45d4-a6f9-bed96a94023c	current
+128	27f40e7e-ab08-4e44-b643-f9546021f2c2	MH	27e60b2e-b9ea-4f04-a82a-f8a2f2da65bd	current
+129	07546102-9696-4e5b-80fb-c435267230aa	MQ	1859048a-366f-4c92-8e4b-04d2e52d742e	current
+130	a4d1f62b-6131-44de-92fe-975d0a463bc7	MR	395690db-bd26-4b36-9725-a1f6fc331233	current
+131	59a60488-bbd7-476a-813e-a92fa901e8e7	MU	fd146c6d-4f8d-4d1d-9294-7534bae60b14	current
+132	4f7bf3fc-1cdd-42ea-acc1-2325444ea405	YT	e752afdb-d692-4972-a2ae-12ad4e5cb08a	current
+133	846ec109-79bc-4e46-a303-40e20bcb2f36	MX	b59b6fbe-3dd7-43af-b063-45d1060f4636	current
+134	0343465d-616b-4419-b3ac-6e358776cb2e	FM	a2f3d8d3-df80-4aff-8247-f9ca38c86c6b	current
+135	6f37afd2-3170-4c9d-8fde-28d6a44eda0d	MD	c84bc747-d3a3-4e23-b213-7907a54d1f57	current
+136	e1b6cef2-9a2d-441a-96db-2cb815ac9398	MC	00794200-b7c6-415a-9197-af106ecc57e6	current
+137	b60fe946-71ac-40be-97dc-8ee0b78c3384	MN	459e8eb2-445f-4b91-a34a-9df8c45616e0	current
+138	6702177a-fbed-4cf3-aa32-22da244beab0	ME	ebcac3ae-16fe-4419-b6cb-50f41fcc8784	current
+139	adc6de52-b3d9-4448-a7d6-39622cf3261f	MS	8eeaf625-c87d-4ec8-b175-2358566a0643	current
+140	a7462d3b-b094-454a-a09c-08573a566463	MA	7c707a40-9cf7-4a31-a79d-6730861afceb	current
+141	95251d34-e411-4cb7-9112-0a1f95b239e0	MZ	84905848-dad2-43d3-ba94-ea94c051149d	current
+142	ac8b13ec-0d98-4fad-852e-a351d68e6a16	MM	dcd28e58-a818-4fc1-a41c-d19372892e70	current
+143	dff0e275-70f0-4d4b-9d4a-3b4029ab3cd1	NA	c5582e70-2379-4193-aea3-9cf35180c9fb	current
+144	c00f0e5e-a315-4118-b879-8d0a07faa486	NR	43711272-4d82-4e49-91c9-b520dcd5cf63	current
+145	52a86412-42e6-499e-a742-a0902ca649b5	NP	c837b443-ab40-40b8-a2d9-fb496556b798	current
+146	649e4cd5-204a-41ae-add6-5c7433d23973	NL	bb4f361f-b17f-48a1-bb3c-d86fd95f2d71	current
+147	17b783e7-ad5c-473c-8787-aab9c9397fed	NC	a5701600-3bee-4eb3-b560-611e9ed66371	current
+148	903625d0-0df4-4537-8370-4c3cda4ffed6	NZ	f322b3e7-6912-4e9b-865a-59fbaf001c78	current
+149	390d0b06-0892-405b-93f4-8b1b69af9667	NI	298f25db-1c33-40b0-9ab4-700f976b8f74	current
+150	363bc536-025f-4ef7-95c0-a083bb8f37e6	NE	fcd529ad-d0c8-4f20-b4ab-bd1342907e4e	current
+151	7ce306aa-4c86-4016-93ab-cf3f5c22c621	NG	50ec2575-dbee-485c-91f8-1ace96a71fc5	current
+152	25064811-fb8f-487b-a95a-acce0aebdb8e	NU	11a083c6-efd1-441d-9b7b-22784694e58a	current
+153	adc3c9dd-bfce-48a7-9c4a-767c2de409ae	NF	f1bcb9a2-0910-4af9-afad-2df10e07f28f	current
+154	90b92de2-8101-4bce-af13-51bf5f5e6da0	MP	92caf64f-c8da-4175-90ee-53784f43f0ff	current
+155	4f50cb61-60cb-48f5-9c7a-974d9c3840d5	NO	ecf6df05-bec9-430d-a98a-d8acf54a2e51	current
+156	7a1e411c-5e2b-4ef6-9561-73a4466af643	OM	2986ab33-9987-4e35-9ebd-bdb1b820ff81	current
+157	abc45575-6e5a-49c5-9967-e067a503c8a6	PK	87eddfb6-53eb-4c4f-97a3-deeb07d2087b	current
+158	43e7d908-36ff-47b2-813c-146e89e91aef	PW	2d1225db-6dca-4bb2-b535-17293f6bf41f	current
+159	6ed0c70e-c6ab-4148-aae3-fbf474467390	PS	b701bcc1-f6eb-4a40-a769-d60b14694b65	current
+160	e32cd55b-2b25-444e-beb4-f86a6e81819b	PA	4fc4a93f-289f-4603-a3e0-374b0af26e08	current
+161	2f5d487b-20b7-47c4-b8fe-378d3c40839a	PG	b0c9fdfb-5319-4957-af94-36542d9dc5da	current
+162	5091a6a9-aa19-4e48-890a-d0d3ccce88c7	PY	5fa16812-f341-4277-97d8-a12647ed2069	current
+163	6fd50499-8698-4764-a9ea-d063e211ae85	PE	6cbc8692-e188-4b54-8a24-dcc62bf77622	current
+164	d29dcef8-e41b-4540-8f88-8849607ad3f3	PH	bc373fe6-3973-4408-900f-5a7238275f35	current
+165	9a7ad7e0-1e36-4004-9879-568b56d0cf87	PL	2d345d90-bd62-42ad-8113-827ddb1a3357	current
+166	c2f84d45-aa39-4df1-8a87-e4dd0c5b34a1	PT	c1029868-fbd3-4d30-acdb-f64fec5a85e3	current
+167	f18ec7fe-184e-4e4b-9ac5-14c5bfbf1fb7	PR	d48e01cd-af00-4d1d-8733-9c21dc8faffd	current
+168	90a93353-4714-42fc-8632-09f25bc1312a	QA	552d074d-c4ac-4776-ae0e-96ca128ce4e9	current
+169	fdf4338f-fd3a-446b-9688-b28515d38074	RO	0a6114f6-2473-4f19-aef7-5e147ac686ec	current
+170	418d8911-a62b-4686-bf0e-f18b204398d8	RW	a3abf52b-365c-4ce4-a363-71be44204d96	current
+171	1c7c18b7-27fa-4852-aff7-6139002c4c9b	SH	5d156723-fc5a-42b3-8561-ea18f1f664b4	current
+172	ec506881-6436-49fc-b56e-42da02dd7d5b	KN	1fb2f048-1097-43ed-a4f3-5dd00efac36c	current
+173	e3b26362-6759-4612-8863-4785505a679e	LC	aa3648bf-163a-4c89-8732-c03c4a438afe	current
+174	6668152c-57e0-4e48-b346-ced1c1abd14f	PM	c45283f0-2e42-4843-9b81-05bc03e7013b	current
+175	54824162-df76-4f5e-8783-404687f907f1	VC	a3c29c7e-707b-4d8c-b8af-e1cb6815ac0a	current
+176	7d76fbc2-43bb-467f-b36b-1b899f3d013a	WS	898619aa-2242-4eac-93be-ad4163734fe1	current
+177	1bc1c6a9-2028-4dcd-94bf-6d19bea049e6	SM	35a7fe02-04e1-4d3f-ba0c-c0fd9fb8cb8f	current
+178	ab4bc3a4-7c19-4a94-905c-a7973e0feaff	ST	f4fa928a-e718-4a49-84e1-d45de8760e79	current
+179	dfffd0b6-a252-421b-94cb-6d44695c5c8c	SA	9dba21ef-4641-481f-bf74-ec79b84c61b0	current
+180	e98795b2-4086-41b5-bac1-4789d9aee005	SN	6fcf8368-2e8d-45e1-a299-51907eb5afe5	current
+181	aae2ba87-a67d-43bd-8516-e403843d61d9	RS	1e637e73-58ef-4716-bd59-096c74c84362	current
+182	4998e162-96ca-4381-ab19-3dc43922884a	SC	e6c8fc4a-e7db-4fc7-8259-a0cdbf086ca2	current
+183	d8df4bc3-503b-41ca-987e-423e41ecb52c	SL	b40640de-a2c0-4459-9d70-030e966e42b9	current
+184	6e83ec38-7e2d-4c2d-8a9d-6991d4e876db	SG	23601423-7b76-4dd2-ad33-d5262a5f9948	current
+185	2dd507e0-8e57-4924-a57f-8fc2e22555e2	SK	a0eb052d-3a64-4367-bb07-19ff773e379a	current
+186	dbc583de-b4de-46ba-aae0-1e8d35054bf3	SI	55c7b5ca-6596-459e-b5ab-cb3e4c91efac	current
+187	b7f76500-4fa3-457f-aca8-477f05aab728	SB	4847cd20-ef09-4201-b91c-ad1c50bcc84c	current
+188	98943525-f93f-426f-a3fe-b48bc18c0c52	SO	035170fa-3d5b-400c-8051-1fd1866b2c8b	current
+189	247ff0fd-78ad-4ca4-90f2-f0394a714535	ZA	8164a29c-cc80-4f06-a27c-9cbd186d0929	current
+190	3ffea3be-1c82-411a-b085-933205f900c7	SS	393f4739-ac56-4b6c-bebd-1abeb62a5e57	current
+191	02e5c743-3075-4226-8c1d-ad97dadda3d8	ES	faed0acf-fd43-4cfb-8a7c-cc52bd351979	current
+192	6c6c9e3f-2353-431c-83c4-2c0cc6c42ff6	LK	c9d11bcc-a5d8-4587-926c-0534122d6c02	current
+193	c149c091-51c2-41d7-85a7-7d67bcac4230	SD	7959dbd1-009a-48bb-9691-e91c6dab0f47	current
+194	e0e0a4c5-9076-4a1e-949f-9dd4521eb0f3	SR	9eb9402d-9b40-4614-a137-a6a5d57fcc01	current
+195	188c245e-16ba-4c8b-a894-dcfd252e6735	SZ	0a8c4998-b966-49b3-891a-11900e935268	current
+196	5c3dd764-6824-4689-a3e1-1d8c2dc3bc93	SE	3f98a506-c487-482f-b290-df7549e20486	current
+197	dacd5cdd-8e56-4067-bfd8-febc66a04058	CH	a2f2b7dc-6917-42c1-9cfe-3b9669535eb6	current
+198	1f6e1df0-b5ff-4eb0-89b2-0bd06cf52883	TW	5f3bfba5-070e-42bc-b332-c90b7eeec106	current
+199	893ca48d-0871-46b1-b299-4bf7e7c98dfa	TJ	44a962ec-fb77-4b9e-8525-aff12c5dd80c	current
+200	1bf315d2-0a2d-4686-9ecb-6d28f8a5b861	TZ	75abf7ef-c1cf-49b1-882a-a6df0b7e87d1	current
+201	99d1c02c-0a04-4eae-b6cd-403f94e43959	TH	8a858086-d3cc-46d5-bbf0-2e0b8a5ee5ac	current
+202	1a61eb0b-45a3-4b91-89c2-c22a20676491	TL	98965bdc-6d3a-4f98-9a96-8ab9b2a92902	current
+203	1a7ba610-72c3-4816-81b5-aad9503a4a9b	TG	fa2ebfb7-8414-479f-884e-50e5745f2cf6	current
+204	ed22e6e0-5acc-4f0a-9a6a-e85dac1fca31	TK	842318da-7f0b-4f2e-a8a9-91d84a0243ed	current
+205	85e41f4f-c125-4753-bbed-c2ffc7e1c288	TO	18fc2409-b81e-4138-b65b-3b14153959d9	current
+206	06659bc5-9958-457e-ac56-2860917a3d28	TT	d0d1d067-1131-4d60-984a-ccb798ce4df5	current
+207	cac7a781-be5d-4c59-b9b8-d8bb65fb1487	TN	26dc8054-53bf-455b-9964-9dad863c786b	current
+208	fb99fe5c-118c-44d8-97ba-6570cdb7bd33	TR	c06eb8f8-080e-4356-901b-4308101a3b17	current
+209	0adc54bf-ff91-4cb0-8571-d89b779f1061	TM	c3a56e0d-e48a-49a7-bad1-7f1038346ca2	current
+210	29c528d3-2b84-4b14-adec-78d0f7a06fc1	TC	d06d7efd-acbc-4147-bc18-ee39f5ce8296	current
+211	6596da04-74ae-4968-9776-6a7debe1b0aa	TV	1e2c3b73-66a0-451f-ae22-2289e32a3fa3	current
+212	c5ce24da-dd58-4e8e-a5e3-91b478717bb4	UG	45a040f0-ee8b-48b3-9087-176484534ab1	current
+213	6b63bb5b-0238-4263-bdf4-8064a4fb5c26	UA	3cae8668-7979-41c1-a931-a1f1d0d6c3ae	current
+214	0f433ba9-47e1-4fe6-902c-632bf40355a9	GB	a47add6f-6d29-46d5-b29e-9b7e352acb1d	current
+215	d95a4486-5ca4-4500-8b10-211b945552c8	UY	6633ebdb-641a-40c3-9be9-d20e446f75b8	current
+216	19c52566-e35f-44fd-8130-d64562928fe2	UZ	f8947cd4-da0e-427f-b2fe-8eaf251784de	current
+217	33f94df7-cd4f-487a-aa5c-fb45b65f19d5	VU	b65b9a8d-0ff9-4242-a61f-73cde41a9137	current
+218	3a93a29d-abcc-45af-8915-8e983662c88a	VE	9f49fc2c-137d-4ac4-92e7-0cba597033fe	current
+219	2b1a33fe-be25-452b-8a1c-c7d5f1dce9c2	AE	37a4f201-7842-48b6-a7d1-8c60acbe114d	current
+220	077da062-83f7-44a0-9a02-a6db1579d6ea	WF	f7e65c91-8ada-424e-ae22-be0a53f105c1	current
+221	7c843d31-a3b7-4fd6-854d-a41fd456ab79	EH	d8cd5d91-7663-4410-9b61-b4258023095e	current
+222	9da8253b-a4dc-41f8-b8fa-e751b6812191	YE	44b747b8-bdd0-4c24-91bc-def2c92dc0ee	current
+223	40fbcdb1-c386-45b7-946f-7e4190dcc02c	ZM	9c2bacef-9a2a-4d65-ade8-991142749867	current
+224	39658cd7-be12-4512-8a90-0b2cc9b2769d	ZW	74adbc28-4358-4078-a42d-4a6a108c30fa	current
+225	582d0cef-1fbc-47f5-8574-a2682c0b1e27	CC	44c72aa0-808c-4fd2-9109-5f73953f550e	current
+226	31d93d6a-5130-4cfa-87ba-90d971d98d34	CI	c9fcceef-2f1f-413d-817e-185c28d84f97	current
+227	3ba46aea-ed4b-48bc-919d-a93a4d6f1d6e	CW	a6f3831d-7175-4e8c-9910-91bb62d16c35	current
+228	ff772da3-5cb8-4833-a427-2651adf6fbd6	FK	b3452d93-a5f2-4208-b525-c7082f93bda0	current
+229	3af87d1b-0507-4bfc-b6a1-e9b91d57fe65	VA	588a2227-a078-4b60-87be-328941656479	current
+230	9ad23145-f384-4a8f-a075-4648d1837d46	KP	e575b139-4f06-4d05-a8be-4b1b98263b26	current
+231	34e549be-e921-419a-a64d-2349902ee1e8	LA	8be580e7-9aa7-475d-9930-080fc5752c03	current
+232	be30ad9f-9895-40aa-825f-997c0efddfab	MO	5481db3f-e17a-4f9b-96e1-1de3d90d9d1f	current
+233	6b9ca8c2-1096-496b-9aa2-0a0dc3fb4f32	MK	67dd8a9b-ebc7-4498-a78f-7e7d7c94c708	current
+234	6fda58dd-3eb4-49f9-8f07-8e0c4562675b	PN	398b11ca-430a-4a42-bccd-1fc9d402e14a	current
+235	e600ef6e-e2fa-42cd-a54e-60cd0a48c98f	RE	c25eaea5-7b77-4a84-890c-f225b902dbe2	current
+236	ae5dee3a-1222-4f42-9f97-470ab88b3b7e	RU	eab0f4ef-8e10-4211-870f-e246f30e7487	current
+237	52ee76db-8c13-4deb-9de4-a3b518a8e9bc	BL	40297381-16dc-403c-a44c-d8616cbbaa49	current
+238	06e8b669-fa86-4cf3-86d2-d0e2e9ab2195	MF	71ccb15c-8d2c-4b07-8ca2-6757e326cccf	current
+239	f873ab5f-e175-4a90-9e0e-1efe1d0880ff	SX	691c4213-4521-4d1a-bf5b-f21f3bb51724	current
+240	367c55ec-ba68-4b65-bac4-5726d0738c76	GS	da2de155-87af-42b3-be1b-50d872f7ee20	current
+241	6c88c84a-862a-4e72-9b60-a99b65774dfa	SJ	c7f846e3-b50f-4fde-b176-27d54c06bf0d	current
+242	7073c668-a71d-4cf0-a8dd-71008877f8ca	SY	cde46898-d885-4c76-adef-7436ef9b830f	current
+243	0bea6297-7d53-49a7-927e-e5cbc57e3b5a	US	8bc1762a-a8f4-4e1e-a1ec-1e094802e132	current
+244	f19c1be1-90e0-4696-b6b9-fbd01a520abf	UM	0022afa9-7ae4-4f15-a38e-975303bd724f	current
+245	ec48dda4-e153-4854-9bc3-453263e606b1	VN	d5dd286d-46de-4502-ab75-1c962425c065	current
+246	4fe94a12-77e5-4a49-94c4-6bff7b9f1b2e	VG	aa6c44c0-52d3-4b08-a144-d2be36fded13	current
+247	cd560671-9a56-4d59-a90b-3fc5876c54a8	VG	3033fc53-ff91-4677-a87e-e607f3ead214	current
+248	6702177a-fbed-4cf3-aa32-22da244beab0	ME	b9a9ec1a-ab46-4689-a122-4fe14a46ef2a	current
+249	aae2ba87-a67d-43bd-8516-e403843d61d9	RS	9064f7e4-bb8a-4705-a3d9-7838a08e81fa	current
+250	9081511d-8a3b-4372-b828-44afb55b2dc4	YU	82374fda-1d38-4646-bd4f-a4780c64d177	current
+251	509e1050-f5ab-4d6b-ba04-501765fb9ecf	MM	2d16cfdf-fa0c-4428-bfca-d634b31372e4	current
+252	7fb270a5-06a1-4488-951f-55dcc7e822c0	CS	0152ccff-67fc-4e43-bb4d-239e9e659a69	current
+254	437b6b0d-4fe4-4e6a-b869-9aca4351a182	AN	f1daa552-48b1-4d5e-b502-ce2e80d01db1	deleted
+255	74718d89-2c74-4664-a9f9-c3bda5884237	AI	3c9232d6-31ca-4d09-bef5-5abc0c871b69	deleted
+256	b4a2b89a-1d72-4928-becb-eb198ed494be	XA	34639ec4-b4c0-4d7c-89be-7a849b508344	current
+257	b4a2b89a-1d72-4928-becb-eb198ed494be	IC	6c65d319-9e3c-475f-a279-6a34940ebc38	reserved
+258	80b3fc54-1fa6-49c6-ac4c-998b002d754f	CD	aa4aa2e5-bc06-4ff1-926e-4bcc545af408	current
+259	0a0b42b2-ee8d-44cb-8ce1-84effb466438	XK	1ac1de01-3061-426a-aa49-a1aaddc53f6c	reserved
+260	ba063fe6-f538-45d8-9450-81c536a1aa29	YU	7f1cbd9c-10dd-4022-a2a8-e0a3278ceb59	deleted
+\.
 
 
 --
@@ -1312,6 +1624,7 @@ COPY public."ISO_3166_type" (id, name) FROM stdin;
 4	transitional
 5	world intellectual property organization
 6	indeterminate
+7	reserved
 \.
 
 
@@ -1616,7 +1929,6 @@ COPY public.demonym (id, uuid, label, territory) FROM stdin;
 51	bacaefdc-227d-4c6b-beaa-5a38bada63ed	burmese	509e1050-f5ab-4d6b-ba04-501765fb9ecf
 52	2800e8cb-24d4-4d7a-866f-1e847cbd7525	burmese	ac8b13ec-0d98-4fad-852e-a351d68e6a16
 53	684ff5c9-ba69-446f-af73-03d857df2971	burundian	4f0fe689-81e0-4b91-a093-cad33a305482
-54	006f2565-3612-4ced-a2a2-fab7d40d80cf	cabo verdean	0b35bd76-e5ef-4a77-bacf-46918e1d9d06
 55	fd057303-0dfb-45ac-ab52-880d13741f80	cambodian	723de35c-616a-4b10-b479-c08378f3765b
 56	bb81ba31-1f52-4493-877d-58a309437103	cameroonian	526f75ae-3c43-45a3-924e-1d7e11177a68
 57	0c28dbbc-a854-49d1-9430-fae18eb729ae	canadian	e242cbe2-dc75-4807-a7c9-c171d164ec2d
@@ -1664,7 +1976,6 @@ COPY public.demonym (id, uuid, label, territory) FROM stdin;
 99	ff55739b-4222-490f-8ee2-5907e9b09ad2	fijian	923566be-1a81-4281-a9f5-fc3d8e59e53e
 100	bc191daa-4693-4f1b-a57c-678cc5b53e3e	filipino	d29dcef8-e41b-4540-8f88-8849607ad3f3
 101	dafdd9c5-563e-4fa7-a12c-26d6b086dc89	finnish	d322fe64-203a-4eb4-8316-2c6c1af401a3
-102	5f37fa5f-f932-4d42-8772-0add0ab95f1c	formosan	7178da96-360e-4b0a-ada4-9640c498daf8
 103	161e0e54-0bf3-4fb6-b4cf-a855c0ba0e98	french	74718d89-2c74-4664-a9f9-c3bda5884237
 104	495d9f9d-86e1-4fa7-bc9b-9913e0b3cd34	french	af123316-5e2b-4453-9908-13434c758d89
 105	6c5dea9f-4aa8-4b5e-a501-0b18c9c04a4e	french	b7b802fe-8789-4b6d-b085-7c25a92dab7b
@@ -1717,7 +2028,6 @@ COPY public.demonym (id, uuid, label, territory) FROM stdin;
 152	ed9e077b-cde2-4906-9e45-fd99afa715f1	kirgiz	6cec735b-3406-430f-be56-71d96ff8f41e
 153	3185ec61-9d5a-4309-a5b9-ddef8f48fea0	kiribati	8275007a-70b9-4a04-bcfa-1c23825d4874
 154	0b0f2747-d3b7-4eb2-9cad-a93f0f6ae156	kittitian	ec506881-6436-49fc-b56e-42da02dd7d5b
-155	3eeecca3-d060-43c3-bdbc-544e77164171	kiwi	ca1a8efc-5d84-4e75-9f3b-5d005b9afca5
 156	b7212f02-9f3b-49f2-a844-ab98b2f9daa3	korean	52dc85c7-9f30-470a-9de9-09b95bc11e86
 157	3bc96ff4-2124-4fc7-a328-c78198f541e7	korean	9ad23145-f384-4a8f-a075-4648d1837d46
 158	052112a6-62d1-48bb-9120-2bbb0679593f	kuwaiti	ab2a946c-f1e3-43f5-bbfd-4b54adae333a
@@ -1770,7 +2080,6 @@ COPY public.demonym (id, uuid, label, territory) FROM stdin;
 205	ed585472-537b-45d7-8a59-39c127c36a87	netherlands antillean	437b6b0d-4fe4-4e6a-b869-9aca4351a182
 206	f03597d7-8361-4d75-a7cf-66d132afd6ee	nevisian	ec506881-6436-49fc-b56e-42da02dd7d5b
 207	0c7e710d-6cf7-4f01-b54b-57ed5948d1b0	new caledonian	17b783e7-ad5c-473c-8787-aab9c9397fed
-208	23f91bd5-8184-4d62-acf3-686ac9b178ef	new zealander	ca1a8efc-5d84-4e75-9f3b-5d005b9afca5
 209	de1f0b42-5978-40e9-98c6-7d9103280721	ni-vanuatu	33f94df7-cd4f-487a-aa5c-fb45b65f19d5
 210	49f47428-1786-4f58-bcae-e2713947dd0c	nicaraguan	390d0b06-0892-405b-93f4-8b1b69af9667
 211	a9712752-c00f-41e4-87c3-70a5f2955545	nigerian	363bc536-025f-4ef7-95c0-a083bb8f37e6
@@ -1883,6 +2192,90 @@ COPY public.demonym (id, uuid, label, territory) FROM stdin;
 318	a5c375d1-4410-4141-849e-903d951e6dc4	yugoslavian	9081511d-8a3b-4372-b828-44afb55b2dc4
 319	8ae98c59-d7af-4263-b3ea-875868fa588a	zambian	40fbcdb1-c386-45b7-946f-7e4190dcc02c
 320	7914b626-7fb1-40f3-b799-6f43f3b86738	zimbabwean	39658cd7-be12-4512-8a90-0b2cc9b2769d
+54	006f2565-3612-4ced-a2a2-fab7d40d80cf	cabo verdean	3e77325d-7fea-46ad-a8fa-b2d31056b3ea
+102	5f37fa5f-f932-4d42-8772-0add0ab95f1c	formosan	1f6e1df0-b5ff-4eb0-89b2-0bd06cf52883
+155	3eeecca3-d060-43c3-bdbc-544e77164171	kiwi	903625d0-0df4-4537-8370-4c3cda4ffed6
+321	b3c68894-7737-4624-bc98-6a4b96411fed	ålandic	ca1a8efc-5d84-4e75-9f3b-5d005b9afca5
+322	03a6d567-500f-480b-80df-ba4d5cc7c057	ålandish	ca1a8efc-5d84-4e75-9f3b-5d005b9afca5
+323	8e5e6039-5c08-4194-93a0-59873f915d07	ålänning	ca1a8efc-5d84-4e75-9f3b-5d005b9afca5
+324	bad5156e-db48-460d-958c-70315bbda137	åländare	ca1a8efc-5d84-4e75-9f3b-5d005b9afca5
+325	2eac13c1-c777-48f3-9fd7-7eb591949ed5	Ahvenanmaalainen	ca1a8efc-5d84-4e75-9f3b-5d005b9afca5
+208	23f91bd5-8184-4d62-acf3-686ac9b178ef	new zealander	903625d0-0df4-4537-8370-4c3cda4ffed6
+326	8fb7afc9-5292-487d-8791-90a166f2e5e2	congolese	80b3fc54-1fa6-49c6-ac4c-998b002d754f
+327	b1a94b93-6d0d-4b3f-9d0f-77a8ed8242a2	dutch	649e4cd5-204a-41ae-add6-5c7433d23973
+328	e380ab88-d8cf-4e9d-828a-7c80633bba8a	netherlandic	649e4cd5-204a-41ae-add6-5c7433d23973
+329	343290c7-20a3-4af2-a188-38fa28463a7d	irish	48d25a4f-6bcb-4595-bf82-1492334695ec
+330	b4a2301a-cb53-440c-9885-5dfe18283dc7	irishman	48d25a4f-6bcb-4595-bf82-1492334695ec
+331	461fb8b4-5f16-4810-bc07-baaa8dde16ce	irishwoman	48d25a4f-6bcb-4595-bf82-1492334695ec
+332	0471a375-858c-4aee-b3bc-7a0a00f3af25	bissau-guinean	98fd5d7d-6f4c-434d-bd97-6fabe502db00
+333	1ae2be9a-77c6-4bba-80bf-dfd747c0596d	dominican	7caae20c-20fa-4ce0-a987-cca304a302b9
+334	3abe68b3-4e3c-4ac1-b57f-8b466b928cf6	canarian	b4a2b89a-1d72-4928-becb-eb198ed494be
+335	905ef496-5fe1-4700-aeb7-f32512123750	canario	b4a2b89a-1d72-4928-becb-eb198ed494be
+336	08c92bb7-3b7e-461d-8ef4-82d5c3db9f6e	canaria	b4a2b89a-1d72-4928-becb-eb198ed494be
+337	9879fbae-32c5-4f3a-8908-36cf40b2527e	chagossian	b422b044-d80d-4463-90e0-7ce2c9c3c285
+338	f4525ce9-9eaa-4cc6-bf86-f0fb731dacc0	nigerian	7ce306aa-4c86-4016-93ab-cf3f5c22c621
+339	11ca231d-63d7-4251-bb21-adc5ecbbe29e	papua new guinean	2f5d487b-20b7-47c4-b8fe-378d3c40839a
+340	5a6010fc-3cfa-49be-8b8e-e7a1e027e727	papuan	2f5d487b-20b7-47c4-b8fe-378d3c40839a
+341	a29976df-d2b4-4ced-82e5-2a34b2830b2a	romanian	fdf4338f-fd3a-446b-9688-b28515d38074
+342	aa8696b9-f5e6-4adb-84e2-34cd21f33c50	somali	98943525-f93f-426f-a3fe-b48bc18c0c52
+343	a3dc7615-58be-4dfb-8443-2c152d9db58b	sudanese	c149c091-51c2-41d7-85a7-7d67bcac4230
+344	a8911d11-186d-423a-a06c-59ab9a7c5582	kosovar	0a0b42b2-ee8d-44cb-8ce1-84effb466438
+345	f8713b0a-8ca4-445c-96b3-d3d6014be3de	kosovan	0a0b42b2-ee8d-44cb-8ce1-84effb466438
+346	53cfdd96-09e1-4231-95b7-07481f68773e	french	4579b4bb-57c1-454e-a91c-b545e8f713e4
+347	f7ee08fd-9390-4e7d-be93-28d21a3fa96d	antarctican	f2cdea77-ac81-4009-a139-487fed267132
+348	c3fc6b34-cc3c-42a2-a63c-f7aac1427c56	marshallese	6320e2de-a214-4502-928e-c14bced2c7a0
+349	099f4516-0801-463b-8e27-a324a7fd2fe0	marshallese	c0f70677-0565-4a82-abcb-ee645843bf25
+350	69d27bcd-8a85-4034-bd5d-905115eab9bb	american samoan	cd5de581-fe44-456f-8b40-1e601666502c
+351	6d0a5b1c-1b14-4582-abdf-e4bc4839ec36	samoan	cd5de581-fe44-456f-8b40-1e601666502c
+352	a7342803-8332-4929-8286-4b3d0df91608	bonaire	57781bac-bb12-4862-9e29-a3eb6ebed059
+353	aae22afc-3a7a-46a6-ad2c-6af50d038965	bonairean	57781bac-bb12-4862-9e29-a3eb6ebed059
+354	f3df40e1-e731-48b9-ad87-2c84d43dd0d6	bouvet islander	2c927bd6-e6c1-4aa7-810e-6f544f2137dc
+355	312aa6eb-8eb5-48c0-9944-30b02300db05	british	f7847a1c-6403-474c-862d-a0f9e079b11d
+356	9d1a1834-0dd8-49ca-a6d9-23534f9477b6	christmas islander	d6807de6-9eb7-4470-89e6-785b74a33137
+357	2827c133-fe69-4042-a0ff-6eee44bb87d9	gibraltarian	c4d460f0-d8f6-49c2-a75d-076d40c3bf4e
+358	8bc8d371-6e1e-498c-a3d3-4aefb7ac7511	llanito	c4d460f0-d8f6-49c2-a75d-076d40c3bf4e
+359	af3cecaa-2d17-4d6b-ae91-af4ae5934b4a	guamanian	dbb53edf-6817-4a18-89b0-f6e2747c95ba
+360	5341b76b-3998-4548-bf8a-40ba4ea4807b	channel islander	99436fc3-8e6d-41af-9a25-f9ff3f9eadc5
+361	f957a166-b49a-4951-badd-0b1401855f75	sarnian	99436fc3-8e6d-41af-9a25-f9ff3f9eadc5
+362	7fc4a16b-559c-4bd9-97f9-0c9eca57ac52	donkey	99436fc3-8e6d-41af-9a25-f9ff3f9eadc5
+363	4bdd7ba8-22da-4727-98c0-cf1f2a28823d	crapeaud	99436fc3-8e6d-41af-9a25-f9ff3f9eadc5
+364	0a082c45-917d-429a-817a-a72c76c7b443	manx	534d150e-315d-40fa-ae9d-6876e3ab6aa1
+365	17057c92-81fe-45f1-a977-d0b521ec59f0	manxman	534d150e-315d-40fa-ae9d-6876e3ab6aa1
+366	08b72eb1-35c3-43ac-86d7-ab9585d9f6c9	manxwoman	534d150e-315d-40fa-ae9d-6876e3ab6aa1
+367	f4ce03b7-0a33-41ee-b381-fc6e14dae9dc	channel islander	242bc52e-221a-4254-b523-8b339182f620
+368	3a5bb22c-10f7-4913-b92a-e612b3f4b431	jersian	adc3c9dd-bfce-48a7-9c4a-767c2de409ae
+369	45b013d0-75f5-413f-b5e9-81479d37be5d	jerseyman	adc3c9dd-bfce-48a7-9c4a-767c2de409ae
+370	c2faa4f6-1bc4-4824-bf3e-3ddb6832e8de	northern mariana islander	90b92de2-8101-4bce-af13-51bf5f5e6da0
+371	f7c0a9d1-151e-45bc-938a-53a5af11df04	chamorro	90b92de2-8101-4bce-af13-51bf5f5e6da0
+372	1d19cc16-bb56-41dd-8e6c-1ce6e7b41e5f	saint helenian	1c7c18b7-27fa-4852-aff7-6139002c4c9b
+373	1ef76205-5b22-47aa-bd52-d4bad2538a7b	ascensionian	1c7c18b7-27fa-4852-aff7-6139002c4c9b
+374	0262260a-a572-43b7-aec5-dd5abcc12762	tristanian	1c7c18b7-27fa-4852-aff7-6139002c4c9b
+375	b4d765c6-0d89-4b4c-8435-21750faf10d9	saint-pierrais	6668152c-57e0-4e48-b346-ced1c1abd14f
+376	a7b6fd6c-bcb3-4f0b-8dbc-7c90a3735a26	miquelonnais	6668152c-57e0-4e48-b346-ced1c1abd14f
+377	5063719b-8898-4c91-bab9-80e5d260f3a6	pierrian	6668152c-57e0-4e48-b346-ced1c1abd14f
+378	71426dd8-cb18-4e80-ba4d-3075a0331b5d	wallisian futunan	077da062-83f7-44a0-9a02-a6db1579d6ea
+379	a3a07fea-d695-4b27-adff-3dcf23a0e4aa	cocossian	582d0cef-1fbc-47f5-8574-a2682c0b1e27
+380	c2ade82f-3277-45df-b21f-05dad83fabbd	cocos islandian	582d0cef-1fbc-47f5-8574-a2682c0b1e27
+381	06eff1a7-9a1a-4928-a31f-d935f10bcb6a	citizen of the holy see	3af87d1b-0507-4bfc-b6a1-e9b91d57fe65
+382	51d7e126-3fbf-40dd-a20c-3a54ab62020b	macau person	be30ad9f-9895-40aa-825f-997c0efddfab
+383	80939a2a-b82e-48f9-a991-7f7146b35116	tanka	be30ad9f-9895-40aa-825f-997c0efddfab
+384	9fd545c0-b1e9-479c-9a89-4153fdfdc862	macanese	be30ad9f-9895-40aa-825f-997c0efddfab
+385	576b558b-6a26-430f-bd8b-e947eecafd9e	barthélemois	52ee76db-8c13-4deb-9de4-a3b518a8e9bc
+386	c01f7b64-f183-4406-8f33-aa87e66c6201	saint-barth	52ee76db-8c13-4deb-9de4-a3b518a8e9bc
+387	47a7ad92-9ef8-4bca-9751-a04b9438ddb8	st. martiner	06e8b669-fa86-4cf3-86d2-d0e2e9ab2195
+388	91d995b4-4fd7-4dcf-acc6-8cc8bcac4f9e	sint maartener	06e8b669-fa86-4cf3-86d2-d0e2e9ab2195
+389	31d9344a-5d2b-402d-a99a-598f3d27d599	south georgian	367c55ec-ba68-4b65-bac4-5726d0738c76
+390	f842df3d-2a27-4654-a87f-ea5457b3c936	south sandwich islander	367c55ec-ba68-4b65-bac4-5726d0738c76
+391	17e99304-cd14-414f-80ed-29a3f2a954f6	nowegian	6c88c84a-862a-4e72-9b60-a99b65774dfa
+392	ddc8ce2f-faa9-44c8-803b-c18ebe35c974	american islander	f19c1be1-90e0-4696-b6b9-fbd01a520abf
+393	f87d5125-0e16-48b7-b652-4a236011b2f5	american	f19c1be1-90e0-4696-b6b9-fbd01a520abf
+394	d4752c90-fa9a-4cbe-9961-26dfffbf9944	palestinian	2e557f8d-0c37-4f40-bd25-1261972df8cf
+395	acaaa190-f8c7-4e68-89ea-d63b2e3c2bae	sval	cf4779ca-37a6-4f60-bc03-5d760a12c978
+396	2e0956a1-9810-4e5e-bf2c-0e2b56143788	heard islander	7ebcc568-e95d-4ebd-b55d-9fed5d9b87cb
+397	33dad0b6-cc50-4e0f-a853-997a8b581b9b	mcdonald islander	7ebcc568-e95d-4ebd-b55d-9fed5d9b87cb
+398	476e53eb-b1dd-4b32-906c-633d698f78de	gazan	1e34b1d1-019a-4f68-b3ec-f82ba27ee695
+399	b0a5a5e8-ee4d-4456-bdc3-bdcce11122de	palestinian	1e34b1d1-019a-4f68-b3ec-f82ba27ee695
+400	0dad0567-7bf6-4093-81b3-f2e8b79e4af3	palestinian	c3d3c3a0-a17b-441c-b834-52b8fea15da0
 \.
 
 
@@ -1933,6 +2326,10 @@ COPY public.language (id, uuid, name) FROM stdin;
 40	80772a3b-361f-4960-9dc3-3ddb5278659d	dorse
 41	d9477607-b4ca-46a3-a583-3fe1d0efacc2	international english
 42	0be0340a-e78b-4846-9feb-74d73c34e450	received pronunciation english
+43	a06b8508-099e-41e5-b212-d55cd5f05ffb	marshallese
+44	321cde1a-311b-453f-946b-73c2841f7c91	ralik
+45	b9d0006c-7335-49ac-a2e0-8cf6abfb8f58	ratak
+46	3ee67bbc-3b13-4dc9-82c7-4350f43184b4	formosan
 \.
 
 
@@ -1999,6 +2396,11 @@ COPY public.language_label (id, uuid, label, language) FROM stdin;
 57	934527db-663d-4de5-9272-d2bbd94aaeb1	BBC English	0be0340a-e78b-4846-9feb-74d73c34e450
 58	5c5d6a86-a921-422e-8080-c9e3c79461fc	Standard British pronunciation	0be0340a-e78b-4846-9feb-74d73c34e450
 59	779434e6-f8ae-4994-af9c-507a270b4321	Southern British pronunciation	0be0340a-e78b-4846-9feb-74d73c34e450
+60	1cf04ff8-421b-4042-9616-abcac9b67969	Ebon	a06b8508-099e-41e5-b212-d55cd5f05ffb
+61	f75eda22-ff8c-469f-93d5-837001c01f94	Marshallese language	a06b8508-099e-41e5-b212-d55cd5f05ffb
+62	3f939de8-f4c3-4e5a-a8db-71a81ae4123f	Rālik	321cde1a-311b-453f-946b-73c2841f7c91
+63	11ddbe7f-3372-4714-9907-4ef9350c17de	Ratak	b9d0006c-7335-49ac-a2e0-8cf6abfb8f58
+64	a14c4e62-9c9d-427c-8825-01bc8b3456ed	Formosan	3ee67bbc-3b13-4dc9-82c7-4350f43184b4
 \.
 
 
@@ -2304,7 +2706,6 @@ COPY public.passport_travel_requirements (id, passport_territory, destination_te
 649	0f433ba9-47e1-4fe6-902c-632bf40355a9	07546102-9696-4e5b-80fb-c435267230aa	visa not required	90 days	French West Indies refers to Martinique, Guadeloupe, Saint Martin and Saint Barthélemy.	cbe17311-b764-46ee-8db7-e7735990476e	0f433ba9-47e1-4fe6-902c-632bf40355a907546102-9696-4e5b-80fb-c435267230aa
 650	0f433ba9-47e1-4fe6-902c-632bf40355a9	b4a2b89a-1d72-4928-becb-eb198ed494be	visa not required	3 mons	\N	a6fb0153-90ad-4a77-add8-28f6ed9a674b	0f433ba9-47e1-4fe6-902c-632bf40355a9b4a2b89a-1d72-4928-becb-eb198ed494be
 1234	6e83ec38-7e2d-4c2d-8a9d-6991d4e876db	b33be079-39b7-4a1d-b689-97c224d5fece	visa required	\N	\N	62ec20e7-2fa1-40ff-8231-795f01245425	6e83ec38-7e2d-4c2d-8a9d-6991d4e876dbb33be079-39b7-4a1d-b689-97c224d5fece
-652	0f433ba9-47e1-4fe6-902c-632bf40355a9	38c4b24f-a7d0-4af2-9d09-724ab4ad9017	visa not required	90 days	\N	66249b9b-487a-4ab8-814f-96680e5454a4	0f433ba9-47e1-4fe6-902c-632bf40355a938c4b24f-a7d0-4af2-9d09-724ab4ad9017
 653	0f433ba9-47e1-4fe6-902c-632bf40355a9	188c245e-16ba-4c8b-a894-dcfd252e6735	visa required	30 days	\N	0b572511-2482-4fae-946b-2f3d08db73fb	0f433ba9-47e1-4fe6-902c-632bf40355a9188c245e-16ba-4c8b-a894-dcfd252e6735
 654	d29dcef8-e41b-4540-8f88-8849607ad3f3	b33be079-39b7-4a1d-b689-97c224d5fece	visa required	\N	Women of all nationalities must cover their body with clothing, except for their face, hands and feet.	3fc8d252-e882-42d8-b8e6-fa4a9225f5f7	d29dcef8-e41b-4540-8f88-8849607ad3f3b33be079-39b7-4a1d-b689-97c224d5fece
 655	d29dcef8-e41b-4540-8f88-8849607ad3f3	6c7e4e7d-9bf4-4e47-b2e4-c925f54bcd1a	visa required	\N	Philippine passport holders who have a valid, multiple-entry Schengen visa, which has been previously used in one of the Schengen states, or foreign citizens who have a valid permit of stay in one of the Schengen states, can enter visa-free.\\nPhilippine passport holders who have a valid, multiple-entry U.S. or UK visa, which has been previously used in the respective country of issuance, or have valid permit of stay in the U.S. or UK, can enter visa-free.	20992bea-a850-4023-89e4-46afe173af24	d29dcef8-e41b-4540-8f88-8849607ad3f36c7e4e7d-9bf4-4e47-b2e4-c925f54bcd1a
@@ -3663,8 +4064,8 @@ COPY public.svg_path (id, uuid, territory, path) FROM stdin;
 187	1f7663c7-01f3-47f7-812a-1a9825a438a5	3e77325d-7fea-46ad-a8fa-b2d31056b3ea	M841.4 477.6l.1-.4-.2-.6-.3-.1-.6.4-.1.3.1.3.3.3.3.1.4-.3zm6.3-1.7l.4-.2v-.7l-.1-.3h-.4l-.2.4v.5l.2.3h.1zm-1.4.8l-.5-.9-.3-.1-.6-.7v-.3l-.3-.1V475.2l-.2.5v.5l.4.8.4.2.7.1.4-.6zm3.1-7.8v.5l-.3.7.5.3.3.1.6-.4.2-.5-.1-.3-.3-.3-.3-.1-.1.1-.5-.1zm-6.4-2.5l-1-.1-.6-.2h-.1v.3l.4.8.2-.5.2-.1.8.2.4-.1-.1-.1-.2-.2zm6.7-.2l-.1-.5v-.7h-.2l-.3.2.1.7.1.1.2.5.2-.3zm-11.1-1v-.2l-.3-.5-.3.1-.4.2-.1.3.4.2h.2l.5-.1zm-1.5-.9l.8-.6.2-.3-.2-.5-.5-.1-1.2.6-.1.2.1.3.1.5.2.1.6-.2z
 188	d583ed32-ff0d-4f11-8321-ea8fc477780c	8372a0ad-58ad-41f7-af06-dea7df6ef891	M527 449.1l-.1-.3-.1.1v.6h.7l.3-.2h.6l-.1-.2-.8-.1-.1.1-.2.1-.2-.1zm8-2.3l-.1-.1h-.1l-.3.1h-.2l-.1.1-.1.1h.2l.4-.2H535zm.8-.1l.5-.2-.1-.1h-.1l-.1.1h-.1l-.5.3h.2l.2-.1z
 189	d9c72a4f-fca6-416d-9f49-909f4e4a5d23	3ba46aea-ed4b-48bc-919d-a93a4d6f1d6e	M595.9 494.9v-.6l-.9-.4v.3l.1.2.3.1.1.2-.1.6.2.3.3-.7z
-190	2498c4c7-c06b-43aa-b2e5-9419624b4788	38c4b24f-a7d0-4af2-9d09-724ab4ad9017	M947 186.9v-.3l-.1-.3v-.2h-.1l-.5-.1-.1-.2h-.1v.2l.1.4.5.4.3.2h.1l-.1-.1zm.5-2.1v-.1l-.2-.2-.5-.2-.2-.1-.2.1v.2l.1.1.4.1.4.3h.1l.1-.2zm-2.4-1.9l-.2-.1-.5.1h-.3l.1.3.6.2h.6l.2-.1-.1-.2-.4-.2zm2.5-.5l-.8-.2-.6-.3-1 .1.7 1.1.8.7.4.2V183.7l-.4-.5-.1-.1v-.1l.1-.1h.2l.3.2h.2l.2-.7zm1-.2l-.3-.2-.4-.4v.9h.1l.3.1.3-.4z
 191	507b4ee9-d336-4c5b-be3e-530ee2d0fd51	ff772da3-5cb8-4833-a427-2651adf6fbd6	M690.3 902.7l-.1-.3-.4-.2-.2-.1.1.2.1.3.1.2.2.1.2-.2zm5.5-1.3l-.1-.1h-.2l-.1.2.2.3.4.1-.2-.5zm-12.9-1.4l-.1.2-.4.1.2.3.6.4h.4l.1-.3-.1-.6h-.3l-.4-.1zm2.8-2l-.9-.3-.4-.3h-.3l.4.4.1.2.1.2.6.3.6.3.4.3-.1.1-.8.3h-.3l-.2.1.4.2.6-.1.2-.1h.2l.3.1v.2l-.1.2-.2.2-.4.3-.6.4h-.8l-.7.7.9.5.7.3h.9v-.1l.2-.1h.3l.1-.1.2-.4v-.6h.2l.3.1.7-.1.3-.1.6-.9.4-.8.2-.4.3-.2.1-.2.1-.3.3-.2v-.3l-.4-.2-.3-.2-.3.3-.2-.1-.9.3h-.4l-.3-.2-.4-.1-.4.1-.5.5-.8-.2zm.7-.4l.1-.3-.1-.2-.5-.2h-.5l.2.5.2.2h.6zm5.9-.7h-.4l.4.5-.8.8.2.6.3.4.1.2-.1.1-.4.1-.3.1-.2.3-.9.9.2.2-.3.7.2.3.8.7.8.4v-.7l.4-.1.4.2.4-.2-.9-1h.3l2.5.5-.1-.4-.1-.2-.3-.4 1.5-.4.5-.3.2-.3.6-.1.8-.3-.1-.1.1-.3-.4-.2-.5-.1.1-.3.5-.1-.8-.7-.3-.1-1 .1-.3.1v.2l.1.3.3.3.1.2-.2-.1-1.1-.4-.2-.1-.2-.4.2-.1.3.1.1-.3-.4-.3-.4-.1-.9.1-.8-.3z
+190	2498c4c7-c06b-43aa-b2e5-9419624b4788	13ba7194-35d8-4666-bc59-4eb69058dc48	M947 186.9v-.3l-.1-.3v-.2h-.1l-.5-.1-.1-.2h-.1v.2l.1.4.5.4.3.2h.1l-.1-.1zm.5-2.1v-.1l-.2-.2-.5-.2-.2-.1-.2.1v.2l.1.1.4.1.4.3h.1l.1-.2zm-2.4-1.9l-.2-.1-.5.1h-.3l.1.3.6.2h.6l.2-.1-.1-.2-.4-.2zm2.5-.5l-.8-.2-.6-.3-1 .1.7 1.1.8.7.4.2V183.7l-.4-.5-.1-.1v-.1l.1-.1h.2l.3.2h.2l.2-.7zm1-.2l-.3-.2-.4-.4v.9h.1l.3.1.3-.4z
 192	a61b9876-5aa6-44bc-b055-196872b64e0e	472108f0-b6a2-410c-9885-d4fa3b3412bd	M213.2 704.9l-.1-.3-.2-.3-.1.1.1.1.2.3v.2l.1-.1zm9.3-14.7l-.2-.2-.4-.2-.2-.1-.2-.1-.1.1.1.1h.1l.3.2.3.1.2.1v.1l.1-.1zm-24.5-1.1l-.6-.3.1.2.4.2.2.1-.1-.2zm20.5-.2l-.4-.5h-.3l.7.6v-.1zm-21.6-1l-.4-.4-.2-.3-.3-.1.1.1.4.4.3.4.2.1-.1-.2zm-.3-2.1l-.1-.1v-.3l.2-.3.6-.4v-.1l-.2.1-.4.2-.2.2-.1.2-.1.3.1.2.1.1h.2l-.1-.1zm-47.4-1.1l-.2-.6-.3-.5-.8-.1-.5.2-.1.2.1.4.5.7.5.1.8-.1.4.6.2.1.4.1.1-.3-.2-.5-.9-.3zm-2.9-.9l.1-.4-.2-.1h-.5v.2l.1.2.1.1.3.2.1-.2zm-9.7-4.3h.2l-.4-.6-.3-.2V679.5l.3.1.2-.1zm43.9-1.6h-.6l.5.1.4.2-.3-.3zm-.7.1l-.3-.1-.3-.2h-.3l.7.3h.2zm-43.8.1l.1-.2-.1-.1-.4-.2.1.3v.2l.2.1.1-.1zm32.8-2l-.3-.4-.2-.3-.2-.4-.4-.5.1.3.1.2.2.2.2.4.1.2.3.4h.1v-.1zm16.2-1.5l.1-.5h-.2v.5h.1zm-14.4-1.6l-.6-.6h-.1l.1.2.5.5.1.2v-.3zm30.8-33.9l.1-.2v-.2l-.1-.1-.3-.1.1.7.2-.1zm-2.7-3.7l-.1-.2h-.2l-.1.1v.5l.4-.4zm.1-1.6l-.8.5.2.4.4.1.2-.2.8-.1.3-.4-.3.1-.8-.4zm-6.1-1.7l.2-.5-.2-.1-.4.2v.2l.3.4.1-.2zm2.6-3.1l.3-.1v-.1l-.2-.2-.3-.1-.1.1-.1.2.1.3.3-.1zm-2.9-.1l.1-.3v-.2l-.1-.2-.9-.2-.1.1v.4l.2.5h.3l.5-.1z
 193	84e71b6b-7019-40fe-89a7-1b1678d8a64f	fef2c7ae-f872-4a71-9c87-0d0727258c26	M681.4 556.2l1.8-4.7 3.5-5.8-.9-2.6-5.8-5.4-4.1-1.5-1.9-.7-3.1 5.5.4 4.4 2.1 3.7-1 2.7-.6 2.9-1.4 2.8 2.4 1.3 1.8-1.8 1.2.3.8 1.8 2.7-.5 2.1-2.4z
 194	9226fefe-1e87-4111-86d8-f9ceb2658277	5f5fad3d-69c4-41b1-bc88-d9b8cff77027	M887.4 76.3l-26-.4-11.8.3-5 1.3-11.5-.1-12.7 2.1-1.6 1.7 6.7 2.1-6.2-1.3-4.5-.3-7-1.4-10.6 2.1-2.7-1.2h-10.4l-10.9.6-8.9 1-.2 1.8-5.3.5-14.6 2.9-4.6 1.7 8.1 1.5-2.8 1.6L730 95l-15.5 2.2-2.2 1.7 6.4 2 14.5 1.2-7.5.2-10.9 1.5 3.8 3.1 3 1.5 9.4-.3 10.1-.2 7.6.3 8 2.9-1.4 2.1 3.6 1.9 1.4 5.3 1 3.6 1.4 1.9-7 4.8 2.6 1.3 4.4-.8 2.6 1.8 5.3 3.4-7.5-1.4h-3.8l-3 2.8-1.5 3.6 4.2 1.8 4-.8 2.6-.8 5.5-1.9-2.8 4.2-2.6 2.3-7.1 2-7 6.3 2 2-3.4 4 3.7 5.2-1.5 5 .7 3.7 4.8 7.1.8 5.6 3.1 3.2h8.9l5 4.7 6.5-.3 4.1-5.7 3.5-4.8-.3-4.4 8.6-4.6 3.3-3.7 1.4-3.9 4.7-3.5 6.5-1.3 6.1-1.4 3-.2 10.2-3.9 7.4-5.7 4.8-2.1 4.6-.1 12.5-1.8 12.1-4.3 11.9-4.6-5.5-.3-10.6-.2 5.3-2.8-.5-3.6 4.2 3 2.7 2.1 7.3-1-.6-4.3-4.5-3.1-5-1.3 2.4-1.4 7.2 2.1.5-2.3-4.1-3.4h5.4l5.6-.8 1.7-1.8-4-2.1 8.6-.3-4-4.3 4.1-.5.1-4.2-6.2-2.5 6.4-1.6 5.8-.1-3.6-3.2 1.1-5.1 3.6-2.9 4.9-3.2-8-.2 11.3-.7 2.2-1 14.6-2.9-1.6-1.7-10-.8-16.9 1.5-9.2 1.5 4.5-2.3-2.3-1.4-7 1.2-9.7-1.4-12.1.5-1.4-.7 18.3-.4 12.9-.2 6.6-1.4-19.7-2.9z
@@ -3692,280 +4093,300 @@ COPY public.svg_path (id, uuid, territory, path) FROM stdin;
 -- Data for Name: territory; Type: TABLE DATA; Schema: public; Owner: brook
 --
 
-COPY public.territory (id, uuid, name) FROM stdin;
-1	1965c743-cf9a-4021-9ed1-b9e4e77486a2	andorra
-2	2b1a33fe-be25-452b-8a1c-c7d5f1dce9c2	uae
-3	793360a3-aa91-4703-acfe-60287e3f9b74	anguilla
-4	74718d89-2c74-4664-a9f9-c3bda5884237	french territory of the afars and the issas
-5	ca1a8efc-5d84-4e75-9f3b-5d005b9afca5	aland
-6	49494a5b-205f-4756-9145-2784c9269a99	barbados
-7	437b6b0d-4fe4-4e6a-b869-9aca4351a182	netherlands antilles
-8	af123316-5e2b-4453-9908-13434c758d89	metropolitan france
-9	b7b802fe-8789-4b6d-b085-7c25a92dab7b	france
-10	7fb270a5-06a1-4488-951f-55dcc7e822c0	czechoslovakia
-11	c5db5d6b-ebcd-4642-9604-0f1ebf2fdf9d	czech republic
-12	2dd507e0-8e57-4924-a57f-8fc2e22555e2	slovakia
-13	ac8b13ec-0d98-4fad-852e-a351d68e6a16	myanmar
-14	509e1050-f5ab-4d6b-ba04-501765fb9ecf	burma
-15	9081511d-8a3b-4372-b828-44afb55b2dc4	yugoslavia
-16	ba063fe6-f538-45d8-9450-81c536a1aa29	serbia and montenegro
-17	aae2ba87-a67d-43bd-8516-e403843d61d9	serbia
-18	6702177a-fbed-4cf3-aa32-22da244beab0	montenegro
-19	0f433ba9-47e1-4fe6-902c-632bf40355a9	united kingdom
-20	56c6dacf-b4d9-401b-874a-6518da0cd567	england
-21	c5bc507e-7bca-4c9d-8d7b-a3441b33dffe	wales
-22	e054a323-d773-441e-9cbb-9843a1780b2d	scotland
-23	c639dcd9-0e03-4f83-bdba-8a5a921b021a	northern ireland
-24	0b48c87c-ddaa-49d2-b736-61d9c44636e0	djibouti
-25	6e83ec38-7e2d-4c2d-8a9d-6991d4e876db	singapore
-26	b33be079-39b7-4a1d-b689-97c224d5fece	afghanistan
-27	6c7e4e7d-9bf4-4e47-b2e4-c925f54bcd1a	albania
-28	d9b8f8c8-5b5a-41ef-8538-26d822a4c9bd	algeria
-29	bf07965f-f874-453e-a725-54c5a1254ee8	angola
-30	90de1527-d5a5-446f-a960-eccda43af198	antigua and barbuda
-31	78219cc6-d1b2-4193-9da7-e7abc92863ee	argentina
-32	f2f3e704-bb03-467a-a1a0-1d56b6faadce	armenia
-33	0a3e548d-7e30-426f-840c-07ff9b6772f7	australia
-34	e14f7607-8074-4eeb-8b3f-3093575719a4	austria
-35	319530a8-8cd2-4dc3-84a6-29ac720c51da	azerbaijan
-36	ac6434f1-bbb9-4242-a393-d78d367f034a	bahamas
-37	497550d7-f9e9-4f1a-a5e0-8c9019c7bc31	bahrain
-38	bb3fa754-b35e-45ee-8d66-fb159c96d821	bangladesh
-39	ac612169-1567-4c5e-a203-3987fa26c267	belarus
-40	1f4dd261-dc57-49ec-b872-8b1917703616	belgium
-41	3e62d48d-717d-4421-91c2-abb059a80576	belize
-42	5fbebc32-e410-4faa-94e5-822252f8b499	benin
-43	1d58bd18-8519-4e53-8cd1-6a7e93cda614	bhutan
-44	546440bf-236c-4f99-bd12-3bba52d50e02	bolivia
-45	c103dabb-a386-4a6a-bce5-c0c0fa5f43f6	bosnia and herzegovina
-46	ff4c5033-aee4-4325-90cc-1f96ef10bbce	botswana
-47	1b558876-4f84-41fb-8215-93143842ba53	brazil
-48	49ca53d4-0d59-4be8-9724-70b0eff911ce	brunei darussalam
-49	dde93861-da65-40d4-8159-3e67e8d58e02	bulgaria
-50	a22c7473-248e-4447-8bc7-1fc51c00ca3e	burkina faso
-51	4f0fe689-81e0-4b91-a093-cad33a305482	burundi
-52	0b35bd76-e5ef-4a77-bacf-46918e1d9d06	cabo verde
-53	723de35c-616a-4b10-b479-c08378f3765b	cambodia
-54	526f75ae-3c43-45a3-924e-1d7e11177a68	cameroon
-55	e242cbe2-dc75-4807-a7c9-c171d164ec2d	canada
-56	2b1aaccb-5846-45c1-8481-12bb8b5e0aa4	central african republic
-57	3f759fc5-8287-4acb-b58d-f235c5ef4981	chad
-58	c5a755fa-0935-4ec5-a880-3d4854beabfd	chile
-59	7178da96-360e-4b0a-ada4-9640c498daf8	china
-60	8b58bd46-c2d7-4df7-8871-378dbe921468	colombia
-61	48847459-b1b2-4092-9bf0-f0c08b928c74	comoros
-62	9982d96a-7b45-4e8a-93c5-83056d6b0fc8	cook islands
-63	cf56f0da-daf4-4437-9ad9-4b61bbedc31a	costa rica
-64	14730d5f-e0e5-43a8-bc67-ca9f92c8502a	croatia
-65	16a55dd1-2e47-489d-830c-3a88aad464a9	cuba
-66	f36ec987-ed66-4a88-9157-b1d4a934e515	cyprus
-67	31d93d6a-5130-4cfa-87ba-90d971d98d34	ivory coast
-68	9ad23145-f384-4a8f-a075-4648d1837d46	north korea
-69	196ed632-cc17-4b9f-87cb-cbc9832e8617	congo
-70	80b3fc54-1fa6-49c6-ac4c-998b002d754f	dr congo
-71	870d8300-9c56-4b34-9447-bcdfedf8454c	denmark
-72	a66c6aaf-f010-4056-8928-1653d670edf3	dominica
-73	7caae20c-20fa-4ce0-a987-cca304a302b9	dominican republic
-74	41fa1fc8-a7c9-4045-ac6a-92fe36c27bd9	ecuador
-75	0d0a18fd-d424-4a69-b646-38fffd942dd5	egypt
-76	bae2df87-ee9b-4efe-8482-2b05b54ebb11	el salvador
-77	43d35de8-4ed4-4bd7-9fce-54d9adcdeec6	equatorial guinea
-78	b2db2210-e9b8-4d51-b3c0-ed8e3d6adc9b	eritrea
-79	061c7757-87bb-4acc-bfb5-ebb5a4dc9429	estonia
-80	646467f2-a7ee-4dc3-8589-902f948694cf	eswatini
-81	f76a50d7-c955-4658-a2da-f191b746b434	ethiopia
-82	13ba7194-35d8-4666-bc59-4eb69058dc48	faroe islands
-83	923566be-1a81-4281-a9f5-fc3d8e59e53e	fiji
-84	d322fe64-203a-4eb4-8316-2c6c1af401a3	finland
-85	6a95dca7-5bc9-438d-ba51-5cc4603d70a4	gabon
-86	81e9890e-9239-4c33-b429-66950b214814	gambia
-87	f2e17057-cb16-4fd3-92ef-07a6320c1818	georgia
-88	d80301ed-7cdc-4f2c-8093-cfec014b077a	germany
-89	53618499-ed33-49f9-aeae-e24d02029f1e	ghana
-90	1a76eb8a-5fca-4552-a0dd-9728217998b0	greece
-91	aedfe3b8-fc01-41f8-a152-516e139dc8b6	grenada
-92	0e291c7e-51a2-466f-94b9-de8d9dec9dd2	guatemala
-93	b3e98c98-8a15-45bf-8f86-f26f6a07a425	guinea
-94	98fd5d7d-6f4c-434d-bd97-6fabe502db00	guinea-bissau
-95	f11d746c-8b82-4fe1-acb0-788067f0071c	guyana
-96	99530f46-46c4-4263-bd88-dca23dc0383f	haiti
-97	3e33cfe7-603b-4d88-a6e3-f4dcc331d9f2	honduras
-98	8287bea9-2349-46e4-9ac0-fb1e799497af	hungary
-99	68563b3e-8866-4310-bdce-659b3cc9c2ac	iceland
-100	83f3b190-021f-4694-a033-57058c22cbf4	india
-101	a3122035-5d20-411c-a94d-17360ed55678	indonesia
-102	1baa5d83-2707-4a0d-8f86-45efc106dffd	iran
-103	e130f15d-7a37-4ddf-a6b5-e9c1266e128a	iraq
-104	48d25a4f-6bcb-4595-bf82-1492334695ec	ireland
-105	fc3338b4-47f1-4342-8def-3acabc77a994	israel
-106	161a32a0-755e-430b-86dc-8f153f7de9b1	italy
-107	96abeca6-c08e-4df8-b22f-2fefc55a8d5b	jamaica
-108	8e5a125d-73cb-45c1-a511-f0c65d7448e7	japan
-109	c728bbe4-373f-4d0a-9a3f-985679759733	jordan
-110	c6a8ea7c-3fed-4a1d-9929-5569db7ab968	kazakhstan
-111	e91cae72-f62c-407e-b388-3f3b86f7a0c3	kenya
-112	8275007a-70b9-4a04-bcfa-1c23825d4874	kiribati
-113	ab2a946c-f1e3-43f5-bbfd-4b54adae333a	kuwait
-114	6cec735b-3406-430f-be56-71d96ff8f41e	kyrgyzstan
-115	34e549be-e921-419a-a64d-2349902ee1e8	laos
-116	85b0fd58-f24b-4249-a31c-46e40023744c	latvia
-117	6a6a8869-35f4-4d7f-af9f-c881d3b4bc19	lebanon
-118	f7ca89ef-b000-416a-b9f4-6059b2d8a3ca	lesotho
-119	e3c9a7c1-e5ec-46aa-be24-13a63b23c24a	liberia
-120	a9bc64d6-1f2e-4882-90bc-4930614667da	libya
-121	d4d24a30-2184-4fd3-8315-248ddc094526	lithuania
-122	a94b35b0-c269-4e9f-9d66-80d8f3081989	luxembourg
-123	b7206cc1-2cca-454d-9447-3788640f7b5e	madagascar
-124	413fe813-55c0-49e9-8853-47654b4ae73b	malawi
-125	d42ac9fd-1e10-4995-8dc1-4d25cee7a022	malaysia
-126	2b8d132e-e3b8-4a97-aa78-a265bf65836d	maldives
-127	a8c0bf67-69a5-4293-8282-622c6b61962c	mali
-128	ca8f94ef-b748-47c8-b040-b996e3cf2581	malta
-129	27f40e7e-ab08-4e44-b643-f9546021f2c2	marshall islands
-130	a4d1f62b-6131-44de-92fe-975d0a463bc7	mauritania
-131	59a60488-bbd7-476a-813e-a92fa901e8e7	mauritius
-132	846ec109-79bc-4e46-a303-40e20bcb2f36	mexico
-133	0343465d-616b-4419-b3ac-6e358776cb2e	micronesia
-134	e1b6cef2-9a2d-441a-96db-2cb815ac9398	monaco
-135	b60fe946-71ac-40be-97dc-8ee0b78c3384	mongolia
-136	a7462d3b-b094-454a-a09c-08573a566463	morocco
-137	95251d34-e411-4cb7-9112-0a1f95b239e0	mozambique
-138	dff0e275-70f0-4d4b-9d4a-3b4029ab3cd1	namibia
-139	c00f0e5e-a315-4118-b879-8d0a07faa486	nauru
-140	52a86412-42e6-499e-a742-a0902ca649b5	nepal
-141	649e4cd5-204a-41ae-add6-5c7433d23973	netherlands
-142	903625d0-0df4-4537-8370-4c3cda4ffed6	new zealand
-143	390d0b06-0892-405b-93f4-8b1b69af9667	nicaragua
-144	363bc536-025f-4ef7-95c0-a083bb8f37e6	niger
-145	7ce306aa-4c86-4016-93ab-cf3f5c22c621	nigeria
-146	25064811-fb8f-487b-a95a-acce0aebdb8e	niue
-147	6b9ca8c2-1096-496b-9aa2-0a0dc3fb4f32	north macedonia
-148	4f50cb61-60cb-48f5-9c7a-974d9c3840d5	norway
-149	7a1e411c-5e2b-4ef6-9561-73a4466af643	oman
-150	abc45575-6e5a-49c5-9967-e067a503c8a6	pakistan
-151	43e7d908-36ff-47b2-813c-146e89e91aef	palau
-152	e32cd55b-2b25-444e-beb4-f86a6e81819b	panama
-153	2f5d487b-20b7-47c4-b8fe-378d3c40839a	papua new guinea
-154	5091a6a9-aa19-4e48-890a-d0d3ccce88c7	paraguay
-155	6fd50499-8698-4764-a9ea-d063e211ae85	peru
-156	d29dcef8-e41b-4540-8f88-8849607ad3f3	philippines
-157	9a7ad7e0-1e36-4004-9879-568b56d0cf87	poland
-158	c2f84d45-aa39-4df1-8a87-e4dd0c5b34a1	portugal
-159	90a93353-4714-42fc-8632-09f25bc1312a	qatar
-160	52dc85c7-9f30-470a-9de9-09b95bc11e86	south korea
-161	6f37afd2-3170-4c9d-8fde-28d6a44eda0d	moldova
-162	fdf4338f-fd3a-446b-9688-b28515d38074	romania
-163	ae5dee3a-1222-4f42-9f97-470ab88b3b7e	russia
-164	418d8911-a62b-4686-bf0e-f18b204398d8	rwanda
-165	ec506881-6436-49fc-b56e-42da02dd7d5b	saint kitts and nevis
-166	e3b26362-6759-4612-8863-4785505a679e	saint lucia
-167	54824162-df76-4f5e-8783-404687f907f1	saint vincent and the grenadines
-168	7d76fbc2-43bb-467f-b36b-1b899f3d013a	samoa
-169	1bc1c6a9-2028-4dcd-94bf-6d19bea049e6	san marino
-170	ab4bc3a4-7c19-4a94-905c-a7973e0feaff	sao tome and principe
-171	dfffd0b6-a252-421b-94cb-6d44695c5c8c	saudi arabia
-172	e98795b2-4086-41b5-bac1-4789d9aee005	senegal
-173	4998e162-96ca-4381-ab19-3dc43922884a	seychelles
-174	d8df4bc3-503b-41ca-987e-423e41ecb52c	sierra leone
-175	dbc583de-b4de-46ba-aae0-1e8d35054bf3	slovenia
-176	b7f76500-4fa3-457f-aca8-477f05aab728	solomon islands
-177	98943525-f93f-426f-a3fe-b48bc18c0c52	somalia
-178	247ff0fd-78ad-4ca4-90f2-f0394a714535	south africa
-179	3ffea3be-1c82-411a-b085-933205f900c7	south sudan
-180	02e5c743-3075-4226-8c1d-ad97dadda3d8	spain
-181	6c6c9e3f-2353-431c-83c4-2c0cc6c42ff6	sri lanka
-182	c149c091-51c2-41d7-85a7-7d67bcac4230	sudan
-183	e0e0a4c5-9076-4a1e-949f-9dd4521eb0f3	suriname
-184	5c3dd764-6824-4689-a3e1-1d8c2dc3bc93	sweden
-185	dacd5cdd-8e56-4067-bfd8-febc66a04058	switzerland
-186	7073c668-a71d-4cf0-a8dd-71008877f8ca	syria
-187	893ca48d-0871-46b1-b299-4bf7e7c98dfa	tajikistan
-188	99d1c02c-0a04-4eae-b6cd-403f94e43959	thailand
-189	1a61eb0b-45a3-4b91-89c2-c22a20676491	timor-leste
-190	1a7ba610-72c3-4816-81b5-aad9503a4a9b	togo
-191	ed22e6e0-5acc-4f0a-9a6a-e85dac1fca31	tokelau
-192	85e41f4f-c125-4753-bbed-c2ffc7e1c288	tonga
-193	06659bc5-9958-457e-ac56-2860917a3d28	trinidad and tobago
-194	cac7a781-be5d-4c59-b9b8-d8bb65fb1487	tunisia
-195	fb99fe5c-118c-44d8-97ba-6570cdb7bd33	turkey
-196	0adc54bf-ff91-4cb0-8571-d89b779f1061	turkmenistan
-197	6596da04-74ae-4968-9776-6a7debe1b0aa	tuvalu
-198	c5ce24da-dd58-4e8e-a5e3-91b478717bb4	uganda
-199	6b63bb5b-0238-4263-bdf4-8064a4fb5c26	ukraine
-200	1bf315d2-0a2d-4686-9ecb-6d28f8a5b861	tanzania
-201	0bea6297-7d53-49a7-927e-e5cbc57e3b5a	usa
-202	d95a4486-5ca4-4500-8b10-211b945552c8	uruguay
-203	19c52566-e35f-44fd-8130-d64562928fe2	uzbekistan
-204	33f94df7-cd4f-487a-aa5c-fb45b65f19d5	vanuatu
-205	3a93a29d-abcc-45af-8915-8e983662c88a	venezuela
-206	ec48dda4-e153-4854-9bc3-453263e606b1	vietnam
-207	9da8253b-a4dc-41f8-b8fa-e751b6812191	yemen
-208	40fbcdb1-c386-45b7-946f-7e4190dcc02c	zambia
-209	39658cd7-be12-4512-8a90-0b2cc9b2769d	zimbabwe
-210	44344c65-9381-42d7-a573-6a9e38ead0f0	aruba
-211	5cbe7035-cbba-4ba4-9e59-1338db15983a	bermuda
-212	4fe94a12-77e5-4a49-94c4-6bff7b9f1b2e	british virgin islands
-213	b4a2b89a-1d72-4928-becb-eb198ed494be	canary islands
-214	3e77325d-7fea-46ad-a8fa-b2d31056b3ea	cape verde
-215	8372a0ad-58ad-41f7-af06-dea7df6ef891	cayman islands
-216	3ba46aea-ed4b-48bc-919d-a93a4d6f1d6e	curaco
-217	38c4b24f-a7d0-4af2-9d09-724ab4ad9017	faeroe islands
-218	ff772da3-5cb8-4833-a427-2651adf6fbd6	falkland islands
-219	472108f0-b6a2-410c-9885-d4fa3b3412bd	french polynesia
-220	fef2c7ae-f872-4a71-9c87-0d0727258c26	french guiana
-221	5f5fad3d-69c4-41b1-bc88-d9b8cff77027	greenland
-222	ba5a63e1-7feb-4d40-ae2f-d0a9f2123c0c	guadeloupe
-223	ae7c2b6b-a504-4e11-a52c-97175217c0a7	hong kong
-224	8510166b-62a4-475f-8afe-891fe1cb22a0	liechtenstein
-225	07546102-9696-4e5b-80fb-c435267230aa	martinique
-226	4f7bf3fc-1cdd-42ea-acc1-2325444ea405	mayotte
-227	adc6de52-b3d9-4448-a7d6-39622cf3261f	montserrat
-228	17b783e7-ad5c-473c-8787-aab9c9397fed	new caledonia
-229	6ed0c70e-c6ab-4148-aae3-fbf474467390	palestine
-230	6fda58dd-3eb4-49f9-8f07-8e0c4562675b	pitcairn islands
-231	f18ec7fe-184e-4e4b-9ac5-14c5bfbf1fb7	puerto rico
-232	e600ef6e-e2fa-42cd-a54e-60cd0a48c98f	reunion
-233	f873ab5f-e175-4a90-9e0e-1efe1d0880ff	sint maarten
-234	188c245e-16ba-4c8b-a894-dcfd252e6735	swaziland
-235	1f6e1df0-b5ff-4eb0-89b2-0bd06cf52883	taiwan
-236	29c528d3-2b84-4b14-adec-78d0f7a06fc1	turks and caicos islands
-237	cd560671-9a56-4d59-a90b-3fc5876c54a8	us virgin islands
-238	7c843d31-a3b7-4fd6-854d-a41fd456ab79	western sahara
-239	6b0038c6-c3a1-4a1c-b721-5bb0a50c8867	abkhazia
-240	f2cdea77-ac81-4009-a139-487fed267132	antarctica
-241	57781bac-bb12-4862-9e29-a3eb6ebed059	bonaire
-242	2c927bd6-e6c1-4aa7-810e-6f544f2137dc	bouvet island
-243	d6807de6-9eb7-4470-89e6-785b74a33137	christmas island
-244	582d0cef-1fbc-47f5-8574-a2682c0b1e27	cocos islands
-245	db372ed2-316b-44eb-854e-861a73d8a364	east timor
-246	6692f259-8335-431b-93da-96663a40fefd	european union
-247	4579b4bb-57c1-454e-a91c-b545e8f713e4	french southern territories
-248	c4d460f0-d8f6-49c2-a75d-076d40c3bf4e	gibraltar
-249	dbb53edf-6817-4a18-89b0-f6e2747c95ba	guam
-250	99436fc3-8e6d-41af-9a25-f9ff3f9eadc5	guernsey
-251	7ebcc568-e95d-4ebd-b55d-9fed5d9b87cb	heard island and mcdonald islands
-252	534d150e-315d-40fa-ae9d-6876e3ab6aa1	isle of man
-253	e9d06599-c594-4a7f-9e16-2c81897bd5dd	jan mayen
-254	242bc52e-221a-4254-b523-8b339182f620	jersey
-255	0a0b42b2-ee8d-44cb-8ce1-84effb466438	kosovo
-256	be30ad9f-9895-40aa-825f-997c0efddfab	macau
-257	adc3c9dd-bfce-48a7-9c4a-767c2de409ae	norfolk island
-258	90b92de2-8101-4bce-af13-51bf5f5e6da0	northern mariana islands
-259	57ec88b9-c03d-4f44-914b-27c8d2e9169c	saba
-260	52ee76db-8c13-4deb-9de4-a3b518a8e9bc	saint barthelemy
-261	1c7c18b7-27fa-4852-aff7-6139002c4c9b	saint helena, ascension and tristan da cunha
-262	06e8b669-fa86-4cf3-86d2-d0e2e9ab2195	saint martin
-263	6668152c-57e0-4e48-b346-ced1c1abd14f	saint pierre and miquelon
-264	81df3e25-77eb-49bb-aff1-b722adf0f68c	sint eustatius
-265	0c720e46-2f5d-471e-9fc1-dc27bc3629f3	south ossetia
-266	cf4779ca-37a6-4f60-bc03-5d760a12c978	svalbard
-267	3af87d1b-0507-4bfc-b6a1-e9b91d57fe65	vatican city state
-268	077da062-83f7-44a0-9a02-a6db1579d6ea	wallis and futuna
-269	cd5de581-fe44-456f-8b40-1e601666502c	american samoa
-270	f7847a1c-6403-474c-862d-a0f9e079b11d	british indian ocean territory
-272	2e557f8d-0c37-4f40-bd25-1261972df8cf	palestinian territory
-273	367c55ec-ba68-4b65-bac4-5726d0738c76	south georgia and the sandwich islands
-275	f19c1be1-90e0-4696-b6b9-fbd01a520abf	united states minor  islands
+COPY public.territory (id, uuid, name, modern_country) FROM stdin;
+4	74718d89-2c74-4664-a9f9-c3bda5884237	french territory of the afars and the issas	f
+7	437b6b0d-4fe4-4e6a-b869-9aca4351a182	netherlands antilles	f
+8	af123316-5e2b-4453-9908-13434c758d89	metropolitan france	f
+16	ba063fe6-f538-45d8-9450-81c536a1aa29	serbia and montenegro	f
+20	56c6dacf-b4d9-401b-874a-6518da0cd567	england	f
+21	c5bc507e-7bca-4c9d-8d7b-a3441b33dffe	wales	f
+22	e054a323-d773-441e-9cbb-9843a1780b2d	scotland	f
+23	c639dcd9-0e03-4f83-bdba-8a5a921b021a	northern ireland	f
+80	646467f2-a7ee-4dc3-8589-902f948694cf	eswatini	f
+79	061c7757-87bb-4acc-bfb5-ebb5a4dc9429	estonia	t
+160	52dc85c7-9f30-470a-9de9-09b95bc11e86	south korea	f
+239	6b0038c6-c3a1-4a1c-b721-5bb0a50c8867	abkhazia	f
+245	db372ed2-316b-44eb-854e-861a73d8a364	east timor	f
+246	6692f259-8335-431b-93da-96663a40fefd	european union	f
+253	e9d06599-c594-4a7f-9e16-2c81897bd5dd	jan mayen	f
+255	0a0b42b2-ee8d-44cb-8ce1-84effb466438	kosovo	f
+259	57ec88b9-c03d-4f44-914b-27c8d2e9169c	saba	f
+264	81df3e25-77eb-49bb-aff1-b722adf0f68c	sint eustatius	f
+265	0c720e46-2f5d-471e-9fc1-dc27bc3629f3	south ossetia	f
+266	cf4779ca-37a6-4f60-bc03-5d760a12c978	svalbard	f
+272	2e557f8d-0c37-4f40-bd25-1261972df8cf	palestinian territory	f
+279	c0f70677-0565-4a82-abcb-ee645843bf25	ratak chain	f
+280	6320e2de-a214-4502-928e-c14bced2c7a0	ralik chain	f
+283	c3d3c3a0-a17b-441c-b834-52b8fea15da0	west bank	f
+284	1e34b1d1-019a-4f68-b3ec-f82ba27ee695	gaza strip	f
+285	b422b044-d80d-4463-90e0-7ce2c9c3c285	chagos archipelago	f
+286	2f828923-0b35-45e4-a7ae-474e7eee1698	botanical europe	f
+287	ad014bac-14c0-4e02-93b6-a7311136de83	botanical africa	f
+288	caf8eed4-8161-4c93-8d53-a306d4723dde	botanical asia tropical	f
+289	894eafd2-4bed-4327-8586-b540f0be7ddf	botanical asia temperate	f
+290	47445f17-fd1d-4493-8fc3-c72f631bd09d	botanical australasia	f
+291	5352b80f-f20f-4e04-98ce-615ed6f369cf	botanical pacific	f
+292	2ccea854-0590-4072-9a3c-effcff58dc5e	botanical northern america	f
+293	4ca60551-b3d0-4d15-b54b-674d0466884d	botanical southern america	f
+294	d13aa440-5749-4b5c-96cc-8d29f2438600	botanical antarctica	f
+262	06e8b669-fa86-4cf3-86d2-d0e2e9ab2195	saint martin	t
+225	07546102-9696-4e5b-80fb-c435267230aa	martinique	t
+268	077da062-83f7-44a0-9a02-a6db1579d6ea	wallis and futuna	t
+201	0bea6297-7d53-49a7-927e-e5cbc57e3b5a	usa	t
+295	c5ce5f4c-e526-4918-b5ec-169fb69ac988	seven-continent asia	f
+296	ede4d446-74e0-4950-9627-95fe2b3f34d1	seven-continent australia	f
+297	2452df38-86e9-42e8-a6ac-0c537744a74e	seven-continent north america	f
+298	5aa29a23-9294-4996-ae1c-200121ef5a2d	seven-continent south america	f
+299	a878ec96-2082-4606-b3a6-61ffe4699459	seven-continent europe	f
+300	6733712e-966a-49ac-9200-6f877c7b63b5	seven-continent africa	f
+301	3ad930db-105b-4d55-8880-bf32cc6cccc9	seven-continent antarctica	f
+180	02e5c743-3075-4226-8c1d-ad97dadda3d8	spain	t
+133	0343465d-616b-4419-b3ac-6e358776cb2e	micronesia	t
+193	06659bc5-9958-457e-ac56-2860917a3d28	trinidad and tobago	t
+33	0a3e548d-7e30-426f-840c-07ff9b6772f7	australia	t
+196	0adc54bf-ff91-4cb0-8571-d89b779f1061	turkmenistan	t
+24	0b48c87c-ddaa-49d2-b736-61d9c44636e0	djibouti	t
+75	0d0a18fd-d424-4a69-b646-38fffd942dd5	egypt	t
+92	0e291c7e-51a2-466f-94b9-de8d9dec9dd2	guatemala	t
+19	0f433ba9-47e1-4fe6-902c-632bf40355a9	united kingdom	t
+82	13ba7194-35d8-4666-bc59-4eb69058dc48	faroe islands	t
+64	14730d5f-e0e5-43a8-bc67-ca9f92c8502a	croatia	t
+106	161a32a0-755e-430b-86dc-8f153f7de9b1	italy	t
+65	16a55dd1-2e47-489d-830c-3a88aad464a9	cuba	t
+228	17b783e7-ad5c-473c-8787-aab9c9397fed	new caledonia	t
+234	188c245e-16ba-4c8b-a894-dcfd252e6735	swaziland	t
+1	1965c743-cf9a-4021-9ed1-b9e4e77486a2	andorra	t
+69	196ed632-cc17-4b9f-87cb-cbc9832e8617	congo	t
+203	19c52566-e35f-44fd-8130-d64562928fe2	uzbekistan	t
+189	1a61eb0b-45a3-4b91-89c2-c22a20676491	timor-leste	t
+90	1a76eb8a-5fca-4552-a0dd-9728217998b0	greece	t
+190	1a7ba610-72c3-4816-81b5-aad9503a4a9b	togo	t
+47	1b558876-4f84-41fb-8215-93143842ba53	brazil	t
+102	1baa5d83-2707-4a0d-8f86-45efc106dffd	iran	t
+169	1bc1c6a9-2028-4dcd-94bf-6d19bea049e6	san marino	t
+200	1bf315d2-0a2d-4686-9ecb-6d28f8a5b861	tanzania	t
+261	1c7c18b7-27fa-4852-aff7-6139002c4c9b	saint helena, ascension and tristan da cunha	t
+43	1d58bd18-8519-4e53-8cd1-6a7e93cda614	bhutan	t
+40	1f4dd261-dc57-49ec-b872-8b1917703616	belgium	t
+235	1f6e1df0-b5ff-4eb0-89b2-0bd06cf52883	taiwan	t
+254	242bc52e-221a-4254-b523-8b339182f620	jersey	t
+178	247ff0fd-78ad-4ca4-90f2-f0394a714535	south africa	t
+146	25064811-fb8f-487b-a95a-acce0aebdb8e	niue	t
+129	27f40e7e-ab08-4e44-b643-f9546021f2c2	marshall islands	t
+236	29c528d3-2b84-4b14-adec-78d0f7a06fc1	turks and caicos islands	t
+2	2b1a33fe-be25-452b-8a1c-c7d5f1dce9c2	uae	t
+56	2b1aaccb-5846-45c1-8481-12bb8b5e0aa4	central african republic	t
+126	2b8d132e-e3b8-4a97-aa78-a265bf65836d	maldives	t
+242	2c927bd6-e6c1-4aa7-810e-6f544f2137dc	bouvet island	t
+12	2dd507e0-8e57-4924-a57f-8fc2e22555e2	slovakia	t
+153	2f5d487b-20b7-47c4-b8fe-378d3c40839a	papua new guinea	t
+35	319530a8-8cd2-4dc3-84a6-29ac720c51da	azerbaijan	t
+67	31d93d6a-5130-4cfa-87ba-90d971d98d34	ivory coast	t
+204	33f94df7-cd4f-487a-aa5c-fb45b65f19d5	vanuatu	t
+115	34e549be-e921-419a-a64d-2349902ee1e8	laos	t
+144	363bc536-025f-4ef7-95c0-a083bb8f37e6	niger	t
+273	367c55ec-ba68-4b65-bac4-5726d0738c76	south georgia and the sandwich islands	t
+143	390d0b06-0892-405b-93f4-8b1b69af9667	nicaragua	t
+209	39658cd7-be12-4512-8a90-0b2cc9b2769d	zimbabwe	t
+205	3a93a29d-abcc-45af-8915-8e983662c88a	venezuela	t
+267	3af87d1b-0507-4bfc-b6a1-e9b91d57fe65	vatican city state	t
+216	3ba46aea-ed4b-48bc-919d-a93a4d6f1d6e	curaco	t
+97	3e33cfe7-603b-4d88-a6e3-f4dcc331d9f2	honduras	t
+41	3e62d48d-717d-4421-91c2-abb059a80576	belize	t
+214	3e77325d-7fea-46ad-a8fa-b2d31056b3ea	cape verde	t
+57	3f759fc5-8287-4acb-b58d-f235c5ef4981	chad	t
+179	3ffea3be-1c82-411a-b085-933205f900c7	south sudan	t
+208	40fbcdb1-c386-45b7-946f-7e4190dcc02c	zambia	t
+124	413fe813-55c0-49e9-8853-47654b4ae73b	malawi	t
+164	418d8911-a62b-4686-bf0e-f18b204398d8	rwanda	t
+74	41fa1fc8-a7c9-4045-ac6a-92fe36c27bd9	ecuador	t
+77	43d35de8-4ed4-4bd7-9fce-54d9adcdeec6	equatorial guinea	t
+151	43e7d908-36ff-47b2-813c-146e89e91aef	palau	t
+210	44344c65-9381-42d7-a573-6a9e38ead0f0	aruba	t
+247	4579b4bb-57c1-454e-a91c-b545e8f713e4	french southern territories	t
+219	472108f0-b6a2-410c-9885-d4fa3b3412bd	french polynesia	t
+61	48847459-b1b2-4092-9bf0-f0c08b928c74	comoros	t
+104	48d25a4f-6bcb-4595-bf82-1492334695ec	ireland	t
+6	49494a5b-205f-4756-9145-2784c9269a99	barbados	t
+37	497550d7-f9e9-4f1a-a5e0-8c9019c7bc31	bahrain	t
+173	4998e162-96ca-4381-ab19-3dc43922884a	seychelles	t
+48	49ca53d4-0d59-4be8-9724-70b0eff911ce	brunei darussalam	t
+51	4f0fe689-81e0-4b91-a093-cad33a305482	burundi	t
+148	4f50cb61-60cb-48f5-9c7a-974d9c3840d5	norway	t
+226	4f7bf3fc-1cdd-42ea-acc1-2325444ea405	mayotte	t
+212	4fe94a12-77e5-4a49-94c4-6bff7b9f1b2e	british virgin islands	t
+154	5091a6a9-aa19-4e48-890a-d0d3ccce88c7	paraguay	t
+14	509e1050-f5ab-4d6b-ba04-501765fb9ecf	burma	t
+54	526f75ae-3c43-45a3-924e-1d7e11177a68	cameroon	t
+140	52a86412-42e6-499e-a742-a0902ca649b5	nepal	t
+260	52ee76db-8c13-4deb-9de4-a3b518a8e9bc	saint barthelemy	t
+252	534d150e-315d-40fa-ae9d-6876e3ab6aa1	isle of man	t
+89	53618499-ed33-49f9-aeae-e24d02029f1e	ghana	t
+44	546440bf-236c-4f99-bd12-3bba52d50e02	bolivia	t
+167	54824162-df76-4f5e-8783-404687f907f1	saint vincent and the grenadines	t
+241	57781bac-bb12-4862-9e29-a3eb6ebed059	bonaire	t
+244	582d0cef-1fbc-47f5-8574-a2682c0b1e27	cocos islands	t
+131	59a60488-bbd7-476a-813e-a92fa901e8e7	mauritius	t
+184	5c3dd764-6824-4689-a3e1-1d8c2dc3bc93	sweden	t
+211	5cbe7035-cbba-4ba4-9e59-1338db15983a	bermuda	t
+221	5f5fad3d-69c4-41b1-bc88-d9b8cff77027	greenland	t
+42	5fbebc32-e410-4faa-94e5-822252f8b499	benin	t
+141	649e4cd5-204a-41ae-add6-5c7433d23973	netherlands	t
+197	6596da04-74ae-4968-9776-6a7debe1b0aa	tuvalu	t
+263	6668152c-57e0-4e48-b346-ced1c1abd14f	saint pierre and miquelon	t
+18	6702177a-fbed-4cf3-aa32-22da244beab0	montenegro	t
+99	68563b3e-8866-4310-bdce-659b3cc9c2ac	iceland	t
+117	6a6a8869-35f4-4d7f-af9f-c881d3b4bc19	lebanon	t
+85	6a95dca7-5bc9-438d-ba51-5cc4603d70a4	gabon	t
+199	6b63bb5b-0238-4263-bdf4-8064a4fb5c26	ukraine	t
+147	6b9ca8c2-1096-496b-9aa2-0a0dc3fb4f32	north macedonia	t
+181	6c6c9e3f-2353-431c-83c4-2c0cc6c42ff6	sri lanka	t
+27	6c7e4e7d-9bf4-4e47-b2e4-c925f54bcd1a	albania	t
+276	6c88c84a-862a-4e72-9b60-a99b65774dfa	svalbard and jan mayen	t
+114	6cec735b-3406-430f-be56-71d96ff8f41e	kyrgyzstan	t
+25	6e83ec38-7e2d-4c2d-8a9d-6991d4e876db	singapore	t
+229	6ed0c70e-c6ab-4148-aae3-fbf474467390	palestine	t
+161	6f37afd2-3170-4c9d-8fde-28d6a44eda0d	moldova	t
+155	6fd50499-8698-4764-a9ea-d063e211ae85	peru	t
+230	6fda58dd-3eb4-49f9-8f07-8e0c4562675b	pitcairn islands	t
+186	7073c668-a71d-4cf0-a8dd-71008877f8ca	syria	t
+59	7178da96-360e-4b0a-ada4-9640c498daf8	china	t
+53	723de35c-616a-4b10-b479-c08378f3765b	cambodia	t
+31	78219cc6-d1b2-4193-9da7-e7abc92863ee	argentina	t
+3	793360a3-aa91-4703-acfe-60287e3f9b74	anguilla	t
+149	7a1e411c-5e2b-4ef6-9561-73a4466af643	oman	t
+238	7c843d31-a3b7-4fd6-854d-a41fd456ab79	western sahara	t
+73	7caae20c-20fa-4ce0-a987-cca304a302b9	dominican republic	t
+145	7ce306aa-4c86-4016-93ab-cf3f5c22c621	nigeria	t
+168	7d76fbc2-43bb-467f-b36b-1b899f3d013a	samoa	t
+251	7ebcc568-e95d-4ebd-b55d-9fed5d9b87cb	heard island and mcdonald islands	t
+10	7fb270a5-06a1-4488-951f-55dcc7e822c0	czechoslovakia	t
+70	80b3fc54-1fa6-49c6-ac4c-998b002d754f	dr congo	t
+86	81e9890e-9239-4c33-b429-66950b214814	gambia	t
+112	8275007a-70b9-4a04-bcfa-1c23825d4874	kiribati	t
+98	8287bea9-2349-46e4-9ac0-fb1e799497af	hungary	t
+215	8372a0ad-58ad-41f7-af06-dea7df6ef891	cayman islands	t
+100	83f3b190-021f-4694-a033-57058c22cbf4	india	t
+132	846ec109-79bc-4e46-a303-40e20bcb2f36	mexico	t
+224	8510166b-62a4-475f-8afe-891fe1cb22a0	liechtenstein	t
+116	85b0fd58-f24b-4249-a31c-46e40023744c	latvia	t
+192	85e41f4f-c125-4753-bbed-c2ffc7e1c288	tonga	t
+71	870d8300-9c56-4b34-9447-bcdfedf8454c	denmark	t
+187	893ca48d-0871-46b1-b299-4bf7e7c98dfa	tajikistan	t
+60	8b58bd46-c2d7-4df7-8871-378dbe921468	colombia	t
+108	8e5a125d-73cb-45c1-a511-f0c65d7448e7	japan	t
+142	903625d0-0df4-4537-8370-4c3cda4ffed6	new zealand	t
+15	9081511d-8a3b-4372-b828-44afb55b2dc4	yugoslavia	t
+159	90a93353-4714-42fc-8632-09f25bc1312a	qatar	t
+258	90b92de2-8101-4bce-af13-51bf5f5e6da0	northern mariana islands	t
+30	90de1527-d5a5-446f-a960-eccda43af198	antigua and barbuda	t
+83	923566be-1a81-4281-a9f5-fc3d8e59e53e	fiji	t
+137	95251d34-e411-4cb7-9112-0a1f95b239e0	mozambique	t
+107	96abeca6-c08e-4df8-b22f-2fefc55a8d5b	jamaica	t
+177	98943525-f93f-426f-a3fe-b48bc18c0c52	somalia	t
+94	98fd5d7d-6f4c-434d-bd97-6fabe502db00	guinea-bissau	t
+250	99436fc3-8e6d-41af-9a25-f9ff3f9eadc5	guernsey	t
+96	99530f46-46c4-4263-bd88-dca23dc0383f	haiti	t
+62	9982d96a-7b45-4e8a-93c5-83056d6b0fc8	cook islands	t
+188	99d1c02c-0a04-4eae-b6cd-403f94e43959	thailand	t
+157	9a7ad7e0-1e36-4004-9879-568b56d0cf87	poland	t
+68	9ad23145-f384-4a8f-a075-4648d1837d46	north korea	t
+207	9da8253b-a4dc-41f8-b8fa-e751b6812191	yemen	t
+50	a22c7473-248e-4447-8bc7-1fc51c00ca3e	burkina faso	t
+101	a3122035-5d20-411c-a94d-17360ed55678	indonesia	t
+130	a4d1f62b-6131-44de-92fe-975d0a463bc7	mauritania	t
+72	a66c6aaf-f010-4056-8928-1653d670edf3	dominica	t
+136	a7462d3b-b094-454a-a09c-08573a566463	morocco	t
+127	a8c0bf67-69a5-4293-8282-622c6b61962c	mali	t
+122	a94b35b0-c269-4e9f-9d66-80d8f3081989	luxembourg	t
+120	a9bc64d6-1f2e-4882-90bc-4930614667da	libya	t
+17	aae2ba87-a67d-43bd-8516-e403843d61d9	serbia	t
+113	ab2a946c-f1e3-43f5-bbfd-4b54adae333a	kuwait	t
+170	ab4bc3a4-7c19-4a94-905c-a7973e0feaff	sao tome and principe	t
+150	abc45575-6e5a-49c5-9967-e067a503c8a6	pakistan	t
+39	ac612169-1567-4c5e-a203-3987fa26c267	belarus	t
+36	ac6434f1-bbb9-4242-a393-d78d367f034a	bahamas	t
+13	ac8b13ec-0d98-4fad-852e-a351d68e6a16	myanmar	t
+257	adc3c9dd-bfce-48a7-9c4a-767c2de409ae	norfolk island	t
+227	adc6de52-b3d9-4448-a7d6-39622cf3261f	montserrat	t
+163	ae5dee3a-1222-4f42-9f97-470ab88b3b7e	russia	t
+223	ae7c2b6b-a504-4e11-a52c-97175217c0a7	hong kong	t
+91	aedfe3b8-fc01-41f8-a152-516e139dc8b6	grenada	t
+78	b2db2210-e9b8-4d51-b3c0-ed8e3d6adc9b	eritrea	t
+26	b33be079-39b7-4a1d-b689-97c224d5fece	afghanistan	t
+93	b3e98c98-8a15-45bf-8f86-f26f6a07a425	guinea	t
+213	b4a2b89a-1d72-4928-becb-eb198ed494be	canary islands	t
+135	b60fe946-71ac-40be-97dc-8ee0b78c3384	mongolia	t
+123	b7206cc1-2cca-454d-9447-3788640f7b5e	madagascar	t
+9	b7b802fe-8789-4b6d-b085-7c25a92dab7b	france	t
+176	b7f76500-4fa3-457f-aca8-477f05aab728	solomon islands	t
+222	ba5a63e1-7feb-4d40-ae2f-d0a9f2123c0c	guadeloupe	t
+76	bae2df87-ee9b-4efe-8482-2b05b54ebb11	el salvador	t
+38	bb3fa754-b35e-45ee-8d66-fb159c96d821	bangladesh	t
+256	be30ad9f-9895-40aa-825f-997c0efddfab	macau	t
+29	bf07965f-f874-453e-a725-54c5a1254ee8	angola	t
+139	c00f0e5e-a315-4118-b879-8d0a07faa486	nauru	t
+45	c103dabb-a386-4a6a-bce5-c0c0fa5f43f6	bosnia and herzegovina	t
+182	c149c091-51c2-41d7-85a7-7d67bcac4230	sudan	t
+158	c2f84d45-aa39-4df1-8a87-e4dd0c5b34a1	portugal	t
+248	c4d460f0-d8f6-49c2-a75d-076d40c3bf4e	gibraltar	t
+58	c5a755fa-0935-4ec5-a880-3d4854beabfd	chile	t
+198	c5ce24da-dd58-4e8e-a5e3-91b478717bb4	uganda	t
+11	c5db5d6b-ebcd-4642-9604-0f1ebf2fdf9d	czech republic	t
+110	c6a8ea7c-3fed-4a1d-9929-5569db7ab968	kazakhstan	t
+109	c728bbe4-373f-4d0a-9a3f-985679759733	jordan	t
+5	ca1a8efc-5d84-4e75-9f3b-5d005b9afca5	aland	t
+128	ca8f94ef-b748-47c8-b040-b996e3cf2581	malta	t
+194	cac7a781-be5d-4c59-b9b8-d8bb65fb1487	tunisia	t
+237	cd560671-9a56-4d59-a90b-3fc5876c54a8	us virgin islands	t
+269	cd5de581-fe44-456f-8b40-1e601666502c	american samoa	t
+63	cf56f0da-daf4-4437-9ad9-4b61bbedc31a	costa rica	t
+156	d29dcef8-e41b-4540-8f88-8849607ad3f3	philippines	t
+84	d322fe64-203a-4eb4-8316-2c6c1af401a3	finland	t
+125	d42ac9fd-1e10-4995-8dc1-4d25cee7a022	malaysia	t
+121	d4d24a30-2184-4fd3-8315-248ddc094526	lithuania	t
+243	d6807de6-9eb7-4470-89e6-785b74a33137	christmas island	t
+88	d80301ed-7cdc-4f2c-8093-cfec014b077a	germany	t
+174	d8df4bc3-503b-41ca-987e-423e41ecb52c	sierra leone	t
+202	d95a4486-5ca4-4500-8b10-211b945552c8	uruguay	t
+28	d9b8f8c8-5b5a-41ef-8538-26d822a4c9bd	algeria	t
+185	dacd5cdd-8e56-4067-bfd8-febc66a04058	switzerland	t
+249	dbb53edf-6817-4a18-89b0-f6e2747c95ba	guam	t
+175	dbc583de-b4de-46ba-aae0-1e8d35054bf3	slovenia	t
+49	dde93861-da65-40d4-8159-3e67e8d58e02	bulgaria	t
+138	dff0e275-70f0-4d4b-9d4a-3b4029ab3cd1	namibia	t
+171	dfffd0b6-a252-421b-94cb-6d44695c5c8c	saudi arabia	t
+183	e0e0a4c5-9076-4a1e-949f-9dd4521eb0f3	suriname	t
+103	e130f15d-7a37-4ddf-a6b5-e9c1266e128a	iraq	t
+34	e14f7607-8074-4eeb-8b3f-3093575719a4	austria	t
+134	e1b6cef2-9a2d-441a-96db-2cb815ac9398	monaco	t
+55	e242cbe2-dc75-4807-a7c9-c171d164ec2d	canada	t
+152	e32cd55b-2b25-444e-beb4-f86a6e81819b	panama	t
+166	e3b26362-6759-4612-8863-4785505a679e	saint lucia	t
+119	e3c9a7c1-e5ec-46aa-be24-13a63b23c24a	liberia	t
+232	e600ef6e-e2fa-42cd-a54e-60cd0a48c98f	reunion	t
+111	e91cae72-f62c-407e-b388-3f3b86f7a0c3	kenya	t
+172	e98795b2-4086-41b5-bac1-4789d9aee005	senegal	t
+206	ec48dda4-e153-4854-9bc3-453263e606b1	vietnam	t
+165	ec506881-6436-49fc-b56e-42da02dd7d5b	saint kitts and nevis	t
+191	ed22e6e0-5acc-4f0a-9a6a-e85dac1fca31	tokelau	t
+95	f11d746c-8b82-4fe1-acb0-788067f0071c	guyana	t
+231	f18ec7fe-184e-4e4b-9ac5-14c5bfbf1fb7	puerto rico	t
+275	f19c1be1-90e0-4696-b6b9-fbd01a520abf	united states minor islands	t
+240	f2cdea77-ac81-4009-a139-487fed267132	antarctica	t
+87	f2e17057-cb16-4fd3-92ef-07a6320c1818	georgia	t
+32	f2f3e704-bb03-467a-a1a0-1d56b6faadce	armenia	t
+66	f36ec987-ed66-4a88-9157-b1d4a934e515	cyprus	t
+81	f76a50d7-c955-4658-a2da-f191b746b434	ethiopia	t
+270	f7847a1c-6403-474c-862d-a0f9e079b11d	british indian ocean territory	t
+118	f7ca89ef-b000-416a-b9f4-6059b2d8a3ca	lesotho	t
+233	f873ab5f-e175-4a90-9e0e-1efe1d0880ff	sint maarten	t
+195	fb99fe5c-118c-44d8-97ba-6570cdb7bd33	turkey	t
+105	fc3338b4-47f1-4342-8def-3acabc77a994	israel	t
+162	fdf4338f-fd3a-446b-9688-b28515d38074	romania	t
+220	fef2c7ae-f872-4a71-9c87-0d0727258c26	french guiana	t
+46	ff4c5033-aee4-4325-90cc-1f96ef10bbce	botswana	t
+218	ff772da3-5cb8-4833-a427-2651adf6fbd6	falkland islands	t
 \.
 
 
@@ -4028,7 +4449,6 @@ COPY public.territory_label (id, uuid, label, territory, the) FROM stdin;
 54	d9b40c94-81fa-4b22-b4ba-8e051c3b3b10	Cape Verde	3e77325d-7fea-46ad-a8fa-b2d31056b3ea	f
 55	6cc799fd-d80d-43b4-b3b9-47be2e6e67df	Cayman islands	8372a0ad-58ad-41f7-af06-dea7df6ef891	t
 56	5b658463-94f0-4949-a36f-8cc7818b5e18	Curaco	3ba46aea-ed4b-48bc-919d-a93a4d6f1d6e	f
-57	9d6255ea-3264-409b-8898-7a3c9d159cca	Faeroe islands	38c4b24f-a7d0-4af2-9d09-724ab4ad9017	t
 58	8a304963-b3d1-4f8e-8969-d18ef1b9fcd2	Falkland islands	ff772da3-5cb8-4833-a427-2651adf6fbd6	t
 59	6e13565c-23bf-4ea7-9989-128380b86680	French Polynesia	472108f0-b6a2-410c-9885-d4fa3b3412bd	f
 60	886e9595-ff14-4687-85c7-e2a53a3cf8e6	French Guiana	fef2c7ae-f872-4a71-9c87-0d0727258c26	f
@@ -4079,7 +4499,6 @@ COPY public.territory_label (id, uuid, label, territory, the) FROM stdin;
 106	02e737cf-367e-47d6-ab3a-f51fd6362bec	Cambodia	723de35c-616a-4b10-b479-c08378f3765b	f
 107	97b52f0c-e55e-4144-937f-db19fb62e6bd	Cameroon	526f75ae-3c43-45a3-924e-1d7e11177a68	f
 108	24691a29-3195-4af3-80f8-63d18161fd73	Canada	e242cbe2-dc75-4807-a7c9-c171d164ec2d	f
-109	634e9e58-0e72-4132-8538-54ec310200c4	Central african republic	2b1aaccb-5846-45c1-8481-12bb8b5e0aa4	f
 110	5447dd89-6115-41c7-81f1-02421c21006d	Chad	3f759fc5-8287-4acb-b58d-f235c5ef4981	f
 111	22048fb9-6e01-47a3-8da2-93b0871e22ad	Chile	c5a755fa-0935-4ec5-a880-3d4854beabfd	f
 112	75478291-fb7b-43ee-be8e-e0adf654b14f	China	7178da96-360e-4b0a-ada4-9640c498daf8	f
@@ -4222,6 +4641,74 @@ COPY public.territory_label (id, uuid, label, territory, the) FROM stdin;
 249	816af8c5-ab36-4d85-b0d0-ef5e3e4332e8	Zimbabwe	39658cd7-be12-4512-8a90-0b2cc9b2769d	f
 250	c544563c-9c24-4a2b-b512-39a235c4bc6b	Kosovo	0a0b42b2-ee8d-44cb-8ce1-84effb466438	f
 251	770201ef-4f95-423d-9775-2022374f0b9d	Samoa	7d76fbc2-43bb-467f-b36b-1b899f3d013a	f
+253	6e890e06-84f8-4a9a-9fdf-04c4e9ac91a9	French Southern and Antarctic Lands	4579b4bb-57c1-454e-a91c-b545e8f713e4	t
+255	0f7cfb27-73da-4c39-8369-29571d883a4a	Antarctica	f2cdea77-ac81-4009-a139-487fed267132	f
+256	c7915d4d-894f-4948-bd85-75fbdcd215ab	Cape Verde	3e77325d-7fea-46ad-a8fa-b2d31056b3ea	f
+259	cce868f8-784d-482d-8d69-b2f6f80cafbd	Faroe Islands	13ba7194-35d8-4666-bc59-4eb69058dc48	t
+258	88bdba06-9880-440b-b335-64f5cc0779b6	Cook Islands	9982d96a-7b45-4e8a-93c5-83056d6b0fc8	t
+260	bfbbef70-a9e5-4549-928a-ed6c4c378dfe	Kingdom of Bahrain	497550d7-f9e9-4f1a-a5e0-8c9019c7bc31	t
+261	95cb0aa9-d4b4-431e-8c53-09811d48969e	Bahrain	497550d7-f9e9-4f1a-a5e0-8c9019c7bc31	f
+263	ec937170-750b-4958-b916-754017d9d815	Ralik Chain	6320e2de-a214-4502-928e-c14bced2c7a0	t
+264	024de4a0-198d-4117-9b6a-b7107520467e	Rālik	6320e2de-a214-4502-928e-c14bced2c7a0	f
+265	a3ea025e-e0fc-47d4-86ac-5742d7e50cc7	Ratak Chain	c0f70677-0565-4a82-abcb-ee645843bf25	t
+266	b118a1a4-a4aa-4ce9-a86f-15fcd6adb40b	Ratak	c0f70677-0565-4a82-abcb-ee645843bf25	f
+267	95effb0f-7350-4b6e-8548-bcef20c6d199	Marshall Islands	27f40e7e-ab08-4e44-b643-f9546021f2c2	t
+268	6532cd08-9f5d-4fc1-966c-dd07631e83e4	Federated States of Micronesia	0343465d-616b-4419-b3ac-6e358776cb2e	t
+269	1f568ee9-6c84-41ea-9e44-ef46f7b58bcd	Monaco	e1b6cef2-9a2d-441a-96db-2cb815ac9398	f
+270	497f87af-5fe1-4653-9c35-496300585cba	Principality of Monaco	e1b6cef2-9a2d-441a-96db-2cb815ac9398	t
+271	8d0483ff-35b7-4c6a-83ec-db6bc0a283f0	Kiribati	8275007a-70b9-4a04-bcfa-1c23825d4874	f
+272	bdb05a4d-7b67-4f0b-9bd0-f308e07140e0	Republic of Kiribati	8275007a-70b9-4a04-bcfa-1c23825d4874	t
+277	a84fc655-2041-4b71-9fc5-c27fd302a996	Niue	25064811-fb8f-487b-a95a-acce0aebdb8e	f
+278	5a355186-32a0-4c4b-84f2-8f7e12f9f990	Palau	43e7d908-36ff-47b2-813c-146e89e91aef	f
+279	317816f1-4f15-4ef4-b23e-5cba1bafcb53	San Marino	1bc1c6a9-2028-4dcd-94bf-6d19bea049e6	f
+280	2be81820-6203-428c-9929-3ec3b165b634	Tokelau	ed22e6e0-5acc-4f0a-9a6a-e85dac1fca31	f
+281	815c9d1a-d37e-47ca-8020-adc193c230c8	Tuvalu	6596da04-74ae-4968-9776-6a7debe1b0aa	f
+337	5877afd7-ef3e-4786-8175-c1b62be8d2aa	American Samoa	cd5de581-fe44-456f-8b40-1e601666502c	f
+338	30794fa8-aa32-40f4-91aa-b5e084427055	Bonaire	57781bac-bb12-4862-9e29-a3eb6ebed059	f
+339	3549102c-143b-4c9b-97c9-10ad9774fa4b	Bouvet Island	2c927bd6-e6c1-4aa7-810e-6f544f2137dc	f
+340	962e5ee4-95ad-4969-a0c5-d4f59b1f75a4	British Indian Ocean Territory	f7847a1c-6403-474c-862d-a0f9e079b11d	t
+341	d0f7f882-2b93-4bb5-8ac1-e4e8c5484c67	Christmas Island	d6807de6-9eb7-4470-89e6-785b74a33137	f
+342	9511197b-bc52-47ec-ad40-34ce190a1870	Gibraltar	c4d460f0-d8f6-49c2-a75d-076d40c3bf4e	f
+343	e2f51a82-af64-41f0-8960-0c0c92ebd841	Guam	dbb53edf-6817-4a18-89b0-f6e2747c95ba	f
+344	9de03e2c-4a16-4240-bb77-7fb04fb2ef56	Guernsey	99436fc3-8e6d-41af-9a25-f9ff3f9eadc5	f
+346	922036ed-c306-4069-95d2-1a22ba662f39	Isle of Man	534d150e-315d-40fa-ae9d-6876e3ab6aa1	t
+347	b880359a-b9d7-49f6-a6f9-7d2f5dd4c08f	Jersey	242bc52e-221a-4254-b523-8b339182f620	f
+348	df932a64-e82c-4148-a701-a479161aeadc	Norfolk Island	adc3c9dd-bfce-48a7-9c4a-767c2de409ae	f
+349	3d5bf11f-e87a-4604-973a-296ec1e4ced4	Northern Mariana Islands	90b92de2-8101-4bce-af13-51bf5f5e6da0	t
+350	baf04426-009e-4680-9929-81ffaff928f7	Saint Helena, Ascension and Tristan da Cunha	1c7c18b7-27fa-4852-aff7-6139002c4c9b	f
+351	ca4bf95a-a90f-4cca-b664-a0e9693e72a0	Saint Pierre and Miquelon	6668152c-57e0-4e48-b346-ced1c1abd14f	t
+352	92deec6b-9858-4e1e-b2bd-3ad26fd53581	Wallis and Futuna	077da062-83f7-44a0-9a02-a6db1579d6ea	f
+353	56fd9ea9-6e22-4d50-bf31-d70267e9efd7	Cocos Islands	582d0cef-1fbc-47f5-8574-a2682c0b1e27	t
+354	5d05ca20-6b88-4307-9eb1-851dab036fd4	Vatican City	3af87d1b-0507-4bfc-b6a1-e9b91d57fe65	f
+355	ba2005b0-c986-4f1b-ae6c-1a710d05636f	Macao	be30ad9f-9895-40aa-825f-997c0efddfab	f
+356	b3410957-43a7-430b-b534-a97d5c9a9dc8	Saint Barthélemy	52ee76db-8c13-4deb-9de4-a3b518a8e9bc	f
+357	b1fc8f61-a6a7-4b30-b33d-347d67c0f580	Saint Martin	06e8b669-fa86-4cf3-86d2-d0e2e9ab2195	f
+358	fe06563f-e3d1-483d-9753-6bc9714b3d04	South Georgia and the South Sandwich Islands	367c55ec-ba68-4b65-bac4-5726d0738c76	f
+359	bf6ecb9f-0627-4e46-a915-5694c4a7806a	Svalbard and Jan Mayen	6c88c84a-862a-4e72-9b60-a99b65774dfa	f
+360	89f6b594-fc67-476c-b9d0-f3a5a2a1f6f5	United States Minor Outlying Islands	f19c1be1-90e0-4696-b6b9-fbd01a520abf	t
+361	fd614257-8315-4be6-b1de-e10753a959ad	Palestinian territories	2e557f8d-0c37-4f40-bd25-1261972df8cf	t
+362	41c1a20a-f97e-408e-b50a-1d5cb1a11da6	Svalbard	cf4779ca-37a6-4f60-bc03-5d760a12c978	f
+363	c651f67b-e998-4491-b4b5-0d772bcfd185	Territory of Heard Island and McDonald Islands	7ebcc568-e95d-4ebd-b55d-9fed5d9b87cb	t
+364	ee9275f9-5642-489f-bcb8-cfb15f97df60	Territory of the Wallis and Futuna Islands	077da062-83f7-44a0-9a02-a6db1579d6ea	t
+365	df97a66a-9ac1-4a15-8347-8d1df7d16e19	Keeling Islands	582d0cef-1fbc-47f5-8574-a2682c0b1e27	t
+366	e31a1588-1f4f-4ba3-a124-9729d909837a	Vatican City State	3af87d1b-0507-4bfc-b6a1-e9b91d57fe65	t
+367	1da2e3fa-83d8-4a23-b4b4-76b79ea1a173	St. Barts	52ee76db-8c13-4deb-9de4-a3b518a8e9bc	f
+368	2b2baacb-d8d8-4c8b-a01e-74ce68c76c04	Gaza Strip	1e34b1d1-019a-4f68-b3ec-f82ba27ee695	t
+369	c30dff1b-68fc-4a6b-a63f-a782f9ea8c88	West Bank	c3d3c3a0-a17b-441c-b834-52b8fea15da0	f
+57	9d6255ea-3264-409b-8898-7a3c9d159cca	Faeroe islands	13ba7194-35d8-4666-bc59-4eb69058dc48	t
+371	71ff90e3-7941-41cf-9275-0f1f64ca3a05	Faroes	13ba7194-35d8-4666-bc59-4eb69058dc48	t
+372	f5dd2245-1d5a-49c3-a6d6-bd4bcb9a909e	Faeroes	13ba7194-35d8-4666-bc59-4eb69058dc48	t
+373	a82db284-f6e4-4e83-8000-ae991a4ac63a	UK	0f433ba9-47e1-4fe6-902c-632bf40355a9	t
+374	6c0ca562-ff77-4587-a10a-4f5aaa225afc	United States of America	0bea6297-7d53-49a7-927e-e5cbc57e3b5a	t
+375	85f7ad98-e3a8-49f9-96a0-7c5cb38f40e8	US	0bea6297-7d53-49a7-927e-e5cbc57e3b5a	t
+376	1310a0e1-c4c5-49af-9042-4591251ab580	America	0bea6297-7d53-49a7-927e-e5cbc57e3b5a	f
+377	5e8a139b-be03-4bf8-a06c-f9389cd09e83	Great Britain	0f433ba9-47e1-4fe6-902c-632bf40355a9	f
+109	634e9e58-0e72-4132-8538-54ec310200c4	Central African Republic	2b1aaccb-5846-45c1-8481-12bb8b5e0aa4	f
+379	f273b8de-df99-45b8-beff-1e00c9a1dfba	Macau	be30ad9f-9895-40aa-825f-997c0efddfab	f
+345	eac55ac7-71b0-4305-8ec6-11390ef5f0f6	Heard Island and McDonald Islands	7ebcc568-e95d-4ebd-b55d-9fed5d9b87cb	t
+381	d1773c4a-769f-43eb-8d86-8e282d1a7f1c	Chagos Archipelago	b422b044-d80d-4463-90e0-7ce2c9c3c285	f
+382	5b422405-1f29-48b5-abb7-afe8cedceaa9	Cocos (Keeling) Islands	582d0cef-1fbc-47f5-8574-a2682c0b1e27	t
+383	6a76e001-c746-430d-a4ea-8b8dc485b221	Republic of China	1f6e1df0-b5ff-4eb0-89b2-0bd06cf52883	t
 \.
 
 
@@ -4232,6 +4719,10 @@ COPY public.territory_label (id, uuid, label, territory, the) FROM stdin;
 COPY public.territory_language (id, uuid, territory, language) FROM stdin;
 1	799b648f-4d7f-479e-96f7-b1b163ed6a5c	0f433ba9-47e1-4fe6-902c-632bf40355a9	e6611c19-fe1f-4086-8eb1-bb0d5620e5d0
 2	45a496f9-6c2d-4cab-b962-fd9b953a5cd3	56c6dacf-b4d9-401b-874a-6518da0cd567	08260f08-1fec-456d-ad5e-660cbc7f1c4c
+3	9abcbee5-c26d-45a9-ba9f-3fe9b3103533	27f40e7e-ab08-4e44-b643-f9546021f2c2	a06b8508-099e-41e5-b212-d55cd5f05ffb
+5	d34da672-3df8-49f6-990b-9c0c2f75f8ad	6320e2de-a214-4502-928e-c14bced2c7a0	321cde1a-311b-453f-946b-73c2841f7c91
+6	1eb145aa-4943-453e-a68b-56cb5bdb7127	c0f70677-0565-4a82-abcb-ee645843bf25	b9d0006c-7335-49ac-a2e0-8cf6abfb8f58
+7	aff7d2f4-7e9a-40c0-9a1d-77fffea06fd4	1f6e1df0-b5ff-4eb0-89b2-0bd06cf52883	3ee67bbc-3b13-4dc9-82c7-4350f43184b4
 \.
 
 
@@ -4244,6 +4735,12 @@ COPY public.territory_reltionship (id, territory, related_territory, relationshi
 2	c5bc507e-7bca-4c9d-8d7b-a3441b33dffe	0f433ba9-47e1-4fe6-902c-632bf40355a9	is within
 3	e054a323-d773-441e-9cbb-9843a1780b2d	0f433ba9-47e1-4fe6-902c-632bf40355a9	is within
 4	c639dcd9-0e03-4f83-bdba-8a5a921b021a	0f433ba9-47e1-4fe6-902c-632bf40355a9	is within
+5	cf4779ca-37a6-4f60-bc03-5d760a12c978	6c88c84a-862a-4e72-9b60-a99b65774dfa	is within
+6	e9d06599-c594-4a7f-9e16-2c81897bd5dd	6c88c84a-862a-4e72-9b60-a99b65774dfa	is within
+7	6320e2de-a214-4502-928e-c14bced2c7a0	27f40e7e-ab08-4e44-b643-f9546021f2c2	is within
+8	c0f70677-0565-4a82-abcb-ee645843bf25	27f40e7e-ab08-4e44-b643-f9546021f2c2	is within
+10	c3d3c3a0-a17b-441c-b834-52b8fea15da0	2e557f8d-0c37-4f40-bd25-1261972df8cf	is within
+11	1e34b1d1-019a-4f68-b3ec-f82ba27ee695	2e557f8d-0c37-4f40-bd25-1261972df8cf	is within
 \.
 
 
@@ -7947,6 +8444,13 @@ COPY public.visa_type (id, ease, name) FROM stdin;
 
 
 --
+-- Name: ISO_3166-1_alpha-2_id_seq; Type: SEQUENCE SET; Schema: public; Owner: brook
+--
+
+SELECT pg_catalog.setval('public."ISO_3166-1_alpha-2_id_seq"', 260, true);
+
+
+--
 -- Name: ISO_3166-1_alpha-3_id_seq; Type: SEQUENCE SET; Schema: public; Owner: brook
 --
 
@@ -7964,7 +8468,7 @@ SELECT pg_catalog.setval('public."ISO_3166-2_id_seq"', 24, true);
 -- Name: ISO_3166-2_types_id_seq; Type: SEQUENCE SET; Schema: public; Owner: brook
 --
 
-SELECT pg_catalog.setval('public."ISO_3166-2_types_id_seq"', 6, true);
+SELECT pg_catalog.setval('public."ISO_3166-2_types_id_seq"', 7, true);
 
 
 --
@@ -7992,21 +8496,21 @@ SELECT pg_catalog.setval('public.authograph_svg_path_id_seq', 241, true);
 -- Name: demonym_id_seq; Type: SEQUENCE SET; Schema: public; Owner: brook
 --
 
-SELECT pg_catalog.setval('public.demonym_id_seq', 320, true);
+SELECT pg_catalog.setval('public.demonym_id_seq', 400, true);
 
 
 --
 -- Name: language_id_seq; Type: SEQUENCE SET; Schema: public; Owner: brook
 --
 
-SELECT pg_catalog.setval('public.language_id_seq', 42, true);
+SELECT pg_catalog.setval('public.language_id_seq', 46, true);
 
 
 --
 -- Name: language_label_id_seq; Type: SEQUENCE SET; Schema: public; Owner: brook
 --
 
-SELECT pg_catalog.setval('public.language_label_id_seq', 59, true);
+SELECT pg_catalog.setval('public.language_label_id_seq', 64, true);
 
 
 --
@@ -8041,28 +8545,28 @@ SELECT pg_catalog.setval('public.svg_path_id_seq', 211, true);
 -- Name: territory_id_seq; Type: SEQUENCE SET; Schema: public; Owner: brook
 --
 
-SELECT pg_catalog.setval('public.territory_id_seq', 31, true);
+SELECT pg_catalog.setval('public.territory_id_seq', 301, true);
 
 
 --
 -- Name: territory_label_id_seq; Type: SEQUENCE SET; Schema: public; Owner: brook
 --
 
-SELECT pg_catalog.setval('public.territory_label_id_seq', 251, true);
+SELECT pg_catalog.setval('public.territory_label_id_seq', 383, true);
 
 
 --
 -- Name: territory_language_id_seq; Type: SEQUENCE SET; Schema: public; Owner: brook
 --
 
-SELECT pg_catalog.setval('public.territory_language_id_seq', 2, true);
+SELECT pg_catalog.setval('public.territory_language_id_seq', 7, true);
 
 
 --
 -- Name: territory_reltionship_id_seq; Type: SEQUENCE SET; Schema: public; Owner: brook
 --
 
-SELECT pg_catalog.setval('public.territory_reltionship_id_seq', 4, true);
+SELECT pg_catalog.setval('public.territory_reltionship_id_seq', 11, true);
 
 
 --
@@ -8098,6 +8602,22 @@ SELECT pg_catalog.setval('public.visa_ease_of_entry_id_seq', 6, true);
 --
 
 SELECT pg_catalog.setval('public.visa_types_id_seq', 52, true);
+
+
+--
+-- Name: ISO_3166-1_alpha-2 ISO_3166-1_alpha-2_pkey; Type: CONSTRAINT; Schema: public; Owner: brook
+--
+
+ALTER TABLE ONLY public."ISO_3166-1_alpha-2"
+    ADD CONSTRAINT "ISO_3166-1_alpha-2_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: ISO_3166-1_alpha-2 ISO_3166-1_alpha-2_uuid_key; Type: CONSTRAINT; Schema: public; Owner: brook
+--
+
+ALTER TABLE ONLY public."ISO_3166-1_alpha-2"
+    ADD CONSTRAINT "ISO_3166-1_alpha-2_uuid_key" UNIQUE (uuid);
 
 
 --
@@ -8458,6 +8978,22 @@ ALTER TABLE ONLY public.visa_type
 
 ALTER TABLE ONLY public.visa_type
     ADD CONSTRAINT visa_types_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ISO_3166-1_alpha-2 ISO_3166-1_alpha-2_territory_fkey; Type: FK CONSTRAINT; Schema: public; Owner: brook
+--
+
+ALTER TABLE ONLY public."ISO_3166-1_alpha-2"
+    ADD CONSTRAINT "ISO_3166-1_alpha-2_territory_fkey" FOREIGN KEY (territory) REFERENCES public.territory(uuid) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- Name: ISO_3166-1_alpha-2 ISO_3166-1_alpha-2_type_fkey; Type: FK CONSTRAINT; Schema: public; Owner: brook
+--
+
+ALTER TABLE ONLY public."ISO_3166-1_alpha-2"
+    ADD CONSTRAINT "ISO_3166-1_alpha-2_type_fkey" FOREIGN KEY (type) REFERENCES public."ISO_3166_type"(name);
 
 
 --

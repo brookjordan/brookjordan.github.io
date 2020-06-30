@@ -19,6 +19,16 @@ exports.handler = async ({
   let client = new Client();
   let clientConnection = client.connect();
 
+  let modernCountriesQuery = tidyQuery(`
+    SELECT
+      uuid
+    FROM
+      territory
+    WHERE
+      modern_country IS TRUE
+    ;
+  `);
+
   let demonymsQuery = tidyQuery(`
     SELECT
       territory,
@@ -57,6 +67,7 @@ exports.handler = async ({
   `);
 
   let queries = [
+    modernCountriesQuery,
     demonymsQuery,
     labelsQuery,
     ISO2Query,
@@ -73,6 +84,7 @@ exports.handler = async ({
     }
 
     let [
+      modernCountryRows,
       demonymRows,
       labelRows,
       ISO2Rows,
@@ -90,6 +102,7 @@ exports.handler = async ({
       };
     }
 
+    let modernCountryUUIds = modernCountryRows.map(row => row.uuid);
     let territories = {};
     function getTerritory(id) {
       territories[id] || (territories[id] = {
@@ -123,6 +136,7 @@ exports.handler = async ({
       body: JSON.stringify({
         queries,
         data: Object.values(territories)
+          .filter(territory => modernCountryUUIds.includes(territory.id))
       }),
       headers: {
         "Cache-Control": "max-age=300",
