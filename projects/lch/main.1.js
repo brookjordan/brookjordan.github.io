@@ -68,7 +68,7 @@ function drawCross(lightness) {
   });
 }
 
-drawCross(50);
+drawCross(+range.value);
 range.oninput = e => drawCross(+range.value);
 max_chroma.oninput = e => {
   MAX_CHROMA = +max_chroma.value;
@@ -84,3 +84,20 @@ quality.oninput = e => {
   canvas.width = canvas.height = size;
   drawCross(+range.value)
 };
+
+find_hex.oninput = e => {
+  if (!find_hex.checkValidity()) { return; }
+  let hexNum = find_hex.value.replace(/#/, '');
+  if (hexNum.length < 4) {
+    hexNum = hexNum.replace(/./g, a => `${a}${a}`);
+  }
+  let rgb = Array.from({ length: 3 }, (_, i) => parseInt(hexNum.slice(i * 2, i * 2 + 2), 16));
+  let rgbD = rgb.map(a => a / 255);
+
+  let lch = Lab_to_LCH(XYZ_to_Lab(D65_to_D50(lin_2020_to_XYZ(lin_2020(rgbD)))));
+  range.value = lch[0];
+  // max_chroma.value = lch[1];
+  // MAX_CHROMA = +max_chroma.value;
+  drawCross(+range.value);
+};
+find_hex.oninput();

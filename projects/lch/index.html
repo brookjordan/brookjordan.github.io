@@ -34,6 +34,17 @@
       background-size: 20px 20px;
       background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
     }
+    [type="color"] {
+      border: 0;
+      padding: 0;
+      width: 100px;
+    }
+    input::-webkit-color-swatch-wrapper {
+      padding: 0;
+    }
+    input::-webkit-color-swatch {
+      border: 0;
+    }
   </style>
 </head>
 <body>
@@ -58,6 +69,11 @@
 --><label style="display:none;position:relative;background:#ccc;padding: 5px 10px;">
   <p style="margin: 0">Max Chroma:</p>
   <input id="max_chroma" type="range" min="35" max="132" value="112" step="0.01">
+</label><!--
+
+--><label style="display:inline-block;position:relative;background:#ccc;padding: 5px 10px;">
+  <p style="margin: 0">Matching hex:</p>
+  <input id="find_hex" type="color" value="#808080" pattern="#?[\d\w]{3}([\d\w]{3})?">
 </label>
 
 <script src="./css-drafts/css-color-4/math.js"></script>
