@@ -93,6 +93,25 @@
   </script>
 
   <script>
+    const motionalSVG = `<svg class="logo" xmlns="http://www.w3.org/2000/svg" width="48" height="25" viewBox="0 0 69 36">
+      <defs>
+        <style>
+          @keyframes scale-in {
+            0% {
+              transform: scaleX(0);
+            }
+          }
+          .logo-part {
+            animation: scale-in 0.7s;
+          }
+        </style>
+      </defs>
+      <path class="logo-part" transform-origin="17 0" fill="#5c48f6" d="M.1 17.5L34.3.1v17.4L.1 35z"></path>
+      <path class="logo-part" transform-origin="52 0" fill="#5c48f6" d="M34.3 35l34.2-17.5V.1L34.3 17.5z"></path>
+    </svg>`
+  </script>
+
+  <script>
     class HSV {
       constructor(h, s, v) {
         if (h <= 0) {
@@ -437,6 +456,9 @@
             transform 0.2s;
           will-change: transform;
         }
+        .constrain--motional h3 {
+          padding-left: 40px;
+        }
 
         .data--hex {
           margin-top: 10px;
@@ -460,6 +482,13 @@
 
         .constrain {
           position: relative;
+        }
+
+        .logo {
+          position: absolute;
+          top: 5px;
+          left: 5px;
+          filter: drop-shadow(0px 1px 5px rgba(0,0,0,0.4));
         }
 
         .wrapper {
@@ -584,12 +613,18 @@
 
             let $ = this.shadowRoot;
             let containerElt = $.querySelector('.constrain');
+            if (this.getAttribute("motional") !== null) {
+              containerElt.innerHTML = `${motionalSVG}${containerElt.innerHTML}`;
+              containerElt.classList.add('constrain--motional');
+              console.log(this.getAttribute("motional"));
+            }
             let dataHEXElt = $.querySelector('.data--hex');
             let dataNameElt = $.querySelector('.data--name');
             let dataRGBElt = $.querySelector('.data--rgb');
             let dataHSLElt = $.querySelector('.data--hsl');
 
             let name = this.getAttribute("name");
+
             let hex = this
               .getAttribute("hex")
               .replace(/#/g, "")
@@ -725,12 +760,17 @@
 
     <color-swatch
       name="Gray 8"
-      hex="#b2b2b2"
+      hex="#c7c7c7"
     ></color-swatch>
 
     <color-swatch
       name="Gray 9"
       hex="#ededed"
+    ></color-swatch>
+
+    <color-swatch
+      name="Gray 10"
+      hex="#fbfbfb"
     ></color-swatch>
 
     <color-swatch
@@ -740,64 +780,13 @@
 
 
     <color-swatch
-      name="Hyundai Blue"
-      hex="#0a2972"
-    ></color-swatch>
-
-    <color-swatch
-      name="Navy"
-      hex="#030a14"
-    ></color-swatch>
-
-    <color-swatch
-      name="Motional Purple"
-      hex="#5c48f6"
-    ></color-swatch>
-
-    <color-swatch
-      name="Lavender Gray"
-      hex="#adb9e3"
-    ></color-swatch>
-
-    <color-swatch
-      name="Seaglass"
-      hex="#c9eaf1"
-    ></color-swatch>
-
-    <color-swatch
-      name="Solid Aqua"
-      hex="#00f6ff"
-    ></color-swatch>
-
-    <color-swatch
-      name="Light Asphalt"
-      hex="#d2dcdc"
-    ></color-swatch>
-
-    <color-swatch
-      name="Medium Asphalt"
-      hex="#828791"
-    ></color-swatch>
-
-    <color-swatch
-      name="Dark Asphalt"
-      hex="#40444a"
-    ></color-swatch>
-
-    <color-swatch
-      name="Chart Yellow"
-      hex="#e2ff1a"
-    ></color-swatch>
-
-    <color-swatch
-      name="Chart Green"
-      hex="#00FF73"
-    ></color-swatch>
-
-
-    <color-swatch
       name="Burnt red"
       hex="#cf3335"
+    ></color-swatch>
+
+    <color-swatch
+      name="Notification color"
+      hex="#f5f3f3"
     ></color-swatch>
 
     <color-swatch
@@ -806,7 +795,7 @@
     ></color-swatch>
 
     <color-swatch
-      name="Highlight"
+      name="Highlite"
       hex="#e27b00"
     ></color-swatch>
 
@@ -821,18 +810,30 @@
     ></color-swatch>
 
     <color-swatch
+      motional
+      name="Chart yellow"
+      hex="#e2ff1a"
+    ></color-swatch>
+
+    <color-swatch
       name="Kiwi"
       hex="#d9f28b"
     ></color-swatch>
 
     <color-swatch
-      name="Car name"
+      name="Pine green"
       hex="#009e1e"
     ></color-swatch>
 
     <color-swatch
       name="Dark gray"
       hex="#929d96"
+    ></color-swatch>
+
+    <color-swatch
+      motional
+      name="Chart green"
+      hex="#00ff73"
     ></color-swatch>
 
     <color-swatch
@@ -858,6 +859,24 @@
     <color-swatch
       name="Dark turquoise"
       hex="#006b63"
+    ></color-swatch>
+
+    <color-swatch
+      motional
+      name="Light asphalt"
+      hex="#d2dcdc"
+    ></color-swatch>
+
+    <color-swatch
+      motional
+      name="Solid aqua"
+      hex="#00f6ff"
+    ></color-swatch>
+
+    <color-swatch
+      motional
+      name="Seaglass"
+      hex="#c9eaf1"
     ></color-swatch>
 
     <color-swatch
@@ -916,8 +935,26 @@
     ></color-swatch>
 
     <color-swatch
+      motional
+      name="Navy"
+      hex="#030a14"
+    ></color-swatch>
+
+    <color-swatch
+      motional
+      name="Dark asphalt"
+      hex="#40444a"
+    ></color-swatch>
+
+    <color-swatch
       name="Blue gray"
       hex="#3d4554"
+    ></color-swatch>
+
+    <color-swatch
+      motional
+      name="Medium asphalt"
+      hex="#828791"
     ></color-swatch>
 
     <color-swatch
@@ -931,8 +968,25 @@
     ></color-swatch>
 
     <color-swatch
+      motional
+      name="Hyundai blue"
+      hex="#0a2972"
+    ></color-swatch>
+
+    <color-swatch
       name="Dark true blue"
       hex="#2e3442"
+    ></color-swatch>
+
+    <color-swatch
+      motional
+      name="Lavender gray"
+      hex="#adb9e3"
+    ></color-swatch>
+
+    <color-swatch
+      name="Light true blue"
+      hex="#bac4f8"
     ></color-swatch>
 
     <color-swatch
@@ -963,6 +1017,12 @@
     <color-swatch
       name="Night"
       hex="#383942"
+    ></color-swatch>
+
+    <color-swatch
+      motional
+      name="Motional purple"
+      hex="#5c48f6"
     ></color-swatch>
 
 
