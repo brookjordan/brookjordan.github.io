@@ -1,3 +1,6 @@
+$TRIG: 1.4142135624;
+$COUNT: 200;
+
 * {
   box-sizing: border-box;
   transform-origin: 50% 50%;
@@ -15,7 +18,7 @@ body {
   display: grid;
   place-items: center;
   margin: 0;
-  perspective: 100vmin;
+  perspective: 200vmin;
   background: black;
 }
 
@@ -29,12 +32,10 @@ body {
 }
 
 .box {
-  $TRIG: 1.4142135624;
-
-  --thickness: 2vmin;
-  --size: 60vmin;
+  --thickness: 0.3vmin;
+  --size: 80vmin;
   --length: calc(var(--size) / #{$TRIG} + var(--thickness) / #{$TRIG});
-  --speed: 4;
+  --speed: 1.5;
 
   --x: -0.4;
   --y: 0.1;
@@ -81,13 +82,13 @@ body {
           repeat
           linear-gradient(
             to bottom,
-            hsl(0deg, 100%, 50%),
-            hsl(60deg, 100%, 50%),
-            hsl(120deg, 100%, 50%),
-            hsl(180deg, 100%, 50%),
-            hsl(240deg, 100%, 50%),
-            hsl(300deg, 100%, 50%),
-            hsl(360deg, 100%, 50%)
+            hsl(0deg, 55%, 45%),
+            hsl(60deg, 55%, 45%),
+            hsl(120deg, 55%, 45%),
+            hsl(180deg, 55%, 45%),
+            hsl(240deg, 55%, 45%),
+            hsl(300deg, 55%, 45%),
+            hsl(360deg, 55%, 45%)
           );
         animation: bg-fall calc(var(--speed) * 1s) linear infinite;
 
@@ -120,33 +121,33 @@ body {
   }
 
   .dot {
-    width: calc(var(--size) / 25);
-    height: calc(var(--size) / 25);
-    border-radius: 50%;
+    width: calc(var(--size) / 150);
+    height: calc(var(--size) / 150);
+    // border-radius: 50%;
     background:
       repeat
       linear-gradient(
         to bottom,
-        hsl(0deg, 100%, 50%),
-        hsl(60deg, 100%, 50%),
-        hsl(120deg, 100%, 50%),
-        hsl(180deg, 100%, 50%),
-        hsl(240deg, 100%, 50%),
-        hsl(300deg, 100%, 50%),
-        hsl(360deg, 100%, 50%)
+        hsl(0deg, 80%, 65%),
+        hsl(60deg, 80%, 65%),
+        hsl(120deg, 80%, 65%),
+        hsl(180deg, 80%, 65%),
+        hsl(240deg, 80%, 65%),
+        hsl(300deg, 80%, 65%),
+        hsl(360deg, 80%, 65%)
       );
     background-size: calc(var(--size) / 50) var(--length);
-    animation: bg-fall calc(var(--speed) * 5s) linear infinite;
+    animation: bg-fall calc(var(--speed) * 1s) linear infinite;
   }
 
-  @for $i from 1 through 50 {
+  @for $i from 1 through $COUNT {
     .dot:nth-child(#{$i}) {
-      animation-delay: calc(var(--speed) * -5s * #{$i / 50});
+      animation-delay: calc(var(--speed) * -1s * #{$i / $COUNT});
       transform:
         translate3D(
-          calc(var(--size) * #{(random(2000) - 1000) / 1000}),
-          calc(var(--size) * #{(random(2000) - 1000) / 1000}),
-          calc(var(--size) * #{(random(2000) - 1000) / 1000}),
+          calc(var(--size) * #{(random(2000) - 1000) / 2900}),
+          calc(var(--size) * #{(random(2000) - 1000) / 2900}),
+          calc(var(--size) * #{(random(2000) - 1000) / 2900}),
         )
         rotateY(calc(var(--x, 0) * -1turn))
         rotateX(calc(var(--y, 0) * 1turn))
