@@ -21,19 +21,20 @@ body {
 
 @keyframes bg-fall {
   0% {
-    background-position-y: calc(var(--length) * var(--from));
+    background-position-y: calc(var(--length));
   }
   100% {
-    background-position-y: calc(var(--length) * var(--from) + var(--length) * var(--dir));
+    background-position-y: calc(var(--length) + var(--length) * 4);
   }
 }
 .box {
   --thickness: 0.3vmin;
-  --size: 80vmin;
+  --size: 60vmin;
   --length: calc(var(--size) / 1.4142135624 + var(--thickness) / 1.4142135624);
-  --speed: 1.5;
+  --speed: 3;
   --x: -0.4;
   --y: 0.1;
+  --count: 200;
   width: var(--size);
   height: var(--size);
   transform-style: preserve-3d;
@@ -41,8 +42,6 @@ body {
   pointer-events: none;
 }
 .box > div {
-  --dir: 1;
-  --from: 0;
   position: absolute;
   width: 0;
   height: 0;
@@ -76,6 +75,7 @@ body {
   width: var(--thickness);
   height: var(--length);
   background: repeat linear-gradient(to bottom, #b23434, #b2b234, #34b234, #34b2b2, #3434b2, #b234b2, #b23434);
+  background-size: 100% calc(var(--length) * 2);
   animation: bg-fall calc(var(--speed) * 1s) linear infinite;
 }
 .box > div > div > div:nth-child(1) {
@@ -104,807 +104,1210 @@ body {
   height: calc(var(--size) / 150);
   background: repeat linear-gradient(to bottom, #ed5e5e, #eded5e, #5eed5e, #5eeded, #5e5eed, #ed5eed, #ed5e5e);
   background-size: calc(var(--size) / 50) var(--length);
+  transform: translate3D(calc(var(--size) * var(--r1)), calc(var(--size) * var(--r2)), calc(var(--size) * var(--r3))) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(calc(var(--i) / 100 + 0.66));
+  border-radius: 50%;
   animation: bg-fall calc(var(--speed) * 1s) linear infinite;
+  animation-delay: calc(var(--speed) * -1s * (var(--i) / var(--count)));
 }
 .box .dot:nth-child(1) {
-  animation-delay: calc(var(--speed) * -1s * 0.005);
-  transform: translate3D(calc(var(--size) * 0.3372413793), calc(var(--size) * -0.0568965517), calc(var(--size) * 0.1093103448)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.6733333333);
+  --i: 1;
+  --r1: 0.2224137931;
+  --r2: 0.0913793103;
+  --r3: 0.3237931034;
 }
 .box .dot:nth-child(2) {
-  animation-delay: calc(var(--speed) * -1s * 0.01);
-  transform: translate3D(calc(var(--size) * 0.1010344828), calc(var(--size) * -0.2131034483), calc(var(--size) * -0.3393103448)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.6866666667);
+  --i: 2;
+  --r1: -0.1979310345;
+  --r2: -0.0810344828;
+  --r3: -0.0782758621;
 }
 .box .dot:nth-child(3) {
-  animation-delay: calc(var(--speed) * -1s * 0.015);
-  transform: translate3D(calc(var(--size) * 0.1444827586), calc(var(--size) * 0.2486206897), calc(var(--size) * 0.0310344828)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.7);
+  --i: 3;
+  --r1: 0.2862068966;
+  --r2: -0.0703448276;
+  --r3: 0.1696551724;
 }
 .box .dot:nth-child(4) {
-  animation-delay: calc(var(--speed) * -1s * 0.02);
-  transform: translate3D(calc(var(--size) * -0.2706896552), calc(var(--size) * 0.3227586207), calc(var(--size) * -0.2675862069)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.7133333333);
+  --i: 4;
+  --r1: -0.2672413793;
+  --r2: 0.0365517241;
+  --r3: 0.3327586207;
 }
 .box .dot:nth-child(5) {
-  animation-delay: calc(var(--speed) * -1s * 0.025);
-  transform: translate3D(calc(var(--size) * 0.1706896552), calc(var(--size) * 0.0689655172), calc(var(--size) * -0.2168965517)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.7266666667);
+  --i: 5;
+  --r1: 0.2368965517;
+  --r2: 0.3051724138;
+  --r3: -0.0955172414;
 }
 .box .dot:nth-child(6) {
-  animation-delay: calc(var(--speed) * -1s * 0.03);
-  transform: translate3D(calc(var(--size) * 0.1117241379), calc(var(--size) * -0.1), calc(var(--size) * 0.3393103448)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.74);
+  --i: 6;
+  --r1: -0.2282758621;
+  --r2: -0.1889655172;
+  --r3: 0.0617241379;
 }
 .box .dot:nth-child(7) {
-  animation-delay: calc(var(--speed) * -1s * 0.035);
-  transform: translate3D(calc(var(--size) * -0.1017241379), calc(var(--size) * -0.2655172414), calc(var(--size) * -0.2534482759)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.7533333333);
+  --i: 7;
+  --r1: 0.0568965517;
+  --r2: -0.29;
+  --r3: -0.2913793103;
 }
 .box .dot:nth-child(8) {
-  animation-delay: calc(var(--speed) * -1s * 0.04);
-  transform: translate3D(calc(var(--size) * -0.0327586207), calc(var(--size) * 0.0448275862), calc(var(--size) * 0.0310344828)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.7666666667);
+  --i: 8;
+  --r1: 0.0489655172;
+  --r2: 0.2789655172;
+  --r3: -0.1944827586;
 }
 .box .dot:nth-child(9) {
-  animation-delay: calc(var(--speed) * -1s * 0.045);
-  transform: translate3D(calc(var(--size) * 0.0131034483), calc(var(--size) * -0.0155172414), calc(var(--size) * 0.1282758621)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.78);
+  --i: 9;
+  --r1: -0.2589655172;
+  --r2: -0.344137931;
+  --r3: -0.0965517241;
 }
 .box .dot:nth-child(10) {
-  animation-delay: calc(var(--speed) * -1s * 0.05);
-  transform: translate3D(calc(var(--size) * -0.0182758621), calc(var(--size) * -0.1317241379), calc(var(--size) * 0.1768965517)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.7933333333);
+  --i: 10;
+  --r1: -0.3027586207;
+  --r2: -0.154137931;
+  --r3: 0.11;
 }
 .box .dot:nth-child(11) {
-  animation-delay: calc(var(--speed) * -1s * 0.055);
-  transform: translate3D(calc(var(--size) * 0.114137931), calc(var(--size) * 0.3096551724), calc(var(--size) * 0.2472413793)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.8066666667);
+  --i: 11;
+  --r1: -0.1248275862;
+  --r2: -0.1806896552;
+  --r3: -0.2075862069;
 }
 .box .dot:nth-child(12) {
-  animation-delay: calc(var(--speed) * -1s * 0.06);
-  transform: translate3D(calc(var(--size) * 0.0262068966), calc(var(--size) * -0.055862069), calc(var(--size) * 0.1813793103)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.82);
+  --i: 12;
+  --r1: 0.0955172414;
+  --r2: -0.1765517241;
+  --r3: -0.225862069;
 }
 .box .dot:nth-child(13) {
-  animation-delay: calc(var(--speed) * -1s * 0.065);
-  transform: translate3D(calc(var(--size) * -0.3348275862), calc(var(--size) * 0.2382758621), calc(var(--size) * 0.1779310345)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.8333333333);
+  --i: 13;
+  --r1: 0.1355172414;
+  --r2: 0.275862069;
+  --r3: 0.3375862069;
 }
 .box .dot:nth-child(14) {
-  animation-delay: calc(var(--speed) * -1s * 0.07);
-  transform: translate3D(calc(var(--size) * 0.1575862069), calc(var(--size) * -0.0582758621), calc(var(--size) * 0.0482758621)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.8466666667);
+  --i: 14;
+  --r1: -0.2344827586;
+  --r2: -0.1427586207;
+  --r3: 0.2155172414;
 }
 .box .dot:nth-child(15) {
-  animation-delay: calc(var(--speed) * -1s * 0.075);
-  transform: translate3D(calc(var(--size) * -0.144137931), calc(var(--size) * -0.3006896552), calc(var(--size) * -0.1675862069)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.86);
+  --i: 15;
+  --r1: -0.1210344828;
+  --r2: 0.0672413793;
+  --r3: -0.1965517241;
 }
 .box .dot:nth-child(16) {
-  animation-delay: calc(var(--speed) * -1s * 0.08);
-  transform: translate3D(calc(var(--size) * 0.3255172414), calc(var(--size) * 0.1079310345), calc(var(--size) * -0.2565517241)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.8733333333);
+  --i: 16;
+  --r1: -0.1513793103;
+  --r2: 0.3331034483;
+  --r3: 0.2606896552;
 }
 .box .dot:nth-child(17) {
-  animation-delay: calc(var(--speed) * -1s * 0.085);
-  transform: translate3D(calc(var(--size) * 0.1803448276), calc(var(--size) * 0.2175862069), calc(var(--size) * 0.1796551724)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.8866666667);
+  --i: 17;
+  --r1: 0.0762068966;
+  --r2: 0.0934482759;
+  --r3: 0.2817241379;
 }
 .box .dot:nth-child(18) {
-  animation-delay: calc(var(--speed) * -1s * 0.09);
-  transform: translate3D(calc(var(--size) * 0.3348275862), calc(var(--size) * 0.1189655172), calc(var(--size) * 0.1313793103)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.9);
+  --i: 18;
+  --r1: -0.0186206897;
+  --r2: -0.2765517241;
+  --r3: 0.0989655172;
 }
 .box .dot:nth-child(19) {
-  animation-delay: calc(var(--speed) * -1s * 0.095);
-  transform: translate3D(calc(var(--size) * -0.1713793103), calc(var(--size) * -0.0844827586), calc(var(--size) * 0.3127586207)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.9133333333);
+  --i: 19;
+  --r1: 0.0513793103;
+  --r2: 0.2520689655;
+  --r3: -0.2724137931;
 }
 .box .dot:nth-child(20) {
-  animation-delay: calc(var(--speed) * -1s * 0.1);
-  transform: translate3D(calc(var(--size) * -0.1855172414), calc(var(--size) * 0.0631034483), calc(var(--size) * -0.1696551724)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.9266666667);
+  --i: 20;
+  --r1: -0.1665517241;
+  --r2: -0.1624137931;
+  --r3: -0.0972413793;
 }
 .box .dot:nth-child(21) {
-  animation-delay: calc(var(--speed) * -1s * 0.105);
-  transform: translate3D(calc(var(--size) * 0.3306896552), calc(var(--size) * -0.1782758621), calc(var(--size) * -0.0568965517)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.94);
+  --i: 21;
+  --r1: -0.0703448276;
+  --r2: 0.2734482759;
+  --r3: -0.1551724138;
 }
 .box .dot:nth-child(22) {
-  animation-delay: calc(var(--speed) * -1s * 0.11);
-  transform: translate3D(calc(var(--size) * -0.1951724138), calc(var(--size) * -0.0665517241), calc(var(--size) * -0.2582758621)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.9533333333);
+  --i: 22;
+  --r1: 0.0179310345;
+  --r2: 0.0603448276;
+  --r3: -0.1996551724;
 }
 .box .dot:nth-child(23) {
-  animation-delay: calc(var(--speed) * -1s * 0.115);
-  transform: translate3D(calc(var(--size) * 0.2431034483), calc(var(--size) * -0.3010344828), calc(var(--size) * -0.0513793103)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.9666666667);
+  --i: 23;
+  --r1: -0.064137931;
+  --r2: 0.2717241379;
+  --r3: -0.1627586207;
 }
 .box .dot:nth-child(24) {
-  animation-delay: calc(var(--speed) * -1s * 0.12);
-  transform: translate3D(calc(var(--size) * -0.1817241379), calc(var(--size) * -0.1368965517), calc(var(--size) * 0.3093103448)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.98);
+  --i: 24;
+  --r1: 0.2351724138;
+  --r2: -0.1913793103;
+  --r3: 0.0586206897;
 }
 .box .dot:nth-child(25) {
-  animation-delay: calc(var(--speed) * -1s * 0.125);
-  transform: translate3D(calc(var(--size) * 0.3317241379), calc(var(--size) * -0.2631034483), calc(var(--size) * 0.1606896552)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.9933333333);
+  --i: 25;
+  --r1: -0.0293103448;
+  --r2: 0.0148275862;
+  --r3: 0.0110344828;
 }
 .box .dot:nth-child(26) {
-  animation-delay: calc(var(--speed) * -1s * 0.13);
-  transform: translate3D(calc(var(--size) * 0.2731034483), calc(var(--size) * -0.3068965517), calc(var(--size) * 0.005862069)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.0066666667);
+  --i: 26;
+  --r1: -0.1279310345;
+  --r2: -0.1110344828;
+  --r3: -0.104137931;
 }
 .box .dot:nth-child(27) {
-  animation-delay: calc(var(--speed) * -1s * 0.135);
-  transform: translate3D(calc(var(--size) * -0.1006896552), calc(var(--size) * 0.2672413793), calc(var(--size) * -0.3224137931)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.02);
+  --i: 27;
+  --r1: -0.195862069;
+  --r2: 0.1682758621;
+  --r3: -0.2031034483;
 }
 .box .dot:nth-child(28) {
-  animation-delay: calc(var(--speed) * -1s * 0.14);
-  transform: translate3D(calc(var(--size) * -0.2665517241), calc(var(--size) * 0.034137931), calc(var(--size) * -0.205862069)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.0333333333);
+  --i: 28;
+  --r1: 0.2089655172;
+  --r2: 0.0544827586;
+  --r3: -0.2944827586;
 }
 .box .dot:nth-child(29) {
-  animation-delay: calc(var(--speed) * -1s * 0.145);
-  transform: translate3D(calc(var(--size) * -0.2182758621), calc(var(--size) * -0.2806896552), calc(var(--size) * 0.2668965517)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.0466666667);
+  --i: 29;
+  --r1: 0.1593103448;
+  --r2: -0.2193103448;
+  --r3: -0.1186206897;
 }
 .box .dot:nth-child(30) {
-  animation-delay: calc(var(--speed) * -1s * 0.15);
-  transform: translate3D(calc(var(--size) * -0.24), calc(var(--size) * 0.2189655172), calc(var(--size) * -0.3289655172)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.06);
+  --i: 30;
+  --r1: 0.1644827586;
+  --r2: 0.0220689655;
+  --r3: 0.0079310345;
 }
 .box .dot:nth-child(31) {
-  animation-delay: calc(var(--speed) * -1s * 0.155);
-  transform: translate3D(calc(var(--size) * -0.1231034483), calc(var(--size) * 0.0655172414), calc(var(--size) * -0.054137931)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.0733333333);
+  --i: 31;
+  --r1: -0.0196551724;
+  --r2: 0.3175862069;
+  --r3: 0.0862068966;
 }
 .box .dot:nth-child(32) {
-  animation-delay: calc(var(--speed) * -1s * 0.16);
-  transform: translate3D(calc(var(--size) * 0.3337931034), calc(var(--size) * 0.1172413793), calc(var(--size) * 0.3120689655)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.0866666667);
+  --i: 32;
+  --r1: 0.1489655172;
+  --r2: -0.2882758621;
+  --r3: -0.254137931;
 }
 .box .dot:nth-child(33) {
-  animation-delay: calc(var(--speed) * -1s * 0.165);
-  transform: translate3D(calc(var(--size) * 0.2931034483), calc(var(--size) * 0.1475862069), calc(var(--size) * -0.2351724138)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.1);
+  --i: 33;
+  --r1: -0.2368965517;
+  --r2: 0.0482758621;
+  --r3: -0.2851724138;
 }
 .box .dot:nth-child(34) {
-  animation-delay: calc(var(--speed) * -1s * 0.17);
-  transform: translate3D(calc(var(--size) * -0.1862068966), calc(var(--size) * 0.094137931), calc(var(--size) * 0.335862069)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.1133333333);
+  --i: 34;
+  --r1: -0.1510344828;
+  --r2: -0.1468965517;
+  --r3: 0.2675862069;
 }
 .box .dot:nth-child(35) {
-  animation-delay: calc(var(--speed) * -1s * 0.175);
-  transform: translate3D(calc(var(--size) * 0.1896551724), calc(var(--size) * 0.2593103448), calc(var(--size) * 0.2010344828)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.1266666667);
+  --i: 35;
+  --r1: 0.014137931;
+  --r2: -0.0886206897;
+  --r3: -0.3296551724;
 }
 .box .dot:nth-child(36) {
-  animation-delay: calc(var(--speed) * -1s * 0.18);
-  transform: translate3D(calc(var(--size) * -0.0975862069), calc(var(--size) * -0.0889655172), calc(var(--size) * 0.135862069)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.14);
+  --i: 36;
+  --r1: -0.1934482759;
+  --r2: -0.0544827586;
+  --r3: -0.0244827586;
 }
 .box .dot:nth-child(37) {
-  animation-delay: calc(var(--speed) * -1s * 0.185);
-  transform: translate3D(calc(var(--size) * -0.0451724138), calc(var(--size) * 0.0927586207), calc(var(--size) * -0.1272413793)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.1533333333);
+  --i: 37;
+  --r1: 0.3255172414;
+  --r2: 0.1331034483;
+  --r3: -0.165862069;
 }
 .box .dot:nth-child(38) {
-  animation-delay: calc(var(--speed) * -1s * 0.19);
-  transform: translate3D(calc(var(--size) * -0.0624137931), calc(var(--size) * -0.2020689655), calc(var(--size) * 0.0072413793)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.1666666667);
+  --i: 38;
+  --r1: 0.2455172414;
+  --r2: -0.3334482759;
+  --r3: -0.0482758621;
 }
 .box .dot:nth-child(39) {
-  animation-delay: calc(var(--speed) * -1s * 0.195);
-  transform: translate3D(calc(var(--size) * 0.3289655172), calc(var(--size) * 0.0068965517), calc(var(--size) * 0.1003448276)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.18);
+  --i: 39;
+  --r1: -0.204137931;
+  --r2: 0.1137931034;
+  --r3: -0.3368965517;
 }
 .box .dot:nth-child(40) {
-  animation-delay: calc(var(--speed) * -1s * 0.2);
-  transform: translate3D(calc(var(--size) * -0.0589655172), calc(var(--size) * -0.1927586207), calc(var(--size) * 0.1068965517)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.1933333333);
+  --i: 40;
+  --r1: 0.1817241379;
+  --r2: -0.0955172414;
+  --r3: -0.304137931;
 }
 .box .dot:nth-child(41) {
-  animation-delay: calc(var(--speed) * -1s * 0.205);
-  transform: translate3D(calc(var(--size) * 0.1110344828), calc(var(--size) * -0.305862069), calc(var(--size) * 0.0606896552)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.2066666667);
+  --i: 41;
+  --r1: -0.1931034483;
+  --r2: -0.1189655172;
+  --r3: -0.2627586207;
 }
 .box .dot:nth-child(42) {
-  animation-delay: calc(var(--speed) * -1s * 0.21);
-  transform: translate3D(calc(var(--size) * -0.33), calc(var(--size) * 0.0362068966), calc(var(--size) * 0.2562068966)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.22);
+  --i: 42;
+  --r1: -0.3203448276;
+  --r2: 0.0051724138;
+  --r3: 0.2134482759;
 }
 .box .dot:nth-child(43) {
-  animation-delay: calc(var(--speed) * -1s * 0.215);
-  transform: translate3D(calc(var(--size) * 0.235862069), calc(var(--size) * -0.11), calc(var(--size) * -0.3355172414)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.2333333333);
+  --i: 43;
+  --r1: 0.2217241379;
+  --r2: 0.0472413793;
+  --r3: 0.074137931;
 }
 .box .dot:nth-child(44) {
-  animation-delay: calc(var(--speed) * -1s * 0.22);
-  transform: translate3D(calc(var(--size) * 0.0537931034), calc(var(--size) * 0.1720689655), calc(var(--size) * -0.0089655172)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.2466666667);
+  --i: 44;
+  --r1: -0.2351724138;
+  --r2: -0.3386206897;
+  --r3: -0.1579310345;
 }
 .box .dot:nth-child(45) {
-  animation-delay: calc(var(--speed) * -1s * 0.225);
-  transform: translate3D(calc(var(--size) * -0.3320689655), calc(var(--size) * -0.174137931), calc(var(--size) * -0.325862069)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.26);
+  --i: 45;
+  --r1: -0.1837931034;
+  --r2: -0.0496551724;
+  --r3: -0.2717241379;
 }
 .box .dot:nth-child(46) {
-  animation-delay: calc(var(--speed) * -1s * 0.23);
-  transform: translate3D(calc(var(--size) * 0.1289655172), calc(var(--size) * 0.2724137931), calc(var(--size) * 0.1410344828)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.2733333333);
+  --i: 46;
+  --r1: -0.0665517241;
+  --r2: -0.1634482759;
+  --r3: -0.1934482759;
 }
 .box .dot:nth-child(47) {
-  animation-delay: calc(var(--speed) * -1s * 0.235);
-  transform: translate3D(calc(var(--size) * -0.0172413793), calc(var(--size) * 0.0489655172), calc(var(--size) * -0.0148275862)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.2866666667);
+  --i: 47;
+  --r1: -0.1479310345;
+  --r2: -0.1775862069;
+  --r3: 0.045862069;
 }
 .box .dot:nth-child(48) {
-  animation-delay: calc(var(--speed) * -1s * 0.24);
-  transform: translate3D(calc(var(--size) * -0.0375862069), calc(var(--size) * 0.1831034483), calc(var(--size) * 0.2824137931)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.3);
+  --i: 48;
+  --r1: 0.0324137931;
+  --r2: -0.0744827586;
+  --r3: -0.0448275862;
 }
 .box .dot:nth-child(49) {
-  animation-delay: calc(var(--speed) * -1s * 0.245);
-  transform: translate3D(calc(var(--size) * -0.324137931), calc(var(--size) * 0.1596551724), calc(var(--size) * 0.3337931034)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.3133333333);
+  --i: 49;
+  --r1: 0.17;
+  --r2: 0.1393103448;
+  --r3: 0.1410344828;
 }
 .box .dot:nth-child(50) {
-  animation-delay: calc(var(--speed) * -1s * 0.25);
-  transform: translate3D(calc(var(--size) * -0.1596551724), calc(var(--size) * -0.2668965517), calc(var(--size) * 0.08)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.3266666667);
+  --i: 50;
+  --r1: 0.2717241379;
+  --r2: 0.0779310345;
+  --r3: 0.0444827586;
 }
 .box .dot:nth-child(51) {
-  animation-delay: calc(var(--speed) * -1s * 0.255);
-  transform: translate3D(calc(var(--size) * -0.2779310345), calc(var(--size) * -0.3382758621), calc(var(--size) * 0.2710344828)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.34);
+  --i: 51;
+  --r1: 0.0579310345;
+  --r2: 0.1237931034;
+  --r3: -0.245862069;
 }
 .box .dot:nth-child(52) {
-  animation-delay: calc(var(--speed) * -1s * 0.26);
-  transform: translate3D(calc(var(--size) * 0.1910344828), calc(var(--size) * 0.2248275862), calc(var(--size) * 0.1920689655)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.3533333333);
+  --i: 52;
+  --r1: 0.0203448276;
+  --r2: 0.27;
+  --r3: -0.2224137931;
 }
 .box .dot:nth-child(53) {
-  animation-delay: calc(var(--speed) * -1s * 0.265);
-  transform: translate3D(calc(var(--size) * 0.25), calc(var(--size) * 0.2548275862), calc(var(--size) * -0.06)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.3666666667);
+  --i: 53;
+  --r1: 0.1851724138;
+  --r2: -0.074137931;
+  --r3: 0.0427586207;
 }
 .box .dot:nth-child(54) {
-  animation-delay: calc(var(--speed) * -1s * 0.27);
-  transform: translate3D(calc(var(--size) * 0.0562068966), calc(var(--size) * -0.2272413793), calc(var(--size) * 0.2379310345)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.38);
+  --i: 54;
+  --r1: 0.2772413793;
+  --r2: -0.174137931;
+  --r3: 0.3113793103;
 }
 .box .dot:nth-child(55) {
-  animation-delay: calc(var(--speed) * -1s * 0.275);
-  transform: translate3D(calc(var(--size) * -0.1272413793), calc(var(--size) * -0.0872413793), calc(var(--size) * -0.2134482759)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.3933333333);
+  --i: 55;
+  --r1: 0.1937931034;
+  --r2: 0.295862069;
+  --r3: 0.1286206897;
 }
 .box .dot:nth-child(56) {
-  animation-delay: calc(var(--speed) * -1s * 0.28);
-  transform: translate3D(calc(var(--size) * -0.3262068966), calc(var(--size) * 0.27), calc(var(--size) * 0.1793103448)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.4066666667);
+  --i: 56;
+  --r1: -0.1310344828;
+  --r2: -0.0820689655;
+  --r3: 0.1272413793;
 }
 .box .dot:nth-child(57) {
-  animation-delay: calc(var(--speed) * -1s * 0.285);
-  transform: translate3D(calc(var(--size) * -0.0996551724), calc(var(--size) * -0.1203448276), calc(var(--size) * -0.0810344828)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.42);
+  --i: 57;
+  --r1: 0.3120689655;
+  --r2: -0.1917241379;
+  --r3: -0.0986206897;
 }
 .box .dot:nth-child(58) {
-  animation-delay: calc(var(--speed) * -1s * 0.29);
-  transform: translate3D(calc(var(--size) * 0.0655172414), calc(var(--size) * 0.0424137931), calc(var(--size) * -0.22)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.4333333333);
+  --i: 58;
+  --r1: 0.3120689655;
+  --r2: -0.3368965517;
+  --r3: 0.2534482759;
 }
 .box .dot:nth-child(59) {
-  animation-delay: calc(var(--speed) * -1s * 0.295);
-  transform: translate3D(calc(var(--size) * -0.2420689655), calc(var(--size) * -0.0365517241), calc(var(--size) * -0.0262068966)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.4466666667);
+  --i: 59;
+  --r1: -0.2289655172;
+  --r2: -0.2796551724;
+  --r3: -0.3006896552;
 }
 .box .dot:nth-child(60) {
-  animation-delay: calc(var(--speed) * -1s * 0.3);
-  transform: translate3D(calc(var(--size) * 0.3210344828), calc(var(--size) * -0.0224137931), calc(var(--size) * 0.1986206897)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.46);
+  --i: 60;
+  --r1: 0.1679310345;
+  --r2: -0.0924137931;
+  --r3: -0.0768965517;
 }
 .box .dot:nth-child(61) {
-  animation-delay: calc(var(--speed) * -1s * 0.305);
-  transform: translate3D(calc(var(--size) * 0.2896551724), calc(var(--size) * -0.2562068966), calc(var(--size) * 0.0113793103)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.4733333333);
+  --i: 61;
+  --r1: -0.1482758621;
+  --r2: -0.0275862069;
+  --r3: -0.1072413793;
 }
 .box .dot:nth-child(62) {
-  animation-delay: calc(var(--speed) * -1s * 0.31);
-  transform: translate3D(calc(var(--size) * 0.335862069), calc(var(--size) * 0.3282758621), calc(var(--size) * 0.2603448276)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.4866666667);
+  --i: 62;
+  --r1: -0.325862069;
+  --r2: -0.2565517241;
+  --r3: -0.1510344828;
 }
 .box .dot:nth-child(63) {
-  animation-delay: calc(var(--speed) * -1s * 0.315);
-  transform: translate3D(calc(var(--size) * -0.0048275862), calc(var(--size) * -0.0644827586), calc(var(--size) * -0.2086206897)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.5);
+  --i: 63;
+  --r1: 0.3096551724;
+  --r2: 0.3337931034;
+  --r3: -0.0213793103;
 }
 .box .dot:nth-child(64) {
-  animation-delay: calc(var(--speed) * -1s * 0.32);
-  transform: translate3D(calc(var(--size) * -0.3289655172), calc(var(--size) * 0.3013793103), calc(var(--size) * -0.094137931)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.5133333333);
+  --i: 64;
+  --r1: -0.3127586207;
+  --r2: 0.2027586207;
+  --r3: 0.2362068966;
 }
 .box .dot:nth-child(65) {
-  animation-delay: calc(var(--speed) * -1s * 0.325);
-  transform: translate3D(calc(var(--size) * 0.0782758621), calc(var(--size) * 0.1724137931), calc(var(--size) * 0.0203448276)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.5266666667);
+  --i: 65;
+  --r1: 0.1520689655;
+  --r2: 0.0003448276;
+  --r3: -0.0534482759;
 }
 .box .dot:nth-child(66) {
-  animation-delay: calc(var(--speed) * -1s * 0.33);
-  transform: translate3D(calc(var(--size) * -0.0796551724), calc(var(--size) * 0.0882758621), calc(var(--size) * -0.0544827586)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.54);
+  --i: 66;
+  --r1: 0.1182758621;
+  --r2: -0.1693103448;
+  --r3: -0.1120689655;
 }
 .box .dot:nth-child(67) {
-  animation-delay: calc(var(--speed) * -1s * 0.335);
-  transform: translate3D(calc(var(--size) * 0.3389655172), calc(var(--size) * -0.1855172414), calc(var(--size) * 0.2089655172)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.5533333333);
+  --i: 67;
+  --r1: -0.0006896552;
+  --r2: -0.1389655172;
+  --r3: -0.2465517241;
 }
 .box .dot:nth-child(68) {
-  animation-delay: calc(var(--speed) * -1s * 0.34);
-  transform: translate3D(calc(var(--size) * -0.1303448276), calc(var(--size) * -0.3075862069), calc(var(--size) * -0.2434482759)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.5666666667);
+  --i: 68;
+  --r1: -0.1075862069;
+  --r2: 0.0710344828;
+  --r3: -0.0686206897;
 }
 .box .dot:nth-child(69) {
-  animation-delay: calc(var(--speed) * -1s * 0.345);
-  transform: translate3D(calc(var(--size) * -0.2796551724), calc(var(--size) * 0.1306896552), calc(var(--size) * 0.2010344828)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.58);
+  --i: 69;
+  --r1: 0.164137931;
+  --r2: 0.2651724138;
+  --r3: -0.124137931;
 }
 .box .dot:nth-child(70) {
-  animation-delay: calc(var(--speed) * -1s * 0.35);
-  transform: translate3D(calc(var(--size) * -0.0444827586), calc(var(--size) * 0.065862069), calc(var(--size) * 0.2289655172)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.5933333333);
+  --i: 70;
+  --r1: 0.2337931034;
+  --r2: 0.1727586207;
+  --r3: -0.0289655172;
 }
 .box .dot:nth-child(71) {
-  animation-delay: calc(var(--speed) * -1s * 0.355);
-  transform: translate3D(calc(var(--size) * 0.2920689655), calc(var(--size) * -0.1689655172), calc(var(--size) * -0.1324137931)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.6066666667);
+  --i: 71;
+  --r1: 0.1110344828;
+  --r2: -0.0782758621;
+  --r3: -0.1386206897;
 }
 .box .dot:nth-child(72) {
-  animation-delay: calc(var(--speed) * -1s * 0.36);
-  transform: translate3D(calc(var(--size) * -0.0910344828), calc(var(--size) * -0.34), calc(var(--size) * -0.0051724138)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.62);
+  --i: 72;
+  --r1: -0.0975862069;
+  --r2: 0.2713793103;
+  --r3: 0.27;
 }
 .box .dot:nth-child(73) {
-  animation-delay: calc(var(--speed) * -1s * 0.365);
-  transform: translate3D(calc(var(--size) * -0.3072413793), calc(var(--size) * 0.3127586207), calc(var(--size) * -0.2862068966)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.6333333333);
+  --i: 73;
+  --r1: 0.0065517241;
+  --r2: -0.1410344828;
+  --r3: -0.2472413793;
 }
 .box .dot:nth-child(74) {
-  animation-delay: calc(var(--speed) * -1s * 0.37);
-  transform: translate3D(calc(var(--size) * 0.1555172414), calc(var(--size) * 0.0106896552), calc(var(--size) * 0.03)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.6466666667);
+  --i: 74;
+  --r1: 0.2734482759;
+  --r2: 0.2165517241;
+  --r3: -0.0331034483;
 }
 .box .dot:nth-child(75) {
-  animation-delay: calc(var(--speed) * -1s * 0.375);
-  transform: translate3D(calc(var(--size) * 0.3368965517), calc(var(--size) * 0.3427586207), calc(var(--size) * -0.1237931034)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.66);
+  --i: 75;
+  --r1: 0.31;
+  --r2: -0.3424137931;
+  --r3: 0.0427586207;
 }
 .box .dot:nth-child(76) {
-  animation-delay: calc(var(--speed) * -1s * 0.38);
-  transform: translate3D(calc(var(--size) * -0.2437931034), calc(var(--size) * -0.0324137931), calc(var(--size) * 0.0889655172)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.6733333333);
+  --i: 76;
+  --r1: -0.1306896552;
+  --r2: -0.0834482759;
+  --r3: 0.1717241379;
 }
 .box .dot:nth-child(77) {
-  animation-delay: calc(var(--speed) * -1s * 0.385);
-  transform: translate3D(calc(var(--size) * 0.1568965517), calc(var(--size) * -0.3010344828), calc(var(--size) * -0.3331034483)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.6866666667);
+  --i: 77;
+  --r1: 0.1279310345;
+  --r2: 0.0244827586;
+  --r3: 0.2282758621;
 }
 .box .dot:nth-child(78) {
-  animation-delay: calc(var(--speed) * -1s * 0.39);
-  transform: translate3D(calc(var(--size) * -0.1572413793), calc(var(--size) * 0.1489655172), calc(var(--size) * 0.164137931)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.7);
+  --i: 78;
+  --r1: 0.0544827586;
+  --r2: 0.0737931034;
+  --r3: -0.3396551724;
 }
 .box .dot:nth-child(79) {
-  animation-delay: calc(var(--speed) * -1s * 0.395);
-  transform: translate3D(calc(var(--size) * 0.2286206897), calc(var(--size) * -0.0937931034), calc(var(--size) * 0.25)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.7133333333);
+  --i: 79;
+  --r1: -0.0420689655;
+  --r2: 0.1520689655;
+  --r3: 0.3320689655;
 }
 .box .dot:nth-child(80) {
-  animation-delay: calc(var(--speed) * -1s * 0.4);
-  transform: translate3D(calc(var(--size) * 0.0065517241), calc(var(--size) * -0.3355172414), calc(var(--size) * -0.2120689655)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.7266666667);
+  --i: 80;
+  --r1: -0.2482758621;
+  --r2: 0.2682758621;
+  --r3: 0.165862069;
 }
 .box .dot:nth-child(81) {
-  animation-delay: calc(var(--speed) * -1s * 0.405);
-  transform: translate3D(calc(var(--size) * -0.2282758621), calc(var(--size) * -0.0431034483), calc(var(--size) * 0.0303448276)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.74);
+  --i: 81;
+  --r1: -0.1062068966;
+  --r2: 0.1751724138;
+  --r3: -0.0386206897;
 }
 .box .dot:nth-child(82) {
-  animation-delay: calc(var(--speed) * -1s * 0.41);
-  transform: translate3D(calc(var(--size) * 0.2262068966), calc(var(--size) * 0.1965517241), calc(var(--size) * -0.1589655172)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.7533333333);
+  --i: 82;
+  --r1: 0.1031034483;
+  --r2: 0.0479310345;
+  --r3: 0.0668965517;
 }
 .box .dot:nth-child(83) {
-  animation-delay: calc(var(--speed) * -1s * 0.415);
-  transform: translate3D(calc(var(--size) * 0.2213793103), calc(var(--size) * 0.0910344828), calc(var(--size) * 0.1865517241)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.7666666667);
+  --i: 83;
+  --r1: 0.1603448276;
+  --r2: 0.2703448276;
+  --r3: 0.065862069;
 }
 .box .dot:nth-child(84) {
-  animation-delay: calc(var(--speed) * -1s * 0.42);
-  transform: translate3D(calc(var(--size) * 0.064137931), calc(var(--size) * -0.2417241379), calc(var(--size) * 0.2989655172)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.78);
+  --i: 84;
+  --r1: -0.2582758621;
+  --r2: -0.0337931034;
+  --r3: -0.1986206897;
 }
 .box .dot:nth-child(85) {
-  animation-delay: calc(var(--speed) * -1s * 0.425);
-  transform: translate3D(calc(var(--size) * 0.1027586207), calc(var(--size) * -0.1682758621), calc(var(--size) * 0.0089655172)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.7933333333);
+  --i: 85;
+  --r1: -0.0937931034;
+  --r2: -0.1248275862;
+  --r3: 0.2624137931;
 }
 .box .dot:nth-child(86) {
-  animation-delay: calc(var(--speed) * -1s * 0.43);
-  transform: translate3D(calc(var(--size) * 0.0289655172), calc(var(--size) * -0.0455172414), calc(var(--size) * 0.1620689655)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.8066666667);
+  --i: 86;
+  --r1: -0.155862069;
+  --r2: 0.0862068966;
+  --r3: -0.0503448276;
 }
 .box .dot:nth-child(87) {
-  animation-delay: calc(var(--speed) * -1s * 0.435);
-  transform: translate3D(calc(var(--size) * -0.0844827586), calc(var(--size) * 0.2272413793), calc(var(--size) * -0.0737931034)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.82);
+  --i: 87;
+  --r1: -0.2086206897;
+  --r2: -0.055862069;
+  --r3: -0.2082758621;
 }
 .box .dot:nth-child(88) {
-  animation-delay: calc(var(--speed) * -1s * 0.44);
-  transform: translate3D(calc(var(--size) * -0.2831034483), calc(var(--size) * 0.295862069), calc(var(--size) * 0.1144827586)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.8333333333);
+  --i: 88;
+  --r1: 0.1534482759;
+  --r2: -0.1606896552;
+  --r3: 0.0082758621;
 }
 .box .dot:nth-child(89) {
-  animation-delay: calc(var(--speed) * -1s * 0.445);
-  transform: translate3D(calc(var(--size) * -0.1948275862), calc(var(--size) * -0.185862069), calc(var(--size) * 0.2834482759)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.8466666667);
+  --i: 89;
+  --r1: 0.2544827586;
+  --r2: -0.1475862069;
+  --r3: 0.3351724138;
 }
 .box .dot:nth-child(90) {
-  animation-delay: calc(var(--speed) * -1s * 0.45);
-  transform: translate3D(calc(var(--size) * 0.2313793103), calc(var(--size) * 0.1517241379), calc(var(--size) * -0.2217241379)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.86);
+  --i: 90;
+  --r1: -0.1062068966;
+  --r2: 0.2506896552;
+  --r3: 0.1334482759;
 }
 .box .dot:nth-child(91) {
-  animation-delay: calc(var(--speed) * -1s * 0.455);
-  transform: translate3D(calc(var(--size) * -0.1203448276), calc(var(--size) * 0.2293103448), calc(var(--size) * 0.1010344828)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.8733333333);
+  --i: 91;
+  --r1: 0.1206896552;
+  --r2: -0.2834482759;
+  --r3: -0.0831034483;
 }
 .box .dot:nth-child(92) {
-  animation-delay: calc(var(--speed) * -1s * 0.46);
-  transform: translate3D(calc(var(--size) * 0.284137931), calc(var(--size) * -0.04), calc(var(--size) * -0.254137931)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.8866666667);
+  --i: 92;
+  --r1: 0.2427586207;
+  --r2: -0.1127586207;
+  --r3: 0.1168965517;
 }
 .box .dot:nth-child(93) {
-  animation-delay: calc(var(--speed) * -1s * 0.465);
-  transform: translate3D(calc(var(--size) * 0.2972413793), calc(var(--size) * -0.0527586207), calc(var(--size) * 0.3093103448)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.9);
+  --i: 93;
+  --r1: 0.1951724138;
+  --r2: -0.1386206897;
+  --r3: 0.1906896552;
 }
 .box .dot:nth-child(94) {
-  animation-delay: calc(var(--speed) * -1s * 0.47);
-  transform: translate3D(calc(var(--size) * -0.1889655172), calc(var(--size) * 0.2051724138), calc(var(--size) * -0.0075862069)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.9133333333);
+  --i: 94;
+  --r1: 0.0937931034;
+  --r2: 0.2537931034;
+  --r3: -0.0251724138;
 }
 .box .dot:nth-child(95) {
-  animation-delay: calc(var(--speed) * -1s * 0.475);
-  transform: translate3D(calc(var(--size) * 0.1296551724), calc(var(--size) * -0.2451724138), calc(var(--size) * -0.0489655172)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.9266666667);
+  --i: 95;
+  --r1: 0.1703448276;
+  --r2: -0.0496551724;
+  --r3: -0.1862068966;
 }
 .box .dot:nth-child(96) {
-  animation-delay: calc(var(--speed) * -1s * 0.48);
-  transform: translate3D(calc(var(--size) * 0.0524137931), calc(var(--size) * 0.0568965517), calc(var(--size) * -0.2813793103)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.94);
+  --i: 96;
+  --r1: 0.2096551724;
+  --r2: -0.2927586207;
+  --r3: 0.1768965517;
 }
 .box .dot:nth-child(97) {
-  animation-delay: calc(var(--speed) * -1s * 0.485);
-  transform: translate3D(calc(var(--size) * 0.0227586207), calc(var(--size) * 0.2455172414), calc(var(--size) * -0.1555172414)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.9533333333);
+  --i: 97;
+  --r1: -0.1024137931;
+  --r2: 0.2831034483;
+  --r3: -0.1968965517;
 }
 .box .dot:nth-child(98) {
-  animation-delay: calc(var(--speed) * -1s * 0.49);
-  transform: translate3D(calc(var(--size) * -0.144137931), calc(var(--size) * 0.1537931034), calc(var(--size) * 0.2262068966)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.9666666667);
+  --i: 98;
+  --r1: -0.1596551724;
+  --r2: 0.155862069;
+  --r3: 0.2186206897;
 }
 .box .dot:nth-child(99) {
-  animation-delay: calc(var(--speed) * -1s * 0.495);
-  transform: translate3D(calc(var(--size) * -0.1513793103), calc(var(--size) * 0.3255172414), calc(var(--size) * 0.1324137931)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.98);
+  --i: 99;
+  --r1: 0.1093103448;
+  --r2: -0.3403448276;
+  --r3: 0.1589655172;
 }
 .box .dot:nth-child(100) {
-  animation-delay: calc(var(--speed) * -1s * 0.5);
-  transform: translate3D(calc(var(--size) * 0.2944827586), calc(var(--size) * -0.165862069), calc(var(--size) * 0.2120689655)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.9933333333);
+  --i: 100;
+  --r1: -0.3082758621;
+  --r2: -0.1465517241;
+  --r3: 0.0924137931;
 }
 .box .dot:nth-child(101) {
-  animation-delay: calc(var(--speed) * -1s * 0.505);
-  transform: translate3D(calc(var(--size) * -0.1613793103), calc(var(--size) * -0.1986206897), calc(var(--size) * -0.1075862069)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.0066666667);
+  --i: 101;
+  --r1: 0.3396551724;
+  --r2: 0.1755172414;
+  --r3: 0.0968965517;
 }
 .box .dot:nth-child(102) {
-  animation-delay: calc(var(--speed) * -1s * 0.51);
-  transform: translate3D(calc(var(--size) * 0.0003448276), calc(var(--size) * 0.0065517241), calc(var(--size) * -0.0210344828)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.02);
+  --i: 102;
+  --r1: 0.2286206897;
+  --r2: 0.2968965517;
+  --r3: 0.3317241379;
 }
 .box .dot:nth-child(103) {
-  animation-delay: calc(var(--speed) * -1s * 0.515);
-  transform: translate3D(calc(var(--size) * -0.285862069), calc(var(--size) * 0.2413793103), calc(var(--size) * 0.2444827586)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.0333333333);
+  --i: 103;
+  --r1: -0.0593103448;
+  --r2: 0.1086206897;
+  --r3: -0.3234482759;
 }
 .box .dot:nth-child(104) {
-  animation-delay: calc(var(--speed) * -1s * 0.52);
-  transform: translate3D(calc(var(--size) * 0.2413793103), calc(var(--size) * -0.1513793103), calc(var(--size) * 0.3272413793)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.0466666667);
+  --i: 104;
+  --r1: -0.0248275862;
+  --r2: -0.2272413793;
+  --r3: -0.1003448276;
 }
 .box .dot:nth-child(105) {
-  animation-delay: calc(var(--speed) * -1s * 0.525);
-  transform: translate3D(calc(var(--size) * -0.2562068966), calc(var(--size) * 0.0779310345), calc(var(--size) * 0.2862068966)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.06);
+  --i: 105;
+  --r1: -0.3406896552;
+  --r2: -0.1524137931;
+  --r3: -0.1765517241;
 }
 .box .dot:nth-child(106) {
-  animation-delay: calc(var(--speed) * -1s * 0.53);
-  transform: translate3D(calc(var(--size) * 0.2637931034), calc(var(--size) * 0.1631034483), calc(var(--size) * -0.0286206897)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.0733333333);
+  --i: 106;
+  --r1: -0.0627586207;
+  --r2: -0.294137931;
+  --r3: 0.0848275862;
 }
 .box .dot:nth-child(107) {
-  animation-delay: calc(var(--speed) * -1s * 0.535);
-  transform: translate3D(calc(var(--size) * 0.0086206897), calc(var(--size) * -0.2162068966), calc(var(--size) * -0.145862069)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.0866666667);
+  --i: 107;
+  --r1: 0.284137931;
+  --r2: -0.0086206897;
+  --r3: -0.1444827586;
 }
 .box .dot:nth-child(108) {
-  animation-delay: calc(var(--speed) * -1s * 0.54);
-  transform: translate3D(calc(var(--size) * -0.2562068966), calc(var(--size) * -0.3393103448), calc(var(--size) * 0.0868965517)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.1);
+  --i: 108;
+  --r1: 0.0437931034;
+  --r2: -0.3079310345;
+  --r3: -0.214137931;
 }
 .box .dot:nth-child(109) {
-  animation-delay: calc(var(--speed) * -1s * 0.545);
-  transform: translate3D(calc(var(--size) * -0.2451724138), calc(var(--size) * 0.2293103448), calc(var(--size) * -0.0289655172)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.1133333333);
+  --i: 109;
+  --r1: 0.1406896552;
+  --r2: 0.0179310345;
+  --r3: -0.18;
 }
 .box .dot:nth-child(110) {
-  animation-delay: calc(var(--speed) * -1s * 0.55);
-  transform: translate3D(calc(var(--size) * 0.1617241379), calc(var(--size) * -0.3068965517), calc(var(--size) * -0.08)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.1266666667);
+  --i: 110;
+  --r1: 0.1679310345;
+  --r2: -0.1172413793;
+  --r3: -0.0006896552;
 }
 .box .dot:nth-child(111) {
-  animation-delay: calc(var(--speed) * -1s * 0.555);
-  transform: translate3D(calc(var(--size) * 0.3220689655), calc(var(--size) * 0.3079310345), calc(var(--size) * 0.1572413793)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.14);
+  --i: 111;
+  --r1: -0.2010344828;
+  --r2: -0.0313793103;
+  --r3: 0.3127586207;
 }
 .box .dot:nth-child(112) {
-  animation-delay: calc(var(--speed) * -1s * 0.56);
-  transform: translate3D(calc(var(--size) * -0.0582758621), calc(var(--size) * 0.1837931034), calc(var(--size) * -0.0193103448)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.1533333333);
+  --i: 112;
+  --r1: -0.2386206897;
+  --r2: 0.2586206897;
+  --r3: -0.214137931;
 }
 .box .dot:nth-child(113) {
-  animation-delay: calc(var(--speed) * -1s * 0.565);
-  transform: translate3D(calc(var(--size) * -0.2972413793), calc(var(--size) * -0.1396551724), calc(var(--size) * 0.2927586207)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.1666666667);
+  --i: 113;
+  --r1: -0.1131034483;
+  --r2: 0.1037931034;
+  --r3: -0.3127586207;
 }
 .box .dot:nth-child(114) {
-  animation-delay: calc(var(--speed) * -1s * 0.57);
-  transform: translate3D(calc(var(--size) * 0.2255172414), calc(var(--size) * -0.0175862069), calc(var(--size) * -0.2134482759)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.18);
+  --i: 114;
+  --r1: 0.1068965517;
+  --r2: 0.2075862069;
+  --r3: 0.1879310345;
 }
 .box .dot:nth-child(115) {
-  animation-delay: calc(var(--speed) * -1s * 0.575);
-  transform: translate3D(calc(var(--size) * -0.06), calc(var(--size) * 0.1017241379), calc(var(--size) * -0.034137931)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.1933333333);
+  --i: 115;
+  --r1: -0.0868965517;
+  --r2: 0.1965517241;
+  --r3: -0.1034482759;
 }
 .box .dot:nth-child(116) {
-  animation-delay: calc(var(--speed) * -1s * 0.58);
-  transform: translate3D(calc(var(--size) * -0.264137931), calc(var(--size) * -0.1979310345), calc(var(--size) * 0.1827586207)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.2066666667);
+  --i: 116;
+  --r1: -0.3262068966;
+  --r2: 0.1151724138;
+  --r3: 0.2324137931;
 }
 .box .dot:nth-child(117) {
-  animation-delay: calc(var(--speed) * -1s * 0.585);
-  transform: translate3D(calc(var(--size) * -0.2875862069), calc(var(--size) * 0.2468965517), calc(var(--size) * 0.2)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.22);
+  --i: 117;
+  --r1: -0.3206896552;
+  --r2: 0.0465517241;
+  --r3: 0.3375862069;
 }
 .box .dot:nth-child(118) {
-  animation-delay: calc(var(--speed) * -1s * 0.59);
-  transform: translate3D(calc(var(--size) * -0.0162068966), calc(var(--size) * -0.1410344828), calc(var(--size) * 0.0989655172)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.2333333333);
+  --i: 118;
+  --r1: 0.1913793103;
+  --r2: -0.0037931034;
+  --r3: 0.1434482759;
 }
 .box .dot:nth-child(119) {
-  animation-delay: calc(var(--speed) * -1s * 0.595);
-  transform: translate3D(calc(var(--size) * -0.3168965517), calc(var(--size) * 0.2937931034), calc(var(--size) * 0.2613793103)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.2466666667);
+  --i: 119;
+  --r1: 0.2493103448;
+  --r2: -0.2748275862;
+  --r3: 0.3327586207;
 }
 .box .dot:nth-child(120) {
-  animation-delay: calc(var(--speed) * -1s * 0.6);
-  transform: translate3D(calc(var(--size) * -0.2282758621), calc(var(--size) * 0.1427586207), calc(var(--size) * -0.2379310345)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.26);
+  --i: 120;
+  --r1: 0.1751724138;
+  --r2: -0.0268965517;
+  --r3: 0.1189655172;
 }
 .box .dot:nth-child(121) {
-  animation-delay: calc(var(--speed) * -1s * 0.605);
-  transform: translate3D(calc(var(--size) * 0.1172413793), calc(var(--size) * 0.254137931), calc(var(--size) * -0.2320689655)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.2733333333);
+  --i: 121;
+  --r1: -0.3389655172;
+  --r2: 0.0306896552;
+  --r3: 0.2882758621;
 }
 .box .dot:nth-child(122) {
-  animation-delay: calc(var(--speed) * -1s * 0.61);
-  transform: translate3D(calc(var(--size) * 0.0717241379), calc(var(--size) * 0.1789655172), calc(var(--size) * 0.1396551724)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.2866666667);
+  --i: 122;
+  --r1: -0.3227586207;
+  --r2: 0.2786206897;
+  --r3: -0.2831034483;
 }
 .box .dot:nth-child(123) {
-  animation-delay: calc(var(--speed) * -1s * 0.615);
-  transform: translate3D(calc(var(--size) * 0.2117241379), calc(var(--size) * -0.0220689655), calc(var(--size) * -0.0979310345)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.3);
+  --i: 123;
+  --r1: 0.074137931;
+  --r2: 0.044137931;
+  --r3: 0.0537931034;
 }
 .box .dot:nth-child(124) {
-  animation-delay: calc(var(--speed) * -1s * 0.62);
-  transform: translate3D(calc(var(--size) * 0.1782758621), calc(var(--size) * -0.2265517241), calc(var(--size) * 0.224137931)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.3133333333);
+  --i: 124;
+  --r1: -0.3344827586;
+  --r2: 0.1634482759;
+  --r3: 0.0465517241;
 }
 .box .dot:nth-child(125) {
-  animation-delay: calc(var(--speed) * -1s * 0.625);
-  transform: translate3D(calc(var(--size) * -0.1034482759), calc(var(--size) * -0.3031034483), calc(var(--size) * -0.22)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.3266666667);
+  --i: 125;
+  --r1: 0.1834482759;
+  --r2: 0.0593103448;
+  --r3: 0.2875862069;
 }
 .box .dot:nth-child(126) {
-  animation-delay: calc(var(--speed) * -1s * 0.63);
-  transform: translate3D(calc(var(--size) * 0.1724137931), calc(var(--size) * 0.0410344828), calc(var(--size) * 0.2913793103)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.34);
+  --i: 126;
+  --r1: 0.2665517241;
+  --r2: -0.2455172414;
+  --r3: 0.2427586207;
 }
 .box .dot:nth-child(127) {
-  animation-delay: calc(var(--speed) * -1s * 0.635);
-  transform: translate3D(calc(var(--size) * -0.3106896552), calc(var(--size) * -0.0862068966), calc(var(--size) * 0.2686206897)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.3533333333);
+  --i: 127;
+  --r1: 0.0334482759;
+  --r2: -0.3065517241;
+  --r3: 0.0665517241;
 }
 .box .dot:nth-child(128) {
-  animation-delay: calc(var(--speed) * -1s * 0.64);
-  transform: translate3D(calc(var(--size) * -0.0137931034), calc(var(--size) * 0.0793103448), calc(var(--size) * -0.1410344828)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.3666666667);
+  --i: 128;
+  --r1: -0.3437931034;
+  --r2: -0.1810344828;
+  --r3: -0.0310344828;
 }
 .box .dot:nth-child(129) {
-  animation-delay: calc(var(--speed) * -1s * 0.645);
-  transform: translate3D(calc(var(--size) * 0.2889655172), calc(var(--size) * -0.0882758621), calc(var(--size) * 0.1244827586)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.38);
+  --i: 129;
+  --r1: -0.13;
+  --r2: -0.1772413793;
+  --r3: 0.0913793103;
 }
 .box .dot:nth-child(130) {
-  animation-delay: calc(var(--speed) * -1s * 0.65);
-  transform: translate3D(calc(var(--size) * -0.3268965517), calc(var(--size) * 0.3137931034), calc(var(--size) * 0.0986206897)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.3933333333);
+  --i: 130;
+  --r1: 0.3437931034;
+  --r2: 0.0451724138;
+  --r3: -0.27;
 }
 .box .dot:nth-child(131) {
-  animation-delay: calc(var(--speed) * -1s * 0.655);
-  transform: translate3D(calc(var(--size) * -0.0906896552), calc(var(--size) * 0.0227586207), calc(var(--size) * -0.0844827586)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.4066666667);
+  --i: 131;
+  --r1: 0.3193103448;
+  --r2: 0.3227586207;
+  --r3: -0.0427586207;
 }
 .box .dot:nth-child(132) {
-  animation-delay: calc(var(--speed) * -1s * 0.66);
-  transform: translate3D(calc(var(--size) * -0.21), calc(var(--size) * 0.2562068966), calc(var(--size) * -0.1155172414)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.42);
+  --i: 132;
+  --r1: 0.1982758621;
+  --r2: 0.1448275862;
+  --r3: 0.19;
 }
 .box .dot:nth-child(133) {
-  animation-delay: calc(var(--speed) * -1s * 0.665);
-  transform: translate3D(calc(var(--size) * -0.1148275862), calc(var(--size) * 0.0517241379), calc(var(--size) * 0.1789655172)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.4333333333);
+  --i: 133;
+  --r1: 0.1727586207;
+  --r2: 0.2062068966;
+  --r3: -0.1982758621;
 }
 .box .dot:nth-child(134) {
-  animation-delay: calc(var(--speed) * -1s * 0.67);
-  transform: translate3D(calc(var(--size) * 0.1589655172), calc(var(--size) * -0.2624137931), calc(var(--size) * 0.3144827586)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.4466666667);
+  --i: 134;
+  --r1: 0.1796551724;
+  --r2: 0.1055172414;
+  --r3: -0.1534482759;
 }
 .box .dot:nth-child(135) {
-  animation-delay: calc(var(--speed) * -1s * 0.675);
-  transform: translate3D(calc(var(--size) * 0.2462068966), calc(var(--size) * 0.2231034483), calc(var(--size) * -0.21)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.46);
+  --i: 135;
+  --r1: 0.0924137931;
+  --r2: -0.0393103448;
+  --r3: 0.3017241379;
 }
 .box .dot:nth-child(136) {
-  animation-delay: calc(var(--speed) * -1s * 0.68);
-  transform: translate3D(calc(var(--size) * -0.1186206897), calc(var(--size) * -0.155862069), calc(var(--size) * -0.1872413793)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.4733333333);
+  --i: 136;
+  --r1: -0.0631034483;
+  --r2: 0.3331034483;
+  --r3: -0.1817241379;
 }
 .box .dot:nth-child(137) {
-  animation-delay: calc(var(--speed) * -1s * 0.685);
-  transform: translate3D(calc(var(--size) * 0.0731034483), calc(var(--size) * 0.344137931), calc(var(--size) * 0.0706896552)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.4866666667);
+  --i: 137;
+  --r1: -0.2962068966;
+  --r2: 0.0344827586;
+  --r3: -0.1213793103;
 }
 .box .dot:nth-child(138) {
-  animation-delay: calc(var(--speed) * -1s * 0.69);
-  transform: translate3D(calc(var(--size) * 0.2337931034), calc(var(--size) * 0.0579310345), calc(var(--size) * -0.1948275862)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.5);
+  --i: 138;
+  --r1: -0.3368965517;
+  --r2: -0.0437931034;
+  --r3: 0.0548275862;
 }
 .box .dot:nth-child(139) {
-  animation-delay: calc(var(--speed) * -1s * 0.695);
-  transform: translate3D(calc(var(--size) * 0.055862069), calc(var(--size) * 0.2437931034), calc(var(--size) * 0.1010344828)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.5133333333);
+  --i: 139;
+  --r1: -0.1144827586;
+  --r2: 0.0762068966;
+  --r3: -0.2889655172;
 }
 .box .dot:nth-child(140) {
-  animation-delay: calc(var(--speed) * -1s * 0.7);
-  transform: translate3D(calc(var(--size) * -0.254137931), calc(var(--size) * -0.0796551724), calc(var(--size) * 0.0486206897)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.5266666667);
+  --i: 140;
+  --r1: 0.0906896552;
+  --r2: 0.2234482759;
+  --r3: 0.3365517241;
 }
 .box .dot:nth-child(141) {
-  animation-delay: calc(var(--speed) * -1s * 0.705);
-  transform: translate3D(calc(var(--size) * 0.22), calc(var(--size) * -0.0403448276), calc(var(--size) * 0.0124137931)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.54);
+  --i: 141;
+  --r1: 0.2706896552;
+  --r2: -0.165862069;
+  --r3: -0.1517241379;
 }
 .box .dot:nth-child(142) {
-  animation-delay: calc(var(--speed) * -1s * 0.71);
-  transform: translate3D(calc(var(--size) * -0.1931034483), calc(var(--size) * -0.1020689655), calc(var(--size) * -0.23)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.5533333333);
+  --i: 142;
+  --r1: -0.2624137931;
+  --r2: 0.2886206897;
+  --r3: -0.2810344828;
 }
 .box .dot:nth-child(143) {
-  animation-delay: calc(var(--speed) * -1s * 0.715);
-  transform: translate3D(calc(var(--size) * 0.2410344828), calc(var(--size) * 0.0696551724), calc(var(--size) * 0.0503448276)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.5666666667);
+  --i: 143;
+  --r1: 0.1834482759;
+  --r2: -0.1737931034;
+  --r3: -0.2220689655;
 }
 .box .dot:nth-child(144) {
-  animation-delay: calc(var(--speed) * -1s * 0.72);
-  transform: translate3D(calc(var(--size) * -0.2913793103), calc(var(--size) * 0.0534482759), calc(var(--size) * 0.3420689655)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.58);
+  --i: 144;
+  --r1: 0.1313793103;
+  --r2: -0.2965517241;
+  --r3: -0.1165517241;
 }
 .box .dot:nth-child(145) {
-  animation-delay: calc(var(--speed) * -1s * 0.725);
-  transform: translate3D(calc(var(--size) * 0.1306896552), calc(var(--size) * -0.2806896552), calc(var(--size) * 0.0179310345)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.5933333333);
+  --i: 145;
+  --r1: -0.0386206897;
+  --r2: -0.3227586207;
+  --r3: 0.1;
 }
 .box .dot:nth-child(146) {
-  animation-delay: calc(var(--speed) * -1s * 0.73);
-  transform: translate3D(calc(var(--size) * -0.1382758621), calc(var(--size) * -0.1686206897), calc(var(--size) * -0.0365517241)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.6066666667);
+  --i: 146;
+  --r1: -0.3403448276;
+  --r2: 0.2524137931;
+  --r3: -0.3234482759;
 }
 .box .dot:nth-child(147) {
-  animation-delay: calc(var(--speed) * -1s * 0.735);
-  transform: translate3D(calc(var(--size) * 0.0303448276), calc(var(--size) * 0.3386206897), calc(var(--size) * -0.1027586207)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.62);
+  --i: 147;
+  --r1: -0.1572413793;
+  --r2: -0.3110344828;
+  --r3: -0.2196551724;
 }
 .box .dot:nth-child(148) {
-  animation-delay: calc(var(--speed) * -1s * 0.74);
-  transform: translate3D(calc(var(--size) * -0.1396551724), calc(var(--size) * -0.2796551724), calc(var(--size) * 0.2048275862)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.6333333333);
+  --i: 148;
+  --r1: -0.034137931;
+  --r2: -0.0189655172;
+  --r3: -0.2806896552;
 }
 .box .dot:nth-child(149) {
-  animation-delay: calc(var(--speed) * -1s * 0.745);
-  transform: translate3D(calc(var(--size) * -0.145862069), calc(var(--size) * 0.2596551724), calc(var(--size) * 0.0868965517)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.6466666667);
+  --i: 149;
+  --r1: 0.3010344828;
+  --r2: 0.3196551724;
+  --r3: 0.2817241379;
 }
 .box .dot:nth-child(150) {
-  animation-delay: calc(var(--speed) * -1s * 0.75);
-  transform: translate3D(calc(var(--size) * 0.144137931), calc(var(--size) * 0.1596551724), calc(var(--size) * -0.0579310345)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.66);
+  --i: 150;
+  --r1: -0.3382758621;
+  --r2: -0.0862068966;
+  --r3: -0.2055172414;
 }
 .box .dot:nth-child(151) {
-  animation-delay: calc(var(--speed) * -1s * 0.755);
-  transform: translate3D(calc(var(--size) * 0.0227586207), calc(var(--size) * -0.3055172414), calc(var(--size) * 0.2544827586)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.6733333333);
+  --i: 151;
+  --r1: -0.2779310345;
+  --r2: 0.0117241379;
+  --r3: -0.2917241379;
 }
 .box .dot:nth-child(152) {
-  animation-delay: calc(var(--speed) * -1s * 0.76);
-  transform: translate3D(calc(var(--size) * -0.1131034483), calc(var(--size) * -0.2727586207), calc(var(--size) * -0.0662068966)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.6866666667);
+  --i: 152;
+  --r1: -0.2024137931;
+  --r2: 0.2731034483;
+  --r3: -0.0144827586;
 }
 .box .dot:nth-child(153) {
-  animation-delay: calc(var(--speed) * -1s * 0.765);
-  transform: translate3D(calc(var(--size) * 0.1631034483), calc(var(--size) * 0.224137931), calc(var(--size) * -0.0796551724)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.7);
+  --i: 153;
+  --r1: -0.1555172414;
+  --r2: 0.3431034483;
+  --r3: -0.2134482759;
 }
 .box .dot:nth-child(154) {
-  animation-delay: calc(var(--speed) * -1s * 0.77);
-  transform: translate3D(calc(var(--size) * 0.3134482759), calc(var(--size) * -0.1531034483), calc(var(--size) * 0.1610344828)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.7133333333);
+  --i: 154;
+  --r1: -0.3289655172;
+  --r2: 0.1172413793;
+  --r3: -0.0068965517;
 }
 .box .dot:nth-child(155) {
-  animation-delay: calc(var(--speed) * -1s * 0.775);
-  transform: translate3D(calc(var(--size) * -0.3017241379), calc(var(--size) * -0.2868965517), calc(var(--size) * 0.1372413793)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.7266666667);
+  --i: 155;
+  --r1: -0.0396551724;
+  --r2: 0.1868965517;
+  --r3: 0.2520689655;
 }
 .box .dot:nth-child(156) {
-  animation-delay: calc(var(--speed) * -1s * 0.78);
-  transform: translate3D(calc(var(--size) * -0.2375862069), calc(var(--size) * 0.1351724138), calc(var(--size) * 0.2613793103)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.74);
+  --i: 156;
+  --r1: 0.1348275862;
+  --r2: -0.2627586207;
+  --r3: 0.0589655172;
 }
 .box .dot:nth-child(157) {
-  animation-delay: calc(var(--speed) * -1s * 0.785);
-  transform: translate3D(calc(var(--size) * 0.0555172414), calc(var(--size) * -0.0517241379), calc(var(--size) * 0.2575862069)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.7533333333);
+  --i: 157;
+  --r1: 0.0724137931;
+  --r2: -0.0027586207;
+  --r3: 0.3148275862;
 }
 .box .dot:nth-child(158) {
-  animation-delay: calc(var(--speed) * -1s * 0.79);
-  transform: translate3D(calc(var(--size) * 0.1644827586), calc(var(--size) * 0.0065517241), calc(var(--size) * 0.2562068966)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.7666666667);
+  --i: 158;
+  --r1: -0.0772413793;
+  --r2: -0.1848275862;
+  --r3: -0.2734482759;
 }
 .box .dot:nth-child(159) {
-  animation-delay: calc(var(--speed) * -1s * 0.795);
-  transform: translate3D(calc(var(--size) * 0.2162068966), calc(var(--size) * 0.1706896552), calc(var(--size) * -0.3193103448)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.78);
+  --i: 159;
+  --r1: 0.3162068966;
+  --r2: 0.315862069;
+  --r3: -0.0751724138;
 }
 .box .dot:nth-child(160) {
-  animation-delay: calc(var(--speed) * -1s * 0.8);
-  transform: translate3D(calc(var(--size) * 0.2262068966), calc(var(--size) * 0.2775862069), calc(var(--size) * 0.2513793103)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.7933333333);
+  --i: 160;
+  --r1: -0.3217241379;
+  --r2: 0.1675862069;
+  --r3: 0.0120689655;
 }
 .box .dot:nth-child(161) {
-  animation-delay: calc(var(--speed) * -1s * 0.805);
-  transform: translate3D(calc(var(--size) * 0.0903448276), calc(var(--size) * 0.0034482759), calc(var(--size) * -0.0334482759)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.8066666667);
+  --i: 161;
+  --r1: -0.094137931;
+  --r2: 0.1479310345;
+  --r3: 0.1293103448;
 }
 .box .dot:nth-child(162) {
-  animation-delay: calc(var(--speed) * -1s * 0.81);
-  transform: translate3D(calc(var(--size) * -0.0055172414), calc(var(--size) * -0.2393103448), calc(var(--size) * 0.1124137931)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.82);
+  --i: 162;
+  --r1: 0.0220689655;
+  --r2: 0.2951724138;
+  --r3: 0.0531034483;
 }
 .box .dot:nth-child(163) {
-  animation-delay: calc(var(--speed) * -1s * 0.815);
-  transform: translate3D(calc(var(--size) * 0.0617241379), calc(var(--size) * 0.1462068966), calc(var(--size) * -0.0817241379)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.8333333333);
+  --i: 163;
+  --r1: -0.0996551724;
+  --r2: 0.0572413793;
+  --r3: -0.1348275862;
 }
 .box .dot:nth-child(164) {
-  animation-delay: calc(var(--speed) * -1s * 0.82);
-  transform: translate3D(calc(var(--size) * -0.1410344828), calc(var(--size) * -0.1986206897), calc(var(--size) * -0.2262068966)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.8466666667);
+  --i: 164;
+  --r1: -0.0996551724;
+  --r2: -0.0327586207;
+  --r3: 0.3244827586;
 }
 .box .dot:nth-child(165) {
-  animation-delay: calc(var(--speed) * -1s * 0.825);
-  transform: translate3D(calc(var(--size) * -0.114137931), calc(var(--size) * 0.164137931), calc(var(--size) * -0.0965517241)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.86);
+  --i: 165;
+  --r1: 0.2093103448;
+  --r2: 0.2693103448;
+  --r3: -0.0248275862;
 }
 .box .dot:nth-child(166) {
-  animation-delay: calc(var(--speed) * -1s * 0.83);
-  transform: translate3D(calc(var(--size) * -0.1717241379), calc(var(--size) * -0.0565517241), calc(var(--size) * -0.2810344828)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.8733333333);
+  --i: 166;
+  --r1: 0.0548275862;
+  --r2: 0.2731034483;
+  --r3: 0.305862069;
 }
 .box .dot:nth-child(167) {
-  animation-delay: calc(var(--speed) * -1s * 0.835);
-  transform: translate3D(calc(var(--size) * 0.1934482759), calc(var(--size) * -0.2368965517), calc(var(--size) * 0.3065517241)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.8866666667);
+  --i: 167;
+  --r1: -0.1151724138;
+  --r2: -0.2079310345;
+  --r3: 0.0793103448;
 }
 .box .dot:nth-child(168) {
-  animation-delay: calc(var(--speed) * -1s * 0.84);
-  transform: translate3D(calc(var(--size) * 0.124137931), calc(var(--size) * 0.0810344828), calc(var(--size) * -0.2627586207)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.9);
+  --i: 168;
+  --r1: 0.1106896552;
+  --r2: 0.0682758621;
+  --r3: -0.1220689655;
 }
 .box .dot:nth-child(169) {
-  animation-delay: calc(var(--speed) * -1s * 0.845);
-  transform: translate3D(calc(var(--size) * -0.0782758621), calc(var(--size) * -0.0965517241), calc(var(--size) * -0.2744827586)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.9133333333);
+  --i: 169;
+  --r1: 0.2293103448;
+  --r2: 0.1789655172;
+  --r3: -0.1379310345;
 }
 .box .dot:nth-child(170) {
-  animation-delay: calc(var(--speed) * -1s * 0.85);
-  transform: translate3D(calc(var(--size) * -0.2182758621), calc(var(--size) * -0.3389655172), calc(var(--size) * 0.0548275862)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.9266666667);
+  --i: 170;
+  --r1: 0.1989655172;
+  --r2: 0.2906896552;
+  --r3: 0.08;
 }
 .box .dot:nth-child(171) {
-  animation-delay: calc(var(--speed) * -1s * 0.855);
-  transform: translate3D(calc(var(--size) * -0.214137931), calc(var(--size) * 0.0037931034), calc(var(--size) * -0.1596551724)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.94);
+  --i: 171;
+  --r1: 0.1965517241;
+  --r2: -0.2589655172;
+  --r3: -0.1437931034;
 }
 .box .dot:nth-child(172) {
-  animation-delay: calc(var(--speed) * -1s * 0.86);
-  transform: translate3D(calc(var(--size) * 0.2855172414), calc(var(--size) * 0.3089655172), calc(var(--size) * -0.2644827586)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.9533333333);
+  --i: 172;
+  --r1: 0.2979310345;
+  --r2: 0.2482758621;
+  --r3: -0.2493103448;
 }
 .box .dot:nth-child(173) {
-  animation-delay: calc(var(--speed) * -1s * 0.865);
-  transform: translate3D(calc(var(--size) * 0.2217241379), calc(var(--size) * -0.3424137931), calc(var(--size) * 0.2120689655)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.9666666667);
+  --i: 173;
+  --r1: -0.3320689655;
+  --r2: -0.1427586207;
+  --r3: 0.0855172414;
 }
 .box .dot:nth-child(174) {
-  animation-delay: calc(var(--speed) * -1s * 0.87);
-  transform: translate3D(calc(var(--size) * -0.2372413793), calc(var(--size) * 0.3231034483), calc(var(--size) * 0.2031034483)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.98);
+  --i: 174;
+  --r1: 0.0751724138;
+  --r2: -0.2586206897;
+  --r3: -0.0382758621;
 }
 .box .dot:nth-child(175) {
-  animation-delay: calc(var(--speed) * -1s * 0.875);
-  transform: translate3D(calc(var(--size) * -0.3320689655), calc(var(--size) * -0.1320689655), calc(var(--size) * -0.1317241379)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(2.9933333333);
+  --i: 175;
+  --r1: 0.2665517241;
+  --r2: 0.2686206897;
+  --r3: -0.26;
 }
 .box .dot:nth-child(176) {
-  animation-delay: calc(var(--speed) * -1s * 0.88);
-  transform: translate3D(calc(var(--size) * 0.0486206897), calc(var(--size) * -0.3031034483), calc(var(--size) * 0.0865517241)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(3.0066666667);
+  --i: 176;
+  --r1: 0.1996551724;
+  --r2: -0.0375862069;
+  --r3: -0.0106896552;
 }
 .box .dot:nth-child(177) {
-  animation-delay: calc(var(--speed) * -1s * 0.885);
-  transform: translate3D(calc(var(--size) * 0.2272413793), calc(var(--size) * 0.0648275862), calc(var(--size) * 0.1944827586)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(3.02);
+  --i: 177;
+  --r1: 0.224137931;
+  --r2: 0.2951724138;
+  --r3: -0.3227586207;
 }
 .box .dot:nth-child(178) {
-  animation-delay: calc(var(--speed) * -1s * 0.89);
-  transform: translate3D(calc(var(--size) * 0.0662068966), calc(var(--size) * 0.1744827586), calc(var(--size) * 0.3182758621)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(3.0333333333);
+  --i: 178;
+  --r1: -0.0082758621;
+  --r2: -0.1593103448;
+  --r3: 0.3417241379;
 }
 .box .dot:nth-child(179) {
-  animation-delay: calc(var(--speed) * -1s * 0.895);
-  transform: translate3D(calc(var(--size) * 0.0924137931), calc(var(--size) * 0.1472413793), calc(var(--size) * -0.325862069)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(3.0466666667);
+  --i: 179;
+  --r1: -0.0675862069;
+  --r2: -0.1096551724;
+  --r3: 0.0410344828;
 }
 .box .dot:nth-child(180) {
-  animation-delay: calc(var(--speed) * -1s * 0.9);
-  transform: translate3D(calc(var(--size) * -0.1986206897), calc(var(--size) * 0.3337931034), calc(var(--size) * 0.1127586207)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(3.06);
+  --i: 180;
+  --r1: -0.0413793103;
+  --r2: -0.2196551724;
+  --r3: 0.0172413793;
 }
 .box .dot:nth-child(181) {
-  animation-delay: calc(var(--speed) * -1s * 0.905);
-  transform: translate3D(calc(var(--size) * -0.2348275862), calc(var(--size) * 0.1296551724), calc(var(--size) * 0.3389655172)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(3.0733333333);
+  --i: 181;
+  --r1: 0.0251724138;
+  --r2: 0.18;
+  --r3: -0.0293103448;
 }
 .box .dot:nth-child(182) {
-  animation-delay: calc(var(--speed) * -1s * 0.91);
-  transform: translate3D(calc(var(--size) * 0.27), calc(var(--size) * 0.334137931), calc(var(--size) * -0.0548275862)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(3.0866666667);
+  --i: 182;
+  --r1: 0.0775862069;
+  --r2: -0.0734482759;
+  --r3: -0.2262068966;
 }
 .box .dot:nth-child(183) {
-  animation-delay: calc(var(--speed) * -1s * 0.915);
-  transform: translate3D(calc(var(--size) * -0.18), calc(var(--size) * 0.1734482759), calc(var(--size) * -0.3044827586)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(3.1);
+  --i: 183;
+  --r1: 0.0344827586;
+  --r2: 0.0237931034;
+  --r3: 0.1627586207;
 }
 .box .dot:nth-child(184) {
-  animation-delay: calc(var(--speed) * -1s * 0.92);
-  transform: translate3D(calc(var(--size) * 0.0882758621), calc(var(--size) * 0.2555172414), calc(var(--size) * 0.1868965517)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(3.1133333333);
+  --i: 184;
+  --r1: -0.0820689655;
+  --r2: 0.0586206897;
+  --r3: 0.2927586207;
 }
 .box .dot:nth-child(185) {
-  animation-delay: calc(var(--speed) * -1s * 0.925);
-  transform: translate3D(calc(var(--size) * -0.2279310345), calc(var(--size) * -0.0310344828), calc(var(--size) * -0.1006896552)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(3.1266666667);
+  --i: 185;
+  --r1: -0.0282758621;
+  --r2: 0.2410344828;
+  --r3: 0.2655172414;
 }
 .box .dot:nth-child(186) {
-  animation-delay: calc(var(--speed) * -1s * 0.93);
-  transform: translate3D(calc(var(--size) * -0.2151724138), calc(var(--size) * 0.1337931034), calc(var(--size) * 0.2034482759)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(3.14);
+  --i: 186;
+  --r1: -0.2275862069;
+  --r2: 0.3293103448;
+  --r3: 0.2565517241;
 }
 .box .dot:nth-child(187) {
-  animation-delay: calc(var(--speed) * -1s * 0.935);
-  transform: translate3D(calc(var(--size) * 0.2948275862), calc(var(--size) * -0.0137931034), calc(var(--size) * 0.2289655172)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(3.1533333333);
+  --i: 187;
+  --r1: -0.2682758621;
+  --r2: 0.1351724138;
+  --r3: -0.1513793103;
 }
 .box .dot:nth-child(188) {
-  animation-delay: calc(var(--speed) * -1s * 0.94);
-  transform: translate3D(calc(var(--size) * 0.0668965517), calc(var(--size) * 0.274137931), calc(var(--size) * 0.2110344828)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(3.1666666667);
+  --i: 188;
+  --r1: -0.12;
+  --r2: -0.0196551724;
+  --r3: -0.3127586207;
 }
 .box .dot:nth-child(189) {
-  animation-delay: calc(var(--speed) * -1s * 0.945);
-  transform: translate3D(calc(var(--size) * 0.2703448276), calc(var(--size) * -0.1724137931), calc(var(--size) * 0.3437931034)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(3.18);
+  --i: 189;
+  --r1: 0.0324137931;
+  --r2: 0.1668965517;
+  --r3: -0.0951724138;
 }
 .box .dot:nth-child(190) {
-  animation-delay: calc(var(--speed) * -1s * 0.95);
-  transform: translate3D(calc(var(--size) * -0.3134482759), calc(var(--size) * 0.0782758621), calc(var(--size) * -0.2896551724)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(3.1933333333);
+  --i: 190;
+  --r1: -0.0720689655;
+  --r2: 0.3237931034;
+  --r3: -0.255862069;
 }
 .box .dot:nth-child(191) {
-  animation-delay: calc(var(--speed) * -1s * 0.955);
-  transform: translate3D(calc(var(--size) * 0.2827586207), calc(var(--size) * -0.2837931034), calc(var(--size) * -0.3355172414)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(3.2066666667);
+  --i: 191;
+  --r1: -0.0375862069;
+  --r2: 0.3379310345;
+  --r3: 0.2013793103;
 }
 .box .dot:nth-child(192) {
-  animation-delay: calc(var(--speed) * -1s * 0.96);
-  transform: translate3D(calc(var(--size) * 0.0355172414), calc(var(--size) * -0.0713793103), calc(var(--size) * 0.0472413793)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(3.22);
+  --i: 192;
+  --r1: -0.0506896552;
+  --r2: -0.0834482759;
+  --r3: 0.2510344828;
 }
 .box .dot:nth-child(193) {
-  animation-delay: calc(var(--speed) * -1s * 0.965);
-  transform: translate3D(calc(var(--size) * 0.1024137931), calc(var(--size) * -0.0993103448), calc(var(--size) * 0.0268965517)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(3.2333333333);
+  --i: 193;
+  --r1: -0.3434482759;
+  --r2: 0.3151724138;
+  --r3: -0.1965517241;
 }
 .box .dot:nth-child(194) {
-  animation-delay: calc(var(--speed) * -1s * 0.97);
-  transform: translate3D(calc(var(--size) * 0.0248275862), calc(var(--size) * -0.1844827586), calc(var(--size) * 0.0817241379)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(3.2466666667);
+  --i: 194;
+  --r1: -0.2510344828;
+  --r2: -0.194137931;
+  --r3: -0.1524137931;
 }
 .box .dot:nth-child(195) {
-  animation-delay: calc(var(--speed) * -1s * 0.975);
-  transform: translate3D(calc(var(--size) * -0.0689655172), calc(var(--size) * -0.2155172414), calc(var(--size) * 0.1979310345)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(3.26);
+  --i: 195;
+  --r1: -0.0210344828;
+  --r2: -0.2682758621;
+  --r3: 0.2144827586;
 }
 .box .dot:nth-child(196) {
-  animation-delay: calc(var(--speed) * -1s * 0.98);
-  transform: translate3D(calc(var(--size) * -0.265862069), calc(var(--size) * -0.0431034483), calc(var(--size) * -0.0065517241)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(3.2733333333);
+  --i: 196;
+  --r1: 0.164137931;
+  --r2: -0.0751724138;
+  --r3: 0.1434482759;
 }
 .box .dot:nth-child(197) {
-  animation-delay: calc(var(--speed) * -1s * 0.985);
-  transform: translate3D(calc(var(--size) * -0.0362068966), calc(var(--size) * -0.2868965517), calc(var(--size) * -0.2168965517)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(3.2866666667);
+  --i: 197;
+  --r1: 0.2124137931;
+  --r2: -0.1137931034;
+  --r3: -0.2537931034;
 }
 .box .dot:nth-child(198) {
-  animation-delay: calc(var(--speed) * -1s * 0.99);
-  transform: translate3D(calc(var(--size) * -0.3010344828), calc(var(--size) * -0.1868965517), calc(var(--size) * -0.3244827586)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(3.3);
+  --i: 198;
+  --r1: -0.3386206897;
+  --r2: 0.2717241379;
+  --r3: 0.2496551724;
 }
 .box .dot:nth-child(199) {
-  animation-delay: calc(var(--speed) * -1s * 0.995);
-  transform: translate3D(calc(var(--size) * -0.0393103448), calc(var(--size) * -0.124137931), calc(var(--size) * -0.1275862069)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(3.3133333333);
+  --i: 199;
+  --r1: -0.164137931;
+  --r2: 0.2920689655;
+  --r3: -0.1872413793;
 }
 .box .dot:nth-child(200) {
-  animation-delay: calc(var(--speed) * -1s * 1);
-  transform: translate3D(calc(var(--size) * -0.3406896552), calc(var(--size) * 0.1565517241), calc(var(--size) * -0.3365517241)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(3.3266666667);
+  --i: 200;
+  --r1: 0.0820689655;
+  --r2: -0.0510344828;
+  --r3: 0.0924137931;
 }
 
 /*# sourceMappingURL=main.css.map */

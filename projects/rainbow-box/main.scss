@@ -1,5 +1,6 @@
 $TRIG: 1.4142135624;
 $COUNT: 200;
+$ROUND_STARS: true;
 
 * {
   box-sizing: border-box;
@@ -24,21 +25,22 @@ body {
 
 @keyframes bg-fall {
   0% {
-    background-position-y: calc(var(--length) * var(--from));
+    background-position-y: calc(var(--length));
   }
   100% {
-    background-position-y: calc(var(--length) * var(--from) + var(--length) * var(--dir));
+    background-position-y: calc(var(--length) + var(--length) * 4);
   }
 }
 
 .box {
   --thickness: 0.3vmin;
-  --size: 80vmin;
+  --size: 60vmin;
   --length: calc(var(--size) / #{$TRIG} + var(--thickness) / #{$TRIG});
-  --speed: 1.5;
+  --speed: 3;
 
   --x: -0.4;
   --y: 0.1;
+  --count: #{$COUNT};
 
   width: var(--size);
   height: var(--size);
@@ -47,9 +49,6 @@ body {
   pointer-events: none;
 
   > div {
-    --dir: 1;
-    --from: 0;
-
     position: absolute;
     width: 0;
     height: 0;
@@ -90,6 +89,7 @@ body {
             hsl(300deg, 55%, 45%),
             hsl(360deg, 55%, 45%)
           );
+        background-size: 100% calc(var(--length) * 2);
         animation: bg-fall calc(var(--speed) * 1s) linear infinite;
 
         &:nth-child(1) {
@@ -137,21 +137,28 @@ body {
         hsl(360deg, 80%, 65%)
       );
     background-size: calc(var(--size) / 50) var(--length);
+    transform:
+      translate3D(
+        calc(var(--size) * var(--r1)),
+        calc(var(--size) * var(--r2)),
+        calc(var(--size) * var(--r3)),
+      )
+      rotateY(calc(var(--x, 0) * -1turn))
+      rotateX(calc(var(--y, 0) * 1turn))
+      scale(calc(var(--i) / #{$COUNT / 2} + 0.66));
+    @if $ROUND_STARS {
+      border-radius: 50%;
+    }
     animation: bg-fall calc(var(--speed) * 1s) linear infinite;
+    animation-delay: calc(var(--speed) * -1s * (var(--i) / var(--count)));
   }
 
   @for $i from 1 through $COUNT {
     .dot:nth-child(#{$i}) {
-      animation-delay: calc(var(--speed) * -1s * #{$i / $COUNT});
-      transform:
-        translate3D(
-          calc(var(--size) * #{(random(2000) - 1000) / 2900}),
-          calc(var(--size) * #{(random(2000) - 1000) / 2900}),
-          calc(var(--size) * #{(random(2000) - 1000) / 2900}),
-        )
-        rotateY(calc(var(--x, 0) * -1turn))
-        rotateX(calc(var(--y, 0) * 1turn))
-        scale(#{$i / 50 / 1.5 + 0.66});
+      --i: #{$i};
+      --r1: #{(random(2000) - 1000) / 2900};
+      --r2: #{(random(2000) - 1000) / 2900};
+      --r3: #{(random(2000) - 1000) / 2900};
     }
   }
 }

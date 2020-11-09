@@ -1,0 +1,18 @@
+doctype html
+
+html
+  head
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Rainbow box
+
+  body
+    .box
+      each star in Array(200)
+        .dot
+
+      each dim in ['x', 'y', 'z']
+        div(class=dim)
+          each cube_edge in Array(4)
+            div
+              each edge_face in Array(4)
+                div
