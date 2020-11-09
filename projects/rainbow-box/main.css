@@ -1,0 +1,311 @@
+* {
+  box-sizing: border-box;
+  transform-origin: 50% 50%;
+  backface-visibility: visible;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  display: grid;
+  place-items: center;
+  margin: 0;
+  perspective: 100vmin;
+  background: black;
+}
+
+@keyframes bg-fall {
+  0% {
+    background-position-y: calc(var(--length) * var(--from));
+  }
+  100% {
+    background-position-y: calc(var(--length) * var(--from) + var(--length) * var(--dir));
+  }
+}
+.box {
+  --thickness: 2vmin;
+  --size: 60vmin;
+  --length: calc(var(--size) / 1.4142135624 + var(--thickness) / 1.4142135624);
+  --speed: 4;
+  --x: -0.4;
+  --y: 0.1;
+  width: var(--size);
+  height: var(--size);
+  transform-style: preserve-3d;
+  transform: rotateX(calc(var(--y, 0) * -1turn)) rotateY(calc(var(--x, 0) * 1turn));
+  pointer-events: none;
+}
+.box > div {
+  --dir: 1;
+  --from: 0;
+  position: absolute;
+  width: 0;
+  height: 0;
+  left: calc(var(--size) / 2);
+  top: calc(var(--size) / 2);
+  transform-style: preserve-3d;
+}
+.box > div > div {
+  position: absolute;
+  top: calc(var(--length) / -2);
+  left: calc(var(--thickness) / -2);
+  width: var(--thickness);
+  height: var(--length);
+  transform: rotateY(calc(var(--i, 0) * 90deg)) translateZ(calc(var(--size) / 2 + var(--thickness) / 2));
+  transform-style: preserve-3d;
+}
+.box > div > div:nth-child(1) {
+  --i: 1;
+}
+.box > div > div:nth-child(2) {
+  --i: 2;
+}
+.box > div > div:nth-child(3) {
+  --i: 3;
+}
+.box > div > div:nth-child(4) {
+  --i: 4;
+}
+.box > div > div > div {
+  position: absolute;
+  width: var(--thickness);
+  height: var(--length);
+  background: repeat linear-gradient(to bottom, red, yellow, lime, aqua, blue, fuchsia, red);
+  animation: bg-fall calc(var(--speed) * 1s) linear infinite;
+}
+.box > div > div > div:nth-child(1) {
+  transform: translateZ(calc(var(--thickness) / 2.01));
+}
+.box > div > div > div:nth-child(2) {
+  transform: rotateY(90deg) translateZ(calc(var(--thickness) / 2.01));
+}
+.box > div > div > div:nth-child(3) {
+  transform: translateZ(calc(var(--thickness) / -2.01));
+}
+.box > div > div > div:nth-child(4) {
+  transform: rotateY(90deg) translateZ(calc(var(--thickness) / -2.01));
+}
+.box .x {
+  transform: rotateY(45deg);
+}
+.box .y {
+  transform: rotateZ(90deg) rotateY(45deg);
+}
+.box .z {
+  transform: rotateX(90deg) rotateY(45deg);
+}
+.box .dot {
+  width: calc(var(--size) / 25);
+  height: calc(var(--size) / 25);
+  border-radius: 50%;
+  background: repeat linear-gradient(to bottom, red, yellow, lime, aqua, blue, fuchsia, red);
+  background-size: calc(var(--size) / 50) var(--length);
+  animation: bg-fall calc(var(--speed) * 5s) linear infinite;
+}
+.box .dot:nth-child(1) {
+  animation-delay: calc(var(--speed) * -5s * 0.02);
+  transform: translate3D(calc(var(--size) * 0.946), calc(var(--size) * -0.09), calc(var(--size) * 0.537)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.6733333333);
+}
+.box .dot:nth-child(2) {
+  animation-delay: calc(var(--speed) * -5s * 0.04);
+  transform: translate3D(calc(var(--size) * -0.618), calc(var(--size) * 0.111), calc(var(--size) * 0.791)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.6866666667);
+}
+.box .dot:nth-child(3) {
+  animation-delay: calc(var(--speed) * -5s * 0.06);
+  transform: translate3D(calc(var(--size) * 0.55), calc(var(--size) * 0.438), calc(var(--size) * 0.765)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.7);
+}
+.box .dot:nth-child(4) {
+  animation-delay: calc(var(--speed) * -5s * 0.08);
+  transform: translate3D(calc(var(--size) * 0.164), calc(var(--size) * 0.191), calc(var(--size) * 0.636)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.7133333333);
+}
+.box .dot:nth-child(5) {
+  animation-delay: calc(var(--speed) * -5s * 0.1);
+  transform: translate3D(calc(var(--size) * -0.533), calc(var(--size) * -0.505), calc(var(--size) * -0.349)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.7266666667);
+}
+.box .dot:nth-child(6) {
+  animation-delay: calc(var(--speed) * -5s * 0.12);
+  transform: translate3D(calc(var(--size) * -0.855), calc(var(--size) * 0.423), calc(var(--size) * 0.163)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.74);
+}
+.box .dot:nth-child(7) {
+  animation-delay: calc(var(--speed) * -5s * 0.14);
+  transform: translate3D(calc(var(--size) * 0.695), calc(var(--size) * -0.895), calc(var(--size) * 0.371)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.7533333333);
+}
+.box .dot:nth-child(8) {
+  animation-delay: calc(var(--speed) * -5s * 0.16);
+  transform: translate3D(calc(var(--size) * 0.849), calc(var(--size) * -0.471), calc(var(--size) * 0.97)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.7666666667);
+}
+.box .dot:nth-child(9) {
+  animation-delay: calc(var(--speed) * -5s * 0.18);
+  transform: translate3D(calc(var(--size) * 0.356), calc(var(--size) * 0.338), calc(var(--size) * 0.94)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.78);
+}
+.box .dot:nth-child(10) {
+  animation-delay: calc(var(--speed) * -5s * 0.2);
+  transform: translate3D(calc(var(--size) * 0.795), calc(var(--size) * 0.418), calc(var(--size) * -0.486)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.7933333333);
+}
+.box .dot:nth-child(11) {
+  animation-delay: calc(var(--speed) * -5s * 0.22);
+  transform: translate3D(calc(var(--size) * 0.441), calc(var(--size) * -0.416), calc(var(--size) * -0.487)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.8066666667);
+}
+.box .dot:nth-child(12) {
+  animation-delay: calc(var(--speed) * -5s * 0.24);
+  transform: translate3D(calc(var(--size) * 0.117), calc(var(--size) * -0.938), calc(var(--size) * -0.748)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.82);
+}
+.box .dot:nth-child(13) {
+  animation-delay: calc(var(--speed) * -5s * 0.26);
+  transform: translate3D(calc(var(--size) * -0.237), calc(var(--size) * -0.037), calc(var(--size) * 0.713)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.8333333333);
+}
+.box .dot:nth-child(14) {
+  animation-delay: calc(var(--speed) * -5s * 0.28);
+  transform: translate3D(calc(var(--size) * -0.468), calc(var(--size) * 0.081), calc(var(--size) * -0.781)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.8466666667);
+}
+.box .dot:nth-child(15) {
+  animation-delay: calc(var(--speed) * -5s * 0.3);
+  transform: translate3D(calc(var(--size) * -0.109), calc(var(--size) * 0.546), calc(var(--size) * -0.887)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.86);
+}
+.box .dot:nth-child(16) {
+  animation-delay: calc(var(--speed) * -5s * 0.32);
+  transform: translate3D(calc(var(--size) * -0.882), calc(var(--size) * -0.104), calc(var(--size) * -0.788)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.8733333333);
+}
+.box .dot:nth-child(17) {
+  animation-delay: calc(var(--speed) * -5s * 0.34);
+  transform: translate3D(calc(var(--size) * 0.789), calc(var(--size) * -0.236), calc(var(--size) * -0.425)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.8866666667);
+}
+.box .dot:nth-child(18) {
+  animation-delay: calc(var(--speed) * -5s * 0.36);
+  transform: translate3D(calc(var(--size) * 0.057), calc(var(--size) * -0.966), calc(var(--size) * -0.772)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.9);
+}
+.box .dot:nth-child(19) {
+  animation-delay: calc(var(--speed) * -5s * 0.38);
+  transform: translate3D(calc(var(--size) * -0.587), calc(var(--size) * -0.361), calc(var(--size) * 0.21)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.9133333333);
+}
+.box .dot:nth-child(20) {
+  animation-delay: calc(var(--speed) * -5s * 0.4);
+  transform: translate3D(calc(var(--size) * 0.146), calc(var(--size) * 0.109), calc(var(--size) * 0.457)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.9266666667);
+}
+.box .dot:nth-child(21) {
+  animation-delay: calc(var(--speed) * -5s * 0.42);
+  transform: translate3D(calc(var(--size) * -0.713), calc(var(--size) * -0.417), calc(var(--size) * 0.556)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.94);
+}
+.box .dot:nth-child(22) {
+  animation-delay: calc(var(--speed) * -5s * 0.44);
+  transform: translate3D(calc(var(--size) * 0.155), calc(var(--size) * -0.242), calc(var(--size) * -0.998)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.9533333333);
+}
+.box .dot:nth-child(23) {
+  animation-delay: calc(var(--speed) * -5s * 0.46);
+  transform: translate3D(calc(var(--size) * -0.194), calc(var(--size) * 0.484), calc(var(--size) * -0.276)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.9666666667);
+}
+.box .dot:nth-child(24) {
+  animation-delay: calc(var(--speed) * -5s * 0.48);
+  transform: translate3D(calc(var(--size) * -0.396), calc(var(--size) * 0.348), calc(var(--size) * 0.605)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.98);
+}
+.box .dot:nth-child(25) {
+  animation-delay: calc(var(--speed) * -5s * 0.5);
+  transform: translate3D(calc(var(--size) * 0.994), calc(var(--size) * 0.882), calc(var(--size) * -0.602)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(0.9933333333);
+}
+.box .dot:nth-child(26) {
+  animation-delay: calc(var(--speed) * -5s * 0.52);
+  transform: translate3D(calc(var(--size) * 0.971), calc(var(--size) * -0.863), calc(var(--size) * 0.128)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.0066666667);
+}
+.box .dot:nth-child(27) {
+  animation-delay: calc(var(--speed) * -5s * 0.54);
+  transform: translate3D(calc(var(--size) * 0.103), calc(var(--size) * 0.011), calc(var(--size) * 0.737)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.02);
+}
+.box .dot:nth-child(28) {
+  animation-delay: calc(var(--speed) * -5s * 0.56);
+  transform: translate3D(calc(var(--size) * 0.452), calc(var(--size) * 0.206), calc(var(--size) * 0.69)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.0333333333);
+}
+.box .dot:nth-child(29) {
+  animation-delay: calc(var(--speed) * -5s * 0.58);
+  transform: translate3D(calc(var(--size) * 0.463), calc(var(--size) * -0.37), calc(var(--size) * -0.424)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.0466666667);
+}
+.box .dot:nth-child(30) {
+  animation-delay: calc(var(--speed) * -5s * 0.6);
+  transform: translate3D(calc(var(--size) * 0.912), calc(var(--size) * 0.149), calc(var(--size) * 0.186)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.06);
+}
+.box .dot:nth-child(31) {
+  animation-delay: calc(var(--speed) * -5s * 0.62);
+  transform: translate3D(calc(var(--size) * -0.174), calc(var(--size) * 0.152), calc(var(--size) * -0.71)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.0733333333);
+}
+.box .dot:nth-child(32) {
+  animation-delay: calc(var(--speed) * -5s * 0.64);
+  transform: translate3D(calc(var(--size) * -0.056), calc(var(--size) * -0.304), calc(var(--size) * 0.158)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.0866666667);
+}
+.box .dot:nth-child(33) {
+  animation-delay: calc(var(--speed) * -5s * 0.66);
+  transform: translate3D(calc(var(--size) * -0.934), calc(var(--size) * 0.176), calc(var(--size) * -0.649)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.1);
+}
+.box .dot:nth-child(34) {
+  animation-delay: calc(var(--speed) * -5s * 0.68);
+  transform: translate3D(calc(var(--size) * -0.894), calc(var(--size) * -0.401), calc(var(--size) * -0.481)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.1133333333);
+}
+.box .dot:nth-child(35) {
+  animation-delay: calc(var(--speed) * -5s * 0.7);
+  transform: translate3D(calc(var(--size) * -0.246), calc(var(--size) * -0.28), calc(var(--size) * -0.603)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.1266666667);
+}
+.box .dot:nth-child(36) {
+  animation-delay: calc(var(--speed) * -5s * 0.72);
+  transform: translate3D(calc(var(--size) * 0.791), calc(var(--size) * -0.283), calc(var(--size) * -0.715)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.14);
+}
+.box .dot:nth-child(37) {
+  animation-delay: calc(var(--speed) * -5s * 0.74);
+  transform: translate3D(calc(var(--size) * 0.54), calc(var(--size) * -0.061), calc(var(--size) * -0.816)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.1533333333);
+}
+.box .dot:nth-child(38) {
+  animation-delay: calc(var(--speed) * -5s * 0.76);
+  transform: translate3D(calc(var(--size) * 0.291), calc(var(--size) * -0.938), calc(var(--size) * -0.459)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.1666666667);
+}
+.box .dot:nth-child(39) {
+  animation-delay: calc(var(--speed) * -5s * 0.78);
+  transform: translate3D(calc(var(--size) * -0.404), calc(var(--size) * -0.755), calc(var(--size) * 0.323)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.18);
+}
+.box .dot:nth-child(40) {
+  animation-delay: calc(var(--speed) * -5s * 0.8);
+  transform: translate3D(calc(var(--size) * -0.251), calc(var(--size) * -0.396), calc(var(--size) * -0.723)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.1933333333);
+}
+.box .dot:nth-child(41) {
+  animation-delay: calc(var(--speed) * -5s * 0.82);
+  transform: translate3D(calc(var(--size) * -0.276), calc(var(--size) * 0.479), calc(var(--size) * 0.046)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.2066666667);
+}
+.box .dot:nth-child(42) {
+  animation-delay: calc(var(--speed) * -5s * 0.84);
+  transform: translate3D(calc(var(--size) * -0.01), calc(var(--size) * -0.701), calc(var(--size) * -0.449)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.22);
+}
+.box .dot:nth-child(43) {
+  animation-delay: calc(var(--speed) * -5s * 0.86);
+  transform: translate3D(calc(var(--size) * 0.11), calc(var(--size) * -0.01), calc(var(--size) * -0.474)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.2333333333);
+}
+.box .dot:nth-child(44) {
+  animation-delay: calc(var(--speed) * -5s * 0.88);
+  transform: translate3D(calc(var(--size) * -0.02), calc(var(--size) * -0.865), calc(var(--size) * 0.984)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.2466666667);
+}
+.box .dot:nth-child(45) {
+  animation-delay: calc(var(--speed) * -5s * 0.9);
+  transform: translate3D(calc(var(--size) * -0.713), calc(var(--size) * -0.516), calc(var(--size) * 0.905)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.26);
+}
+.box .dot:nth-child(46) {
+  animation-delay: calc(var(--speed) * -5s * 0.92);
+  transform: translate3D(calc(var(--size) * -0.161), calc(var(--size) * 0.065), calc(var(--size) * -0.166)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.2733333333);
+}
+.box .dot:nth-child(47) {
+  animation-delay: calc(var(--speed) * -5s * 0.94);
+  transform: translate3D(calc(var(--size) * 0.74), calc(var(--size) * 0.411), calc(var(--size) * -0.799)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.2866666667);
+}
+.box .dot:nth-child(48) {
+  animation-delay: calc(var(--speed) * -5s * 0.96);
+  transform: translate3D(calc(var(--size) * 0.493), calc(var(--size) * 0.714), calc(var(--size) * -0.725)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.3);
+}
+.box .dot:nth-child(49) {
+  animation-delay: calc(var(--speed) * -5s * 0.98);
+  transform: translate3D(calc(var(--size) * 0.173), calc(var(--size) * 0.551), calc(var(--size) * -0.089)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.3133333333);
+}
+.box .dot:nth-child(50) {
+  animation-delay: calc(var(--speed) * -5s * 1);
+  transform: translate3D(calc(var(--size) * 0.694), calc(var(--size) * -0.759), calc(var(--size) * -0.177)) rotateY(calc(var(--x, 0) * -1turn)) rotateX(calc(var(--y, 0) * 1turn)) scale(1.3266666667);
+}
+
+/*# sourceMappingURL=main.css.map */

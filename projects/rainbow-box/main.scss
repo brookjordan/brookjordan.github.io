@@ -1,0 +1,156 @@
+* {
+  box-sizing: border-box;
+  transform-origin: 50% 50%;
+  backface-visibility: visible;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  display: grid;
+  place-items: center;
+  margin: 0;
+  perspective: 100vmin;
+  background: black;
+}
+
+@keyframes bg-fall {
+  0% {
+    background-position-y: calc(var(--length) * var(--from));
+  }
+  100% {
+    background-position-y: calc(var(--length) * var(--from) + var(--length) * var(--dir));
+  }
+}
+
+.box {
+  $TRIG: 1.4142135624;
+
+  --thickness: 2vmin;
+  --size: 60vmin;
+  --length: calc(var(--size) / #{$TRIG} + var(--thickness) / #{$TRIG});
+  --speed: 4;
+
+  --x: -0.4;
+  --y: 0.1;
+
+  width: var(--size);
+  height: var(--size);
+  transform-style: preserve-3d;
+  transform: rotateX(calc(var(--y, 0) * -1turn)) rotateY(calc(var(--x, 0) * 1turn));
+  pointer-events: none;
+
+  > div {
+    --dir: 1;
+    --from: 0;
+
+    position: absolute;
+    width: 0;
+    height: 0;
+    left: calc(var(--size) / 2);
+    top: calc(var(--size) / 2);
+    transform-style: preserve-3d;
+
+    > div {
+      position: absolute;
+      top: calc(var(--length) / -2);
+      left: calc(var(--thickness) / -2);
+      width: var(--thickness);
+      height: var(--length);
+      transform: rotateY(calc(var(--i, 0) * 90deg)) translateZ(calc(var(--size) / 2 + var(--thickness) / 2));
+      transform-style: preserve-3d;
+
+      &:nth-child(1) { --i: 1; }
+      &:nth-child(2) { --i: 2; }
+      &:nth-child(3) { --i: 3; }
+      &:nth-child(4) { --i: 4; }
+
+      // &:nth-child(2),
+      // &:nth-child(4) { --dir: -1; }
+
+      > div {
+        position: absolute;
+        width: var(--thickness);
+        height: var(--length);
+        background:
+          repeat
+          linear-gradient(
+            to bottom,
+            hsl(0deg, 100%, 50%),
+            hsl(60deg, 100%, 50%),
+            hsl(120deg, 100%, 50%),
+            hsl(180deg, 100%, 50%),
+            hsl(240deg, 100%, 50%),
+            hsl(300deg, 100%, 50%),
+            hsl(360deg, 100%, 50%)
+          );
+        animation: bg-fall calc(var(--speed) * 1s) linear infinite;
+
+        &:nth-child(1) {
+          transform: translateZ(calc(var(--thickness) / 2.01));
+        }
+        &:nth-child(2) {
+          transform: rotateY(90deg) translateZ(calc(var(--thickness) / 2.01));
+        }
+        &:nth-child(3) {
+          transform: translateZ(calc(var(--thickness) / -2.01));
+        }
+        &:nth-child(4) {
+          transform: rotateY(90deg) translateZ(calc(var(--thickness) / -2.01));
+        }
+      }
+    }
+  }
+
+  .x {
+    transform: rotateY(45deg);
+  }
+
+  .y {
+    transform: rotateZ(90deg) rotateY(45deg);
+  }
+
+  .z {
+    transform: rotateX(90deg) rotateY(45deg);
+  }
+
+  .dot {
+    width: calc(var(--size) / 25);
+    height: calc(var(--size) / 25);
+    border-radius: 50%;
+    background:
+      repeat
+      linear-gradient(
+        to bottom,
+        hsl(0deg, 100%, 50%),
+        hsl(60deg, 100%, 50%),
+        hsl(120deg, 100%, 50%),
+        hsl(180deg, 100%, 50%),
+        hsl(240deg, 100%, 50%),
+        hsl(300deg, 100%, 50%),
+        hsl(360deg, 100%, 50%)
+      );
+    background-size: calc(var(--size) / 50) var(--length);
+    animation: bg-fall calc(var(--speed) * 5s) linear infinite;
+  }
+
+  @for $i from 1 through 50 {
+    .dot:nth-child(#{$i}) {
+      animation-delay: calc(var(--speed) * -5s * #{$i / 50});
+      transform:
+        translate3D(
+          calc(var(--size) * #{(random(2000) - 1000) / 1000}),
+          calc(var(--size) * #{(random(2000) - 1000) / 1000}),
+          calc(var(--size) * #{(random(2000) - 1000) / 1000}),
+        )
+        rotateY(calc(var(--x, 0) * -1turn))
+        rotateX(calc(var(--y, 0) * 1turn))
+        scale(#{$i / 50 / 1.5 + 0.66});
+    }
+  }
+}
