@@ -31,6 +31,7 @@
   --santa-ratio: 1.2359307359;
   --x: 0;
   --y: 0;
+  --bob: 0vmin;
 }
 
 html, body {
@@ -88,7 +89,6 @@ body {
   width: 0;
   height: 0;
   transform: translate(calc(var(--left) - (var(--offset) * 1vw) * var(--x)), calc(var(--top) - (var(--offset) * 1.3vh) * var(--y) + var(--bob))) scaleX(var(--flip)) scale(var(--scale));
-  transition: transform 0.05s;
   animation: bob var(--dur) infinite ease-in-out;
 }
 .boomer--b-r {

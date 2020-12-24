@@ -43,6 +43,7 @@ $santa-h: 1713;
   --santa-ratio: #{$santa-h / $santa-w};
   --x: 0;
   --y: 0;
+  --bob: 0vmin;
 }
 
 html, body {
@@ -118,7 +119,6 @@ body {
     scaleX(var(--flip))
     scale(var(--scale))
   ;
-  transition: transform 0.05s;
   animation: bob var(--dur) infinite ease-in-out;
 
   &--b-r {
