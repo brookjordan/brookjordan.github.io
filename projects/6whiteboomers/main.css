@@ -1,0 +1,255 @@
+@property --bob {
+  syntax: "<length>";
+  initial-value: 0;
+  inherits: false;
+}
+@keyframes run {
+  0% {
+    transform: translateX(0);
+  }
+  35% {
+    transform: translateX(-33.333333%);
+  }
+  50% {
+    transform: translateX(-66.666667%);
+  }
+  85% {
+    transform: translateX(-33.333333%);
+  }
+}
+@keyframes bob {
+  0%, 100% {
+    --bob: 1vmin;
+  }
+  50% {
+    --bob: -1vmin;
+  }
+}
+:root {
+  --run-ratio: 0.8084690554;
+  --head-ratio: 1.4169139466;
+  --santa-ratio: 1.2359307359;
+  --x: 0;
+  --y: 0;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  background: #3b3452;
+}
+
+body {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 300vh, #040b27 230vh, rgba(4, 11, 39, 0) 50vh), radial-gradient(circle farthest-corner at 50% 40vmin, #17142c, #3b3452);
+}
+
+.close-head-selects {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.canvas {
+  position: relative;
+  width: 100vmin;
+  height: 100vmin;
+  pointer-events: none;
+}
+
+.santa {
+  --width: 30vmin;
+  --offset: 5;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) translate(calc(0px - (var(--offset) * 1vw) * var(--x)), calc(0px - (var(--offset) * 1vh) * var(--y) + var(--bob) * 2));
+  width: var(--width);
+  height: calc(var(--width) * var(--santa-ratio));
+  background: transparent url("./i/santa.png") center center/100% 100%;
+  animation: bob 7s infinite ease-in-out;
+}
+
+.boomer {
+  --bob: 0vmin;
+  --width: 30vmin;
+  --flip: 1;
+  --hue: 0deg;
+  --offset: 0vmin;
+  --scale: 1;
+  --dur: 2s;
+  --d6: calc(var(--dur) / 6);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  transform: translate(calc(var(--left) - (var(--offset) * 1vw) * var(--x)), calc(var(--top) - (var(--offset) * 1.3vh) * var(--y) + var(--bob))) scaleX(var(--flip)) scale(var(--scale));
+  transition: transform 0.05s;
+  animation: bob var(--dur) infinite ease-in-out;
+}
+.boomer--b-r {
+  --left: 39vmin;
+  --top: 37vmin;
+  --offset: 10;
+  --hue: 180deg;
+  --scale: 0.7;
+  animation-delay: calc(0s - var(--d6) * 0);
+}
+.boomer--m-r {
+  --left: 29vmin;
+  --top: 58vmin;
+  --offset: 20;
+  --hue: 120deg;
+  --scale: 0.85;
+  animation-delay: calc(0s - var(--d6) * 1);
+}
+.boomer--f-r {
+  --left: 17vmin;
+  --top: 85vmin;
+  --offset: 30;
+  --hue: 0deg;
+  animation-delay: calc(0s - var(--d6) * 2);
+}
+.boomer--b-l {
+  --left: 61vmin;
+  --top: 37vmin;
+  --offset: 10;
+  --hue: 270deg;
+  --scale: 0.7;
+  --flip: -1;
+  animation-delay: calc(0s - var(--d6) * 3);
+}
+.boomer--m-l {
+  --left: 71vmin;
+  --top: 58vmin;
+  --offset: 20;
+  --hue: 60deg;
+  --scale: 0.85;
+  --flip: -1;
+  animation-delay: calc(0s - var(--d6) * 4);
+}
+.boomer--f-l {
+  --left: 83vmin;
+  --top: 85vmin;
+  --offset: 30;
+  --hue: 240deg;
+  --flip: -1;
+  animation-delay: calc(0s - var(--d6) * 5);
+}
+
+input {
+  display: none;
+}
+
+label {
+  display: block;
+}
+
+[for^=terry],
+[value=terry]:checked ~ .head {
+  background: transparent url("./i/head-terry.png") center center/100% 100%;
+}
+
+[for^=page],
+[value=page]:checked ~ .head {
+  background: transparent url("./i/head-page.png") center center/100% 100%;
+}
+
+[for^=leon],
+[value=leon]:checked ~ .head {
+  background: transparent url("./i/head-leon.png") center center/100% 100%;
+}
+
+[for^=chris],
+[value=chris]:checked ~ .head {
+  background: transparent url("./i/head-chris.png") center center/100% 100%;
+}
+
+[for^=brett],
+[value=brett]:checked ~ .head {
+  background: transparent url("./i/head-brett.png") center center/100% 100%;
+}
+
+[for^=chantal],
+[value=chantal]:checked ~ .head {
+  background: transparent url("./i/head-chantal.png") center center/100% 100%;
+}
+
+.head {
+  --width: 26vmin;
+  position: absolute;
+  top: -38vmin;
+  left: -14vmin;
+  width: var(--width);
+  height: calc(var(--head-ratio) * var(--width));
+  border-radius: 10vmin;
+  pointer-events: initial;
+  cursor: pointer;
+  transition: background-image 0.1s;
+}
+
+.run {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--width);
+  height: calc(var(--width) * var(--run-ratio));
+  overflow: hidden;
+  transform: translate(-50%, -50%);
+}
+.run > div {
+  position: absolute;
+  width: 300%;
+  height: 100%;
+  animation: run 1s infinite steps(1);
+}
+.run .bg {
+  background: transparent url("./i/run-bg.png") center center/100% 100%;
+}
+.run .body {
+  background: transparent url("./i/run-body.png") center center/100% 100%;
+  filter: hue-rotate(var(--hue));
+}
+.run .fg {
+  background: transparent url("./i/run-fg.png") center center/100% 100%;
+}
+
+.head-select {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1vmin;
+  position: absolute;
+  top: -34vmin;
+  left: 10vmin;
+  z-index: 1;
+  width: 30vmin;
+  height: 28vmin;
+  padding: 1vmin;
+  background: white;
+  border-radius: 5vmin;
+  transform: scale(0);
+  transform-origin: -13vmin 15vmin;
+  transition: transform 0.3s;
+}
+.head-select label {
+  cursor: pointer;
+}
+
+:checked + .boomer {
+  z-index: 1;
+}
+:checked + .boomer .head {
+  pointer-events: none;
+}
+:checked + .boomer .head-select {
+  transform: scale(1);
+}
+:checked + .boomer .head-select label {
+  pointer-events: initial;
+}
+
+/*# sourceMappingURL=main.css.map */
