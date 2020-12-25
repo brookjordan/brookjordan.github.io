@@ -17,6 +17,14 @@
     transform: translateX(-33.333333%);
   }
 }
+@keyframes fall {
+  0% {
+    transform: translateY(-150vh);
+  }
+  100% {
+    transform: translateY(0vh);
+  }
+}
 @keyframes bob {
   0%, 100% {
     --bob: 1vmin;
@@ -72,6 +80,17 @@ body {
   height: calc(var(--width) * var(--santa-ratio));
   background: transparent url("./i/santa.png") center center/100% 100%;
   animation: bob 7s infinite ease-in-out;
+}
+
+.boomers {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  animation: fall 0.7s cubic-bezier(0.45, 1.45, 0.7, 0.92) backwards;
+}
+.boomers.not-yet {
+  transform: translateY(-150vh);
+  animation: none;
 }
 
 .boomer {
@@ -250,6 +269,39 @@ label {
 }
 :checked + .boomer .head-select label {
   pointer-events: initial;
+}
+
+#start-button {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 99;
+  pointer-events: initial !important;
+  opacity: 0;
+  outline: none;
+  font-family: "Nerko One", cursive;
+  color: #d3a701;
+  background: #671a00;
+  border: 0;
+  font-size: 13vmin;
+  border-radius: 3vmin;
+  padding: 3vmin 7vmin;
+  box-shadow: 0 1vmin 4vmin #000000;
+}
+#start-button.can-start {
+  opacity: 1;
+  transition: opacity 2s;
+}
+#start-button.started {
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(10);
+  transition: opacity 5s, transform 5s;
+}
+
+audio {
+  opacity: 0;
 }
 
 /*# sourceMappingURL=main.css.map */

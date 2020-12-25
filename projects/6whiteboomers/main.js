@@ -1,3 +1,24 @@
+var audio = document.querySelector('audio');
+var boomerContainer = document.querySelector('.boomers');
+var startButton = document.querySelector('#start-button');
+
+audio.addEventListener('canplay', function() {
+  startButton.className = 'can-start';
+});
+audio.addEventListener('timeupdate', function() {
+  if (audio.currentTime > 64) {
+    boomerContainer.className = 'boomers';
+  }
+});
+audio.src = "./sound/six-white-boomers.mp3";
+
+startButton.onclick = function() {
+  audio.play();
+  startButton.className = 'started';
+}
+
+
+
 window.onmousemove = window.ontouchmove = window.ontouchstart = function(event) {
   var touch = event.touches ? event.touches[0] : event;
   var largestDimension = Math.max(window.innerWidth, window.innerHeight);
@@ -17,7 +38,6 @@ function setProps(vars) {
     vars.y,
   );
 }
-
 
 
 var radios = document.querySelectorAll('.boomer > [type="radio"]');
