@@ -13,6 +13,7 @@ audio.addEventListener('timeupdate', function() {
     boomerContainer.className = 'boomers';
   }
 });
+setTimeout(showStartButton, 3000);
 audio.src = "./sound/six-white-boomers.mp3";
 
 function showStartButton() {
