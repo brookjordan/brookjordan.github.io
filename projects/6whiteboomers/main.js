@@ -3,7 +3,9 @@ var boomerContainer = document.querySelector('.boomers');
 var startButton = document.querySelector('#start-button');
 
 audio.addEventListener('canplay', function() {
-  startButton.className = 'can-start';
+  if (!startButton.className) {
+    startButton.className = 'can-start';
+  }
 });
 audio.addEventListener('timeupdate', function() {
   if (audio.currentTime > 64) {
