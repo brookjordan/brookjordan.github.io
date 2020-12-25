@@ -301,6 +301,7 @@ label {
   opacity: 0;
   outline: none;
   font-family: "Nerko One", cursive;
+  cursor: pointer;
   color: #d3a701;
   background: #671a00;
   border: 0;
@@ -308,6 +309,13 @@ label {
   border-radius: 3vmin;
   padding: 3vmin 7vmin;
   box-shadow: 0 1vmin 4vmin #000000;
+}
+#start-button span {
+  display: block;
+}
+#start-button span + span {
+  font-family: sans-serif;
+  font-size: 16px;
 }
 #start-button.can-start {
   opacity: 1;

@@ -6,7 +6,7 @@ head
   link(rel='stylesheet' href='./main.css')
   link(rel='preload' href='./sound/six-white-boomers.mp3' as='audio' type='audio/mpeg')
   link(rel='preconnect' href='https://fonts.gstatic.com')
-  link(href='https://fonts.googleapis.com/css2?family=Indie+Flower&family=Nerko+One&display=swap;text=Start!' rel='stylesheet')
+  link(href='https://fonts.googleapis.com/css2?family=Indie+Flower&family=Nerko+One&display=swap;text=Star!' rel='stylesheet')
 audio(type='audio/mpeg')
 input#hide-head-select(type='radio' name='show-head-select')
 label.close-head-selects(for='hide-head-select')
@@ -16,7 +16,9 @@ label.close-head-selects(for='hide-head-select')
 
 .canvas
   .santa
-  button#start-button Start!
+  button#start-button
+    span Start!
+    span (turn on your speakers)
   .boomers.not-yet
     each position, positionIndex in positions
       input(id=`show-head-select--${position}` type='radio' name='show-head-select')
