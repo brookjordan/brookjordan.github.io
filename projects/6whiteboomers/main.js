@@ -7,18 +7,16 @@ audio.addEventListener('canplay', function() {
     startButton.className = 'can-start';
   }
 });
+startButton.onclick = function() {
+  audio.play();
+  startButton.className = 'started';
+}
 audio.addEventListener('timeupdate', function() {
   if (audio.currentTime > 64) {
     boomerContainer.className = 'boomers';
   }
 });
 audio.src = "./sound/six-white-boomers.mp3";
-
-startButton.onclick = function() {
-  audio.play();
-  startButton.className = 'started';
-}
-
 
 
 window.onmousemove = window.ontouchmove = window.ontouchstart = function(event) {
@@ -67,7 +65,7 @@ function setSearchParams() {
 var pickSets = {
   default: 'terry,chris,page,leon,brett,chantal'.split(','),
   brett: 'antony,chris,clive,emma,brett,chantal'.split(','),
-  page: 'terry,chris,page,leon,clive,chantal'.split(','),
+  page: 'chris,terry,page,antony,june,leon'.split(','),
   cousins: 'brett,chris,page,gareth,clive,chantal'.split(','),
 };
 

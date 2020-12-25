@@ -218,11 +218,20 @@ label {
   background: transparent url("./i/head-gareth.png") center center/100% 100%;
 }
 
+[for^=june],
+[value=june]:checked ~ .head {
+  background: transparent url("./i/head-june.png") center center/100% 100%;
+}
+
+[value=june]:checked ~ .head {
+  --head-offset: -3vmin;
+}
+
 .head {
   --width: 26vmin;
   position: absolute;
   top: -38vmin;
-  left: -14vmin;
+  left: calc(-14vmin + var(--head-offset, 0vmin));
   width: var(--width);
   height: calc(var(--head-ratio) * var(--width));
   border-radius: 10vmin;

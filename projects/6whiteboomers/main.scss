@@ -1,4 +1,4 @@
-$boomers: terry page leon chris brett chantal clive antony emma gareth;
+$boomers: terry page leon chris brett chantal clive antony emma gareth june;
 
 $run-w: 1535;
 $run-h: 1241;
@@ -210,13 +210,17 @@ label {
   }
 }
 
+[value="june"]:checked ~ .head {
+  --head-offset: -3vmin;
+}
+
 
 .head {
   --width: 26vmin;
 
   position: absolute;
   top: -38vmin;
-  left: -14vmin;
+  left: calc(-14vmin + var(--head-offset, 0vmin));
   width: var(--width);
   height: calc(var(--head-ratio) * var(--width));
   border-radius: 10vmin;
