@@ -213,6 +213,11 @@ label {
   background: transparent url("./i/head-emma.png") center center/100% 100%;
 }
 
+[for^=gareth],
+[value=gareth]:checked ~ .head {
+  background: transparent url("./i/head-gareth.png") center center/100% 100%;
+}
+
 .head {
   --width: 26vmin;
   position: absolute;
@@ -261,7 +266,7 @@ label {
   left: 10vmin;
   z-index: 1;
   width: 30vmin;
-  height: 40vmin;
+  height: 55vmin;
   padding: 1vmin;
   background: white;
   border-radius: 5vmin;
