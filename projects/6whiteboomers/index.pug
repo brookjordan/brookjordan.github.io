@@ -1,0 +1,34 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  title= '6️⃣⚪️👵'
+  link(rel='stylesheet' href='./main.css')
+  link(rel='preload' href='./sound/six-white-boomers.mp3' as='audio' type='audio/mpeg')
+  link(rel='preconnect' href='https://fonts.gstatic.com')
+  link(href='https://fonts.googleapis.com/css2?family=Indie+Flower&family=Nerko+One&display=swap;text=Start!' rel='stylesheet')
+audio(type='audio/mpeg')
+input#hide-head-select(type='radio' name='show-head-select')
+label.close-head-selects(for='hide-head-select')
+- var boomers = 'terry,page,chris,brett,clive,chantal,antony,leon,antony,emma'.split(',')
+- var positions = 'b-r,m-r,f-r,b-l,m-l,f-l'.split(',')
+
+.canvas
+  .santa
+  button#start-button Start!
+  .boomers.not-yet
+    each position, positionIndex in positions
+      input(id=`show-head-select--${position}` type='radio' name='show-head-select')
+      .boomer(class=`boomer--${position}`)
+        each boomer, boomerIndex in boomers
+          - var checkedBoomer = boomerIndex === positionIndex
+          input(id=`${boomer}--${position}` type='radio' name=position value=boomer checked=checkedBoomer)
+        .run
+          .bg
+          .body
+          .fg
+        label.head(for=`show-head-select--${position}`)
+        .head-select
+          each boomer in boomers
+            label(for=`${boomer}--${position}`)
+script(src='./main.js')

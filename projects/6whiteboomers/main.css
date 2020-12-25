@@ -198,6 +198,21 @@ label {
   background: transparent url("./i/head-chantal.png") center center/100% 100%;
 }
 
+[for^=clive],
+[value=clive]:checked ~ .head {
+  background: transparent url("./i/head-clive.png") center center/100% 100%;
+}
+
+[for^=antony],
+[value=antony]:checked ~ .head {
+  background: transparent url("./i/head-antony.png") center center/100% 100%;
+}
+
+[for^=emma],
+[value=emma]:checked ~ .head {
+  background: transparent url("./i/head-emma.png") center center/100% 100%;
+}
+
 .head {
   --width: 26vmin;
   position: absolute;
@@ -246,7 +261,7 @@ label {
   left: 10vmin;
   z-index: 1;
   width: 30vmin;
-  height: 28vmin;
+  height: 40vmin;
   padding: 1vmin;
   background: white;
   border-radius: 5vmin;
@@ -277,7 +292,7 @@ label {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 99;
-  pointer-events: initial !important;
+  pointer-events: initial;
   opacity: 0;
   outline: none;
   font-family: "Nerko One", cursive;

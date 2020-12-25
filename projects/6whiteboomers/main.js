@@ -64,6 +64,8 @@ function setSearchParams() {
 
 var pickSets = {
   default: 'terry,chris,page,leon,brett,chantal'.split(','),
+  brett: 'antony,chris,clive,emma,brett,chantal'.split(','),
+  page: 'terry,chris,page,leon,clive,chantal'.split(','),
 };
 
 var boomers = document.querySelectorAll('.boomer');

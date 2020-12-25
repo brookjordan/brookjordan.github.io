@@ -1,3 +1,5 @@
+$boomers: terry page leon chris brett chantal clive antony emma;
+
 $run-w: 1535;
 $run-h: 1241;
 
@@ -201,34 +203,11 @@ label {
   display: block;
 }
 
-[for^="terry"],
-[value="terry"]:checked ~ .head {
-  background: transparent url("./i/head-terry.png") center center / 100% 100%;
-}
-
-[for^="page"],
-[value="page"]:checked ~ .head {
-  background: transparent url("./i/head-page.png") center center / 100% 100%;
-}
-
-[for^="leon"],
-[value="leon"]:checked ~ .head {
-  background: transparent url("./i/head-leon.png") center center / 100% 100%;
-}
-
-[for^="chris"],
-[value="chris"]:checked ~ .head {
-  background: transparent url("./i/head-chris.png") center center / 100% 100%;
-}
-
-[for^="brett"],
-[value="brett"]:checked ~ .head {
-  background: transparent url("./i/head-brett.png") center center / 100% 100%;
-}
-
-[for^="chantal"],
-[value="chantal"]:checked ~ .head {
-  background: transparent url("./i/head-chantal.png") center center / 100% 100%;
+@each $boomer in $boomers {
+  [for^="#{$boomer}"],
+  [value="#{$boomer}"]:checked ~ .head {
+    background: transparent url("./i/head-#{$boomer}.png") center center / 100% 100%;
+  }
 }
 
 
@@ -291,7 +270,7 @@ label {
   left: 10vmin;
   z-index: 1;
   width: 30vmin;
-  height: 28vmin;
+  height: 40vmin;
   padding: 1vmin;
   background: white;
   border-radius: 5vmin;
@@ -327,7 +306,7 @@ label {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 99;
-  pointer-events: initial !important;
+  pointer-events: initial;
   opacity: 0;
   outline: none;
   font-family: 'Nerko One', cursive;
