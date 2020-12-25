@@ -1,8 +1,3 @@
-@property --bob {
-  syntax: "<length>";
-  initial-value: 0;
-  inherits: false;
-}
 @keyframes run {
   0% {
     transform: translateX(0);
@@ -27,10 +22,10 @@
 }
 @keyframes bob {
   0%, 100% {
-    --bob: 1vmin;
+    transform: translateY(1vmin);
   }
   50% {
-    --bob: -1vmin;
+    transform: translateY(-1vmin);
   }
 }
 :root {
@@ -39,7 +34,6 @@
   --santa-ratio: 1.2359307359;
   --x: 0;
   --y: 0;
-  --bob: 0vmin;
 }
 
 html, body {
@@ -70,16 +64,21 @@ body {
   pointer-events: none;
 }
 
-.santa {
+.santa-bob {
   --width: 30vmin;
   --offset: 5;
   position: absolute;
   left: 50%;
-  transform: translateX(-50%) translate(calc(0px - (var(--offset) * 1vw) * var(--x)), calc(0px - (var(--offset) * 1vh) * var(--y) + var(--bob) * 2));
+  animation: bob 7s infinite ease-in-out;
   width: var(--width);
   height: calc(var(--width) * var(--santa-ratio));
+}
+
+.santa {
+  width: 100%;
+  height: 100%;
+  transform: translateX(-50%) translate(calc(0px - (var(--offset) * 1vw) * var(--x)), calc(0px - (var(--offset) * 1vh) * var(--y)));
   background: transparent url("./i/santa.png") center center/100% 100%;
-  animation: bob 7s infinite ease-in-out;
 }
 
 .boomers {
@@ -94,7 +93,6 @@ body {
 }
 
 .boomer {
-  --bob: 0vmin;
   --width: 30vmin;
   --flip: 1;
   --hue: 0deg;
@@ -107,8 +105,7 @@ body {
   left: 0;
   width: 0;
   height: 0;
-  transform: translate(calc(var(--left) - (var(--offset) * 1vw) * var(--x)), calc(var(--top) - (var(--offset) * 1.3vh) * var(--y) + var(--bob))) scaleX(var(--flip)) scale(var(--scale));
-  animation: bob var(--dur) infinite ease-in-out;
+  transform: translate(calc(var(--left) - (var(--offset) * 1vw) * var(--x)), calc(var(--top) - (var(--offset) * 1.3vh) * var(--y))) scaleX(var(--flip)) scale(var(--scale));
 }
 .boomer--b-r {
   --left: 39vmin;
@@ -116,6 +113,8 @@ body {
   --offset: 10;
   --hue: 180deg;
   --scale: 0.7;
+}
+.boomer--b-r .boomer-bob {
   animation-delay: calc(0s - var(--d6) * 0);
 }
 .boomer--m-r {
@@ -124,6 +123,8 @@ body {
   --offset: 20;
   --hue: 120deg;
   --scale: 0.85;
+}
+.boomer--m-r .boomer-bob {
   animation-delay: calc(0s - var(--d6) * 1);
 }
 .boomer--f-r {
@@ -131,6 +132,8 @@ body {
   --top: 85vmin;
   --offset: 30;
   --hue: 0deg;
+}
+.boomer--f-r .boomer-bob {
   animation-delay: calc(0s - var(--d6) * 2);
 }
 .boomer--b-l {
@@ -140,6 +143,8 @@ body {
   --hue: 270deg;
   --scale: 0.7;
   --flip: -1;
+}
+.boomer--b-l .boomer-bob {
   animation-delay: calc(0s - var(--d6) * 3);
 }
 .boomer--m-l {
@@ -149,6 +154,8 @@ body {
   --hue: 60deg;
   --scale: 0.85;
   --flip: -1;
+}
+.boomer--m-l .boomer-bob {
   animation-delay: calc(0s - var(--d6) * 4);
 }
 .boomer--f-l {
@@ -157,7 +164,13 @@ body {
   --offset: 30;
   --hue: 240deg;
   --flip: -1;
+}
+.boomer--f-l .boomer-bob {
   animation-delay: calc(0s - var(--d6) * 5);
+}
+
+.boomer-bob {
+  animation: bob var(--dur) infinite ease-in-out;
 }
 
 input {
@@ -221,6 +234,11 @@ label {
 [for^=june],
 [value=june]:checked ~ .head {
   background: transparent url("./i/head-june.png") center center/100% 100%;
+}
+
+[for^=cliff],
+[value=cliff]:checked ~ .head {
+  background: transparent url("./i/head-cliff.png") center center/100% 100%;
 }
 
 [value=june]:checked ~ .head {

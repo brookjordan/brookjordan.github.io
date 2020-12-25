@@ -1,4 +1,4 @@
-$boomers: terry page leon chris brett chantal clive antony emma gareth june;
+$boomers: terry page leon chris brett chantal clive antony emma gareth june cliff;
 
 $run-w: 1535;
 $run-h: 1241;
@@ -8,12 +8,6 @@ $head-h: 1910;
 
 $santa-w: 1386;
 $santa-h: 1713;
-
-@property --bob {
-  syntax: "<length>";
-  initial-value: 0;
-  inherits: false;
-}
 
 @keyframes run {
   0% {
@@ -41,10 +35,10 @@ $santa-h: 1713;
 
 @keyframes bob {
   0%, 100% {
-    --bob: 1vmin;
+    transform: translateY(1vmin);
   }
   50% {
-    --bob: -1vmin;
+    transform: translateY(-1vmin);
   }
 }
 
@@ -54,7 +48,6 @@ $santa-h: 1713;
   --santa-ratio: #{$santa-h / $santa-w};
   --x: 0;
   --y: 0;
-  --bob: 0vmin;
 }
 
 html, body {
@@ -87,24 +80,27 @@ body {
   pointer-events: none;
 }
 
-.santa {
+.santa-bob {
   --width: 30vmin;
   --offset: 5;
 
   position: absolute;
   left: 50%;
-
+  animation: bob 7s infinite ease-in-out;
+  width: var(--width);
+  height: calc(var(--width) * var(--santa-ratio));
+}
+.santa {
+  width: 100%;
+  height: 100%;
   transform:
     translateX(-50%)
     translate(
       calc(0px - (var(--offset) * 1vw) * var(--x)),
-      calc(0px - (var(--offset) * 1vh) * var(--y) + var(--bob) * 2)
+      calc(0px - (var(--offset) * 1vh) * var(--y))
     )
   ;
-  width: var(--width);
-  height: calc(var(--width) * var(--santa-ratio));
   background: transparent url("./i/santa.png") center center / 100% 100%;
-  animation: bob 7s infinite ease-in-out;
 }
 
 .boomers {
@@ -120,7 +116,6 @@ body {
 }
 
 .boomer {
-  --bob: 0vmin;
   --width: 30vmin;
   --flip: 1;
   --hue: 0deg;
@@ -137,12 +132,11 @@ body {
   transform:
     translate(
       calc(var(--left) - (var(--offset) * 1vw) * var(--x)),
-      calc(var(--top) - (var(--offset) * 1.3vh) * var(--y) + var(--bob))
+      calc(var(--top) - (var(--offset) * 1.3vh) * var(--y))
     )
     scaleX(var(--flip))
     scale(var(--scale))
   ;
-  animation: bob var(--dur) infinite ease-in-out;
 
   &--b-r {
     --left: 39vmin;
@@ -150,7 +144,9 @@ body {
     --offset: 10;
     --hue: 180deg;
     --scale: 0.7;
-    animation-delay: calc(0s - var(--d6) * 0);
+    .boomer-bob {
+      animation-delay: calc(0s - var(--d6) * 0);
+    }
   }
   &--m-r {
     --left: 29vmin;
@@ -158,14 +154,18 @@ body {
     --offset: 20;
     --hue: 120deg;
     --scale: 0.85;
-    animation-delay: calc(0s - var(--d6) * 1);
+    .boomer-bob {
+      animation-delay: calc(0s - var(--d6) * 1);
+    }
   }
   &--f-r {
     --left: 17vmin;
     --top: 85vmin;
     --offset: 30;
     --hue: 0deg;
-    animation-delay: calc(0s - var(--d6) * 2);
+    .boomer-bob {
+      animation-delay: calc(0s - var(--d6) * 2);
+    }
   }
 
   &--b-l {
@@ -175,7 +175,9 @@ body {
     --hue: 270deg;
     --scale: 0.7;
     --flip: -1;
-    animation-delay: calc(0s - var(--d6) * 3);
+    .boomer-bob {
+      animation-delay: calc(0s - var(--d6) * 3);
+    }
   }
   &--m-l {
     --left: 71vmin;
@@ -184,7 +186,9 @@ body {
     --hue: 60deg;
     --scale: 0.85;
     --flip: -1;
-    animation-delay: calc(0s - var(--d6) * 4);
+    .boomer-bob {
+      animation-delay: calc(0s - var(--d6) * 4);
+    }
   }
   &--f-l {
     --left: 83vmin;
@@ -192,8 +196,14 @@ body {
     --offset: 30;
     --hue: 240deg;
     --flip: -1;
-    animation-delay: calc(0s - var(--d6) * 5);
+    .boomer-bob {
+      animation-delay: calc(0s - var(--d6) * 5);
+    }
   }
+}
+
+.boomer-bob {
+  animation: bob var(--dur) infinite ease-in-out;
 }
 
 input {

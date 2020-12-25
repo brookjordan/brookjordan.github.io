@@ -40,16 +40,16 @@ function setProps(vars) {
 }
 
 
-var radios = document.querySelectorAll('.boomer > [type="radio"]');
+var radios = document.querySelectorAll('.boomer-bob > [type="radio"]');
 
 for (var i = 0; i < radios.length; i += 1) {
-  radios[i].onchange = function() {
+  radios[i].onchange = radios[i].onclick = function() {
     setSearchParams();
   }
 }
 
 function setSearchParams() {
-  var checkedRadios = document.querySelectorAll('.boomer > [type="radio"]:checked');
+  var checkedRadios = document.querySelectorAll('.boomer-bob > [type="radio"]:checked');
   var checkedString = '';
   for (var i = 0; i < checkedRadios.length; i += 1) {
     if (checkedString) {
@@ -64,9 +64,12 @@ function setSearchParams() {
 
 var pickSets = {
   default: 'terry,chris,page,leon,brett,chantal'.split(','),
-  brett: 'antony,chris,clive,emma,brett,chantal'.split(','),
-  page: 'chris,terry,page,antony,june,leon'.split(','),
-  cousins: 'brett,chris,page,gareth,clive,chantal'.split(','),
+  dad: 'gareth,chris,clive,emma,brett,chantal'.split(','),
+  nana: 'gareth,chris,clive,page,brett,chantal'.split(','),
+  siblings: 'gareth,june,terry,page,brett,leon'.split(','),
+  mcardle: 'chris,terry,page,cliff,june,leon'.split(','),
+  jordan: 'brett,chris,page,gareth,clive,chantal'.split(','),
+  billingtons: 'brett,page,antony,chris,gareth,emma'.split(','),
 };
 
 var boomers = document.querySelectorAll('.boomer');
@@ -84,7 +87,10 @@ function setInitalPicks() {
   for (var i = 0; i < searchParams.length; i += 1) {
     if (searchParams[i].indexOf('boomers=') === 0) {
       initialPicks = searchParams[i].slice(8).split(',');
-    } else if (searchParams[i].indexOf('set=') === 0) {
+    } else if (
+      searchParams[i].indexOf('set=') === 0
+      && pickSets[searchParams[i].slice(4)]
+    ) {
       initialPicks = pickSets[searchParams[i].slice(4)];
     } else {
       continue;
@@ -98,12 +104,3 @@ function setInitalPicks() {
     break;
   }
 }
-
-
-
-CSS.registerProperty({
-  name: '--bob',
-  syntax: '<length>',
-  inherits: false,
-  initialValue: '0vmin',
-});

@@ -10,11 +10,12 @@ head
 audio(type='audio/mpeg')
 input#hide-head-select(type='radio' name='show-head-select')
 label.close-head-selects(for='hide-head-select')
-- var boomers = 'terry,chris,page,antony,clive,brett,chantal,leon,emma,gareth,june'.split(',')
+- var boomers = 'terry,chris,page,antony,clive,brett,chantal,leon,emma,gareth,june,cliff'.split(',')
 - var positions = 'b-r,m-r,f-r,b-l,m-l,f-l'.split(',')
 
 .canvas
-  .santa
+  .santa-bob
+    .santa
   button#start-button
     span Start!
     span (turn on your speakers)
@@ -22,15 +23,16 @@ label.close-head-selects(for='hide-head-select')
     each position, positionIndex in positions
       input(id=`show-head-select--${position}` type='radio' name='show-head-select')
       .boomer(class=`boomer--${position}`)
-        each boomer, boomerIndex in boomers
-          - var checkedBoomer = boomerIndex === positionIndex
-          input(id=`${boomer}--${position}` type='radio' name=position value=boomer checked=checkedBoomer)
-        .run
-          .bg
-          .body
-          .fg
-        label.head(for=`show-head-select--${position}`)
-        .head-select
-          each boomer in boomers
-            label(for=`${boomer}--${position}`)
+        .boomer-bob
+          each boomer, boomerIndex in boomers
+            - var checkedBoomer = boomerIndex === positionIndex
+            input(id=`${boomer}--${position}` type='radio' name=position value=boomer checked=checkedBoomer)
+          .run
+            .bg
+            .body
+            .fg
+          label.head(for=`show-head-select--${position}`)
+          .head-select
+            each boomer in boomers
+              label(for=`${boomer}--${position}`)
 script(src='./main.js')
