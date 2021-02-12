@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pangram test</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    input {
+      font: inherit;
+      background: none;
+      border: 0;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      font-family: sans-serif;
+      background: #DDD;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .prose {
+      position: relative;
+    }
+
+    input,
+    .typed {
+      padding: 10px;
+      font-size: 22px;
+      font-size: min(22px, 4vw);
+      border: 1px solid #bbb;
+    }
+
+    input {
+      position: absolute;
+      width: 100%;
+      transition: box-shadow 300ms;
+      border-radius: 10px;
+    }
+    input:focus {
+      outline: 0;
+      box-shadow: inset 0 1px 5px rgba(0 0 0 / 0.3);
+      transition: box-shadow 50ms;
+    }
+
+    .typed {
+      color: transparent;
+      border-color: transparent;
+    }
+
+    h3 span {
+      font-family: monospace;
+    }
+
+    b,
+    strong {
+      font-weight: inherit;
+      border-radius: 3px;
+    }
+
+    b {
+      background-color: #FFF;
+    }
+
+    strong {
+      background-color: #FCC;
+    }
+
+    ul {
+      margin-top: 0;
+    }
+    li {
+      cursor: pointer;
+      margin: 10px 0;
+    }
+
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 5px -10px;
+    }
+
+    .stats > * {
+      margin: 5px 20px;
+    }
+
+    .stats h3 {
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>Pangram tester</h1>
+  <p>Try to use the whole alphabet with as few repeated letters as possible</p>
+  <p>Repeated letters are coloured:
+    <br>  • the first of each letter is white, to help you find it
+    <br>  • following repeats are red so you can quickly see how many there are.
+  </p>
+
+  <label for="pangram">Your <em hidden> long</em> pangram<span hidden> attempt</span>:</label>
+  <div class="prose">
+    <input id="pangram"
+      value=""
+      placeholder="The quick brown fox jumps over the lazy dog"
+    />
+    <div class="typed">&nbsp;</div>
+  </div>
+
+  <div class="stats">
+    <h3 class="unused">
+      <small>Unused: </small>
+      <span></span>
+    </h3>
+    <h3 class="length">
+      <small>Length: </small>
+      <span></span>
+    </h3>
+    <h3 class="repeatcount">
+      <small>Repeat count: </small>
+      <span></span>
+    </h3>
+    <h3 class="repeated">
+      <small>Repeated: </small>
+      <span></span>
+    </h3>
+  </div>
+
+  <p>Some famous pangrams (click to test) (copy your one first, or it’s gonna disappear 😅):</p>
+  <ul>
+    <li>The quick brown fox jumps over the lazy dog
+    <li>Waltz, bad nymph, for quick jigs vex
+    <li>Jived fox nymph grabs quick waltz
+    <li>Glib jocks quiz nymph to vex dwarf
+    <li>Sphinx of black quartz, judge my vow
+    <li>How vexingly quick daft zebras jump!
+    <li>The five boxing wizards jump quickly
+    <li>Jackdaws love my big sphinx of quartz
+    <li>Pack my box with five dozen liquor jugs
+  </ul>
+
+  <script>
+    const initialPangram = new URL(location).searchParams.get('_');
+    const input = document.querySelector('input');
+    const labelAttempt = document.querySelector('label span');
+    const labelLong = document.querySelector('label em');
+    const display = document.querySelector('.typed');
+    const unused = document.querySelector('h3:nth-of-type(1) span');
+    const length = document.querySelector('h3:nth-of-type(2) span');
+    const repeatcount = document.querySelector('h3:nth-of-type(3) span');
+    const repeated = document.querySelector('h3:nth-of-type(4) span');
+    const lis = document.querySelectorAll('li');
+    const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
+
+    input.value = initialPangram || '';
+    print();
+    input.oninput = print;
+
+    lis.forEach(li => li.onclick = fillInput);
+
+    function print() {
+      let repeatCount = 0;
+      const repeatedChars = [];
+      const text = input.value;
+      const uniqueLetters = new Set(text.replace(/\W/g, '').toLowerCase().split(''));
+      display.innerHTML = text.split('')
+        .map((char, index) => {
+          if (!/\w/i.test(char)) { return char; }
+          return text.toLowerCase().indexOf(char.toLowerCase()) === text.toLowerCase().lastIndexOf(char.toLowerCase())
+            ? char
+            : text.toLowerCase().indexOf(char.toLowerCase()) === index
+              ? repeatedChars.push(char) && `<b>${char}</b>`
+              : ++repeatCount && `<strong>${char}</strong>`
+        }).join('') || '&nbsp;';
+      const remainingChars =  alphabet.flatMap(char => uniqueLetters.has(char.toLowerCase()) ? [] : char).join('');
+      unused.innerHTML = remainingChars || '—';
+      unused.innerHTML = remainingChars || '—';
+      if (remainingChars.length) {
+        labelAttempt.removeAttribute('hidden');
+      } else {
+        labelAttempt.setAttribute('hidden', 'hidden');
+      }
+      repeatcount.innerHTML = repeatCount;
+      repeated.innerHTML = repeatedChars.join('');
+      if (repeatCount > 10) {
+        labelLong.removeAttribute('hidden');
+      } else {
+        labelLong.setAttribute('hidden', 'hidden');
+      }
+      length.innerHTML = text.match(/(\w)/g) ? text.match(/(\w)/g).length : 0;
+    }
+
+    function fillInput(e) {
+      input.value = e.target.innerText.trim();
+      print();
+    }
+  </script>
+</body>
+</html>
