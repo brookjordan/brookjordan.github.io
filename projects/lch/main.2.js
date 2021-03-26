@@ -1,3 +1,5 @@
+import Color from './color.2.js';
+
 let renderRAF;
 let lastFrameDrawnAt = 0;
 
