@@ -19,36 +19,51 @@
     nav > div {
       display: grid;
       grid-auto-flow: column;
+      grid-gap: 20px;
+      align-items: center;
+    }
+
+    a {
+      padding: 10px 20px;
       background: white;
       border-radius: 10px;
     }
 
-    a {
-      padding: 20px;
+    p {
+      text-align: center;
+      margin-top: 100px;
     }
   </style>
 </head>
 <body>
   <nav>
     <div>
-      <a href="./house1">House 1</a>
-      <a href="./house1/big">(big)</a>
+      House 1
+      <a href="./house1">Low quality (~20MB)</a>
+      <a href="./house1/big">Ok quality (~100MB)</a>
     </div>
 
     <div>
-      <a href="./view1">View 1</a>
-      <a href="./view1/big">(big)</a>
+      View 1
+      <a href="./view1">Low quality (~20MB)</a>
+      <a href="./view1/big">Ok quality (~100MB)</a>
     </div>
 
     <div>
-      <a href="./view2">View 2</a>
-      <a href="./view2/big">(big)</a>
+      View 2
+      <a href="./view2">Low quality (~20MB)</a>
+      <a href="./view2/big">Ok quality (~100MB)</a>
     </div>
 
     <div>
-      <a href="./road1">Road 1</a>
-      <a href="./road1/big">(big)</a>
+      Road 1
+      <a href="./road1">Low quality (~20MB)</a>
+      <a href="./road1/big">Ok quality (~100MB)</a>
     </div>
   </nav>
+
+  <p>
+    (Sorry for the low quality, GitHub limits to 100MB, and Netlify is slow… I’ll need to pay to make it better 😬)
+  </p>
 </body>
 </html>
