@@ -12,8 +12,8 @@
     }
 
     nav {
-      display: grid;
-      grid-gap: 20px;
+      max-width: 600px;
+      margin: 0 auto;
     }
 
     nav > div {
@@ -21,44 +21,83 @@
       grid-auto-flow: column;
       grid-gap: 20px;
       align-items: center;
+      margin: 10px 0;
+      text-align: right;
+    }
+
+    nav > h3 {
+      margin-top: 40px;
+      text-align: center;
     }
 
     a {
       padding: 10px 20px;
       background: white;
       border-radius: 10px;
+      text-align: center;
+      text-decoration: none;
+      color: black;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+    a span {
+      color: white;
+      text-decoration: none;
+    }
+    a:hover span {
+      text-decoration: none;
+    }
+
+    a:visited {
+      color: #666;
+      background-color: #eee;
+    }
+    a:visited span {
+      color: #666;
     }
 
     p {
       text-align: center;
+      max-width: 400px;
+      margin: 0 auto;
       margin-top: 100px;
     }
   </style>
 </head>
 <body>
   <nav>
+    <h3>May 8 2021</h3>
     <div>
-      House 1
-      <a href="./house1">Low quality (~20MB)</a>
-      <a href="./house1/big">Ok quality (~100MB)</a>
-    </div>
-
-    <div>
-      View 1
-      <a href="./view1">Low quality (~20MB)</a>
-      <a href="./view1/big">Ok quality (~100MB)</a>
-    </div>
-
-    <div>
-      View 2
-      <a href="./view2">Low quality (~20MB)</a>
-      <a href="./view2/big">Ok quality (~100MB)</a>
+      Road 2
+      <a href="./road2">Low quality (~20MB) <span>(seen)</span></a>
+      <a href="./road2/big">Ok quality (~100MB) <span>(seen)</span></a>
     </div>
 
     <div>
       Road 1
-      <a href="./road1">Low quality (~20MB)</a>
-      <a href="./road1/big">Ok quality (~100MB)</a>
+      <a href="./road1">Low quality (~20MB) <span>(seen)</span></a>
+      <a href="./road1/big">Ok quality (~100MB) <span>(seen)</span></a>
+    </div>
+
+    <div>
+      View 2
+      <a href="./view2">Low quality (~20MB) <span>(seen)</span></a>
+      <a href="./view2/big">Ok quality (~100MB) <span>(seen)</span></a>
+    </div>
+
+    <div>
+      View 1
+      <a href="./view1">Low quality (~20MB) <span>(seen)</span></a>
+      <a href="./view1/big">Ok quality (~100MB) <span>(seen)</span></a>
+    </div>
+
+    <h3>May 6 2021</h3>
+    <div>
+      House 1
+      <a href="./house1">Low quality (~20MB) <span>(seen)</span></a>
+      <a href="./house1/big">Ok quality (~100MB) <span>(seen)</span></a>
     </div>
   </nav>
 
