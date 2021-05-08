@@ -5,13 +5,50 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>360 Tests</title>
+
+  <style>
+    html {
+      background: #ddd;
+    }
+
+    nav {
+      display: grid;
+      grid-gap: 20px;
+    }
+
+    nav > div {
+      display: grid;
+      grid-auto-flow: column;
+      background: white;
+      border-radius: 10px;
+    }
+
+    a {
+      padding: 20px;
+    }
+  </style>
 </head>
 <body>
   <nav>
-    <a href="./house1"></a>
-    <a href="./view1"></a>
-    <a href="./view2"></a>
-    <a href="./road1"></a>
+    <div>
+      <a href="./house1">House 1</a>
+      <a href="./house1/big">(big)</a>
+    </div>
+
+    <div>
+      <a href="./view1">View 1</a>
+      <a href="./view1/big">(big)</a>
+    </div>
+
+    <div>
+      <a href="./view2">View 2</a>
+      <a href="./view2/big">(big)</a>
+    </div>
+
+    <div>
+      <a href="./road1">Road 1</a>
+      <a href="./road1/big">(big)</a>
+    </div>
   </nav>
 </body>
 </html>
