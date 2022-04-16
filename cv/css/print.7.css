@@ -1,0 +1,124 @@
+:root {
+	--c-text-body: #47536a;
+	--c-text-h2: #fc4349;
+	--c-text-h3: #253443;
+	--c-text-h4: var(--c-text-h2);
+	--c-text-h5: var(--c-text-h3);
+	--c-text-faded: #a1acb1;
+	--c-text-link: #007dbd;
+
+	--c-background-underlay: #a1acb1;
+	--c-background-page: white;
+
+	--c-divider: #d7dadb;
+}
+
+@page {
+    size: auto;   /* auto is the initial value */
+
+    /* this affects the margin in the printer settings */
+    margin: 7mm 7mm 7mm 7mm;
+}
+
+html {
+	font-size: 11pt !important;
+}
+
+body {
+	padding: 0 !important;
+	margin: 0 !important;
+	max-width: none !important;
+	line-height: 16pt !important;
+}
+
+.section-employment {
+	column-count: 2;
+	column-gap: 0.8cm;
+}
+
+.section-skills {
+	column-count: 4;
+}
+
+.job {
+	break-inside: avoid;
+	break-before: avoid;
+}
+
+.job-date {
+	line-height: 16pt !important;
+	font-size: 10pt !important;
+}
+
+a {
+	color: inherit !important;
+	text-decoration: none !important;
+}
+
+.font-sectionHead {
+	font-size: 15pt !important;
+	margin-top: 10pt !important;
+}
+.myName br {
+	display: none;
+}
+
+.job-head,
+.job-company {
+	margin-top: 4pt !important;
+}
+
+.job:first-child .job-company {
+	margin-top: 0 !important;
+}
+
+.job-title {
+	padding: 0 !important;
+	font-size: 11pt !important;
+}
+
+.font-body {
+	margin-top: 6pt !important;
+}
+.font-body.contact {
+	display: flex;
+}
+.font-body.contact a + a::before {
+	content: '|';
+	margin: 0 1em;
+}
+h4 + .font-body {
+	margin-top: 0 !important;
+}
+.section-hobbies .font-body {
+	display: none;
+}
+.section-hobbies .definitionlist {
+	display: flex;
+}
+.section-hobbies .job-company {
+	flex-basis: auto;
+	font: inherit;
+	margin: 0 !important;
+}
+.section-hobbies .font-body + .job-company::before {
+	content: ", ";
+}
+.font-body:empty::after {
+	content: '' !important;
+}
+
+.section-education .bullet,
+.section-education .bullet p {
+	display: inline;
+	width: auto;
+	margin: 0;
+}
+
+.section-education .bullet + .bullet::before {
+	content: ', ';
+}
+
+.screenOnly {
+	display: none;
+}
