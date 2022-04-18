@@ -15,20 +15,39 @@
 
 @page {
     size: auto;   /* auto is the initial value */
-
-    /* this affects the margin in the printer settings */
-    margin: 7mm 7mm 7mm 7mm;
 }
 
 html {
 	font-size: 11pt !important;
 }
 
-body {
+html,
+body,
+.body,
+.page {
 	padding: 0 !important;
 	margin: 0 !important;
 	max-width: none !important;
 	line-height: 16pt !important;
+}
+.page {
+	margin: 7mm 7mm 7mm 7mm !important;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  page-break-after: avoid;
+  page-break-inside: avoid;
+}
+:where(h1,h2,h3,h4,h5,h6)::after {
+  content: '';
+	display: block;
+	height: 100px;
+	margin-bottom: -100px;
+	flex-basis: 100%;
+}
+
+.controls {
+	display: none !important;
 }
 
 .section-employment {
@@ -55,7 +74,7 @@ a {
 	text-decoration: none !important;
 }
 
-.font-sectionHead {
+.font--sectionHead {
 	font-size: 15pt !important;
 	margin-top: 10pt !important;
 }
@@ -77,20 +96,28 @@ a {
 	font-size: 11pt !important;
 }
 
-.font-body {
+.font--body {
 	margin-top: 6pt !important;
 }
-.font-body.contact {
+.font--body.contact {
 	display: flex;
+	flex-direction: row;
+	align-items: baseline;
 }
-.font-body.contact a + a::before {
-	content: '|';
+.font--body.contact a::before,
+.font--body.contact a::after {
+	content: none !important;
+	position: static !important;
+	opacity: 1 !important;
+}
+.font--body.contact a + a::before {
+	content: '|' !important;
 	margin: 0 1em;
 }
-h4 + .font-body {
+h4 + .font--body {
 	margin-top: 0 !important;
 }
-.section-hobbies .font-body {
+.section-hobbies .font--body {
 	display: none;
 }
 .section-hobbies .definitionlist {
@@ -101,10 +128,10 @@ h4 + .font-body {
 	font: inherit;
 	margin: 0 !important;
 }
-.section-hobbies .font-body + .job-company::before {
+.section-hobbies .font--body + .job-company::before {
 	content: ", ";
 }
-.font-body:empty::after {
+.font--body:empty::after {
 	content: '' !important;
 }
 

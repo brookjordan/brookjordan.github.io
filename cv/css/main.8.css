@@ -1,52 +1,72 @@
 :root {
-	--c-text-body: #47536a;
-	--c-text-h2: #fc4349;
-	--c-text-h3: #253443;
-	--c-text-h4: var(--c-text-h2);
-	--c-text-h5: var(--c-text-h3);
-	--c-text-faded: #a1acb1;
-	--c-text-link: #007dbd;
+  --c-text-body-light: 37 52 67;
+  --c-text-body-dark: 208 229 255;
 
-	--c-background-underlay: #a1acb1;
-	--c-background-page: white;
+  --c-text-body: rgb(var(--c-text-body-light));
+  --c-text-h2: #fc4349;
+  --c-text-h3: #253443;
+  --c-text-h4: var(--c-text-h2);
+  --c-text-h5: var(--c-text-h3);
+  --c-text-faded: #a1acb1;
+  --c-text-link: #007dbd;
 
-	--c-divider: #d7dadb;
+  --c-background-underlay: #a1acb1;
+  --c-background-page: white;
+
+  --c-divider: #d7dadb;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --c-text-body: #a8bcce;
-    --c-text-h2: #d64c50;
-    --c-text-h3: #d0e5ff;
-    --c-text-h4: var(--c-text-h2);
-    --c-text-h5: var(--c-text-h3);
+* {
+  transition-property: color, background-color;
+  transition-duration: 0.3s;
+}
 
-    --c-text-faded: #486c8e;
-    --c-text-link: #4192bb;
+html,
+body {
+  margin: 0;
+  background-color: var(--c-background-underlay);
+}
 
-    --c-background-underlay: #162533;
-    --c-background-page: #0a1825;
+.body {
+  --c-text: var(--c-text-body);
 
-    --c-divider: #486c8e;
+  background-color: var(--c-background-underlay);
+  font-size: 100%;
+  padding: 1px;
+}
+
+.controls {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 10px;
+  padding-bottom: calc(10px + 5vw);
+  max-width: calc(800px + 16vw);
+  opacity: 0.3;
+  transition: opacity 0.3s;
+}
+.controls:hover,
+.controls:focus-within {
+  opacity: 1;
+}
+
+@media screen and (min-width: 520px) {
+  .controls {
+    margin-inline: 3vw;
   }
 }
 
-html {
-	--c-background: var(--c-background-underlay);
-	--c-text: var(--c-text-body);
-
-  background-color: var(--c-background);
-  font-size: 100%;
-}
-
-body {
-	--c-background: var(--c-background-page);
+.page {
+  --c-background: var(--c-background-page);
   position: relative;
   padding: 5vw;
+  max-width: 800px;
+  margin-top: -5vw;
   font-family: 'Gentium Book Basic', serif;
   line-height: 1.4;
   color: var(--c-text);
-  max-width: 800px;
   background-color: var(--c-background);
 }
 
@@ -56,29 +76,29 @@ body {
 }
 
 ::selection {
-	color: var(--c-background);
-	background-color: var(--c-text);/*none*/
-	/* text-shadow:
-		0 0 4px var(--c-text),
-		0 0 4px var(--c-text),
-		0 0 4px var(--c-text),
-		0 0 4px var(--c-text),
-		0 0 4px var(--c-text),
-		0 0 4px var(--c-text),
-		0 0 4px var(--c-text),
-		0 0 4px var(--c-text),
-		0 0 4px var(--c-text),
-		0 0 4px var(--c-text),
-		0 0 4px var(--c-text),
-		0 0 4px var(--c-text),
-		0 0 4px var(--c-text),
-		0 0 4px var(--c-text),
-		0 0 6px var(--c-text),
-		0 0 6px var(--c-text),
-		0 0 6px var(--c-text),
-		0 0 6px var(--c-text),
-		0 0 6px var(--c-text),
-		0 0 6px var(--c-text); */
+  color: var(--c-background);
+  background-color: var(--c-text, var(--c-background));/*none*/
+  /* text-shadow:
+  0 0 4px var(--c-text),
+  0 0 4px var(--c-text),
+  0 0 4px var(--c-text),
+  0 0 4px var(--c-text),
+  0 0 4px var(--c-text),
+  0 0 4px var(--c-text),
+  0 0 4px var(--c-text),
+  0 0 4px var(--c-text),
+  0 0 4px var(--c-text),
+  0 0 4px var(--c-text),
+  0 0 4px var(--c-text),
+  0 0 4px var(--c-text),
+  0 0 4px var(--c-text),
+  0 0 4px var(--c-text),
+  0 0 6px var(--c-text),
+  0 0 6px var(--c-text),
+  0 0 6px var(--c-text),
+  0 0 6px var(--c-text),
+  0 0 6px var(--c-text),
+  0 0 6px var(--c-text); */
 }
 
 .cf::before,
@@ -95,47 +115,47 @@ body {
 }
 
 a {
-	--c-text: var(--c-text-link);
-	position: relative;
+  --c-text: var(--c-text-link);
+  position: relative;
   font-weight: 400;
   text-decoration: none;
-	color: var(--c-text);
+  color: var(--c-text);
 }
-a:focus {
-	outline: 0;
+a:focus-visible {
+  outline: 0;
 }
 a::before {
-	content: '';
-	position: absolute;
-	left: -6px;
-	top: -3px;
-	width: calc(100% + 12px);
-	height: calc(100% + 6px);
-	border-radius: 5px;
-	background-color: var(--c-text);
-	opacity: 0;
-	transition: opacity 0.1s ease-out;
-	will-change: opacity;
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: -3px;
+  width: calc(100% + 12px);
+  height: calc(100% + 6px);
+  border-radius: 5px;
+  background-color: var(--c-text);
+  opacity: 0;
+  transition: opacity 0.1s ease-out;
+  will-change: opacity;
 }
 a::after {
-	content: '';
-	position: absolute;
-	top: 100%;
-	left: -10px;
-	width: calc(100% + 20px);
-	height: 3px;
-	border-radius: 1.5px;
-	background-color: var(--c-text);
-	transform: scaleX(0);
-	transition: transform 0.1s ease-out;
-	will-change: transform;
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: -10px;
+  width: calc(100% + 20px);
+  height: 3px;
+  border-radius: 1.5px;
+  background-color: var(--c-text);
+  transform: scaleX(0);
+  transition: transform 0.1s ease-out;
+  will-change: transform;
 }
 a:hover::after,
 a:focus-visible::after {
-	transform: scaleX(1);
+  transform: scaleX(1);
 }
 a:focus-visible::before {
-	opacity: 0.2;
+  opacity: 0.2;
 }
 
 .is-clearing {
@@ -145,11 +165,11 @@ a:focus-visible::before {
 }
 
 .contact {
-	display: flex;
-	flex-direction: column;
+  display: flex;
+  flex-direction: column;
   text-align: right;
-	align-items: end;
-	gap: 5px;
+  align-items: end;
+  gap: 5px;
 }
 
 .font--section-head,
@@ -161,12 +181,12 @@ h5 {
 }
 
 h5 {
-	--c-text: var(--c-text-h5);
-	color: var(--c-text);
+  --c-text: var(--c-text-h5);
+  color: var(--c-text);
 }
 
 .font--section-head {
-	--c-text: var(--c-text-h2);
+  --c-text: var(--c-text-h2);
   margin-top: 3rem;
   margin-bottom: 0.5rem;
   font-weight: 600;
@@ -174,6 +194,11 @@ h5 {
   color: var(--c-text);
 }
 
+
+.section--contact {
+  display: flex;
+  justify-content: space-between;
+}
 .section--contact .font--section-head {
   margin-top: 0;
 }
@@ -194,7 +219,7 @@ h5 {
 }
 
 .job-company {
-	--c-text: var(--c-text-h3);
+  --c-text: var(--c-text-h3);
   font-weight: 600;
   color: var(--c-text);
   flex-basis: 100%;
@@ -211,10 +236,10 @@ sub {
 }
 
 .job-title {
-	--c-text: var(--c-text-h4);
+  --c-text: var(--c-text-h4);
   margin-top: 1.5rem;
   font-size: 1.2rem;
-	color: var(--c-text);
+  color: var(--c-text);
 }
 
 .job-head .job-title {
@@ -255,9 +280,9 @@ h5 + .font--body {
 }
 
 .font--body:empty::after {
-	--c-text: var(--c-text-faded);
+  --c-text: var(--c-text-faded);
   content: '—';
-	color: var(--c-text);
+  color: var(--c-text);
 }
 
 .job-head + .font--body,
@@ -266,8 +291,8 @@ h5 + .font--body {
 }
 
 .font--subtle {
-	--c-text: var(--c-text-faded);
-	color: var(--c-text);
+  --c-text: var(--c-text-faded);
+  color: var(--c-text);
   font-size: 0.8rem;
   font-weight: 400;
 }
@@ -275,6 +300,7 @@ h5 + .font--body {
 .bullets {
   list-style-type: disc;
   margin-top: 1px;
+  padding-top: 1px;
 }
 
 .bullets::before {
@@ -334,9 +360,10 @@ h5 + .font--body {
     font-size: 125%;
   }
 
-  body {
+  .page {
     padding: 8vw;
     margin: 3vw;
+    margin-top: -5vw;
   }
 }
 

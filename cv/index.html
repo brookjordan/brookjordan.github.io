@@ -14,6 +14,9 @@
 
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="date.updated" content="2022-04-16">
+	<meta name="theme-color" content="#162533" media="(prefers-color-scheme: dark)" id="theme-color-meta-dark">
+	<meta name="theme-color" content="#a1acb1" media="(prefers-color-scheme: light)" id="theme-color-meta-light">
 
 	<title>CV | Brook Jordan | April 2022</title>
 
@@ -49,257 +52,274 @@
 		}
 	</style>
 	<link rel="stylesheet" href="css/reset.css">
-	<link rel="stylesheet" href="css/main.7.css">
+	<link rel="stylesheet" href="css/main.8.css">
+	<link rel="stylesheet" href="css/dark.8.css" media="screen">
+	<link rel="stylesheet" href="css/theme-toggle.8.css">
 </head>
 
 <body>
-	<div class="section section--contact">
-		<div style="
-			display: flex;
-			justify-content: space-between;
-		">
-			<h1 class="font--section-head myName">
-				Brook
-				<br>
-				Jordan
-			</h1>
-			<p class="font--body contact" style="
-				margin: 0;
-			">
-				<a href="mailto:brook@brook.dev">brook@brook.dev</a>
-				<a href="tel:+6592403724"><sub>+65 </sub>9240 3724</a>
-				<a href="https://brook.dev/"><sub><sub>https://</sub></sub>brook.dev<sub><sub>/</sub></sub></a>
-			</p>
+	<input tabindex="0" type="radio" name="theme" id="theme--dark" aria-label="Page theme: Dark">
+	<input tabindex="0" type="radio" name="theme" id="theme--light" aria-label="Page theme: Light">
+	<input tabindex="0" type="radio" name="theme" id="theme--auto" aria-label="Page theme: Match system">
+
+	<div class="body">
+		<div class="controls">
+			<span class="theme-switcher">
+				<label aria-labelledBy="theme--auto" for="theme--auto" title="Click again to match system"></label>
+				<label aria-labelledBy="theme--dark" for="theme--dark">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><g fill="rgb(var(--c-icon))"><circle cx="46" cy="38" r="2"/><circle cx="32" cy="48" r="1"/><circle cx="45" cy="47" r="1"/><circle cx="36" cy="3" r="1"/><circle cx="40.5" cy="45.5" r="1.5"/><path d="M25 31c8 8 18 2 18 2-2 7-9 12-17 12-13 0-21-8-21-20C5 14 14 5 24 5c4 0 10 1 13 6-3-2-9-1-12 2-4 4-5 13 0 18ZM43 2c0 2 0 7 3 7-3 0-3 5-3 7 0-2 0-7-3-7 3 0 3-5 3-7Z"/></g></svg>
+				</label>
+				<label aria-labelledBy="theme--light" for="theme--light">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path fill="rgb(var(--c-icon))" d="M3 4c3 0 2 6 8 4s3 3 7 2 1-8 9-8c-2 1-2 4 2 5 3 1 1 4 4 4s4-9 12 4c-7-2-6 7-1 5 0 6-6-1-6 3s7 4 4 11c-1 2-2 4 1 3-7 5-3-6-8-1-3 3 6 4 0 7-5 2-1 3-1 3-9 3-3-10-8-7s-8 2-11 0c8 7-1 12-3 8 3 0 2-7-1-7s-5 9-9 3c3 1 6 0 3-3s5-8 5-11c-3 5-12-1-7-6-1 2 1 7 5 3 2-2-1-4-2-3 1-2 4-2 4-4s-5-1-5-7-1-7-2-8Zm34 21a13 13 0 1 0-26 0 13 13 0 0 0 26 0Zm-1 0a12 12 0 1 0-24 0 12 12 0 0 0 24 0Z"/></svg>
+				</label>
+			</span>
+
+			<a href="2022-04-brook-jordan.pdf" download="CV | Brook Jordan | April 2022.pdf">Download as PDF</a>
 		</div>
+
+		<main class="page">
+			<section class="section section--contact">
+				<h1 class="font--section-head myName">
+					Brook
+					<br>
+					Jordan
+				</h1>
+				<p class="font--body contact" style="
+					margin: 0;
+				">
+					<a href="mailto:brook@brook.dev">brook@brook.dev</a>
+					<a href="tel:+6592403724"><sub>+65 </sub>9240 3724</a>
+					<a href="https://brook.dev/"><sub><sub>https://</sub></sub>brook.dev<sub><sub>/</sub></sub></a>
+				</p>
+			</section>
+
+			<section class="section section--about">
+				<p class="font--body">
+					A software engineer with deep understanding of JavaScript, CSS, and HTML
+					alongside a background in design, illustration, and animation.
+					I excel in frontend architecture, componentisation, and design systems &ndash;
+					keeping: codebases efficient and maintainable; teams focused and excited; and projects accessible and punctual.
+				</p>
+				<!--
+				<p class="font--body">
+					My desire for perfection drives me to sweat the details:
+					keeping designs tight, interactions fluid, and code efficient and maintainable.
+					Then my experience, pragmatism, and research allows me to
+					budget for time, scope, and the future of the product.
+				</p>
+				<p class="font--body">
+					I got my first web development role after teaching myself web development on my commute and,
+					until now, I haven’t lost my passion for all things internet.
+				</p>
+				-->
+			</section>
+
+			<h3 class="font--section-head">Employment history</h3>
+			<section class="section section--employment">
+				<div class="job">
+					<h4 class="job-head">
+						<p class="job-company">Motional</p>
+						<p class="job-title">Senior Software Engineer</p>
+						<time class="font--subtle job-date">Apr&nbsp;2020&nbsp;&mdash; current</time>
+					</h4>
+
+					<h5>Front-end</h5>
+					<p class="font--body">
+						Leading the front-end build, tests, and deployment of the Command Center application.
+						<br>Live data using a combination of polling and websockets, where appropriate.
+						<br>Maps using Google Maps, then MapBox.
+					</p>
+
+					<h5>People</h5>
+					<p class="font--body">
+						Worked closely with a design intern to release new project.
+						<br>Mentored intern to develop system to create and control simulated vehicles.
+						<br>Mentored a second intern to expand that previous system to control real vehicles from the cloud.
+					</p>
+
+					<h5>Architecture</h5>
+					<p class="font--body">
+						Put forward the usecase of new design system.
+						<br>Built it out while working on new features.
+						<br>Gradually back-ported old projects to the new system.
+					</p>
+					<p class="font--body">
+						Work closely with back-end to encourage consistent APIs for internal and external use.
+					</p>
+				</div>
+
+				<div class="job">
+					<h4 class="job-head">
+						<p class="job-company">TradeGecko</p>
+						<p class="job-title">Software Engineer</p>
+						<time class="font--subtle job-date">Sep&nbsp;2015&nbsp;&mdash; Feb&nbsp;2020</time>
+					</h4>
+
+					<h5>Core application</h5>
+					<p class="font--body">
+						Championing UX architecture, componentisation, and frontend architecture.
+						Rapidly prototyping, then converting to highly-polished MVPs,
+							taking into consideration speed-to-production, developer happiness, and end-user accessibility.
+						Work included in-depth code reviews, technical documenting,
+							and refactoring code reactively and proactively to prevent bottlenecks.
+					</p>
+
+					<h5>Marketing website</h5>
+					<p class="font--body">
+						I built and maintained the marketing website by building custom tooling on top of HubSpot.
+						I ensured the system was quick and easy to update; that analytics and SEO gave an accurate
+							representation of our audience; and load times were fast.
+					</p>
+
+					<h5>People</h5>
+					<p class="font--body">
+						After some time the core app demanded I worked on it fulltime and I couldn’t spend time on the
+							marketing site, so I began mentoring a junior for the marketing site.
+						This carried forward to me similarly mentoring other team members from the engineering team,
+							with regular pairing and conversations.
+					</p>
+				</div>
+
+				<div class="job">
+					<h4 class="job-head">
+						<p class="job-company">Win Technologies</p>
+						<p class="job-title">Software Engineer</p>
+						<time class="font--subtle job-date">Jun&nbsp;2014&nbsp;&mdash; Apr&nbsp;2015</time>
+					</h4>
+					<p class="font--body">
+						Under the Betway brand: I started by polishing up the Bingo website,
+							then quickly moved to lead the new white-label gaming website.
+						Together we made a portal that tailored itself to the needs of multiple brands.
+					</p>
+				</div>
+
+				<div class="job">
+					<h4 class="job-head">
+						<p class="job-company">Perform Group</p>
+						<p class="job-title">Web developer</p>
+						<time class="font--subtle job-date">Mar&nbsp;2013&nbsp;&mdash; Apr&nbsp;2014</time>
+					</h4>
+					<p class="font--body">
+						Leading live streaming website projects,
+							CMS integrations, curated data feeds, and technical documentation.
+					</p>
+				</div>
+
+				<div class="job">
+					<h4 class="job-head">
+						<p class="job-title">Junior web developer</p>
+						<time class="font--subtle job-date">Dec&nbsp;2011&nbsp;&mdash; Mar&nbsp;2013</time>
+					</h4>
+					<p class="font--body">
+						After three months of teaching myself web development: Perform Group,
+							excited by my passion for the role, gave me a shot as a junior developer.
+						In less than a year I was leading teams for the Norwegian Eliteserien and OBOS-ligaen.
+					</p>
+				</div>
+
+				<div class="job">
+					<h4 class="job-head">
+						<p class="job-company">Research Now</p>
+						<p class="job-title">Graphic design intern</p>
+						<time class="font--subtle job-date">Apr - Jul&nbsp;2011</time>
+					</h4>
+					<p class="font--body">
+						This is where my journey into web dev began.
+						After learning Flash on-the-job while hitting deadlines I was asked to create an email.
+						This hooked me in and I started learning web dev on my 2-hour commute.
+					</p>
+				</div>
+			</section>
+
+			<h3 class="font--section-head">Technical Skills <sub><sub>In&nbsp;order&nbsp;of&nbsp;preference</sub></sub></h3>
+			<section class="section section--skills">
+				<ul class="bullets">
+					<li class="bullet bullet--single">
+						<p class="font--body">CSS<sub>: SCSS, Vanilla</sub></p>
+					</li>
+
+					<li class="bullet bullet--single">
+						<p class="font--body">Frontend JavaScript<sub>: Vanilla, React, Ember</sub></p>
+					</li>
+
+					<li class="bullet bullet--single">
+						<p class="font--body">HTML<sub>: Accessibile</sub></p>
+					</li>
+
+					<li class="bullet bullet--single">
+						<p class="font--body">Node<sub>: Express, Vanilla</sub></p>
+					</li>
+
+					<li class="bullet bullet--single">
+						<p class="font--body">SQL<sub>: MySQL, PostgreSQL</sub></p>
+					</li>
+				</ul>
+			</section>
+
+			<h3 class="font--section-head">Formal Education</h3>
+			<div class="section section--education">
+				<ul class="bullets">
+					<li class="bullet bullet--single">
+						<p class="font--body">BA Illustration with Animation<sub>: Manchester Metropolitan University</sub></p>
+					</li>
+
+					<li class="bullet bullet--single">
+						<p class="font--body">Arts Foundation<sub>: University of Lincoln</sub></p>
+					</li>
+				</ul>
+			</div>
+
+			<div class="section section--hobbies">
+				<h3 class="font--section-head">Hobbies &amp; interests</h3>
+
+				<div class="definitionlist">
+					<h4 class="job-company">Travel</h4>
+					<p class="font--body">
+						A revelation, as before leaving the UK around 5 year ago, I hardly left the house.
+						Moving to Singapore has opened my eyes to travelling and I have been trying to get to new
+						countries at least every couple of months.
+						Activities while abroad include diving, hiking, and meeting new people.
+					</p>
+
+					<h4 class="job-company">Art</h4>
+					<p class="font--body">
+						I still enjoy life-drawing and try to go to classes to keep my drawing sharp.
+						During down-time you could find me sketching or folding a paper animal.
+					</p>
+
+					<h4 class="job-company">Computers</h4>
+					<p class="font--body">
+						Most of my spare time is spent with computers, and electronics:
+						learning new things and immersing myself in their world.
+					</p>
+
+					<h4 class="job-company last">Gaming</h4>
+					<p class="font--body">
+						The progressive problem-solving nature of real-time strategy games makes them my ‘go-to’,
+						but I also enjoy casual action and fps games to wind-down with.
+					</p>
+
+					<h4 class="job-company">Guitar &amp; recording</h4>
+					<p class="font--body">
+						Having taught myself guitar while at University, I enjoyed recording sessions in my bedroom...
+						all parts played by yours-truly.
+						However, these days I tend to keep my playing more to myself.
+					</p>
+
+					<h4 class="job-company">Photography</h4>
+					<p class="font--body">
+						I am familiar with modern DSLR cameras, but as I generally take photos while out-and-about
+						I stick mostly to point-and-shoot cameras or my Phone.
+						As I started diving I’m currently enjoying the Olympus TG-5.
+					</p>
+				</div>
+			</div>
+		</main>
 	</div>
 
-	<div class="section section--about">
-		<p class="font--body">
-			A software engineer with deep understanding of JavaScript, CSS, and HTML
-			alongside a background in design, illustration, and animation.
-			I excel in frontend architecture, componentisation, and design systems &ndash;
-			keeping: codebases efficient and maintainable; teams focused and excited; and projects accessible and punctual.
-		</p>
-		<!--
-		<p class="font--body">
-			My desire for perfection drives me to sweat the details:
-			keeping designs tight, interactions fluid, and code efficient and maintainable.
-			Then my experience, pragmatism, and research allows me to
-			budget for time, scope, and the future of the product.
-		</p>
-		<p class="font--body">
-			I got my first web development role after teaching myself web development on my commute and,
-			until now, I haven’t lost my passion for all things internet.
-		</p>
-		-->
-	</div>
+	<link rel="stylesheet" href="css/print.8.css" media="print">
 
-	<h3 class="font--section-head">Employment history</h3>
-	<div class="section section--employment">
-
-		<div class="job">
-			<h4 class="job-head">
-				<p class="job-company">Motional</p>
-				<p class="job-title">Senior Software Engineer</p>
-				<time class="font--subtle job-date">Apr&nbsp;2020&nbsp;&mdash; current</time>
-			</h4>
-
-			<h5>Front-end</h5>
-			<p class="font--body">
-				Leading the front-end build, tests, and deployment of the core application.
-				<br>Live data using a combination of polling and websockets, where appropriate.
-				<br>Maps using Google Maps, then MapBox.
-			</p>
-
-			<h5>People</h5>
-			<p class="font--body">
-				Worked closely with a design intern to release new project.
-				<br>Mentored intern to develop system to create and control simulated vehicles.
-				<br>Mentored a second intern to expand that previous system to control real vehicles from the cloud.
-			</p>
-
-			<h5>Architecture</h5>
-			<p class="font--body">
-				Put forward the usecase of new design system.
-				<br>Built it out while working on new features.
-				<br>Gradually back-ported old projects to the new system.
-			</p>
-			<p class="font--body">
-				Work closely with back-end to encourage consistent APIs for internal and external use.
-			</p>
-		</div>
-
-		<div class="job">
-			<h4 class="job-head">
-				<p class="job-company">TradeGecko</p>
-				<p class="job-title">Software Engineer</p>
-				<time class="font--subtle job-date">Sep&nbsp;2015&nbsp;&mdash; Feb&nbsp;2020</time>
-			</h4>
-
-			<h5>The core application</h5>
-			<p class="font--body">
-				Championing UX architecture, componentisation, and frontend architecture.
-				Rapidly prototyping, then converting to highly-polished MVPs,
-					taking into consideration speed-to-production, developer happiness, and end-user accessibility.
-				Work included in-depth code reviews, technical documenting,
-					and refactoring code reactively and proactively to prevent bottlenecks.
-			</p>
-
-			<h5>The marketing website</h5>
-			<p class="font--body">
-				I built and maintained the marketing website by building custom tooling on top of HubSpot.
-				I ensured the system was quick and easy to update; that analytics and SEO gave an accurate
-					representation of our audience; and load times were fast.
-			</p>
-
-			<h5>People</h5>
-			<p class="font--body">
-				After some time the core app demanded I worked on it fulltime and I couldn’t spend time on the
-					marketing site, so I began mentoring a junior for the marketing site.
-				This carried forward to me similarly mentoring other team members from the engineering team,
-					with regular pairing and conversations.
-			</p>
-		</div>
-
-		<div class="job">
-			<h4 class="job-head">
-				<p class="job-company">Win Technologies</p>
-				<p class="job-title">Software Engineer</p>
-				<time class="font--subtle job-date">Jun&nbsp;2014&nbsp;&mdash; Apr&nbsp;2015</time>
-			</h4>
-			<p class="font--body">
-				Under the Betway brand: I started by polishing up the Bingo website,
-					then quickly moved to lead the new white-label gaming website.
-				Together we made a portal that tailored itself to the needs of multiple brands.
-			</p>
-		</div>
-
-		<div class="job">
-			<h4 class="job-head">
-				<p class="job-company">Perform Group</p>
-				<p class="job-title">Web developer</p>
-				<time class="font--subtle job-date">Mar&nbsp;2013&nbsp;&mdash; Apr&nbsp;2014</time>
-			</h4>
-			<p class="font--body">
-				Leading live streaming website projects,
-					CMS integrations, curated data feeds, and technical documentation.
-			</p>
-		</div>
-
-		<div class="job">
-			<h4 class="job-head">
-				<p class="job-title">Junior web developer</p>
-				<time class="font--subtle job-date">Dec&nbsp;2011&nbsp;&mdash; Mar&nbsp;2013</time>
-			</h4>
-			<p class="font--body">
-				After three months of teaching myself web development: Perform Group,
-					excited by my passion for the role, gave me a shot as a junior developer.
-				In less than a year I was leading teams for the Norwegian Eliteserien and OBOS-ligaen.
-			</p>
-		</div>
-
-		<div class="job">
-			<h4 class="job-head">
-				<p class="job-company">Research Now</p>
-				<p class="job-title">Graphic design intern</p>
-				<time class="font--subtle job-date">Apr - Jul&nbsp;2011</time>
-			</h4>
-			<p class="font--body">
-				This is where my journey into web dev began.
-				After learning Flash on-the-job while hitting deadlines I was asked to create an email.
-				This hooked me in and I started learning web dev on my 2-hour commute.
-			</p>
-		</div>
-	</div>
-
-	<h3 class="font--section-head">Technical Skills</h3>
-	<p class="job-company">
-		In order of preference
-	</p>
-	<div class="section section--skills">
-		<ul class="bullets">
-			<li class="bullet bullet--single">
-				<p class="font--body">CSS<sub>: SCSS, Vanilla</sub></p>
-			</li>
-
-			<li class="bullet bullet--single">
-				<p class="font--body">Frontend JavaScript<sub>: Vanilla, React, Ember</sub></p>
-			</li>
-
-			<li class="bullet bullet--single">
-				<p class="font--body">HTML<sub>: Accessibile</sub></p>
-			</li>
-
-			<li class="bullet bullet--single">
-				<p class="font--body">Node<sub>: Express, Vanilla</sub></p>
-			</li>
-
-			<li class="bullet bullet--single">
-				<p class="font--body">SQL<sub>: MySQL, PostgreSQL</sub></p>
-			</li>
-		</ul>
-	</div>
-
-	<h3 class="font--section-head">Formal Education</h3>
-	<div class="section section--education">
-		<ul class="bullets">
-			<li class="bullet bullet--single">
-				<p class="font--body">BA Illustration with Animation<sub>: Manchester Metropolitan University</sub></p>
-			</li>
-
-			<li class="bullet bullet--single">
-				<p class="font--body">Arts Foundation<sub>: University of Lincoln</sub></p>
-			</li>
-		</ul>
-	</div>
-
-	<div class="section section--hobbies">
-		<h3 class="font--section-head">Hobbies &amp; interests</h3>
-
-		<div class="definitionlist">
-			<h4 class="job-company">Travel</h4>
-			<p class="font--body">
-				A revelation, as before leaving the UK around 5 year ago, I hardly left the house.
-				Moving to Singapore has opened my eyes to travelling and I have been trying to get to new
-				countries at least every couple of months.
-				Activities while abroad include diving, hiking, and meeting new people.
-			</p>
-
-			<h4 class="job-company">Art</h4>
-			<p class="font--body">
-				I still enjoy life-drawing and try to go to classes to keep my drawing sharp.
-				During down-time you could find me sketching or folding a paper animal.
-			</p>
-
-			<h4 class="job-company">Computers</h4>
-			<p class="font--body">
-				Most of my spare time is spent with computers, and electronics:
-				learning new things and immersing myself in their world.
-			</p>
-
-			<h4 class="job-company last">Gaming</h4>
-			<p class="font--body">
-				The progressive problem-solving nature of real-time strategy games makes them my ‘go-to’,
-				but I also enjoy casual action and fps games to wind-down with.
-			</p>
-
-			<h4 class="job-company">Guitar &amp; recording</h4>
-			<p class="font--body">
-				Having taught myself guitar while at University, I enjoyed recording sessions in my bedroom...
-				all parts played by yours-truly.
-				However, these days I tend to keep my playing more to myself.
-			</p>
-
-			<h4 class="job-company">Photography</h4>
-			<p class="font--body">
-				I am familiar with modern DSLR cameras, but as I generally take photos while out-and-about
-				I stick mostly to point-and-shoot cameras or my Phone.
-				As I started diving I’m currently enjoying the Olympus TG-5.
-			</p>
-		</div>
-	</div>
-
-	<link rel="stylesheet" href="css/print.7.css" media="print">
+	<script defer src="./js/theme-toggle.1.js"></script>
 </body>
 
 </html>
