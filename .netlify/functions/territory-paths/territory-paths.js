@@ -1,25 +1,34 @@
 const PG = require("pg");
 const { Client } = PG;
-const isUUID = (string) => /^[a-f0-9]{8}(-[a-f0-9]{4}){3}-[a-f0-9]{12}$/.test(string);
+const isUUID = (string) =>
+  /^[a-f0-9]{8}(-[a-f0-9]{4}){3}-[a-f0-9]{12}$/.test(string);
 const stringify = (string) => JSON.stringify(string);
-const tidyQuery = string => {
+const tidyQuery = (string) => {
   let trimmedString = string.trim();
-  let minIndent = Math.min(...trimmedString.match(/(?<=\n)( +)/g).map(a => a.length - 1));
+  let minIndent = Math.min(
+    ...trimmedString.match(/(?<=\n)( +)/g).map((a) => a.length - 1)
+  );
   return trimmedString.replace(RegExp(`(?<=\n) {${minIndent}}`, "g"), "");
-}
+};
 
-
-exports.handler = async ({
-  path, // string: Path parameter
-  httpMethod, // string: Incoming request’s method name
-  headers, // object: Incoming request headers
-  queryStringParameters, // object: query string parameters
-  body, // string: A JSON string of the request payload.
-  isBase64Encoded, // string: A boolean flag to indicate if the applicable request payload is Base64-encoded
-}, context, callback) => {
+exports.handler = async (
+  {
+    path, // string: Path parameter
+    httpMethod, // string: Incoming request’s method name
+    headers, // object: Incoming request headers
+    queryStringParameters, // object: query string parameters
+    body, // string: A JSON string of the request payload.
+    isBase64Encoded, // string: A boolean flag to indicate if the applicable request payload is Base64-encoded
+  },
+  context,
+  callback
+) => {
   let error;
-  let client = new Client();
-  let clientConnection = client.connect();
+  let client = new Client({
+    ssl: { rejectUnauthorized: false },
+  });
+  let clientConnection;
+
   const pathTables = {
     default: {
       table: "svg_path",
@@ -33,7 +42,8 @@ exports.handler = async ({
   };
 
   try {
-    await clientConnection.catch(e => error = e);
+    clientConnection = client.connect();
+    await clientConnection.catch((e) => (error = e));
     if (error) {
       throw {
         errorType: "postgres connection",
@@ -62,11 +72,10 @@ exports.handler = async ({
       LEFT JOIN
         territory_label
       ON
-        ${pathTables[type].table} .territory = territory_label.territory${
-      WHERE};
+        ${pathTables[type].table} .territory = territory_label.territory${WHERE};
     `);
 
-    let { rows } = await client.query(query).catch(e => error = e);
+    let { rows } = await client.query(query).catch((e) => (error = e));
     if (error) {
       throw {
         query,
@@ -76,24 +85,25 @@ exports.handler = async ({
     }
 
     let paths = {};
-    rows.forEach(row => {
-      paths[row.uuid] || (paths[row.uuid] = {
-        labels: [],
-        path: row.path,
-        territory: row.territory,
-      });
+    rows.forEach((row) => {
+      paths[row.uuid] ||
+        (paths[row.uuid] = {
+          labels: [],
+          path: row.path,
+          territory: row.territory,
+        });
       paths[row.uuid].labels.push(row.label);
-    })
+    });
     callback(null, {
       statusCode: 200,
       body: stringify({
         query,
         data: Object.values(paths),
-        viewBox: pathTables[type].viewBox
+        viewBox: pathTables[type].viewBox,
       }),
       headers: {
         "Cache-Control": "max-age=300",
-        "Access-Control-Allow-Origin": "*"
+        "Access-Control-Allow-Origin": "*",
       },
       //isBase64Encoded: false,
     });
