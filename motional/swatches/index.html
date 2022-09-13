@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="Viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="prefetch" href="./color.js">
   <title>Color Swatches</title>
 
   <style>
@@ -412,10 +413,12 @@
     }
   </script>
 
-  <script>
+  <script type="module">
+    import Color from "./color.js";
+
     (function() {
 
-      let css = `
+      let css = /*css*/`
         *,
         ::before,
         ::after {
@@ -537,7 +540,7 @@
       }
 
       let colourSwatchTemplate = document.createElement('template');
-      colourSwatchTemplate.innerHTML = `
+      colourSwatchTemplate.innerHTML = /*html*/`
         <style>${css}</style>
 
         <div class="constrain">
@@ -554,8 +557,14 @@
                 RGB:
                 <span></span>
               </p>
+              <!--
               <p class="data data--hsl">
                 HSL:
+                <span></span>
+              </p>
+              -->
+              <p class="data data--lch">
+                LCH:
                 <span></span>
               </p>
             </div>
@@ -596,6 +605,7 @@
             this.onclickhex = () => { };
             this.onclickrgb = () => { };
             this.onclickhsl = () => { };
+            this.onclicklch = () => { };
             this.showAlertMessage = (messageText) => {
               clearTimeout(this.alertHideTimeout);
 
@@ -622,6 +632,7 @@
             let dataNameElt = $.querySelector('.data--name');
             let dataRGBElt = $.querySelector('.data--rgb');
             let dataHSLElt = $.querySelector('.data--hsl');
+            let dataLCHElt = $.querySelector('.data--lch');
 
             let name = this.getAttribute("name");
 
@@ -631,8 +642,9 @@
               .split(",");
             let rgb = hex.map(hh => toRGB(hh));
             let hsl = rgb.map(rr => toHSL(rr));
+            let lch = hex.map(hh => {const raw = new Color(`#${hh}`).to('lch'); return { l: raw.l, c: raw.c, h: raw.h || 0 }});
 
-            if (hsl.reduce((acc, { l }) => acc + l, 0) / hsl.length < 42) {
+            if (lch.reduce((acc, { l }) => acc + l, 0) / lch.length < 58) {
               containerElt.classList.add("theme--dark");
             }
 
@@ -665,7 +677,7 @@
             }
 
             this.rgb = rgb;
-            dataRGBElt.querySelector('span').innerHTML = rgb.map(a => a.cssString).join('<br>');
+            dataRGBElt.querySelector('span').innerHTML = rgb.map(a => a.cssString.slice(4, -1).replace(/,/g, ' ')).join('<br>');
             dataRGBElt.onclick = (e) => {
               window.copyValue(
                 rgb.map(a => a.cssString).join(','),
@@ -684,23 +696,46 @@
               );
             }
 
-            this.hsl = hsl;
-            dataHSLElt.querySelector('span').innerHTML = hsl.map(a => a.cssString).join('<br>');
-            dataHSLElt.onclick = (e) => {
+            // this.hsl = hsl;
+            // dataHSLElt.querySelector('span').innerHTML = hsl.map(a => a.cssString.slice(4, -1).replace(/,/g, ' ')).join('<br>');
+            // dataHSLElt.onclick = (e) => {
+            //   window.copyValue(
+            //     hsl.map(a => a.cssString).join(','),
+            //     () => this.showAlertMessage(`Copied “${hsl.map(a => a.cssString).join(',')}” to clipboard.`)
+            //   );
+            //   this.onclickhsl(Object.freeze({
+            //     ...e,
+            //     currentTarget: this,
+            //   }));
+            // }
+            // dataHSLElt.oncontextmenu = (e) => {
+            //   e.preventDefault();
+            //   window.copyValue(
+            //     hsl.map(a => a.cssNewString).join(','),
+            //     () => this.showAlertMessage(`Copied “${hsl.map(a => a.cssNewString).join(',')}” to clipboard.`)
+            //   );
+            // }
+
+            const cssLCH = (lch, decimals, joiner) =>
+              lch.map(a => `lch(${Object.values(a).map(a => +a.toFixed(decimals)).join(',')})`).join(joiner || ',');
+
+            this.lch = lch;
+            dataLCHElt.querySelector('span').innerHTML = lch.map(a => Object.values(a).map(a => +a.toFixed(1)).join(' ')).join('<br>');
+            dataLCHElt.onclick = (e) => {
               window.copyValue(
-                hsl.map(a => a.cssString).join(','),
-                () => this.showAlertMessage(`Copied “${hsl.map(a => a.cssString).join(',')}” to clipboard.`)
+                cssLCH(lch, 1),
+                () => this.showAlertMessage(`Copied “${cssLCH(lch, 1)}” to clipboard.`)
               );
-              this.onclickhsl(Object.freeze({
+              this.onclicklch(Object.freeze({
                 ...e,
                 currentTarget: this,
               }));
             }
-            dataHSLElt.oncontextmenu = (e) => {
+            dataLCHElt.oncontextmenu = (e) => {
               e.preventDefault();
               window.copyValue(
-                hsl.map(a => a.cssNewString).join(','),
-                () => this.showAlertMessage(`Copied “${hsl.map(a => a.cssNewString).join(',')}” to clipboard.`)
+                cssLCH(lch, 1),
+                () => this.showAlertMessage(`Copied “${cssLCH(lch, 1)}” to clipboard.`)
               );
             }
 
@@ -1207,24 +1242,31 @@
     ></color-swatch>
   </div>
 
-  <script id="compare-element-script">
+  <script id="compare-element-script" type="module">
+    import Color from "./color.js";
+
     let compareElement = document.querySelector(".compare");
     let compareInputElement = document.querySelector(".compare__input");
 
     function updateCompare(e) {
-      let val = compareInputElement.value.split(",")[0].toUpperCase();
-      let hexxed = hexify(val);
+      let clr;
 
-      if (isHex(hexxed)) {
-        val = hexxed;
-      } else {
-        val = "#fff";
+      try {
+        clr = new Color(compareInputElement.value);
+      } catch(e) {}
+
+
+      if (!clr) {
+        try {
+          clr = new Color(`#${compareInputElement.value}`);
+        } catch (e) {
+          clr = new Color(`#fff`);
+        }
       }
 
-      compareElement.style.backgroundColor = document.body.style.backgroundColor = val;
+      compareElement.style.backgroundColor = document.body.style.backgroundColor = `rgb(${[...clr.srgb].map(a => Math.round((a || 0) * 255)).join(',')})`;
 
-      let inputColor = toHSL(toRGB(val));
-      if (inputColor.l < 43) {
+      if (clr.lch[0] < 58) {
         compareElement.classList.add("theme--dark");
       } else {
         compareElement.classList.remove("theme--dark");
@@ -1232,9 +1274,8 @@
     }
 
     compareInputElement.addEventListener("input", updateCompare, false);
-  </script>
 
-  <script id="update-compare-element-script">
+    // update-compare-element-script
     let inputEvent = new Event("input", {
       bubbles: true,
       cancelable: true,
@@ -1247,5 +1288,7 @@
       };
     });
   </script>
+
+  <!-- <script src="./sorting.js" type="module"></script> -->
 </body>
 </html>
