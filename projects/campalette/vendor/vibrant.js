@@ -6,7 +6,7 @@
 
   Credits
   --------
-  Lokesh Dhakar (http://www.lokeshdhakar.com) - Created ColorThief
+  Lokesh Dhakar (https://www.lokeshdhakar.com) - Created ColorThief
   Google - Palette support library in Android
 */
 

@@ -3,7 +3,7 @@
 
  (c) 2015-2017 LearnBrite
 
- License: http://responsivevoice.org/license
+ License: https://responsivevoice.org/license
 */
 if("undefined"!=typeof responsiveVoice)console.log("ResponsiveVoice already loaded"),console.log(responsiveVoice);else var ResponsiveVoice=function(){var a=this;a.version="1.5.2";console.log("ResponsiveVoice r"+a.version);a.responsivevoices=[{name:"UK English Female",flag:"gb",gender:"f",voiceIDs:[3,5,1,6,7,171,278,201,257,258,8]},{name:"UK English Male",flag:"gb",gender:"m",voiceIDs:[0,4,2,75,277,202,256,159,6,7]},{name:"US English Female",flag:"us",gender:"f",voiceIDs:[39,40,41,42,43,173,205,204,
 235,44]},{name:"Arabic Male",flag:"ar",gender:"m",voiceIDs:[96,95,97,196,98],deprecated:!0},{name:"Arabic Female",flag:"ar",gender:"f",voiceIDs:[96,95,97,196,98]},{name:"Armenian Male",flag:"hy",gender:"f",voiceIDs:[99]},{name:"Australian Female",flag:"au",gender:"f",voiceIDs:[87,86,5,276,201,88]},{name:"Brazilian Portuguese Female",flag:"br",gender:"f",voiceIDs:[245,124,123,125,186,223,126]},{name:"Chinese Female",flag:"cn",gender:"f",voiceIDs:[249,58,59,60,155,191,281,231,268,269,61]},{name:"Chinese (Hong Kong) Female",

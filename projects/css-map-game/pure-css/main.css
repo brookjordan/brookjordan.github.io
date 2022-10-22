@@ -1,0 +1,208 @@
+html,
+body {
+  margin: 0;
+  height: 100%;
+  display: grid;
+  place-content: center;
+  background: black;
+}
+
+input {
+  position: fixed;
+  right: 100%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.game {
+  --dur: 100s;
+  --base-delay: calc(0s - var(--dur));
+  --part-dur: (var(--dur) / 20);
+
+  position: relative;
+  width: 100vmin;
+  height: 100vmin;
+  box-shadow: 0 0 calc(50vmax - 50vmin) rgba(255 255 255 / 0.5);
+  perspective: 200vmin;
+}
+
+.positions,
+.input-layers,
+.view-layers,
+.view-layer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+.positions,
+.input-layer,
+.view-layer {
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 1fr);
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes approach {
+  0% {
+    transform: translateZ(-500vmin);
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  95% {
+    transform: translateZ(0);
+    opacity: 1;
+  }
+
+  95.5%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.view-layer {
+  animation: approach var(--dur) both linear}
+
+  .view-block {
+    background:
+      repeat
+      conic-gradient(
+        black 25%,
+        hsl(0, 0%, 50%) 25% 50%,
+        black 50% 75%,
+        hsl(0, 0%, 50%) 75%
+      )
+      0 0 / 11.111vmin 11.111vmin
+    ;
+    visibility: hidden;
+  }
+
+  .view-layer:nth-child(1) {
+    animation-delay: calc(var(--base-delay) + var(--part-dur) * 2)}
+
+    .view-layer:nth-child(1) .view-block:nth-child(4) { visibility: visible ;
+  }
+
+  .view-layer:nth-child(2) {
+    animation-delay: calc(var(--base-delay) + var(--part-dur) * 3)}
+
+    .view-layer:nth-child(2) .view-block:nth-child(1) { visibility: visible }
+    .view-layer:nth-child(2) .view-block:nth-child(5) { visibility: visible ;
+  }
+
+  .view-layer:nth-child(3) {
+    animation-delay: calc(var(--base-delay) + var(--part-dur) * 4)}
+
+    .view-layer:nth-child(3) .view-block:nth-child(3) { visibility: visible }
+    .view-layer:nth-child(3) .view-block:nth-child(6) { visibility: visible }
+    .view-layer:nth-child(3) .view-block:nth-child(9) { visibility: visible ;
+  }
+
+  .view-layer:nth-child(4) {
+    animation-delay: calc(var(--base-delay) + var(--part-dur) * 5)}
+
+    .view-layer:nth-child(4) .view-block:nth-child(2) { visibility: visible }
+    .view-layer:nth-child(4) .view-block:nth-child(4) { visibility: visible }
+    .view-layer:nth-child(4) .view-block:nth-child(5) { visibility: visible }
+    .view-layer:nth-child(4) .view-block:nth-child(6) { visibility: visible ;
+  }
+
+  .view-layer:nth-child(5) {
+    animation-delay: calc(var(--base-delay) + var(--part-dur) * 6)}
+
+    .view-layer:nth-child(5) .view-block:nth-child(1) { visibility: visible }
+    .view-layer:nth-child(5) .view-block:nth-child(6) { visibility: visible }
+    .view-layer:nth-child(5) .view-block:nth-child(7) { visibility: visible }
+    .view-layer:nth-child(5) .view-block:nth-child(8) { visibility: visible }
+    .view-layer:nth-child(5) .view-block:nth-child(9) { visibility: visible ;
+  }
+
+  .view-layer:nth-child(6) {
+    animation-delay: calc(var(--base-delay) + var(--part-dur) * 7)}
+
+    .view-layer:nth-child(6) .view-block:nth-child(1) { visibility: visible }
+    .view-layer:nth-child(6) .view-block:nth-child(2) { visibility: visible }
+    .view-layer:nth-child(6) .view-block:nth-child(3) { visibility: visible }
+    .view-layer:nth-child(6) .view-block:nth-child(4) { visibility: visible }
+    .view-layer:nth-child(6) .view-block:nth-child(7) { visibility: visible }
+    .view-layer:nth-child(6) .view-block:nth-child(8) { visibility: visible ;
+  }
+
+  .view-layer:nth-child(7) {
+    animation-delay: calc(var(--base-delay) + var(--part-dur) * 8)}
+
+    .view-layer:nth-child(7) .view-block:nth-child(1) { visibility: visible }
+    .view-layer:nth-child(7) .view-block:nth-child(3) { visibility: visible }
+    .view-layer:nth-child(7) .view-block:nth-child(4) { visibility: visible }
+    .view-layer:nth-child(7) .view-block:nth-child(5) { visibility: visible }
+    .view-layer:nth-child(7) .view-block:nth-child(6) { visibility: visible }
+    .view-layer:nth-child(7) .view-block:nth-child(7) { visibility: visible }
+    .view-layer:nth-child(7) .view-block:nth-child(8) { visibility: visible ;
+  }
+
+  .view-layer:nth-child(8) {
+    animation-delay: calc(var(--base-delay) + var(--part-dur) * 9)}
+
+    .view-layer:nth-child(8) .view-block:nth-child(1) { visibility: visible }
+    .view-layer:nth-child(8) .view-block:nth-child(2) { visibility: visible }
+    .view-layer:nth-child(8) .view-block:nth-child(3) { visibility: visible }
+    .view-layer:nth-child(8) .view-block:nth-child(4) { visibility: visible }
+    .view-layer:nth-child(8) .view-block:nth-child(6) { visibility: visible }
+    .view-layer:nth-child(8) .view-block:nth-child(7) { visibility: visible }
+    .view-layer:nth-child(8) .view-block:nth-child(8) { visibility: visible }
+    .view-layer:nth-child(8) .view-block:nth-child(9) { visibility: visible ;
+  }
+/*
+}
+*/
+.input-layers {
+  display: flex;
+}
+
+@keyframes fade {
+  0% {
+    opacity: 1;
+  }
+}
+
+.positions {
+  opacity: 0;
+  pointer-events: none;
+  animation: fade 10s ease-out;
+}
+.position-block:nth-child(2n) { background: rgba(255 0 0 / 0.3) }
+
+@keyframes land {
+  0% {
+    transform: translate(calc(33.333vmin - 50%), calc(33.333vmin - 50%)) scale(100);
+  }
+}
+
+.ship {
+  position: absolute;
+  top: 16.66667vmin;
+  left: 16.66667vmin;
+  width: 3vmin;
+  height: 3vmin;
+  background: white;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  transition: transform calc(var(--dur) / 200) ease-in-out;
+  animation: land calc(var(--dur) / 40) ease-out}
+
+  ._1-1:checked ~ .ship { transform: translate(calc(00.000vmin - 50%), calc(00.000vmin - 50%)) }
+  ._2-1:checked ~ .ship { transform: translate(calc(33.333vmin - 50%), calc(00.000vmin - 50%)) }
+  ._3-1:checked ~ .ship { transform: translate(calc(66.667vmin - 50%), calc(00.000vmin - 50%)) }
+  ._1-2:checked ~ .ship { transform: translate(calc(00.000vmin - 50%), calc(33.333vmin - 50%)) }
+  ._2-2:checked ~ .ship { transform: translate(calc(33.333vmin - 50%), calc(33.333vmin - 50%)) }
+  ._3-2:checked ~ .ship { transform: translate(calc(66.667vmin - 50%), calc(33.333vmin - 50%)) }
+  ._1-3:checked ~ .ship { transform: translate(calc(00.000vmin - 50%), calc(66.667vmin - 50%)) }
+  ._2-3:checked ~ .ship { transform: translate(calc(33.333vmin - 50%), calc(66.667vmin - 50%)) }
+  ._3-3:checked ~ .ship { transform: translate(calc(66.667vmin - 50%), calc(66.667vmin - 50%)) ;
+}

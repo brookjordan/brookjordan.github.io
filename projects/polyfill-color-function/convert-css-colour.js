@@ -1171,7 +1171,7 @@ function utf8Slice (buf, start, end) {
   return decodeCodePointsArray(res)
 }
 
-// Based on http://stackoverflow.com/a/22747272/680742, the browser with
+// Based on https://stackoverflow.com/a/22747272/680742, the browser with
 // the lowest limit is Chrome, with 0x10000 args.
 // We go 1 magnitude less, for safety
 var MAX_ARGUMENTS_LENGTH = 0x1000;
@@ -2674,7 +2674,7 @@ convert.hsv.hsl = function (hsv) {
 	return [h, sl * 100, l * 100];
 };
 
-// http://dev.w3.org/csswg/css-color/#hwb-to-rgb
+// https://dev.w3.org/csswg/css-color/#hwb-to-rgb
 convert.hwb.rgb = function (hwb) {
 	var h = hwb[0] / 360;
 	var wh = hwb[1] / 100;
@@ -3195,7 +3195,7 @@ function buildGraph() {
 
 	for (var len = models.length, i = 0; i < len; i++) {
 		graph[models[i]] = {
-			// http://jsperf.com/1-vs-infinity
+			// https://jsperf.com/1-vs-infinity
 			// micro-opt, but this is simple.
 			distance: -1,
 			parent: null
@@ -3790,7 +3790,7 @@ Color.prototype = {
 	},
 
 	dark: function () {
-		// YIQ equation from http://24ways.org/2010/calculating-color-contrast
+		// YIQ equation from https://24ways.org/2010/calculating-color-contrast
 		var rgb = this.values.rgb;
 		var yiq = (rgb[0] * 299 + rgb[1] * 587 + rgb[2] * 114) / 1000;
 		return yiq < 128;
@@ -3847,7 +3847,7 @@ Color.prototype = {
 
 	greyscale: function () {
 		var rgb = this.values.rgb;
-		// http://en.wikipedia.org/wiki/Grayscale#Converting_color_to_grayscale
+		// https://en.wikipedia.org/wiki/Grayscale#Converting_color_to_grayscale
 		var val = rgb[0] * 0.3 + rgb[1] * 0.59 + rgb[2] * 0.11;
 		this.setValues('rgb', [val, val, val]);
 		return this;
@@ -4203,7 +4203,7 @@ var performanceNow =
   function(){ return (new Date()).getTime() };
 
 // generate timestamp or delta
-// see http://nodejs.org/api/process.html#process_process_hrtime
+// see https://nodejs.org/api/process.html#process_process_hrtime
 function hrtime(previousTimestamp){
   var clocktime = performanceNow.call(performance)*1e-3;
   var seconds = Math.floor(clocktime);
@@ -4704,11 +4704,11 @@ function useColors() {
 
   if (typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/(edge|trident)\/(\d+)/)) {
     return false;
-  } // Is webkit? http://stackoverflow.com/a/16459606/376773
+  } // Is webkit? https://stackoverflow.com/a/16459606/376773
   // document is undefined in react-native: https://github.com/facebook/react-native/pull/1632
 
 
-  return typeof document !== 'undefined' && document.documentElement && document.documentElement.style && document.documentElement.style.WebkitAppearance || // Is firebug? http://stackoverflow.com/a/398120/376773
+  return typeof document !== 'undefined' && document.documentElement && document.documentElement.style && document.documentElement.style.WebkitAppearance || // Is firebug? https://stackoverflow.com/a/398120/376773
   typeof window !== 'undefined' && window.console && (window.console.firebug || window.console.exception && window.console.table) || // Is firefox >= v31?
   // https://developer.mozilla.org/en-US/docs/Tools/Web_Console#Styling_messages
   typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) && parseInt(RegExp.$1, 10) >= 31 || // Double check webkit in userAgent just in case we are in a worker
@@ -5008,7 +5008,7 @@ function inspect(obj, opts) {
   return formatValue(ctx, obj, ctx.depth);
 }
 
-// http://en.wikipedia.org/wiki/ANSI_escape_code#graphics
+// https://en.wikipedia.org/wiki/ANSI_escape_code#graphics
 inspect.colors = {
   'bold' : [1, 22],
   'italic' : [3, 23],
@@ -5099,7 +5099,7 @@ function formatValue(ctx, value, recurseTimes) {
   }
 
   // IE doesn't make error fields non-enumerable
-  // http://msdn.microsoft.com/en-us/library/ie/dww52sbt(v=vs.94).aspx
+  // https://msdn.microsoft.com/en-us/library/ie/dww52sbt(v=vs.94).aspx
   if (isError(value)
       && (keys.indexOf('message') >= 0 || keys.indexOf('description') >= 0)) {
     return formatError(value);

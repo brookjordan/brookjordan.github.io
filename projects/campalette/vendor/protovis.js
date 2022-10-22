@@ -1,7 +1,7 @@
 /*
- * Block below copied from Protovis: http://mbostock.github.com/protovis/
+ * Block below copied from Protovis: https://mbostock.github.com/protovis/
  * Copyright 2010 Stanford Visualization Group
- * Licensed under the BSD License: http://www.opensource.org/licenses/bsd-license.php
+ * Licensed under the BSD License: https://www.opensource.org/licenses/bsd-license.php
  */
 var protovis = {
     map: function(array, f) {
@@ -28,4 +28,3 @@ var protovis = {
     }
 };
 export default protovis;
-

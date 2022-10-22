@@ -1,0 +1,172 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+  background: black;
+}
+
+html {
+  background: black;
+}
+
+body {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: grid;
+  grid-template:
+    '. . .' 1fr
+    '. g .' 100vmin
+    '. . .' 1fr
+  / 1fr 100vmin 1fr;
+  margin: 0;
+  overflow: hidden;
+}
+
+input {
+  position: fixed;
+  right: 100%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.game {
+  --dur: 100s;
+  --base-delay: calc(0s - var(--dur));
+  --part-dur: (var(--dur) / 20);
+
+  grid-area: g;
+  position: relative;
+  width: 100vmin;
+  height: 100vmin;
+  perspective: 200vmin;
+}
+
+.positions,
+.input-layers,
+.view-layers,
+.view-layer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+.positions,
+.input-layer {
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 1fr);
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes approach {
+  0% {
+    transform: translateX(var(--x)) translateY(var(--y)) translateZ(-500vmin);
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  95% {
+    transform: translateZ(0);
+    opacity: 1;
+  }
+
+  95.5%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.view-block {
+  background:
+    repeat
+    conic-gradient(
+      black 25%,
+      hsl(0, 0%, 50%) 25% 50%,
+      black 50% 75%,
+      hsl(0, 0%, 50%) 75%
+    )
+    0 0 / 11.2vmin 11.2vmin
+  ;
+  visibility: hidden;
+}
+
+.view-layers {
+  transform: translate(-33.333vmin, -33.333vmin);
+  width: 166.667vmin;
+  height: 166.667vmin;
+}
+
+.view-layer {
+  display: grid;
+  grid-template-rows: repeat(5, 1fr);
+  grid-template-columns: repeat(5, 1fr);
+  animation: approach var(--dur) both linear;
+  // filter: drop-shadow(0 0 2vmin rgba(0 0 0 / 0.5));
+
+  @for $layer from 1 through 8 {
+    &:nth-child(#{$layer}) {
+      --x: #{(random(200) - 100) * 1vmin};
+      --y: #{(random(200) - 100) * 1vmin};
+      animation-delay: calc(var(--base-delay) + var(--part-dur) * #{$layer + 1});
+
+      @for $block from 1 through 25 {
+        @if random(100) > 33 {
+          > :nth-child(#{$block}) { visibility: visible }
+        }
+      }
+    }
+  }
+}
+
+.input-layers {
+  display: flex;
+}
+
+@keyframes fade {
+  0% {
+    opacity: 1;
+  }
+}
+
+.positions {
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 0 calc(50vmax - 50vmin) rgba(255 0 0 / 0.3);
+  animation: fade 10s ease-out;
+}
+.position-block:nth-child(2n) { background: rgba(255 0 0 / 0.3) }
+
+@keyframes land {
+  0% {
+    transform: translate(calc(33.333vmin - 50%), calc(33.333vmin - 50%)) scale(100);
+  }
+}
+
+.ship {
+  position: absolute;
+  top: 16.66667vmin;
+  left: 16.66667vmin;
+  width: 3vmin;
+  height: 3vmin;
+  background: white;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  transition: transform calc(var(--dur) / 200) ease-in-out;
+  animation: land calc(var(--dur) / 40) ease-out;
+
+  @for $row from 1 through 3 {
+    @for $column from 1 through 3 {
+      ._#{$row}-#{$column}:checked ~ & {
+        transform: translate(
+          calc(#{(100vmin / 3) * ($row - 1)} - 50%),
+          calc(#{(100vmin / 3) * ($column - 1)} - 50%)
+        )
+      }
+    }
+  }
+}

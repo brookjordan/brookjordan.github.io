@@ -1,7 +1,7 @@
 var pokedex;
 var nameList;
-var api = 'http://pokeapi.co';
-var pokedex_url = 'http://pokeapi.co/api/v1/pokedex/';
+var api = 'https://pokeapi.co';
+var pokedex_url = 'https://pokeapi.co/api/v1/pokedex/';
 var pokedex_xhr;
 var matches = [];
 var infoLoadingCount = 0;
@@ -113,7 +113,7 @@ function loadAnotherPokemon () {
 }
 
 function getPokemonInfo ( pokedexItem, i, _pokedex ) {
-	pokedexItem.image = 'http://drh1.img.digitalriver.com/DRHM/Storefront/SiteImplementation/adbehap/adbehapSI/version/29/images/load_small.gif';
+	pokedexItem.image = 'https://drh1.img.digitalriver.com/DRHM/Storefront/SiteImplementation/adbehap/adbehapSI/version/29/images/load_small.gif';
 	pokedexItem.i = i;
 	pokedexItem.dataURL = api + '/' + pokedexItem.resource_uri;
 

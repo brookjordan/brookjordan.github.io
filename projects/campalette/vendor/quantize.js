@@ -1,7 +1,7 @@
 /*
  * quantize.js Copyright 2008 Nick Rabinowitz
  * Ported to node.js by Olivier Lesnicki
- * Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+ * Licensed under the MIT license: https://www.opensource.org/licenses/mit-license.php
  */
 
 // fill out a couple protovis dependencies
@@ -9,7 +9,7 @@ import pv from '../vendor/protovis.js';
 
 /**
 * Basic Javascript port of the MMCQ (modified median cut quantization)
-* algorithm from the Leptonica library (http://www.leptonica.com/).
+* algorithm from the Leptonica library (https://www.leptonica.com/).
 * Returns a color map you can use to map original pixels to the reduced
 * palette. Still a work in progress.
 *

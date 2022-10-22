@@ -819,7 +819,7 @@ ng.module('brk')
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
 /*  SHA-256 implementation in JavaScript                (c) Chris Veness 2002-2014 / MIT Licence  */
 /*                                                                                                */
-/*  - see http://www.movable-type.co.uk/scripts/sha256.html
+/*  - see https://www.movable-type.co.uk/scripts/sha256.html
 /*
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
 /*	Many comments removed and code simplified for brevity
