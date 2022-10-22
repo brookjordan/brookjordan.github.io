@@ -237,7 +237,7 @@ var defaultVerbs = [
   ` surrounded $subject with $objects`,
   ` swatted $subject`,
   ` switched $anObject with $anObject`,
-  ` talked to $sentientObject`,
+  ` talked to $aSentientObject`,
   ` thought $person answered`,
   ` thought $person seemed like someone who $didSomething`,
   ` thought $they let it happen when $person $didSomething`,

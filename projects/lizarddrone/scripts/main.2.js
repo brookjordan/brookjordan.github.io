@@ -399,7 +399,7 @@ function sendScore (e) {
   if (e > +highScore) {
     localStorage.setItem("mokoDroneHiscore", e);
     var t = {
-        text: userName + " just got a new highscore of " + e + "! <http://brook.dev/tg/moko|Try beat them.>"
+        text: userName + " just got a new highscore of " + e + "! <https://brook.dev/tg/moko|Try beat them.>"
       },
       n = new XMLHttpRequest;
     n.open("POST", "https://hooks.slack.com/services/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"), n.send(JSON.stringify(t)), highScore = e
@@ -452,9 +452,9 @@ let renderQueue = [
   }
 ];
 let imageURLs = [
-  ["mokoCopter", "http://brook.dev/tg/moko/images/moko-copter.png"],
-  ["lamp", "http://brook.dev/tg/moko/images/lamp.png"],
-  ["crates", "http://brook.dev/tg/moko/images/crates.png"]
+  ["mokoCopter", "https://brook.dev/projects/lizarddrone/images/lizard-copter.png"],
+  ["lamp", "https://brook.dev/projects/lizarddrone/images/lamp.png"],
+  ["crates", "https://brook.dev/projects/lizarddrone/images/crates.png"]
 ];
 let images = {};
 loadImages().then(init);

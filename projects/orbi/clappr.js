@@ -1656,7 +1656,7 @@ window.$ === undefined && (window.$ = Zepto)
             result = xhr.responseText
 
             try {
-              // http://perfectionkills.com/global-eval-what-are-the-options/
+              // https://perfectionkills.com/global-eval-what-are-the-options/
               // sanitize response accordingly if data filter callback provided
               result = ajaxDataFilter(result, dataType, settings)
               if (dataType == 'script')    (1,eval)(result)
@@ -2301,7 +2301,7 @@ window.$ === undefined && (window.$ = Zepto)
   }
 
   // Implements a subset from:
-  // http://api.jquery.com/category/selectors/jquery-selector-extensions/
+  // https://api.jquery.com/category/selectors/jquery-selector-extensions/
   //
   // Each filter function receives the current index, all nodes in the
   // considered set, and a value if there were parentheses. The value
@@ -4747,7 +4747,7 @@ exports.push([module.i, ".clappr-watermark[data-watermark] {\n  position: absolu
 /***/ (function(module, exports) {
 
 /*
-	MIT License http://www.opensource.org/licenses/mit-license.php
+	MIT License https://www.opensource.org/licenses/mit-license.php
 	Author Tobias Koppers @sokra
 */
 // css base code, injected by the css-loader
@@ -5326,9 +5326,9 @@ if (true) {
     // If opts.alwaysNormalize is true then the path will always be normalized even when it starts with / or //
     // E.g
     // With opts.alwaysNormalize = false (default, spec compliant)
-    // http://a.com/b/cd + /e/f/../g => http://a.com/e/f/../g
+    // https://a.com/b/cd + /e/f/../g => https://a.com/e/f/../g
     // With opts.alwaysNormalize = true (not spec compliant)
-    // http://a.com/b/cd + /e/f/../g => http://a.com/e/g
+    // https://a.com/b/cd + /e/f/../g => https://a.com/e/g
     buildAbsoluteURL: function(baseURL, relativeURL, opts) {
       opts = opts || {};
       // remove any remaining space and CRLF
@@ -5559,7 +5559,7 @@ function webpackBootstrapFunc (modules) {
 var moduleNameReqExp = '[\\.|\\-|\\+|\\w|\/|@]+'
 var dependencyRegExp = '\\(\\s*(\/\\*.*?\\*\/)?\\s*.*?(' + moduleNameReqExp + ').*?\\)' // additional chars when output.pathinfo is true
 
-// http://stackoverflow.com/a/2593661/130442
+// https://stackoverflow.com/a/2593661/130442
 function quoteRegExp (str) {
   return (str + '').replace(/[.?*+^$[\]\\(){}|-]/g, '\\$&')
 }
@@ -6262,7 +6262,7 @@ function getAudioConfig(observer, data, offset, audioCodec) {
       adtsExtensionSampleingIndex = adtsSampleingIndex;
     }
   }
-  /* refer to http://wiki.multimedia.cx/index.php?title=MPEG-4_Audio#Audio_Specific_Config
+  /* refer to https://wiki.multimedia.cx/index.php?title=MPEG-4_Audio#Audio_Specific_Config
       ISO 14496-3 (AAC).pdf - Table 1.13 — Syntax of AudioSpecificConfig()
     Audio Profile / Audio Object Type
     0: Null
@@ -6581,7 +6581,7 @@ var MpegAudio = {
   4 // Layer1
   ],
   appendFrame: function appendFrame(track, data, offset, pts, frameIndex) {
-    // Using http://www.datavoyage.com/mpgscript/mpeghdr.htm as a reference
+    // Using https://www.datavoyage.com/mpgscript/mpeghdr.htm as a reference
     if (offset + 24 > data.length) {
       return undefined;
     }
@@ -6642,7 +6642,7 @@ var MpegAudio = {
   isHeader: function isHeader(data, offset) {
     // Look for MPEG header | 1111 1111 | 111X XYZX | where X can be either 0 or 1 and Y or Z should be 1
     // Layer bits (position 14 and 15) in header should be always different from 0 (Layer I or Layer II or Layer III)
-    // More info http://www.mp3-tech.org/programmer/frame_header.html
+    // More info https://www.mp3-tech.org/programmer/frame_header.html
     if (offset + 1 < data.length && this.isHeaderPattern(data, offset)) {
       return true;
     }
@@ -7744,7 +7744,7 @@ function () {
       pesFlags = frag[7];
 
       if (pesFlags & 0xC0) {
-        /* PES header described here : http://dvd.sourceforge.net/dvdinfo/pes-hdr.html
+        /* PES header described here : https://dvd.sourceforge.net/dvdinfo/pes-hdr.html
             as PTS / DTS is 33 bit we cannot use bitwise operator in JS,
             as Bitwise operators treat their operands as a sequence of 32 bits */
         pesPts = (frag[9] & 0x0E) * 536870912 + // 1 << 29
@@ -8521,7 +8521,7 @@ function () {
     if (id3Data && id3["default"].getTimeStamp(id3Data) !== undefined) {
       // Look for MPEG header | 1111 1111 | 111X XYZX | where X can be either 0 or 1 and Y or Z should be 1
       // Layer bits (position 14 and 15) in header should be always different from 0 (Layer I or Layer II or Layer III)
-      // More info http://www.mp3-tech.org/programmer/frame_header.html
+      // More info https://www.mp3-tech.org/programmer/frame_header.html
       for (offset = id3Data.length, length = Math.min(data.length - 1, offset + 100); offset < length; offset++) {
         if (mpegaudio.probe(data, offset)) {
           logger["logger"].log('MPEG Audio sync word found !');
@@ -10383,7 +10383,7 @@ function () {
    */
   ID3.isHeader = function isHeader(data, offset) {
     /*
-    * http://id3.org/id3v2.3.0
+    * https://id3.org/id3v2.3.0
     * [0]     = 'I'
     * [1]     = 'D'
     * [2]     = '3'
@@ -10692,8 +10692,8 @@ function () {
         data: url
       };
     }
-  } // http://stackoverflow.com/questions/8936984/uint8array-to-string-in-javascript/22373197
-  // http://www.onicos.com/staff/iz/amuse/javascript/expert/utf.txt
+  } // https://stackoverflow.com/questions/8936984/uint8array-to-string-in-javascript/22373197
+  // https://www.onicos.com/staff/iz/amuse/javascript/expert/utf.txt
 
   /* utf.js - UTF-8 <=> UTF-16 convertion
    *
@@ -11999,7 +11999,7 @@ function () {
 
 /* harmony default export */ var attr_list = (AttrList);
 // CONCATENATED MODULE: ./src/utils/codecs.ts
-// from http://mp4ra.org/codecs.html
+// from https://mp4ra.org/codecs.html
 var sampleEntryCodesISO = {
   audio: {
     'a3ds': true,
@@ -20734,7 +20734,7 @@ function (_BaseStreamController) {
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *   https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20808,7 +20808,7 @@ function (_BaseStreamController) {
     cue.hasBeenReset = false;
     /**
      * VTTCue and TextTrackCue properties
-     * http://dev.w3.org/html5/webvtt/#vttcue-interface
+     * https://dev.w3.org/html5/webvtt/#vttcue-interface
      */
 
     var _id = '';
@@ -20996,7 +20996,7 @@ function (_BaseStreamController) {
     /**
      * Other <track> spec defined properties
      */
-    // http://www.whatwg.org/specs/web-apps/current-work/multipage/the-video-element.html#text-track-cue-display-state
+    // https://www.whatwg.org/specs/web-apps/current-work/multipage/the-video-element.html#text-track-cue-display-state
 
     cue.displayState = void 0;
   }
@@ -26203,7 +26203,7 @@ process.umask = function() { return 0; };
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
-	MIT License http://www.opensource.org/licenses/mit-license.php
+	MIT License https://www.opensource.org/licenses/mit-license.php
 	Author Tobias Koppers @sokra
 */
 
@@ -26220,7 +26220,7 @@ var	memoize = function (fn) {
 
 var isOldIE = memoize(function () {
 	// Test for IE <= 9 as proposed by Browserhacks
-	// @see http://browserhacks.com/#hack-e71d8692f65334173fee715c222cb805
+	// @see https://browserhacks.com/#hack-e71d8692f65334173fee715c222cb805
 	// Tests for existence of standard globals is to allow style-loader
 	// to operate correctly into non-standard environments
 	// @see https://github.com/webpack-contrib/style-loader/issues/177
@@ -26566,7 +26566,7 @@ function updateLink (link, options, obj) {
 	}
 
 	if (sourceMap) {
-		// http://stackoverflow.com/a/26603875
+		// https://stackoverflow.com/a/26603875
 		css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
 	}
 
@@ -28401,7 +28401,7 @@ Playback.extend = function (properties) {
  * from the source extension.
  * @method canPlay
  * @static
- * @param {String} source the given source ex: `http://example.com/play.mp4`
+ * @param {String} source the given source ex: `https://example.com/play.mp4`
  * @param {String} [mimeType] the given mime type, ex: `'application/vnd.apple.mpegurl'`
  * @return {Boolean} `true` if the playback is playable, otherwise `false`
  */
@@ -28660,8 +28660,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 /* eslint-disable no-var */
 // Simple JavaScript Templating
-// Paul Miller (http://paulmillr.com)
-// http://underscorejs.org
+// Paul Miller (https://paulmillr.com)
+// https://underscorejs.org
 // (c) 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 
 // By default, Underscore uses ERB-style template delimiters, change the
@@ -29666,7 +29666,7 @@ var DoubleEventHandler = exports.DoubleEventHandler = function () {
   DoubleEventHandler.prototype.handle = function handle(event, cb) {
     var prevented = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
 
-    // Based on http://jsfiddle.net/brettwp/J4djY/
+    // Based on https://jsfiddle.net/brettwp/J4djY/
     var currentTime = new Date().getTime();
     var diffTime = currentTime - this.lastTime;
 
@@ -32488,7 +32488,7 @@ var baseUrl = (0, _utils.currentScriptUrl)().replace(/\/[^/]+$/, '');
  * Add the following script on your HTML:
  * ```html
  * <head>
- *   <script type="text/javascript" src="http://cdn.clappr.io/latest/clappr.min.js"></script>
+ *   <script type="text/javascript" src="https://cdn.clappr.io/latest/clappr.min.js"></script>
  * </head>
  * ```
  * Now, create the player:
@@ -32496,7 +32496,7 @@ var baseUrl = (0, _utils.currentScriptUrl)().replace(/\/[^/]+$/, '');
  * <body>
  *   <div id="player"></div>
  *   <script>
- *     var player = new Clappr.Player({source: "http://your.video/here.mp4", parentId: "#player"});
+ *     var player = new Clappr.Player({source: "https://your.video/here.mp4", parentId: "#player"});
  *   </script>
  * </body>
  * ```
@@ -32627,7 +32627,7 @@ var Player = function (_BaseObject) {
      *
      * You might pass the options object to build the player.
      * ```javascript
-     * var options = {source: "http://example.com/video.mp4", param1: "val1"};
+     * var options = {source: "https://example.com/video.mp4", param1: "val1"};
      * var player = new Clappr.Player(options);
      * ```
      *
@@ -32683,10 +32683,10 @@ var Player = function (_BaseObject) {
      * @param {Boolean} [options.hideVolumeBar]
      * when embedded with width less than 320, volume bar will hide. You can force this behavior for all sizes by adding `true` **default**: `false`
      * @param {String} [options.watermark]
-     * put `watermark: 'http://url/img.png'` on your embed parameters to automatically add watermark on your video.
+     * put `watermark: 'https://url/img.png'` on your embed parameters to automatically add watermark on your video.
      * You can customize corner position by defining position parameter. Positions can be `bottom-left`, `bottom-right`, `top-left` and `top-right`.
      * @param {String} [options.watermarkLink]
-     * `watermarkLink: 'http://example.net/'` - define URL to open when the watermark is clicked. If not provided watermark will not be clickable.
+     * `watermarkLink: 'https://example.net/'` - define URL to open when the watermark is clicked. If not provided watermark will not be clickable.
      * @param {Boolean} [options.disableVideoTagContextMenu] @deprecated
      * disables the context menu (right click) on the video element if a HTML5Video playback is used.
      * @param {Boolean} [options.autoSeekFromUrl]
@@ -32694,7 +32694,7 @@ var Player = function (_BaseObject) {
      * @param {Boolean} [options.exitFullscreenOnEnd]
      * Automatically exit full screen when the media finishes. **default**: `true`
      * @param {String} [options.poster]
-     * define a poster by adding its address `poster: 'http://url/img.png'`. It will appear after video embed, disappear on play and go back when user stops the video.
+     * define a poster by adding its address `poster: 'https://url/img.png'`. It will appear after video embed, disappear on play and go back when user stops the video.
      * @param {String} [options.playbackNotSupportedMessage]
      * define a custom message to be displayed when a playback is not supported.
      * @param {Object} [options.events]
@@ -33669,7 +33669,7 @@ module.exports = exports['default'];
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<param name=\"movie\" value=\"<%= swfPath %>\">\n<param name=\"quality\" value=\"autohigh\">\n<param name=\"swliveconnect\" value=\"true\">\n<param name=\"allowScriptAccess\" value=\"always\">\n<param name=\"bgcolor\" value=\"#000000\">\n<param name=\"allowFullScreen\" value=\"false\">\n<param name=\"wmode\" value=\"<%= wmode %>\">\n<param name=\"tabindex\" value=\"1\">\n<param name=\"FlashVars\" value=\"playbackId=<%= playbackId %>&callback=<%= callbackName %>\">\n<embed\n  name=\"<%= cid %>\"\n  type=\"application/x-shockwave-flash\"\n  disabled=\"disabled\"\n  tabindex=\"-1\"\n  enablecontextmenu=\"false\"\n  allowScriptAccess=\"always\"\n  quality=\"autohigh\"\n  pluginspage=\"http://www.macromedia.com/go/getflashplayer\"\n  wmode=\"<%= wmode %>\"\n  swliveconnect=\"true\"\n  allowfullscreen=\"false\"\n  bgcolor=\"#000000\"\n  FlashVars=\"playbackId=<%= playbackId %>&callback=<%= callbackName %>\"\n  data=\"<%= swfPath %>\"\n  src=\"<%= swfPath %>\"\n  width=\"100%\"\n  height=\"100%\">\n</embed>\n";
+module.exports = "<param name=\"movie\" value=\"<%= swfPath %>\">\n<param name=\"quality\" value=\"autohigh\">\n<param name=\"swliveconnect\" value=\"true\">\n<param name=\"allowScriptAccess\" value=\"always\">\n<param name=\"bgcolor\" value=\"#000000\">\n<param name=\"allowFullScreen\" value=\"false\">\n<param name=\"wmode\" value=\"<%= wmode %>\">\n<param name=\"tabindex\" value=\"1\">\n<param name=\"FlashVars\" value=\"playbackId=<%= playbackId %>&callback=<%= callbackName %>\">\n<embed\n  name=\"<%= cid %>\"\n  type=\"application/x-shockwave-flash\"\n  disabled=\"disabled\"\n  tabindex=\"-1\"\n  enablecontextmenu=\"false\"\n  allowScriptAccess=\"always\"\n  quality=\"autohigh\"\n  pluginspage=\"https://www.macromedia.com/go/getflashplayer\"\n  wmode=\"<%= wmode %>\"\n  swliveconnect=\"true\"\n  allowfullscreen=\"false\"\n  bgcolor=\"#000000\"\n  FlashVars=\"playbackId=<%= playbackId %>&callback=<%= callbackName %>\"\n  data=\"<%= swfPath %>\"\n  src=\"<%= swfPath %>\"\n  width=\"100%\"\n  height=\"100%\">\n</embed>\n";
 
 /***/ }),
 

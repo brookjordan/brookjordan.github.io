@@ -102,7 +102,7 @@
     };
 
     const getTravelEase = async (territory) => {
-      let travelRequirementsURL = location.href.includes("localhost") ? "http://localhost:3000/territory-travel-requirements" : "/.netlify/functions/territory-travel-requirements";
+      let travelRequirementsURL = location.href.includes("localhost") ? "https://localhost:3000/territory-travel-requirements" : "/.netlify/functions/territory-travel-requirements";
       pathsPayload = await fetch(travelRequirementsURL, {
         method: "POST",
         body: JSON.stringify({
@@ -113,7 +113,7 @@
     }
 
     (async () => {
-      let pathsURL = location.href.includes("localhost") ? "http://localhost:3000/paths" : "/.netlify/functions/territory-paths";
+      let pathsURL = location.href.includes("localhost") ? "https://localhost:3000/paths" : "/.netlify/functions/territory-paths";
       let pathsPayload = await fetch(pathsURL);
       let { data: pathData } = await pathsPayload.json();
       pathData = pathData

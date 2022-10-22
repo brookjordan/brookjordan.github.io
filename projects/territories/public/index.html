@@ -470,29 +470,33 @@
                 return;
               }
 
+              if (!travelData || travelData.length === 0) {
+                showError('Travel data is empty');
+                return;
+              }
+
               if (activeTerritory === pathElt) {
                 document.documentElement.classList.remove("loading");
                 hoveredLabelElt && hoveredLabelElt.remove();
-                if (travelData.length) {
-                  travelData.forEach(function updateNotesAndEase({
-                    uuid,
-                    notes,
-                    ease,
-                  }) {
-                    let _ease = ease && ease.replace(/\s/, "-");
-                    let easeTerritoryElt = document.querySelector(
-                      `[data-uuid="${uuid}"]`
-                    );
-                    if (!easeTerritoryElt) {
-                      return;
-                    }
-                    easeTerritoryElt.classList.add(_ease);
-                    relatedNotes[uuid] = {
-                      ease: _ease,
-                      notes: notes && notes.replace(/\\n/g, "\n").trim(),
-                    };
-                  });
-                }
+
+                travelData.forEach(function updateNotesAndEase({
+                  uuid,
+                  notes,
+                  ease,
+                }) {
+                  let _ease = ease && ease.replace(/\s/, "-");
+                  let easeTerritoryElt = document.querySelector(
+                    `[data-uuid="${uuid}"]`
+                  );
+                  if (!easeTerritoryElt) {
+                    return;
+                  }
+                  easeTerritoryElt.classList.add(_ease);
+                  relatedNotes[uuid] = {
+                    ease: _ease,
+                    notes: notes && notes.replace(/\\n/g, "\n").trim(),
+                  };
+                });
               }
             });
           });
