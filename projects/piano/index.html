@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Piano</title>
+    <link rel="stylesheet" href="./reset.css" />
+    <link rel="stylesheet" href="./app.css" />
+    <link rel="stylesheet" href="./piano.css" />
+  </head>
+  <body>
+    <div class="app">
+      <div class="controls">
+        <label>
+          Octave count: <span id="octave_count_value"></span>
+          <input
+            id="octave_count_input"
+            type="range"
+            min="1"
+            max="10"
+            value="3"
+            step="1"
+          />
+        </label>
+
+        <label>
+          Octave offset: <span id="octave_offset_value"></span>
+          <input
+            id="octave_offset_input"
+            type="range"
+            min="-4"
+            _="lowest audible octave"
+            max="9"
+            _="highest clamped octave"
+            value="4"
+            step="1"
+          />
+        </label>
+
+        <label
+          id="instrument_label"
+          style="display: inline-block; position: relative"
+        >
+          <span id="instrument_value"></span>
+          <select
+            id="instrument_select"
+            style="position: absolute; inset: 0; opacity: 0"
+          >
+            <option>piano</option>
+            <option>violin</option>
+          </select>
+        </label>
+      </div>
+      <div class="piano"></div>
+    </div>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

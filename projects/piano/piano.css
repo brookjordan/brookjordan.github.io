@@ -1,0 +1,147 @@
+﻿html {
+  background: #ddd;
+}
+
+.piano {
+  --octave-count: 1;
+  display: grid;
+  grid-template-rows: 2fr 1fr;
+  grid-template-columns: repeat(
+      var(--octave-count),
+      6fr 4fr 2fr 6fr 2fr 4fr 6fr 5fr 5fr 1fr 6fr 3fr 3fr 6fr 1fr 5fr 5fr
+    ) 6fr 4fr;
+}
+
+.piano--octave-count-1 {
+  --octave-count: 1;
+}
+.piano--octave-count-2 {
+  --octave-count: 2;
+}
+.piano--octave-count-3 {
+  --octave-count: 3;
+}
+.piano--octave-count-4 {
+  --octave-count: 4;
+}
+.piano--octave-count-5 {
+  --octave-count: 5;
+}
+.piano--octave-count-6 {
+  --octave-count: 6;
+}
+.piano--octave-count-7 {
+  --octave-count: 7;
+}
+.piano--octave-count-8 {
+  --octave-count: 8;
+}
+.piano--octave-count-9 {
+  --octave-count: 9;
+}
+.piano--octave-count-10 {
+  --octave-count: 10;
+}
+
+.key {
+  --octave: 0;
+  --col-span: 2;
+  position: relative;
+  background-color: white;
+  border: 1px solid rgb(0 0 0 / 0.3);
+  box-shadow: inset 0 -10px 30px rgb(0 0 0 / 0.3);
+  grid-row: 1 / span 2;
+  grid-column-start: calc(var(--start) + var(--octave) * 17);
+  grid-column-end: span var(--col-span);
+}
+
+.key:nth-child(12n + 2),
+.key:nth-child(12n + 4),
+.key:nth-child(12n + 7),
+.key:nth-child(12n + 9),
+.key:nth-child(12n + 11) {
+  grid-row: 1 / span 1;
+  z-index: 1;
+  background-color: black;
+  box-shadow: inset 0 10px 30px rgb(255 255 255 / 0.5);
+  grid-column-start: calc(var(--start) + var(--octave) * 17);
+  grid-column-end: span var(--col-span);
+}
+
+.key:nth-child(n + 13) {
+  --octave: 1;
+}
+.key:nth-child(n + 25) {
+  --octave: 2;
+}
+.key:nth-child(n + 37) {
+  --octave: 3;
+}
+.key:nth-child(n + 49) {
+  --octave: 4;
+}
+.key:nth-child(n + 61) {
+  --octave: 5;
+}
+.key:nth-child(n + 73) {
+  --octave: 6;
+}
+.key:nth-child(n + 85) {
+  --octave: 7;
+}
+.key:nth-child(n + 97) {
+  --octave: 8;
+}
+.key:nth-child(n + 109) {
+  --octave: 9;
+}
+.key:nth-child(n + 121) {
+  --octave: 10;
+}
+
+/* White notes */
+.key:nth-child(12n + 1) {
+  --start: 1;
+}
+.key:nth-child(12n + 3) {
+  --start: 3;
+  --col-span: 3;
+}
+.key:nth-child(12n + 5) {
+  --start: 6;
+}
+.key:nth-child(12n + 6) {
+  --start: 8;
+}
+.key:nth-child(12n + 8) {
+  --start: 10;
+  --col-span: 3;
+}
+.key:nth-child(12n + 10) {
+  --start: 13;
+  --col-span: 3;
+}
+.key:nth-child(12n + 12) {
+  --start: 16;
+}
+
+/* Black notes */
+.key:nth-child(12n + 2) {
+  --start: 2;
+}
+
+.key:nth-child(12n + 4) {
+  --start: 5;
+}
+
+.key:nth-child(12n + 7) {
+  --start: 9;
+}
+
+.key:nth-child(12n + 9) {
+  --start: 12;
+}
+
+.key:nth-child(12n + 11) {
+  --start: 15;
+}
