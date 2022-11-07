@@ -55,7 +55,9 @@ window.addEventListener("touchstart", init, {
 });
 
 export function beep(frequency, instrument = "piano") {
-  const attack = 0.01;
+  const attack = instrument === "piano" ? 0.01 : 0.4  ;
+  const hold = instrument === "piano" ? 0.05 : 0.2;
+  const fade = instrument === "piano" ? 0.15 : 0.1;
 
   if (!ready) return;
 
@@ -68,8 +70,12 @@ export function beep(frequency, instrument = "piano") {
   const oscillator1Index = currentOscillatorSet * oscillatorSetSize;
   oscillators[oscillator1Index].osc.setPeriodicWave(instrument === "piano" ? pianoWave : violinWave);
   oscillators[oscillator1Index].osc.frequency.setValueAtTime(frequency, 0);
-  oscillators[oscillator1Index].volume.gain.setTargetAtTime(0.9, 0, attack);
-  setTimeout(() => {
-    oscillators[oscillator1Index].volume.gain.setTargetAtTime(-1, 0, 0.1);
-  }, attack * 1000);
+  console.log({
+    currentTime: context.currentTime,
+    attackEnd: context.currentTime + attack,
+    holdEnd: context.currentTime + attack + hold,
+    fadeEnd: context.currentTime + attack + hold + fade,
+  });
+  oscillators[oscillator1Index].volume.gain.setTargetAtTime(0.9, context.currentTime, attack);
+  oscillators[oscillator1Index].volume.gain.setTargetAtTime(-1, context.currentTime + attack + hold, fade);
 }
