@@ -1,12 +1,12 @@
 ﻿// A4 has a defined, integer frequency. Let's use this as the base for calculations
 export const A4Frequency = 440;
+export const semitoneMultiplier = 2 ** (1 / 12);
 
 // Allows:
 //   - multiple flats and sharps in any order
 //   - usage of '♭' or lowercase 'B' as flat
 //   - usage of '♯' or '#' as sharp
 const noteRegExp = /^([a-gA-G])([♭b♯#]*)(-?\d+)?$/;
-const semitoneMultiplier = 2 ** (1 / 12);
 const scaleNoteCount = 12;
 
 // Pre calculate offsets of each note from A

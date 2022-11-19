@@ -1,4 +1,7 @@
 ﻿import { pianoTerms, violinTerms } from "./instruments.js";
+// I’m not sure why this import doesn’t work
+// import { semitoneMultiplier } from "./note-frequency.js";
+const semitoneMultiplier = 2 ** (1 / 12);
 
 let context;
 let pianoWave;
@@ -54,8 +57,8 @@ window.addEventListener("touchstart", init, {
   capture: true,
 });
 
-export function beep(frequency, instrument = "piano") {
-  const attack = instrument === "piano" ? 0.01 : 0.4  ;
+function singleBeep(frequency, instrument = "piano") {
+  const attack = instrument === "piano" ? 0.01 : 0.4;
   const hold = instrument === "piano" ? 0.05 : 0.2;
   const fade = instrument === "piano" ? 0.15 : 0.1;
 
@@ -68,14 +71,62 @@ export function beep(frequency, instrument = "piano") {
   currentOscillatorSet = (currentOscillatorSet + 1) % oscillatorSetCount;
 
   const oscillator1Index = currentOscillatorSet * oscillatorSetSize;
-  oscillators[oscillator1Index].osc.setPeriodicWave(instrument === "piano" ? pianoWave : violinWave);
+  oscillators[oscillator1Index].osc.setPeriodicWave(
+    instrument === "piano" ? pianoWave : violinWave
+  );
   oscillators[oscillator1Index].osc.frequency.setValueAtTime(frequency, 0);
-  console.log({
-    currentTime: context.currentTime,
-    attackEnd: context.currentTime + attack,
-    holdEnd: context.currentTime + attack + hold,
-    fadeEnd: context.currentTime + attack + hold + fade,
-  });
-  oscillators[oscillator1Index].volume.gain.setTargetAtTime(0.9, context.currentTime, attack);
-  oscillators[oscillator1Index].volume.gain.setTargetAtTime(-1, context.currentTime + attack + hold, fade);
+  // console.log({
+  //   currentTime: context.currentTime,
+  //   attackEnd: context.currentTime + attack,
+  //   holdEnd: context.currentTime + attack + hold,
+  //   fadeEnd: context.currentTime + attack + hold + fade,
+  // });
+  oscillators[oscillator1Index].volume.gain.setTargetAtTime(
+    0.9,
+    context.currentTime,
+    attack
+  );
+  oscillators[oscillator1Index].volume.gain.setTargetAtTime(
+    -1,
+    context.currentTime + attack + hold,
+    fade
+  );
+}
+
+export function beep(frequency, instrument = "piano", chord) {
+  const chordDuration = 300;
+  const randomOrder = false;
+  const playBackwards = false;
+
+  if (!chord) {
+    singleBeep(frequency, instrument);
+    return;
+  }
+
+  const chordClone = [...chord];
+  let index = 0;
+  while (chordClone.length) {
+    const noteFrequency =
+      frequency *
+      semitoneMultiplier **
+        chordClone.splice(
+          randomOrder
+            ? Math.floor(Math.random() * chordClone.length)
+            : playBackwards
+            ? -1
+            : 0,
+          1
+        )[0];
+
+    if (index) {
+      setTimeout(
+        () => singleBeep(noteFrequency, instrument),
+        (index * chordDuration) / chord.length - 1
+      );
+    } else {
+      singleBeep(noteFrequency, instrument);
+    }
+
+    index += 1;
+  }
 }
