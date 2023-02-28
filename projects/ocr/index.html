@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <style>
+    html,
+    body,
+    canvas {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+
+    p {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      user-select: none;
+      pointer-events: none;
+    }
+  </style>
+</head>
+
+<body>
+  <script src="https://unpkg.com/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
+  <canvas></canvas>
+  <p>Loading…</p>
+
+  <script>
+    const p = document.querySelector('p');
+    const canvas = document.querySelector('canvas');
+    canvas.width = canvas.clientWidth * 2;
+    canvas.height = canvas.clientHeight * 2;
+    canvas.style.cssText = `
+      width: ${canvas.clientWidth}px;
+      height: ${canvas.clientHeight}px;
+      box-shadow: 0 0 10px rgb(0 0 0 / 0.2);
+    `;
+
+    let worker;
+    let workerReady = false;
+    let rerunRequested = false;
+
+    const runOCR = () => {
+      if (!workerReady) {
+        rerunRequested = true;
+      };
+
+      workerReady = false;
+
+      worker.recognize(canvas)
+      .then(({ data: { text } }) => {
+        if (!text) return;
+
+        p.innerText = text;
+      })
+      .catch(e => { console.log(e) })
+      .then(() => {
+        if (rerunRequested) {
+          rerunRequested = false;
+          runOCR();
+        } else {
+          workerReady = true;
+        }
+      });
+    }
+
+    new Tesseract.createWorker()
+    .then(_worker => {
+      worker = _worker;
+      return worker.loadLanguage('eng')
+    })
+    .then(() =>
+      worker.initialize('eng')
+    )
+    .then(() => {
+      p.innerHTML = 'Click anywhere to start writing!';
+      workerReady = true;
+      runOCR();
+    });
+
+    const ctx = canvas.getContext('2d');
+    ctx.lineWidth = 4;
+    let isDrawing = false;
+    let didMove = false;
+
+    canvas.onmousedown = (e) => {
+      e.preventDefault();
+
+      // termination = worker.terminate();
+      ctx.beginPath();
+      ctx.moveTo(e.clientX * 2, e.clientY * 2);
+      isDrawing = true;
+    }
+
+    canvas.onmouseup = (e) => {
+      e.preventDefault();
+
+      if (!didMove) {
+        ctx.lineTo(e.x * 2 + 1, e.y * 2);
+        ctx.lineTo(e.x * 2 + 1, e.y * 2 + 1);
+        ctx.lineTo(e.x * 2, e.y * 2 + 1);
+        ctx.lineTo(e.x * 2, e.y * 2);
+      }
+      ctx.stroke();
+      isDrawing = false;
+      didMove = false;
+
+      runOCR();
+    }
+
+    canvas.onmousemove = (e) => {
+      e.preventDefault();
+
+      if (!isDrawing) return;
+
+      ctx.lineTo(e.x * 2, e.y * 2);
+      didMove = true;
+    }
+  </script>
+</body>
+</html>
