@@ -44,95 +44,10 @@ Try it!
 <span id="NUMBER_DISPLAY">zero</span>
 
 <script>
-"use strict";
-const units = [
-    'zero', 'one', 'two', 'three', 'four', 'five',
-    'six', 'seven', 'eight', 'nine', 'ten', 'eleven',
-    'twelve', 'thirteen', 'fourteen', 'fifteen',
-    'sixteen', 'seventeen', 'eighteen', 'nineteen',
-];
-const tens = [
-    '', 'ten', 'twenty', 'thirty', 'fourty',
-    'fifty', 'sixty', 'seventy', 'eighty', 'ninety',
-];
-const exponents = [
-    '', 'thousand', 'million', 'billion', 'trillion', 'quadrillion',
-    'quintillion', 'sextillion', 'septillion', 'octillion', 'nonillion',
-    'decillion', 'undecillion', 'duodecillion', 'tredecillion',
-    'quattuordecillion', 'quindecillion', 'sexdecillion',
-    'septendecillion', 'octodecillion', 'novemdecillion', 'vigintillion',
-];
-const largestNumber = 1000n ** BigInt(exponents.length) - 1n;
-function renderNumberGroup(numberGroup, exponent, exponentCount, ending) {
-    const unit = numberGroup.at(-1);
-    const ten = numberGroup.at(-2) || 0;
-    const hundred = numberGroup.at(-3) || 0;
-    const unitAndTen = ten * 10 + unit;
-    return `${hundred ? `${units[hundred]} hundred${unitAndTen ? ' and ' : ''}` : ''}${unitAndTen && unitAndTen < 20
-        ? units[unitAndTen]
-        : `${ten ? `${tens[ten]} ` : ''}${unit ? units[unit] : ten || exponentCount > 1 ? '' : units[0]}`}${exponent && (hundred || unitAndTen)
-        ? ` ${exponents[exponent]}${ending === 'and' ? ' and' : ending === 'comma' ? ',' : ''}`
-        : ''}`;
-}
-function buildTextNumber(number) {
-    const numbers = [...String(number)];
-    const firstNonNumber = numbers.find((digit) => Number.isNaN(+digit));
-    if (firstNonNumber) {
-        throw new Error(`This only works with integers, but you included “${firstNonNumber}”`);
-    }
-    if (BigInt(number) > largestNumber) {
-        throw new Error(`As of now, this only supports numbers up to 10^${exponents.length * 3}-1`);
-    }
-    const numberGroups = [];
-    numbers.reverse();
-    numbers.forEach((number) => {
-        const lastGroup = numberGroups.at(-1);
-        if (!lastGroup || lastGroup.length === 3) {
-            numberGroups.push([+number]);
-        }
-        else {
-            lastGroup.push(+number);
-        }
-    });
-    numberGroups.forEach((group) => group.reverse());
-    let ending = 'comma';
-    const namedNumberParts = numberGroups.map((numberGroup, index, numberGroups) => {
-        const rendered = renderNumberGroup(numberGroup, index, numberGroups.length, ending);
-        // So as to read better, we replace the comma of the last
-        //   exponent with “and” if there’s no hundred.
-        // eg. “one million and three” vs “one million, three”
-        if (ending === 'comma' ) {
-          if (index === 0) {
-            if (numberGroup.reduce((curr, item) => curr + item) === 0) {
-              ending = 'none';
-            } else if (numberGroup.at(-3) === 0) {
-              ending = 'and';
-            }
-          }
-        }
-        else if (ending && rendered) {
-            ending = 'comma';
-        }
-        return rendered;
-    });
-    namedNumberParts.reverse();
-    return namedNumberParts.join(' ').replace(/\s{2,}/g, ' ');
-}
-
-const oninput = () => {
-  if (!NUMBER_INPUT.value) {
-    NUMBER_DISPLAY.textContent = 'Type something in!'
-    return;
-  }
-
-  try {
-    NUMBER_DISPLAY.textContent = buildTextNumber(NUMBER_INPUT.value);
-  } catch (e) {
-    NUMBER_DISPLAY.textContent = e.message;
-  }
-};
-NUMBER_INPUT.oninput = oninput;
-oninput();
+'use strict';const g="zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen".split(" "),l=" ten twenty thirty fourty fifty sixty seventy eighty ninety".split(" "),m=" thousand million billion trillion quadrillion quintillion sextillion septillion octillion nonillion decillion undecillion duodecillion tredecillion quattuordecillion quindecillion sexdecillion septendecillion octodecillion novemdecillion vigintillion".split(" "),
+n=1000n**BigInt(m.length)-1n;function p(a,f,h,e){const d=a.at(-1),b=a.at(-2)||0;a=a.at(-3)||0;const c=10*b+d;return`${a?`${g[a]} hundred${c?" and ":""}`:""}${c&&20>c?g[c]:`${b?`${l[b]} `:""}${d?g[d]:b||1<h?"":g[0]}`}${f&&(a||c)?` ${m[f]}${"and"===e?" and":"comma"===e?",":""}`:""}`}
+function q(){var a=NUMBER_INPUT.value;const f=[...String(a)],h=f.find(b=>Number.isNaN(+b));if(h)throw Error(`This only works with integers, but you included \u201c${h}\u201d`);if(BigInt(a)>n)throw Error(`As of now, this only supports numbers up to 10^${3*m.length}-1`);const e=[];f.reverse();f.forEach(b=>{const c=e.at(-1);c&&3!==c.length?c.push(+b):e.push([+b])});e.forEach(b=>b.reverse());let d="comma";a=e.map((b,c,k)=>{k=p(b,c,k.length,d);"comma"===d?0===c&&(0===b.reduce((t,u)=>t+u)?d="none":0===
+b.at(-3)&&(d="and")):d&&k&&(d="comma");return k});a.reverse();return a.join(" ").replace(/\s{2,}/g," ")}const r=()=>{if(NUMBER_INPUT.value)try{NUMBER_DISPLAY.textContent=q()}catch(a){NUMBER_DISPLAY.textContent=a.message}else NUMBER_DISPLAY.textContent="Type something in!"};NUMBER_INPUT.oninput=r;r();
 </script>
 
 ## The code
