@@ -4,6 +4,7 @@
   --c-main-shadow: hsl(20, 5%, 10%);
 
   --c-body-text: hsl(35, 3%, 60%);
+  --c-body-2-text: hsl(35, 8%, 35%);
   --c-link-text: hsl(50, 15%, 60%);
   --c-code-text: hsl(40, 15%, 55%);
 
@@ -85,4 +86,11 @@ body > a {
 .rss-link:hover {
   color: #ff6600;
   background-color: white;
+}
+
+.last-updated-tag {
+  color: var(--c-body-2-text);
+}
+.last-updated-date {
+  color: var(--c-body-text);
 }
