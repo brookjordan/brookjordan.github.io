@@ -42,17 +42,15 @@ const getRandomStunServer = async () => {
   return servers[Math.floor(Math.random() * servers.length)] || null;
 };
 
-const getStunServers = async ({ searchParam } = {}) => {
+const getStunServers = async ({ searchParam, serverCount = 3 } = {}) => {
   let cachedStunServers = searchParam
     ? new URLSearchParams(location.search).get(searchParam)
     : null;
 
   if (!cachedStunServers) {
-    const newStunServers = [
-      await getRandomStunServer(),
-      await getRandomStunServer(),
-      await getRandomStunServer(),
-    ];
+    const newStunServers = await Promise.all(
+      Array.from({ length: serverCount }, () => getRandomStunServer())
+    );
 
     if (searchParam) {
       let encodedServer = btoa(newStunServers);
@@ -69,7 +67,7 @@ const getStunServers = async ({ searchParam } = {}) => {
   return atob(cachedStunServers).split(",");
 };
 
-getStunServers({ searchParam: "stunServers" }).then((serverUrls) => {
+getStunServers({ searchParam: "stunServers", serverCount: 1 }).then((serverUrls) => {
   if (globalThis.buttoncreateoffer?.style.opacity) {
     buttoncreateoffer.style.opacity = 1;
   }
