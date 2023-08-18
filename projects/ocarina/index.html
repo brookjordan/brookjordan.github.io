@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      #main {
+        white-space: nowrap;
+      }
+      #stave {
+        display: grid;
+        grid-template-columns: repeat(var(--column-count), 1fr);
+        font-size: calc(var(--column-count) * 0.2vmin);
+      }
+      #stave > * {
+        display: grid;
+        overflow: hidden;
+        padding:
+          clamp(3px, calc(3vmin - 30px), 36px)
+          clamp(2px, calc(2vmin - 20px), 24px)
+        ;
+        font-size: clamp(16px, calc(1.5vmin / (6 / var(--column-count))), 24px);
+        min-width: 40px;
+      }
+      #stave img,
+      #stave svg {
+        height: auto;
+      }
+      .line-start {
+        grid-column: 1;
+      }
+      p {
+        text-align: center;
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <main id="main" style="--c-ocarina: hsl(24 31.5% 72%)"></main>
+
+    <script src="./songs.js"></script>
+
+    <script>
+      "use strict";
+      const availableNotes = [
+          "C5",
+          "D♭5",
+          "D5",
+          "E♭5",
+          "E5",
+          "F5",
+          "G♭5",
+          "G5",
+          "A♭5",
+          "A5",
+          "B♭5",
+          "B5",
+          "C6",
+          "D♭6",
+          "D6",
+          "E♭6",
+          "E6",
+          "F6",
+      ];
+      let noteImages = {};
+      const noteImagesPromise = Promise.all([...availableNotes, "blank", "broken"].map(async (svgName) => {
+          const response = await fetch(`./i/${svgName.replace("♯", "%23")}.svg`);
+          const svgString = await response.text();
+          const container = document.createElement("div");
+          container.innerHTML = svgString;
+          const svgElement = container.querySelector("svg");
+          if (svgElement) {
+              noteImages[svgName] = svgElement;
+          }
+      }));
+      (async () => {
+          await noteImagesPromise;
+          renderSong();
+      })();
+      const mainElement = document.querySelector("#main");
+      const staveElement = document.createElement('div');
+      staveElement.id = 'stave';
+      const songs = availableSongs;
+      let selectedSongName = Object.keys(songs)[0];
+      function renderSong() {
+          if (!mainElement)
+              return;
+          mainElement.innerHTML = "";
+          let song = songs[selectedSongName];
+          const maxAllowedNoteNumber = availableNotes.length - 1;
+          const numberedNotes = song.filter((note) => typeof note === "number");
+          const maxNote = Math.max(...numberedNotes);
+          const minNote = Math.min(...numberedNotes);
+          const rangeDifference = maxNote - minNote - maxAllowedNoteNumber;
+          const outOfRangeBy = Math.max(0, rangeDifference);
+          const distanceOver = Math.max(0, maxNote - maxAllowedNoteNumber);
+          const distanceUnder = Math.abs(Math.min(0, minNote));
+          let reRangedSong = [...song];
+          let transposedSemitones = 0;
+          let errorMessage = "";
+          if (maxNote - minNote > availableNotes.length - 1) {
+              errorMessage = `Song out of range by ${outOfRangeBy} semitones`;
+          }
+          if (distanceOver || distanceUnder) {
+              if (distanceUnder) {
+                  transposedSemitones = distanceUnder;
+                  reRangedSong = song.map((noteNumber) => typeof noteNumber === "number" ? noteNumber + distanceUnder : noteNumber);
+              }
+              else {
+                  transposedSemitones = -distanceOver;
+                  reRangedSong = song.map((noteNumber) => typeof noteNumber === "number" ? noteNumber - distanceOver : noteNumber);
+              }
+          }
+          /* Print messages */
+          if (errorMessage) {
+              mainElement.append(`Error: ${errorMessage}`);
+              mainElement.append(document.createElement("br"));
+          }
+          if (transposedSemitones) {
+              mainElement.append(`Transposed ${transposedSemitones > 0 ? "up" : "down"} by ${Math.abs(transposedSemitones)}`);
+              mainElement.append(document.createElement("br"));
+          }
+          if (rangeDifference < 0) {
+              mainElement.append(`Song could expand its range by ${-rangeDifference} semitones`);
+              mainElement.append(document.createElement("br"));
+          }
+          /* END => Print messages */
+          /* Print select menu */
+          const selectMenu = document.createElement("select");
+          Object.keys(songs).forEach((songName) => {
+              const option = document.createElement("option");
+              option.textContent = songName;
+              if (selectedSongName === songName) {
+                  option.selected = true;
+              }
+              selectMenu.append(option);
+          });
+          selectMenu.addEventListener("change", () => {
+              selectedSongName = selectMenu.selectedOptions[0].value;
+              renderSong();
+          });
+          mainElement.append(selectMenu);
+          mainElement.append(document.createElement("br"));
+          mainElement.append(staveElement);
+
+          let lineStart = true;
+          let lineLength = 0;
+          let maxLineLength = 0;
+          /* END => Print select menu */
+          reRangedSong.forEach((number) => {
+              lineLength += 1;
+
+              if (number === "|") {
+                  lineStart = true;
+                  lineLength = 0;
+                  return;
+              }
+              else {
+                  maxLineLength = Math.max(maxLineLength, lineLength);
+                  const wrapper = document.createElement("div");
+                  wrapper.classList.add("note");
+                  if (lineStart) {
+                    lineStart = false;
+                    wrapper.classList.add("line-start");
+                  }
+                  const label = document.createElement("p");
+                  // undefined means out of range, null means a note wasn’t requested
+                  const note = typeof number === "number" ? availableNotes[number] : null;
+                  /** @type {SVGElement} */
+                  const svg = noteImages[note === undefined ? "broken" : note === null ? "blank" : note].cloneNode(true);
+                  label.textContent = note === undefined ? "?" : note === null ? "" : note;
+                  wrapper.append(label);
+                  wrapper.appendChild(svg);
+                  staveElement.append(wrapper);
+              }
+          });
+          staveElement.style.setProperty("--column-count", maxLineLength.toString());
+      }
+    </script>
+
+    <div>
+      <style>
+        menu {
+          padding: 0;
+        }
+
+        #base_color {
+          appearance: none;
+          padding: 0;
+          border: 1px solid black;
+          margin: 0;
+          display: inline-block;
+          vertical-align: middle;
+          width: 200px;
+          height: 44px;
+          border-radius: 10px;
+          overflow: hidden;
+        }
+        ::-webkit-color-swatch-wrapper {
+          padding: 0;
+        }
+        ::color-swatch-wrapper {
+          padding: 0;
+        }
+      </style>
+      <menu>
+        <label>
+          <input type="color" value="#ceb3a1" id="base_color" />
+          Ocarina colour
+        </label>
+      </menu>
+      <script>
+        function rgbToHsl (red, green, blue) {
+            let max = Math.max(red, green, blue);
+            let min = Math.min(red, green, blue);
+            let [hue, sat, light] = [NaN, 0, (min + max)/2];
+            let d = max - min;
+
+            if (d !== 0) {
+                sat = (light === 0 || light === 1)
+                    ? 0
+                    : (max - light) / Math.min(light, 1 - light);
+
+                switch (max) {
+                    case red:   hue = (green - blue) / d + (green < blue ? 6 : 0); break;
+                    case green: hue = (blue - red) / d + 2; break;
+                    case blue:  hue = (red - green) / d + 4;
+                }
+
+                hue = hue * 60;
+            }
+
+            return [hue || 0, sat * 100, light * 100];
+        }
+
+        base_color.addEventListener('change', () => {
+          const rgb = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(base_color.value).map(a => parseInt(a, 16) / 255).slice(1);
+          const hsl = rgbToHsl(...rgb);
+          stave.style.setProperty('--c-ocarina', `hsl(${hsl[0]}deg ${hsl[1]}% ${hsl[2]}%)`);
+        });
+      </script>
+    </div>
+  </body>
+</html>
