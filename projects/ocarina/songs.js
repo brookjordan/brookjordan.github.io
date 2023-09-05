@@ -7,6 +7,12 @@ const transpose = (song, offset) =>
   );
 
 const availableSongs = {
+  'Only fools rush in': transpose([
+    32, '-', 39, 32, '|',
+    34, 36, 37, 36, 34, '|',
+    27, 29, 31, 32, '|',
+    34, 36, 37, 36, 34, 32
+  ], -25),
   'Mario slide': [
     ...transpose([36, 36, 36, 33, 31, 30], -12), '|',
     29, 31, 29, 22, '-',
