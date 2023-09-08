@@ -29,6 +29,7 @@ let frict = null;
 let nameCount = null;
 let spinnerElt = null;
 let nameFilter = null;
+let container = null;
 
 function enableTrackMouse(e) {
   e.preventDefault();
@@ -165,7 +166,6 @@ function renderNames() {
 }
 
 function addName(e) {
-  console.log({ cards });
   const filteredCards = nameFilter
     ? cards.filter(({ name }) => nameFilter.includes(name))
     : cards;
@@ -197,7 +197,6 @@ function addName(e) {
 }
 
 export function spinner(e, items, options = {}) {
-  console.log("spinner");
   const t = options.desiredNameCount;
   const a = null === t ? 4 : t;
   const i = options.friction;
@@ -220,4 +219,66 @@ export function spinner(e, items, options = {}) {
   body.addEventListener("touchcancel", startSpinnerSpinning, !1);
   body.addEventListener("mousedown", enableTrackMouse, !1);
   body.addEventListener("touchstart", enableTrackMouse, !1);
+}
+
+function handleEscPressOpen(e) {
+  if (e.key !== "Escape") return;
+
+  makeNameCheckboxes();
+  window.removeEventListener("keypress", handleEscPressOpen);
+  window.addEventListener("keypress", handleEscPressClose);
+}
+function handleEscPressClose(e) {
+  if (e.key !== "Escape") return;
+
+  killNameCheckboxes();
+  window.removeEventListener("keypress", handleEscPressClose);
+  window.addEventListener("keypress", handleEscPressOpen);
+}
+window.addEventListener("keypress", handleEscPressOpen);
+
+function killNameCheckboxes() {
+  container.remove();
+}
+
+function makeNameCheckboxes() {
+  container = document.createElement("div");
+  cards.forEach(({ name }) => {
+    const checkbox = document.createElement("input");
+    const label = document.createElement("label");
+    checkbox.type = "checkbox";
+    checkbox.name = name;
+    checkbox.value = name;
+    checkbox.id = `spinner-checkbox-${name.replace(/\s+/g, "-")}`;
+    checkbox.checked = nameFilter.includes(name);
+    checkbox.addEventListener("change", (e) => {
+      if (e.target.checked) {
+        nameFilter.push(name);
+      } else {
+        nameFilter.splice(nameFilter.indexOf(name), 1);
+      }
+    });
+    label.textContent = name;
+    label.setAttribute("for", `spinner-checkbox-${name.replace(/\s+/g, "-")}`);
+    container.appendChild(checkbox);
+    container.appendChild(label);
+  });
+  document.body.appendChild(container);
+  container.style.cssText = `
+    font-size: 22px;
+    font-family: "Nunito Sans", "open sans", sans-serif;
+    position: fixed;
+    z-index: 1000;
+    background: white;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 15px 30px;
+    padding: 20px;
+    overflow-y: auto;
+    height: 100vh;
+    width: 100vw;
+    box-sizing: border-box;
+    justify-content: center;
+    cursor: default !important;
+  `;
 }
