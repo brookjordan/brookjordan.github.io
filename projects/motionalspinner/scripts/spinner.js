@@ -225,17 +225,17 @@ function handleEscPressOpen(e) {
   if (e.key !== "Escape") return;
 
   makeNameCheckboxes();
-  window.removeEventListener("keypress", handleEscPressOpen);
-  window.addEventListener("keypress", handleEscPressClose);
+  window.removeEventListener("keydown", handleEscPressOpen);
+  window.addEventListener("keydown", handleEscPressClose);
 }
 function handleEscPressClose(e) {
   if (e.key !== "Escape") return;
 
   killNameCheckboxes();
-  window.removeEventListener("keypress", handleEscPressClose);
-  window.addEventListener("keypress", handleEscPressOpen);
+  window.removeEventListener("keydown", handleEscPressClose);
+  window.addEventListener("keydown", handleEscPressOpen);
 }
-window.addEventListener("keypress", handleEscPressOpen);
+window.addEventListener("keydown", handleEscPressOpen);
 
 function killNameCheckboxes() {
   container.remove();
