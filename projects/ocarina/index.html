@@ -91,6 +91,7 @@
           if (!mainElement)
               return;
           mainElement.innerHTML = "";
+          staveElement.innerHTML = "";
           let song = songs[selectedSongName];
           const maxAllowedNoteNumber = availableNotes.length - 1;
           const numberedNotes = song.filter((note) => typeof note === "number");
