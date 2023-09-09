@@ -1,8 +1,8 @@
 import { items } from "./items.js";
-import { spinner } from "./spinner.js";
+import { initialiseSpinner } from "./spinner.js";
 
 function getDesiredCount() {
-  return 4;
+  return +new URLSearchParams(location.search).get("count") || 5;
 }
 
 const body = document.body;
@@ -32,9 +32,9 @@ const peopleInDemo = [
   "William Kar Hoong Yoong",
 ];
 
-body.appendChild(spinnerElt),
-  spinner(spinnerElt, items, {
-    desiredNameCount: getDesiredCount(),
-    friction: 0.01,
-    filterItemNames: peopleInDemo,
-  });
+body.appendChild(spinnerElt);
+initialiseSpinner(spinnerElt, items, {
+  desiredNameCount: getDesiredCount(),
+  friction: 0.01,
+  initialItemNames: peopleInDemo,
+});

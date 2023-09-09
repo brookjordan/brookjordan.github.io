@@ -1,3 +1,4 @@
+const maxRunCount = 2 ** 10;
 let activeThreads = {};
 let idleThreads = {};
 let uuid = 0;
@@ -9,73 +10,101 @@ export const threadRunner = {
 };
 
 function tick() {
-  for (const e in activeThreads) activeThreads[e].run();
+  for (const e in activeThreads) {
+    activeThreads[e].run();
+  }
   requestAnimationFrame(tick);
 }
 
 function addThread(...args) {
-  const e = args.length <= 0 || void 0 === args[0] ? ++uuid : args[0];
+  const e = args.length <= 0 || undefined === args[0] ? ++uuid : args[0];
 
-  const t = args.length <= 1 || void 0 === args[1] ? {} : args[1];
+  const t = args.length <= 1 || undefined === args[1] ? {} : args[1];
   if (activeThreads[e] || idleThreads[e])
     throw new Error(`Thread with ID ${e} already exists.`);
   const i = new Thread(e, t);
   return (activeThreads[e] = i), i;
 }
 
-function Thread(e) {
-  const t = this;
-  const i =
-    arguments.length <= 1 || void 0 === arguments[1] ? {} : arguments[1];
-  const a = i.fps;
-  const r = void 0 === a ? 60 : a;
-  const d = (i.active, i.tasks);
-  const n = void 0 === d ? [] : d;
-  const s = i.frame;
-  let h = void 0 === s ? 0 : s;
-  const u = i.simulate;
-  const c = void 0 === u ? !0 : u;
-  let o = +new Date();
-  (this.id = e),
-    (this.resetFrame = () => {
-      h = 0;
-    }),
-    (this.destroy = () => {
-      delete activeThreads[e];
-    }),
-    (this.play = () => {
-      (o = +new Date()), (activeThreads[e] = t), delete idleThreads[e];
-    }),
-    (this.pause = () => {
-      (idleThreads[e] = t), delete activeThreads[e];
-    }),
-    (this.addTask = (e) => {
-      !n.includes(e) && n.push(e.bind(t));
-    }),
-    (this.removeTask = (e) => {
-      const t = n.indexOf(e);
-      t > -1 && n.splice(t, 1);
-    }),
-    (this.run = () => {
-      const e = +new Date();
-      c &&
-        e > o &&
-        (n.forEach((e) => {
-          e();
-        }),
-        (o += 1e3 / r),
-        (h += 1),
-        c && t.run()),
-        c || t.run();
-    }),
-    Object.defineProperty(this, "frame", {
-      get() {
-        return h;
-      },
-      set(e) {
-        return h;
-      },
-    });
+class Thread {
+  #id;
+  #mspf;
+  #frame;
+  #tasks;
+  #simulate;
+  #previousRun;
+  #resetOnThrottle;
+
+  resetFrame() {
+    this.#frame = 0;
+  }
+
+  destroy() {
+    delete activeThreads[this.#id];
+  }
+
+  play() {
+    (this.#previousRun = +new Date()),
+      (activeThreads[this.#id] = this),
+      delete idleThreads[this.#id];
+  }
+
+  pause() {
+    idleThreads[this.#id] = this;
+    delete activeThreads[this.#id];
+  }
+
+  addTask(newTask) {
+    this.#tasks.add(newTask);
+  }
+
+  removeTask(taskToRemove) {
+    this.#tasks.delete(taskToRemove);
+  }
+
+  run(runCount = 0) {
+    const dateNow = Date.now();
+
+    if (!this.#simulate || dateNow > this.#previousRun) {
+      this.#tasks.forEach((task) => {
+        task(this);
+      });
+      this.#frame += 1;
+    }
+
+    if (!this.#simulate) {
+      this.#previousRun = dateNow;
+    } else if (this.#simulate && dateNow > this.#previousRun) {
+      this.#previousRun += this.#mspf;
+
+      if (runCount < maxRunCount) {
+        this.run(runCount + 1);
+      } else if (this.#resetOnThrottle) {
+        this.#previousRun = dateNow;
+      }
+    }
+  }
+
+  set fps(newFps) {
+    this.#mspf = 1e3 / newFps;
+  }
+
+  get frame() {
+    return this.#frame;
+  }
+
+  constructor(spinnerName, options) {
+    this.#id = spinnerName;
+    this.#mspf = undefined === options.fps ? 1e3 / 60 : 1e3 / options.fps;
+    this.#frame = undefined === options.frame ? 0 : options.frame;
+    this.#simulate = undefined === options.simulate ? true : options.simulate;
+    this.#resetOnThrottle =
+      undefined === options.resetOnThrottle ? true : options.resetOnThrottle;
+    this.#tasks =
+      undefined === options.tasks ? new Set() : new Set(options.tasks);
+
+    this.#previousRun = +new Date();
+  }
 }
 
 tick();

@@ -3,35 +3,35 @@ import { average } from "./math.js";
 const cursorSpeeds = [];
 const _document = document;
 const body = _document.body;
-let prevClientY = void 0;
-let clientY = void 0;
-let clientX = void 0;
+let prevClientY = undefined;
+let clientY = undefined;
+let clientX = undefined;
 
 export function initialiseCursorTracking() {
-  body.addEventListener("mousemove", mouseSpeed, !1),
-    body.addEventListener("touchmove", mouseSpeed, !1),
-    body.addEventListener("touchstart", mouseSpeed, !1),
-    body.addEventListener("touchend", mouseSpeed, !1),
-    checkCursorSpeed();
+  body.addEventListener("mousemove", mouseSpeed, false);
+  body.addEventListener("touchmove", mouseSpeed, false);
+  body.addEventListener("touchstart", mouseSpeed, false);
+  body.addEventListener("touchend", mouseSpeed, false);
+  checkCursorSpeed();
 }
 
-export function getY(e) {
-  let t = void 0;
-  return (t = e.touches ? e.touches[0].pageY : e.clientY);
+export function getY(event) {
+  let t = undefined;
+  return (t = event.touches ? event.touches[0].pageY : event.clientY);
 }
 
-export function getX(e) {
-  let t = void 0;
-  return (t = e.touches ? e.touches[0].pageX : e.clientX);
+export function getX(event) {
+  let t = undefined;
+  return (t = event.touches ? event.touches[0].pageX : event.clientX);
 }
 
-export function resetCursorSpeed(e) {
+export function resetCursorSpeed(event) {
   for (; cursorSpeeds.length; ) cursorSpeeds.pop();
-  clientY = prevClientY = getY(e);
+  clientY = prevClientY = getY(event);
 }
 
 export function cursorSpeed() {
-  return average.apply(void 0, cursorSpeeds);
+  return average.apply(undefined, cursorSpeeds);
 }
 
 function checkCursorSpeed() {
@@ -39,13 +39,15 @@ function checkCursorSpeed() {
 }
 
 function addMousePositionToStack() {
-  "number" == typeof clientY &&
-    ("number" == typeof prevClientY || (prevClientY = clientY),
-    cursorSpeeds.push(clientY - prevClientY),
-    cursorSpeeds.length > 5 && cursorSpeeds.unshift(),
-    (prevClientY = clientY));
+  if ("number" == typeof clientY) {
+    "number" == typeof prevClientY || (prevClientY = clientY);
+    cursorSpeeds.push(clientY - prevClientY);
+    cursorSpeeds.length > 5 && cursorSpeeds.unshift();
+    prevClientY = clientY;
+  }
 }
 
 function mouseSpeed(e) {
-  (clientY = getY(e)), (clientX = getX(e));
+  clientY = getY(e);
+  clientX = getX(e);
 }

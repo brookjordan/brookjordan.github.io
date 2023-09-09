@@ -1,3 +1,9 @@
+@property --name-count {
+  syntax: "<integer>";
+  inherits: true;
+  initial-value: 3;
+}
+
 *,
 *::before,
 *::after {
@@ -69,6 +75,7 @@ button {
   position: relative;
   width: 100vw;
   height: 100vh;
+  height: 100svh;
   pointer-events: none;
 }
 .name {
@@ -87,36 +94,36 @@ button {
   -ms-flex-align: center;
   align-items: center;
   width: 100vw;
+  height: calc(100 / var(--name-count) * 1vh);
+  height: calc(100 / var(--name-count) * 1svh);
   background-size: contain;
   background-repeat: no-repeat;
   background-position: 0% 50%;
+  background-image: var(--i-bg);
+  background-color: rgb(153, 153, 153);
+  color: rgb(102, 102, 102);
   transition-property: color, background-color;
-  transition-duration: 0.5s;
+  transition-duration: 3s;
+  transition-delay: 0s;
 }
-.name__text {
+.name__text-wrapper {
   -webkit-box-flex: 0;
   -webkit-flex: 0 1 auto;
   -ms-flex: 0 1 auto;
   flex: 0 1 auto;
+  display: flex;
+  align-items: center;
   height: 100%;
+  width: calc(100vw - 100 / var(--name-count) * 1vh);
+  width: calc(100vw - 100 / var(--name-count) * 1svh);
   text-align: center;
   font-family: "Nunito Sans", "open sans", sans-serif;
   font-weight: 200;
   font-size: 5vmin;
-  text-indent: 10vw;
-  background: linear-gradient(
-    to left,
-    rgba(255, 255, 255, 0),
-    rgba(255, 255, 255, 0.8) 30%,
-    rgba(255, 255, 255, 0.8) 70%,
-    rgba(255, 255, 255, 0)
-  );
-}
-.name:not(:nth-child(3)) {
-  color: rgb(102, 102, 102);
-  background-color: rgb(153, 153, 153);
-}
-.name:not(:nth-child(3)) .name__text {
+  font-size: calc(min(6, calc(40 / var(--name-count))) * 1vmin);
+  margin-left: calc(100 / var(--name-count) * 1vh);
+  margin-left: calc(100 / var(--name-count) * 1svh);
+  padding: 0 5vw;
   background: linear-gradient(
     to left,
     rgba(153, 153, 153, 0),
@@ -124,4 +131,145 @@ button {
     rgba(153, 153, 153, 0.8) 70%,
     rgba(153, 153, 153, 0)
   );
+}
+
+.name__text {
+  transition-property: transform, letter-spacing;
+  transition-duration: 0.5s;
+  transform: scaleX(0.9);
+  transition-timing-function: ease-in-out;
+  width: 100%;
+}
+
+.name:first-child:nth-last-child(1),
+.name:first-child:nth-last-child(2) ~ :nth-child(2),
+.name:first-child:nth-last-child(3) ~ :nth-child(2),
+.name:first-child:nth-last-child(4) ~ :nth-child(3),
+.name:first-child:nth-last-child(5) ~ :nth-child(3),
+.name:first-child:nth-last-child(6) ~ :nth-child(4),
+.name:first-child:nth-last-child(7) ~ :nth-child(4),
+.name:first-child:nth-last-child(8) ~ :nth-child(5),
+.name:first-child:nth-last-child(9) ~ :nth-child(5),
+.name:first-child:nth-last-child(10) ~ :nth-child(6),
+.name:first-child:nth-last-child(11) ~ :nth-child(6),
+.name:first-child:nth-last-child(12) ~ :nth-child(7),
+.name:first-child:nth-last-child(13) ~ :nth-child(7),
+.name:first-child:nth-last-child(14) ~ :nth-child(8),
+.name:first-child:nth-last-child(15) ~ :nth-child(8),
+.name:first-child:nth-last-child(16) ~ :nth-child(9) {
+  background-color: white;
+  color: black;
+  transition-delay: 0.75s;
+  transition-duration: 0.5s;
+}
+.name:first-child:nth-last-child(1) .name__text-wrapper,
+.name:first-child:nth-last-child(2) ~ :nth-child(2) .name__text-wrapper,
+.name:first-child:nth-last-child(3) ~ :nth-child(2) .name__text-wrapper,
+.name:first-child:nth-last-child(4) ~ :nth-child(3) .name__text-wrapper,
+.name:first-child:nth-last-child(5) ~ :nth-child(3) .name__text-wrapper,
+.name:first-child:nth-last-child(6) ~ :nth-child(4) .name__text-wrapper,
+.name:first-child:nth-last-child(7) ~ :nth-child(4) .name__text-wrapper,
+.name:first-child:nth-last-child(8) ~ :nth-child(5) .name__text-wrapper,
+.name:first-child:nth-last-child(9) ~ :nth-child(5) .name__text-wrapper,
+.name:first-child:nth-last-child(10) ~ :nth-child(6) .name__text-wrapper,
+.name:first-child:nth-last-child(11) ~ :nth-child(6) .name__text-wrapper,
+.name:first-child:nth-last-child(12) ~ :nth-child(7) .name__text-wrapper,
+.name:first-child:nth-last-child(13) ~ :nth-child(7) .name__text-wrapper,
+.name:first-child:nth-last-child(14) ~ :nth-child(8) .name__text-wrapper,
+.name:first-child:nth-last-child(15) ~ :nth-child(8) .name__text-wrapper,
+.name:first-child:nth-last-child(16) ~ :nth-child(9) .name__text-wrapper {
+  background: linear-gradient(
+    to left,
+    rgb(255 255 255 / 0) 0%,
+    rgb(255 255 255 / 0.59) 25%,
+    rgb(255 255 255 / 0.75) 41%,
+    rgb(255 255 255 / 0.75) 57%,
+    rgb(255 255 255 / 0.59) 74%,
+    rgb(255 255 255 / 0) 100%
+  );
+}
+.name:first-child:nth-last-child(1) .name__text,
+.name:first-child:nth-last-child(2) ~ :nth-child(2) .name__text,
+.name:first-child:nth-last-child(3) ~ :nth-child(2) .name__text,
+.name:first-child:nth-last-child(4) ~ :nth-child(3) .name__text,
+.name:first-child:nth-last-child(5) ~ :nth-child(3) .name__text,
+.name:first-child:nth-last-child(6) ~ :nth-child(4) .name__text,
+.name:first-child:nth-last-child(7) ~ :nth-child(4) .name__text,
+.name:first-child:nth-last-child(8) ~ :nth-child(5) .name__text,
+.name:first-child:nth-last-child(9) ~ :nth-child(5) .name__text,
+.name:first-child:nth-last-child(10) ~ :nth-child(6) .name__text,
+.name:first-child:nth-last-child(11) ~ :nth-child(6) .name__text,
+.name:first-child:nth-last-child(12) ~ :nth-child(7) .name__text,
+.name:first-child:nth-last-child(13) ~ :nth-child(7) .name__text,
+.name:first-child:nth-last-child(14) ~ :nth-child(8) .name__text,
+.name:first-child:nth-last-child(15) ~ :nth-child(8) .name__text,
+.name:first-child:nth-last-child(16) ~ :nth-child(9) .name__text {
+  transition-duration: 2s;
+  transform: scaleX(1);
+  letter-spacing: 0.1em;
+  transition-delay: 3s;
+}
+
+.checkbox-container {
+  font-size: 22px;
+  font-family: "Nunito Sans", "open sans", sans-serif;
+  position: fixed;
+  z-index: 2;
+  background: white;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  padding: 40px 20px;
+  overflow-y: auto;
+  height: 100vh;
+  height: 100svh;
+  width: 100vw;
+  box-sizing: border-box;
+  justify-content: center;
+  align-content: start;
+  cursor: default !important;
+}
+.checkbox-container label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 10px;
+  justify-content: start;
+}
+.checkbox-container label img {
+  width: 44px;
+  height: 44px;
+  transition-property: opacity, box-shadow;
+  transition-duration: 0.2s;
+  border-radius: 5px;
+}
+.checkbox-container input:not(:checked) + img {
+  opacity: 0.3;
+}
+.checkbox-container label:hover input:not(:checked) + img {
+  box-shadow: 0 2px 5px rgba(0 0 0 / 0.3);
+  opacity: 0.8;
+}
+.checkbox-container input:checked + img {
+  box-shadow: 0 1px 3px rgba(0 0 0 / 0.3);
+}
+.checkbox-container input {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+.checkbox-toggle {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 3;
+  width: 80px;
+  height: 50px;
+  background: rgba(255 255 255 / 0.5);
+  border-bottom-left-radius: 10px;
+  font-size: 22px;
+}
+.checkbox-toggle::after {
+  content: "PICK";
+  font-family: "Nunito Sans", "open sans", sans-serif;
 }
