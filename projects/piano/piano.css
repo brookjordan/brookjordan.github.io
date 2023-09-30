@@ -6,10 +6,16 @@
   --octave-count: 1;
   display: grid;
   grid-template-rows: 2fr 1fr;
-  grid-template-columns: repeat(
+  grid-template-columns:
+    repeat(
       var(--octave-count),
       6fr 4fr 2fr 6fr 2fr 4fr 6fr 5fr 5fr 1fr 6fr 3fr 3fr 6fr 1fr 5fr 5fr
-    ) 6fr 4fr;
+    )
+    6fr 4fr;
+
+  transform-style: preserve-3d;
+  perspective: 550vh;
+  transform: translateY(2%);
 }
 
 .piano--octave-count-1 {
@@ -47,12 +53,30 @@
   --octave: 0;
   --col-span: 2;
   position: relative;
-  background-color: white;
+  background-color: rgb(240 240 240);
   border: 1px solid rgb(0 0 0 / 0.3);
   box-shadow: inset 0 -10px 30px rgb(0 0 0 / 0.3);
   grid-row: 1 / span 2;
   grid-column-start: calc(var(--start) + var(--octave) * 17);
   grid-column-end: span var(--col-span);
+  transform: translateZ(var(--height, 0)) rotateX(0);
+
+  transform-origin: 50% 5%;
+  transition-duration: 0.2s;
+  transition-property: transform, background-color, box-shadow;
+}
+/* .key:hover, not reliable, unfortunetly */
+.key.key--hover {
+  transform: translateZ(var(--height, 0)) rotateX(2deg);
+  background-color: (255 255 255);
+  box-shadow: inset 0 0 20px rgb(0 0 0 / 0.2);
+}
+/* .key:active, not reliable, unfortunetl */
+.key.key--active {
+  transform: translateZ(var(--height, 0)) rotateX(-4deg);
+  background-color: (200 200 200);
+  box-shadow: inset 0 -15px 40px rgb(0 0 0 / 0.4);
+  transition-duration: 0.05s;
 }
 
 .key:nth-child(12n + 2),
@@ -128,20 +152,25 @@
 /* Black notes */
 .key:nth-child(12n + 2) {
   --start: 2;
+  --height: 5vh;
 }
 
 .key:nth-child(12n + 4) {
   --start: 5;
+  --height: 5vh;
 }
 
 .key:nth-child(12n + 7) {
   --start: 9;
+  --height: 5vh;
 }
 
 .key:nth-child(12n + 9) {
   --start: 12;
+  --height: 5vh;
 }
 
 .key:nth-child(12n + 11) {
   --start: 15;
+  --height: 5vh;
 }

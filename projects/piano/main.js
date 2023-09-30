@@ -1,5 +1,9 @@
 ﻿import { beep } from "./beep.js";
 import { generateKeyboard, onClick } from "./generate-keyboard.js";
+import {
+  getNoteParts,
+  noteDescriptorFromOffsetFromA4,
+} from "./note-frequency.js";
 import chordLabels from "./chords/names.js";
 import { get as getChord } from "./chords/promises.js";
 
@@ -54,6 +58,17 @@ instrument_select.addEventListener("change", () => {
   instrument_value.innerHTML = `Instrument: ${instrument_select.value}`;
 });
 
-onClick(async (frequency) => {
+onClick(async (frequency, keyName, noteDescriptor) => {
+  const noteParts = getNoteParts(noteDescriptor);
+  // console.log(noteParts.offsetFromA4);
+  // console.log(noteDescriptor);
+  // const frequencies = chord ? chord.map() : [frequency];
+  // console.log(
+  //   chord
+  //     ? chord.map((offset) =>
+  //         noteDescriptorFromOffsetFromA4(noteParts.offsetFromA4 + offset)
+  //       )
+  //     : noteDescriptorFromOffsetFromA4(noteParts.offsetFromA4)
+  // );
   beep(frequency, instrument_select.value, chord);
 });
