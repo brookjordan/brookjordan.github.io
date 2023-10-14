@@ -17,13 +17,19 @@ const middleNoteFrequencyList = ["c", "d", "g", "g#", "e", "a"].flatMap((note) =
 stop_sound.addEventListener("click", () => {
     endAllNotes();
 });
-window.addEventListener("mousedown", () => {
+const handleInit = (e) => {
     init();
     click_to_start.remove();
-}, { once: true, capture: true });
-document.body.addEventListener("mousedown", (e) => {
+};
+window.addEventListener("mousedown", handleInit, { once: true, capture: true });
+window.addEventListener("touchstart", handleInit, {
+    once: true,
+    capture: true,
+});
+const handleNotePlayRequest = (e) => {
     if (e.target !== document.body)
         return;
+    e.preventDefault();
     const note = playNote({
         frequency: middleNoteFrequencyList[Math.floor(Math.random() * middleNoteFrequencyList.length)],
         waveShape: wave_shape.selectedOptions[0].value,
@@ -36,4 +42,9 @@ document.body.addEventListener("mousedown", (e) => {
     window.addEventListener("mouseup", () => {
         note.release();
     }, { once: true });
-});
+    window.addEventListener("touchend", () => {
+        note.release();
+    }, { once: true });
+};
+document.body.addEventListener("mousedown", handleNotePlayRequest);
+document.body.addEventListener("touchstart", handleNotePlayRequest);

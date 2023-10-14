@@ -27,18 +27,20 @@ stop_sound.addEventListener("click", () => {
   endAllNotes();
 });
 
-window.addEventListener(
-  "mousedown",
-  () => {
-    init();
-    click_to_start.remove();
-  },
-  { once: true, capture: true }
-);
+const handleInit = (e: MouseEvent) => {
+  init();
+  click_to_start.remove();
+};
+window.addEventListener("mousedown", handleInit, { once: true, capture: true });
+window.addEventListener("touchstart", handleInit, {
+  once: true,
+  capture: true,
+});
 
-document.body.addEventListener("mousedown", (e) => {
+const handleNotePlayRequest = (e: MouseEvent) => {
   if (e.target !== document.body) return;
 
+  e.preventDefault();
   const note = playNote({
     frequency:
       middleNoteFrequencyList[
@@ -59,4 +61,13 @@ document.body.addEventListener("mousedown", (e) => {
     },
     { once: true }
   );
-});
+  window.addEventListener(
+    "touchend",
+    () => {
+      note.release();
+    },
+    { once: true }
+  );
+};
+document.body.addEventListener("mousedown", handleNotePlayRequest);
+document.body.addEventListener("touchstart", handleNotePlayRequest);
