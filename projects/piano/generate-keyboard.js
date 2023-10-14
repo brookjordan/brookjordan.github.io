@@ -208,7 +208,21 @@ document.body.addEventListener("keydown", (e) => {
   if (!key) return;
 
   key.pressHandler();
-  setTimeout(() => {
-    key.releaseHandler();
-  }, 100);
+});
+document.body.addEventListener("keyup", (e) => {
+  if (
+    e.repeat ||
+    (!keyboardWhiteKeyCodes.includes(e.code) &&
+      !keyboardBlackKeyCodes.includes(e.code))
+  ) {
+    return;
+  }
+
+  e.preventDefault();
+
+  const noteDescriptor = keyboardWhiteKeys[e.code] || keyboardBlackKeys[e.code];
+  const key = currentKeys.find((key) => key.noteDescriptor === noteDescriptor);
+  if (!key) return;
+
+  key.releaseHandler();
 });
