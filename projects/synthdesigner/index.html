@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Synth designer</title>
+
+  <style>
+    :invalid {
+      color: red;
+    }
+    html, body {
+      height: 100%;
+    }
+    h1, main, aside {
+      pointer-events: none;;
+    }
+    label, button {
+      pointer-events: auto;
+    }
+  </style>
+
+</head>
+<body>
+  <h1>Synth designer</h1>
+
+  <main>
+    <menu style="display: flex; flex-wrap: wrap; gap: 10px 20px">
+      <label style="display: flex; gap: 5px">Attack ms<input id="attack_ms" type="number" value="50" min="0" /></label>
+      <label style="display: flex; gap: 5px">Wave shape<select id="wave_shape">
+        <option selected>sine</option>
+        <option>triangle</option>
+        <option>sawtooth</option>
+        <option>square</option>
+      </select></label>
+      <label style="display: flex; gap: 5px">Force full attack<input id="force_full_attack" type="checkbox" /></label>
+      <label style="display: flex; gap: 5px">Decay ms<input id="decay_ms" type="number" value="3000" min="2" /></label>
+      <label style="display: flex; gap: 5px">Sustain volume<input id="sustain_volume" type="range" value="0" min="0" step="0.01" max="1" /></label>
+      <label style="display: flex; gap: 5px">Release ms<input id="release_ms" type="number" value="200" min="2" /></label>
+
+      <button id="stop_sound" type="button">Stop sound</button>
+    </menu>
+  </main>
+
+  <aside id="click_to_start">Click to start</aside>
+
+  <script type="module" src="./build/entry.js"></script>
+</body>
+</html>
