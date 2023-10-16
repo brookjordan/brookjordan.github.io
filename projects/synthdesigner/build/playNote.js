@@ -1,4 +1,13 @@
 import { audioContext } from "./audioContext.js";
+import { isBasicWaveType } from "./instruments/types.js";
+import * as waveCompilers from "./instruments/waveCompilers.js";
+const waves = {};
+const getWave = (waveType) => {
+    if (!waves[waveType]) {
+        waves[waveType] = waveCompilers[waveType]();
+    }
+    return waves[waveType];
+};
 const SILENCE = 1.401e-45;
 const VOLUME = 0.4;
 const susCurve = 2.3;
@@ -42,7 +51,12 @@ export const playNote = ({ frequency = 440, attack: attackMs = 10, waveShape = "
     gainNode.gain.linearRampToValueAtTime(VOLUME, audioContext.currentTime + attack);
     const oscillatorNode = audioContext.createOscillator();
     oscillatorNode.connect(gainNode);
-    oscillatorNode.type = waveShape;
+    if (isBasicWaveType(waveShape)) {
+        oscillatorNode.type = waveShape;
+    }
+    else {
+        oscillatorNode.setPeriodicWave(getWave(waveShape));
+    }
     oscillatorNode.frequency.setValueAtTime(frequency, audioContext.currentTime);
     const sustainTimeout = setTimeout(() => {
         gainNode.gain.linearRampToValueAtTime(Math.max(VOLUME * sus(sustain), SILENCE), audioContext.currentTime + decay);

@@ -9,12 +9,20 @@ const decay_ms = document.getElementById("decay_ms");
 const sustain_volume = document.getElementById("sustain_volume");
 const release_ms = document.getElementById("release_ms");
 const click_to_start = document.getElementById("click_to_start");
-const middleNoteFrequencyList = ["c", "d", "g", "g#", "e", "a"].flatMap((note) => [
+const cPentatonicBebopOctaves3to5Notes = [
+    "c",
+    "d",
+    "g",
+    "g#",
+    "e",
+    "a",
+].flatMap((note) => [
     noteFrequencies[3][note],
     noteFrequencies[4][note],
     noteFrequencies[5][note],
 ]);
-stop_sound.addEventListener("click", () => {
+stop_sound.addEventListener("click", (e) => {
+    e.preventDefault();
     endAllNotes();
 });
 const handleInit = (e) => {
@@ -31,7 +39,7 @@ const handleNotePlayRequest = (e) => {
         return;
     e.preventDefault();
     const note = playNote({
-        frequency: middleNoteFrequencyList[Math.floor(Math.random() * middleNoteFrequencyList.length)],
+        frequency: cPentatonicBebopOctaves3to5Notes[Math.floor(Math.random() * cPentatonicBebopOctaves3to5Notes.length)],
         waveShape: wave_shape.selectedOptions[0].value,
         attack: attack_ms.valueAsNumber || 0,
         forceFullAttack: force_full_attack.checked || false,

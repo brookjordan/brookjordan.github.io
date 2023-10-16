@@ -1,4 +1,14 @@
 import { audioContext } from "./audioContext.js";
+import { InstrumentType, isBasicWaveType } from "./instruments/types.js";
+import * as waveCompilers from "./instruments/waveCompilers.js";
+
+const waves = {};
+const getWave = (waveType: InstrumentType) => {
+  if (!waves[waveType]) {
+    waves[waveType] = waveCompilers[waveType]();
+  }
+  return waves[waveType];
+};
 
 const SILENCE = 1.401e-45;
 const VOLUME = 0.4;
@@ -54,7 +64,7 @@ const releaseNote = (note: Note, release: number) => {
 interface Props {
   frequency?: number;
   attack?: number;
-  waveShape?: OscillatorType;
+  waveShape?: OscillatorType | InstrumentType;
   forceFullAttack?: boolean;
   decay?: number;
   sustain?: number;
@@ -85,7 +95,11 @@ export const playNote = ({
 
   const oscillatorNode = audioContext.createOscillator();
   oscillatorNode.connect(gainNode);
-  oscillatorNode.type = waveShape;
+  if (isBasicWaveType(waveShape)) {
+    oscillatorNode.type = waveShape;
+  } else {
+    oscillatorNode.setPeriodicWave(getWave(waveShape));
+  }
   oscillatorNode.frequency.setValueAtTime(frequency, audioContext.currentTime);
 
   const sustainTimeout = setTimeout(() => {

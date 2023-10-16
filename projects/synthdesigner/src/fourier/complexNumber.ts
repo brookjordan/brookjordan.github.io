@@ -78,7 +78,10 @@ export default class ComplexNumber {
   constructor(
     number: number | [number] | [number, number] | ComplexNumberInitiator
   ) {
-    if (typeof number === "number") {
+    if (number == null) {
+      this.#real = 0;
+      this.#imaginary = 0;
+    } else if (typeof number === "number") {
       this.#real = number;
       this.#imaginary = 0;
     } else if (Array.isArray(number)) {
