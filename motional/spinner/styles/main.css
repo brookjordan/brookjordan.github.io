@@ -263,7 +263,7 @@ button {
   top: 0;
   right: 0;
   z-index: 3;
-  width: 80px;
+  width: 100px;
   height: 50px;
   background: rgba(255 255 255 / 0.5);
   border-bottom-left-radius: 10px;
@@ -272,4 +272,7 @@ button {
 .checkbox-toggle::after {
   content: "PICK";
   font-family: "Nunito Sans", "open sans", sans-serif;
+}
+.checkbox-toggle[aria-expanded="true"]::after {
+  content: "CLOSE";
 }

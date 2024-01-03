@@ -50,4 +50,8 @@ export const items = [
     name: "William Kar Hoong Yoong",
     image: "./i/William Kar Hoong Yoong.jpg",
   },
+  {
+    name: "Zizhang Ai",
+    image: "./i/Zizhang Ai.jpg",
+  },
 ];

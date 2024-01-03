@@ -21,6 +21,7 @@ spinThread.addTask(keepSpinning);
 renderThread.addTask(updateDOM);
 
 let checkboxContainer = null;
+let togglesToggle = null;
 let spinnerStartSpeed = 0;
 let spinnerStartPos = 0;
 let spinnerSpeed = 0;
@@ -31,7 +32,9 @@ let requestedFriction = null;
 let frict = null;
 let nameCount = null;
 let spinnerElt = null;
+let defaultNameFilter = null;
 let nameFilter = null;
+let nameFilterStorage = "nameFilter";
 
 function enableTrackMouse(event) {
   event.preventDefault();
@@ -250,7 +253,13 @@ export function initialiseSpinner(
   spinnerElt = _spinnerElt;
   requestedFriction = friction;
   setNameCount(desiredNameCount);
-  nameFilter = initialItemNames;
+  defaultNameFilter = initialItemNames;
+
+  if (localStorage.getItem(nameFilterStorage)) {
+    nameFilter = JSON.parse(localStorage.getItem(nameFilterStorage));
+  } else {
+    nameFilter = defaultNameFilter;
+  }
 
   buildNames();
   initialiseCursorTracking();
@@ -267,13 +276,14 @@ export function initialiseSpinner(
 }
 
 function createCheckboxControls() {
-  const togglesToggle = document.createElement("button");
+  togglesToggle = document.createElement("button");
   togglesToggle.className = "checkbox-toggle";
   togglesToggle.addEventListener("click", toggleCheckboxContainer);
   document.body.append(togglesToggle);
 
   const container = document.createElement("div");
   container.className = "checkbox-container";
+  container.id = "checkbox_container";
 
   cards.forEach(({ name, image }) => {
     const checkbox = document.createElement("input");
@@ -288,6 +298,7 @@ function createCheckboxControls() {
       } else {
         nameFilter.splice(nameFilter.indexOf(name), 1);
       }
+      localStorage.setItem(nameFilterStorage, JSON.stringify(nameFilter));
     });
 
     const label = document.createElement("label");
@@ -300,14 +311,32 @@ function createCheckboxControls() {
     container.appendChild(label);
   });
 
+  const resetButton = document.createElement("button");
+  resetButton.textContent = "Reset to default";
+  resetButton.className = "checkbox-reset";
+  resetButton.addEventListener("click", () => {
+    nameFilter = defaultNameFilter;
+    localStorage.removeItem(nameFilterStorage);
+    Array.from(container.querySelectorAll("input")).forEach((input) => {
+      input.checked = nameFilter.includes(input.name);
+    });
+  });
+  container.appendChild(resetButton);
+
   return container;
 }
 
 function toggleCheckboxContainer() {
   if (document.body.contains(checkboxContainer)) {
+    togglesToggle.setAttribute("aria-expanded", "false");
+    togglesToggle.setAttribute("aria-controls", "");
+
     checkboxContainer.remove();
   } else {
     document.body.append(checkboxContainer);
+
+    togglesToggle.setAttribute("aria-expanded", "true");
+    togglesToggle.setAttribute("aria-controls", "checkbox_container");
   }
 }
 function handleKeyDown(event) {
