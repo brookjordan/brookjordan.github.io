@@ -25,6 +25,7 @@ const items = [
   { name: "Panteley Boyadjiev", image: "./i/Panteley Boyadjiev.jpg" },
   { name: "Plamen", image: "./i/Plamen.png" },
   { name: "Quanjie Yang", image: "./i/Quanjie Yang.jpg" },
+  { name: "Rajnish Kumar", image: "./i/Rajnish Kumar.png" },
   { name: "Robin Yeh", image: "./i/Robin Yeh.jpg" },
   {
     name: "Sadaananth Anbucheliyan",
@@ -49,6 +50,10 @@ const items = [
   {
     name: "William Kar Hoong Yoong",
     image: "./i/William Kar Hoong Yoong.jpg",
+  },
+  {
+    name: "Zizhang Ai",
+    image: "./i/Zizhang Ai.jpg",
   },
 ];
 
@@ -268,6 +273,7 @@ spinThread.addTask(keepSpinning);
 renderThread.addTask(updateDOM);
 
 let checkboxContainer = null;
+let togglesToggle = null;
 let spinnerStartSpeed = 0;
 let spinnerStartPos = 0;
 let spinnerSpeed = 0;
@@ -278,7 +284,9 @@ let requestedFriction = null;
 let frict = null;
 let nameCount = null;
 let spinnerElt$1 = null;
+let defaultNameFilter = null;
 let nameFilter = null;
+let nameFilterStorage = "nameFilter";
 
 function enableTrackMouse(event) {
   event.preventDefault();
@@ -443,9 +451,11 @@ function renderNames() {
 }
 
 function addName(cardName = false) {
-  const filteredCards = nameFilter
-    ? cards.filter(({ name }) => nameFilter.includes(name))
-    : cards;
+  const filteredCards = (
+    nameFilter
+      ? cards.filter(({ name }) => nameFilter.includes(name))
+      : [...cards]
+  ).sort((cardA, cardB) => cardA.name.localeCompare(cardB.name));
   const unusedCards = filteredCards.filter(({ name }) =>
     nameCards.every(({ text }) => text.name !== name)
   );
@@ -497,7 +507,13 @@ function initialiseSpinner(
   spinnerElt$1 = _spinnerElt;
   requestedFriction = friction;
   setNameCount(desiredNameCount);
-  nameFilter = initialItemNames;
+  defaultNameFilter = initialItemNames;
+
+  if (localStorage.getItem(nameFilterStorage)) {
+    nameFilter = JSON.parse(localStorage.getItem(nameFilterStorage));
+  } else {
+    nameFilter = defaultNameFilter;
+  }
 
   buildNames();
   initialiseCursorTracking();
@@ -514,13 +530,18 @@ function initialiseSpinner(
 }
 
 function createCheckboxControls() {
-  const togglesToggle = document.createElement("button");
+  togglesToggle = document.createElement("button");
   togglesToggle.className = "checkbox-toggle";
   togglesToggle.addEventListener("click", toggleCheckboxContainer);
+  togglesToggle.addEventListener("touchstart", toggleCheckboxContainer);
   document.body.append(togglesToggle);
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "checkbox-wrapper";
 
   const container = document.createElement("div");
   container.className = "checkbox-container";
+  container.id = "checkbox_container";
 
   cards.forEach(({ name, image }) => {
     const checkbox = document.createElement("input");
@@ -535,6 +556,7 @@ function createCheckboxControls() {
       } else {
         nameFilter.splice(nameFilter.indexOf(name), 1);
       }
+      localStorage.setItem(nameFilterStorage, JSON.stringify(nameFilter));
     });
 
     const label = document.createElement("label");
@@ -544,17 +566,36 @@ function createCheckboxControls() {
     label.setAttribute("for", `spinner-checkbox-${name.replace(/\s+/g, "-")}`);
     label.append(checkbox, img, labelText);
 
-    container.appendChild(label);
+    wrapper.appendChild(label);
   });
+
+  const resetButton = document.createElement("button");
+  resetButton.textContent = "Reset to default";
+  resetButton.className = "checkbox-reset";
+  resetButton.addEventListener("click", () => {
+    nameFilter = defaultNameFilter;
+    localStorage.removeItem(nameFilterStorage);
+    Array.from(wrapper.querySelectorAll("input")).forEach((input) => {
+      input.checked = nameFilter.includes(input.name);
+    });
+  });
+  wrapper.appendChild(resetButton);
+  container.appendChild(wrapper);
 
   return container;
 }
 
 function toggleCheckboxContainer() {
   if (document.body.contains(checkboxContainer)) {
+    togglesToggle.setAttribute("aria-expanded", "false");
+    togglesToggle.setAttribute("aria-controls", "");
+
     checkboxContainer.remove();
   } else {
     document.body.append(checkboxContainer);
+
+    togglesToggle.setAttribute("aria-expanded", "true");
+    togglesToggle.setAttribute("aria-controls", "checkbox_container");
   }
 }
 function handleKeyDown(event) {
@@ -571,27 +612,41 @@ const body = document.body;
 const spinnerElt = document.createElement("div");
 
 const peopleInDemo = [
+  // "Alan Z",
+  // "Arnaud Michel Jacques Lago",
   "Brandon Jie Yi Lam",
-  "Brandon Ong",
+  // "Brandon Ong",
   "Brook Jordan",
+  // "Eduard Nabokov",
+  // "Fil Mihaylov",
   "Hung Viet Nguyen",
-  "Katya Daskalova",
+  // "Ivan Petkov",
+  // "Kakali Basak",
+  // "Katya Daskalova",
   "Marcellus Reinaldo Jodihardja",
   "Marco Mandrioli",
-  "Namith",
+  // "Minsung Cho",
+  // "Namith",
   "Nicholas Tan Xuan",
   "Olzhas Kaiyrakhmet",
-  "Panteley Boyadjiev",
+  // "Panteley Boyadjiev",
+  // "Plamen",
+  // "Quanjie Yang",
+  "Rajnish Kumar",
   "Robin Yeh",
-  "Sadaananth Anbucheliyan",
+  // "Sadaananth Anbucheliyan",
   "Sarah Neo",
   "Sergei Stepanov",
   "Shen Rui Chong",
-  "Stacey Ng",
+  // "Stacey Ng",
   "Thanh Tam Hoang",
+  "Tian Fu Tan",
   "Tudor Gergely",
+  // "Wan Jou Lim",
+  // "Wee Kiat Clarence Ang",
   "Wei Jian Chen",
-  "William Kar Hoong Yoong",
+  // "William Kar Hoong Yoong",
+  "Zizhang Ai",
 ];
 
 body.appendChild(spinnerElt);

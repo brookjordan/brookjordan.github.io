@@ -25,6 +25,7 @@ export const items = [
   { name: "Panteley Boyadjiev", image: "./i/Panteley Boyadjiev.jpg" },
   { name: "Plamen", image: "./i/Plamen.png" },
   { name: "Quanjie Yang", image: "./i/Quanjie Yang.jpg" },
+  { name: "Rajnish Kumar", image: "./i/Rajnish Kumar.png" },
   { name: "Robin Yeh", image: "./i/Robin Yeh.jpg" },
   {
     name: "Sadaananth Anbucheliyan",

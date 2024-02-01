@@ -199,9 +199,11 @@ function renderNames() {
 }
 
 function addName(cardName = false) {
-  const filteredCards = nameFilter
-    ? cards.filter(({ name }) => nameFilter.includes(name))
-    : cards;
+  const filteredCards = (
+    nameFilter
+      ? cards.filter(({ name }) => nameFilter.includes(name))
+      : [...cards]
+  ).sort((cardA, cardB) => cardA.name.localeCompare(cardB.name));
   const unusedCards = filteredCards.filter(({ name }) =>
     nameCards.every(({ text }) => text.name !== name)
   );
@@ -279,7 +281,11 @@ function createCheckboxControls() {
   togglesToggle = document.createElement("button");
   togglesToggle.className = "checkbox-toggle";
   togglesToggle.addEventListener("click", toggleCheckboxContainer);
+  togglesToggle.addEventListener("touchstart", toggleCheckboxContainer);
   document.body.append(togglesToggle);
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "checkbox-wrapper";
 
   const container = document.createElement("div");
   container.className = "checkbox-container";
@@ -308,7 +314,7 @@ function createCheckboxControls() {
     label.setAttribute("for", `spinner-checkbox-${name.replace(/\s+/g, "-")}`);
     label.append(checkbox, img, labelText);
 
-    container.appendChild(label);
+    wrapper.appendChild(label);
   });
 
   const resetButton = document.createElement("button");
@@ -317,11 +323,12 @@ function createCheckboxControls() {
   resetButton.addEventListener("click", () => {
     nameFilter = defaultNameFilter;
     localStorage.removeItem(nameFilterStorage);
-    Array.from(container.querySelectorAll("input")).forEach((input) => {
+    Array.from(wrapper.querySelectorAll("input")).forEach((input) => {
       input.checked = nameFilter.includes(input.name);
     });
   });
-  container.appendChild(resetButton);
+  wrapper.appendChild(resetButton);
+  container.appendChild(wrapper);
 
   return container;
 }

@@ -211,20 +211,23 @@ button {
 }
 
 .checkbox-container {
-  font-size: 22px;
-  font-family: "Nunito Sans", "open sans", sans-serif;
   position: fixed;
-  z-index: 2;
+  z-index: 10;
   background: white;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 30px;
   padding: 40px 20px;
   overflow-y: auto;
   height: 100vh;
   height: 100svh;
   width: 100vw;
   box-sizing: border-box;
+  cursor: default !important;
+}
+.checkbox-wrapper {
+  font-size: 22px;
+  font-family: "Nunito Sans", "open sans", sans-serif;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
   justify-content: center;
   align-content: start;
   cursor: default !important;
@@ -235,6 +238,7 @@ button {
   cursor: pointer;
   gap: 10px;
   justify-content: start;
+  overflow: hidden;
 }
 .checkbox-container label img {
   width: 44px;
@@ -242,6 +246,7 @@ button {
   transition-property: opacity, box-shadow;
   transition-duration: 0.2s;
   border-radius: 5px;
+  cursor: pointer;
 }
 .checkbox-container input:not(:checked) + img {
   opacity: 0.3;
@@ -257,12 +262,14 @@ button {
   width: 12px;
   height: 12px;
   flex-shrink: 0;
+  cursor: pointer;
 }
+
 .checkbox-toggle {
   position: fixed;
   top: 0;
   right: 0;
-  z-index: 3;
+  z-index: 20;
   width: 100px;
   height: 50px;
   background: rgba(255 255 255 / 0.5);
