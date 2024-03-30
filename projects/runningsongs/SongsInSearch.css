@@ -1,0 +1,37 @@
+.songs-in-search {
+  label {
+    cursor: pointer;
+
+    &:has(:focus) {
+      box-shadow: 0 0 0 2px blue;
+    }
+    &:has(:checked) {
+      background-color: #333;
+      color: white;
+    }
+    &:has(:checked):hover {
+      background-color: #666;
+    }
+    &:where(:active),
+    &:has(:checked):active {
+      background-color: black;
+      color: white;
+    }
+    &:where(:hover) {
+      background-color: #ccc;
+    }
+  }
+
+  input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    left: -9999px;
+  }
+
+  sub {
+    vertical-align: sub;
+    font-size: smaller;
+    color: grey;
+  }
+}

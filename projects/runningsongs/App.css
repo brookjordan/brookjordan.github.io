@@ -1,0 +1,85 @@
+.app-form {
+  display: grid;
+  padding: 1em;
+  gap: 1em;
+
+  grid-template:
+    "title title" auto
+    "user user" auto
+    "playlist playlist" auto
+    "filters results" 1fr
+    / 1fr 2fr;
+
+  h1 {
+    grid-area: title;
+    font-size: larger;
+    font-weight: 900;
+  }
+
+  h3 {
+    font-size: larger;
+    font-weight: 600;
+  }
+
+  a {
+    color: blue;
+
+    &:hover {
+      text-decoration: underline;
+
+      &::after {
+        content: " (go to spotify page)";
+        font-size: smaller;
+      }
+    }
+  }
+
+  menu {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+
+    > * {
+      flex-basis: 150px;
+      flex-grow: 1;
+    }
+
+    label {
+      flex-grow: 10;
+    }
+
+    button {
+      cursor: pointer;
+      flex-grow: 1;
+      border: 1px solid black;
+      text-align: center;
+
+      &:has(:focus) {
+        box-shadow: 0 0 0 2px blue;
+      }
+      &:has(:checked) {
+        background-color: #333;
+        color: white;
+      }
+      &:has(:checked):hover {
+        background-color: #666;
+      }
+      &:where(:active),
+      &:has(:checked):active {
+        background-color: black;
+        color: white;
+      }
+      &:where(:hover) {
+        background-color: #ccc;
+      }
+    }
+  }
+
+  aside {
+    grid-area: filters;
+  }
+
+  section {
+    grid-area: results;
+  }
+}

@@ -1,0 +1,27 @@
+.text-input {
+  --label-size: 16px;
+
+  display: grid;
+  grid-template:
+    [label-start]
+    "input input" auto
+    [label-end]
+    "input input" 1fr
+    / [label-start] auto [label-end] 1fr;
+  border: 1px solid black;
+
+  span {
+    grid-area: label;
+    font-size: var(--label-size);
+    line-height: var(--label-size);
+  }
+
+  input {
+    grid-area: input;
+    padding-top: var(--label-size);
+
+    &::placeholder {
+      color: gray;
+    }
+  }
+}
