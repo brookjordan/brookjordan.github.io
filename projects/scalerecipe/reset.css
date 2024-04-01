@@ -1,0 +1,61 @@
+@charset "utf-8";
+
+/*
+    Remove all the styles of the "User-Agent-Stylesheet", except for the 'display' property
+    - The "symbol *" part is to solve Firefox SVG sprite bug
+    - The "html" attribute is exclud, because otherwise a bug in Chrome breaks the CSS hyphens property (https://github.com/elad2412/the-new-css-reset/issues/36)
+ */
+::-webkit-outer-spin-button,
+::-webkit-inner-spin-button,
+::placeholder,
+::marker,
+*:where(
+    :not(html, iframe, canvas, img, svg, video, audio):not(svg *, symbol *)
+  ) {
+  content: initial;
+  all: unset;
+  display: revert;
+}
+
+/* Remove list styles (bullets/numbers) */
+:where(ol, ul, menu) {
+  list-style: none;
+}
+
+/* Safari - solving issue when using user-select:none on the <body> text input doesn't work */
+:where(input, textarea) {
+  -webkit-user-select: auto;
+}
+
+/* revert the 'white-space' property for textarea elements on Safari */
+:where(textarea) {
+  white-space: revert;
+}
+
+/* minimum style to allow to style meter element */
+:where(meter) {
+  -webkit-appearance: revert;
+  appearance: revert;
+}
+
+/* revert for bug in Chromium browsers
+   - fix for the content editable attribute will work properly.
+   - webkit-user-select: auto; added for Safari in case of using user-select:none on wrapper element */
+:where([contenteditable]:not([contenteditable="false"])) {
+  -moz-user-modify: read-write;
+  -webkit-user-modify: read-write;
+  overflow-wrap: break-word;
+  -webkit-line-break: after-white-space;
+  -webkit-user-select: auto;
+}
+
+/* apply back the draggable feature - exist only in Chromium and Safari */
+:where([draggable="true"]) {
+  -webkit-user-drag: element;
+  user-drag: element;
+}
+
+/* Revert Modal native behavior */
+:where(dialog:modal) {
+  all: revert;
+}

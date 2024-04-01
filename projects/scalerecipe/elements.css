@@ -1,0 +1,28 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  padding: 10px;
+}
+
+/* Reapply the pointer cursor for anchor tags */
+:where(a, button) {
+  cursor: revert;
+}
+
+:where(html) {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans",
+    Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  font-size: 22px;
+}
+
+:where(table) {
+  border-collapse: collapse;
+}
+
+:where(pre) {
+  white-space: pre;
+}

@@ -1,0 +1,42 @@
+.text-input {
+  --label-size: 16px;
+
+  display: inline-grid;
+  grid-template:
+    [label-start]
+    "input input" auto
+    [label-end]
+    "input input" 1fr
+    / [label-start] auto [label-end] 1fr;
+  border: 1px solid black;
+
+  span {
+    grid-area: label;
+    pointer-events: none;
+    font-size: var(--label-size);
+    line-height: var(--label-size);
+  }
+
+  input,
+  select {
+    grid-area: input;
+    padding-top: var(--label-size);
+    min-width: 100%;
+
+    &::placeholder {
+      color: gray;
+    }
+
+    &[type="number"] {
+      width: 80px;
+    }
+  }
+
+  input {
+    width: 200px;
+  }
+
+  select {
+    width: 60px;
+  }
+}

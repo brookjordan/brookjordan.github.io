@@ -1,0 +1,43 @@
+.genre-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2em 0.4em;
+
+  label {
+    display: flex;
+    gap: 0.2em 0.4em;
+    padding: 0.2em 0.4em;
+    transition: 200ms;
+    transition-property: background-color, color;
+    cursor: pointer;
+
+    &:where(:has(:focus)) {
+      box-shadow: 0 0 0 2px blue;
+    }
+    &:where(:has(:checked)) {
+      background-color: #333;
+      color: white;
+    }
+    &:where(:hover) {
+      background-color: #ccc;
+    }
+    &:where(:has(:checked):hover) {
+      background-color: #666;
+    }
+    &:where(:active) {
+      background-color: black;
+      color: white;
+    }
+  }
+
+  input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    left: -9999px;
+  }
+
+  label span::first-letter {
+    text-transform: capitalize;
+  }
+}
