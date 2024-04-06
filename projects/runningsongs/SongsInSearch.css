@@ -1,24 +1,53 @@
 .songs-in-search {
-  label {
-    cursor: pointer;
+  display: grid;
+  gap: var(--p-m);
+  align-content: start;
+  align-items: start;
 
-    &:has(:focus) {
-      box-shadow: 0 0 0 2px blue;
+  h3,
+  strong {
+    font-size: var(--f-s-h3);
+  }
+
+  p,
+  sub {
+    font-size: var(--f-s-p);
+    color: hsl(var(--hsl-t-secondary));
+  }
+
+  ul {
+    display: grid;
+    gap: var(--p-m);
+  }
+
+  label {
+    --o-bg: 0.1;
+
+    display: inline-block;
+    cursor: pointer;
+    font-size: var(--f-s-p);
+    font-weight: var(--f-w-p);
+    padding: var(--p-s);
+    border-radius: 20px;
+    background-color: hsl(var(--hsl-background-inverted) / var(--o-bg));
+    transition-property: background-color, color;
+
+    &:where(:has(:focus)) {
+      box-shadow: 0 0 0 2px hsl(var(--hsl-t-inverted));
     }
-    &:has(:checked) {
-      background-color: #333;
-      color: white;
-    }
-    &:has(:checked):hover {
-      background-color: #666;
-    }
-    &:where(:active),
-    &:has(:checked):active {
-      background-color: black;
-      color: white;
+    &:where(:has(:checked)) {
+      --o-bg: 1;
+      color: hsl(var(--hsl-t-inverted));
     }
     &:where(:hover) {
-      background-color: #ccc;
+      --o-bg: 0.2;
+    }
+    &:where(:has(:checked):hover) {
+      --o-bg: 0.8;
+    }
+    &:where(:active) {
+      --o-bg: 0.07;
+      color: hsl(var(--hsl-t-secondary));
     }
   }
 
@@ -31,7 +60,18 @@
 
   sub {
     vertical-align: sub;
-    font-size: smaller;
-    color: grey;
+  }
+
+  aside {
+    display: grid;
+    gap: var(--p-m);
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    padding: var(--p-m);
+    border-radius: var(--b-r);
+    background: hsl(var(--hsl-background-primary)) var(--image-background-noise);
+  }
+
+  hr {
+    border-top: 2px solid hsl(var(--hsl-background-inverted) / 0.2);
   }
 }

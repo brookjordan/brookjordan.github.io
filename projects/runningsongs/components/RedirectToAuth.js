@@ -16,7 +16,11 @@ function RedirectToAuth({ clientId }) {
       const params = new URLSearchParams();
       params.append("client_id", clientId);
       params.append("response_type", "token");
-      params.append("redirect_uri", "https://brook.dev/projects/runningsongs");
+      params.append(
+        "redirect_uri",
+        location.href.includes("brook.dev") ? "https://brook.dev/projects/runningsongs"
+          : "http://127.0.0.1:8080",
+      );
       params.append("scope", "user-read-private user-read-email");
       params.append("code_challenge_method", "S256");
       params.append("code_challenge", challenge);

@@ -1,32 +1,37 @@
 .genre-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.2em 0.4em;
+  gap: var(--p-s);
 
   label {
+    --o-bg: 0.1;
+    font-size: var(--f-s-p);
+    font-weight: var(--f-w-p);
     display: flex;
-    gap: 0.2em 0.4em;
-    padding: 0.2em 0.4em;
+    gap: var(--p-s);
+    padding: var(--p-s);
     transition: 200ms;
     transition-property: background-color, color;
     cursor: pointer;
+    border-radius: 9999px;
+    background-color: hsl(var(--hsl-background-inverted) / var(--o-bg));
 
     &:where(:has(:focus)) {
-      box-shadow: 0 0 0 2px blue;
+      box-shadow: 0 0 0 2px hsl(var(--hsl-t-inverted));
     }
     &:where(:has(:checked)) {
-      background-color: #333;
-      color: white;
+      --o-bg: 1;
+      color: hsl(var(--hsl-t-inverted));
     }
     &:where(:hover) {
-      background-color: #ccc;
+      --o-bg: 0.2;
     }
     &:where(:has(:checked):hover) {
-      background-color: #666;
+      --o-bg: 0.8;
     }
     &:where(:active) {
-      background-color: black;
-      color: white;
+      --o-bg: 0.07;
+      color: hsl(var(--hsl-t-secondary));
     }
   }
 

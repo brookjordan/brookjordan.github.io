@@ -1,6 +1,4 @@
 .text-input {
-  --label-size: 16px;
-
   display: grid;
   grid-template:
     [label-start]
@@ -8,20 +6,36 @@
     [label-end]
     "input input" 1fr
     / [label-start] auto [label-end] 1fr;
-  border: 1px solid black;
+
+  border-radius: 9999px;
+  border: 0;
+  padding: var(--p-m);
+  background-color: hsl(var(--hsl-background-inverted) / 0.1);
+  box-shadow: 0 0 0 0 hsl(var(--hsl-background-inverted) / 0);
+  transition: box-shadow var(--d-medium);
+
+  &:hover {
+    box-shadow: 0 0 0 1px hsl(var(--hsl-background-inverted) / 0.2);
+  }
+
+  &:has(:focus) {
+    box-shadow: 0 0 0 2px hsl(var(--hsl-background-inverted));
+  }
 
   span {
     grid-area: label;
-    font-size: var(--label-size);
-    line-height: var(--label-size);
+    font-size: var(--f-s-p);
+    line-height: var(--f-s-p);
   }
 
   input {
     grid-area: input;
-    padding-top: var(--label-size);
+    padding-top: var(--f-s-p);
+    font-size: var(--f-s-h3);
+    line-height: var(--f-s-h3);
 
     &::placeholder {
-      color: gray;
+      color: hsl(var(--hsl-t-secondary));
     }
   }
 }

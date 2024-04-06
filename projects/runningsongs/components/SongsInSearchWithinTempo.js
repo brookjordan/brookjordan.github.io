@@ -59,7 +59,6 @@ function SongsInSearchWithinTempo({
       ]),
     [accuracy, tempo],
   );
-  console.log(tempos)
 
   const trackList = trackListProps ?? defaultTrackList;
   const selectedTracks = selectedTracksProps ?? defaultTrackList;
@@ -106,7 +105,24 @@ function SongsInSearchWithinTempo({
     [tempos],
   );
 
-  const tracksToShow = useMemo(
+  const flatMapTrackFilter = useCallback(
+    /** @param {Track} track */
+    (track) => {
+      if (!track?.meta) {
+        return [];
+      }
+
+      const pacing = tempoSpeed(track.meta.tempo);
+      if (!pacing) {
+        return [];
+      }
+
+      return { ...track, meta: { ...track.meta, pacing } };
+    },
+    [tempoSpeed],
+  );
+
+  const selectedNotInResult = useMemo(
     () =>
       [
         ...(selectedTracks ?? []).filter((selectedTrack) => {
@@ -117,8 +133,13 @@ function SongsInSearchWithinTempo({
 
           return true;
         }),
-        ...(trackList ?? []),
-      ].flatMap((track, trackIndex, allTracks) => {
+      ].flatMap(flatMapTrackFilter),
+    [flatMapTrackFilter, selectedTracks, trackList],
+  );
+
+  const resultsToShow = useMemo(
+    () =>
+      trackList.flatMap((track, trackIndex, allTracks) => {
         if (!track?.meta) {
           return [];
         }
@@ -137,7 +158,7 @@ function SongsInSearchWithinTempo({
 
         return { ...track, meta: { ...track.meta, pacing } };
       }),
-    [selectedTracks, tempoSpeed, trackList],
+    [tempoSpeed, trackList],
   );
 
   useEffect(
@@ -165,10 +186,9 @@ function SongsInSearchWithinTempo({
   );
 
   return html`<div class="songs-in-search">
-    <p>${searchTerm}</p>
-    <p>${genre}</p>
-    ${tracksToShow.length
-      ? tracksToShow.map((track) => {
+    ${!!selectedNotInResult.length &&
+    html`<ul>
+        ${selectedNotInResult.map((track) => {
           const displayTempo = track.meta ? Math.round(track.meta.tempo) : "—";
           const displayModifiedTempo = !track.meta.tempo
             ? null
@@ -181,30 +201,74 @@ function SongsInSearchWithinTempo({
             ? html`<sub> — ${track.album.name}</sub>`
             : "";
 
-          return html`<ul>
-            ${html`<li>
-              <label>
-                <sub
-                  >tempo:
-                  ${displayTempo}${displayModifiedTempo
-                    ? ` (${displayModifiedTempo})`
-                    : ""}</sub
-                >
-                <span> ${track.name}${displayAlbumName} </span>
+          return html`<li>
+            <label>
+              <sub
+                >tempo:
+                ${displayTempo}${displayModifiedTempo
+                  ? ` (${displayModifiedTempo})`
+                  : ""}</sub
+              >
+              <span> <strong>${track.name}</strong>${displayAlbumName} </span>
 
-                <input
-                  type="checkbox"
-                  checked=${selectedTracks.some(
-                    (trackB) => trackB.id === track.id,
-                  )}
-                  onChange=${handleTrackToggle(track)}
-                />
-              </label>
-            </li>`}
-          </ul>`;
-        })
-      : html`<p>No tracks found</p>`}
-    ${isFetching && html`<p>Loading tracks…</p>`}
+              <input
+                type="checkbox"
+                checked=${selectedTracks.some(
+                  (trackB) => trackB.id === track.id,
+                )}
+                onChange=${handleTrackToggle(track)}
+              />
+            </label>
+          </li>`;
+        })}
+      </ul>
+      <hr />`}
+    ${(searchTerm || genre) &&
+    html`<aside>
+      ${searchTerm && html`<h3><sub>Search term:</sub> ${searchTerm}</h3>`}
+      ${genre && html`<h3><sub>Genre:</sub> ${genre}</h3>`}
+    </aside>`}
+    ${!!resultsToShow.length &&
+    html`<ul>
+      ${resultsToShow.map((track) => {
+        const displayTempo = track.meta ? Math.round(track.meta.tempo) : "—";
+        const displayModifiedTempo = !track.meta.tempo
+          ? null
+          : track?.meta?.pacing === "half"
+            ? Math.round(track.meta.tempo * 2)
+            : track?.meta?.pacing === "double"
+              ? Math.round(track.meta.tempo / 2)
+              : null;
+        const displayAlbumName = track.album.name
+          ? html`<sub> — ${track.album.name}</sub>`
+          : "";
+
+        return html`<li>
+          <label>
+            <sub
+              >tempo:
+              ${displayTempo}${displayModifiedTempo
+                ? ` (${displayModifiedTempo})`
+                : ""}</sub
+            >
+            <span> <strong>${track.name}</strong>${displayAlbumName} </span>
+
+            <input
+              type="checkbox"
+              checked=${selectedTracks.some((trackB) => trackB.id === track.id)}
+              onChange=${handleTrackToggle(track)}
+            />
+          </label>
+        </li>`;
+      })}
+    </ul>`}
+    ${!searchTerm?.length && !genre
+      ? html`<p>Add a search term, or genre</p>`
+      : isFetching
+        ? html`<p>Loading tracks…</p>`
+        : resultsToShow.length === 0
+          ? html`<p>No tracks found</p>`
+          : null}
   </div>`;
 }
 

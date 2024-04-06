@@ -12,74 +12,111 @@
 
   h1 {
     grid-area: title;
-    font-size: larger;
-    font-weight: 900;
+    font-size: var(--f-s-h1);
+    font-weight: var(--f-w-h1);
   }
 
   h3 {
-    font-size: larger;
-    font-weight: 600;
+    font-size: var(--f-s-h3);
+    font-weight: var(--f-w-h3);
+    padding-block: var(--p-m-b);
   }
 
   a {
-    color: blue;
+    --o: 0.8;
+    color: hsl(var(--hsl-spotify-green) / var(--o));
+    text-decoration: underline;
+    text-decoration-color: hsl(var(--hsl-spotify-green) / 0);
+    transition: color, text-decoration-color, text-decoration-thickness;
+    text-decoration-thickness: 3px;
+    transition-duration: var(--d-medium);
+
+    &::after {
+      content: " (go to spotify page)";
+      font-size: var(--t-s-p);
+      color: hsl(var(--hsl-spotify-green) / 0);
+      transition: color, text-decoration-color, text-decoration-thickness;
+    }
 
     &:hover {
-      text-decoration: underline;
+      --o: 1;
+      text-decoration-color: hsl(var(--hsl-spotify-green) / 0.3);
 
       &::after {
-        content: " (go to spotify page)";
-        font-size: smaller;
+        color: hsl(var(--hsl-spotify-green) / 0.5);
       }
     }
   }
 
   menu {
-    display: flex;
+    display: grid;
     flex-wrap: wrap;
-    gap: 1em;
+    gap: var(--p-m);
 
-    > * {
-      flex-basis: 150px;
-      flex-grow: 1;
-    }
+    @media screen and (min-width: 1200px) {
+      grid-template-columns: repeat(2, minmax(200px, 1fr));
 
-    label {
-      flex-grow: 10;
+      label:has([type="search"]) {
+        grid-column: 1 / span 2;
+      }
     }
 
     button {
+      --hsl-bg: var(--hsl-spotify-green);
+      --o-bg: 0.8;
+      --d: var(--d-medium);
       cursor: pointer;
       flex-grow: 1;
       border: 1px solid black;
       text-align: center;
+      border-radius: 9999px;
+      color: hsl(var(--hsl-t-inverted));
+      background-color: hsl(var(--hsl-bg) / var(--o-bg));
+      transition: background-color var(--d-medium);
+      min-height: 44px;
 
-      &:has(:focus) {
-        box-shadow: 0 0 0 2px blue;
-      }
-      &:has(:checked) {
-        background-color: #333;
-        color: white;
-      }
-      &:has(:checked):hover {
-        background-color: #666;
-      }
-      &:where(:active),
-      &:has(:checked):active {
-        background-color: black;
-        color: white;
+      &:where(:has(:focus)) {
+        box-shadow: 0 0 0 2px hsl(var(--hsl-t-inverted));
       }
       &:where(:hover) {
-        background-color: #ccc;
+        --o-bg: 1;
+      }
+      &:where(:active) {
+        --o-bg: 0.6;
+        --d: var(--d-short);
+      }
+      &:disabled {
+        --o-bg: 0.2;
+        --hsl-bg: var(--hsl-background-inverted);
+        cursor: not-allowed;
       }
     }
   }
 
-  aside {
+  > aside {
+    display: grid;
+    align-content: start;
+    padding: var(--p-m);
     grid-area: filters;
+    border-radius: var(--b-r);
+    background-image: var(--image-background-noise),
+      linear-gradient(
+        to bottom,
+        hsl(var(--hsl-background-highlight)),
+        hsl(var(--hsl-background-secondary)) 180px
+      );
   }
 
   section {
     grid-area: results;
+    display: grid;
+    gap: var(--p-m);
+    align-content: start;
+    align-items: start;
+    padding: var(--p-m);
+    padding: var(--p-m);
+    border-radius: var(--b-r);
+    background-color: hsl(var(--hsl-background-secondary));
+    background-image: var(--image-background-noise);
   }
 }

@@ -47,11 +47,28 @@ function App() {
     searchTerm,
   });
 
+  const cannotSubmitReason = isSavingPlaylist
+    ? "Saving, hold on…"
+    : !user
+      ? "Loading user, hold on…"
+      : !playlistName
+        ? "Pick a playlist name first"
+        : playlistName.length < 5
+          ? "Playlist name needs to be longer"
+          : selectedTracks.length < 5
+            ? "Playlist needs more tracks"
+            : undefined;
+
   /**
    * @param {Event} event
    */
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (cannotSubmitReason) {
+      alert(cannotSubmitReason);
+      return;
+    }
 
     if (!user) return;
 
@@ -102,35 +119,28 @@ function App() {
                 onInput=${setPlaylistName}
               />
 
-              <button
-                disabled=${isSavingPlaylist ||
-                !user ||
-                !playlistName ||
-                playlistName.length < 5}
-              >
-                Create playlist
-              </button>
+              <button disabled=${!!cannotSubmitReason}>Create playlist</button>
             </menu>
 
             <aside>
-              <${TextInput}
-                type="search"
-                label="Search term"
-                placeholder="Search for a song"
-                value=${searchTerm}
-                onInput=${setSearchTerm}
-              />
-
               <menu>
+                <${TextInput}
+                  type="search"
+                  label="Search"
+                  placeholder="Search for a song"
+                  value=${searchTerm}
+                  onInput=${setSearchTerm}
+                />
+
                 <${NumberInput}
-                  label="Target tempo"
+                  label="Tempo"
                   placeholder="170"
                   value=${targetTempo}
                   onInput=${setTargetTempo}
                 />
 
                 <${NumberInput}
-                  label="Tempo accuracy"
+                  label="Range"
                   placeholder="0.02"
                   value=${tempoAccuracy}
                   onInput=${setTempoAccuracy}
@@ -148,7 +158,7 @@ function App() {
             <section>
               <h3>Found songs</h3>
               <${SongsInSearchWithinTempo}
-                search=${searchTerm}
+                searchTerm=${searchTerm}
                 genre=${genre}
                 tempo=${targetTempo}
                 accuracy=${tempoAccuracy}
