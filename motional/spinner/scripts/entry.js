@@ -22,6 +22,7 @@ const peopleInDemo = [
   // "Katya Daskalova",
   "Marcellus Reinaldo Jodihardja",
   "Marco Mandrioli",
+  "Matt Yang",
   // "Minsung Cho",
   // "Namith",
   "Nicholas Tan Xuan",
@@ -42,7 +43,7 @@ const peopleInDemo = [
   // "Wan Jou Lim",
   // "Wee Kiat Clarence Ang",
   "Wei Jian Chen",
-  // "William Kar Hoong Yoong",
+  "William Kar Hoong Yoong",
   "Zizhang Ai",
 ];
 

@@ -18,6 +18,7 @@ export const items = [
     image: "./i/Marcellus Reinaldo Jodihardja.jpg",
   },
   { name: "Marco Mandrioli", image: "./i/Marco Mandrioli.jpg" },
+  { name: "Matt Yang", image: "./i/Matt Yang.jpg" },
   { name: "Minsung Cho", image: "./i/Minsung Cho.jpg" },
   { name: "Namith", image: "./i/Namith.jpg" },
   { name: "Nicholas Tan Xuan", image: "./i/Nicholas Tan Xuan.jpg" },
