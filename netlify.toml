@@ -1,0 +1,15 @@
+[[headers]]
+  for = "/motional/org*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+
+    # The Basic-Auth header may not be available on all plans.
+    Basic-Auth = "motional:Mx_9@QzrL66baxCE7JJ.FNtNaDEKzbGa4a-"
+
+    #  Multi-value headers are expressed with multi-line strings
+    # cache-control = '''
+    # max-age=0,
+    # no-cache,
+    # no-store,
+    # must-revalidate'''
