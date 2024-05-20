@@ -1,3 +1,5 @@
+const zeroWidthSpace = "\u200B";
+
 const iconSvgWrap = (path) =>
   `<svg width="8" height="8" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="${path}" fill="#716E7B" stroke="#716E7B"/></svg>`;
 
@@ -19,12 +21,12 @@ const expandIcons = {
 const expandButtonWrap = (
   icon,
   content,
-  extraStyles,
-) => `<div style="display:flex;">
-  <span style="align-items:center;display:flex;">
+  textClasses,
+) => `<div class="expand-toggle">
+  <span class="expand-toggle__icon" >
     ${icon}
   </span>
-  <span style="color:#716E7B;${extraStyles}">
+  <span class="expand-toggle__text ${textClasses}">
     ${content}
   </span>
 </div>`;
@@ -36,16 +38,16 @@ const expandButtons = {
       : expandButtonWrap(expandIcons.right, content, ""),
   bottom: (d, content) =>
     d
-      ? expandButtonWrap(expandIcons.down, content, "margin-left:1px")
-      : expandButtonWrap(expandIcons.up, content, "margin-left:1px"),
+      ? expandButtonWrap(expandIcons.down, content, "expand-toggle__text--spaced-left")
+      : expandButtonWrap(expandIcons.up, content, "expand-toggle__text--spaced-left"),
   right: (d, content) =>
     d
       ? expandButtonWrap(expandIcons.right, content, "")
       : expandButtonWrap(expandIcons.left, content, ""),
   top: (d, content) =>
     d
-      ? expandButtonWrap(expandIcons.up, content, "margin-left:1px")
-      : expandButtonWrap(expandIcons.down, content, "margin-left:1px"),
+      ? expandButtonWrap(expandIcons.up, content, "expand-toggle__text--spaced-left")
+      : expandButtonWrap(expandIcons.down, content, "expand-toggle__text--spaced-left"),
 };
 
 const countryEmojiMap = {
@@ -79,6 +81,8 @@ d3.csv("./data.csv").then((data) => {
     .forEach((member) => {
       const li = document.createElement("li");
       const a = document.createElement("a");
+      const name = document.createElement("span");
+      const deets = document.createElement("span");
       a.href = `?member-id=${member["Person Number"]}`;
 
       const knownAs =
@@ -92,12 +96,18 @@ d3.csv("./data.csv").then((data) => {
           )
           ? member[PREFERRED_NAME]?.trim()
           : "";
-      a.textContent = `${member["List Name"]}${knownAs ? ` (${knownAs})` : ""}`;
       a.addEventListener("click", (e) => {
         e.preventDefault();
         history.pushState(null, null, `?member-id=${member["Person Number"]}`);
         chart.setCentered(member["Person Number"]).render();
       });
+
+      // name is suffixed with zeroWidthSpace to prevent dodgy search results
+      name.textContent = `${member["List Name"]}${knownAs ? ` (${knownAs})` : ""}${zeroWidthSpace}`;
+      deets.textContent = member["Department"];
+
+      a.append(name);
+      a.append(deets);
       li.append(a);
       membersUl.append(li);
     });
@@ -105,22 +115,43 @@ d3.csv("./data.csv").then((data) => {
   const membersSearch = document.querySelector("#members-search");
   membersSearch.addEventListener("input", (e) => {
     const searchValue = e.target.value;
-    if (!searchValue) {
+    if (!(searchValue.trim())) {
       const members = document.querySelectorAll(".members-list li");
       members.forEach((member) => {
         member.style.display = "block";
       });
+      const memberInfos = document.querySelectorAll(".members-list span");
+      memberInfos.forEach((info) => {
+        info.classList.remove("highlight");
+      });
       return;
     }
+
+    const normalisedSearch = searchValue.trim().toLowerCase();
 
     const members = document.querySelectorAll(".members-list li");
     members.forEach((member) => {
       if (
-        member.textContent.toLowerCase().includes(searchValue.toLowerCase())
+        member.textContent.toLowerCase().includes(normalisedSearch)
       ) {
         member.style.display = "block";
       } else {
         member.style.display = "none";
+      }
+
+      const memberName = member.querySelector("span:first-child");
+      if (memberName.textContent.toLowerCase().includes(normalisedSearch)) {
+        memberName.classList.add("highlight");
+      } else {
+        console.log('kill');
+        memberName.classList.remove("highlight");
+      }
+
+      const memberDeets = member.querySelector("span:last-child");
+      if (memberDeets.textContent.toLowerCase().includes(normalisedSearch)) {
+        memberDeets.classList.add("highlight");
+      } else {
+        memberDeets.classList.remove("highlight");
       }
     });
   });
