@@ -170,6 +170,10 @@ d3.csv("./data.csv").then((data) => {
     .nodeButtonWidth(() => 200)
     .nodeButtonX(() => -100)
     .nodeHeight(() => 70)
+    .compactMarginPair(() => 30)
+    .neighbourMargin(() => 30)
+    .siblingsMargin(() => 30)
+    .childrenMargin(() => 50)
     .initialExpandLevel(0)
     .onNodeClick((node) => {
       focusMember(node.data["Person Number"]);

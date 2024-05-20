@@ -1,17 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script type="importmap">
-    {
-      "imports": {
-        "d3-org-chart": "/node_modules/d3-org-chart/build/d3-org-chart.min.js"
-      }
-    }
-  </script>
-
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Motional Org</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
   <link rel="stylesheet" href="./reset.css">
   <link rel="stylesheet" href="./main.css">
@@ -21,7 +14,7 @@
   <div class="members">
     <label for="members-search">
       <span>Search for a member</span>
-      <input type="search" id="members-search" placeholder="Search for a member" list="members-data-list">
+      <input type="search" id="members-search" placeholder="Name or Department" list="members-data-list">
     </label>
 
     <ul class="members-list">Loading…</ul>
@@ -32,5 +25,7 @@
   <script src="https://cdn.jsdelivr.net/npm/d3-flextree@2.1.2/build/d3-flextree.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/d3-org-chart@3"></script>
   <script type="module" src="index.js"></script>
+
+  <link rel="stylesheet" href="./fonts.css">
 </body>
 </html>
