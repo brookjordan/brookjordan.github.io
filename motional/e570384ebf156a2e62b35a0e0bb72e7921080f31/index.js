@@ -102,7 +102,7 @@ d3.csv("./data.csv").then((data) => {
       membersUl.append(li);
     });
 
-  const membersSearch = document.querySelector(".members-search");
+  const membersSearch = document.querySelector("#members-search");
   membersSearch.addEventListener("input", (e) => {
     const searchValue = e.target.value;
     if (!searchValue) {
