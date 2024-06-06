@@ -173,7 +173,8 @@ var defaultPlaces = [
   "in the basement",
   "in $person’s basement ",
   "in the office",
-  "around level 3",
+  () =>
+    `around level ${Math.random() > 0.25 ? "13" : Math.random() > 0.33 ? "69" : Math.ceil(Math.random() * 30)}`,
   "on the second floor",
   "yesterday",
   "down at the hunting grounds",

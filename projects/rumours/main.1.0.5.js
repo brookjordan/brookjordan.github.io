@@ -13,7 +13,7 @@ class Chance {
     let rnd = Math.random() * index;
     let upto = 0;
 
-    return val => {
+    return (val) => {
       upto += val;
       if (upto >= rnd) {
         return true;
@@ -40,13 +40,14 @@ class RandomString {
           throw new Error("Gender isn’t set");
         }
 
-        if ((boys.length + girls.length >= 2) && Math.random() > (isPlural ? 0.95 : 0.92)) {
+        if (
+          boys.length + girls.length >= 2 &&
+          Math.random() > (isPlural ? 0.95 : 0.92)
+        ) {
           isPlural = true;
           phrase += `${itemFrom(peopleConnectors, true)} `;
 
-          genderRnd = Math.ceil(
-            Math.random() * (girls.length + boys.length)
-          );
+          genderRnd = Math.ceil(Math.random() * (girls.length + boys.length));
           if (genderRnd < girls.length) {
             gender = "female";
           } else {
@@ -100,23 +101,23 @@ class RandomString {
           phrase += chance(15)
             ? "."
             : chance(4)
-            ? "!"
-            : chance(4)
-            ? "?"
-            : chance(1)
-            ? "..."
-            : "?!?";
+              ? "!"
+              : chance(4)
+                ? "?"
+                : chance(1)
+                  ? "..."
+                  : "?!?";
         }
       };
 
       const itemFrom = (array, safe) => {
+        let place;
         if (!!safe) {
-          return array[Math.floor(Math.random() * array.length)];
+          place = array[Math.floor(Math.random() * array.length)];
+        } else {
+          place = array.splice(Math.floor(Math.random() * array.length), 1)[0];
         }
-        return array.splice(
-          Math.floor(Math.random() * array.length),
-          1
-        )[0];
+        return typeof place === "function" ? place() : place;
       };
 
       const randomAdjective = () => genderise(itemFrom(adjectives, true));
@@ -125,11 +126,7 @@ class RandomString {
 
       const randomVerb = () => {
         let verb = itemFrom(verbs, false);
-        if (
-          places.length &&
-          Math.random() > 0.8 &&
-          !/\$place/.test(verb)
-        ) {
+        if (places.length && Math.random() > 0.8 && !/\$place/.test(verb)) {
           phrase += randomPlace();
         }
         return subjectise(prefixise(genderise(fillPlaceholders(verb))));
@@ -166,26 +163,26 @@ class RandomString {
 
       const objectSet = ({
         sentience = "either",
-        includePlurals = !usedPluralisedObjects
+        includePlurals = !usedPluralisedObjects,
       } = {}) => {
         let objectSet;
         if (sentience === "sentient") {
           objectSet = includePlurals
             ? randomItemFromArray([
-              sentientObjects,
-              sentientObjects,
-              sentientObjects,
-              pluralisedSentientObjects,
-            ])
+                sentientObjects,
+                sentientObjects,
+                sentientObjects,
+                pluralisedSentientObjects,
+              ])
             : sentientObjects;
         } else if (sentience === "inanimate") {
           objectSet = includePlurals
             ? randomItemFromArray([
-              inanimateObjects,
-              inanimateObjects,
-              inanimateObjects,
-              pluralisedInanimateObjects,
-            ])
+                inanimateObjects,
+                inanimateObjects,
+                inanimateObjects,
+                pluralisedInanimateObjects,
+              ])
             : inanimateObjects;
         } else {
           objectSet = includePlurals
@@ -243,15 +240,12 @@ class RandomString {
         return chance(1) ? randomPerson() : randomAnObject();
       };
 
-      const genderise = string => {
+      const genderise = (string) => {
         let hasYou = USED_PEOPLE.includes("You");
-        let genderData = genders[
-          isPlural
-            ? "plural"
-            : hasYou && Math.random() > 0.5
-              ? "you"
-              : gender
-        ];
+        let genderData =
+          genders[
+            isPlural ? "plural" : hasYou && Math.random() > 0.5 ? "you" : gender
+          ];
         return string
           .replace("$themself", genderData.themself)
           .replace("$them", genderData.them)
@@ -260,41 +254,41 @@ class RandomString {
           .replace("$was", genderData.was);
       };
 
-      const prefixise = string =>
+      const prefixise = (string) =>
         string.replace("$prefix", itemFrom(prefixes, false));
-      const subjectise = string =>
+      const subjectise = (string) =>
         string.replace("$subject", randomSubject());
 
-      const fillPlaceholders = string => {
+      const fillPlaceholders = (string) => {
         string = fillPlaceholder(string, "$subject", randomSubject);
         string = fillPlaceholder(string, "$girl", randomGirl);
         string = fillPlaceholder(string, "$boy", randomBoy);
         string = fillPlaceholder(string, "$person", randomPerson);
 
         string = fillPlaceholder(string, "$objects", () =>
-          randomObjects({ includePlurals: false })
+          randomObjects({ includePlurals: false }),
         );
         string = fillPlaceholder(string, "$sentientObjects", () =>
-          randomObjects({ sentience: "sentient", includePlurals: false })
+          randomObjects({ sentience: "sentient", includePlurals: false }),
         );
         string = fillPlaceholder(string, "$inanimateObjects", () =>
-          randomObjects({ sentience: "inanimate", includePlurals: false })
+          randomObjects({ sentience: "inanimate", includePlurals: false }),
         );
 
         string = fillPlaceholder(string, "$anObject", randomAnObject);
         string = fillPlaceholder(string, "$aSentientObject", () =>
-          randomAnObject({ sentience: "sentient" })
+          randomAnObject({ sentience: "sentient" }),
         );
         string = fillPlaceholder(string, "$anInanimateObject", () =>
-          randomAnObject({ sentience: "inanimate" })
+          randomAnObject({ sentience: "inanimate" }),
         );
 
         string = fillPlaceholder(string, "$object", randomObject);
         string = fillPlaceholder(string, "$sentientObject", () =>
-          randomObject({ sentience: "sentient" })
+          randomObject({ sentience: "sentient" }),
         );
         string = fillPlaceholder(string, "$inanimateObject", () =>
-          randomObject({ sentience: "inanimate" })
+          randomObject({ sentience: "inanimate" }),
         );
 
         string = fillPlaceholder(string, "$adj", randomAdjective);
@@ -321,11 +315,11 @@ class RandomString {
           genderise(" when $they"),
           genderise(" after $they"),
           genderise(" because $they"),
-          genderise(" but then $they")
+          genderise(" but then $they"),
         ];
       };
 
-      const cleanPhrase = phrase =>
+      const cleanPhrase = (phrase) =>
         phrase.replace(/,{2}/, ",").replace(/s’s/g, "s’").replace(/\$s/g, "");
 
       const randomItemFromArray = (items) => {
@@ -366,32 +360,32 @@ class RandomString {
           their: "your",
           them: "you",
           themself: "yourself",
-          was: "were"
+          was: "were",
         },
         male: {
           they: "he",
           their: "his",
           them: "him",
           themself: "himself",
-          was: "was"
+          was: "was",
         },
         female: {
           they: "she",
           their: "her",
           them: "her",
           themself: "herself",
-          was: "was"
+          was: "was",
         },
         plural: {
           they: "they",
           their: "their",
           them: "them",
           themself: "themselves",
-          was: "were"
-        }
+          was: "were",
+        },
       };
       let genderRnd = Math.ceil(
-        Math.random() * (girls.length + boys.length + 1)
+        Math.random() * (girls.length + boys.length + 1),
       );
       let gender;
       let isPlural;
@@ -418,10 +412,13 @@ class RandomString {
   }
 }
 
-const _begin = words => {
+const _begin = (words) => {
   getString = new RandomString(words);
   buildWordsIfSpaceIsAvailable();
-  window.onscroll = window.ontouchmove = window.onresize = buildWordsIfSpaceIsAvailable;
+  window.onscroll =
+    window.ontouchmove =
+    window.onresize =
+      buildWordsIfSpaceIsAvailable;
 };
 
 const buildWordsIfSpaceIsAvailable = () => {
@@ -462,26 +459,23 @@ const buildWord = (str, active) => {
     a.target = "_self";
   }
 
-  if (
-    navigator.canShare
-      ? navigator.canShare()
-      : "share" in window.navigator
-  ) {
+  if (navigator.canShare ? navigator.canShare() : "share" in window.navigator) {
     let shareButton = document.createElement("button");
     shareButton.classList.add("share-button");
     shareButton.innerText = "Share";
     div.appendChild(shareButton);
-    shareButton.addEventListener("click", event => {
+    shareButton.addEventListener("click", (event) => {
       event.preventDefault();
-        window.navigator.share({
+      window.navigator
+        .share({
           url: location.href,
           text: str,
           title: "You won’t believe this…",
         })
-        .then(data => {
+        .then((data) => {
           console.log(data);
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
         });
     });
@@ -500,9 +494,9 @@ const buildWord = (str, active) => {
   document.title = str;
 };
 
-const makeStyle = str => `font-size:${Math.max(16, len(str.length))}px`;
+const makeStyle = (str) => `font-size:${Math.max(16, len(str.length))}px`;
 
-const len = x => {
+const len = (x) => {
   let min = 14;
   let max = 26;
   return max - Math.max(0, Math.min(max - min, 15 - 1000 / x));
@@ -520,7 +514,7 @@ function globalisePluralise(d){
   let f=unPluralisableWords.split(" "),c=[[RegExp("(m)an$","gi"),"$1en"],[RegExp("(pe)rson$","gi"),"$1ople"],[RegExp("(child)$","gi"),"$1ren"],[RegExp("^(ox)$","gi"),"$1en"],[RegExp("(ax|test)is$","gi"),"$1es"],[RegExp("(octop|vir)us$","gi"),"$1i"],[RegExp("(alias|status)$","gi"),"$1es"],[RegExp("(bu)s$","gi"),"$1ses"],[RegExp("(buffal|tomat|potat)o$","gi"),"$1oes"],[RegExp("([ti])um$","gi"),"$1a"],[RegExp("sis$","gi"),"ses"],[RegExp("(?:([^f])fe|([lr])f)$",
   "gi"),"$1$2ves"],[RegExp("(hive)$","gi"),"$1s"],[RegExp("([^aeiouy]|qu)y$","gi"),"$1ies"],[RegExp("(x|ch|ss|sh)$","gi"),"$1es"],[RegExp("(matr|vert|ind)ix|ex$","gi"),"$1ices"],[RegExp("([m|l])ouse$","gi"),"$1ice"],[RegExp("(quiz)$","gi"),"$1zes"],[RegExp("s$","gi"),"s"],[RegExp("$","gi"),"s"]];d.pluralise=function(d,e){let a=d;if(e)a=e;else if(!(-1<f.indexOf(a.toLowerCase())))for(let b=0;b<c.length;b++)if(a.match(c[b][0])){a=a.replace(c[b][0],c[b][1]);break}return a}}
 
-let begin = _ => _;
+let begin = (_) => _;
 let building = false;
 
 if (searchParams["_"]) {
@@ -531,9 +525,14 @@ if (searchParams["_"]) {
 }
 
 const setDefaultGlobalNames = () => {
-  if (typeof globalGirls === "undefined" && searchParams.girls && (!localStorage.getItem("girls") || confirm(`Replace saved girls with ${searchParams.girls}?`))) {
+  if (
+    typeof globalGirls === "undefined" &&
+    searchParams.girls &&
+    (!localStorage.getItem("girls") ||
+      confirm(`Replace saved girls with ${searchParams.girls}?`))
+  ) {
     globalGirls = searchParams.girls.split(",");
-  }  else if (!globalGirls && localStorage.getItem("girls")) {
+  } else if (!globalGirls && localStorage.getItem("girls")) {
     globalGirls = localStorage.getItem("girls").split(",");
   } else if (typeof defaultGirls !== "undefined") {
     globalGirls = defaultGirls;
@@ -542,9 +541,14 @@ const setDefaultGlobalNames = () => {
   }
   localStorage.setItem("girls", globalGirls);
 
-  if (typeof globalBoys === "undefined" && searchParams.boys && (!localStorage.getItem("boys") || confirm(`Replace saved boys with ${searchParams.boys}?`))) {
+  if (
+    typeof globalBoys === "undefined" &&
+    searchParams.boys &&
+    (!localStorage.getItem("boys") ||
+      confirm(`Replace saved boys with ${searchParams.boys}?`))
+  ) {
     globalBoys = searchParams.boys.split(",");
-  }  else if (!globalBoys && localStorage.getItem("boys")) {
+  } else if (!globalBoys && localStorage.getItem("boys")) {
     globalBoys = localStorage.getItem("boys").split(",");
   } else if (typeof defaultGirls !== "undefined") {
     globalBoys = defaultBoys;
@@ -554,7 +558,11 @@ const setDefaultGlobalNames = () => {
   localStorage.setItem("boys", globalBoys);
 };
 setDefaultGlobalNames();
-history.replaceState({}, "", `${location.pathname}${searchParams["_"] ? `?_=${searchParams["_"]}` : ""}`);
+history.replaceState(
+  {},
+  "",
+  `${location.pathname}${searchParams["_"] ? `?_=${searchParams["_"]}` : ""}`,
+);
 
 begin({
   extraGirls: defaultExtraGirls,
@@ -570,5 +578,5 @@ begin({
 
   places: defaultPlaces,
   adjectives: defaultAdjectives,
-  endings: defaultEndings
+  endings: defaultEndings,
 });
