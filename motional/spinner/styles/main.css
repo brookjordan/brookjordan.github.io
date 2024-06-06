@@ -102,9 +102,11 @@ button {
   background-image: var(--i-bg);
   background-color: rgb(153, 153, 153);
   color: rgb(102, 102, 102);
+  transform: translateY(calc(100% * var(--y)));
   transition-property: color, background-color;
   transition-duration: 3s;
   transition-delay: 0s;
+  will-change: transform, color, background-color;
 }
 .name__text-wrapper {
   -webkit-box-flex: 0;
@@ -208,6 +210,28 @@ button {
   transform: scaleX(1);
   letter-spacing: 0.1em;
   transition-delay: 3s;
+}
+
+@keyframes peek-in {
+  0% {
+    transform: translate(100%, 100%);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+.lazy-spin-button {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 20;
+  width: 150px;
+  height: 50px;
+  background: rgba(255 255 255 / 0.5);
+  border-top-left-radius: 10px;
+  font-family: "Nunito Sans", "open sans", sans-serif;
+  font-size: 22px;
+  animation: peek-in 1s ease-out;
 }
 
 .checkbox-container {

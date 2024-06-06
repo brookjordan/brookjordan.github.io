@@ -7,17 +7,21 @@ const items = [
   { name: "Brandon Jie Yi Lam", image: "./i/Brandon Jie Yi Lam.jpg" },
   { name: "Brandon Ong", image: "./i/Brandon Ong.png" },
   { name: "Brook Jordan", image: "./i/Brook Jordan.jpg" },
+  { name: "Cong Vu", image: "./i/Cong Vu.jpg" },
   { name: "Eduard Nabokov", image: "./i/Eduard Nabokov.jpg" },
   { name: "Fil Mihaylov", image: "./i/Fil Mihaylov.png" },
   { name: "Hung Viet Nguyen", image: "./i/Hung Viet Nguyen.jpg" },
   { name: "Ivan Petkov", image: "./i/Ivan Petkov.jpg" },
+  { name: "Jingchen Yu", image: "./i/Jingchen Yu.jpg" },
   { name: "Kakali Basak", image: "./i/Kakali Basak.jpg" },
   { name: "Katya Daskalova", image: "./i/Katya Daskalova.jpg" },
+  { name: "Kenny Reida Dharmawan", image: "./i/Kenny Reida Dharmawan.png" },
   {
     name: "Marcellus Reinaldo Jodihardja",
     image: "./i/Marcellus Reinaldo Jodihardja.jpg",
   },
   { name: "Marco Mandrioli", image: "./i/Marco Mandrioli.jpg" },
+  { name: "Matt Yang", image: "./i/Matt Yang.jpg" },
   { name: "Minsung Cho", image: "./i/Minsung Cho.jpg" },
   { name: "Namith", image: "./i/Namith.jpg" },
   { name: "Nicholas Tan Xuan", image: "./i/Nicholas Tan Xuan.jpg" },
@@ -272,6 +276,7 @@ const renderThread = threadRunner.addThread("spinner-render", {
 spinThread.addTask(keepSpinning);
 renderThread.addTask(updateDOM);
 
+let showEasySpinTimeout;
 let checkboxContainer = null;
 let togglesToggle = null;
 let spinnerStartSpeed = 0;
@@ -289,6 +294,10 @@ let nameFilter = null;
 let nameFilterStorage = "nameFilter";
 
 function enableTrackMouse(event) {
+  if (event.target.closest(".lazy-spin-button")) {
+    return;
+  }
+
   event.preventDefault();
 
   resetCursorSpeed(event);
@@ -298,8 +307,12 @@ function enableTrackMouse(event) {
   }
   spinnerSpeed = 0;
   lastY = getY(event);
+
   body$1.addEventListener("mousemove", trackMouse, !1);
   body$1.addEventListener("touchmove", trackMouse, !1);
+  body$1.addEventListener("mouseup", startSpinnerSpinning, !1);
+  body$1.addEventListener("touchend", startSpinnerSpinning, !1);
+  body$1.addEventListener("touchcancel", startSpinnerSpinning, !1);
 }
 
 function disableTrackMouse(event) {
@@ -311,12 +324,20 @@ function disableTrackMouse(event) {
   lastY = null;
   body$1.removeEventListener("mousemove", trackMouse, !1);
   body$1.removeEventListener("touchmove", trackMouse, !1);
+  body$1.removeEventListener("mouseup", startSpinnerSpinning, !1);
+  body$1.removeEventListener("touchend", startSpinnerSpinning, !1);
+  body$1.removeEventListener("touchcancel", startSpinnerSpinning, !1);
 }
 
-function startSpinnerSpinning(event) {
+function startSpinnerSpinning(event, customSpeed) {
   event.preventDefault();
   spinnerStartPos = spinnerPos;
-  spinnerStartSpeed = spinnerSpeed = px2spd(cursorSpeed());
+  spinnerStartSpeed = spinnerSpeed =
+    typeof customSpeed === "number" ? customSpeed : px2spd(cursorSpeed());
+
+  if (showEasySpinTimeout && spinnerStartSpeed > 0.07 || spinnerSpeed < -0.07) {
+    clearTimeout(showEasySpinTimeout);
+  }
 
   const calculatedLandingSpot = willLandAt({
     initialPosition: spinnerStartPos,
@@ -441,7 +462,10 @@ function killFallenNames() {
 }
 
 function renderName({ elt, index }) {
-  elt.style.transform = `translateY(${100 * (spinnerPos + index)}%)`;
+  elt.style.setProperty(
+    "--y",
+    (spinnerPos + index).toFixed(3)
+  );
 }
 
 function renderNames() {
@@ -457,7 +481,7 @@ function addName(cardName = false) {
       : [...cards]
   ).sort((cardA, cardB) => cardA.name.localeCompare(cardB.name));
   const unusedCards = filteredCards.filter(({ name }) =>
-    nameCards.every(({ text }) => text.name !== name)
+    nameCards.every(({ text }) => text.name !== name),
   );
 
   const randomPerson =
@@ -478,7 +502,7 @@ function addName(cardName = false) {
   if (randomPerson) {
     cardElt.style.setProperty(
       "--i-bg",
-      randomPerson.image ? `url("../${randomPerson.image}")` : "none"
+      randomPerson.image ? `url("../${randomPerson.image}")` : "none",
     );
     labelElt.innerHTML = (randomPerson && randomPerson.name) || "";
   }
@@ -501,7 +525,7 @@ function initialiseSpinner(
     friction = 0.01,
     desiredNameCount = 5,
     initialItemNames = _cards.map(({ name }) => name),
-  } = {}
+  } = {},
 ) {
   cards = _cards;
   spinnerElt$1 = _spinnerElt;
@@ -518,15 +542,28 @@ function initialiseSpinner(
   buildNames();
   initialiseCursorTracking();
 
-  body$1.addEventListener("mouseup", startSpinnerSpinning, !1);
-  body$1.addEventListener("touchend", startSpinnerSpinning, !1);
-  body$1.addEventListener("touchcancel", startSpinnerSpinning, !1);
   body$1.addEventListener("mousedown", enableTrackMouse, !1);
   body$1.addEventListener("touchstart", enableTrackMouse, !1);
 
   document.body.style.setProperty("--name-count", nameCount);
 
   checkboxContainer = createCheckboxControls();
+  showEasySpinTimeout = setTimeout(() => {
+    createEasySpinnerButton();
+  }, 10000);
+}
+
+function createEasySpinnerButton() {
+  const button = document.createElement("button");
+  button.className = "lazy-spin-button";
+  button.textContent = "LAZY SPIN";
+  button.title = "Click and drag to spin the wheel";
+  button.addEventListener("mousedown", (event) => {
+    const baseSpeed = Math.random() * 0.4 - 0.2;
+    startSpinnerSpinning(event, baseSpeed + Math.sign(baseSpeed) * 0.15);
+    spinThread.play();
+  });
+  document.body.append(button);
 }
 
 function createCheckboxControls() {
@@ -612,41 +649,46 @@ const body = document.body;
 const spinnerElt = document.createElement("div");
 
 const peopleInDemo = [
+  "Brook Jordan",
+  "Cong Vu",
+  "Jingchen Yu",
+  "Kenny Reida Dharmawan",
+  "Marcellus Reinaldo Jodihardja",
+  "Nicholas Tan Xuan",
+  "Robin Yeh",
+  "Stacey Ng",
+  "Tian Fu Tan",
+  "Wee Kiat Clarence Ang",
+
   // "Alan Z",
   // "Arnaud Michel Jacques Lago",
-  "Brandon Jie Yi Lam",
+  // "Brandon Jie Yi Lam",
   // "Brandon Ong",
-  "Brook Jordan",
   // "Eduard Nabokov",
   // "Fil Mihaylov",
-  "Hung Viet Nguyen",
+  // "Hung Viet Nguyen",
   // "Ivan Petkov",
   // "Kakali Basak",
   // "Katya Daskalova",
-  "Marcellus Reinaldo Jodihardja",
-  "Marco Mandrioli",
+  // "Marco Mandrioli",
+  // "Matt Yang",
   // "Minsung Cho",
   // "Namith",
-  "Nicholas Tan Xuan",
-  "Olzhas Kaiyrakhmet",
+  // "Olzhas Kaiyrakhmet",
   // "Panteley Boyadjiev",
   // "Plamen",
   // "Quanjie Yang",
-  "Rajnish Kumar",
-  "Robin Yeh",
+  // "Rajnish Kumar",
   // "Sadaananth Anbucheliyan",
-  "Sarah Neo",
-  "Sergei Stepanov",
-  "Shen Rui Chong",
-  // "Stacey Ng",
-  "Thanh Tam Hoang",
-  "Tian Fu Tan",
-  "Tudor Gergely",
+  // "Sarah Neo",
+  // "Sergei Stepanov",
+  // "Shen Rui Chong",
+  // "Thanh Tam Hoang",
+  // "Tudor Gergely",
   // "Wan Jou Lim",
-  // "Wee Kiat Clarence Ang",
-  "Wei Jian Chen",
+  // "Wei Jian Chen",
   // "William Kar Hoong Yoong",
-  "Zizhang Ai",
+  // "Zizhang Ai",
 ];
 
 body.appendChild(spinnerElt);

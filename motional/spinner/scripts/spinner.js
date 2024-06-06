@@ -20,6 +20,7 @@ const renderThread = threadRunner.addThread("spinner-render", {
 spinThread.addTask(keepSpinning);
 renderThread.addTask(updateDOM);
 
+let showEasySpinTimeout;
 let checkboxContainer = null;
 let togglesToggle = null;
 let spinnerStartSpeed = 0;
@@ -37,6 +38,10 @@ let nameFilter = null;
 let nameFilterStorage = "nameFilter";
 
 function enableTrackMouse(event) {
+  if (event.target.closest(".lazy-spin-button")) {
+    return;
+  }
+
   event.preventDefault();
 
   resetCursorSpeed(event);
@@ -46,8 +51,12 @@ function enableTrackMouse(event) {
   }
   spinnerSpeed = 0;
   lastY = getY(event);
+
   body.addEventListener("mousemove", trackMouse, !1);
   body.addEventListener("touchmove", trackMouse, !1);
+  body.addEventListener("mouseup", startSpinnerSpinning, !1);
+  body.addEventListener("touchend", startSpinnerSpinning, !1);
+  body.addEventListener("touchcancel", startSpinnerSpinning, !1);
 }
 
 function disableTrackMouse(event) {
@@ -59,12 +68,20 @@ function disableTrackMouse(event) {
   lastY = null;
   body.removeEventListener("mousemove", trackMouse, !1);
   body.removeEventListener("touchmove", trackMouse, !1);
+  body.removeEventListener("mouseup", startSpinnerSpinning, !1);
+  body.removeEventListener("touchend", startSpinnerSpinning, !1);
+  body.removeEventListener("touchcancel", startSpinnerSpinning, !1);
 }
 
-function startSpinnerSpinning(event) {
+function startSpinnerSpinning(event, customSpeed) {
   event.preventDefault();
   spinnerStartPos = spinnerPos;
-  spinnerStartSpeed = spinnerSpeed = px2spd(cursorSpeed());
+  spinnerStartSpeed = spinnerSpeed =
+    typeof customSpeed === "number" ? customSpeed : px2spd(cursorSpeed());
+
+  if (showEasySpinTimeout && spinnerStartSpeed > 0.07 || spinnerSpeed < -0.07) {
+    clearTimeout(showEasySpinTimeout);
+  }
 
   const calculatedLandingSpot = willLandAt({
     initialPosition: spinnerStartPos,
@@ -189,7 +206,10 @@ function killFallenNames() {
 }
 
 function renderName({ elt, index }) {
-  elt.style.transform = `translateY(${100 * (spinnerPos + index)}%)`;
+  elt.style.setProperty(
+    "--y",
+    (spinnerPos + index).toFixed(3)
+  );
 }
 
 function renderNames() {
@@ -205,7 +225,7 @@ function addName(cardName = false) {
       : [...cards]
   ).sort((cardA, cardB) => cardA.name.localeCompare(cardB.name));
   const unusedCards = filteredCards.filter(({ name }) =>
-    nameCards.every(({ text }) => text.name !== name)
+    nameCards.every(({ text }) => text.name !== name),
   );
 
   const randomPerson =
@@ -226,7 +246,7 @@ function addName(cardName = false) {
   if (randomPerson) {
     cardElt.style.setProperty(
       "--i-bg",
-      randomPerson.image ? `url("../${randomPerson.image}")` : "none"
+      randomPerson.image ? `url("../${randomPerson.image}")` : "none",
     );
     labelElt.innerHTML = (randomPerson && randomPerson.name) || "";
   }
@@ -249,7 +269,7 @@ export function initialiseSpinner(
     friction = 0.01,
     desiredNameCount = 5,
     initialItemNames = _cards.map(({ name }) => name),
-  } = {}
+  } = {},
 ) {
   cards = _cards;
   spinnerElt = _spinnerElt;
@@ -266,15 +286,28 @@ export function initialiseSpinner(
   buildNames();
   initialiseCursorTracking();
 
-  body.addEventListener("mouseup", startSpinnerSpinning, !1);
-  body.addEventListener("touchend", startSpinnerSpinning, !1);
-  body.addEventListener("touchcancel", startSpinnerSpinning, !1);
   body.addEventListener("mousedown", enableTrackMouse, !1);
   body.addEventListener("touchstart", enableTrackMouse, !1);
 
   document.body.style.setProperty("--name-count", nameCount);
 
   checkboxContainer = createCheckboxControls();
+  showEasySpinTimeout = setTimeout(() => {
+    createEasySpinnerButton();
+  }, 10000);
+}
+
+function createEasySpinnerButton() {
+  const button = document.createElement("button");
+  button.className = "lazy-spin-button";
+  button.textContent = "LAZY SPIN";
+  button.title = "Click and drag to spin the wheel";
+  button.addEventListener("mousedown", (event) => {
+    const baseSpeed = Math.random() * 0.4 - 0.2;
+    startSpinnerSpinning(event, baseSpeed + Math.sign(baseSpeed) * 0.15);
+    spinThread.play();
+  });
+  document.body.append(button);
 }
 
 function createCheckboxControls() {
