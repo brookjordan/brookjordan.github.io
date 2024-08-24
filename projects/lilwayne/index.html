@@ -56,7 +56,7 @@
 
           // Pull the relevant information out of the RegExp
           let [, note, sharpsAndFlats, octave = 4] = noteRegExp.exec(offsetString);
-          let sharpCount = (sharpsAndFlats.match(/#/g)    || []).length;
+          let sharpCount = (sharpsAndFlats.match(/[♯#]/g) || []).length;
           let flatCount  = (sharpsAndFlats.match(/[♭b]/g) || []).length;
           let noteOffset = (sharpCount - flatCount + scaleNoteCount) % scaleNoteCount;
 

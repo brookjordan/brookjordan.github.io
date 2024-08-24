@@ -12,7 +12,7 @@
     />
     <link
       rel="prefetch"
-      href="./color.js"
+      href="../color.js"
     />
     <title>Color Swatches</title>
 
@@ -420,7 +420,7 @@
     </script>
 
     <script type="module">
-      import Color from "./color.js";
+      import Color from "../color.js";
 
       (function () {
         let css = /*css*/ `
@@ -534,14 +534,13 @@
           let clr = clrName
             ? clrName
                 .trim()
-                .replace(/ |\&nbsp;/g, "-")
-                .toLowerCase()
-            : clrHex
-                .trim()
-                .replace(/ |\&nbsp;/g, "-")
-                .toLowerCase();
+                .replace(/( |\&nbsp;)[a-z0-9]/gi, (group) =>
+                  group.slice(1).toUpperCase()
+                )
+                .replace(/^[A-Z]/, (group) => group.toLowerCase())
+            : clrHex.trim().toLowerCase();
 
-          return `${isGradient ? "lg" : "c"}.$${clr}`;
+          return `BASE_COLORS.${clr}`;
         }
 
         let colourSwatchTemplate = document.createElement("template");
@@ -627,7 +626,9 @@
                 notification.textContent = messageText;
                 notification.innerHTML = notification.innerHTML
                   .split(",")
-                  .join(",&#8203;");
+                  .join(",&#8203;")
+                  .split(".")
+                  .join(".&#8203;");
               };
             }
 
@@ -816,481 +817,144 @@
 
     <div class="colors">
       <color-swatch
-        name="White"
+        name="True white"
         hex="#ffffff"
       ></color-swatch>
       <color-swatch
-        name="Noir ambient 60"
-        hex="#2f3234"
+        name="White"
+        hex="#eaeaea"
       ></color-swatch>
       <color-swatch
-        name="Noir ambient 80"
-        hex="#3f4244"
+        name="Gray 900"
+        hex="#e5e5e5"
       ></color-swatch>
       <color-swatch
-        name="Noir ambient 85"
-        hex="#2f3234"
+        name="Gray 800"
+        hex="#d7d6d6"
       ></color-swatch>
       <color-swatch
-        name="Noir ambient 90"
-        hex="#24282a"
+        name="Gray 700"
+        hex="#c0bfc0"
       ></color-swatch>
       <color-swatch
-        name="Noir ambient 95"
-        hex="#1a1e20"
+        name="Gray 600"
+        hex="#a4a2a3"
       ></color-swatch>
       <color-swatch
-        name="Noir ambient 98"
-        hex="#131719"
+        name="Gray 500"
+        hex="#848383"
       ></color-swatch>
       <color-swatch
-        name="Noir ambient"
-        hex="#0f1315"
+        name="Gray 400"
+        hex="#646363"
+      ></color-swatch>
+      <color-swatch
+        name="Gray 300"
+        hex="#484646"
+      ></color-swatch>
+      <color-swatch
+        name="Gray 200"
+        hex="#312f30"
+      ></color-swatch>
+      <color-swatch
+        name="Gray 100"
+        hex="#232021"
       ></color-swatch>
       <color-swatch
         name="Black"
-        hex="#030a14"
+        hex="#1e1b1c"
       ></color-swatch>
       <color-swatch
         name="True black"
         hex="#000000"
       ></color-swatch>
-
       <color-swatch
-        name="Noir neutral 10"
-        hex="#8894d1"
+        name="Aubergine"
+        hex="#9933ff"
       ></color-swatch>
       <color-swatch
-        name="Noir neutral 40"
-        hex="#5e6791"
+        name="Aubergine 2"
+        hex="#d2a6ff"
       ></color-swatch>
       <color-swatch
-        name="Noir neutral"
-        hex="#4e5578"
+        name="Blueberry"
+        hex="#404bdd"
       ></color-swatch>
       <color-swatch
-        name="Noir neutral 60"
-        hex="#353a52"
+        name="Sky"
+        hex="#00b0ff"
       ></color-swatch>
       <color-swatch
-        name="Noir neutral 70"
-        hex="#2d3145"
+        name="Cyan"
+        hex="#00fffa"
       ></color-swatch>
       <color-swatch
-        name="Light asphalt 40"
-        hex="#eaefef"
+        name="Cyan 2"
+        hex="#66fffa"
       ></color-swatch>
       <color-swatch
-        name="Light asphalt"
-        hex="#d2dcdc"
+        name="Cyan 3"
+        hex="#b2fffa"
       ></color-swatch>
       <color-swatch
-        name="Light asphalt 60"
-        hex="#bac9c9"
+        name="Lime"
+        hex="#4bdd40"
       ></color-swatch>
       <color-swatch
-        name="Light asphalt 70"
-        hex="#9db1b1"
+        name="Lime 2"
+        hex="#17e879"
       ></color-swatch>
       <color-swatch
-        name="Light asphalt 80"
-        hex="#798d8d"
+        name="Lime 3"
+        hex="#74f1ae"
       ></color-swatch>
       <color-swatch
-        name="Light asphalt 90"
-        hex="#5b6c6c"
+        name="Apple"
+        hex="#7bcc30"
       ></color-swatch>
       <color-swatch
-        name="Asphalt 10"
-        hex="#f6f6f8"
+        name="Apple 2"
+        hex="#9bcc64"
       ></color-swatch>
       <color-swatch
-        name="Asphalt 20"
-        hex="#e3e6ec"
+        name="Lemon"
+        hex="#ffd700"
       ></color-swatch>
       <color-swatch
-        name="Asphalt 40"
-        hex="#b4b7be"
+        name="Lemon 2"
+        hex="#d2ff16"
       ></color-swatch>
       <color-swatch
-        name="Asphalt"
-        hex="#828791"
+        name="Carrot"
+        hex="#ff8000"
       ></color-swatch>
       <color-swatch
-        name="Asphalt 70"
-        hex="#5b5f67"
+        name="Carrot 2"
+        hex="#ff9933"
       ></color-swatch>
       <color-swatch
-        name="Asphalt 90"
-        hex="#40444a"
+        name="Carrot 3"
+        hex="#ffc633"
       ></color-swatch>
       <color-swatch
-        name="Purple 02"
-        hex="#fafafd"
+        name="Tomato"
+        hex="#ff3333"
       ></color-swatch>
       <color-swatch
-        name="Purple 05"
-        hex="#f2f2f9"
+        name="Rhubarb"
+        hex="#dd404b"
       ></color-swatch>
       <color-swatch
-        name="Purple 10"
-        hex="#e7e6f4"
+        name="Rhubarb 2"
+        hex="#ff8080"
       ></color-swatch>
       <color-swatch
-        name="Purple 20"
-        hex="#c9c3f9"
+        name="Doll"
+        hex="#ff619b"
       ></color-swatch>
       <color-swatch
-        name="Purple 30"
-        hex="#988bf9"
-      ></color-swatch>
-      <color-swatch
-        name="Purple 40"
-        hex="#8179f1"
-      ></color-swatch>
-      <color-swatch
-        name="Motional purple"
-        hex="#5c48f6"
-      ></color-swatch>
-      <color-swatch
-        name="Purple 70"
-        hex="#2d2baa"
-      ></color-swatch>
-      <color-swatch
-        name="Purple 90"
-        hex="#111471"
-      ></color-swatch>
-      <color-swatch
-        name="Purple 100"
-        hex="#0e0e4f"
-      ></color-swatch>
-      <color-swatch
-        name="Lavender gray 30"
-        hex="#eceef8"
-      ></color-swatch>
-      <color-swatch
-        name="Lavender gray 40"
-        hex="#d1d8ef"
-      ></color-swatch>
-      <color-swatch
-        name="Lavender gray"
-        hex="#adb9e3"
-      ></color-swatch>
-      <color-swatch
-        name="Lavender gray 60"
-        hex="#8395d5"
-      ></color-swatch>
-      <color-swatch
-        name="Lavender gray 70"
-        hex="#5f76c9"
-      ></color-swatch>
-      <color-swatch
-        name="Electric purple 10"
-        hex="#f8eefe"
-      ></color-swatch>
-      <color-swatch
-        name="Electric purple 20"
-        hex="#f0ddfd"
-      ></color-swatch>
-      <color-swatch
-        name="Electric purple 30"
-        hex="#daa8f9"
-      ></color-swatch>
-      <color-swatch
-        name="Electric purple 40"
-        hex="#c981f8"
-      ></color-swatch>
-      <color-swatch
-        name="Electric purple"
-        hex="#b653f5"
-      ></color-swatch>
-      <color-swatch
-        name="Electric purple 70"
-        hex="#9515e6"
-      ></color-swatch>
-      <color-swatch
-        name="Electric purple 90"
-        hex="#6f00b6"
-      ></color-swatch>
-      <color-swatch
-        name="Hyundai blue 10"
-        hex="#caddf7"
-      ></color-swatch>
-      <color-swatch
-        name="Hyundai blue 20"
-        hex="#98bbf0"
-      ></color-swatch>
-      <color-swatch
-        name="Hyundai blue 30"
-        hex="#608ad4"
-      ></color-swatch>
-      <color-swatch
-        name="Hyundai blue 40"
-        hex="#355caa"
-      ></color-swatch>
-      <color-swatch
-        name="Hyundai blue"
-        hex="#0a2972"
-      ></color-swatch>
-      <color-swatch
-        name="Hyundai blue 70"
-        hex="#051752"
-      ></color-swatch>
-      <color-swatch
-        name="Hyundai blue 90"
-        hex="#010b36"
-      ></color-swatch>
-      <color-swatch
-        name="Ripple"
-        hex="#e0f4f9"
-      ></color-swatch>
-      <color-swatch
-        name="Seaglass"
-        hex="#c9eaf1"
-      ></color-swatch>
-      <color-swatch
-        name="Seaglass ripple 30"
-        hex="#a2dbe7"
-      ></color-swatch>
-      <color-swatch
-        name="Seaglass ripple"
-        hex="#61c2d6"
-      ></color-swatch>
-      <color-swatch
-        name="Seaglass ripple 60"
-        hex="#27bedd"
-      ></color-swatch>
-      <color-swatch
-        name="Seaglass ripple 70"
-        hex="#00abce"
-      ></color-swatch>
-      <color-swatch
-        name="Seaglass ripple 80"
-        hex="#0092b0"
-      ></color-swatch>
-      <color-swatch
-        name="Solid aqua 20"
-        hex="#cdfdff"
-      ></color-swatch>
-      <color-swatch
-        name="Solid aqua 30"
-        hex="#8ffbff"
-      ></color-swatch>
-      <color-swatch
-        name="Solid aqua"
-        hex="#00f6ff"
-      ></color-swatch>
-      <color-swatch
-        name="Solid aqua 60"
-        hex="#00cfd6"
-      ></color-swatch>
-      <color-swatch
-        name="Solid aqua 80"
-        hex="#009da2"
-      ></color-swatch>
-      <color-swatch
-        name="Vibrant red 30"
-        hex="#f97a5e"
-      ></color-swatch>
-      <color-swatch
-        name="Vibrant red"
-        hex="#f86949"
-      ></color-swatch>
-      <color-swatch
-        name="Vibrant red 60"
-        hex="#df5f44"
-      ></color-swatch>
-      <color-swatch
-        name="Vibrant red 70"
-        hex="#c7563e"
-      ></color-swatch>
-      <color-swatch
-        name="Vibrant red 80"
-        hex="#ae4c39"
-      ></color-swatch>
-      <color-swatch
-        name="Vibrant red 90"
-        hex="#964334"
-      ></color-swatch>
-      <color-swatch
-        name="Accessible red"
-        hex="#dc2e07"
-      ></color-swatch>
-      <color-swatch
-        name="Red 20"
-        hex="#fdd8d5"
-      ></color-swatch>
-      <color-swatch
-        name="Red 30"
-        hex="#f9998f"
-      ></color-swatch>
-      <color-swatch
-        name="Red 40"
-        hex="#f67365"
-      ></color-swatch>
-      <color-swatch
-        name="Little red"
-        hex="#ed5645"
-      ></color-swatch>
-      <color-swatch
-        name="Red 60"
-        hex="#c13323"
-      ></color-swatch>
-      <color-swatch
-        name="Red 70"
-        hex="#ae2011"
-      ></color-swatch>
-      <color-swatch
-        name="Red 80"
-        hex="#6f2820"
-      ></color-swatch>
-      <color-swatch
-        name="Red orange 20"
-        hex="#fde2d0"
-      ></color-swatch>
-      <color-swatch
-        name="Red orange 30"
-        hex="#f8995c"
-      ></color-swatch>
-      <color-swatch
-        name="Red orange"
-        hex="#f56c16"
-      ></color-swatch>
-      <color-swatch
-        name="Red orange 60"
-        hex="#e05700"
-      ></color-swatch>
-      <color-swatch
-        name="Red orange 80"
-        hex="#c04a00"
-      ></color-swatch>
-      <color-swatch
-        name="Orange 20"
-        hex="#fce8ba"
-      ></color-swatch>
-      <color-swatch
-        name="Orange 30"
-        hex="#f9d78a"
-      ></color-swatch>
-      <color-swatch
-        name="Orange"
-        hex="#f5b016"
-      ></color-swatch>
-      <color-swatch
-        name="Orange 60"
-        hex="#e3a009"
-      ></color-swatch>
-      <color-swatch
-        name="Orange 80"
-        hex="#c08500"
-      ></color-swatch>
-      <color-swatch
-        name="Yellow 20"
-        hex="#fdf7d0"
-      ></color-swatch>
-      <color-swatch
-        name="Yellow 30"
-        hex="#f9e673"
-      ></color-swatch>
-      <color-swatch
-        name="Yellow"
-        hex="#f5d616"
-      ></color-swatch>
-      <color-swatch
-        name="Yellow 60"
-        hex="#dbc114"
-      ></color-swatch>
-      <color-swatch
-        name="Yellow 80"
-        hex="#c5aa06"
-      ></color-swatch>
-      <color-swatch
-        name="Beam 20"
-        hex="#f8ffad"
-      ></color-swatch>
-      <color-swatch
-        name="Beam"
-        hex="#e2ff1a"
-      ></color-swatch>
-      <color-swatch
-        name="Beam 60"
-        hex="#ceec00"
-      ></color-swatch>
-      <color-swatch
-        name="Beam 65"
-        hex="#bcd700"
-      ></color-swatch>
-      <color-swatch
-        name="Beam 70"
-        hex="#adc600"
-      ></color-swatch>
-      <color-swatch
-        name="Beam 80"
-        hex="#84901a"
-      ></color-swatch>
-      <color-swatch
-        name="Turf 20"
-        hex="#cfffe4"
-      ></color-swatch>
-      <color-swatch
-        name="Turf 30"
-        hex="#8fffc1"
-      ></color-swatch>
-      <color-swatch
-        name="Turf"
-        hex="#00ff73"
-      ></color-swatch>
-      <color-swatch
-        name="Turf 60"
-        hex="#00d962"
-      ></color-swatch>
-      <color-swatch
-        name="Turf 80"
-        hex="#00a249"
-      ></color-swatch>
-      <color-swatch
-        name="Turf 90"
-        hex="#147942"
-      ></color-swatch>
-      <color-swatch
-        name="Blue green 60"
-        hex="#09cc92"
-      ></color-swatch>
-      <color-swatch
-        name="Map primary light"
-        hex="#eef0f5"
-      ></color-swatch>
-      <color-swatch
-        name="Map primary dark"
-        hex="#1f2529"
-      ></color-swatch>
-      <color-swatch
-        name="Partner lyft 1"
-        hex="#ff00bf"
-      ></color-swatch>
-      <color-swatch
-        name="Partner lyft 2"
-        hex="#f48dc3"
-      ></color-swatch>
-      <color-swatch
-        name="Partner uber eats 1"
-        hex="#06c167"
-      ></color-swatch>
-      <color-swatch
-        name="Partner uber eats 2"
-        hex="#67dfa5"
-      ></color-swatch>
-      <color-swatch
-        name="Partner via 1"
-        hex="#4aa6dd"
-      ></color-swatch>
-      <color-swatch
-        name="Partner uber 1"
-        hex="#000000"
-      ></color-swatch>
-      <color-swatch
-        name="Partner uber 2"
-        hex="#ffffff"
+        name="Doll 2"
+        hex="#ffa6d2"
       ></color-swatch>
     </div>
 
@@ -1298,7 +962,7 @@
       id="compare-element-script"
       type="module"
     >
-      import Color from "./color.js";
+      import Color from "../color.js";
 
       let compareElement = document.querySelector(".compare");
       let compareInputElement = document.querySelector(".compare__input");
