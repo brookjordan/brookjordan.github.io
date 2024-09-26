@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>2D Canvas Game Engine</title>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+      canvas {
+        display: block;
+        background: #eee;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="gameCanvas"></canvas>
+
+    <script>
+      class InputHandler {
+        constructor() {
+          this.keys = {};
+          this.movementStack = []; // Stack to track movement keys in the order pressed
+          this.keyBindings = {};
+
+          window.addEventListener("keydown", (e) => this.onKeyDown(e));
+          window.addEventListener("keyup", (e) => this.onKeyUp(e));
+        }
+
+        onKeyDown(event) {
+          const key = event.key.toLowerCase();
+          if (!this.keys[key]) {
+            this.keys[key] = true;
+
+            // Add movement keys to the stack
+            if (["w", "s", "a", "d"].includes(key)) {
+              this.movementStack.push(key);
+            }
+
+            if (this.keyBindings[key] && this.keyBindings[key].onPress) {
+              this.keyBindings[key].onPress();
+            }
+          }
+        }
+
+        onKeyUp(event) {
+          const key = event.key.toLowerCase();
+          this.keys[key] = false;
+
+          // Remove key from movement stack
+          if (["w", "s", "a", "d"].includes(key)) {
+            this.movementStack = this.movementStack.filter((k) => k !== key);
+          }
+
+          if (this.keyBindings[key] && this.keyBindings[key].onRelease) {
+            this.keyBindings[key].onRelease();
+          }
+        }
+
+        getCurrentMovement() {
+          // Get the most recent key in the stack
+          return this.movementStack.length > 0
+            ? this.movementStack[this.movementStack.length - 1]
+            : null;
+        }
+
+        // Check if a key is more recent than its opposite
+        isKeyMoreRecentThan(key, oppositeKey) {
+          const keyIndex = this.movementStack.lastIndexOf(key);
+          const oppositeKeyIndex = this.movementStack.lastIndexOf(oppositeKey);
+          return keyIndex > oppositeKeyIndex; // Returns true if `key` is more recent than `oppositeKey`
+        }
+
+        update() {
+          const currentKey = this.getCurrentMovement();
+          if (
+            currentKey &&
+            this.keyBindings[currentKey] &&
+            this.keyBindings[currentKey].onHold
+          ) {
+            this.keyBindings[currentKey].onHold();
+          }
+        }
+
+        bindKey(key, { onPress, onHold, onRelease }) {
+          this.keyBindings[key.toLowerCase()] = { onPress, onHold, onRelease };
+        }
+      }
+
+      class GameEngine {
+        constructor(width, height) {
+          this.gameWidth = width;
+          this.gameHeight = height;
+          this.worldWidth = width * 2;
+          this.worldHeight = height * 2;
+          this.canvas = document.getElementById("gameCanvas");
+          this.ctx = this.canvas.getContext("2d");
+
+          // Updated player settings
+          this.player = {
+            x: width / 2,
+            y: height / 2,
+            size: 40,
+            speed: 1000, // Increased speed for more responsiveness
+            maxSpeed: 1000, // Increased max speed
+            acceleration: 3000, // Faster acceleration on ground
+            friction: 0.93, // Reduced ground friction for more sliding
+            airFriction: 0.98, // Reduced air friction for smoother jumps
+            angle: 0,
+            velocity: { x: 0, y: 0 },
+            jumpHeight: 0,
+            isJumping: false,
+            isChargingJump: false,
+            crouchFactor: 1,
+            jumpCharge: 0,
+            maxJumpHeight: 2 * 40, // 2 times the character size
+            baseJumpHeight: 1.5 * 40, // 1.5 times the character size
+            jumpVelocity: 0,
+            movementLocked: false, // New property to lock movement in the air
+          };
+
+          this.camera = {
+            x: 0,
+            y: 0,
+            width: width,
+            height: height,
+            lagFactor: 0.1,
+          };
+
+          this.input = new InputHandler();
+          this.lastUpdateTime = 0;
+
+          this.scaleFactor = 1;
+
+          this.spriteSheets = {
+            idle: [],
+            running: [],
+            crouching: [],
+            jumping: [],
+          };
+          this.currentFrame = 0;
+          this.frameSpeed = 6; // Speed at which frames of animation play
+          this.totalFrames = 10;
+
+          this.gravity = 600; // Gravity force in pixels per second²
+          this.createSpriteSheets();
+
+          this.updateCanvasSize();
+          window.addEventListener("resize", () => this.updateCanvasSize());
+
+          this.bindMovementKeys();
+          this.bindJumpKey();
+
+          this.startGameLoop();
+        }
+
+        updateCanvasSize() {
+          this.canvas.width = window.innerWidth;
+          this.canvas.height = window.innerHeight;
+          this.scaleFactor = Math.min(
+            this.canvas.width / this.gameWidth,
+            this.canvas.height / this.gameHeight
+          );
+          this.camera.width = this.canvas.width / this.scaleFactor;
+          this.camera.height = this.canvas.height / this.scaleFactor;
+        }
+
+        bindMovementKeys() {
+          // W key (Move Up) only if more recent than 's'
+          this.input.bindKey("w", {
+            onHold: () => {
+              if (
+                !this.player.isJumping &&
+                !this.player.isChargingJump &&
+                this.input.isKeyMoreRecentThan("w", "s")
+              ) {
+                this.acceleratePlayer(0, -1);
+              }
+            },
+          });
+
+          // S key (Move Down) only if more recent than 'w'
+          this.input.bindKey("s", {
+            onHold: () => {
+              if (
+                !this.player.isJumping &&
+                !this.player.isChargingJump &&
+                this.input.isKeyMoreRecentThan("s", "w")
+              ) {
+                this.acceleratePlayer(0, 1);
+              }
+            },
+          });
+
+          // A key (Move Left) only if more recent than 'd'
+          this.input.bindKey("a", {
+            onHold: () => {
+              if (
+                !this.player.isJumping &&
+                !this.player.isChargingJump &&
+                this.input.isKeyMoreRecentThan("a", "d")
+              ) {
+                this.acceleratePlayer(-1, 0);
+              }
+            },
+          });
+
+          // D key (Move Right) only if more recent than 'a'
+          this.input.bindKey("d", {
+            onHold: () => {
+              if (
+                !this.player.isJumping &&
+                !this.player.isChargingJump &&
+                this.input.isKeyMoreRecentThan("d", "a")
+              ) {
+                this.acceleratePlayer(1, 0);
+              }
+            },
+          });
+        }
+
+        bindJumpKey() {
+          this.input.bindKey(" ", {
+            onPress: () => {
+              this.player.isChargingJump = true;
+              this.player.jumpCharge = 0;
+            },
+            onHold: () => {
+              if (this.player.isChargingJump) {
+                // Gradually charge the jump
+                this.player.jumpCharge = Math.min(
+                  1,
+                  this.player.jumpCharge + 0.02
+                ); // Faster charge
+                // Scale the character down as crouch progresses
+                this.player.crouchFactor = 1 - this.player.jumpCharge * 0.3; // More visible crouch
+
+                // Slow down the character's speed while charging jump
+                this.player.speed =
+                  this.player.maxSpeed * (1 - this.player.jumpCharge);
+              }
+            },
+            onRelease: () => {
+              if (this.player.isChargingJump) {
+                this.player.isChargingJump = false;
+                this.player.isJumping = true;
+                this.player.movementLocked = true;
+
+                // Calculate jump height based on charge
+                const jumpHeight =
+                  this.player.baseJumpHeight +
+                  (this.player.maxJumpHeight - this.player.baseJumpHeight) *
+                    this.player.jumpCharge;
+                this.player.jumpVelocity = -Math.sqrt(
+                  2 * this.gravity * jumpHeight
+                ); // Initial upward velocity
+
+                // Reset speed after charging
+                this.player.speed = this.player.maxSpeed;
+
+                this.player.crouchFactor = 1;
+                this.player.jumpCharge = 0;
+              }
+            },
+          });
+        }
+
+        acceleratePlayer(dirX, dirY) {
+          // Only accelerate if on the ground and not charging jump
+          if (!this.player.isJumping && !this.player.isChargingJump) {
+            const acceleration = this.player.acceleration / 60; // Frame-based acceleration
+            this.player.velocity.x += dirX * acceleration;
+            this.player.velocity.y += dirY * acceleration;
+          }
+        }
+
+        applyFriction() {
+          // Apply friction to the player's velocity
+          const friction = this.player.isJumping
+            ? this.player.airFriction
+            : this.player.friction;
+          this.player.velocity.x *= friction;
+          this.player.velocity.y *= friction;
+
+          // Cap the player's velocity to max speed
+          const speed = Math.sqrt(
+            this.player.velocity.x ** 2 + this.player.velocity.y ** 2
+          );
+          if (speed > this.player.maxSpeed) {
+            const scale = this.player.maxSpeed / speed;
+            this.player.velocity.x *= scale;
+            this.player.velocity.y *= scale;
+          }
+        }
+
+        updatePlayerPosition() {
+          // Update the player's position based on velocity
+          this.player.x += this.player.velocity.x / 60;
+          this.player.y += this.player.velocity.y / 60;
+
+          // Constrain player to world bounds
+          this.player.x = Math.max(0, Math.min(this.worldWidth, this.player.x));
+          this.player.y = Math.max(
+            0,
+            Math.min(this.worldHeight, this.player.y)
+          );
+
+          // Update angle based on movement
+          if (this.player.velocity.x !== 0 || this.player.velocity.y !== 0) {
+            this.player.angle = Math.atan2(
+              this.player.velocity.y,
+              this.player.velocity.x
+            );
+          }
+        }
+
+        handleJump(deltaTime) {
+          if (this.player.isJumping) {
+            // Update the vertical velocity with gravity
+            this.player.jumpVelocity += this.gravity * deltaTime;
+
+            // Apply the vertical velocity to jump height
+            this.player.jumpHeight -= this.player.jumpVelocity * deltaTime;
+
+            // When the character reaches the ground, reset the jump state
+            if (this.player.jumpHeight <= 0) {
+              this.player.isJumping = false;
+              this.player.jumpHeight = 0;
+              this.player.jumpVelocity = 0;
+              this.player.movementLocked = false; // Allow movement again when grounded
+            }
+          }
+        }
+
+        drawCheckerboard() {
+          const tileSize = 100;
+          const startX = Math.floor(this.camera.x / tileSize) * tileSize;
+          const startY = Math.floor(this.camera.y / tileSize) * tileSize;
+
+          for (
+            let y = startY;
+            y < this.camera.y + this.camera.height;
+            y += tileSize
+          ) {
+            for (
+              let x = startX;
+              x < this.camera.x + this.camera.width;
+              x += tileSize
+            ) {
+              this.ctx.fillStyle =
+                (x / tileSize + y / tileSize) % 2 === 0 ? "#ddd" : "#999";
+              this.ctx.fillRect(
+                (x - this.camera.x) * this.scaleFactor,
+                (y - this.camera.y) * this.scaleFactor,
+                tileSize * this.scaleFactor,
+                tileSize * this.scaleFactor
+              );
+            }
+          }
+        }
+
+        createSpriteSheets() {
+          // Generate different sprite sheets for each type of animation
+          this.createSpriteSheet("idle", 0.1, 1); // Slight wobble
+          this.createSpriteSheet("running", 0.4, 0.8); // More wobble
+          this.createSpriteSheet("crouching", 0, 0.5); // Squashed for crouching
+          this.createSpriteSheet("jumping", 0, 1.2); // Stretched for jumping
+        }
+
+        createSpriteSheet(type, wobbleAmount, aspectRatio) {
+          const size = this.player.size;
+          for (let i = 0; i < this.totalFrames; i++) {
+            const canvas = document.createElement("canvas");
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext("2d");
+
+            const wobble =
+              Math.sin((i / this.totalFrames) * Math.PI * 2) *
+              wobbleAmount *
+              size;
+            ctx.fillStyle = "blue"; // Keep the color consistent
+            ctx.beginPath();
+            ctx.ellipse(
+              size / 2 + wobble,
+              size / 2,
+              size / 2,
+              (size / 2) * aspectRatio,
+              0,
+              0,
+              Math.PI * 2
+            );
+            ctx.fill();
+
+            this.spriteSheets[type].push(canvas);
+          }
+        }
+
+        drawPlayer() {
+          const { x, y, size, angle, jumpHeight, crouchFactor } = this.player;
+
+          // Draw shadow first
+          this.drawShadow(x, y);
+
+          // Determine the correct animation based on player state
+          let spriteSheet;
+          const speed = Math.sqrt(
+            this.player.velocity.x ** 2 + this.player.velocity.y ** 2
+          );
+          if (this.player.isChargingJump) {
+            spriteSheet = this.spriteSheets.crouching;
+          } else if (this.player.isJumping) {
+            spriteSheet = this.spriteSheets.jumping;
+          } else if (speed > this.player.maxSpeed * 0.5) {
+            spriteSheet = this.spriteSheets.running;
+          } else {
+            spriteSheet = this.spriteSheets.idle;
+          }
+
+          this.ctx.save();
+          // Offset vertically by 0.5 times the current jump height
+          const visualOffset = jumpHeight * 0.5;
+          this.ctx.translate(
+            (x - this.camera.x) * this.scaleFactor,
+            (y - this.camera.y - visualOffset) * this.scaleFactor
+          );
+          this.ctx.rotate(angle);
+
+          const frame =
+            spriteSheet[Math.floor(this.currentFrame / this.frameSpeed)];
+          // Apply crouch factor to size
+          this.ctx.drawImage(
+            frame,
+            (-size / 2) * this.scaleFactor,
+            (-size / 2) * this.scaleFactor * crouchFactor,
+            size * this.scaleFactor,
+            size * this.scaleFactor * crouchFactor
+          );
+
+          this.ctx.restore();
+
+          this.currentFrame =
+            (this.currentFrame + 1) % (this.totalFrames * this.frameSpeed);
+        }
+
+        drawShadow(x, y) {
+          const { size } = this.player;
+          const shadowSize = size * 0.8;
+
+          this.ctx.save();
+          this.ctx.translate(
+            (x - this.camera.x) * this.scaleFactor,
+            (y - this.camera.y) * this.scaleFactor
+          );
+          this.ctx.fillStyle = "rgba(0, 0, 0, 0.2)"; // Semi-transparent shadow
+          this.ctx.beginPath();
+          this.ctx.ellipse(
+            0,
+            0,
+            shadowSize * this.scaleFactor,
+            shadowSize * 0.3 * this.scaleFactor,
+            0,
+            0,
+            Math.PI * 2
+          );
+          this.ctx.fill();
+          this.ctx.restore();
+        }
+
+        updateCamera() {
+          this.camera.x +=
+            (this.player.x - this.camera.x - this.camera.width / 2) *
+            this.camera.lagFactor;
+          this.camera.y +=
+            (this.player.y - this.camera.y - this.camera.height / 2) *
+            this.camera.lagFactor;
+
+          this.camera.x = Math.max(
+            0,
+            Math.min(this.worldWidth - this.camera.width, this.camera.x)
+          );
+          this.camera.y = Math.max(
+            0,
+            Math.min(this.worldHeight - this.camera.height, this.camera.y)
+          );
+        }
+
+        render() {
+          this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+          this.drawCheckerboard();
+          this.drawPlayer();
+        }
+
+        startGameLoop() {
+          const loop = (timestamp) => {
+            const deltaTime = (timestamp - this.lastUpdateTime) / 1000;
+            this.lastUpdateTime = timestamp;
+
+            this.input.update();
+            this.applyFriction();
+            this.updatePlayerPosition();
+            this.updateCamera();
+
+            this.handleJump(deltaTime);
+            this.render();
+
+            requestAnimationFrame(loop);
+          };
+          requestAnimationFrame(loop);
+        }
+      }
+
+      // Initialize the game with width 800 and height 600 for the game world dimensions
+      const game = new GameEngine(800, 600);
+    </script>
+  </body>
+</html>
