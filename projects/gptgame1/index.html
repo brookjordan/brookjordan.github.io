@@ -1,78 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>2D Canvas Game Engine</title>
     <style>
-        body { margin: 0; overflow: hidden; }
-        canvas { display: block; background: #eee; }
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+      canvas {
+        display: block;
+        background: #eee;
+      }
     </style>
-</head>
-<body>
-<canvas id="gameCanvas"></canvas>
+  </head>
+  <body>
+    <canvas id="gameCanvas"></canvas>
 
-<script>
-class InputHandler {
-    constructor() {
-        this.keys = new Set(); // Use Set for better performance on add/remove
-        this.keyBindings = {};
+    <script>
+      class InputHandler {
+        constructor() {
+          this.keys = new Set(); // Use Set for better performance on add/remove
+          this.keyBindings = {};
 
-        window.addEventListener('keydown', (e) => this.onKeyDown(e));
-        window.addEventListener('keyup', (e) => this.onKeyUp(e));
-    }
+          window.addEventListener("keydown", (e) => this.onKeyDown(e));
+          window.addEventListener("keyup", (e) => this.onKeyUp(e));
+        }
 
-    onKeyDown(event) {
-        const key = event.key.toLowerCase();
-        if (!this.keys.has(key)) {
+        onKeyDown(event) {
+          const key = event.key.toLowerCase();
+          if (!this.keys.has(key)) {
             this.keys.add(key);
             if (this.keyBindings[key]?.onPress) {
-                this.keyBindings[key].onPress();
+              this.keyBindings[key].onPress();
             }
+          }
         }
-    }
 
-    onKeyUp(event) {
-        const key = event.key.toLowerCase();
-        this.keys.delete(key);
-        if (this.keyBindings[key]?.onRelease) {
+        onKeyUp(event) {
+          const key = event.key.toLowerCase();
+          this.keys.delete(key);
+          if (this.keyBindings[key]?.onRelease) {
             this.keyBindings[key].onRelease();
+          }
         }
-    }
 
-    bindKey(key, actions) {
-        this.keyBindings[key.toLowerCase()] = actions;
-    }
+        bindKey(key, actions) {
+          this.keyBindings[key.toLowerCase()] = actions;
+        }
 
-    update() {
-        // Update all bound keys with 'onHold' behavior
-        this.keys.forEach(key => {
+        update() {
+          // Update all bound keys with 'onHold' behavior
+          this.keys.forEach((key) => {
             this.keyBindings[key]?.onHold?.();
-        });
-    }
-}
+          });
+        }
+      }
 
-class GameEngine {
-    constructor(width, height) {
-        this.gameWidth = width;
-        this.gameHeight = height;
-        this.worldWidth = width * 2;
-        this.worldHeight = height * 2;
-        this.canvas = document.getElementById("gameCanvas");
-        this.ctx = this.canvas.getContext("2d");
+      class GameEngine {
+        constructor(width, height) {
+          this.gameWidth = width;
+          this.gameHeight = height;
+          this.worldWidth = width * 2;
+          this.worldHeight = height * 2;
+          this.canvas = document.getElementById("gameCanvas");
+          this.ctx = this.canvas.getContext("2d");
 
-        this.player = {
+          this.player = {
             x: width / 2,
             y: height / 2,
             size: 40,
-            speed: 1000,
-            maxSpeed: 1000,
+            speed: 300,
+            maxSpeed: 300,
             acceleration: 3000,
-            friction: 0.93,
-            airFriction: 0.98,
+            friction: 0.9,
+            airFriction: 0.99,
             angle: 0,
             velocity: { x: 0, y: 0 },
-            jumpHeight: 0,
+            jumpHeight: 0, // Vertical visual offset for jump effect
             isJumping: false,
             isChargingJump: false,
             crouchFactor: 1,
@@ -80,234 +86,303 @@ class GameEngine {
             maxJumpHeight: 2 * 40,
             baseJumpHeight: 1.5 * 40,
             jumpVelocity: 0,
-            movementLocked: false,
-        };
+          };
 
-        this.camera = { x: 0, y: 0, width: width, height: height, lagFactor: 0.1 };
+          this.camera = {
+            x: 0,
+            y: 0,
+            width: width,
+            height: height,
+            lagFactor: 0.1,
+          };
 
-        this.input = new InputHandler();
-        this.lastUpdateTime = 0;
-        this.scaleFactor = 1;
+          this.input = new InputHandler();
+          this.lastUpdateTime = 0;
+          this.scaleFactor = 1;
 
-        this.spriteSheet = [];
-        this.currentFrame = 0;
-        this.frameSpeed = 6;
-        this.totalFrames = 10;
+          this.spriteSheet = [];
+          this.currentFrame = 0;
+          this.frameSpeed = 6;
+          this.totalFrames = 10;
 
-        this.gravity = 600;
-        this.createSpriteSheet();
+          this.gravity = 600;
+          this.createSpriteSheet();
 
-        this.updateCanvasSize();
-        window.addEventListener('resize', () => this.updateCanvasSize());
+          this.updateCanvasSize();
+          window.addEventListener("resize", () => this.updateCanvasSize());
 
-        this.bindMovementKeys();
-        this.bindJumpKey();
+          this.bindMovementKeys();
+          this.bindJumpKey();
 
-        this.startGameLoop();
-    }
+          this.startGameLoop();
+        }
 
-    updateCanvasSize() {
-        this.canvas.width = window.innerWidth;
-        this.canvas.height = window.innerHeight;
-        this.scaleFactor = Math.min(this.canvas.width / this.gameWidth, this.canvas.height / this.gameHeight);
-        this.camera.width = this.canvas.width / this.scaleFactor;
-        this.camera.height = this.canvas.height / this.scaleFactor;
-    }
+        updateCanvasSize() {
+          this.canvas.width = window.innerWidth;
+          this.canvas.height = window.innerHeight;
+          this.scaleFactor = Math.min(
+            this.canvas.width / this.gameWidth,
+            this.canvas.height / this.gameHeight
+          );
+          this.camera.width = this.canvas.width / this.scaleFactor;
+          this.camera.height = this.canvas.height / this.scaleFactor;
+        }
 
-    bindMovementKeys() {
-        this.input.bindKey('w', {
+        bindMovementKeys() {
+          this.input.bindKey("w", {
             onHold: () => {
-                if (!this.player.isJumping && !this.player.isChargingJump && !this.player.movementLocked) {
-                    this.acceleratePlayer(0, -1);
-                }
-            }
-        });
+              this.acceleratePlayer(0, -1);
+            },
+          });
 
-        this.input.bindKey('s', {
+          this.input.bindKey("s", {
             onHold: () => {
-                if (!this.player.isJumping && !this.player.isChargingJump && !this.player.movementLocked) {
-                    this.acceleratePlayer(0, 1);
-                }
-            }
-        });
+              this.acceleratePlayer(0, 1);
+            },
+          });
 
-        this.input.bindKey('a', {
+          this.input.bindKey("a", {
             onHold: () => {
-                if (!this.player.isJumping && !this.player.isChargingJump && !this.player.movementLocked) {
-                    this.acceleratePlayer(-1, 0);
-                }
-            }
-        });
+              this.acceleratePlayer(-1, 0);
+            },
+          });
 
-        this.input.bindKey('d', {
+          this.input.bindKey("d", {
             onHold: () => {
-                if (!this.player.isJumping && !this.player.isChargingJump && !this.player.movementLocked) {
-                    this.acceleratePlayer(1, 0);
-                }
-            }
-        });
-    }
+              this.acceleratePlayer(1, 0);
+            },
+          });
+        }
 
-    bindJumpKey() {
-        this.input.bindKey(' ', {
+        bindJumpKey() {
+          this.input.bindKey(" ", {
             onPress: () => {
-                this.player.isChargingJump = true;
-                this.player.jumpCharge = 0;
+              this.player.isChargingJump = true;
+              this.player.jumpCharge = 0;
             },
             onHold: () => {
-                if (this.player.isChargingJump) {
-                    this.player.jumpCharge = Math.min(1, this.player.jumpCharge + 0.02);
-                    this.player.crouchFactor = 1 - (this.player.jumpCharge * 0.3);
-                    this.player.speed = this.player.maxSpeed * (1 - this.player.jumpCharge);
-                }
+              if (this.player.isChargingJump) {
+                this.player.jumpCharge = Math.min(
+                  1,
+                  this.player.jumpCharge + 0.02
+                );
+                this.player.crouchFactor = 1 - this.player.jumpCharge * 0.3;
+              }
             },
             onRelease: () => {
-                if (this.player.isChargingJump) {
-                    this.player.isChargingJump = false;
-                    this.player.isJumping = true;
-                    this.player.movementLocked = true;
+              if (this.player.isChargingJump) {
+                this.player.isChargingJump = false;
+                this.player.isJumping = true;
 
-                    const jumpHeight = this.player.baseJumpHeight + (this.player.maxJumpHeight - this.player.baseJumpHeight) * this.player.jumpCharge;
-                    this.player.jumpVelocity = -Math.sqrt(2 * this.gravity * jumpHeight);
+                // Reset crouchFactor after releasing jump
+                this.player.crouchFactor = 1;
 
-                    this.player.speed = this.player.maxSpeed;
-                    this.player.crouchFactor = 1;
-                    this.player.jumpCharge = 0;
-                }
-            }
-        });
-    }
+                // Calculate jump height based on charge
+                const jumpHeight =
+                  this.player.baseJumpHeight +
+                  (this.player.maxJumpHeight - this.player.baseJumpHeight) *
+                    this.player.jumpCharge;
+                this.player.jumpVelocity = -Math.sqrt(
+                  2 * this.gravity * jumpHeight
+                );
 
-    acceleratePlayer(dirX, dirY) {
-        if (!this.player.isJumping && !this.player.isChargingJump) {
-            const acceleration = this.player.acceleration / 60;
-            let magnitude = Math.sqrt(dirX * dirX + dirY * dirY);
-            if (magnitude > 0) {
-                dirX /= magnitude;
-                dirY /= magnitude;
-            }
-            this.player.velocity.x += dirX * acceleration;
-            this.player.velocity.y += dirY * acceleration;
+                this.player.jumpCharge = 0;
+              }
+            },
+          });
         }
-    }
 
-    applyFriction() {
-        const friction = this.player.isJumping ? this.player.airFriction : this.player.friction;
-        this.player.velocity.x *= friction;
-        this.player.velocity.y *= friction;
+        acceleratePlayer(dirX, dirY) {
+          // Prevent acceleration while jumping or charging jump
+          if (this.player.isJumping || this.player.isChargingJump) return;
 
-        const speed = Math.sqrt(this.player.velocity.x ** 2 + this.player.velocity.y ** 2);
-        if (speed > this.player.maxSpeed) {
+          const acceleration = this.player.acceleration / 60;
+          this.player.velocity.x += dirX * acceleration;
+          this.player.velocity.y += dirY * acceleration;
+        }
+
+        applyFriction() {
+          if (this.player.isJumping) {
+            this.player.velocity.x *= this.player.airFriction;
+            this.player.velocity.y *= this.player.airFriction;
+          } else {
+            this.player.velocity.x *= this.player.friction;
+            this.player.velocity.y *= this.player.friction;
+          }
+
+          // Cap the player's velocity to max speed
+          const speed = Math.sqrt(
+            this.player.velocity.x ** 2 + this.player.velocity.y ** 2
+          );
+          if (speed > this.player.maxSpeed) {
             const scale = this.player.maxSpeed / speed;
             this.player.velocity.x *= scale;
             this.player.velocity.y *= scale;
+          }
         }
-    }
 
-    updatePlayerPosition() {
-        this.player.x += this.player.velocity.x / 60;
-        this.player.y += this.player.velocity.y / 60;
+        updatePlayerPosition() {
+          this.player.x += this.player.velocity.x / 60;
+          this.player.y += this.player.velocity.y / 60;
 
-        this.player.x = Math.max(0, Math.min(this.worldWidth, this.player.x));
-        this.player.y = Math.max(0, Math.min(this.worldHeight, this.player.y));
-
-        if (this.player.velocity.x !== 0 || this.player.velocity.y !== 0) {
-            this.player.angle = Math.atan2(this.player.velocity.y, this.player.velocity.x);
+          // Constrain player to world bounds
+          this.player.x = Math.max(0, Math.min(this.worldWidth, this.player.x));
+          this.player.y = Math.max(
+            0,
+            Math.min(this.worldHeight, this.player.y)
+          );
         }
-    }
 
-    handleJump(deltaTime) {
-        if (this.player.isJumping) {
+        handleJump(deltaTime) {
+          if (this.player.isJumping) {
+            // Update jump visual height with gravity
             this.player.jumpVelocity += this.gravity * deltaTime;
             this.player.jumpHeight -= this.player.jumpVelocity * deltaTime;
 
+            // When "landing," reset jump state
             if (this.player.jumpHeight <= 0) {
-                this.player.isJumping = false;
-                this.player.jumpHeight = 0;
-                this.player.jumpVelocity = 0;
-                this.player.movementLocked = false;
+              this.player.isJumping = false;
+              this.player.jumpHeight = 0;
+              this.player.jumpVelocity = 0;
             }
+          }
         }
-    }
 
-    drawCheckerboard() {
-        const tileSize = 100;
-        const startX = Math.floor(this.camera.x / tileSize) * tileSize;
-        const startY = Math.floor(this.camera.y / tileSize) * tileSize;
+        drawCheckerboard() {
+          const tileSize = 100;
+          const startX = Math.floor(this.camera.x / tileSize) * tileSize;
+          const startY = Math.floor(this.camera.y / tileSize) * tileSize;
 
-        for (let y = startY; y < this.camera.y + this.camera.height; y += tileSize) {
-            for (let x = startX; x < this.camera.x + this.camera.width; x += tileSize) {
-                this.ctx.fillStyle = ((x / tileSize + y / tileSize) % 2 === 0) ? '#ddd' : '#999';
-                this.ctx.fillRect((x - this.camera.x) * this.scaleFactor, (y - this.camera.y) * this.scaleFactor, tileSize * this.scaleFactor, tileSize * this.scaleFactor);
+          for (
+            let y = startY;
+            y < this.camera.y + this.camera.height;
+            y += tileSize
+          ) {
+            for (
+              let x = startX;
+              x < this.camera.x + this.camera.width;
+              x += tileSize
+            ) {
+              this.ctx.fillStyle =
+                (x / tileSize + y / tileSize) % 2 === 0 ? "#ddd" : "#999";
+              this.ctx.fillRect(
+                (x - this.camera.x) * this.scaleFactor,
+                (y - this.camera.y) * this.scaleFactor,
+                tileSize * this.scaleFactor,
+                tileSize * this.scaleFactor
+              );
             }
+          }
         }
-    }
 
-    createSpriteSheet() {
-        const size = this.player.size;
-        for (let i = 0; i < this.totalFrames; i++) {
-            const canvas = document.createElement('canvas');
+        createSpriteSheet() {
+          const size = this.player.size;
+          for (let i = 0; i < this.totalFrames; i++) {
+            const canvas = document.createElement("canvas");
             canvas.width = size;
             canvas.height = size;
-            const ctx = canvas.getContext('2d');
+            const ctx = canvas.getContext("2d");
 
-            const wobble = Math.sin(i / this.totalFrames * Math.PI * 2) * 5;
-            ctx.fillStyle = 'blue';
+            const wobble = Math.sin((i / this.totalFrames) * Math.PI * 2) * 5;
+            ctx.fillStyle = "blue";
             ctx.beginPath();
-            ctx.ellipse(size / 2 + wobble, size / 2, size / 2, size / 2.2, 0, 0, Math.PI * 2);
+            ctx.ellipse(
+              size / 2 + wobble,
+              size / 2,
+              size / 2,
+              size / 2.2,
+              0,
+              0,
+              Math.PI * 2
+            );
             ctx.fill();
 
             this.spriteSheet.push(canvas);
+          }
         }
-    }
 
-    drawPlayer() {
-        const { x, y, size, angle, jumpHeight, crouchFactor } = this.player;
+        drawPlayer() {
+          const { x, y, size, angle, jumpHeight, crouchFactor } = this.player;
 
-        this.ctx.save();
-        const visualOffset = jumpHeight * 0.5;
-        this.ctx.translate((x - this.camera.x) * this.scaleFactor, (y - this.camera.y - visualOffset) * this.scaleFactor);
-        this.ctx.rotate(angle);
+          // Draw shadow first to appear beneath player
+          this.drawShadow(x, y);
 
-        const frame = this.spriteSheet[Math.floor(this.currentFrame / this.frameSpeed)];
-        this.ctx.drawImage(frame, -size / 2 * this.scaleFactor, -size / 2 * this.scaleFactor * crouchFactor, size * this.scaleFactor, size * this.scaleFactor * crouchFactor);
+          this.ctx.save();
+          // Apply the visual jump offset
+          const visualOffset = jumpHeight * 0.5;
+          this.ctx.translate(
+            (x - this.camera.x) * this.scaleFactor,
+            (y - this.camera.y - visualOffset) * this.scaleFactor
+          );
+          this.ctx.rotate(angle);
 
-        this.ctx.restore();
+          const frame =
+            this.spriteSheet[Math.floor(this.currentFrame / this.frameSpeed)];
+          this.ctx.drawImage(
+            frame,
+            (-size / 2) * this.scaleFactor,
+            (-size / 2) * this.scaleFactor * crouchFactor,
+            size * this.scaleFactor,
+            size * this.scaleFactor * crouchFactor
+          );
 
-        this.currentFrame = (this.currentFrame + 1) % (this.totalFrames * this.frameSpeed);
+          this.ctx.restore();
 
-        this.drawShadow(x, y);
-    }
+          this.currentFrame =
+            (this.currentFrame + 1) % (this.totalFrames * this.frameSpeed);
+        }
 
-    drawShadow(x, y) {
-        const { size } = this.player;
-        const shadowSize = size * 0.8;
+        drawShadow(x, y) {
+          const { size, jumpHeight } = this.player;
+          const shadowSize = size * 0.8;
 
-        this.ctx.save();
-        this.ctx.translate((x - this.camera.x) * this.scaleFactor, (y - this.camera.y) * this.scaleFactor);
-        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
-        this.ctx.beginPath();
-        this.ctx.ellipse(0, 0, shadowSize * this.scaleFactor, shadowSize * 0.3 * this.scaleFactor, 0, 0, Math.PI * 2);
-        this.ctx.fill();
-        this.ctx.restore();
-    }
+          this.ctx.save();
+          // Draw shadow without the jump offset
+          this.ctx.translate(
+            (x - this.camera.x) * this.scaleFactor,
+            (y - this.camera.y) * this.scaleFactor
+          );
+          this.ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
+          this.ctx.beginPath();
+          this.ctx.ellipse(
+            0,
+            0,
+            shadowSize * this.scaleFactor,
+            shadowSize * 0.3 * this.scaleFactor,
+            0,
+            0,
+            Math.PI * 2
+          );
+          this.ctx.fill();
+          this.ctx.restore();
+        }
 
-    updateCamera() {
-        this.camera.x += (this.player.x - this.camera.x - this.camera.width / 2) * this.camera.lagFactor;
-        this.camera.y += (this.player.y - this.camera.y - this.camera.height / 2) * this.camera.lagFactor;
+        updateCamera() {
+          this.camera.x +=
+            (this.player.x - this.camera.x - this.camera.width / 2) *
+            this.camera.lagFactor;
+          this.camera.y +=
+            (this.player.y - this.camera.y - this.camera.height / 2) *
+            this.camera.lagFactor;
 
-        this.camera.x = Math.max(0, Math.min(this.worldWidth - this.camera.width, this.camera.x));
-        this.camera.y = Math.max(0, Math.min(this.worldHeight - this.camera.height, this.camera.y));
-    }
+          this.camera.x = Math.max(
+            0,
+            Math.min(this.worldWidth - this.camera.width, this.camera.x)
+          );
+          this.camera.y = Math.max(
+            0,
+            Math.min(this.worldHeight - this.camera.height, this.camera.y)
+          );
+        }
 
-    render() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.drawCheckerboard();
-        this.drawPlayer();
-    }
+        render() {
+          this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+          this.drawCheckerboard();
+          this.drawPlayer();
+        }
 
-    startGameLoop() {
-        const loop = (timestamp) => {
+        startGameLoop() {
+          const loop = (timestamp) => {
             const deltaTime = (timestamp - this.lastUpdateTime) / 1000;
             this.lastUpdateTime = timestamp;
 
@@ -315,21 +390,21 @@ class GameEngine {
             this.render();
 
             requestAnimationFrame(loop);
-        };
-        requestAnimationFrame(loop);
-    }
+          };
+          requestAnimationFrame(loop);
+        }
 
-    update(deltaTime) {
-        this.input.update();
-        this.applyFriction();
-        this.updatePlayerPosition();
-        this.updateCamera();
-        this.handleJump(deltaTime);
-    }
-}
+        update(deltaTime) {
+          this.input.update();
+          this.applyFriction();
+          this.updatePlayerPosition();
+          this.updateCamera();
+          this.handleJump(deltaTime);
+        }
+      }
 
-// Initialize the game with width 800 and height 600 for the game world dimensions
-const game = new GameEngine(800, 600);
-</script>
-</body>
+      // Initialize the game with width 800 and height 600 for the game world dimensions
+      const game = new GameEngine(800, 600);
+    </script>
+  </body>
 </html>
