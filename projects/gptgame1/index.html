@@ -97,7 +97,7 @@
 
         this.direction = 'front'; // 'front', 'back', 'left', 'right'
         this.currentFrame = 0;
-        this.frameSpeed = 6;
+        this.frameSpeed = 0.67;
         this.totalFrames = 12;
 
         this.spriteImages = {
@@ -327,7 +327,7 @@
           ctx.drawImage(
             frame,
             (-size / 2) * scaleFactor,
-            (-size) * scaleFactor * crouchFactor,
+            (-size / 2) * scaleFactor * crouchFactor,
             size * scaleFactor,
             size * scaleFactor * crouchFactor
           );
@@ -351,7 +351,7 @@
 
         ctx.save();
         // Draw shadow with offset
-        const shadowOffsetY = size * 0.4; // Align with bottom of sprite
+        const shadowOffsetY = size * 0.5; // Align with bottom of sprite
         ctx.translate(
           (this.x - camera.x) * scaleFactor,
           (this.y - camera.y + shadowOffsetY) * scaleFactor
