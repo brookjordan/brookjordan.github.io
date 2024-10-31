@@ -29,6 +29,7 @@
 
         window.addEventListener('keydown', (e) => this.onKeyDown(e));
         window.addEventListener('keyup', (e) => this.onKeyUp(e));
+        window.addEventListener('blur', () => this.onBlur());
       }
 
       onKeyDown(event) {
@@ -53,6 +54,17 @@
         event.preventDefault();
       }
 
+      onBlur() {
+        // Release all keys when window loses focus
+        this.keysHeld.clear();
+        // Call onRelease for all key bindings
+        for (const key in this.keyBindings) {
+          if (this.keyBindings[key]?.onRelease) {
+            this.keyBindings[key].onRelease();
+          }
+        }
+      }
+
       bindKey(key, actions) {
         this.keyBindings[key.toLowerCase()] = actions;
       }
@@ -63,7 +75,7 @@
     }
 
     class Player {
-      constructor(gameWidth, gameHeight) {
+      constructor(gameWidth, gameHeight, worldWidth, worldHeight) {
         this.x = gameWidth / 2;
         this.y = gameHeight / 2;
         this.size = 40;
@@ -96,6 +108,9 @@
         };
 
         this.loadSprites();
+
+        this.worldWidth = worldWidth;
+        this.worldHeight = worldHeight;
       }
 
       loadSprites() {
@@ -149,7 +164,31 @@
         // Determine direction based on velocity
         this.updateDirection();
 
-        // Constrain player to world bounds (if needed)
+        // Constrain player to world bounds
+        this.constrainToBounds();
+
+        // Update animation frame
+        this.updateAnimation(deltaTime);
+      }
+
+      constrainToBounds() {
+        const halfSize = this.size / 2;
+        // Left and right boundaries
+        if (this.x - halfSize < 0) {
+          this.x = halfSize;
+          this.velocity.x = 0;
+        } else if (this.x + halfSize > this.worldWidth) {
+          this.x = this.worldWidth - halfSize;
+          this.velocity.x = 0;
+        }
+        // Top and bottom boundaries
+        if (this.y - halfSize < 0) {
+          this.y = halfSize;
+          this.velocity.y = 0;
+        } else if (this.y + halfSize > this.worldHeight) {
+          this.y = this.worldHeight - halfSize;
+          this.velocity.y = 0;
+        }
       }
 
       updateDirection() {
@@ -252,6 +291,20 @@
         }
       }
 
+      updateAnimation(deltaTime) {
+        const speed = Math.hypot(this.velocity.x, this.velocity.y);
+        if (speed > 0.1) {
+          // Adjust frame speed based on movement speed
+          const animationSpeed = Math.min(speed / this.maxSpeed, 1);
+          this.currentFrame += animationSpeed * this.frameSpeed * deltaTime * 60;
+          if (this.currentFrame >= this.totalFrames) {
+            this.currentFrame = 0;
+          }
+        } else {
+          this.currentFrame = 0; // Reset to first frame when not moving
+        }
+      }
+
       draw(ctx, camera, scaleFactor) {
         const { size, angle, jumpHeight, crouchFactor } = this;
 
@@ -267,14 +320,14 @@
         );
         ctx.rotate(angle);
 
-        const frameIndex = Math.floor(this.currentFrame / this.frameSpeed) % this.totalFrames;
+        const frameIndex = Math.floor(this.currentFrame) % this.totalFrames;
         const frame = this.spriteImages[this.direction][frameIndex];
 
         if (frame && frame.complete) {
           ctx.drawImage(
             frame,
             (-size / 2) * scaleFactor,
-            (-size / 2) * scaleFactor * crouchFactor,
+            (-size) * scaleFactor * crouchFactor,
             size * scaleFactor,
             size * scaleFactor * crouchFactor
           );
@@ -290,24 +343,15 @@
         }
 
         ctx.restore();
-
-        // Update animation frame only if moving
-        const speed = Math.hypot(this.velocity.x, this.velocity.y);
-        if (speed > 0.1) {
-          this.currentFrame =
-            (this.currentFrame + 1) % (this.totalFrames * this.frameSpeed);
-        } else {
-          this.currentFrame = 0; // Reset to first frame when not moving
-        }
       }
 
       drawShadow(ctx, camera, scaleFactor) {
         const { size } = this;
-        const shadowSize = size * 0.8;
+        const shadowSize = (size * 0.4); // Half the previous size
 
         ctx.save();
         // Draw shadow with offset
-        const shadowOffsetY = size * 0.1; // Move shadow down by 10% of size
+        const shadowOffsetY = size * 0.4; // Align with bottom of sprite
         ctx.translate(
           (this.x - camera.x) * scaleFactor,
           (this.y - camera.y + shadowOffsetY) * scaleFactor
@@ -399,7 +443,7 @@
         // High-DPI support
         this.dpr = window.devicePixelRatio || 1;
 
-        this.player = new Player(width, height);
+        this.player = new Player(width, height, this.worldWidth, this.worldHeight);
 
         this.camera = new Camera(
           width,
