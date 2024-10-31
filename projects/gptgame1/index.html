@@ -10,11 +10,11 @@
       overflow: hidden;
     }
     canvas {
-        position: fixed;
-        width: 100%;
-        height: 100%;
-        display: block;
-        background: #eee;
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      display: block;
+      background: #eee;
     }
   </style>
 </head>
@@ -67,12 +67,11 @@
         this.x = gameWidth / 2;
         this.y = gameHeight / 2;
         this.size = 40;
-        this.speed = 300;
-        this.maxSpeed = 300;
-        this.acceleration = 3000;
-        this.friction = 0.90;
-        this.airFriction = 0.99;
-        this.angle = 0;
+        this.maxSpeed = 300; // Max speed in units per second
+        this.acceleration = 1000; // Acceleration in units per second squared
+        this.friction = 800; // Friction deceleration in units per second squared
+        this.airFriction = 200; // Air friction deceleration
+
         this.velocity = { x: 0, y: 0 };
         this.jumpHeight = 0;
         this.isJumping = false;
@@ -82,7 +81,7 @@
         this.maxJumpHeight = 2 * 40;
         this.baseJumpHeight = 1.5 * 40;
         this.jumpVelocity = 0;
-        this.gravity = 600;
+        this.gravity = -600; // Negative gravity for upward movement
 
         this.direction = 'front'; // 'front', 'back', 'left', 'right'
         this.currentFrame = 0;
@@ -112,21 +111,28 @@
 
       update(deltaTime, input) {
         // Handle movement
+        let moveX = 0;
+        let moveY = 0;
+
         if (input.isKeyHeld('w')) {
-          this.accelerate(0, -1, deltaTime);
-          this.direction = 'back';
+          moveY -= 1;
         }
         if (input.isKeyHeld('s')) {
-          this.accelerate(0, 1, deltaTime);
-          this.direction = 'front';
+          moveY += 1;
         }
         if (input.isKeyHeld('a')) {
-          this.accelerate(-1, 0, deltaTime);
-          this.direction = 'left';
+          moveX -= 1;
         }
         if (input.isKeyHeld('d')) {
-          this.accelerate(1, 0, deltaTime);
-          this.direction = 'right';
+          moveX += 1;
+        }
+
+        if (moveX !== 0 || moveY !== 0) {
+          const length = Math.hypot(moveX, moveY);
+          moveX /= length;
+          moveY /= length;
+
+          this.accelerate(moveX, moveY, deltaTime);
         }
 
         if (input.isKeyHeld(' ')) {
@@ -140,7 +146,29 @@
 
         this.handleJump(deltaTime);
 
+        // Determine direction based on velocity
+        this.updateDirection();
+
         // Constrain player to world bounds (if needed)
+      }
+
+      updateDirection() {
+        const speed = Math.hypot(this.velocity.x, this.velocity.y);
+        if (speed > 0.1) {
+          if (Math.abs(this.velocity.x) > Math.abs(this.velocity.y)) {
+            if (this.velocity.x > 0) {
+              this.direction = 'right';
+            } else if (this.velocity.x < 0) {
+              this.direction = 'left';
+            }
+          } else {
+            if (this.velocity.y > 0) {
+              this.direction = 'front';
+            } else if (this.velocity.y < 0) {
+              this.direction = 'back';
+            }
+          }
+        }
       }
 
       accelerate(dirX, dirY, deltaTime) {
@@ -150,20 +178,23 @@
         const acceleration = this.acceleration * deltaTime;
         this.velocity.x += dirX * acceleration;
         this.velocity.y += dirY * acceleration;
-      }
-
-      applyFriction(deltaTime) {
-        const frictionFactor = Math.pow(
-          this.isJumping ? this.airFriction : this.friction,
-          deltaTime * 60
-        );
-        this.velocity.x *= frictionFactor;
-        this.velocity.y *= frictionFactor;
 
         // Cap the player's velocity to max speed
         const speed = Math.hypot(this.velocity.x, this.velocity.y);
         if (speed > this.maxSpeed) {
           const scale = this.maxSpeed / speed;
+          this.velocity.x *= scale;
+          this.velocity.y *= scale;
+        }
+      }
+
+      applyFriction(deltaTime) {
+        const friction = this.isJumping ? this.airFriction : this.friction;
+        const speed = Math.hypot(this.velocity.x, this.velocity.y);
+        if (speed > 0) {
+          const deceleration = friction * deltaTime;
+          const newSpeed = Math.max(0, speed - deceleration);
+          const scale = newSpeed / speed;
           this.velocity.x *= scale;
           this.velocity.y *= scale;
         }
@@ -199,7 +230,7 @@
               this.jumpCharge;
 
           // Set the correct jump velocity based on charged height
-          this.jumpVelocity = -Math.sqrt(2 * this.gravity * jumpHeight);
+          this.jumpVelocity = Math.sqrt(2 * -this.gravity * jumpHeight);
 
           // Reset jump charge for next jump
           this.jumpCharge = 0;
@@ -208,12 +239,12 @@
 
       handleJump(deltaTime) {
         if (this.isJumping) {
-          // Update jump visual height with gravity
-          this.jumpVelocity += this.gravity * deltaTime;
+          // Update jump velocity with gravity
+          this.jumpVelocity += this.gravity * deltaTime; // gravity is negative
           this.jumpHeight += this.jumpVelocity * deltaTime;
 
-          // When "landing," reset jump state
-          if (this.jumpHeight >= 0) {
+          // When landing, reset jump state
+          if (this.jumpHeight <= 0) {
             this.isJumping = false;
             this.jumpHeight = 0;
             this.jumpVelocity = 0;
@@ -229,7 +260,7 @@
 
         ctx.save();
         // Apply the visual jump offset
-        const visualOffset = -jumpHeight * 0.5;
+        const visualOffset = -jumpHeight * 0.5; // Move character up
         ctx.translate(
           (this.x - camera.x) * scaleFactor,
           (this.y - camera.y + visualOffset) * scaleFactor
@@ -260,8 +291,14 @@
 
         ctx.restore();
 
-        this.currentFrame =
-          (this.currentFrame + 1) % (this.totalFrames * this.frameSpeed);
+        // Update animation frame only if moving
+        const speed = Math.hypot(this.velocity.x, this.velocity.y);
+        if (speed > 0.1) {
+          this.currentFrame =
+            (this.currentFrame + 1) % (this.totalFrames * this.frameSpeed);
+        } else {
+          this.currentFrame = 0; // Reset to first frame when not moving
+        }
       }
 
       drawShadow(ctx, camera, scaleFactor) {
@@ -269,10 +306,11 @@
         const shadowSize = size * 0.8;
 
         ctx.save();
-        // Draw shadow without the jump offset
+        // Draw shadow with offset
+        const shadowOffsetY = size * 0.1; // Move shadow down by 10% of size
         ctx.translate(
           (this.x - camera.x) * scaleFactor,
-          (this.y - camera.y) * scaleFactor
+          (this.y - camera.y + shadowOffsetY) * scaleFactor
         );
         ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
         ctx.beginPath();
@@ -373,7 +411,8 @@
         );
 
         this.input = new InputHandler();
-        this.lastUpdateTime = 0;
+
+        this.lastUpdateTime = performance.now();
 
         this.updateCanvasSize();
         window.addEventListener("resize", () => this.updateCanvasSize());
@@ -445,11 +484,14 @@
       }
 
       startGameLoop() {
-        const loop = (timestamp) => {
-          const deltaTime = (timestamp - this.lastUpdateTime) / 1000;
-          this.lastUpdateTime = timestamp;
+        const loop = (currentTime) => {
+          const deltaTime = (currentTime - this.lastUpdateTime) / 1000;
+          this.lastUpdateTime = currentTime;
 
-          this.update(deltaTime);
+          // Cap deltaTime to prevent large jumps
+          const delta = Math.min(deltaTime, 0.1);
+
+          this.update(delta);
           this.render();
 
           requestAnimationFrame(loop);
