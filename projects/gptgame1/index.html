@@ -1,560 +1,592 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>2D Canvas Game Engine</title>
-  <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-    }
-    canvas {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      display: block;
-      background: #eee;
-    }
-  </style>
-</head>
-<body>
-  <canvas id="gameCanvas"></canvas>
-
-  <script>
-    class InputHandler {
-      constructor() {
-        this.keysHeld = new Set();
-        this.keyBindings = {};
-
-        window.addEventListener('keydown', (e) => this.onKeyDown(e));
-        window.addEventListener('keyup', (e) => this.onKeyUp(e));
-        window.addEventListener('blur', () => this.onBlur());
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>2D Canvas Game Engine</title>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
       }
-
-      onKeyDown(event) {
-        const key = event.key.toLowerCase();
-        if (!this.keysHeld.has(key)) {
-          this.keysHeld.add(key);
-          if (this.keyBindings[key]?.onPress) {
-            this.keyBindings[key].onPress();
-          }
-        }
-        event.preventDefault();
+      canvas {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        display: block;
+        background: #eee;
       }
+    </style>
+  </head>
+  <body>
+    <canvas id="gameCanvas"></canvas>
 
-      onKeyUp(event) {
-        const key = event.key.toLowerCase();
-        if (this.keysHeld.has(key)) {
-          this.keysHeld.delete(key);
-          if (this.keyBindings[key]?.onRelease) {
-            this.keyBindings[key].onRelease();
-          }
-        }
-        event.preventDefault();
-      }
+    <script>
+      class InputHandler {
+        constructor() {
+          this.keysHeld = new Set();
+          this.keyBindings = {};
 
-      onBlur() {
-        // Release all keys when window loses focus
-        this.keysHeld.clear();
-        // Call onRelease for all key bindings
-        for (const key in this.keyBindings) {
-          if (this.keyBindings[key]?.onRelease) {
-            this.keyBindings[key].onRelease();
-          }
-        }
-      }
-
-      bindKey(key, actions) {
-        this.keyBindings[key.toLowerCase()] = actions;
-      }
-
-      isKeyHeld(key) {
-        return this.keysHeld.has(key.toLowerCase());
-      }
-    }
-
-    class Player {
-      constructor(gameWidth, gameHeight, worldWidth, worldHeight) {
-        this.x = gameWidth / 2;
-        this.y = gameHeight / 2;
-        this.size = 40;
-        this.maxSpeed = 300; // Max speed in units per second
-        this.acceleration = 1000; // Acceleration in units per second squared
-        this.friction = 800; // Friction deceleration in units per second squared
-        this.airFriction = 200; // Air friction deceleration
-
-        this.velocity = { x: 0, y: 0 };
-        this.jumpHeight = 0;
-        this.isJumping = false;
-        this.isChargingJump = false;
-        this.crouchFactor = 1;
-        this.jumpCharge = 0;
-        this.maxJumpHeight = 2 * 40;
-        this.baseJumpHeight = 1.5 * 40;
-        this.jumpVelocity = 0;
-        this.gravity = -600; // Negative gravity for upward movement
-
-        this.direction = 'front'; // 'front', 'back', 'left', 'right'
-        this.currentFrame = 0;
-        this.frameSpeed = 0.67;
-        this.totalFrames = 12;
-
-        this.spriteImages = {
-          front: [],
-          back: [],
-          left: [],
-          right: [],
-        };
-
-        this.loadSprites();
-
-        this.worldWidth = worldWidth;
-        this.worldHeight = worldHeight;
-      }
-
-      loadSprites() {
-        const directions = ['front', 'back', 'left', 'right'];
-        directions.forEach((dir) => {
-          for (let i = 1; i <= this.totalFrames; i++) {
-            const img = new Image();
-            img.src = `i/${dir}_${String(i).padStart(2, '0')}.png`;
-            this.spriteImages[dir].push(img);
-          }
-        });
-      }
-
-      update(deltaTime, input) {
-        // Handle movement
-        let moveX = 0;
-        let moveY = 0;
-
-        if (input.isKeyHeld('w')) {
-          moveY -= 1;
-        }
-        if (input.isKeyHeld('s')) {
-          moveY += 1;
-        }
-        if (input.isKeyHeld('a')) {
-          moveX -= 1;
-        }
-        if (input.isKeyHeld('d')) {
-          moveX += 1;
+          window.addEventListener("keydown", (e) => this.onKeyDown(e));
+          window.addEventListener("keyup", (e) => this.onKeyUp(e));
+          window.addEventListener("blur", () => this.onBlur());
         }
 
-        if (moveX !== 0 || moveY !== 0) {
-          const length = Math.hypot(moveX, moveY);
-          moveX /= length;
-          moveY /= length;
-
-          this.accelerate(moveX, moveY, deltaTime);
-        }
-
-        if (input.isKeyHeld(' ')) {
-          this.chargeJump(deltaTime);
-        }
-
-        this.applyFriction(deltaTime);
-
-        this.x += this.velocity.x * deltaTime;
-        this.y += this.velocity.y * deltaTime;
-
-        this.handleJump(deltaTime);
-
-        // Determine direction based on velocity
-        this.updateDirection();
-
-        // Constrain player to world bounds
-        this.constrainToBounds();
-
-        // Update animation frame
-        this.updateAnimation(deltaTime);
-      }
-
-      constrainToBounds() {
-        const halfSize = this.size / 2;
-        // Left and right boundaries
-        if (this.x - halfSize < 0) {
-          this.x = halfSize;
-          this.velocity.x = 0;
-        } else if (this.x + halfSize > this.worldWidth) {
-          this.x = this.worldWidth - halfSize;
-          this.velocity.x = 0;
-        }
-        // Top and bottom boundaries
-        if (this.y - halfSize < 0) {
-          this.y = halfSize;
-          this.velocity.y = 0;
-        } else if (this.y + halfSize > this.worldHeight) {
-          this.y = this.worldHeight - halfSize;
-          this.velocity.y = 0;
-        }
-      }
-
-      updateDirection() {
-        const speed = Math.hypot(this.velocity.x, this.velocity.y);
-        if (speed > 0.1) {
-          if (Math.abs(this.velocity.x) > Math.abs(this.velocity.y)) {
-            if (this.velocity.x > 0) {
-              this.direction = 'right';
-            } else if (this.velocity.x < 0) {
-              this.direction = 'left';
+        onKeyDown(event) {
+          const key = event.key.toLowerCase();
+          if (!this.keysHeld.has(key)) {
+            this.keysHeld.add(key);
+            if (this.keyBindings[key]?.onPress) {
+              this.keyBindings[key].onPress();
             }
-          } else {
-            if (this.velocity.y > 0) {
-              this.direction = 'front';
-            } else if (this.velocity.y < 0) {
-              this.direction = 'back';
+          }
+          event.preventDefault();
+        }
+
+        onKeyUp(event) {
+          const key = event.key.toLowerCase();
+          if (this.keysHeld.has(key)) {
+            this.keysHeld.delete(key);
+            if (this.keyBindings[key]?.onRelease) {
+              this.keyBindings[key].onRelease();
+            }
+          }
+          event.preventDefault();
+        }
+
+        onBlur() {
+          // Release all keys when window loses focus
+          this.keysHeld.clear();
+          // Call onRelease for all key bindings
+          for (const key in this.keyBindings) {
+            if (this.keyBindings[key]?.onRelease) {
+              this.keyBindings[key].onRelease();
             }
           }
         }
-      }
 
-      accelerate(dirX, dirY, deltaTime) {
-        // Prevent acceleration while jumping or charging jump
-        if (this.isJumping || this.isChargingJump) return;
+        bindKey(key, actions) {
+          this.keyBindings[key.toLowerCase()] = actions;
+        }
 
-        const acceleration = this.acceleration * deltaTime;
-        this.velocity.x += dirX * acceleration;
-        this.velocity.y += dirY * acceleration;
-
-        // Cap the player's velocity to max speed
-        const speed = Math.hypot(this.velocity.x, this.velocity.y);
-        if (speed > this.maxSpeed) {
-          const scale = this.maxSpeed / speed;
-          this.velocity.x *= scale;
-          this.velocity.y *= scale;
+        isKeyHeld(key) {
+          return this.keysHeld.has(key.toLowerCase());
         }
       }
 
-      applyFriction(deltaTime) {
-        const friction = this.isJumping ? this.airFriction : this.friction;
-        const speed = Math.hypot(this.velocity.x, this.velocity.y);
-        if (speed > 0) {
-          const deceleration = friction * deltaTime;
-          const newSpeed = Math.max(0, speed - deceleration);
-          const scale = newSpeed / speed;
-          this.velocity.x *= scale;
-          this.velocity.y *= scale;
-        }
-      }
+      class Player {
+        constructor(gameWidth, gameHeight, worldWidth, worldHeight) {
+          this.x = gameWidth / 2;
+          this.y = gameHeight / 2;
+          this.size = 40;
+          this.maxSpeed = 300; // Max speed in units per second
+          this.acceleration = 1000; // Acceleration in units per second squared
+          this.friction = 800; // Friction deceleration in units per second squared
 
-      startChargingJump() {
-        if (this.isJumping) return; // Prevent jump if already jumping
-        this.isChargingJump = true;
-        this.jumpCharge = 0;
-      }
-
-      chargeJump(deltaTime) {
-        // Only charge the jump if the player is actively charging
-        if (this.isChargingJump && !this.isJumping) {
-          const chargeSpeed = 1; // Adjust as needed for desired charge duration
-          this.jumpCharge = Math.min(1, this.jumpCharge + chargeSpeed * deltaTime);
-          this.crouchFactor = 1 - this.jumpCharge * 0.3;
-        }
-      }
-
-      releaseJump() {
-        if (this.isChargingJump) {
+          this.velocity = { x: 0, y: 0 };
+          this.jumpHeight = 0;
+          this.isJumping = false;
           this.isChargingJump = false;
-          this.isJumping = true;
-
-          // Reset crouchFactor after releasing jump
           this.crouchFactor = 1;
+          this.jumpCharge = 0;
+          this.maxJumpHeight = 2 * 40;
+          this.baseJumpHeight = 1.5 * 40;
+          this.jumpVelocity = 0;
+          this.gravity = -600; // Negative gravity for upward movement
 
-          // Calculate jump height based on the charged value
-          const jumpHeight =
-            this.baseJumpHeight +
-            (this.maxJumpHeight - this.baseJumpHeight) *
-              this.jumpCharge;
+          this.direction = "front"; // 'front', 'back', 'left', 'right'
+          this.currentFrame = 0;
+          this.frameSpeed = 0.67;
+          this.totalFrames = 12;
 
-          // Set the correct jump velocity based on charged height
-          this.jumpVelocity = Math.sqrt(2 * -this.gravity * jumpHeight);
+          this.spriteImages = {
+            front: [],
+            back: [],
+            left: [],
+            right: [],
+          };
 
-          // Reset jump charge for next jump
+          this.loadSprites();
+
+          this.worldWidth = worldWidth;
+          this.worldHeight = worldHeight;
+        }
+
+        loadSprites() {
+          const directions = ["front", "back", "left", "right"];
+          directions.forEach((dir) => {
+            for (let i = 1; i <= this.totalFrames; i++) {
+              const img = new Image();
+              img.src = `i/${dir}_${String(i).padStart(2, "0")}.png`;
+              this.spriteImages[dir].push(img);
+            }
+          });
+        }
+
+        update(deltaTime, input) {
+          // Handle movement
+          let moveX = 0;
+          let moveY = 0;
+
+          if (input.isKeyHeld("w")) {
+            moveY -= 1;
+          }
+          if (input.isKeyHeld("s")) {
+            moveY += 1;
+          }
+          if (input.isKeyHeld("a")) {
+            moveX -= 1;
+          }
+          if (input.isKeyHeld("d")) {
+            moveX += 1;
+          }
+
+          if (moveX !== 0 || moveY !== 0) {
+            const length = Math.hypot(moveX, moveY);
+            moveX /= length;
+            moveY /= length;
+
+            this.accelerate(moveX, moveY, deltaTime);
+          }
+
+          if (input.isKeyHeld(" ")) {
+            this.chargeJump(deltaTime);
+          }
+
+          this.applyFriction(deltaTime);
+
+          this.x += this.velocity.x * deltaTime;
+          this.y += this.velocity.y * deltaTime;
+
+          this.handleJump(deltaTime);
+
+          // Determine direction based on velocity
+          this.updateDirection();
+
+          // Constrain player to world bounds
+          this.constrainToBounds();
+
+          // Update animation frame
+          this.updateAnimation(deltaTime);
+        }
+
+        constrainToBounds() {
+          const halfSize = this.size / 2;
+          // Left and right boundaries
+          if (this.x - halfSize < 0) {
+            this.x = halfSize;
+            this.velocity.x = 0;
+          } else if (this.x + halfSize > this.worldWidth) {
+            this.x = this.worldWidth - halfSize;
+            this.velocity.x = 0;
+          }
+          // Top and bottom boundaries
+          if (this.y - halfSize < 0) {
+            this.y = halfSize;
+            this.velocity.y = 0;
+          } else if (this.y + halfSize > this.worldHeight) {
+            this.y = this.worldHeight - halfSize;
+            this.velocity.y = 0;
+          }
+        }
+
+        updateDirection() {
+          const speed = Math.hypot(this.velocity.x, this.velocity.y);
+          if (speed > 0.1) {
+            if (Math.abs(this.velocity.x) > Math.abs(this.velocity.y)) {
+              if (this.velocity.x > 0) {
+                this.direction = "right";
+              } else if (this.velocity.x < 0) {
+                this.direction = "left";
+              }
+            } else {
+              if (this.velocity.y > 0) {
+                this.direction = "front";
+              } else if (this.velocity.y < 0) {
+                this.direction = "back";
+              }
+            }
+          }
+        }
+
+        accelerate(dirX, dirY, deltaTime) {
+          // Prevent acceleration while jumping or charging jump
+          if (this.isJumping || this.isChargingJump) return;
+
+          const acceleration = this.acceleration * deltaTime;
+          this.velocity.x += dirX * acceleration;
+          this.velocity.y += dirY * acceleration;
+
+          // Cap the player's velocity to max speed
+          const speed = Math.hypot(this.velocity.x, this.velocity.y);
+          if (speed > this.maxSpeed) {
+            const scale = this.maxSpeed / speed;
+            this.velocity.x *= scale;
+            this.velocity.y *= scale;
+          }
+        }
+
+        applyFriction(deltaTime) {
+          let friction;
+
+          if (this.isJumping) {
+            friction = this.friction * 0.05; // 0.05 times normal friction in the air
+          } else if (this.isChargingJump) {
+            friction = this.friction * (1 / 3); // 1/3 normal friction when crouching
+          } else {
+            friction = this.friction; // Normal friction when standing
+          }
+
+          const speed = Math.hypot(this.velocity.x, this.velocity.y);
+          if (speed > 0) {
+            const deceleration = friction * deltaTime;
+            const newSpeed = Math.max(0, speed - deceleration);
+            const scale = newSpeed / speed;
+            this.velocity.x *= scale;
+            this.velocity.y *= scale;
+          }
+        }
+
+        startChargingJump() {
+          if (this.isJumping) return; // Prevent jump if already jumping
+          this.isChargingJump = true;
           this.jumpCharge = 0;
         }
-      }
 
-      handleJump(deltaTime) {
-        if (this.isJumping) {
-          // Update jump velocity with gravity
-          this.jumpVelocity += this.gravity * deltaTime; // gravity is negative
-          this.jumpHeight += this.jumpVelocity * deltaTime;
-
-          // When landing, reset jump state
-          if (this.jumpHeight <= 0) {
-            this.isJumping = false;
-            this.jumpHeight = 0;
-            this.jumpVelocity = 0;
+        chargeJump(deltaTime) {
+          // Only charge the jump if the player is actively charging
+          if (this.isChargingJump && !this.isJumping) {
+            const chargeSpeed = 1; // Adjust as needed for desired charge duration
+            this.jumpCharge = Math.min(
+              1,
+              this.jumpCharge + chargeSpeed * deltaTime
+            );
+            this.crouchFactor = 1 - this.jumpCharge * 0.3;
           }
         }
-      }
 
-      updateAnimation(deltaTime) {
-        const speed = Math.hypot(this.velocity.x, this.velocity.y);
-        if (speed > 0.1) {
-          // Adjust frame speed based on movement speed
-          const animationSpeed = Math.min(speed / this.maxSpeed, 1);
-          this.currentFrame += animationSpeed * this.frameSpeed * deltaTime * 60;
-          if (this.currentFrame >= this.totalFrames) {
-            this.currentFrame = 0;
+        releaseJump() {
+          if (this.isChargingJump) {
+            this.isChargingJump = false;
+            this.isJumping = true;
+
+            // Reset crouchFactor after releasing jump
+            this.crouchFactor = 1;
+
+            // Calculate jump height based on the charged value
+            const jumpHeight =
+              this.baseJumpHeight +
+              (this.maxJumpHeight - this.baseJumpHeight) * this.jumpCharge;
+
+            // Set the correct jump velocity based on charged height
+            this.jumpVelocity = Math.sqrt(2 * -this.gravity * jumpHeight);
+
+            // Reset jump charge for next jump
+            this.jumpCharge = 0;
           }
-        } else {
-          this.currentFrame = 0; // Reset to first frame when not moving
         }
-      }
 
-      draw(ctx, camera, scaleFactor) {
-        const { size, angle, jumpHeight, crouchFactor } = this;
+        handleJump(deltaTime) {
+          if (this.isJumping) {
+            // Update jump velocity with gravity
+            this.jumpVelocity += this.gravity * deltaTime; // gravity is negative
+            this.jumpHeight += this.jumpVelocity * deltaTime;
 
-        // Draw shadow first to appear beneath player
-        this.drawShadow(ctx, camera, scaleFactor);
+            // When landing, reset jump state
+            if (this.jumpHeight <= 0) {
+              this.isJumping = false;
+              this.jumpHeight = 0;
+              this.jumpVelocity = 0;
+            }
+          }
+        }
 
-        ctx.save();
-        // Apply the visual jump offset
-        const visualOffset = -jumpHeight * 0.5; // Move character up
-        ctx.translate(
-          (this.x - camera.x) * scaleFactor,
-          (this.y - camera.y + visualOffset) * scaleFactor
-        );
-        ctx.rotate(angle);
+        updateAnimation(deltaTime) {
+          const speed = Math.hypot(this.velocity.x, this.velocity.y);
+          if (speed > 0.1) {
+            // Adjust frame speed based on movement speed
+            const animationSpeed = Math.min(speed / this.maxSpeed, 1);
+            this.currentFrame +=
+              animationSpeed * this.frameSpeed * deltaTime * 60;
+            if (this.currentFrame >= this.totalFrames) {
+              this.currentFrame = 0;
+            }
+          } else {
+            this.currentFrame = 0; // Reset to first frame when not moving
+          }
+        }
 
-        const frameIndex = Math.floor(this.currentFrame) % this.totalFrames;
-        const frame = this.spriteImages[this.direction][frameIndex];
+        draw(ctx, camera, scaleFactor) {
+          const { size, angle, jumpHeight, crouchFactor } = this;
 
-        if (frame && frame.complete) {
-          ctx.drawImage(
-            frame,
-            (-size / 2) * scaleFactor,
-            (-size / 2) * scaleFactor * crouchFactor,
-            size * scaleFactor,
-            size * scaleFactor * crouchFactor
+          // Draw shadow first to appear beneath player
+          this.drawShadow(ctx, camera, scaleFactor);
+
+          ctx.save();
+          // Apply the visual jump offset
+          const visualOffset = -jumpHeight * 0.5; // Move character up
+          ctx.translate(
+            (this.x - camera.x) * scaleFactor,
+            (this.y - camera.y + visualOffset) * scaleFactor
           );
-        } else {
-          // Placeholder if image is not loaded yet
-          ctx.fillStyle = 'blue';
-          ctx.fillRect(
-            (-size / 2) * scaleFactor,
-            (-size / 2) * scaleFactor * crouchFactor,
-            size * scaleFactor,
-            size * scaleFactor * crouchFactor
-          );
-        }
+          ctx.rotate(angle);
 
-        ctx.restore();
-      }
+          const frameIndex = Math.floor(this.currentFrame) % this.totalFrames;
+          const frame = this.spriteImages[this.direction][frameIndex];
 
-      drawShadow(ctx, camera, scaleFactor) {
-        const { size } = this;
-        const shadowSize = (size * 0.4); // Half the previous size
-
-        ctx.save();
-        // Draw shadow with offset
-        const shadowOffsetY = size * 0.5; // Align with bottom of sprite
-        ctx.translate(
-          (this.x - camera.x) * scaleFactor,
-          (this.y - camera.y + shadowOffsetY) * scaleFactor
-        );
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
-        ctx.beginPath();
-        ctx.ellipse(
-          0,
-          0,
-          shadowSize * scaleFactor,
-          shadowSize * 0.3 * scaleFactor,
-          0,
-          0,
-          Math.PI * 2
-        );
-        ctx.fill();
-        ctx.restore();
-      }
-    }
-
-    class Camera {
-      constructor(gameWidth, gameHeight, canvasWidth, canvasHeight, worldWidth, worldHeight) {
-        this.x = 0;
-        this.y = 0;
-        this.width = gameWidth;
-        this.height = gameHeight;
-        this.canvasWidth = canvasWidth;
-        this.canvasHeight = canvasHeight;
-        this.lagFactor = 0.1;
-
-        this.scaleFactor = 1;
-        this.updateScaleFactor();
-
-        this.worldWidth = worldWidth;
-        this.worldHeight = worldHeight;
-      }
-
-      updateScaleFactor() {
-        this.scaleFactor = Math.min(
-          this.canvasWidth / this.width,
-          this.canvasHeight / this.height
-        );
-      }
-
-      update(player) {
-        const targetX = player.x - this.width / 2;
-        const targetY = player.y - this.height / 2;
-
-        // Smooth camera movement using damping
-        const dx = targetX - this.x;
-        const dy = targetY - this.y;
-
-        this.x += dx * this.lagFactor;
-        this.y += dy * this.lagFactor;
-
-        // Adjust camera width and height to fit within world bounds
-        this.width = Math.min(this.worldWidth, this.canvasWidth / this.scaleFactor);
-        this.height = Math.min(this.worldHeight, this.canvasHeight / this.scaleFactor);
-
-        // Camera bounds to prevent showing area outside the world
-        this.x = Math.max(0, Math.min(this.worldWidth - this.width, this.x));
-        this.y = Math.max(0, Math.min(this.worldHeight - this.height, this.y));
-
-        // If the world is smaller than the viewport, center the camera
-        if (this.worldWidth < this.width) {
-          this.x = (this.worldWidth - this.width) / 2;
-        }
-        if (this.worldHeight < this.height) {
-          this.y = (this.worldHeight - this.height) / 2;
-        }
-      }
-
-      resize(canvasWidth, canvasHeight) {
-        this.canvasWidth = canvasWidth;
-        this.canvasHeight = canvasHeight;
-        this.updateScaleFactor();
-      }
-    }
-
-    class GameEngine {
-      constructor(width, height) {
-        this.gameWidth = width;
-        this.gameHeight = height;
-        this.worldWidth = width * 2;
-        this.worldHeight = height * 2;
-        this.canvas = document.getElementById("gameCanvas");
-        this.ctx = this.canvas.getContext("2d");
-
-        // High-DPI support
-        this.dpr = window.devicePixelRatio || 1;
-
-        this.player = new Player(width, height, this.worldWidth, this.worldHeight);
-
-        this.camera = new Camera(
-          width,
-          height,
-          window.innerWidth,
-          window.innerHeight,
-          this.worldWidth,
-          this.worldHeight
-        );
-
-        this.input = new InputHandler();
-
-        this.lastUpdateTime = performance.now();
-
-        this.updateCanvasSize();
-        window.addEventListener("resize", () => this.updateCanvasSize());
-
-        this.bindKeys();
-
-        this.startGameLoop();
-      }
-
-      updateCanvasSize() {
-        // High-DPI support
-        this.canvas.width = window.innerWidth * this.dpr;
-        this.canvas.height = window.innerHeight * this.dpr;
-        this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
-
-        this.camera.resize(window.innerWidth, window.innerHeight);
-      }
-
-      bindKeys() {
-        this.input.bindKey(" ", {
-          onPress: () => {
-            this.player.startChargingJump();
-          },
-          onRelease: () => {
-            this.player.releaseJump();
-          }
-        });
-      }
-
-      render() {
-        // Clear canvas
-        this.ctx.clearRect(
-          0,
-          0,
-          this.canvas.width / this.dpr,
-          this.canvas.height / this.dpr
-        );
-        this.drawCheckerboard();
-        this.player.draw(this.ctx, this.camera, this.camera.scaleFactor);
-      }
-
-      drawCheckerboard() {
-        const tileSize = 100;
-        const startX = Math.floor(this.camera.x / tileSize) * tileSize;
-        const startY = Math.floor(this.camera.y / tileSize) * tileSize;
-
-        for (
-          let y = startY;
-          y < this.camera.y + this.camera.height;
-          y += tileSize
-        ) {
-          for (
-            let x = startX;
-            x < this.camera.x + this.camera.width;
-            x += tileSize
-          ) {
-            this.ctx.fillStyle =
-              (Math.floor(x / tileSize) + Math.floor(y / tileSize)) % 2 === 0
-                ? "#ddd"
-                : "#999";
-            this.ctx.fillRect(
-              (x - this.camera.x) * this.camera.scaleFactor,
-              (y - this.camera.y) * this.camera.scaleFactor,
-              tileSize * this.camera.scaleFactor,
-              tileSize * this.camera.scaleFactor
+          if (frame && frame.complete) {
+            ctx.drawImage(
+              frame,
+              (-size / 2) * scaleFactor,
+              -size * scaleFactor * crouchFactor,
+              size * scaleFactor,
+              size * scaleFactor * crouchFactor
+            );
+          } else {
+            // Placeholder if image is not loaded yet
+            ctx.fillStyle = "blue";
+            ctx.fillRect(
+              (-size / 2) * scaleFactor,
+              -size * scaleFactor * crouchFactor,
+              size * scaleFactor,
+              size * scaleFactor * crouchFactor
             );
           }
+
+          ctx.restore();
+        }
+
+        drawShadow(ctx, camera, scaleFactor) {
+          const { size } = this;
+          const shadowSize = size * (2 / 3); // Shadow is roughly 2/3 the size
+
+          ctx.save();
+          // Draw shadow with offset
+          const shadowOffsetY = size * 0.001; // Slight offset to align with bottom of sprite
+          ctx.translate(
+            (this.x - camera.x) * scaleFactor,
+            (this.y - camera.y + shadowOffsetY) * scaleFactor
+          );
+          ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
+          ctx.beginPath();
+          ctx.ellipse(
+            0,
+            0,
+            shadowSize * scaleFactor,
+            shadowSize * 0.3 * scaleFactor,
+            0,
+            0,
+            Math.PI * 2
+          );
+          ctx.fill();
+          ctx.restore();
         }
       }
 
-      startGameLoop() {
-        const loop = (currentTime) => {
-          const deltaTime = (currentTime - this.lastUpdateTime) / 1000;
-          this.lastUpdateTime = currentTime;
+      class Camera {
+        constructor(
+          gameWidth,
+          gameHeight,
+          canvasWidth,
+          canvasHeight,
+          worldWidth,
+          worldHeight
+        ) {
+          this.x = 0;
+          this.y = 0;
+          this.width = gameWidth;
+          this.height = gameHeight;
+          this.canvasWidth = canvasWidth;
+          this.canvasHeight = canvasHeight;
+          this.lagFactor = 0.1;
 
-          // Cap deltaTime to prevent large jumps
-          const delta = Math.min(deltaTime, 0.1);
+          this.scaleFactor = 1;
+          this.updateScaleFactor();
 
-          this.update(delta);
-          this.render();
+          this.worldWidth = worldWidth;
+          this.worldHeight = worldHeight;
+        }
 
+        updateScaleFactor() {
+          this.scaleFactor = Math.min(
+            this.canvasWidth / this.width,
+            this.canvasHeight / this.height
+          );
+        }
+
+        update(player) {
+          const targetX = player.x - this.width / 2;
+          const targetY = player.y - this.height / 2;
+
+          // Smooth camera movement using damping
+          const dx = targetX - this.x;
+          const dy = targetY - this.y;
+
+          this.x += dx * this.lagFactor;
+          this.y += dy * this.lagFactor;
+
+          // Adjust camera width and height to fit within world bounds
+          this.width = Math.min(
+            this.worldWidth,
+            this.canvasWidth / this.scaleFactor
+          );
+          this.height = Math.min(
+            this.worldHeight,
+            this.canvasHeight / this.scaleFactor
+          );
+
+          // Camera bounds to prevent showing area outside the world
+          this.x = Math.max(0, Math.min(this.worldWidth - this.width, this.x));
+          this.y = Math.max(
+            0,
+            Math.min(this.worldHeight - this.height, this.y)
+          );
+
+          // If the world is smaller than the viewport, center the camera
+          if (this.worldWidth < this.width) {
+            this.x = (this.worldWidth - this.width) / 2;
+          }
+          if (this.worldHeight < this.height) {
+            this.y = (this.worldHeight - this.height) / 2;
+          }
+        }
+
+        resize(canvasWidth, canvasHeight) {
+          this.canvasWidth = canvasWidth;
+          this.canvasHeight = canvasHeight;
+          this.updateScaleFactor();
+        }
+      }
+
+      class GameEngine {
+        constructor(width, height) {
+          this.gameWidth = width;
+          this.gameHeight = height;
+          this.worldWidth = width * 2;
+          this.worldHeight = height * 2;
+          this.canvas = document.getElementById("gameCanvas");
+          this.ctx = this.canvas.getContext("2d");
+
+          // High-DPI support
+          this.dpr = window.devicePixelRatio || 1;
+
+          this.player = new Player(
+            width,
+            height,
+            this.worldWidth,
+            this.worldHeight
+          );
+
+          this.camera = new Camera(
+            width,
+            height,
+            window.innerWidth,
+            window.innerHeight,
+            this.worldWidth,
+            this.worldHeight
+          );
+
+          this.input = new InputHandler();
+
+          this.lastUpdateTime = performance.now();
+
+          this.updateCanvasSize();
+          window.addEventListener("resize", () => this.updateCanvasSize());
+
+          this.bindKeys();
+
+          this.startGameLoop();
+        }
+
+        updateCanvasSize() {
+          // High-DPI support
+          this.canvas.width = window.innerWidth * this.dpr;
+          this.canvas.height = window.innerHeight * this.dpr;
+          this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
+
+          this.camera.resize(window.innerWidth, window.innerHeight);
+        }
+
+        bindKeys() {
+          this.input.bindKey(" ", {
+            onPress: () => {
+              this.player.startChargingJump();
+            },
+            onRelease: () => {
+              this.player.releaseJump();
+            },
+          });
+        }
+
+        render() {
+          // Clear canvas
+          this.ctx.clearRect(
+            0,
+            0,
+            this.canvas.width / this.dpr,
+            this.canvas.height / this.dpr
+          );
+          this.drawCheckerboard();
+          this.player.draw(this.ctx, this.camera, this.camera.scaleFactor);
+        }
+
+        drawCheckerboard() {
+          const tileSize = 100;
+          const startX = Math.floor(this.camera.x / tileSize) * tileSize;
+          const startY = Math.floor(this.camera.y / tileSize) * tileSize;
+
+          for (
+            let y = startY;
+            y < this.camera.y + this.camera.height;
+            y += tileSize
+          ) {
+            for (
+              let x = startX;
+              x < this.camera.x + this.camera.width;
+              x += tileSize
+            ) {
+              this.ctx.fillStyle =
+                (Math.floor(x / tileSize) + Math.floor(y / tileSize)) % 2 === 0
+                  ? "#ddd"
+                  : "#999";
+              this.ctx.fillRect(
+                (x - this.camera.x) * this.camera.scaleFactor,
+                (y - this.camera.y) * this.camera.scaleFactor,
+                tileSize * this.camera.scaleFactor,
+                tileSize * this.camera.scaleFactor
+              );
+            }
+          }
+        }
+
+        startGameLoop() {
+          const loop = (currentTime) => {
+            const deltaTime = (currentTime - this.lastUpdateTime) / 1000;
+            this.lastUpdateTime = currentTime;
+
+            // Cap deltaTime to prevent large jumps
+            const delta = Math.min(deltaTime, 0.1);
+
+            this.update(delta);
+            this.render();
+
+            requestAnimationFrame(loop);
+          };
           requestAnimationFrame(loop);
-        };
-        requestAnimationFrame(loop);
-      }
+        }
 
-      update(deltaTime) {
-        try {
-          this.player.update(deltaTime, this.input);
-          this.camera.update(this.player);
-        } catch (error) {
-          console.error("An error occurred during update:", error);
+        update(deltaTime) {
+          try {
+            this.player.update(deltaTime, this.input);
+            this.camera.update(this.player);
+          } catch (error) {
+            console.error("An error occurred during update:", error);
+          }
         }
       }
-    }
 
-    // Initialize the game with width 800 and height 600 for the game world dimensions
-    const game = new GameEngine(800, 600);
-  </script>
-</body>
+      // Initialize the game with width 800 and height 600 for the game world dimensions
+      const game = new GameEngine(800, 600);
+    </script>
+  </body>
 </html>
