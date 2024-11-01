@@ -358,11 +358,13 @@
 
         drawShadow(ctx, camera, scaleFactor) {
           const { size } = this;
-          const shadowSize = size * (2 / 3); // Shadow is roughly 2/3 the size
+          const previousShadowSize = size * 0.4; // Previous shadow size (40% of character size)
+          const shadowSize = previousShadowSize * (2 / 3); // Reduce shadow size by 2/3
+          // Alternatively, shadowSize = size * 0.2667;
 
           ctx.save();
-          // Draw shadow with offset
-          const shadowOffsetY = size * 0.001; // Slight offset to align with bottom of sprite
+          // Draw shadow with slight offset to align with bottom of sprite
+          const shadowOffsetY = size * 0.001;
           ctx.translate(
             (this.x - camera.x) * scaleFactor,
             (this.y - camera.y + shadowOffsetY) * scaleFactor
@@ -547,7 +549,7 @@
             ) {
               this.ctx.fillStyle =
                 (Math.floor(x / tileSize) + Math.floor(y / tileSize)) % 2 === 0
-                  ? "#ddd"
+                  ? "#aaa"
                   : "#999";
               this.ctx.fillRect(
                 (x - this.camera.x) * this.camera.scaleFactor,
