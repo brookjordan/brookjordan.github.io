@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lily’s Schengen visa application</title>
+
+    <style>
+      html {
+        font-family: sans-serif;
+        font-size: 24px;
+      }
+
+      form,
+      fieldset,
+      ul {
+        display: grid;
+        gap: 10px;
+      }
+
+      fieldset {
+        border-radius: 10px;
+      }
+
+      legend {
+        white-space: nowrap;
+      }
+
+      label {
+        display: grid;
+        grid-auto-flow: column;
+        gap: 10px;
+        justify-content: start;
+        justify-items: start;
+        align-content: center;
+        align-items: center;
+        text-align: start;
+      }
+
+      li {
+        list-style: none;
+      }
+
+      label:has(input:not(:checked)) {
+        background-color: rgb(255 200 200);
+      }
+
+      input {
+        width: 44px;
+        height: 44px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Lily’s Schengen visa application</h1>
+
+    <form>
+      <fieldset>
+        <legend>Queries</legend>
+        <label for="query_no_pass_start_date"
+          ><input type="checkbox" id="query_no_pass_start_date" />The date that
+          the pass started isn’t written down anywhere that I can see.</label
+        >
+      </fieldset>
+
+      <fieldset>
+        <legend>Things to bring</legend>
+        <label for="passport"
+          ><input id="passport" type="checkbox" />Passport</label
+        >
+        <label for="photocopy_of_passport_id"
+          ><input id="photocopy_of_passport_id" type="checkbox" />Photocopy of
+          passport ID</label
+        >
+        <label for="photocopy_of_passport_last_visas_pages"
+          ><input
+            id="photocopy_of_passport_last_visas_pages"
+            type="checkbox"
+          />photocopy of passport last visas pages</label
+        >
+        <label
+          for="photocopy_of_all_passport_pages_which_have_been_written_on_visas_etc"
+          ><input
+            id="photocopy_of_all_passport_pages_which_have_been_written_on_visas_etc"
+            type="checkbox"
+          />photocopy of all passport pages which have been written on (visas,
+          etc.)</label
+        >
+        <label for="id_style_photographs"
+          ><input id="id_style_photographs" type="checkbox" />ID style
+          photographs</label
+        >
+        <label for="s_pass"><input id="s_pass" type="checkbox" />S-Pass</label>
+        <label for="photocopy_of_front_and_back_of_s_pass"
+          ><input
+            id="photocopy_of_front_and_back_of_s_pass"
+            type="checkbox"
+          />Photocopy of Front and back of S pass</label
+        >
+        <label for="print_out_pass_status"
+          ><input id="print_out_pass_status" type="checkbox" />Print out pass
+          status</label
+        >
+        <label for="email_of_return_ticket"
+          ><input id="email_of_return_ticket" type="checkbox" />Email of return
+          ticket</label
+        >
+        <label for="print_out_of_return_ticket"
+          ><input id="print_out_of_return_ticket" type="checkbox" />Print out of
+          return ticket</label
+        >
+        <label
+          for="original_letter_of_employment_pdf_whatsapp_etc_including_date_signature_date_of_employment_full_monthly_annual_salary_any_dates_of_permissed_leave"
+          ><input
+            id="original_letter_of_employment_pdf_whatsapp_etc_including_date_signature_date_of_employment_full_monthly_annual_salary_any_dates_of_permissed_leave"
+            type="checkbox"
+          />Original letter of employment (PDF, whatsapp, etc.)
+          including:</label
+        >
+        <ul>
+          <li>
+            <label for="employment_letter_date"
+              ><input id="employment_letter_date" type="checkbox" />date</label
+            >
+          </li>
+          <li>
+            <label for="employment_letter_signature"
+              ><input
+                id="employment_letter_signature"
+                type="checkbox"
+              />signature</label
+            >
+          </li>
+          <li>
+            <label for="employment_letter_date_of_employment"
+              ><input
+                id="employment_letter_date_of_employment"
+                type="checkbox"
+              />date of employment</label
+            >
+          </li>
+          <li>
+            <label for="employment_letter_full_monthly_annual"
+              ><input
+                id="employment_letter_full_monthly_annual"
+                type="checkbox"
+              />full monthly/annual</label
+            >
+          </li>
+          <li>
+            <label for="employment_letter_salary"
+              ><input
+                id="employment_letter_salary"
+                type="checkbox"
+              />salary</label
+            >
+          </li>
+          <li>
+            <label for="employment_letter_any_dates_of_permissed_leav"
+              ><input
+                id="employment_letter_any_dates_of_permissed_leav"
+                type="checkbox"
+              />any dates of permissed leave</label
+            >
+          </li>
+        </ul>
+        <label for="print_out_of_the_letter_of_employment"
+          ><input
+            id="print_out_of_the_letter_of_employment"
+            type="checkbox"
+          />Print out of the letter of employment</label
+        >
+        <label for="lily_s_bank_app_with_3_months_of_statements"
+          ><input
+            id="lily_s_bank_app_with_3_months_of_statements"
+            type="checkbox"
+          />Lily’s Bank app with 3 months of statements</label
+        >
+        <label for="print_out_of_3_months_of_lily_s_bank_statements"
+          ><input
+            id="print_out_of_3_months_of_lily_s_bank_statements"
+            type="checkbox"
+          />Print out of 3 months of Lily’s bank statements</label
+        >
+        <label for="print_of_3_months_of_lily_s_pay_slips"
+          ><input
+            id="print_of_3_months_of_lily_s_pay_slips"
+            type="checkbox"
+          />Print of 3 months of Lily’s pay slips</label
+        >
+        <label for="letter_dated_and_signed_by_sponsor_brook"
+          ><input
+            id="letter_dated_and_signed_by_sponsor_brook"
+            type="checkbox"
+          />Letter dated and signed by sponsor (Brook)</label
+        >
+        <label for="photocopy_of_letter_dated_and_signed_by_sponsor_brook"
+          ><input
+            id="photocopy_of_letter_dated_and_signed_by_sponsor_brook"
+            type="checkbox"
+          />Photocopy of letter dated and signed by sponsor (Brook)</label
+        >
+        <label for="sponsor_s_id"
+          ><input id="sponsor_s_id" type="checkbox" />Sponsor’s ID</label
+        >
+        <label for="photocopy_of_sponsor_s_id"
+          ><input id="photocopy_of_sponsor_s_id" type="checkbox" />Photocopy of
+          sponsor’s ID</label
+        >
+        <label for="sponsor_s_bank_app_with_3_months_of_statements"
+          ><input
+            id="sponsor_s_bank_app_with_3_months_of_statements"
+            type="checkbox"
+          />Sponsor’s Bank app with 3 months of statements</label
+        >
+        <label for="print_out_of_3_months_of_sponsor_s_bank_statements"
+          ><input
+            id="print_out_of_3_months_of_sponsor_s_bank_statements"
+            type="checkbox"
+          />Print out of 3 months of sponsor’s bank statements</label
+        >
+        <label for="sponsor_s_payslip"
+          ><input id="sponsor_s_payslip" type="checkbox" />Sponsor’s
+          payslip</label
+        >
+        <label for="print_out_of_sponsor_s_payslip"
+          ><input
+            id="print_out_of_sponsor_s_payslip"
+            type="checkbox"
+          />Print-out of sponsor’s payslip</label
+        >
+        <label for="email_of_hotel_reservation"
+          ><input id="email_of_hotel_reservation" type="checkbox" />Email of
+          hotel reservation</label
+        >
+        <label for="print_out_of_hotel_reservation"
+          ><input
+            id="print_out_of_hotel_reservation"
+            type="checkbox"
+          />Print-out of hotel reservation</label
+        >
+        <label for="travel_insurance_certificate_it_must"
+          ><input
+            id="travel_insurance_certificate_it_must"
+            type="checkbox"
+          />Travel insurance certificate. It must:</label
+        >
+        <ul>
+          <li>
+            <label for="cover_the_duration_of_your_trip"
+              ><input
+                id="cover_the_duration_of_your_trip"
+                type="checkbox"
+              />cover the duration of your trip</label
+            >
+          </li>
+          <li>
+            <label for="be_valid_at_least_for_the_schengen_area"
+              ><input
+                id="be_valid_at_least_for_the_schengen_area"
+                type="checkbox"
+              />be valid at least for the Schengen area</label
+            >
+          </li>
+        </ul>
+        <label for="print_out_of_travel_insurance_certificate"
+          ><input
+            id="print_out_of_travel_insurance_certificate"
+            type="checkbox"
+          />Print out of Travel insurance certificate</label
+        >
+        <label for="proof_of_house_ownership"
+          ><input id="proof_of_house_ownership" type="checkbox" />Proof of
+          house, including:</label
+        >
+        <ul>
+          <li>
+            <label for="proof_of_house__date"
+              ><input id="proof_of_house__date" type="checkbox" />date of
+              purchase</label
+            >
+            <label for="proof_of_house__name"
+              ><input id="proof_of_house__name" type="checkbox" />name</label
+            >
+            <label for="proof_of_house__address"
+              ><input
+                id="proof_of_house__address"
+                type="checkbox"
+              />address</label
+            >
+          </li>
+        </ul>
+        <label for="copy_of_proof_of_house_ownership"
+          ><input id="copy_of_proof_of_house_ownership" type="checkbox" />Copy
+          of proof of house</label
+        >
+        <label for="sponsor_letter_from_gilles"
+          ><input id="sponsor_letter_from_gilles" type="checkbox" />Letter from
+          french sponsor, Gilles</label
+        >
+      </fieldset>
+    </form>
+  </body>
+</html>
