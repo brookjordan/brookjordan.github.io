@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home assistant bathroom brightness test</title>
+
+    <style>
+      :root {
+        background: #222;
+        color: white;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+          sans-serif;
+        display: grid;
+        place-items: center;
+      }
+      :root,
+      body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+      body {
+        display: grid;
+      }
+      .image-stack {
+        display: grid;
+        overflow: hidden;
+        grid-template:
+          [image-start]
+          "controls" auto
+          "." 1fr
+          [image-end]
+          / [image-start] 1fr [image-end];
+      }
+      .image-stack > img {
+        grid-area: image;
+        opacity: 0;
+        transition: opacity 0.5s;
+        mix-blend-mode: screen;
+        object-fit: contain;
+        width: 100%;
+        height: 100%;
+      }
+      .image-stack > img:first-child {
+        opacity: 1;
+        mix-blend-mode: normal;
+      }
+      menu {
+        position: relative;
+        grid-area: controls;
+        display: grid;
+        gap: 20px;
+        grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+        margin: 0;
+        padding: 20px;
+      }
+      label {
+        display: grid;
+        padding: 10px;
+        font-variant-numeric: lining-nums;
+        background: black linear-gradient(
+          to right,
+          black 10%,
+          hsla(41, 100%, 13%, 0.4) 10%,
+          hsl(41, 100%, 13%)
+        );
+        border-radius: 10px;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div class="image-stack">
+      <img src="./i/bathroom-off.jpg" />
+      <img src="./i/toilet-dim.jpg" class="image--toilet-light-dim" />
+      <img src="./i/toilet-bright.jpg" class="image--toilet-light-bright" />
+      <img src="./i/shower-dim.jpg" class="image--shower-light-dim" />
+      <img src="./i/shower-bright.jpg" class="image--shower-light-bright" />
+
+      <menu>
+        <label for="toilet-light-slider">
+          <span>Toilet light: <span class="light-value--toilet"></span></span>
+          <input
+            id="toilet-light-slider"
+            type="range"
+            value="-1"
+            min="-1"
+            step="1"
+            class="slider--toilet-light"
+          />
+        </label>
+        <label for="shower-light-slider">
+          <span>Shower light: <span class="light-value--shower"></span></span>
+          <input
+            id="shower-light-slider"
+            type="range"
+            value="-1"
+            min="-1"
+            step="1"
+            class="slider--shower-light"
+          />
+        </label>
+      </menu>
+    </div>
+
+    <script>
+      const STEP_COUNT = 20;
+
+      const lightImages = {
+        toilet: {
+          dim: document.querySelector(".image--toilet-light-dim"),
+          bright: document.querySelector(".image--toilet-light-bright"),
+        },
+        shower: {
+          dim: document.querySelector(".image--shower-light-dim"),
+          bright: document.querySelector(".image--shower-light-bright"),
+        },
+      };
+
+      const lightSliders = {
+        toilet: document.querySelector(".slider--toilet-light"),
+        shower: document.querySelector(".slider--shower-light"),
+      };
+
+      const lightValues = {
+        toilet: document.querySelector(".light-value--toilet"),
+        shower: document.querySelector(".light-value--shower"),
+      };
+
+      lightSliders.toilet.setAttribute("max", STEP_COUNT);
+      lightSliders.shower.setAttribute("max", STEP_COUNT);
+
+      const handleLightChange = (name) => (ev) => {
+        const value = ev.target.valueAsNumber;
+
+        lightValues[name].innerText =
+          value === -1 ? "off" : `${Math.round((value / STEP_COUNT) * 100 || 1)}%`;
+
+        if (value > -1) {
+          lightImages[name].dim.style.opacity = 1;
+        } else {
+          lightImages[name].dim.style.opacity = 0;
+        }
+
+        if (value <= 0) {
+          lightImages[name].bright.style.opacity = 0;
+        } else {
+          lightImages[name].bright.style.opacity = value / STEP_COUNT;
+        }
+      };
+
+      const handleToiletLightChange = handleLightChange("toilet");
+      handleToiletLightChange({ target: { valueAsNumber: -1 } });
+      lightSliders.toilet.addEventListener("input", handleToiletLightChange);
+
+      const handleShowerLightChange = handleLightChange("shower");
+      handleShowerLightChange({ target: { valueAsNumber: -1 } });
+      lightSliders.shower.addEventListener("input", handleShowerLightChange);
+    </script>
+  </body>
+</html>
