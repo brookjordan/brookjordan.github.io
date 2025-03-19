@@ -1,0 +1,390 @@
+:root {
+  --c-text-body-light: 37 52 67;
+  --c-text-body-dark: 208 229 255;
+
+  --c-text-body: rgb(var(--c-text-body-light));
+  --c-text-h2: #fc4349;
+  --c-text-h3: #253443;
+  --c-text-h4: var(--c-text-h2);
+  --c-text-h5: var(--c-text-h3);
+  --c-text-faded: #a1acb1;
+  --c-text-link: #0d78b9;
+
+  --c-background-underlay: #a1acb1;
+  --c-background-page: white;
+
+  --c-divider: #d7dadb;
+}
+
+* {
+  transition-property: color, background-color;
+  transition-duration: 0.3s;
+}
+
+html,
+body {
+  margin: 0;
+  background-color: var(--c-background-underlay);
+}
+
+.body {
+  --c-text: var(--c-text-body);
+
+  background-color: var(--c-background-underlay);
+  font-size: 100%;
+  padding: 1px;
+}
+
+.controls {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 10px;
+  padding-bottom: calc(10px + 5vw);
+  max-width: calc(800px + 16vw);
+  opacity: 0.3;
+  transition: opacity 0.3s;
+}
+.controls:hover,
+.controls:focus-within {
+  opacity: 1;
+}
+
+@media screen and (min-width: 520px) {
+  .controls {
+    margin-inline: 3vw;
+  }
+}
+
+.page {
+  --c-background: var(--c-background-page);
+  position: relative;
+  padding: 5vw;
+  max-width: 800px;
+  margin-top: -5vw;
+  font-family: 'Gentium Book Basic', serif;
+  line-height: 1.4;
+  color: var(--c-text);
+  background-color: var(--c-background);
+}
+
+* {
+  orphans: 3;
+  widows: 3;
+}
+
+::selection {
+  color: var(--c-background);
+  background-color: var(--c-text, var(--c-background));/*none*/
+  /* text-shadow:
+  0 0 4px var(--c-text),
+  0 0 4px var(--c-text),
+  0 0 4px var(--c-text),
+  0 0 4px var(--c-text),
+  0 0 4px var(--c-text),
+  0 0 4px var(--c-text),
+  0 0 4px var(--c-text),
+  0 0 4px var(--c-text),
+  0 0 4px var(--c-text),
+  0 0 4px var(--c-text),
+  0 0 4px var(--c-text),
+  0 0 4px var(--c-text),
+  0 0 4px var(--c-text),
+  0 0 4px var(--c-text),
+  0 0 6px var(--c-text),
+  0 0 6px var(--c-text),
+  0 0 6px var(--c-text),
+  0 0 6px var(--c-text),
+  0 0 6px var(--c-text),
+  0 0 6px var(--c-text); */
+}
+
+.cf::before,
+.cf::after,
+.bullets::before,
+.bullets::after {
+  content: ' ';
+  display: table;
+}
+
+.bullets::after,
+.cf::after {
+  clear: both;
+}
+
+a {
+  --c-text: var(--c-text-link);
+  position: relative;
+  text-decoration: none;
+  color: var(--c-text);
+}
+a:focus-visible {
+  outline: 0;
+}
+a::before {
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: -3px;
+  width: calc(100% + 12px);
+  height: calc(100% + 6px);
+  border-radius: 5px;
+  background-color: var(--c-text);
+  opacity: 0;
+  transition: opacity 0.1s ease-out;
+  will-change: opacity;
+}
+a::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: -10px;
+  width: calc(100% + 20px);
+  height: 3px;
+  border-radius: 1.5px;
+  background-color: var(--c-text);
+  transform: scaleX(0);
+  transition: transform 0.1s ease-out;
+  will-change: transform;
+}
+a:hover::after,
+a:focus-visible::after {
+  transform: scaleX(1);
+}
+a:focus-visible::before {
+  opacity: 0.2;
+}
+
+.is-clearing {
+  clear: both;
+  width: 100%;
+  height: 0;
+}
+
+.contact {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+  align-items: end;
+  gap: 5px;
+}
+
+.font--section-head,
+.job-company,
+.job-date,
+.job-title,
+h5 {
+  font-family: 'PT Sans Caption', sans-serif;
+}
+
+h5 {
+  --c-text: var(--c-text-h5);
+  color: var(--c-text);
+}
+
+.font--section-head {
+  --c-text: var(--c-text-h2);
+  margin-top: 3rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  font-size: 1.6rem;
+  color: var(--c-text);
+}
+
+
+.section--contact {
+  display: flex;
+  justify-content: space-between;
+}
+.section--contact .font--section-head {
+  margin-top: 0;
+}
+
+.section--skills {
+  column-width: 10rem;
+}
+
+.job-head {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.job:first-child .job-head {
+  margin-top: 0;
+}
+
+.job-company {
+  --c-text: var(--c-text-h3);
+  font-weight: 600;
+  color: var(--c-text);
+  flex-basis: 100%;
+}
+
+sub {
+  font-weight: 100;
+  font-size: 0.85em;
+  opacity: 0.7;
+}
+
+.font--body + .job-company {
+  margin-top: 1.2rem;
+}
+
+.job-title {
+  --c-text: var(--c-text-h4);
+  margin-top: 1.5rem;
+  font-size: 1.2rem;
+  color: var(--c-text);
+}
+
+.job-head .job-title {
+  margin-top: 0;
+  padding-top: 0.3rem;
+  font-size: 0.8rem;
+  line-height: 1;
+  text-transform: uppercase;
+  font-weight: 100;
+}
+
+.job-date {
+  line-height: 1;
+  padding-top: 0.3rem;
+}
+
+.font--body {
+  margin-top: 0.8rem;
+}
+
+.font--strapline {
+  margin-top: 0.2rem;
+  font-size: 0.8em;
+  opacity: 0.7;
+}
+
+h5 {
+  font-weight: 100;
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  margin-bottom: 0.2rem;
+  letter-spacing: 0.03em;
+  border-bottom: 1px solid var(--c-divider);
+  color: var(--c-divider);
+}
+
+h5 + .font--body {
+  margin-top: 0;
+}
+
+.font--body:empty::after {
+  --c-text: var(--c-text-faded);
+  content: '—';
+  color: var(--c-text);
+}
+
+.job-head + .font--body,
+.job-company + .font--body {
+  margin-top: 0.3em;
+}
+
+.font--subtle {
+  --c-text: var(--c-text-faded);
+  color: var(--c-text);
+  font-size: 0.8rem;
+  font-weight: 400;
+}
+
+.bullets {
+  list-style-type: disc;
+  margin-top: 1px;
+  padding-top: 1px;
+}
+
+.bullets::before {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+.bullets .bullets {
+  list-style-type: circle;
+}
+
+.bullet {
+  margin-top: 0;
+  margin-left: 1em;
+  padding-top: 1px;
+  break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+}
+
+.bullet--single {
+  width: 96%;
+}
+
+.bullet--double {
+  width: 46%;
+}
+
+.bullet--treble {
+  width: 29.333%;
+}
+
+.print-inline.only {
+  display: none;
+}
+
+.print-block.only {
+  display: none;
+}
+
+.screen-inline {
+  display: inline;
+}
+
+.screen-block {
+  display: block;
+}
+
+@media screen and (min-width: 400px) {
+  html {
+    font-size: 110%;
+  }
+}
+
+@media screen and (min-width: 520px) {
+  html {
+    font-size: 125%;
+  }
+
+  .page {
+    padding: 8vw;
+    margin: 3vw;
+    margin-top: -5vw;
+  }
+}
+
+@media screen and (min-width: 800px) {
+  html {
+    font-size: 140%;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .bullet--double {
+    width: 96%;
+  }
+
+  .bullet--treble {
+    width: 46%;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .bullet--treble {
+    width: 96%;
+  }
+}
