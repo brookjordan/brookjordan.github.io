@@ -1,0 +1,155 @@
+:root {
+  --c-text-body: #47536a;
+  --c-text-h2: #fc4349;
+  --c-text-h3: #253443;
+  --c-text-h4: var(--c-text-h2);
+  --c-text-h5: var(--c-text-h3);
+  --c-text-faded: #a1acb1;
+  --c-text-link: #007dbd;
+
+  --c-background-underlay: #a1acb1;
+  --c-background-page: white;
+
+  --c-divider: #d7dadb;
+}
+
+@page {
+  size: auto; /* auto is the initial value */
+}
+
+html {
+  font-size: 11pt !important;
+}
+
+html,
+body,
+.body,
+.page {
+  padding: 0 !important;
+  margin: 0 !important;
+  max-width: none !important;
+  line-height: 16pt !important;
+}
+.page {
+  margin: 7mm 7mm 7mm 7mm !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  page-break-after: avoid;
+  page-break-inside: avoid;
+}
+:where(h1, h2, h3, h4, h5, h6)::after {
+  content: "";
+  display: block;
+  height: 100px;
+  margin-bottom: -100px;
+  flex-basis: 100%;
+}
+
+.controls {
+  display: none !important;
+}
+
+.section-employment {
+  column-count: 2;
+  column-gap: 0.8cm;
+}
+
+.section-skills {
+  column-count: 4;
+}
+
+.job {
+  page-break-inside: avoid;
+}
+
+.job-date {
+  line-height: 16pt !important;
+  font-size: 10pt !important;
+}
+
+a {
+  color: inherit !important;
+  text-decoration: none !important;
+}
+
+.font--sectionHead {
+  font-size: 15pt !important;
+  margin-top: 10pt !important;
+}
+.myName br {
+  display: none;
+}
+
+.job-company {
+  margin-top: 4pt !important;
+}
+
+.job:first-child .job-company {
+  margin-top: 0 !important;
+}
+
+.job-title {
+  padding: 0 !important;
+  font-size: 11pt !important;
+}
+
+.font--body {
+  margin-top: 6pt !important;
+}
+.font--body.contact {
+  display: flex;
+  flex-direction: row;
+  align-items: last baseline;
+  justify-content: end;
+}
+.font--body.contact a::before,
+.font--body.contact a::after {
+  content: none !important;
+  position: static !important;
+  opacity: 1 !important;
+}
+.font--body.contact a + a::before {
+  content: "|" !important;
+  margin: 0 1em;
+}
+h4 + .font--body {
+  margin-top: 0 !important;
+}
+.section-hobbies .font--body {
+  display: none;
+}
+.section-hobbies .definitionlist {
+  display: flex;
+}
+.section-hobbies .job-company {
+  flex-basis: auto;
+  font: inherit;
+  margin: 0 !important;
+}
+.section-hobbies .font--body + .job-company::before {
+  content: ", ";
+}
+.font--body:empty::after {
+  content: "" !important;
+}
+
+.section-education .bullet,
+.section-education .bullet p {
+  display: inline;
+  width: auto;
+  margin: 0;
+}
+
+.section-education .bullet + .bullet::before {
+  content: ", ";
+}
+
+.screenOnly {
+  display: none;
+}
