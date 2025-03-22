@@ -1,0 +1,18 @@
+﻿[id=prose--fluffy],
+[id=prose--formal] {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+}
+
+:root:has([id=prose--formal]:checked) [for="prose--formal"],
+:root:has([id=prose--fluffy]:checked) [for="prose--fluffy"] {
+  display: none;
+}
+
+.prose-switcher {
+  --c-text: lch(var(--lch-text-link));
+
+  margin-left: calc(var(--page-margin, 0vw) + 1em);
+}

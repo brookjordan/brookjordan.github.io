@@ -1,0 +1,126 @@
+:root,
+::before,
+::after  {
+  /* brand colours */
+  --lch-white: 100% 0 250;
+  --lch-grey-9: 95% 8 250;
+  --lch-grey-8: 83% 8 250;
+  --lch-grey-7: 71% 8 250;
+  --lch-grey-6: 60% 8 250;
+  --lch-grey-5: 50% 8 250;
+  --lch-grey-4: 40% 8 250;
+  --lch-grey-3: 29% 8 250;
+  --lch-grey-2: 17% 8 250;
+  --lch-grey-1: 5%  8 250;
+
+  --lch-blue-9: 95% 30 260;
+  --lch-blue-8: 83% 30 260;
+  --lch-blue-7: 71% 35 260;
+  --lch-blue-6: 60% 40 260;
+  --lch-blue-5: 50% 50 260;
+  --lch-blue-4: 40% 55 260;
+  --lch-blue-3: 29% 60 260;
+  --lch-blue-2: 17% 70 260;
+  --lch-blue-1: 5%  80 260;
+  
+  --lch-red-9: 95% 75 30;
+  --lch-red-8: 83% 74 30;
+  --lch-red-7: 71% 72 30;
+  --lch-red-6: 60% 70 30;
+  --lch-red-5: 50% 65 30;
+  --lch-red-4: 40% 70 30;
+  --lch-red-3: 29% 72 30;
+  --lch-red-2: 17% 74 30;
+  --lch-red-1: 5%  75 30;
+
+  /* light colours */
+  --l-lch-text-body: var(--lch-grey-3);
+  --l-lch-text-h2: var(--lch-red-6);
+  --l-lch-text-h3: var(--lch-grey-2);
+
+  --l-lch-text-faded: var(--lch-grey-7);
+  --l-lch-text-link: var(--lch-blue-3);
+
+  --l-lch-bg-underlay: var(--lch-grey-8);
+  --l-lch-bg-page: var(--lch-white);
+
+  --l-lch-divider: var(--lch-grey-5);
+
+  /* dark colours */
+  --d-lch-text-body: var(--lch-grey-8);
+  --d-lch-text-h2: var(--lch-red-5);
+  --d-lch-text-h3: var(--lch-white);
+
+  --d-lch-text-faded: var(--lch-grey-4);
+  --d-lch-text-link: var(--lch-blue-6);
+
+  --d-lch-bg-underlay: var(--lch-grey-2);
+  --d-lch-bg-page: var(--lch-grey-1);
+
+  --d-lch-divider: var(--lch-grey-6);
+
+  /* themed colours */
+  --lch-text-body: var(--l-lch-text-body);
+  --lch-text-h2: var(--l-lch-text-h2);
+  --lch-text-h3: var(--l-lch-text-h3);
+  --lch-text-h4: var(--lch-text-h2);
+  --lch-text-h5: var(--lch-text-h3);
+
+  --lch-text-faded: var(--l-lch-text-faded);
+  --lch-text-link: var(--l-lch-text-link);
+
+  --lch-bg-underlay: var(--l-lch-bg-underlay);
+  --lch-bg-page: var(--l-lch-bg-page);
+
+  --lch-divider: var(--l-lch-divider);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root,
+  ::before,
+  ::after  {
+    --lch-text-body: var(--d-lch-text-body);
+    --lch-text-h2: var(--d-lch-text-h2);
+    --lch-text-h3: var(--d-lch-text-h3);
+  
+    --lch-text-faded: var(--d-lch-text-faded);
+    --lch-text-link: var(--d-lch-text-link);
+  
+    --lch-bg-underlay: var(--d-lch-bg-underlay);
+    --lch-bg-page: var(--d-lch-bg-page);
+  
+    --lch-divider: var(--d-lch-divider);
+  }
+}
+
+:root:has([id=theme--light]:checked),
+:root:has([id=theme--light]:checked) ::before,
+:root:has([id=theme--light]:checked) ::after {
+  --lch-text-body: var(--l-lch-text-body);
+  --lch-text-h2: var(--l-lch-text-h2);
+  --lch-text-h3: var(--l-lch-text-h3);
+
+  --lch-text-faded: var(--l-lch-text-faded);
+  --lch-text-link: var(--l-lch-text-link);
+
+  --lch-bg-underlay: var(--l-lch-bg-underlay);
+  --lch-bg-page: var(--l-lch-bg-page);
+
+  --lch-divider: var(--l-lch-divider);
+}
+
+:root:has([id=theme--dark]:checked),
+:root:has([id=theme--dark]:checked) ::before,
+:root:has([id=theme--dark]:checked) ::after {
+  --lch-text-body: var(--d-lch-text-body);
+  --lch-text-h2: var(--d-lch-text-h2);
+  --lch-text-h3: var(--d-lch-text-h3);
+
+  --lch-text-faded: var(--d-lch-text-faded);
+  --lch-text-link: var(--d-lch-text-link);
+
+  --lch-bg-underlay: var(--d-lch-bg-underlay);
+  --lch-bg-page: var(--d-lch-bg-page);
+
+  --lch-divider: var(--d-lch-divider);
+}
