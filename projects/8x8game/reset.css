@@ -1,0 +1,92 @@
+*:where(
+  :not(
+    html, iframe,
+    img, svg, video, audio
+  ):not(
+    svg *, symbol *
+  )
+) {
+  all: unset;
+  display: revert;
+}
+
+:where(html) {
+  -moz-text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+}
+
+:where(a) {
+  cursor: revert;
+}
+
+:where(ol) {
+  counter-reset: revert;
+}
+
+:where(table) {
+  border-collapse: collapse;
+}
+
+:where(
+  input,
+  textarea
+) {
+  -webkit-user-select: auto;
+}
+
+:where(textarea) {
+  white-space: revert;
+}
+
+:where(meter) {
+  -webkit-appearance: revert;
+  appearance: revert;
+}
+
+:where(pre) {
+  all: revert;
+  box-sizing: border-box;
+}
+
+:where([hidden]) {
+  display: none;
+}
+
+:where([contenteditable]:not([contenteditable="false"])) {
+  -moz-user-modify: read-write;
+  -webkit-user-modify: read-write;
+  overflow-wrap: break-word;
+  -webkit-line-break: after-white-space;
+  -webkit-user-select: auto;
+}
+
+:where([draggable="true"]) {
+  -webkit-user-drag: element;
+}
+
+:where(dialog:modal) {
+  all: revert;
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+::placeholder {
+  color: unset;
+}
+::-webkit-details-marker {
+  display: none;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+  color: var(--c-text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans",
+    Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+}
