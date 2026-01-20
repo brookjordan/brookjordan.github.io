@@ -1,0 +1,43 @@
+:root {
+  --delay: 0.15s;
+
+  --hover-scale: 1.2;
+
+  /* Manipulable colours */
+  --lch-gold: 70% 64 56;
+  --lch-dark-gold: 53% 78 39;
+  --lch-blue: 31% 54 274;
+  --lch-white: 100% 1 297;
+  --lch-black: 2% 60 446;
+
+  --lch-red-header: 49% 68 34;
+  --lch-green-sub: 64% 56 123;
+  --lch-link-blue: 50% 36 272;
+  --lch-link-hover: 30% 48 288;
+
+  --lch-text-grey: 54% 7 276;
+  --lch-light-grey: 63% 1 297;
+  --lch-sidebar-border: 88% 1 297;
+
+  --lch-logo-yellow: 87% 87 91;
+  --lch-logo-yellow-dark: 73% 75 90;
+
+  /* Opaque colours */
+  --c-gold: lch(var(--lch-gold));
+  --c-dark-gold: lch(var(--lch-dark-gold));
+  --c-blue: lch(var(--lch-blue));
+  --c-white: lch(var(--lch-white));
+  --c-black: lch(var(--lch-black));
+
+  --c-red-header: lch(var(--lch-red-header));
+  --c-green-sub: lch(var(--lch-green-sub));
+  --c-link-blue: lch(var(--lch-link-blue));
+  --c-link-hover: lch(var(--lch-link-hover));
+
+  --c-text-grey: lch(var(--lch-text-grey));
+  --c-light-grey: lch(var(--lch-light-grey));
+  --c-sidebar-border: lch(var(--lch-sidebar-border));
+
+  --c-logo-yellow: lch(var(--lch-logo-yellow));
+  --c-logo-yellow-dark: lch(var(--lch-logo-yellow-dark));
+}

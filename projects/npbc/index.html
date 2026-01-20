@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Northolt Park Baptist Church</title>
+  <link rel="stylesheet" href="./styles/variables.css">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Trebuchet MS", Geneva, Arial, Helvetica, SunSans-Regular, sans-serif;
+      background-color: var(--c-white);
+      color: var(--c-text-grey);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      display: grid;
+      max-width: 720px;
+      width: 100%;
+      align-items: center;
+    }
+
+    .images {
+      grid-area: images;
+      display: grid;
+      grid-template:
+        "image-1" 1fr
+        "image-2" 1fr
+        "image-3" 1fr;
+      gap: 20px;
+      align-content: space-between;
+      align-self: stretch;
+      align-items: center;
+    }
+
+    .text {
+      grid-area: text;
+      display: grid;
+      gap: 50px;
+      align-content: center;
+      grid-template:
+        "heading" auto
+        "paragraph" auto
+        "links" auto
+        / 1fr;
+    }
+
+    .image-card {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.3);
+      display: block;
+      object-fit: cover;
+      min-height: 120px;
+    }
+
+    .image-card:nth-child(1) {
+      grid-area: image-1;
+      object-position: 70%;
+    }
+
+    .image-card:nth-child(2) {
+      grid-area: image-2;
+      object-position: 85%;
+    }
+
+    .image-card:nth-child(3) {
+      grid-area: image-3;
+      object-position: 80%;
+    }
+
+    .text-column {
+      display: grid;
+      grid-auto-flow: column;
+      flex: 1;
+      padding-right: 20px;
+    }
+
+    h1 {
+      color: var(--c-blue);
+      font-size: 3rem;
+      line-height: 1.1;
+      font-weight: 700;
+      grid-area: heading;
+    }
+
+    p {
+      font-size: 1.15rem;
+      line-height: 1.6;
+      color: var(--c-text-grey);
+      grid-area: paragraph;
+    }
+
+
+    .church-links {
+      grid-area: links;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: start;
+      gap: 10px 35px;
+
+      font-size: 1.25rem;
+      line-height: 1.8;
+
+      max-width: 100%;
+    }
+
+    .church-links a {
+      color: var(--c-gold);
+      white-space: nowrap;
+      text-decoration-color: lch(var(--lch-dark-gold) / 0);
+      background-color: lch(var(--lch-gold) / 0);
+      transition: var(--delay) ease;
+      transition-property: color, text-decoration-color, background-color;
+      padding: 0 13px;
+      margin: 0 -13px;
+      border-radius: 8px;
+    }
+
+    .church-links a:hover {
+      background-color: lch(var(--lch-gold) / 0.2);
+    }
+
+    .church-links a:focus {
+      text-decoration-color: lch(var(--lch-dark-gold) / 1);
+    }
+
+    .church-links a:hover,
+    .church-links a:focus {
+      color: var(--c-dark-gold);
+    }
+
+    @media (width >=550px) {
+      .container {
+        gap: 60px;
+        align-items: space-around;
+        align-content: center;
+        grid-template:
+          "images text" 1fr
+          / 5fr 6fr;
+      }
+
+      h1 span::before {
+        content: "\00a0";
+      }
+    }
+
+    @media (width < 550px) {
+
+      .images,
+      .text {
+        display: contents
+      }
+
+      .container {
+        grid-template:
+          "image-2 image-2"
+          "heading heading"
+          "paragraph paragraph"
+          "links links"
+          "image-1 image-3";
+        gap: 40px;
+      }
+
+      h1 span::before {
+        content: "\00a0";
+      }
+    }
+
+
+    @media (width < 450px) {
+      h1 span::before {
+        content: " ";
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="images">
+      <img src="./i/01.jpg" role="presentation" class="image-card">
+      <img src="./i/02.jpg" role="presentation" class="image-card">
+      <img src="./i/03.jpg" role="presentation" class="image-card">
+    </div>
+
+
+    <div class="text">
+      <h1>Northolt<span></span>Park Baptist<span></span>Church</h1>
+
+      <p>
+        Our congregation is made up of ordinary people meeting together to worship God.
+        We are united in our faith in, and love for, the Lord Jesus Christ, and hope that you
+        sense the presence and power of the Spirit of God as you worship with us.
+      </p>
+
+      <div class="church-links">
+        <a href="pages/services.html">Church Services</a>
+        <a href="pages/activities.html">Church Activities</a>
+        <a href="pages/sermons.html">Sermon Notes</a>
+        <a href="pages/5-mins.html">5 minutes</a>
+        <a href="pages/notices.html">Notices</a>
+        <a href="pages/directions.html">How to get to us</a>
+        <a href="pages/contacts.html">Contacts</a>
+        <a href="pages/links.html">Links</a>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+
+</html>
