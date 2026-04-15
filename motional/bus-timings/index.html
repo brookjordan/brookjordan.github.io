@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bus Timings Display</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet" />
+  <style>
+    /* --- Base Styles --- */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* --- Marquee Styles --- */
+    #marquee-container {
+      display: none;
+      /* Hidden by default, shown by JS if there are events */
+      overflow: hidden;
+      background-color: #5253f3;
+      color: #e8e8e8;
+      padding: 15px 0;
+      font-size: 1.5rem;
+      font-weight: bold;
+      width: 100%;
+      box-sizing: border-box;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      align-items: center;
+    }
+
+    .marquee-content {
+      display: inline-block;
+      white-space: nowrap;
+      flex-shrink: 0;
+      padding-right: 2rem;
+      /* pure CSS animation with a custom property for dynamic speed */
+      animation: marquee-scroll var(--marquee-duration, 25s) linear infinite;
+    }
+
+    @keyframes marquee-scroll {
+      from {
+        transform: translateX(0);
+      }
+
+      to {
+        transform: translateX(-100%);
+      }
+    }
+
+    /* --- Original Styles --- */
+    .main-container {
+      --bus-width: 500px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(var(--bus-width), 1fr));
+      grid-auto-flow: row dense;
+      background: rgb(255, 255, 255);
+      gap: 10px;
+      padding: 10px;
+      overflow: hidden;
+    }
+
+    .bus-station {
+      flex: 1;
+      background: #fefeff;
+      margin: 10px 0 10px 0;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      align-items: center;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .station-header {
+      font-weight: bold;
+      margin-bottom: 15px;
+      font-size: 150%;
+    }
+
+    .bus-services {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(var(--bus-width), 1fr));
+      gap: 10px;
+      padding: 10px;
+    }
+
+    .service-number {
+      box-sizing: border-box;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+
+    .bus-service {
+      display: flex;
+      border-radius: 5px;
+      padding: 8px;
+      align-items: center;
+      margin-bottom: 5px;
+      background: #5252f36b;
+      height: 80px;
+    }
+
+    .timings {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      height: 100%;
+      border-radius: 5px;
+      flex-grow: 1;
+      gap: 8px;
+      align-items: center;
+      margin-left: 8px;
+      font-family: monospace;
+    }
+
+    .timing {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-width: 30%;
+      text-align: center;
+      border-radius: 8px;
+      background: #e7e7e73a;
+      color: #585858;
+      height: 100%;
+      font-size: 100px;
+      font-weight: bold;
+    }
+
+    .non-number-timing {
+      font-size: 150%;
+      text-align: center;
+      justify-content: center;
+      border-radius: 8px;
+      color: #585858;
+      height: 100%;
+      box-sizing: border-box;
+      font-weight: bold;
+      line-height: 1.7;
+    }
+
+    .arr-timing {
+      font-size: 150%;
+      text-align: center;
+      justify-content: center;
+      border-radius: 8px;
+      height: 100%;
+      box-sizing: border-box;
+      background-color: black !important;
+      color: lightgreen !important;
+      font-weight: bold;
+      line-height: 1.7;
+    }
+
+    .minutes {
+      min-width: 30%;
+      text-align: center;
+      font-size: 150%;
+      color: #585858;
+    }
+
+    .arr-timing .minutes {
+      display: none;
+    }
+
+    .service-number {
+      padding: 8px;
+      min-width: 25%;
+      border-radius: 8px;
+      background: #5253f3;
+      font-size: 50px;
+      color: #e8e8e8;
+    }
+
+    .flex-parent-element {
+      display: flex;
+      width: 100%;
+    }
+
+    .countdown {
+      flex: 1;
+      margin-top: 20px;
+      font-size: 18px;
+      color: #5253f3;
+    }
+
+    .current-time {
+      flex: 1;
+      margin-top: 20px;
+      font-size: 18px;
+      color: #5253f3;
+      text-align: right;
+      display: grid;
+      justify-content: end;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .station-header small {
+      background-color: #5253f3;
+      color: white;
+      padding: 4px;
+      border-radius: 8px;
+      margin-right: 8px;
+    }
+
+    .station-header strong {
+      color: rgb(255, 21, 21);
+    }
+
+    @media (width >=1050px) {
+      main {
+        --bus-width: 495px;
+      }
+
+      .bus-station:has(.bus-service:nth-child(2)) {
+        grid-column-end: span 2;
+      }
+    }
+
+    @media (width >=1560px) {
+      main {
+        --bus-width: 496.6666666667px;
+      }
+
+      .bus-station:has(.bus-service:nth-child(3)) {
+        grid-column-end: span 3;
+      }
+    }
+
+    @media (width >=2070px) {
+      main {
+        --bus-width: 497.5px;
+      }
+
+      .bus-station:has(.bus-service:nth-child(4)) {
+        grid-column-end: span 4;
+      }
+    }
+
+    @media (width >=2580px) {
+      main {
+        --bus-width: 498px;
+      }
+
+      .bus-station:has(.bus-service:nth-child(5)) {
+        grid-column-end: span 5;
+      }
+    }
+
+    @media (width >=3090px) {
+      main {
+        --bus-width: 498.3333333333px;
+      }
+
+      .bus-station:has(.bus-service:nth-child(6)) {
+        grid-column-end: span 6;
+      }
+    }
+
+    @media (width >=3600px) {
+      main {
+        --bus-width: 498.5714285714px;
+      }
+
+      .bus-station:has(.bus-service:nth-child(7)) {
+        grid-column-end: span 7;
+      }
+    }
+
+    @media (width >=4110px) {
+      main {
+        --bus-width: 498.75px;
+      }
+
+      .bus-station:has(.bus-service:nth-child(8)) {
+        grid-column-end: span 8;
+      }
+    }
+
+    @media (width >=4620px) {
+      main {
+        --bus-width: 498.8888888889px;
+      }
+
+      .bus-station:has(.bus-service:nth-child(9)) {
+        grid-column-end: span 9;
+      }
+    }
+
+    @media (width >=5130px) {
+      main {
+        --bus-width: 499px;
+      }
+
+      .bus-station:has(.bus-service:nth-child(10)) {
+        grid-column-end: span 10;
+      }
+    }
+
+    .spin {
+      --size: 200px;
+      --hsl: 230deg 75% 85%;
+      --hsl-2: 230deg 30% 60%;
+      --fade: 20;
+      --_dec: var(--dec, 1);
+      font-family: sans-serif;
+      font-size: calc(var(--size) * 0.15);
+      display: grid;
+      place-items: center;
+      height: var(--size);
+      width: var(--size);
+      border-radius: 50%;
+      --fade-alpha: calc((1 - var(--fade)) + var(--dec) * var(--fade));
+      background: conic-gradient(hsl(var(--hsl) / var(--fade-alpha)) 0deg,
+          hsl(var(--hsl-2, var(--hsl)) / var(--fade-alpha)) calc(var(--dec) * 360deg),
+          hsl(var(--hsl) / 1) calc(var(--dec) * 360deg),
+          hsl(var(--hsl-2, var(--hsl)) / 1) 360deg);
+    }
+
+    .spin::after {
+      content: "every \a 60 \asecs";
+      white-space: pre-wrap;
+      text-align: center;
+      display: grid;
+      place-items: center;
+      width: calc(var(--size) * 0.75);
+      height: calc(var(--size) * 0.75);
+      background-color: white;
+      border-radius: 50%;
+    }
+
+    /* --- Slideshow Styles --- */
+    .slideshow-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #000;
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+
+    .slideshow-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .slideshow-overlay.fade-out {
+      opacity: 0;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    .slide.visible {
+      opacity: 1;
+    }
+
+    .slide1-words {
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .slide1-words .word {
+      font-family: 'Roboto', sans-serif;
+      font-size: 30px;
+      font-weight: bold;
+      color: #fff;
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+
+    .slide1-words .word.animate-in {
+      animation: slideWordIn 0.5s ease forwards;
+    }
+
+    @keyframes slideWordIn {
+      from {
+        opacity: 0;
+        transform: translateX(-30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .slide2-content {
+      text-align: center;
+      color: #fff;
+      font-family: 'Roboto', sans-serif;
+    }
+
+    .slide2-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 20px;
+    }
+
+    .slide2-title-row .separator {
+      width: 2px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.5);
+      position: relative;
+      top: 10px;
+    }
+
+    .slide2-content .motional-logo {
+      max-width: 350px;
+      display: inline-block;
+    }
+
+    .slide2-content .motional-logo img {
+      width: 100%;
+      height: auto;
+      filter: brightness(0) invert(1);
+    }
+
+    .slide2-content .challenge-title {
+      font-size: 32px;
+      position: relative;
+      top: 10px;
+      left: 10px;
+      font-weight: 300;
+    }
+
+    .slide2-content .signup-text {
+      font-size: 30px;
+      color: #ccc;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Slideshow Overlay -->
+  <div class="slideshow-overlay" id="slideshow">
+    <div class="slide" id="slide1">
+      <div class="slide1-words">
+        <span class="word">HUMAN</span>
+        <span class="word">POWERED</span>
+        <span class="word">MILES</span>
+      </div>
+    </div>
+    <div class="slide" id="slide2">
+      <div class="slide2-content">
+        <div class="slide2-title-row">
+          <div class="motional-logo">
+            <img src="motional.svg" alt="Motional"
+              onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'30\'><text x=\'0\' y=\'20\' fill=\'white\' font-family=\'Arial\' font-size=\'20\'>Motional</text></svg>'" />
+          </div>
+          <div class="separator"></div>
+          <div class="challenge-title">Running Challenge</div>
+        </div>
+        <div class="signup-text">Sign-up now at #sg-running-group</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Event Marquee -->
+  <div id="marquee-container">
+    <div class="marquee-content" id="marquee-text-1"></div>
+    <div class="marquee-content" id="marquee-text-2"></div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-container">
+    <div class="bus-station" id="station-18279">
+      <div class="station-header">
+        <small>18279</small><strong font-size="250%">Opposite</strong> Block 85
+      </div>
+      <div class="bus-services" id="services-18279">
+        <!-- Bus service cards will be dynamically inserted here -->
+      </div>
+    </div>
+    <div class="bus-station" id="station-18271">
+      <div class="station-header"><small>18271</small>Block 85</div>
+      <div class="bus-services" id="services-18271">
+        <!-- Bus service cards will be dynamically inserted here -->
+      </div>
+    </div>
+    <div class="bus-station" id="station-18131">
+      <div class="station-header"><small>18131</small>Science Park</div>
+      <div class="bus-services" id="services-18131">
+        <!-- Bus service cards will be dynamically inserted here -->
+      </div>
+    </div>
+    <div class="bus-station" id="station-18049">
+      <div class="station-header">
+        <small>18049</small>Opposite Science Park
+      </div>
+      <div class="bus-services" id="services-18049">
+        <!-- Bus service cards will be dynamically inserted here -->
+      </div>
+    </div>
+    <div>
+      <div class="current-time">
+        <span id="date-timer"></span>
+        <div class="spin"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ===== MARQUEE & EVENT LOGIC =====
+    const ALL_EVENTS = [
+      // US Holidays 2026
+      { date: new Date(2026, 0, 19), name: 'Martin Luther King Jr. Day', holiday: 'US' },
+      { date: new Date(2026, 1, 16), name: 'Presidents Day', holiday: 'US' },
+      { date: new Date(2026, 4, 25), name: 'Memorial Day', holiday: 'US' },
+      { date: new Date(2026, 5, 19), name: 'Juneteenth', holiday: 'US' },
+      { date: new Date(2026, 6, 3), name: 'Independence Day', holiday: 'US' },
+      { date: new Date(2026, 8, 7), name: 'Labor Day', holiday: 'US' },
+      { date: new Date(2026, 9, 12), name: 'Indigenous Peoples\' Day', holiday: 'US' },
+      { date: new Date(2026, 10, 11), name: 'Veterans Day', holiday: 'US' },
+      { date: new Date(2026, 10, 26), name: 'Thanksgiving Day', holiday: 'US' },
+      { date: new Date(2026, 10, 27), name: 'Day After Thanksgiving', holiday: 'US' },
+      { date: new Date(2026, 11, 24), endDate: new Date(2027, 0, 1), name: 'Holiday Break (US)', holiday: 'US' },
+      // Singapore Holidays 2026
+      { date: new Date(2026, 3, 6), endDate: new Date(2026, 5, 28), name: 'Motional SG Running Challenge' },
+      { date: new Date(2026, 1, 17), endDate: new Date(2026, 1, 18), name: 'Chinese New Year', holiday: 'SG' },
+      { date: new Date(2026, 2, 20), name: 'Hari Raya Puasa', holiday: 'SG' },
+      { date: new Date(2026, 3, 3), name: 'Good Friday', holiday: 'SG' },
+      { date: new Date(2026, 3, 1), name: 'Labour Day', holiday: 'SG' },
+      { date: new Date(2026, 4, 27), name: 'Hari Raya Haji', holiday: 'SG' },
+      { date: new Date(2026, 5, 1), name: 'Vesak Day', holiday: 'SG' },
+      { date: new Date(2026, 7, 10), name: 'National Day', holiday: 'SG' },
+      { date: new Date(2026, 10, 9), name: 'Deepavali', holiday: 'SG' },
+      { date: new Date(2026, 11, 24), endDate: new Date(2027, 0, 1), name: 'Holiday Break (SG)', holiday: 'SG' },
+      // Fake events to test the different relative date logic
+      { date: new Date(new Date().setDate(new Date().getDate() - 3)), name: 'Fake 3 Days Ago Event' },
+      { date: new Date(new Date().setDate(new Date().getDate() - 1)), name: 'Fake Yesterday Event' },
+      { date: new Date(new Date().setDate(new Date().getDate() + 1)), name: 'Fake Tomorrow Event' },
+      { date: new Date(new Date().setDate(new Date().getDate() + 4)), name: 'Fake Less Than A Week Event' },
+      { date: new Date(new Date().setDate(new Date().getDate() + 12)), name: 'Fake Less Than 15 Days Event' },
+      { date: new Date(new Date().setDate(new Date().getDate() + 25)), name: 'Fake Less Than A Month Event' }
+    ];
+
+    function getDaysDiff(date1, date2) {
+      // Discard time so difference is based purely on calendar days
+      const d1 = Date.UTC(date1.getFullYear(), date1.getMonth(), date1.getDate());
+      const d2 = Date.UTC(date2.getFullYear(), date2.getMonth(), date2.getDate());
+      return Math.floor((d1 - d2) / (1000 * 60 * 60 * 24));
+    }
+
+    function formatDateDayMonth(d) {
+      const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      return `${d.getDate()} ${months[d.getMonth()]}`;
+    }
+
+    function getWeekday(d) {
+      const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+      return days[d.getDay()];
+    }
+
+    function updateMarquee() {
+      const now = new Date();
+      const activeEvents = [];
+
+      ALL_EVENTS.forEach(event => {
+        const startDiff = getDaysDiff(event.date, now);
+        const endDiff = event.endDate ? getDaysDiff(event.endDate, now) : startDiff;
+
+        let statusStr = "";
+        let include = false;
+        let isPast = false;
+
+        // Check if today falls anywhere within the event date range
+        if (startDiff <= 0 && endDiff >= 0) {
+          if (startDiff === 0 && endDiff === 0) {
+            statusStr = "today";
+          } else {
+            statusStr = "ongoing";
+          }
+          include = true;
+        }
+        // Future Events (up to 31 days)
+        else if (startDiff > 0 && startDiff <= 31) {
+          if (startDiff === 1) {
+            statusStr = "tomorrow";
+          } else if (startDiff <= 7) {
+            statusStr = `${getWeekday(event.date)}`;
+          } else if (startDiff <= 15) {
+            statusStr = `in ${startDiff} days, ${formatDateDayMonth(event.date)}`;
+          } else {
+            statusStr = `${formatDateDayMonth(event.date)}`;
+          }
+          include = true;
+        }
+        // Past Events (up to 5 days ago based on the END of the event)
+        else if (endDiff < 0 && endDiff >= -5) {
+          isPast = true;
+          let referenceDate = event.endDate ? event.endDate : event.date;
+
+          if (endDiff === -1) {
+            statusStr = "yesterday";
+          } else {
+            statusStr = `was on ${getWeekday(referenceDate)}`;
+          }
+          include = true;
+        }
+
+        if (include) {
+          // Remove parentheses, add styling to make the date smaller and un-bolded
+          let eventText = `${event.name} <span style="font-weight: normal; font-size: 0.85em; margin-left: 4px;">${statusStr}</span>`;
+
+          // Fade out past events using an inline span
+          if (isPast) {
+            eventText = `<span style="opacity: 0.45;">${eventText}</span>`;
+          }
+          activeEvents.push(eventText);
+        }
+      });
+
+      const container = document.getElementById('marquee-container');
+      const content1 = document.getElementById('marquee-text-1');
+      const content2 = document.getElementById('marquee-text-2');
+
+      if (activeEvents.length > 0) {
+        // Add spacing and HTML entities for bullet points
+        let text = activeEvents.join(" &nbsp; &bull; &nbsp; ") + " &nbsp; &bull; &nbsp; ";
+
+        // Repeat text to ensure it's long enough to wrap ultra-wide screens properly
+        text = text.repeat(4);
+
+        // Using innerHTML instead of textContent so our <span> transparency tags render correctly
+        content1.innerHTML = text;
+        content2.innerHTML = text;
+
+        // Adjust duration based on number of events to maintain constant visual speed
+        // 25 seconds is the baseline speed for a single event string
+        const duration = activeEvents.length * 25;
+        container.style.setProperty('--marquee-duration', `${duration}s`);
+
+        container.style.display = 'flex'; // show the banner
+      } else {
+        container.style.display = 'none'; // hide the banner
+      }
+    }
+
+    // Initialize Marquee and set hourly interval
+    updateMarquee();
+    setInterval(updateMarquee, 60 * 60 * 1000); // Once an hour
+
+
+    // ===== ORIGINAL BUS TIMINGS LOGIC =====
+    function fetchBusData() {
+      const stations = [18279, 18271, 18131, 18049];
+      stations.forEach((stationId) => {
+        fetch(`http://127.0.0.1:5000/v2/singlebusdata/${stationId}`)
+          .then((response) => response.json())
+          .then((data) => {
+            const servicesContainer = document.getElementById(`services-${stationId}`);
+            if (!servicesContainer) return;
+
+            while (servicesContainer.firstChild) {
+              servicesContainer.removeChild(servicesContainer.lastChild);
+            }
+            // If there's no data returning from Python app, ignore.
+            if (!data || !Array.isArray(data)) return;
+
+            data.forEach((service) => {
+              const serviceDiv = document.createElement("div");
+              serviceDiv.className = "bus-service";
+              const serviceNoContainer = document.createElement("div");
+              serviceNoContainer.className = "service-number";
+              serviceNoContainer.innerHTML = `<div>${service.ServiceNo}</div>`;
+              serviceDiv.appendChild(serviceNoContainer);
+              const timingsContainer = document.createElement("div");
+              timingsContainer.className = "timings";
+              var altCnt = 0;
+              service.Timings.forEach((time) => {
+                var timeStr = formatTime(time);
+                const timeDiv = document.createElement("div");
+                const timeTextDiv = document.createElement("div");
+                timeDiv.style.strokeWidth = "299%";
+                timeTextDiv.textContent = timeStr;
+                if (+timeStr) {
+                  timeDiv.className = "timing";
+                } else {
+                  if (timeStr == "ARR") {
+                    timeDiv.className = "arr-timing";
+                  } else {
+                    timeDiv.className = "non-number-timing";
+                  }
+                }
+                const minDiv = document.createElement("div");
+                minDiv.className = "minutes";
+                if (+timeStr) {
+                  minDiv.textContent = "mins";
+                  timeDiv.style.fontSize = "50px";
+                } else {
+                  minDiv.textContent = "";
+                }
+                timeDiv.style.fontSize = "50px";
+                minDiv.style.fontSize = "30%";
+                if (altCnt == 0) {
+                  minDiv.style.backgroundColor = "#FFFFFF";
+                  timeDiv.style.backgroundColor = "#FFFFFF";
+                  minDiv.style.color = "#000000";
+                  timeDiv.style.color = "#000000";
+                }
+                altCnt += 1;
+                timeDiv.appendChild(timeTextDiv);
+                timeDiv.appendChild(minDiv);
+                timingsContainer.appendChild(timeDiv);
+              });
+              serviceDiv.appendChild(timingsContainer);
+              servicesContainer.appendChild(serviceDiv);
+            });
+          })
+          .catch(e => console.log('Error fetching bus data:', e));
+      });
+    }
+
+    function formatTime(seconds) {
+      if (seconds == "-") {
+        return "N/A";
+      }
+      if (seconds < 60) {
+        return "ARR";
+      }
+      const minutes = Math.floor(seconds / 60);
+      return `${minutes}`;
+    }
+
+    function updateCountdown() {
+      let val = parseFloat(document.body.style.getPropertyValue("--dec"));
+      if (isNaN(val)) {
+        val = 0;
+      }
+      val += 0.00166;
+      if (val > 1) {
+        val = 0;
+        fetchBusData(); // Fetch data when countdown reaches zero
+      }
+      document.body.style.setProperty("--dec", val);
+      const now = new Date();
+      const dateOptions = { weekday: 'long', day: 'numeric', month: 'short' };
+      const datePart = now.toLocaleDateString(undefined, dateOptions);
+      const timePart = now.toLocaleTimeString();
+      const fullDateTime = `${datePart}, ${timePart}`;
+      const dateTimer = document.getElementById("date-timer");
+      if (dateTimer) dateTimer.textContent = fullDateTime;
+    }
+
+    setInterval(updateCountdown, 100); // Update countdown every second
+    fetchBusData(); // Fetch data immediately on load
+
+
+    // ===== SLIDESHOW LOGIC =====
+    const SLIDESHOW_INTERVAL = 10 * 60 * 800; // 8 minutes
+    const WORD_STAGGER = 600; // ms between each word animation start
+    const WORD_ANIM_DURATION = 500; // each word's animation length
+    const INITIAL_DELAY = 300;
+    const SLIDE2_DURATION = 5000; // how long slide 2 stays visible
+
+    function showSlideshow() {
+      const overlay = document.getElementById("slideshow");
+      const slide1 = document.getElementById("slide1");
+      const slide2 = document.getElementById("slide2");
+      const words = slide1.querySelectorAll(".word");
+      const wordCount = words.length;
+
+      // Time when last word finishes animating
+      const lastWordDone = INITIAL_DELAY + (wordCount - 1) * WORD_STAGGER + WORD_ANIM_DURATION;
+      // Transition to slide 2 starts 600ms after last word is done
+      const slide2Start = lastWordDone + 600;
+
+      // Reset
+      slide1.classList.remove("visible");
+      slide2.classList.remove("visible");
+      words.forEach((w) => w.classList.remove("animate-in"));
+      overlay.classList.remove("fade-out");
+
+      // Show overlay
+      overlay.classList.add("active");
+
+      // Slide 1: animate words one at a time
+      setTimeout(() => {
+        slide1.classList.add("visible");
+        words.forEach((word, i) => {
+          setTimeout(() => word.classList.add("animate-in"), i * WORD_STAGGER);
+        });
+      }, INITIAL_DELAY);
+
+      // Transition to slide 2
+      setTimeout(() => {
+        slide1.classList.remove("visible");
+      }, slide2Start);
+      setTimeout(() => {
+        slide2.classList.add("visible");
+      }, slide2Start + 500);
+
+      // Fade out and hide
+      setTimeout(() => {
+        overlay.classList.add("fade-out");
+        setTimeout(() => {
+          overlay.classList.remove("active", "fade-out");
+          slide2.classList.remove("visible");
+        }, 800);
+      }, slide2Start + 500 + SLIDE2_DURATION);
+    }
+
+    // Show slideshow every 10 minutes
+    setInterval(showSlideshow, SLIDESHOW_INTERVAL);
+    // Show once on load after a short delay
+    setTimeout(showSlideshow, 3000);
+  </script>
+</body>
+
+</html>
