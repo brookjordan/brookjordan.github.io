@@ -20,9 +20,12 @@
         /* Links & Buttons */
         .link-container { margin-top: 1rem; opacity: 0; transition: opacity 0.3s; pointer-events: none; flex-shrink: 0; }
         .link-container.visible { opacity: 1; pointer-events: auto; }
-        .btn { background: #bb86fc; color: #121212; padding: 10px 18px; text-decoration: none; border-radius: 10px; font-weight: bold; display: inline-block; transition: transform 0.2s; }
+        
+        /* Updated Button styling to hold the summary */
+        .btn { background: #bb86fc; color: #121212; padding: 12px 20px; text-decoration: none; border-radius: 12px; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; transition: transform 0.2s; gap: 4px; box-shadow: 0 4px 15px rgba(187, 134, 252, 0.2); }
         .btn:hover { transform: scale(1.03); }
-        .summary-text { display: block; margin-top: 0.8rem; font-size: 0.9rem; color: #aaa; font-style: italic; line-height: 1.4; padding: 0 10px; }
+        .btn-title { font-weight: 800; font-size: 1rem; }
+        .btn-summary { font-size: 0.75rem; font-weight: 600; opacity: 0.75; text-transform: uppercase; letter-spacing: 0.5px; }
 
         /* Messenger Toggle */
         .toggle-btn { background: none; border: 1px solid #555; color: #aaa; padding: 8px 16px; border-radius: 20px; cursor: pointer; margin: 1.5rem auto 0.5rem auto; font-size: 0.85rem; transition: all 0.2s; flex-shrink: 0; }
@@ -38,7 +41,7 @@
         .chat-bubble.active { opacity: 1; }
         .chat-label { font-size: 0.65rem; font-weight: bold; margin-bottom: 4px; text-transform: uppercase; opacity: 0.7; }
         
-        /* Dynamic Character Styles tied directly to the Voice ID */
+        /* Dynamic Character Styles */
         .am_adam { border-color: #00d2ff; } 
         .af_sky { border-color: #bb86fc; } 
 
@@ -58,8 +61,10 @@
         </div>
 
         <div id="lnk-wrap" class="link-container">
-            <a id="lnk" class="btn" target="_blank">Read Source Article</a>
-            <span id="summ" class="summary-text"></span>
+            <a id="lnk" class="btn" target="_blank">
+                <span class="btn-title">Read Source Article</span>
+                <span id="summ" class="btn-summary"></span>
+            </a>
         </div>
 
         <button id="toggle-chat" class="toggle-btn">Show Full Transcript</button>
@@ -83,10 +88,8 @@
         
         playlist.forEach((item, idx) => {
             const bubble = document.createElement('div');
-            // We now apply the raw voice ID as the class (e.g. 'af_sky')
             bubble.className = 'chat-bubble ' + item.voice;
             bubble.id = 'chat-msg-' + idx;
-            // And we inject the proper display name straight from the AI
             bubble.innerHTML = '<div class="chat-label">' + item.speaker + '</div>' + item.text;
             chatContainer.appendChild(bubble);
         });
@@ -112,7 +115,6 @@
             pl.src = t.file; 
             st.innerText = 'Segment ' + (i + 1);
             
-            // Dynamic Updates
             tsText.innerText = t.text;
             tsVoice.innerText = t.speaker;
             tsBox.className = 'transcript-box ' + t.voice;
@@ -128,9 +130,15 @@
                 }
             });
 
+            // Summary is now injected directly into the button
             if (t.url) { 
                 lnk.href = t.url; 
-                summ.innerText = t.summary ? "— " + t.summary : "";
+                if (t.summary) {
+                    summ.innerText = t.summary;
+                    summ.style.display = 'block';
+                } else {
+                    summ.style.display = 'none';
+                }
                 lnkWrap.classList.add('visible'); 
             } else { 
                 lnkWrap.classList.remove('visible'); 
