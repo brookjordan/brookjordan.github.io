@@ -3,29 +3,45 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Daily Briefing - 2026-05-03</title>
+    <title>Daily Tech - 2026-05-03</title>
     <base href="/projects/news/2026-05-03/">
     <style>
-        body { background: #121212; color: #eee; font-family: -apple-system, BlinkMacSystemFont, sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
-        .card { background: #1e1e1e; padding: 2.5rem; border-radius: 24px; text-align: center; width: 100%; max-width: 500px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); }
-        h1 { margin: 0 0 1rem 0; color: #fff; font-size: 1.6rem; letter-spacing: -0.5px; }
+        body { background: #121212; color: #eee; font-family: -apple-system, BlinkMacSystemFont, sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
+        .card { background: #1e1e1e; padding: 2rem; border-radius: 24px; text-align: center; width: 100%; max-width: 500px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); display: flex; flex-direction: column; max-height: 90vh; }
+        h1 { margin: 0 0 1rem 0; color: #fff; font-size: 1.6rem; }
         #st { color: #888; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 0.5rem; }
-        audio { width: 100%; margin: 1rem 0; outline: none; }
+        audio { width: 100%; margin: 1rem 0; outline: none; flex-shrink: 0; }
         
-        .transcript-box { background: #252525; padding: 1.5rem; border-radius: 16px; margin: 1rem 0; min-height: 60px; text-align: left; border-left: 4px solid #444; }
+        /* 'Now Playing' Transcript Box */
+        .transcript-box { background: #252525; padding: 1.5rem; border-radius: 16px; margin: 0.5rem 0; min-height: 60px; text-align: left; border-left: 4px solid #444; flex-shrink: 0; }
         .af_alloy { border-color: #00d2ff; } 
         .af_nova { border-color: #bb86fc; } 
         #ts-text { line-height: 1.5; font-size: 1.05rem; margin: 0; color: #f0f0f0; }
         #ts-voice { font-weight: bold; font-size: 0.7rem; text-transform: uppercase; margin-bottom: 0.4rem; opacity: 0.6; }
 
-        .link-container { margin-top: 1.5rem; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+        /* Links & Buttons */
+        .link-container { margin-top: 1rem; opacity: 0; transition: opacity 0.3s; pointer-events: none; flex-shrink: 0; }
         .link-container.visible { opacity: 1; pointer-events: auto; }
-        
         .btn { background: #bb86fc; color: #121212; padding: 10px 18px; text-decoration: none; border-radius: 10px; font-weight: bold; display: inline-block; transition: transform 0.2s; }
         .btn:hover { transform: scale(1.03); }
-        
-        /* Summary Text Styling */
         .summary-text { display: block; margin-top: 0.8rem; font-size: 0.9rem; color: #aaa; font-style: italic; line-height: 1.4; padding: 0 10px; }
+
+        /* Messenger Toggle */
+        .toggle-btn { background: none; border: 1px solid #555; color: #aaa; padding: 8px 16px; border-radius: 20px; cursor: pointer; margin: 1.5rem auto 0.5rem auto; font-size: 0.85rem; transition: all 0.2s; flex-shrink: 0; }
+        .toggle-btn:hover { background: #333; color: #fff; }
+
+        /* Full Messenger Chat */
+        .chat-container { display: none; flex-direction: column; gap: 12px; margin-top: 1rem; text-align: left; overflow-y: auto; padding: 10px 15px 10px 5px; border-top: 1px solid #333; scrollbar-width: thin; scroll-behavior: smooth; }
+        .chat-container.visible { display: flex; flex-grow: 1; }
+        .chat-container::-webkit-scrollbar { width: 6px; }
+        .chat-container::-webkit-scrollbar-thumb { background-color: #555; border-radius: 10px; }
+        
+        .chat-bubble { padding: 12px 16px; border-radius: 18px; max-width: 85%; font-size: 0.95rem; line-height: 1.4; position: relative; opacity: 0.4; transition: opacity 0.3s; }
+        .chat-bubble.active { opacity: 1; }
+        .chat-label { font-size: 0.65rem; font-weight: bold; margin-bottom: 4px; text-transform: uppercase; opacity: 0.7; }
+        
+        .chat-alloy { align-self: flex-start; background: #2a2a2a; color: #e0e0e0; border-bottom-left-radius: 4px; border-left: 3px solid #00d2ff; }
+        .chat-nova { align-self: flex-end; background: #3c2a4d; color: #e0e0e0; border-bottom-right-radius: 4px; border-right: 3px solid #bb86fc; }
     </style>
 </head>
 <body>
@@ -43,6 +59,9 @@
             <a id="lnk" class="btn" target="_blank">Read Source Article</a>
             <span id="summ" class="summary-text"></span>
         </div>
+
+        <button id="toggle-chat" class="toggle-btn">Show Full Transcript</button>
+        <div id="full-chat" class="chat-container"></div>
     </div>
 
     <script>
@@ -56,6 +75,28 @@
         const tsText = document.getElementById('ts-text');
         const tsVoice = document.getElementById('ts-voice');
         const tsBox = document.getElementById('ts-box');
+        
+        // Setup Full Chat
+        const chatContainer = document.getElementById('full-chat');
+        const toggleBtn = document.getElementById('toggle-chat');
+        
+        playlist.forEach((item, idx) => {
+            const bubble = document.createElement('div');
+            const isAlloy = item.voice.includes('alloy');
+            bubble.className = 'chat-bubble ' + (isAlloy ? 'chat-alloy' : 'chat-nova');
+            bubble.id = 'chat-msg-' + idx;
+            bubble.innerHTML = '<div class="chat-label">' + (isAlloy ? 'Alloy' : 'Nova') + '</div>' + item.text;
+            chatContainer.appendChild(bubble);
+        });
+
+        toggleBtn.onclick = () => {
+            const isVis = chatContainer.classList.toggle('visible');
+            toggleBtn.innerText = isVis ? 'Hide Transcript' : 'Show Full Transcript';
+            if (isVis) {
+                const activeBubble = document.getElementById('chat-msg-' + cur);
+                if (activeBubble) activeBubble.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        };
 
         function load(i) { 
             if (i >= playlist.length) {
@@ -68,9 +109,23 @@
             const t = playlist[i]; 
             pl.src = t.file; 
             st.innerText = 'Segment ' + (i + 1);
+            
+            // Update Active Box
             tsText.innerText = t.text;
             tsVoice.innerText = t.voice.includes('alloy') ? 'Alloy' : 'Nova';
             tsBox.className = 'transcript-box ' + t.voice;
+
+            // Handle Chat Bubble Highlighting
+            document.querySelectorAll('.chat-bubble').forEach((b, idx) => {
+                if (idx === i) {
+                    b.classList.add('active');
+                    if (chatContainer.classList.contains('visible')) {
+                        b.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }
+                } else {
+                    b.classList.remove('active');
+                }
+            });
 
             // Handle Link and Summary
             if (t.url) { 
