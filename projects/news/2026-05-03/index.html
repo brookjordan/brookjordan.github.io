@@ -1,0 +1,61 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Tech AI Podcast - 2026-05-03</title>
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; background-color: #121212; color: #e0e0e0; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+        .player-container { background: #1e1e1e; padding: 2.5rem; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; max-width: 450px; width: 90%; }
+        h1 { margin-top: 0; font-size: 1.5rem; color: #fff; }
+        .status-text { color: #888; font-size: 0.9rem; margin-bottom: 1.5rem; height: 1.2rem; }
+        audio { width: 100%; margin: 1.5rem 0; border-radius: 8px; outline: none; }
+        .source-btn { display: inline-block; background: #bb86fc; color: #121212; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; transition: all 0.2s ease; opacity: 0; pointer-events: none; transform: translateY(10px); }
+        .source-btn.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+        .source-btn:hover { background: #9965f4; }
+    </style>
+</head>
+<body>
+    <div class="player-container">
+        <h1>🎙️ Daily Tech Banter</h1>
+        <div class="status-text" id="status">Loading...</div>
+        <audio id="audio-player" controls preload="auto"></audio>
+        <br><a id="source-link" class="source-btn" href="#" target="_blank">Read Source Article</a>
+    </div>
+
+    <script>
+        const playlist = [{"file":"audio_0.mp3","url":null},{"file":"audio_1.mp3","url":null},{"file":"audio_2.mp3","url":"https://openai.com/index/searchgpt/"},{"file":"audio_3.mp3","url":"https://openai.com/index/searchgpt/"},{"file":"audio_4.mp3","url":"https://openai.com/index/searchgpt/"},{"file":"audio_5.mp3","url":"https://www.apple.com/newsroom/2024/10/apple-introduces-the-all-new-mac-mini-all-powerful-all-small/"},{"file":"audio_6.mp3","url":"https://www.apple.com/newsroom/2024/10/apple-introduces-the-all-new-mac-mini-all-powerful-all-small/"},{"file":"audio_7.mp3","url":"https://www.apple.com/newsroom/2024/10/apple-introduces-the-all-new-mac-mini-all-powerful-all-small/"},{"file":"audio_8.mp3","url":"https://www.rabbit.tech/blog"},{"file":"audio_9.mp3","url":"https://www.rabbit.tech/blog"},{"file":"audio_10.mp3","url":null},{"file":"audio_11.mp3","url":null}];
+        let currentIndex = 0;
+        const player = document.getElementById('audio-player');
+        const statusText = document.getElementById('status');
+        const sourceBtn = document.getElementById('source-link');
+
+        function loadTrack(index) {
+            if (index >= playlist.length) {
+                statusText.innerText = "You're all caught up!";
+                sourceBtn.classList.remove('visible');
+                return;
+            }
+            const track = playlist[index];
+            player.src = track.file;
+            statusText.innerText = "Playing Segment " + (index + 1) + " of " + playlist.length;
+            
+            if (track.url) {
+                sourceBtn.href = track.url;
+                sourceBtn.classList.add('visible');
+            } else {
+                sourceBtn.classList.remove('visible');
+            }
+            if (index > 0) player.play();
+        }
+
+        player.addEventListener('ended', () => {
+            currentIndex++;
+            loadTrack(currentIndex);
+        });
+
+        loadTrack(0);
+    </script>
+</body>
+</html>
