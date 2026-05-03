@@ -42,10 +42,10 @@
         .chat-container::-webkit-scrollbar { width: 6px; }
         .chat-container::-webkit-scrollbar-thumb { background-color: #555; border-radius: 10px; }
         
-        /* NEW: Topic Wrapper */
+        /* Topic Wrapper */
         .topic-group { display: flex; flex-direction: column; gap: 12px; position: relative; }
 
-        /* UPDATED: Sticky Topic Header */
+        /* Sticky Topic Header */
         .topic-header { position: sticky; top: 5px; align-self: center; background: rgba(35, 35, 35, 0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: #bb86fc; padding: 8px 16px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; text-align: center; border-radius: 12px; z-index: 10; box-shadow: 0 4px 12px rgba(0,0,0,0.4); border: 1px solid rgba(187, 134, 252, 0.2); max-width: 85%; }
 
         .chat-bubble { padding: 12px 16px; border-radius: 18px; max-width: 85%; font-size: 0.95rem; line-height: 1.4; position: relative; opacity: 0.4; transition: all 0.3s; cursor: pointer; }
@@ -113,7 +113,6 @@
         playlist.forEach((item, idx) => {
             const currentTopic = item.summary || "Banter & Hot Takes";
             
-            // If the topic changes, create a new wrapper div
             if (currentTopic !== lastTopic) {
                 currentGroup = document.createElement('div');
                 currentGroup.className = 'topic-group';
@@ -139,14 +138,17 @@
                     pl.play().catch(e => {});
                 }
             };
-            
-            // Append bubble to the CURRENT group, not the main container
             currentGroup.appendChild(bubble);
         });
 
+        // UPDATED: Toggle logic hides/shows the single transcript box
         toggleBtn.onclick = () => {
             const isVis = chatContainer.classList.toggle('visible');
             toggleBtn.innerText = isVis ? 'Hide Transcript' : 'Show Full Transcript';
+            
+            // Hide the active text box when full chat is open
+            tsBox.style.display = isVis ? 'none' : 'block';
+
             if (isVis) {
                 const activeBubble = document.getElementById('chat-msg-' + cur);
                 if (activeBubble) activeBubble.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -180,7 +182,6 @@
                 return;
             } 
             
-            // Update Button States
             btnPrev.disabled = (i === 0);
             btnNext.disabled = (i >= playlist.length - 1);
 
