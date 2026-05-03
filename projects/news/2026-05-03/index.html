@@ -37,13 +37,16 @@
         .toggle-btn:hover { background: #333; color: #fff; }
 
         /* Full Messenger Chat */
-        .chat-container { display: none; flex-direction: column; gap: 12px; margin-top: 1rem; text-align: left; overflow-y: auto; padding: 10px 15px 10px 5px; border-top: 1px solid #333; scrollbar-width: thin; scroll-behavior: smooth; position: relative; }
+        .chat-container { display: none; flex-direction: column; gap: 20px; margin-top: 1rem; text-align: left; overflow-y: auto; padding: 10px 15px 10px 5px; border-top: 1px solid #333; scrollbar-width: thin; scroll-behavior: smooth; }
         .chat-container.visible { display: flex; flex-grow: 1; }
         .chat-container::-webkit-scrollbar { width: 6px; }
         .chat-container::-webkit-scrollbar-thumb { background-color: #555; border-radius: 10px; }
         
-        /* NEW: Sticky Topic Header */
-        .topic-header { position: sticky; top: 0; background: rgba(30, 30, 30, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: #bb86fc; padding: 8px 16px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; text-align: center; border-radius: 12px; margin: 10px auto; z-index: 10; box-shadow: 0 4px 10px rgba(0,0,0,0.3); border: 1px solid rgba(187, 134, 252, 0.2); max-width: 80%; }
+        /* NEW: Topic Wrapper */
+        .topic-group { display: flex; flex-direction: column; gap: 12px; position: relative; }
+
+        /* UPDATED: Sticky Topic Header */
+        .topic-header { position: sticky; top: 5px; align-self: center; background: rgba(35, 35, 35, 0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: #bb86fc; padding: 8px 16px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; text-align: center; border-radius: 12px; z-index: 10; box-shadow: 0 4px 12px rgba(0,0,0,0.4); border: 1px solid rgba(187, 134, 252, 0.2); max-width: 85%; }
 
         .chat-bubble { padding: 12px 16px; border-radius: 18px; max-width: 85%; font-size: 0.95rem; line-height: 1.4; position: relative; opacity: 0.4; transition: all 0.3s; cursor: pointer; }
         .chat-bubble:hover { opacity: 0.8; transform: scale(1.01); }
@@ -103,19 +106,24 @@
         const chatContainer = document.getElementById('full-chat');
         const toggleBtn = document.getElementById('toggle-chat');
         
-        // Build Interactive Chat Bubbles with Sticky Topic Headers
-        let lastTopic = "START";
+        // Build Interactive Chat Bubbles with Proper Topic Groups
+        let lastTopic = null;
+        let currentGroup = null;
         
         playlist.forEach((item, idx) => {
-            // Determine the topic name (use summary, or default to Banter)
             const currentTopic = item.summary || "Banter & Hot Takes";
             
-            // If the topic changed, insert a sticky header first
+            // If the topic changes, create a new wrapper div
             if (currentTopic !== lastTopic) {
+                currentGroup = document.createElement('div');
+                currentGroup.className = 'topic-group';
+                chatContainer.appendChild(currentGroup);
+                
                 const header = document.createElement('div');
                 header.className = 'topic-header';
                 header.innerText = currentTopic;
-                chatContainer.appendChild(header);
+                currentGroup.appendChild(header);
+                
                 lastTopic = currentTopic;
             }
 
@@ -131,7 +139,9 @@
                     pl.play().catch(e => {});
                 }
             };
-            chatContainer.appendChild(bubble);
+            
+            // Append bubble to the CURRENT group, not the main container
+            currentGroup.appendChild(bubble);
         });
 
         toggleBtn.onclick = () => {
@@ -186,7 +196,6 @@
                 if (idx === i) {
                     b.classList.add('active');
                     if (chatContainer.classList.contains('visible')) {
-                        // Scroll active bubble into view. 'center' ensures the sticky header doesn't cover it.
                         b.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     }
                 } else {
