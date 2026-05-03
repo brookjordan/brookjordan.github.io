@@ -9,19 +9,24 @@
         body { background: #121212; color: #eee; font-family: -apple-system, BlinkMacSystemFont, sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
         .card { background: #1e1e1e; padding: 2rem; border-radius: 24px; text-align: center; width: 100%; max-width: 500px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); display: flex; flex-direction: column; max-height: 90vh; }
         h1 { margin: 0 0 1rem 0; color: #fff; font-size: 1.6rem; }
-        #st { color: #888; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 0.5rem; }
-        audio { width: 100%; margin: 1rem 0; outline: none; flex-shrink: 0; }
+        
+        /* Navigation & Status Row */
+        .nav-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+        #st { color: #888; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; margin: 0; flex-grow: 1; }
+        .skip-btn { background: #333; color: #fff; border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+        .skip-btn:hover:not(:disabled) { background: #bb86fc; color: #121212; }
+        .skip-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        audio { width: 100%; margin: 0.5rem 0 1rem 0; outline: none; flex-shrink: 0; }
         
         /* 'Now Playing' Transcript Box */
-        .transcript-box { background: #252525; padding: 1.5rem; border-radius: 16px; margin: 0.5rem 0; min-height: 60px; text-align: left; border-left: 4px solid #444; flex-shrink: 0; }
+        .transcript-box { background: #252525; padding: 1.5rem; border-radius: 16px; margin: 0.5rem 0; min-height: 60px; text-align: left; border-left: 4px solid #444; flex-shrink: 0; transition: border-color 0.3s; }
         #ts-text { line-height: 1.5; font-size: 1.05rem; margin: 0; color: #f0f0f0; }
         #ts-voice { font-weight: bold; font-size: 0.7rem; text-transform: uppercase; margin-bottom: 0.4rem; opacity: 0.6; }
 
         /* Links & Buttons */
         .link-container { margin-top: 1rem; opacity: 0; transition: opacity 0.3s; pointer-events: none; flex-shrink: 0; }
         .link-container.visible { opacity: 1; pointer-events: auto; }
-        
-        /* Updated Button styling to hold the summary */
         .btn { background: #bb86fc; color: #121212; padding: 12px 20px; text-decoration: none; border-radius: 12px; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; transition: transform 0.2s; gap: 4px; box-shadow: 0 4px 15px rgba(187, 134, 252, 0.2); }
         .btn:hover { transform: scale(1.03); }
         .btn-title { font-weight: 800; font-size: 1rem; }
@@ -37,9 +42,10 @@
         .chat-container::-webkit-scrollbar { width: 6px; }
         .chat-container::-webkit-scrollbar-thumb { background-color: #555; border-radius: 10px; }
         
-        .chat-bubble { padding: 12px 16px; border-radius: 18px; max-width: 85%; font-size: 0.95rem; line-height: 1.4; position: relative; opacity: 0.4; transition: opacity 0.3s; }
-        .chat-bubble.active { opacity: 1; }
-        .chat-label { font-size: 0.65rem; font-weight: bold; margin-bottom: 4px; text-transform: uppercase; opacity: 0.7; }
+        .chat-bubble { padding: 12px 16px; border-radius: 18px; max-width: 85%; font-size: 0.95rem; line-height: 1.4; position: relative; opacity: 0.4; transition: all 0.3s; cursor: pointer; }
+        .chat-bubble:hover { opacity: 0.8; transform: scale(1.01); }
+        .chat-bubble.active { opacity: 1; cursor: default; transform: none; }
+        .chat-label { font-size: 0.65rem; font-weight: bold; margin-bottom: 4px; text-transform: uppercase; opacity: 0.7; pointer-events: none; }
         
         /* Dynamic Character Styles */
         .am_adam { border-color: #00d2ff; } 
@@ -52,7 +58,13 @@
 <body>
     <div class="card">
         <h1>🎙️ Daily Tech</h1>
-        <p id="st">Ready to play</p>
+        
+        <div class="nav-row">
+            <button id="btn-prev" class="skip-btn" disabled>⏮</button>
+            <p id="st">Ready to play</p>
+            <button id="btn-next" class="skip-btn">⏭</button>
+        </div>
+
         <audio id="pl" controls autoplay></audio>
         
         <div id="ts-box" class="transcript-box">
@@ -76,6 +88,8 @@
         let cur = 0; 
         const pl = document.getElementById('pl'); 
         const st = document.getElementById('st'); 
+        const btnPrev = document.getElementById('btn-prev');
+        const btnNext = document.getElementById('btn-next');
         const lnkWrap = document.getElementById('lnk-wrap');
         const lnk = document.getElementById('lnk');
         const summ = document.getElementById('summ');
@@ -86,11 +100,21 @@
         const chatContainer = document.getElementById('full-chat');
         const toggleBtn = document.getElementById('toggle-chat');
         
+        // Build Interactive Chat Bubbles
         playlist.forEach((item, idx) => {
             const bubble = document.createElement('div');
             bubble.className = 'chat-bubble ' + item.voice;
             bubble.id = 'chat-msg-' + idx;
             bubble.innerHTML = '<div class="chat-label">' + item.speaker + '</div>' + item.text;
+            
+            // Allow users to jump to this segment by clicking the bubble
+            bubble.onclick = () => {
+                if (cur !== idx) {
+                    cur = idx;
+                    load(cur);
+                    pl.play().catch(e => {});
+                }
+            };
             chatContainer.appendChild(bubble);
         });
 
@@ -103,17 +127,40 @@
             }
         };
 
+        // Handle Skip Buttons
+        btnPrev.onclick = () => {
+            if (cur > 0) {
+                cur--;
+                load(cur);
+                pl.play().catch(e => {});
+            }
+        };
+
+        btnNext.onclick = () => {
+            if (cur < playlist.length - 1) {
+                cur++;
+                load(cur);
+                pl.play().catch(e => {});
+            }
+        };
+
         function load(i) { 
             if (i >= playlist.length) {
                 st.innerText = 'Broadcast Ended';
                 tsText.innerText = 'See you tomorrow!';
                 tsVoice.innerText = '';
                 lnkWrap.classList.remove('visible');
+                btnNext.disabled = true;
                 return;
             } 
+            
+            // Update Button States
+            btnPrev.disabled = (i === 0);
+            btnNext.disabled = (i >= playlist.length - 1);
+
             const t = playlist[i]; 
             pl.src = t.file; 
-            st.innerText = 'Segment ' + (i + 1);
+            st.innerText = 'Segment ' + (i + 1) + ' of ' + playlist.length;
             
             tsText.innerText = t.text;
             tsVoice.innerText = t.speaker;
@@ -123,14 +170,13 @@
                 if (idx === i) {
                     b.classList.add('active');
                     if (chatContainer.classList.contains('visible')) {
-                        b.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        b.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
                     }
                 } else {
                     b.classList.remove('active');
                 }
             });
 
-            // Summary is now injected directly into the button
             if (t.url) { 
                 lnk.href = t.url; 
                 if (t.summary) {
@@ -146,7 +192,13 @@
             if (i > 0) pl.play().catch(e => {}); 
         }
 
-        pl.onended = () => { cur++; load(cur); }; 
+        pl.onended = () => { 
+            if(cur < playlist.length - 1) {
+                cur++; 
+                load(cur); 
+            }
+        }; 
+        
         load(0);
     </script>
 </body>
