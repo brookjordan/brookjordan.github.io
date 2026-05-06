@@ -1,71 +1,307 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Daily Tech - 2026-05-06</title>
     <base href="/projects/news/2026-05-06/">
     <style>
-        body { background: #121212; color: #eee; font-family: -apple-system, BlinkMacSystemFont, sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
-        .card { background: #1e1e1e; padding: 2rem; border-radius: 24px; text-align: center; width: 100%; max-width: 500px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); display: flex; flex-direction: column; max-height: 90vh; }
-        h1 { margin: 0 0 1rem 0; color: #fff; font-size: 1.6rem; }
-        
-        /* Navigation & Status Row */
-        .nav-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
-        #st { color: #888; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; margin: 0; flex-grow: 1; }
-        .skip-btn { background: #333; color: #fff; border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
-        .skip-btn:hover:not(:disabled) { background: #bb86fc; color: #121212; }
-        .skip-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+        body {
+            background: #121212;
+            color: #eee;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
 
-        audio { width: 100%; margin: 0.5rem 0 1rem 0; outline: none; flex-shrink: 0; }
-        
+        .card {
+            background: #1e1e1e;
+            padding: 2rem;
+            border-radius: 24px;
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            max-height: 90vh;
+        }
+
+        h1 {
+            margin: 0 0 1rem 0;
+            color: #fff;
+            font-size: 1.6rem;
+        }
+
+        /* Navigation & Status Row */
+        .nav-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        #st {
+            color: #888;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin: 0;
+            flex-grow: 1;
+        }
+
+        .skip-btn {
+            background: #333;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .skip-btn:hover:not(:disabled) {
+            background: #bb86fc;
+            color: #121212;
+        }
+
+        .skip-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        audio {
+            width: 100%;
+            margin: 0.5rem 0 1rem 0;
+            outline: none;
+            flex-shrink: 0;
+        }
+
         /* 'Now Playing' Transcript Box */
-        .transcript-box { background: #252525; padding: 1.5rem; border-radius: 16px; margin: 0.5rem 0; min-height: 60px; text-align: left; border-left: 4px solid #444; flex-shrink: 0; transition: border-color 0.3s; }
-        #ts-text { line-height: 1.5; font-size: 1.05rem; margin: 0; color: #f0f0f0; }
-        #ts-voice { font-weight: bold; font-size: 0.7rem; text-transform: uppercase; margin-bottom: 0.4rem; opacity: 0.6; }
+        .transcript-box {
+            background: #252525;
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin: 0.5rem 0;
+            min-height: 60px;
+            text-align: left;
+            border-left: 4px solid #444;
+            flex-shrink: 0;
+            transition: border-color 0.3s;
+        }
+
+        #ts-text {
+            line-height: 1.5;
+            font-size: 1.05rem;
+            margin: 0;
+            color: #f0f0f0;
+        }
+
+        #ts-voice {
+            font-weight: bold;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            margin-bottom: 0.4rem;
+            opacity: 0.6;
+        }
 
         /* Links & Buttons */
-        .link-container { margin-top: 1rem; opacity: 0; transition: opacity 0.3s; pointer-events: none; flex-shrink: 0; }
-        .link-container.visible { opacity: 1; pointer-events: auto; }
-        .btn { background: #bb86fc; color: #121212; padding: 12px 20px; text-decoration: none; border-radius: 12px; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; transition: transform 0.2s; gap: 4px; box-shadow: 0 4px 15px rgba(187, 134, 252, 0.2); }
-        .btn:hover { transform: scale(1.03); }
-        .btn-title { font-weight: 800; font-size: 1rem; }
-        .btn-summary { font-size: 0.75rem; font-weight: 600; opacity: 0.75; text-transform: uppercase; letter-spacing: 0.5px; }
+        .link-container {
+            margin-top: 1rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            flex-shrink: 0;
+        }
+
+        .link-container.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .btn {
+            background: #bb86fc;
+            color: #121212;
+            padding: 12px 20px;
+            text-decoration: none;
+            border-radius: 12px;
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+            gap: 4px;
+            box-shadow: 0 4px 15px rgba(187, 134, 252, 0.2);
+        }
+
+        .btn:hover {
+            transform: scale(1.03);
+        }
+
+        .btn-title {
+            font-weight: 800;
+            font-size: 1rem;
+        }
+
+        .btn-summary {
+            font-size: 0.75rem;
+            font-weight: 600;
+            opacity: 0.75;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
 
         /* Messenger Toggle */
-        .toggle-btn { background: none; border: 1px solid #555; color: #aaa; padding: 8px 16px; border-radius: 20px; cursor: pointer; margin: 1.5rem auto 0.5rem auto; font-size: 0.85rem; transition: all 0.2s; flex-shrink: 0; }
-        .toggle-btn:hover { background: #333; color: #fff; }
+        .toggle-btn {
+            background: none;
+            border: 1px solid #555;
+            color: #aaa;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin: 1.5rem auto 0.5rem auto;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .toggle-btn:hover {
+            background: #333;
+            color: #fff;
+        }
 
         /* Full Messenger Chat */
-        .chat-container { display: none; flex-direction: column; gap: 20px; margin-top: 1rem; text-align: left; overflow-y: auto; padding: 10px 15px 10px 5px; border-top: 1px solid #333; scrollbar-width: thin; scroll-behavior: smooth; }
-        .chat-container.visible { display: flex; flex-grow: 1; }
-        .chat-container::-webkit-scrollbar { width: 6px; }
-        .chat-container::-webkit-scrollbar-thumb { background-color: #555; border-radius: 10px; }
-        
+        .chat-container {
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 1rem;
+            text-align: left;
+            overflow-y: auto;
+            padding: 10px 15px 10px 5px;
+            border-top: 1px solid #333;
+            scrollbar-width: thin;
+            scroll-behavior: smooth;
+        }
+
+        .chat-container.visible {
+            display: flex;
+            flex-grow: 1;
+        }
+
+        .chat-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-container::-webkit-scrollbar-thumb {
+            background-color: #555;
+            border-radius: 10px;
+        }
+
         /* Topic Wrapper */
-        .topic-group { display: flex; flex-direction: column; gap: 12px; position: relative; }
+        .topic-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            position: relative;
+        }
 
         /* Sticky Topic Header */
-        .topic-header { position: sticky; top: 5px; align-self: center; background: rgba(35, 35, 35, 0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: #bb86fc; padding: 8px 16px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; text-align: center; border-radius: 12px; z-index: 10; box-shadow: 0 4px 12px rgba(0,0,0,0.4); border: 1px solid rgba(187, 134, 252, 0.2); max-width: 85%; }
+        .topic-header {
+            position: sticky;
+            top: 5px;
+            align-self: center;
+            background: rgba(35, 35, 35, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: #bb86fc;
+            padding: 8px 16px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+            border-radius: 12px;
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(187, 134, 252, 0.2);
+            max-width: 85%;
+        }
 
-        .chat-bubble { padding: 12px 16px; border-radius: 18px; max-width: 85%; font-size: 0.95rem; line-height: 1.4; position: relative; opacity: 0.4; transition: all 0.3s; cursor: pointer; }
-        .chat-bubble:hover { opacity: 0.8; transform: scale(1.01); }
-        .chat-bubble.active { opacity: 1; cursor: default; transform: none; }
-        .chat-label { font-size: 0.65rem; font-weight: bold; margin-bottom: 4px; text-transform: uppercase; opacity: 0.7; pointer-events: none; }
-        
+        .chat-bubble {
+            padding: 12px 16px;
+            border-radius: 18px;
+            max-width: 85%;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            position: relative;
+            opacity: 0.4;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .chat-bubble:hover {
+            opacity: 0.8;
+            transform: scale(1.01);
+        }
+
+        .chat-bubble.active {
+            opacity: 1;
+            cursor: default;
+            transform: none;
+        }
+
+        .chat-label {
+            font-size: 0.65rem;
+            font-weight: bold;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
         /* Dynamic Character Styles */
-        .am_adam { border-color: #00d2ff; } 
-        .af_sky { border-color: #bb86fc; } 
+        .am_adam {
+            border-color: #00d2ff;
+        }
 
-        .chat-bubble.am_adam { align-self: flex-start; background: #2a2a2a; color: #e0e0e0; border-bottom-left-radius: 4px; border-left: 3px solid #00d2ff; }
-        .chat-bubble.af_sky { align-self: flex-end; background: #3c2a4d; color: #e0e0e0; border-bottom-right-radius: 4px; border-right: 3px solid #bb86fc; }
+        .af_sky {
+            border-color: #bb86fc;
+        }
+
+        .chat-bubble.am_adam {
+            align-self: flex-start;
+            background: #2a2a2a;
+            color: #e0e0e0;
+            border-bottom-left-radius: 4px;
+            border-left: 3px solid #00d2ff;
+        }
+
+        .chat-bubble.af_sky {
+            align-self: flex-end;
+            background: #3c2a4d;
+            color: #e0e0e0;
+            border-bottom-right-radius: 4px;
+            border-right: 3px solid #bb86fc;
+        }
     </style>
 </head>
+
 <body>
     <div class="card">
         <h1>🎙️ Daily Tech</h1>
-        
+
         <div class="nav-row">
             <button id="btn-prev" class="skip-btn" disabled>⏮</button>
             <p id="st">Ready to play</p>
@@ -74,7 +310,7 @@
 
         <audio id="pl1" controls autoplay></audio>
         <audio id="pl2" controls style="display:none;"></audio>
-        
+
         <div id="ts-box" class="transcript-box">
             <div id="ts-voice"></div>
             <p id="ts-text">Press play to start the briefing...</p>
@@ -92,14 +328,14 @@
     </div>
 
     <script>
-        const playlist = [{"file":"audio_0.mp3","url":null,"text":"Good morning! And welcome to another news day where, much like in Heraclitus's river, we step into the same studio but with entirely different events flowing around us. I'm Antony, joined as always by my colleagues.","voice":3,"speaker":"Antony","summary":null},{"file":"audio_1.mp3","url":null,"text":"Morning, all. Apologies for the bags under my eyes. Brook left his autonomous prototype car running all night in the garage. Kept me up with its beeping. Strange how my son who can program a car to drive itself can't program it to be quiet.","voice":4,"speaker":"Brett","summary":null},{"file":"audio_2.mp3","url":null,"text":"Dad, it wasn't beeping! It was communicating with the central server to update its mapping algorithms. Those sounds are literally crucial for debugging the neural network's spatial awareness functions, which is absolutely essential for...","voice":1,"speaker":"Brook","summary":null},{"file":"audio_3.mp3","url":"https://9to5mac.com/2026/05/05/apple-reaches-250m-settlement-over-siri-delays-users-could-get-up-to-95-per-device/","text":"-- Let's focus on the news, shall we? Apple is back in hot water again, this time settling a class action lawsuit to the tune of $250 million over AI features they advertised but never delivered.","voice":2,"speaker":"Conrad","summary":"AI lawsuit settlement"},{"file":"audio_4.mp3","url":null,"text":"This is exactly what I predicted yesterday! They promised this super-personalized Siri at WWDC 2024, showed all these amazing demos about how it would anticipate your needs and basically be your AI bestie, but the reality has been so disappointing. I've literally been tracking the feature gaps on my blog for months, and there are at least 17 promised features that still...","voice":1,"speaker":"Brook","summary":null},{"file":"audio_5.mp3","url":null,"text":"-- Calm down, son. Companies overpromise all the time. When Sky was five, I told her the tooth fairy would bring her a pound for her tooth. Accidentally left a twenty under her pillow. Next morning, she pulled out three perfectly healthy teeth. Cost me sixty quid and an emergency dentist visit.","voice":4,"speaker":"Brett","summary":null},{"file":"audio_6.mp3","url":null,"text":"What's particularly telling here is Apple's carefully worded statement. They maintain they 'acted in good faith' while simultaneously paying out up to $95 per device. It's a classic example of corporate risk assessment – the cost of settling versus the potential brand damage from prolonged litigation. They've clearly calculated that a quarter-billion is the cheaper option.","voice":2,"speaker":"Conrad","summary":null},{"file":"audio_7.mp3","url":null,"text":"Indeed, this brings to mind Thomas More's 'Utopia,' where he describes an idealized society that cannot actually exist. Apple sold us a technological utopia through their advertisements – a perfect AI assistant that understood context, anticipated needs, and possessed near-human comprehension. But as with all utopian visions, reality fell short of the imagined perfection. More would appreciate the irony.","voice":3,"speaker":"Antony","summary":null},{"file":"audio_8.mp3","url":"https://www.macrumors.com/2026/05/05/apple-mac-studio-mac-mini-ram-cuts/","text":"And speaking of Apple disappointments, they've also had to cut more RAM options for their Mac Studio and Mac Mini models because of the global memory shortage. This is absolutely devastating for developers like me who need that computational power. The M3 Ultra Mac Studio is now only available with 96GB RAM instead of the 256GB option. How am I supposed to run my development environment with only...","voice":1,"speaker":"Brook","summary":"Apple RAM cuts"},{"file":"audio_9.mp3","url":null,"text":"-- It's actually a fascinating supply chain problem. This global memory shortage is affecting everything from smartphones to data centers. The delivery estimates of 9-10 weeks suggest Apple is projecting this shortage to continue well into the summer. It's a ripple effect of the semiconductor manufacturing issues that began during the pandemic.","voice":2,"speaker":"Conrad","summary":null},{"file":"audio_10.mp3","url":null,"text":"When I was starting out, my first computer had 64k of RAM. Total. We wrote entire accounting systems in that. Now my son needs 256 gigabytes to watch YouTube and complain about how slow his computer is.","voice":4,"speaker":"Brett","summary":null},{"file":"audio_11.mp3","url":null,"text":"The memory shortage reminds me of John Donne's 'Meditation XVII' – 'No man is an island.' In our interconnected economy, a shortage in Taiwan becomes Apple's crisis in Cupertino. I'm particularly drawn to the parallel with Thomas Malthus's 'Essay on the Principle of Population,' wherein he argues that population growth inevitably outpaces resource production. We've created a technological ecosystem whose appetite for memory has outpaced our ability to produce it.","voice":3,"speaker":"Antony","summary":null},{"file":"audio_12.mp3","url":"https://www.aljazeera.com/news/2026/5/6/operation-epic-fury-has-ended-is-the-iran-war-over?traffic_source=rss","text":"Let's move to some international news. The Iran conflict may be cooling down, with reports that 'Operation Epic Fury' has concluded. Experts are suggesting this could mark the beginning of the end of the war.","voice":2,"speaker":"Conrad","summary":"Iran conflict update"},{"file":"audio_13.mp3","url":null,"text":"The naming of military operations has always fascinated me. 'Epic Fury' sounds like something from the Homeric 'Iliad,' where gods and men alike were consumed by mênis – divine wrath. There's something terribly ancient about using classical epithets to brand modern warfare, as though we're still engaging in the same fundamental conflicts that Achilles and Hector fought thousands of years ago.","voice":3,"speaker":"Antony","summary":null},{"file":"audio_14.mp3","url":null,"text":"The whole thing is just ridiculous posturing! 'Project Freedom' sounds like a middle schooler named it. And now it's paused after what, three days? The military-industrial complex is just a massive waste of resources that could be spent on actually solving problems like climate change or developing better autonomous transport networks or...","voice":1,"speaker":"Brook","summary":null},{"file":"audio_15.mp3","url":null,"text":"-- When I was in the Territorial Army, we named our field exercises things like 'Operation Wet Socks' and 'Project Where's The Bloody Map.' At least we were honest about it. These grandiose names are just to make politicians feel important.","voice":4,"speaker":"Brett","summary":null},{"file":"audio_16.mp3","url":"https://www.aljazeera.com/news/2026/5/6/sudan-blames-ethiopia-uae-for-recent-drone-attacks-what-we-know?traffic_source=rss","text":"There's also concerning news regarding Sudan. The country has recalled its ambassador to Ethiopia after blaming them and the UAE for recent drone attacks. This marks a significant escalation in regional tensions.","voice":2,"speaker":"Conrad","summary":"Sudan blames Ethiopia"},{"file":"audio_17.mp3","url":null,"text":"Sudan. Ethiopia. UAE. It's like watching the neighbors argue about who's responsible for the fence falling down. Except with more explosives and fewer polite cups of tea.","voice":4,"speaker":"Brett","summary":null},{"file":"audio_18.mp3","url":null,"text":"The Horn of Africa has historically been a nexus of competing imperial ambitions, from the ancient kingdoms of Kush to the colonial scramble for Africa. This modern conflict echoes Rudyard Kipling's 'The Man Who Would Be King,' with its themes of overreach and hubris. The drone warfare aspect adds a layer of technological detachment that Aldous Huxley would find particularly dystopian – violence administered remotely, without witnessing the consequences.","voice":3,"speaker":"Antony","summary":null},{"file":"audio_19.mp3","url":"https://www.theguardian.com/science/2026/may/04/cruise-ship-suspected-hantavirus-outbreak-blocked-docking-cape-verde","text":"Now to something more terrifying than warfare – there's a cruise ship with a suspected hantavirus outbreak! The MV Hondius has passengers stuck on board after three people have died. I'm sorry, but this is why I will never go on a cruise. Floating petri dishes full of disease and...","voice":1,"speaker":"Brook","summary":"Hantavirus on cruise ship"},{"file":"audio_20.mp3","url":null,"text":"The situation is particularly complex because hantavirus isn't typically spread person-to-person. It's usually transmitted through contact with rodent urine or droppings, which raises serious questions about the sanitation standards aboard the vessel. The WHO has confirmed seven suspected or confirmed cases, including the three fatalities.","voice":2,"speaker":"Conrad","summary":null},{"file":"audio_21.mp3","url":null,"text":"I took the family on a cruise once. Brook spent the entire time complaining about the Wi-Fi speed, Sky got seasick, Cyan befriended the bartender who kept giving her virgin cocktails that mysteriously made her giggly, and Zak tried to convince other passengers he was the captain's son. Still better than camping.","voice":4,"speaker":"Brett","summary":null},{"file":"audio_22.mp3","url":"https://techcrunch.com/2026/05/05/peter-sarlins-qutwo-reaches-380m-valuation-in-angel-round/","text":"Dad! I was 14, and the Wi-Fi was 56k modem speed! How was I supposed to update my MySpace page? Anyway, let's move to a rapid-fire round of tech news. QyTw0, the Finnish AI lab founded by former AMD Silo AI CEO Peter Sarlin, has reached a valuation of $380 million after raising $29 million in an angel round. This is huge for European AI development!","voice":1,"speaker":"Brook","summary":"Finnish AI valuation"},{"file":"audio_23.mp3","url":null,"text":"The name 'QyTw0' evokes Jorge Luis Borges' 'The Library of Babel,' with its seemingly random yet potentially meaningful combinations of letters. Finland, with its tradition of linguistic uniqueness through the non-Indo-European Finnish language, is an apropos birthplace for an AI company charting new linguistic territories.","voice":3,"speaker":"Antony","summary":null},{"file":"audio_24.mp3","url":"https://techcrunch.com/2026/05/05/marc-lore-says-that-ai-will-soon-enable-anyone-open-a-restaurant/","text":"Marc Lore believes AI will soon enable anyone to open a restaurant. His company Wonder is developing AI-powered 'restaurant factories' where people could spin up a virtual food brand with just a prompt.","voice":2,"speaker":"Conrad","summary":"AI restaurant revolution"},{"file":"audio_25.mp3","url":null,"text":"Great. Because what the world needs is more people with no culinary training selling overpriced food. Had a burger from one of those virtual kitchens last month. Cost me £15 and came with a side of disappointment.","voice":4,"speaker":"Brett","summary":null},{"file":"audio_26.mp3","url":"https://kottke.org/26/05/0048882-uploaded-a-video-of-every","text":"Fred Again has uploaded what might be the longest video ever on YouTube – a four and a half day long recording of his entire USB002 tour! That's insane! The compression algorithms alone must have been a nightmare to process that much data efficiently without...","voice":1,"speaker":"Brook","summary":"Longest YouTube video"},{"file":"audio_27.mp3","url":"https://openai.com/index/mrc-supercomputer-networking","text":"OpenAI has introduced a new supercomputer networking protocol called MRC, or Multipath Reliable Connection, to improve resilience and performance in large-scale AI training clusters.","voice":2,"speaker":"Conrad","summary":"OpenAI networking protocol"},{"file":"audio_28.mp3","url":null,"text":"That's actually revolutionary! MRC could solve the packet loss issues in traditional networking protocols when scaling to thousands of GPUs. It's the kind of infrastructure advancement that makes all the flashy consumer-facing AI possible in the first...","voice":1,"speaker":"Brook","summary":null},{"file":"audio_29.mp3","url":"https://openai.com/index/gpt-5-5-instant-system-card","text":"-- Also in technology, GPT-5.5 Instant has been released with a comprehensive system card detailing its capabilities and limitations.","voice":3,"speaker":"Antony","summary":"GPT-5.5 release"},{"file":"audio_30.mp3","url":"https://www.wired.com/gallery/best-security-cameras/","text":"For those concerned about home security, Wired has reviewed the best indoor security cameras for 2026, with a focus on privacy concerns and feature sets.","voice":2,"speaker":"Conrad","summary":"Security camera review"},{"file":"audio_31.mp3","url":null,"text":"I've got a security camera. It's called 'looking out the window.' Never needs charging and doesn't get hacked by teenagers in Russia.","voice":4,"speaker":"Brett","summary":null},{"file":"audio_32.mp3","url":"https://www.wired.com/story/best-webcams/","text":"Wired has also tested all the major webcams across the price spectrum to find the very best for 2026, which is super useful with so many of us still working remotely at least part of the time.","voice":1,"speaker":"Brook","summary":"Webcam reviews"},{"file":"audio_33.mp3","url":"https://firstthings.com/conservative-culture-isnt-real-ft-dave-greene/","text":"First Things has an intriguing podcast about whether 'conservative culture' can exist at all, featuring discussions on discourse, BreadTube, Warhammer 40K, horror, and why most modern films disappoint.","voice":3,"speaker":"Antony","summary":"Conservative culture podcast"},{"file":"audio_34.mp3","url":"https://firstthings.com/the-slow-death-of-england-new-and-notable-books/","text":"There's an interesting piece on the slow death of England, reviewing several books that examine Britain's post-Thatcher decline, from academic influence to Brexit and beyond.","voice":2,"speaker":"Conrad","summary":"Britain's decline reviewed"},{"file":"audio_35.mp3","url":null,"text":"England dying? News to me. We're just having a bit of a lie-down after running the world for a few centuries. We'll be up and about once we've had our tea.","voice":4,"speaker":"Brett","summary":null},{"file":"audio_36.mp3","url":"https://www.bbc.com/news/articles/c893xj41zwdo?at_medium=RSS&at_campaign=rss","text":"In Ukraine, civilians in the frontline city of Oleshky are trapped between staying put or risking the dangerous 'Road of Death' to evacuate. They've been cut off from fresh supplies for months. It's absolutely heartbreaking.","voice":1,"speaker":"Brook","summary":"Ukrainian civilians trapped"},{"file":"audio_37.mp3","url":null,"text":"The 'Road of Death' evokes Cormac McCarthy's 'The Road,' with its bleak portrayal of survival in a post-apocalyptic landscape. War creates these liminal spaces where normal life is suspended, and people exist in a terrible purgatory – neither fully living nor dead, but simply enduring.","voice":3,"speaker":"Antony","summary":null},{"file":"audio_38.mp3","url":"https://www.bbc.com/news/articles/cg7p09p2evxo?at_medium=RSS&at_campaign=rss","text":"The BBC has conducted an investigation that led to the arrest of two people who were helping asylum seekers pretend to be gay to stay in the country.","voice":2,"speaker":"Conrad","summary":"Asylum fraud arrests"},{"file":"audio_39.mp3","url":null,"text":"Immigration advisers helping people pretend to be gay? In my day, people pretended to be straight. Progress, I suppose.","voice":4,"speaker":"Brett","summary":null},{"file":"audio_40.mp3","url":"https://apnews.com/article/florida-usf-missing-students-bangladesh-43a85acb9d9e1ef964470bbba7cd0724","text":"And here's a heartbreaking update on that story from the University of South Florida. Police have identified the body of one missing doctoral student, Zamil Limon, but Nahida Bristy is still missing. Their roommate has been arrested on multiple charges.","voice":1,"speaker":"Brook","summary":"Missing student update"},{"file":"audio_41.mp3","url":null,"text":"A truly tragic story. It reminds me of Fyodor Dostoevsky's 'Crime and Punishment,' exploring the psychology of violence within intimate domestic settings.","voice":3,"speaker":"Antony","summary":null},{"file":"audio_42.mp3","url":"https://apnews.com/article/death-penalty-firing-squads-justice-department-9e81687b80402e1e19d57bbc55772470","text":"In a controversial move, the Justice Department will now allow firing squads for executions, as part of the Trump administration's push to ramp up capital punishment.","voice":2,"speaker":"Conrad","summary":"Firing squads approved"},{"file":"audio_43.mp3","url":null,"text":"That's absolutely barbaric! I can't believe we're actually going backwards on this issue. There's so much evidence showing that the death penalty doesn't deter crime, is applied inequitably across racial and socioeconomic lines, and has led to the execution of innocent people. And now they want to bring back firing squads? It's like we're living in some dystopian...","voice":1,"speaker":"Brook","summary":null},{"file":"audio_44.mp3","url":null,"text":"-- At least it's quick. Nothing worse than a drawn-out ending. Like when you're at a dinner party and can't figure out how to leave. Just shoot me already.","voice":4,"speaker":"Brett","summary":null},{"file":"audio_45.mp3","url":"https://www.bbc.com/news/articles/c202652vvnjo?at_medium=RSS&at_campaign=rss","text":"The BBC has tracked how just 10 minutes of Israeli bombing brought widespread devastation to Lebanon, providing a minute-by-minute account of the attack and its aftermath.","voice":2,"speaker":"Conrad","summary":"Lebanon bombing timeline"},{"file":"audio_46.mp3","url":null,"text":"The compression of such devastating violence into mere minutes recalls T.S. Eliot's line from 'The Hollow Men' – 'This is the way the world ends, not with a bang but a whimper.' Except here, it is precisely with many bangs that normality ends for countless civilians.","voice":3,"speaker":"Antony","summary":null},{"file":"audio_47.mp3","url":"https://www.theguardian.com/business/2026/may/04/nigeria-refinery-dangote-uk-plan-jet-fuel-shortage-strait-of-hormuz","text":"And just one more quick item before we wrap up – a refinery in Nigeria that's been accused of dismissing workers for joining a union is apparently key to the UK government's plan to tackle jet fuel shortages caused by the Strait of Hormuz crisis. Talk about ethical complications!","voice":1,"speaker":"Brook","summary":"Nigeria refinery controversy"},{"file":"audio_48.mp3","url":null,"text":"And that brings us to the end of today's news roundup. Thank you for joining us and we'll be back tomorrow with more updates.","voice":2,"speaker":"Conrad","summary":null},{"file":"audio_49.mp3","url":null,"text":"Indeed. As Søren Kierkegaard wrote, 'Life can only be understood backwards, but it must be lived forwards.' Until tomorrow, when we'll try to make sense of today's events.","voice":3,"speaker":"Antony","summary":null},{"file":"audio_50.mp3","url":null,"text":"Until tomorrow. I'll be spending the evening fixing the garage door that Brook's robot car damaged while 'updating its mapping algorithms.' Nothing a hammer and some choice words can't solve.","voice":4,"speaker":"Brett","summary":null},{"file":"audio_51.mp3","url":null,"text":"It wasn't the car's fault! The spatial recognition system was compromised by the garage door's irregular reflection pattern! I'll explain the technical details to you later, Dad. Anyway, bye everyone, catch you tomorrow!","voice":1,"speaker":"Brook","summary":null}]; 
-        let cur = 0; 
-        
+        const playlist = [{ "file": "audio_0.mp3", "url": null, "text": "Good morning! And welcome to another news day where, much like in Heraclitus's river, we step into the same studio but with entirely different events flowing around us. I'm Antony, joined as always by my colleagues.", "voice": 3, "speaker": "Antony", "summary": null }, { "file": "audio_1.mp3", "url": null, "text": "Morning, all. Apologies for the bags under my eyes. Brook left his autonomous prototype car running all night in the garage. Kept me up with its beeping. Strange how my son who can program a car to drive itself can't program it to be quiet.", "voice": 4, "speaker": "Brett", "summary": null }, { "file": "audio_2.mp3", "url": null, "text": "Dad, it wasn't beeping! It was communicating with the central server to update its mapping algorithms. Those sounds are literally crucial for debugging the neural network's spatial awareness functions, which is absolutely essential for...", "voice": 1, "speaker": "Brook", "summary": null }, { "file": "audio_3.mp3", "url": "https://9to5mac.com/2026/05/05/apple-reaches-250m-settlement-over-siri-delays-users-could-get-up-to-95-per-device/", "text": "-- Let's focus on the news, shall we? Apple is back in hot water again, this time settling a class action lawsuit to the tune of $250 million over AI features they advertised but never delivered.", "voice": 2, "speaker": "Conrad", "summary": "AI lawsuit settlement" }, { "file": "audio_4.mp3", "url": null, "text": "This is exactly what I predicted yesterday! They promised this super-personalized Siri at WWDC 2024, showed all these amazing demos about how it would anticipate your needs and basically be your AI bestie, but the reality has been so disappointing. I've literally been tracking the feature gaps on my blog for months, and there are at least 17 promised features that still...", "voice": 1, "speaker": "Brook", "summary": null }, { "file": "audio_5.mp3", "url": null, "text": "-- Calm down, son. Companies overpromise all the time. When Sky was five, I told her the tooth fairy would bring her a pound for her tooth. Accidentally left a twenty under her pillow. Next morning, she pulled out three perfectly healthy teeth. Cost me sixty quid and an emergency dentist visit.", "voice": 4, "speaker": "Brett", "summary": null }, { "file": "audio_6.mp3", "url": null, "text": "What's particularly telling here is Apple's carefully worded statement. They maintain they 'acted in good faith' while simultaneously paying out up to $95 per device. It's a classic example of corporate risk assessment – the cost of settling versus the potential brand damage from prolonged litigation. They've clearly calculated that a quarter-billion is the cheaper option.", "voice": 2, "speaker": "Conrad", "summary": null }, { "file": "audio_7.mp3", "url": null, "text": "Indeed, this brings to mind Thomas More's 'Utopia,' where he describes an idealized society that cannot actually exist. Apple sold us a technological utopia through their advertisements – a perfect AI assistant that understood context, anticipated needs, and possessed near-human comprehension. But as with all utopian visions, reality fell short of the imagined perfection. More would appreciate the irony.", "voice": 3, "speaker": "Antony", "summary": null }, { "file": "audio_8.mp3", "url": "https://www.macrumors.com/2026/05/05/apple-mac-studio-mac-mini-ram-cuts/", "text": "And speaking of Apple disappointments, they've also had to cut more RAM options for their Mac Studio and Mac Mini models because of the global memory shortage. This is absolutely devastating for developers like me who need that computational power. The M3 Ultra Mac Studio is now only available with 96GB RAM instead of the 256GB option. How am I supposed to run my development environment with only...", "voice": 1, "speaker": "Brook", "summary": "Apple RAM cuts" }, { "file": "audio_9.mp3", "url": null, "text": "-- It's actually a fascinating supply chain problem. This global memory shortage is affecting everything from smartphones to data centers. The delivery estimates of 9-10 weeks suggest Apple is projecting this shortage to continue well into the summer. It's a ripple effect of the semiconductor manufacturing issues that began during the pandemic.", "voice": 2, "speaker": "Conrad", "summary": null }, { "file": "audio_10.mp3", "url": null, "text": "When I was starting out, my first computer had 64k of RAM. Total. We wrote entire accounting systems in that. Now my son needs 256 gigabytes to watch YouTube and complain about how slow his computer is.", "voice": 4, "speaker": "Brett", "summary": null }, { "file": "audio_11.mp3", "url": null, "text": "The memory shortage reminds me of John Donne's 'Meditation XVII' – 'No man is an island.' In our interconnected economy, a shortage in Taiwan becomes Apple's crisis in Cupertino. I'm particularly drawn to the parallel with Thomas Malthus's 'Essay on the Principle of Population,' wherein he argues that population growth inevitably outpaces resource production. We've created a technological ecosystem whose appetite for memory has outpaced our ability to produce it.", "voice": 3, "speaker": "Antony", "summary": null }, { "file": "audio_12.mp3", "url": "https://www.aljazeera.com/news/2026/5/6/operation-epic-fury-has-ended-is-the-iran-war-over?traffic_source=rss", "text": "Let's move to some international news. The Iran conflict may be cooling down, with reports that 'Operation Epic Fury' has concluded. Experts are suggesting this could mark the beginning of the end of the war.", "voice": 2, "speaker": "Conrad", "summary": "Iran conflict update" }, { "file": "audio_13.mp3", "url": null, "text": "The naming of military operations has always fascinated me. 'Epic Fury' sounds like something from the Homeric 'Iliad,' where gods and men alike were consumed by mênis – divine wrath. There's something terribly ancient about using classical epithets to brand modern warfare, as though we're still engaging in the same fundamental conflicts that Achilles and Hector fought thousands of years ago.", "voice": 3, "speaker": "Antony", "summary": null }, { "file": "audio_14.mp3", "url": null, "text": "The whole thing is just ridiculous posturing! 'Project Freedom' sounds like a middle schooler named it. And now it's paused after what, three days? The military-industrial complex is just a massive waste of resources that could be spent on actually solving problems like climate change or developing better autonomous transport networks or...", "voice": 1, "speaker": "Brook", "summary": null }, { "file": "audio_15.mp3", "url": null, "text": "-- When I was in the Territorial Army, we named our field exercises things like 'Operation Wet Socks' and 'Project Where's The Bloody Map.' At least we were honest about it. These grandiose names are just to make politicians feel important.", "voice": 4, "speaker": "Brett", "summary": null }, { "file": "audio_16.mp3", "url": "https://www.aljazeera.com/news/2026/5/6/sudan-blames-ethiopia-uae-for-recent-drone-attacks-what-we-know?traffic_source=rss", "text": "There's also concerning news regarding Sudan. The country has recalled its ambassador to Ethiopia after blaming them and the UAE for recent drone attacks. This marks a significant escalation in regional tensions.", "voice": 2, "speaker": "Conrad", "summary": "Sudan blames Ethiopia" }, { "file": "audio_17.mp3", "url": null, "text": "Sudan. Ethiopia. UAE. It's like watching the neighbors argue about who's responsible for the fence falling down. Except with more explosives and fewer polite cups of tea.", "voice": 4, "speaker": "Brett", "summary": null }, { "file": "audio_18.mp3", "url": null, "text": "The Horn of Africa has historically been a nexus of competing imperial ambitions, from the ancient kingdoms of Kush to the colonial scramble for Africa. This modern conflict echoes Rudyard Kipling's 'The Man Who Would Be King,' with its themes of overreach and hubris. The drone warfare aspect adds a layer of technological detachment that Aldous Huxley would find particularly dystopian – violence administered remotely, without witnessing the consequences.", "voice": 3, "speaker": "Antony", "summary": null }, { "file": "audio_19.mp3", "url": "https://www.theguardian.com/science/2026/may/04/cruise-ship-suspected-hantavirus-outbreak-blocked-docking-cape-verde", "text": "Now to something more terrifying than warfare – there's a cruise ship with a suspected hantavirus outbreak! The MV Hondius has passengers stuck on board after three people have died. I'm sorry, but this is why I will never go on a cruise. Floating petri dishes full of disease and...", "voice": 1, "speaker": "Brook", "summary": "Hantavirus on cruise ship" }, { "file": "audio_20.mp3", "url": null, "text": "The situation is particularly complex because hantavirus isn't typically spread person-to-person. It's usually transmitted through contact with rodent urine or droppings, which raises serious questions about the sanitation standards aboard the vessel. The WHO has confirmed seven suspected or confirmed cases, including the three fatalities.", "voice": 2, "speaker": "Conrad", "summary": null }, { "file": "audio_21.mp3", "url": null, "text": "I took the family on a cruise once. Brook spent the entire time complaining about the Wi-Fi speed, Sky got seasick, Cyan befriended the bartender who kept giving her virgin cocktails that mysteriously made her giggly, and Zak tried to convince other passengers he was the captain's son. Still better than camping.", "voice": 4, "speaker": "Brett", "summary": null }, { "file": "audio_22.mp3", "url": "https://techcrunch.com/2026/05/05/peter-sarlins-qutwo-reaches-380m-valuation-in-angel-round/", "text": "Dad! I was 14, and the Wi-Fi was 56k modem speed! How was I supposed to update my MySpace page? Anyway, let's move to a rapid-fire round of tech news. QyTw0, the Finnish AI lab founded by former AMD Silo AI CEO Peter Sarlin, has reached a valuation of $380 million after raising $29 million in an angel round. This is huge for European AI development!", "voice": 1, "speaker": "Brook", "summary": "Finnish AI valuation" }, { "file": "audio_23.mp3", "url": null, "text": "The name 'QyTw0' evokes Jorge Luis Borges' 'The Library of Babel,' with its seemingly random yet potentially meaningful combinations of letters. Finland, with its tradition of linguistic uniqueness through the non-Indo-European Finnish language, is an apropos birthplace for an AI company charting new linguistic territories.", "voice": 3, "speaker": "Antony", "summary": null }, { "file": "audio_24.mp3", "url": "https://techcrunch.com/2026/05/05/marc-lore-says-that-ai-will-soon-enable-anyone-open-a-restaurant/", "text": "Marc Lore believes AI will soon enable anyone to open a restaurant. His company Wonder is developing AI-powered 'restaurant factories' where people could spin up a virtual food brand with just a prompt.", "voice": 2, "speaker": "Conrad", "summary": "AI restaurant revolution" }, { "file": "audio_25.mp3", "url": null, "text": "Great. Because what the world needs is more people with no culinary training selling overpriced food. Had a burger from one of those virtual kitchens last month. Cost me £15 and came with a side of disappointment.", "voice": 4, "speaker": "Brett", "summary": null }, { "file": "audio_26.mp3", "url": "https://kottke.org/26/05/0048882-uploaded-a-video-of-every", "text": "Fred Again has uploaded what might be the longest video ever on YouTube – a four and a half day long recording of his entire USB002 tour! That's insane! The compression algorithms alone must have been a nightmare to process that much data efficiently without...", "voice": 1, "speaker": "Brook", "summary": "Longest YouTube video" }, { "file": "audio_27.mp3", "url": "https://openai.com/index/mrc-supercomputer-networking", "text": "OpenAI has introduced a new supercomputer networking protocol called MRC, or Multipath Reliable Connection, to improve resilience and performance in large-scale AI training clusters.", "voice": 2, "speaker": "Conrad", "summary": "OpenAI networking protocol" }, { "file": "audio_28.mp3", "url": null, "text": "That's actually revolutionary! MRC could solve the packet loss issues in traditional networking protocols when scaling to thousands of GPUs. It's the kind of infrastructure advancement that makes all the flashy consumer-facing AI possible in the first...", "voice": 1, "speaker": "Brook", "summary": null }, { "file": "audio_29.mp3", "url": "https://openai.com/index/gpt-5-5-instant-system-card", "text": "-- Also in technology, GPT-5.5 Instant has been released with a comprehensive system card detailing its capabilities and limitations.", "voice": 3, "speaker": "Antony", "summary": "GPT-5.5 release" }, { "file": "audio_30.mp3", "url": "https://www.wired.com/gallery/best-security-cameras/", "text": "For those concerned about home security, Wired has reviewed the best indoor security cameras for 2026, with a focus on privacy concerns and feature sets.", "voice": 2, "speaker": "Conrad", "summary": "Security camera review" }, { "file": "audio_31.mp3", "url": null, "text": "I've got a security camera. It's called 'looking out the window.' Never needs charging and doesn't get hacked by teenagers in Russia.", "voice": 4, "speaker": "Brett", "summary": null }, { "file": "audio_32.mp3", "url": "https://www.wired.com/story/best-webcams/", "text": "Wired has also tested all the major webcams across the price spectrum to find the very best for 2026, which is super useful with so many of us still working remotely at least part of the time.", "voice": 1, "speaker": "Brook", "summary": "Webcam reviews" }, { "file": "audio_33.mp3", "url": "https://firstthings.com/conservative-culture-isnt-real-ft-dave-greene/", "text": "First Things has an intriguing podcast about whether 'conservative culture' can exist at all, featuring discussions on discourse, BreadTube, Warhammer 40K, horror, and why most modern films disappoint.", "voice": 3, "speaker": "Antony", "summary": "Conservative culture podcast" }, { "file": "audio_34.mp3", "url": "https://firstthings.com/the-slow-death-of-england-new-and-notable-books/", "text": "There's an interesting piece on the slow death of England, reviewing several books that examine Britain's post-Thatcher decline, from academic influence to Brexit and beyond.", "voice": 2, "speaker": "Conrad", "summary": "Britain's decline reviewed" }, { "file": "audio_35.mp3", "url": null, "text": "England dying? News to me. We're just having a bit of a lie-down after running the world for a few centuries. We'll be up and about once we've had our tea.", "voice": 4, "speaker": "Brett", "summary": null }, { "file": "audio_36.mp3", "url": "https://www.bbc.com/news/articles/c893xj41zwdo?at_medium=RSS&at_campaign=rss", "text": "In Ukraine, civilians in the frontline city of Oleshky are trapped between staying put or risking the dangerous 'Road of Death' to evacuate. They've been cut off from fresh supplies for months. It's absolutely heartbreaking.", "voice": 1, "speaker": "Brook", "summary": "Ukrainian civilians trapped" }, { "file": "audio_37.mp3", "url": null, "text": "The 'Road of Death' evokes Cormac McCarthy's 'The Road,' with its bleak portrayal of survival in a post-apocalyptic landscape. War creates these liminal spaces where normal life is suspended, and people exist in a terrible purgatory – neither fully living nor dead, but simply enduring.", "voice": 3, "speaker": "Antony", "summary": null }, { "file": "audio_38.mp3", "url": "https://www.bbc.com/news/articles/cg7p09p2evxo?at_medium=RSS&at_campaign=rss", "text": "The BBC has conducted an investigation that led to the arrest of two people who were helping asylum seekers pretend to be gay to stay in the country.", "voice": 2, "speaker": "Conrad", "summary": "Asylum fraud arrests" }, { "file": "audio_39.mp3", "url": null, "text": "Immigration advisers helping people pretend to be gay? In my day, people pretended to be straight. Progress, I suppose.", "voice": 4, "speaker": "Brett", "summary": null }, { "file": "audio_40.mp3", "url": "https://apnews.com/article/florida-usf-missing-students-bangladesh-43a85acb9d9e1ef964470bbba7cd0724", "text": "And here's a heartbreaking update on that story from the University of South Florida. Police have identified the body of one missing doctoral student, Zamil Limon, but Nahida Bristy is still missing. Their roommate has been arrested on multiple charges.", "voice": 1, "speaker": "Brook", "summary": "Missing student update" }, { "file": "audio_41.mp3", "url": null, "text": "A truly tragic story. It reminds me of Fyodor Dostoevsky's 'Crime and Punishment,' exploring the psychology of violence within intimate domestic settings.", "voice": 3, "speaker": "Antony", "summary": null }, { "file": "audio_42.mp3", "url": "https://apnews.com/article/death-penalty-firing-squads-justice-department-9e81687b80402e1e19d57bbc55772470", "text": "In a controversial move, the Justice Department will now allow firing squads for executions, as part of the Trump administration's push to ramp up capital punishment.", "voice": 2, "speaker": "Conrad", "summary": "Firing squads approved" }, { "file": "audio_43.mp3", "url": null, "text": "That's absolutely barbaric! I can't believe we're actually going backwards on this issue. There's so much evidence showing that the death penalty doesn't deter crime, is applied inequitably across racial and socioeconomic lines, and has led to the execution of innocent people. And now they want to bring back firing squads? It's like we're living in some dystopian...", "voice": 1, "speaker": "Brook", "summary": null }, { "file": "audio_44.mp3", "url": null, "text": "-- At least it's quick. Nothing worse than a drawn-out ending. Like when you're at a dinner party and can't figure out how to leave. Just shoot me already.", "voice": 4, "speaker": "Brett", "summary": null }, { "file": "audio_45.mp3", "url": "https://www.bbc.com/news/articles/c202652vvnjo?at_medium=RSS&at_campaign=rss", "text": "The BBC has tracked how just 10 minutes of Israeli bombing brought widespread devastation to Lebanon, providing a minute-by-minute account of the attack and its aftermath.", "voice": 2, "speaker": "Conrad", "summary": "Lebanon bombing timeline" }, { "file": "audio_46.mp3", "url": null, "text": "The compression of such devastating violence into mere minutes recalls T.S. Eliot's line from 'The Hollow Men' – 'This is the way the world ends, not with a bang but a whimper.' Except here, it is precisely with many bangs that normality ends for countless civilians.", "voice": 3, "speaker": "Antony", "summary": null }, { "file": "audio_47.mp3", "url": "https://www.theguardian.com/business/2026/may/04/nigeria-refinery-dangote-uk-plan-jet-fuel-shortage-strait-of-hormuz", "text": "And just one more quick item before we wrap up – a refinery in Nigeria that's been accused of dismissing workers for joining a union is apparently key to the UK government's plan to tackle jet fuel shortages caused by the Strait of Hormuz crisis. Talk about ethical complications!", "voice": 1, "speaker": "Brook", "summary": "Nigeria refinery controversy" }, { "file": "audio_48.mp3", "url": null, "text": "And that brings us to the end of today's news roundup. Thank you for joining us and we'll be back tomorrow with more updates.", "voice": 2, "speaker": "Conrad", "summary": null }, { "file": "audio_49.mp3", "url": null, "text": "Indeed. As Søren Kierkegaard wrote, 'Life can only be understood backwards, but it must be lived forwards.' Until tomorrow, when we'll try to make sense of today's events.", "voice": 3, "speaker": "Antony", "summary": null }, { "file": "audio_50.mp3", "url": null, "text": "Until tomorrow. I'll be spending the evening fixing the garage door that Brook's robot car damaged while 'updating its mapping algorithms.' Nothing a hammer and some choice words can't solve.", "voice": 4, "speaker": "Brett", "summary": null }, { "file": "audio_51.mp3", "url": null, "text": "It wasn't the car's fault! The spatial recognition system was compromised by the garage door's irregular reflection pattern! I'll explain the technical details to you later, Dad. Anyway, bye everyone, catch you tomorrow!", "voice": 1, "speaker": "Brook", "summary": null }];
+        let cur = 0;
+
         // Pointers for our dual audio players
-        let plActive = document.getElementById('pl1'); 
-        let plStandby = document.getElementById('pl2'); 
-        
-        const st = document.getElementById('st'); 
+        let plActive = document.getElementById('pl1');
+        let plStandby = document.getElementById('pl2');
+
+        const st = document.getElementById('st');
         const btnPrev = document.getElementById('btn-prev');
         const btnNext = document.getElementById('btn-next');
         const lnkWrap = document.getElementById('lnk-wrap');
@@ -108,27 +344,27 @@
         const tsText = document.getElementById('ts-text');
         const tsVoice = document.getElementById('ts-voice');
         const tsBox = document.getElementById('ts-box');
-        
+
         const chatContainer = document.getElementById('full-chat');
         const toggleBtn = document.getElementById('toggle-chat');
-        
+
         // --- CHAT BUBBLE GENERATION ---
         let lastTopic = null;
         let currentGroup = null;
-        
+
         playlist.forEach((item, idx) => {
             const currentTopic = item.summary || "Banter & Hot Takes";
-            
+
             if (currentTopic !== lastTopic) {
                 currentGroup = document.createElement('div');
                 currentGroup.className = 'topic-group';
                 chatContainer.appendChild(currentGroup);
-                
+
                 const header = document.createElement('div');
                 header.className = 'topic-header';
                 header.innerText = currentTopic;
                 currentGroup.appendChild(header);
-                
+
                 lastTopic = currentTopic;
             }
 
@@ -136,7 +372,7 @@
             bubble.className = 'chat-bubble ' + item.voice;
             bubble.id = 'chat-msg-' + idx;
             bubble.innerHTML = '<div class="chat-label">' + item.speaker + '</div>' + item.text;
-            
+
             bubble.onclick = () => {
                 if (cur !== idx) {
                     cur = idx;
@@ -164,7 +400,7 @@
 
         // --- DUAL PLAYER LOGIC ---
         let isOverlapping = false;
-        const OVERLAP_SECONDS = 1.2; // Adjust this to change how early the interruption starts
+        const OVERLAP_SECONDS = 2; // Adjust this to change how early the interruption starts
 
         function updateUI(i) {
             if (i >= playlist.length) {
@@ -174,14 +410,14 @@
                 lnkWrap.classList.remove('visible');
                 btnNext.disabled = true;
                 return;
-            } 
-            
+            }
+
             btnPrev.disabled = (i === 0);
             btnNext.disabled = (i >= playlist.length - 1);
 
-            const t = playlist[i]; 
+            const t = playlist[i];
             st.innerText = 'Segment ' + (i + 1) + ' of ' + playlist.length;
-            
+
             tsText.innerText = t.text;
             tsVoice.innerText = t.speaker;
             tsBox.className = 'transcript-box ' + t.voice;
@@ -197,18 +433,18 @@
                 }
             });
 
-            if (t.url) { 
-                lnk.href = t.url; 
+            if (t.url) {
+                lnk.href = t.url;
                 if (t.summary) {
                     summ.innerText = t.summary;
                     summ.style.display = 'block';
                 } else {
                     summ.style.display = 'none';
                 }
-                lnkWrap.classList.add('visible'); 
-            } else { 
-                lnkWrap.classList.remove('visible'); 
-            } 
+                lnkWrap.classList.add('visible');
+            } else {
+                lnkWrap.classList.remove('visible');
+            }
         }
 
         // Monitors the active player and triggers overlaps if needed
@@ -220,7 +456,7 @@
                 if (!isOverlapping && playerIndex < playlist.length - 1) {
                     const nextText = playlist[playerIndex + 1].text.trim();
                     if (nextText.startsWith('--')) {
-                        
+
                         // If we are within the overlap window at the end of the track
                         if (plActive.duration && (plActive.duration - plActive.currentTime) <= OVERLAP_SECONDS) {
                             isOverlapping = true;
@@ -231,7 +467,7 @@
 
                             // 2. Start playing the next track silently in the standby player
                             plStandby.src = playlist[cur].file;
-                            plStandby.play().catch(e => {});
+                            plStandby.play().catch(e => { });
                         }
                     }
                 }
@@ -269,7 +505,7 @@
             plActive.src = playlist[i].file;
             plActive.style.display = 'block';
             plStandby.style.display = 'none';
-            plActive.play().catch(e => {});
+            plActive.play().catch(e => { });
 
             attachPlayerLogic(i);
         }
@@ -279,4 +515,5 @@
         playNewTrack(0);
     </script>
 </body>
+
 </html>
