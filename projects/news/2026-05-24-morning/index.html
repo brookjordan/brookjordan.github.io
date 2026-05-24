@@ -347,6 +347,55 @@
         const chatContainer = document.getElementById('full-chat');
         const toggleBtn = document.getElementById('toggle-chat');
         
+        // --- BACKGROUND PRELOADER (+/- 2 Tracks) ---
+        const preloadBuffer = {};
+        
+        function updatePreloadBuffer(index) {
+            // Define the exact target window: 2 behind, 2 ahead
+            const targets = [index - 2, index - 1, index + 1, index + 2]
+                .filter(i => i >= 0 && i < playlist.length);
+                
+            // 1. Fetch new tracks into the invisible background buffer
+            targets.forEach(i => {
+                if (!preloadBuffer[i]) {
+                    const bgAudio = new Audio();
+                    bgAudio.src = playlist[i].file;
+                    bgAudio.preload = 'auto'; // Forces browser to download/cache
+                    preloadBuffer[i] = bgAudio;
+                }
+            });
+            
+            // 2. Clean up old tracks outside the +/- 2 window to save RAM
+            Object.keys(preloadBuffer).forEach(key => {
+                if (!targets.includes(parseInt(key))) {
+                    preloadBuffer[key].src = ''; // Instantly kills the network request
+                    delete preloadBuffer[key];
+                }
+            });
+        }
+
+        // --- KEYBOARD SHORTCUTS (J, K, L) ---
+        document.addEventListener('keydown', (e) => {
+            // Ignore keystrokes if the user holds Ctrl, Alt, or Cmd (e.g. Cmd+R to refresh)
+            if (e.metaKey || e.ctrlKey || e.altKey) return;
+            
+            switch(e.key.toLowerCase()) {
+                case 'j': // Previous
+                    if (!btnPrev.disabled) btnPrev.click();
+                    break;
+                case 'l': // Next
+                    if (!btnNext.disabled) btnNext.click();
+                    break;
+                case 'k': // Play/Pause
+                    if (plActive.paused) {
+                        plActive.play().catch(err => {});
+                    } else {
+                        plActive.pause();
+                    }
+                    break;
+            }
+        });
+
         // --- CHAT BUBBLE GENERATION ---
         let lastTopic = null;
         let currentGroup = null;
@@ -485,7 +534,19 @@
         function playNewTrack(i) {
             plActive.pause();
             plStandby.pause();
-            plActive.src = playlist[i].file;
+            
+            // Trigger our background cache manager!
+            updatePreloadBuffer(i);
+            
+            // Check if the file is already cached in our buffer
+            if (preloadBuffer[i] && preloadBuffer[i].readyState === 4) {
+                // If it is fully loaded in the background, assign it instantly
+                plActive.src = preloadBuffer[i].src;
+            } else {
+                // Fallback normal loading
+                plActive.src = playlist[i].file;
+            }
+            
             plActive.style.display = 'block';
             plStandby.style.display = 'none';
             plActive.play().catch(e => {});
