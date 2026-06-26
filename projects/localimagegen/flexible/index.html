@@ -202,6 +202,7 @@
     }
     .control-group { display: flex; flex-direction: column; gap: 0.35rem; }
     .control-group label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+    .checkbox-label { display: flex; align-items: center; gap: 0.4rem; cursor: pointer; text-transform: none; letter-spacing: normal; font-size: 0.85rem; color: var(--text); }
     .slider-row { display: flex; align-items: center; gap: 0.75rem; min-width: 220px; }
     input[type="range"] { flex: 1; accent-color: var(--accent); }
     .sample-value { font-variant-numeric: tabular-nums; min-width: 2ch; font-weight: 600; }
@@ -472,6 +473,100 @@
       border-radius: 10px;
     }
 
+    /* ---- Notes: has-note indicator dot on annotated slides ---- */
+    .slide-note-dot {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 1px solid rgba(0, 0, 0, 0.5);
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    /* ---- Notes lightbox overlay ---- */
+    .notes-lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      align-items: stretch;
+    }
+    .notes-lightbox[hidden] { display: none; }
+    .notes-lightbox-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.82);
+      backdrop-filter: blur(4px);
+    }
+    .notes-lightbox-panel {
+      position: relative;
+      display: flex;
+      width: 100%;
+      height: 100%;
+    }
+    .notes-lightbox-img {
+      flex: 1 1 auto;
+      min-width: 0;
+      object-fit: contain;
+      max-height: 100vh;
+      background: transparent;
+    }
+    .notes-lightbox-editor {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      width: 320px;
+      flex-shrink: 0;
+      background: var(--bg-secondary);
+      border-left: 1px solid var(--border-primary);
+      padding: var(--space-5);
+      overflow-y: auto;
+    }
+    .notes-lightbox-meta {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    .notes-textarea {
+      flex: 1 1 auto;
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-md);
+      padding: var(--space-3);
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      line-height: 1.55;
+      resize: vertical;
+      min-height: 120px;
+    }
+    .notes-textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    .notes-lightbox-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-2);
+    }
+    .notes-save-status {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+    }
+    .notes-save-status.saved { color: var(--accent); }
+    .notes-save-status.error { color: #f87171; }
+    @media (max-width: 900px) {
+      .notes-lightbox-panel { flex-direction: column; }
+      .notes-lightbox-img { flex: 1 1 auto; max-height: 55vh; }
+      .notes-lightbox-editor { width: 100%; border-left: none; border-top: 1px solid var(--border-primary); }
+    }
+
     @media (max-width: 640px) {
       header {
         padding: 0.75rem 1rem;
@@ -596,6 +691,13 @@
         <label>&nbsp;</label>
         <button type="button" id="refresh">Refresh</button>
       </div>
+      <div class="control-group" id="overshootGroup" hidden>
+        <label>&nbsp;</label>
+        <label class="checkbox-label" title="Steps above a model's quality plateau. Hidden by default; toggle to compare beyond the ceiling.">
+          <input type="checkbox" id="showOvershoots" />
+          <span>Show overshoots</span>
+        </label>
+      </div>
     </div>
     <div id="controlsSliderSlot" class="controls-slider-row">
       <div class="control-group" id="sampleSliderGroup">
@@ -622,1868 +724,2068 @@
     <p class="empty" id="empty" hidden>No images found. Drag the output folder here, pick it, or open this folder over HTTP.</p>
   </main>
 
+  <!-- Notes lightbox: full-screen click-to-open image + note editor -->
+  <div id="notesLightbox" class="notes-lightbox" hidden aria-modal="true" role="dialog" aria-label="Image note editor">
+    <div class="notes-lightbox-backdrop"></div>
+    <div class="notes-lightbox-panel">
+      <img class="notes-lightbox-img" src="" alt="" />
+      <div class="notes-lightbox-editor">
+        <div class="notes-lightbox-meta" id="notesLightboxMeta"></div>
+        <textarea
+          id="notesTextarea"
+          class="notes-textarea"
+          placeholder="Add a note… (Cmd/Ctrl+Enter to save, Esc to close)"
+          rows="4"
+        ></textarea>
+        <div class="notes-lightbox-actions">
+          <span class="notes-save-status" id="notesSaveStatus"></span>
+          <button type="button" class="secondary" id="notesClose">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
-let catalog = {};
-    let metaByPrefix = {};
-    let promptCatalog = null;  // _prompts.json: {models, promptSizes, fallback, scenes:{scene:{layer:text}}}
-    /** @type {Map<string, string>} filename → resolved object/url */
-    const imageUrlCache = new Map();
-    const preloadedFiles = new Set();
-    let renderGeneration = 0;
-    let availableSamples = [];
-    let availableSeeds = [42];
-    let currentSeed = 42;
-    let dirHandle = null;
-    /** @type {Map<string, File>} filename → File (drag-drop or picker) */
-    let fileMap = new Map();
-    let loadSource = 'listing'; // 'listing' | 'handle' | 'dropped'
-    let droppedFolderName = '';
-    let compareMode = 'models'; // 'models' | 'samples'
-
-    // Baked-data hook. build_static.py replaces the sentinel below to produce a
-    // standalone index.html with a hard-coded file list + meta, so it works on a
-    // plain static host (no directory listing, no folder picker, no local images
-    // folder). Left null here, so flexible.html keeps using the live picker flow.
-    let IMG_BASE = '';
-    let BAKED_FILES = null;
-    let BAKED_META = null;
-    let BAKED_PROMPTS = null;
-    /* __BAKED_DATA__ */
-    /** @type {number[] | null} pixel width per subject index, synced across all rows */
-    let slideWidthsPx = null;
-    let slideImgHeightPx = 270;
-    let slidesAutoSized = false;
-    let userHasResizedSlides = false;
-    const SLIDE_MIN_WIDTH_PX = 200;
-    const SLIDE_DEFAULT_WIDTH_PX = 480;
-    const SLIDE_FALLBACK_ASPECT = 16 / 9;
-    const RESIZE_BAR_TOTAL_PX = 12;
-    const RESIZE_HIT_FRACTION = 0.33;
-    const MAX_VISIBLE_SLIDES = 3;
-    const IMAGE_FADE_MS = 300;
-
-    const FILE_RE = /^(.+?)_(dragon|van|[a-z0-9]+)_s(\d+)(?:_t(\d+)s)?_(\d+)_?\.(?:png|webp|avif|jpe?g)$/i;
-    const IMG_EXT_RE = /\.(?:png|webp|avif|jpe?g)$/i;
-    const isImageFile = (name) => IMG_EXT_RE.test(name || '');
-    // Subfolders to skip when crawling a dropped/picked folder: the compressed build
-    // output + caches live here and carry pre-migration names (e.g. _00001_/_00002_)
-    // that would otherwise register as phantom "seeds".
-    const IGNORE_DIRS = new Set(['fixed', '__pycache__', 'build', 'node_modules', '.git']);
-    const SUBJECT_ORDER = ['dragon', 'van'];
-
-    function normModel(name) {
-      return name.toLowerCase().replace(/-/g, '');
+"use strict";
+(() => {
+  // web/lib.ts
+  var FILE_RE = /^(.+?)_(dragon|van|[a-z0-9]+)_s(\d+)(?:_t(\d+)s)?_(\d+)_?\.(?:png|webp|avif|jpe?g)$/i;
+  var IMG_EXT_RE = /\.(?:png|webp|avif|jpe?g)$/i;
+  function normModel(name) {
+    return name.toLowerCase().replace(/-/g, "");
+  }
+  var isImageFile = (name) => IMG_EXT_RE.test(name || "");
+  function catalogPrefix(model, subject, sample, seed = 42) {
+    const base = `${model}_${subject}_s${String(sample).padStart(2, "0")}`;
+    return `${base}_${String(seed).padStart(5, "0")}`;
+  }
+  function makeCellKey(model, scene, sample, seed) {
+    return `${model}_${scene}_s${String(sample).padStart(2, "0")}_${String(seed).padStart(5, "0")}`;
+  }
+  function parseFilename(name) {
+    const base = name.split("/").at(-1) ?? "";
+    const m = FILE_RE.exec(base);
+    if (!m) return null;
+    return {
+      model: normModel(m[1]),
+      subject: m[2].toLowerCase(),
+      sample: parseInt(m[3], 10),
+      dur: m[4] != null ? parseInt(m[4], 10) : null,
+      seed: parseInt(m[5], 10)
+    };
+  }
+  function isOvershoot(ceilings, model, sample) {
+    const ceil = ceilings[model];
+    return ceil != null && sample > ceil;
+  }
+  function pickEntry(catalog2, currentSeed2, model, subject, sample) {
+    const cell = catalog2[model]?.[subject]?.[String(sample)];
+    if (!cell) return null;
+    if (cell[String(currentSeed2)]) return cell[String(currentSeed2)] ?? null;
+    if (cell["42"]) return cell["42"] ?? null;
+    const ss = Object.keys(cell).map(Number).sort((a, b) => a - b);
+    return ss.length ? cell[String(ss[0])] ?? null : null;
+  }
+  function entryMeta(metaByPrefix2, model, subject, sample, entry) {
+    const pref = catalogPrefix(model, subject, sample, entry?.seed ?? 42);
+    const fromJson = metaByPrefix2[pref];
+    const seconds = entry?.duration ?? (fromJson && fromJson.seconds >= 0 ? fromJson.seconds : null);
+    return { ...fromJson, seconds: seconds ?? -1 };
+  }
+  function closestSample(catalog2, ceilings, model, subject, target, showOvershoots2) {
+    const allSamples = Object.keys(catalog2[model]?.[subject] ?? {}).map(Number).sort((a, b) => a - b);
+    const samples = showOvershoots2 ? allSamples : allSamples.filter((s) => !isOvershoot(ceilings, model, s));
+    if (!samples.length) return null;
+    const atOrBelow = samples.filter((s) => s <= target);
+    if (atOrBelow.length) return atOrBelow[atOrBelow.length - 1] ?? null;
+    return samples[0] ?? null;
+  }
+  function samplesForModel(catalog2, ceilings, model, showOvershoots2) {
+    const set = /* @__PURE__ */ new Set();
+    for (const subj of Object.keys(catalog2[model] ?? {})) {
+      for (const s of Object.keys((catalog2[model] ?? {})[subj] ?? {})) set.add(Number(s));
     }
-
-    function resetCatalog() {
-      catalog = {};
-      preloadedFiles.clear();
+    return [...set].sort((a, b) => a - b).filter((s) => showOvershoots2 || !isOvershoot(ceilings, model, s));
+  }
+  function promptSizeOfModel(promptCatalog2, model) {
+    const models = promptCatalog2?.models;
+    if (!models) return null;
+    if (model in models) return models[model] ?? null;
+    const hit = Object.keys(models).find((k) => normModel(k) === model);
+    return hit ? models[hit] ?? null : null;
+  }
+  function promptForSize(promptCatalog2, subject, size) {
+    const layers = promptCatalog2?.scenes?.[subject];
+    if (!layers) return null;
+    if (size && layers[size] != null) return layers[size] ?? null;
+    const fb = promptCatalog2?.fallback ?? "all";
+    return layers[fb] != null ? layers[fb] ?? null : null;
+  }
+  function promptFor(promptCatalog2, model, subject) {
+    return promptForSize(promptCatalog2, subject, promptSizeOfModel(promptCatalog2, model) ?? "l");
+  }
+  function timeCellPick(catalog2, metaByPrefix2, ceilings, currentSeed2, model, subject, budget, showOvershoots2) {
+    const cell = catalog2[model]?.[subject];
+    if (!cell) return null;
+    const allSamples = Object.keys(cell).map(Number);
+    const samples = showOvershoots2 ? allSamples : allSamples.filter((s) => !isOvershoot(ceilings, model, s));
+    let best = null;
+    let fastest = null;
+    for (const s of samples) {
+      const e = pickEntry(catalog2, currentSeed2, model, subject, s);
+      if (!e) continue;
+      const secs = entryMeta(metaByPrefix2, model, subject, s, e).seconds;
+      if (secs < 0) continue;
+      if (secs <= budget && (!best || secs > best.secs)) best = { sample: s, secs };
+      if (!fastest || secs < fastest.secs) fastest = { sample: s, secs };
     }
-
-    function catalogPrefix(model, subject, sample, seed = 42) {
-      const base = `${model}_${subject}_s${String(sample).padStart(2, '0')}`;
-      return `${base}_${String(seed).padStart(5, '0')}`;
+    if (best) return { sample: best.sample, secs: best.secs, over: false, overBy: 0 };
+    if (fastest)
+      return {
+        sample: fastest.sample,
+        secs: fastest.secs,
+        over: true,
+        overBy: fastest.secs - budget
+      };
+    const lo = samples.sort((a, b) => a - b)[0];
+    return lo != null ? { sample: lo, secs: null, over: false, overBy: 0 } : null;
+  }
+  function slideShownSample(catalog2, metaByPrefix2, ceilings, currentSeed2, model, subject, targetSample, compareMode2, budget, showOvershoots2, exact = false) {
+    if (compareMode2 === "time") {
+      const p = timeCellPick(
+        catalog2,
+        metaByPrefix2,
+        ceilings,
+        currentSeed2,
+        model,
+        subject,
+        budget,
+        showOvershoots2
+      );
+      return p ? p.sample : null;
     }
+    if (exact) {
+      return catalog2[model]?.[subject]?.[String(targetSample)] ? targetSample : null;
+    }
+    return closestSample(catalog2, ceilings, model, subject, targetSample, showOvershoots2);
+  }
+  function formatDuration(seconds) {
+    if (seconds <= 0) return "\xB7\xB7\xB7";
+    if (seconds < 60) return `${seconds}s`;
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return secs > 0 ? `${mins}m${secs}s` : `${mins}m`;
+  }
+  function formatMetaTooltip(promptCatalog2, filename, meta) {
+    const parts = [filename];
+    if (!meta) return parts.join("");
+    if (meta.seconds >= 0) parts.push(`${meta.seconds}s render`);
+    if (meta.steps >= 0) parts.push(`${meta.steps} steps`);
+    if (meta.cfg >= 0) parts.push(`cfg ${meta.cfg}`);
+    if (meta.seed >= 0) parts.push(`seed ${meta.seed}`);
+    if (meta.sampler) parts.push(meta.sampler);
+    if (meta.schedule) parts.push(meta.schedule);
+    if (meta.denoise != null && meta.denoise >= 0 && meta.denoise !== 1)
+      parts.push(`denoise ${meta.denoise}`);
+    if (meta.width > 0 && meta.height > 0) parts.push(`${meta.width}\xD7${meta.height}`);
+    if (meta.unet) parts.push(meta.unet);
+    if (meta.vae) parts.push(meta.vae);
+    let line = parts.join(" \xB7 ");
+    const fm = FILE_RE.exec(filename);
+    if (fm && promptCatalog2) {
+      const model = normModel(fm[1]);
+      const subject = fm[2].toLowerCase();
+      const promptSize = meta.promptSize ?? promptSizeOfModel(promptCatalog2, model);
+      const prompt = promptFor(promptCatalog2, model, subject);
+      if (prompt) {
+        const trimmed = prompt.length > 240 ? prompt.slice(0, 240) + "\u2026" : prompt;
+        line += `
 
-    function ingestFilename(filename) {
-      const base = filename.split('/').pop();
-      const m = FILE_RE.exec(base);
-      if (!m) return;
-      const model = normModel(m[1]);
-      const subject = m[2].toLowerCase();
-      const sample = parseInt(m[3], 10);
-      const duration = m[4] ? parseInt(m[4], 10) : null;
-      const seed = parseInt(m[5], 10);  // trailing number = seed = version axis
-      if (!catalog[model]) catalog[model] = {};
-      if (!catalog[model][subject]) catalog[model][subject] = {};
-      if (!catalog[model][subject][sample]) catalog[model][subject][sample] = {};
-      const cell = catalog[model][subject][sample];
-      const prev = cell[seed];
-      if (prev) {
-        const prevHasDuration = !!FILE_RE.exec(prev.file)?.[4];
-        if (prevHasDuration && !m[4]) return;  // keep the stamped one
+[${(promptSize ?? "?").toString().toUpperCase()}] ${trimmed}`;
       }
-      cell[seed] = { file: base, duration, seed };
     }
-
-    // The entry to display for a cell at the active seed, falling back to seed 42
-    // (v1) then the lowest available seed when the selected one is missing.
-    function pickEntry(model, subject, sample) {
-      const cell = catalog[model]?.[subject]?.[sample];
-      if (!cell) return null;
-      if (cell[currentSeed]) return cell[currentSeed];
-      if (cell[42]) return cell[42];
-      const ss = Object.keys(cell).map(Number).sort((a, b) => a - b);
-      return ss.length ? cell[ss[0]] : null;
-    }
-
-    function entryMeta(model, subject, sample, entry) {
-      const pref = catalogPrefix(model, subject, sample, entry?.seed ?? 42);
-      const fromJson = metaByPrefix[pref];
-      const seconds = entry?.duration ?? (fromJson?.seconds >= 0 ? fromJson.seconds : null);
-      return { ...(fromJson || {}), seconds: seconds ?? -1 };
-    }
-
-    function formatDuration(seconds) {
-      if (seconds == null || seconds < 0) return '···';
-      return `${seconds}s`;
-    }
-
-    function formatMetaTooltip(filename, meta) {
-      const parts = [filename];
-      if (!meta) return parts.join('');
-      if (meta.seconds >= 0) parts.push(`${meta.seconds}s render`);
-      if (meta.steps >= 0) parts.push(`${meta.steps} steps`);
-      if (meta.cfg >= 0) parts.push(`cfg ${meta.cfg}`);
-      if (meta.seed >= 0) parts.push(`seed ${meta.seed}`);
-      if (meta.sampler) parts.push(meta.sampler);
-      if (meta.schedule) parts.push(meta.schedule);
-      if (meta.denoise >= 0 && meta.denoise !== 1) parts.push(`denoise ${meta.denoise}`);
-      if (meta.width > 0 && meta.height > 0) parts.push(`${meta.width}×${meta.height}`);
-      if (meta.unet) parts.push(meta.unet);
-      if (meta.vae) parts.push(meta.vae);
-      let line = parts.join(' · ');
-      const fm = FILE_RE.exec(filename);
-      if (fm && promptCatalog) {
-        const model = normModel(fm[1]);
-        const subject = fm[2].toLowerCase();
-        const promptSize = meta.promptSize || promptSizeOfModel(model);
-        const prompt = promptFor(model, subject);
-        if (prompt) {
-          const trimmed = prompt.length > 240 ? prompt.slice(0, 240) + '…' : prompt;
-          line += `\n\n[${(promptSize || '?').toString().toUpperCase()}] ${trimmed}`;
-        }
+    return line;
+  }
+  function linearizeSrgb(channel) {
+    const c = channel / 255;
+    return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  }
+  function rgbToLab(r, g, b) {
+    const R = linearizeSrgb(r);
+    const G = linearizeSrgb(g);
+    const B = linearizeSrgb(b);
+    let x = R * 0.4124564 + G * 0.3575761 + B * 0.1804375;
+    let y = R * 0.2126729 + G * 0.7151522 + B * 0.072175;
+    let z = R * 0.0193339 + G * 0.119192 + B * 0.9503041;
+    x /= 0.95047;
+    y /= 1;
+    z /= 1.08883;
+    const f = (t) => t > 8856e-6 ? Math.cbrt(t) : 7.787 * t + 16 / 116;
+    const fx = f(x);
+    const fy = f(y);
+    const fz = f(z);
+    const L = 116 * fy - 16;
+    const a = 500 * (fx - fy);
+    const bStar = 200 * (fy - fz);
+    const C = Math.hypot(a, bStar);
+    return { L, C };
+  }
+  function relativeLuminance(r, g, b) {
+    const R = linearizeSrgb(r);
+    const G = linearizeSrgb(g);
+    const B = linearizeSrgb(b);
+    return 0.2126 * R + 0.7152 * G + 0.0722 * B;
+  }
+  function contrastRatio(lumA, lumB) {
+    const lighter = Math.max(lumA, lumB);
+    const darker = Math.min(lumA, lumB);
+    return (lighter + 0.05) / (darker + 0.05);
+  }
+  function rgbToHex(r, g, b) {
+    return `#${[r, g, b].map((c) => Math.round(c).toString(16).padStart(2, "0")).join("")}`;
+  }
+  function haloFromSample(sample) {
+    return { r: sample.ar, g: sample.ag, b: sample.ab };
+  }
+  function textColorForHalo(halo) {
+    const haloLum = relativeLuminance(halo.r, halo.g, halo.b);
+    const candidates = [
+      [242, 243, 245],
+      [255, 255, 255],
+      [15, 17, 21],
+      [0, 0, 0],
+      [253, 214, 99]
+    ];
+    let best = candidates[0];
+    let bestScore = 0;
+    for (const [cr, cg, cb] of candidates) {
+      const score = contrastRatio(haloLum, relativeLuminance(cr, cg, cb));
+      if (score > bestScore) {
+        bestScore = score;
+        best = [cr, cg, cb];
       }
-      return line;
     }
+    return rgbToHex(...best);
+  }
+  function analyzeImageData(data) {
+    const buckets = /* @__PURE__ */ new Map();
+    let sumL = 0;
+    let sumC = 0;
+    let sumR = 0;
+    let sumG = 0;
+    let sumB = 0;
+    let n = 0;
+    for (let i = 0; i < data.length; i += 4) {
+      if (data[i + 3] < 48) continue;
+      const r = data[i];
+      const g = data[i + 1];
+      const b = data[i + 2];
+      const { L, C } = rgbToLab(r, g, b);
+      sumL += L;
+      sumC += C;
+      sumR += r;
+      sumG += g;
+      sumB += b;
+      n++;
+      const key = r >> 3 << 10 | g >> 3 << 5 | b >> 3;
+      const entry = buckets.get(key) ?? { r: 0, g: 0, b: 0, n: 0 };
+      entry.r += r;
+      entry.g += g;
+      entry.b += b;
+      entry.n++;
+      buckets.set(key, entry);
+    }
+    let best = null;
+    for (const entry of buckets.values()) {
+      if (!best || entry.n > best.n) best = entry;
+    }
+    if (!best || !n) {
+      return { r: 15, g: 17, b: 21, ar: 15, ag: 17, ab: 21, avgL: 8, avgC: 0 };
+    }
+    return {
+      r: Math.round(best.r / best.n),
+      g: Math.round(best.g / best.n),
+      b: Math.round(best.b / best.n),
+      ar: Math.round(sumR / n),
+      ag: Math.round(sumG / n),
+      ab: Math.round(sumB / n),
+      avgL: sumL / n,
+      avgC: sumC / n
+    };
+  }
+  function captionStyleFromSample(sample) {
+    const halo = haloFromSample(sample);
+    const text = textColorForHalo(halo);
+    const stroke = `2px rgba(${halo.r}, ${halo.g}, ${halo.b}, 0.9)`;
+    const shadows = [
+      `0 0 2px rgba(${halo.r}, ${halo.g}, ${halo.b}, 1)`,
+      `0 0 7px rgba(${halo.r}, ${halo.g}, ${halo.b}, 0.95)`,
+      `0 0 14px rgba(${halo.r}, ${halo.g}, ${halo.b}, 0.8)`
+    ].join(", ");
+    return { text, stroke, shadows };
+  }
+  function heightFromWidth(aspectRatio, width) {
+    return width / aspectRatio;
+  }
+  function widthFromHeight(aspectRatio, height) {
+    return height * aspectRatio;
+  }
+  function minHeightForWidths(aspectRatios, minWidthPx) {
+    let minH = 80;
+    for (const ar of aspectRatios) {
+      minH = Math.max(minH, heightFromWidth(ar, minWidthPx));
+    }
+    return minH;
+  }
+  function layoutFromAnchor(aspectRatios, anchorIndex, anchorWidth, widths, minWidthPx) {
+    if (!widths.length) return null;
+    const anchorAr = aspectRatios[anchorIndex] ?? 1;
+    const height = Math.max(
+      minHeightForWidths(aspectRatios, minWidthPx),
+      heightFromWidth(anchorAr, Math.max(minWidthPx, anchorWidth))
+    );
+    const nextWidths = widths.map(
+      (_, i) => Math.max(minWidthPx, widthFromHeight(aspectRatios[i] ?? 1, height))
+    );
+    return { height, widths: nextWidths };
+  }
 
-    function applyMetaToCatalog() {
-      for (const [model, subjects] of Object.entries(catalog)) {
-        for (const [subject, samples] of Object.entries(subjects)) {
-          for (const [sample, cell] of Object.entries(samples)) {
-            for (const [seed, entry] of Object.entries(cell)) {
-              const meta = metaByPrefix[catalogPrefix(model, subject, Number(sample), Number(seed))];
-              if (meta?.seconds >= 0 && entry.duration == null) entry.duration = meta.seconds;
-            }
+  // web/app.ts
+  var catalog = {};
+  var metaByPrefix = {};
+  var promptCatalog = null;
+  var notesMap = {};
+  var imageUrlCache = /* @__PURE__ */ new Map();
+  var preloadedFiles = /* @__PURE__ */ new Set();
+  var renderGeneration = 0;
+  var availableSamples = [];
+  var availableSeeds = [42];
+  var currentSeed = 42;
+  var dirHandle = null;
+  var fileMap = /* @__PURE__ */ new Map();
+  var loadSource = "listing";
+  var droppedFolderName = "";
+  var compareMode = "models";
+  var showOvershoots = false;
+  var IMG_BASE = "";
+  var BAKED_FILES = null;
+  var BAKED_META = null;
+  var BAKED_PROMPTS = null;
+  var BAKED_NOTES = null;
+  /*!__BAKED_DATA__*/
+  var slideWidthsPx = null;
+  var slideImgHeightPx = 270;
+  var slidesAutoSized = false;
+  var userHasResizedSlides = false;
+  var SLIDE_MIN_WIDTH_PX = 200;
+  var SLIDE_DEFAULT_WIDTH_PX = 480;
+  var SLIDE_FALLBACK_ASPECT = 16 / 9;
+  var RESIZE_BAR_TOTAL_PX = 12;
+  var RESIZE_HIT_FRACTION = 0.33;
+  var MAX_VISIBLE_SLIDES = 3;
+  var IMAGE_FADE_MS = 300;
+  var layerGenMap = /* @__PURE__ */ new WeakMap();
+  var captionObserverMap = /* @__PURE__ */ new WeakMap();
+  var IGNORE_DIRS = /* @__PURE__ */ new Set(["fixed", "__pycache__", "build", "node_modules", ".git"]);
+  var SUBJECT_ORDER = ["dragon", "van"];
+  function resetCatalog() {
+    catalog = {};
+    preloadedFiles.clear();
+  }
+  function ingestFilename(filename) {
+    const parsed = parseFilename(filename);
+    if (!parsed) return;
+    const { model, subject, sample, dur: duration, seed } = parsed;
+    const base = filename.split("/").at(-1) ?? "";
+    const sampleKey = String(sample);
+    const seedKey = String(seed);
+    if (!catalog[model]) catalog[model] = {};
+    if (!catalog[model][subject]) catalog[model][subject] = {};
+    if (!catalog[model][subject][sampleKey]) catalog[model][subject][sampleKey] = {};
+    const cell = catalog[model][subject][sampleKey];
+    const prev = cell[seedKey];
+    if (prev) {
+      const prevHasDuration = parseFilename(prev.file)?.dur != null;
+      if (prevHasDuration && duration == null) return;
+    }
+    cell[seedKey] = { file: base, duration, seed };
+  }
+  function pickEntry2(model, subject, sample) {
+    return pickEntry(catalog, currentSeed, model, subject, sample);
+  }
+  function entryMeta2(model, subject, sample, entry) {
+    return entryMeta(metaByPrefix, model, subject, sample, entry);
+  }
+  function formatMetaTooltip2(filename, meta) {
+    return formatMetaTooltip(promptCatalog, filename, meta);
+  }
+  function applyMetaToCatalog() {
+    for (const [model, subjects] of Object.entries(catalog)) {
+      for (const [subject, samples] of Object.entries(subjects)) {
+        for (const [sample, cell] of Object.entries(samples)) {
+          for (const [seed, entry] of Object.entries(cell)) {
+            const meta = metaByPrefix[catalogPrefix(model, subject, Number(sample), Number(seed))];
+            if (meta?.seconds >= 0 && entry.duration == null) entry.duration = meta.seconds;
           }
         }
       }
     }
-
-    function rebuildSeedList() {
-      const set = new Set();
-      for (const subjects of Object.values(catalog))
-        for (const samples of Object.values(subjects))
-          for (const cell of Object.values(samples))
-            for (const s of Object.keys(cell)) set.add(Number(s));
-      availableSeeds = [...set].sort((a, b) => a - b);
-      if (!availableSeeds.length) availableSeeds = [42];
-      if (!availableSeeds.includes(currentSeed)) currentSeed = availableSeeds.includes(42) ? 42 : availableSeeds[0];
-      const sel = document.getElementById('seedSelect');
-      const group = document.getElementById('seedGroup');
-      if (sel) {
-        sel.innerHTML = '';
-        availableSeeds.forEach((s, i) => {
-          const opt = document.createElement('option');
-          opt.value = String(s);
-          opt.textContent = `v${i + 1} · seed ${s}`;
-          sel.appendChild(opt);
-        });
-        sel.value = String(currentSeed);
-      }
-      if (group) group.hidden = availableSeeds.length < 2;  // hide until >1 seed exists
-    }
-
-    function promptSizeValue() {
-      return document.getElementById('promptSizeSelect')?.value || 'all';
-    }
-
-    function setupPromptUI() {
-      const group = document.getElementById('promptSizeGroup');
-      if (group) group.hidden = !promptCatalog;
-    }
-
-    // (label, text) pairs to show for one scene at the chosen size. "All" lists the
-    // authored layers as-is (legacy => one "all"; kingdom => s/m/l); a specific size
-    // resolves that size (falling back to the base layer, labelled accordingly).
-    function promptRowsFor(subject, size) {
-      const layers = promptCatalog?.scenes?.[subject] || {};
-      if (size === 'all') {
-        return ['all', 's', 'm', 'l'].filter((k) => layers[k] != null).map((k) => [k, layers[k]]);
-      }
-      const text = promptForSize(subject, size);
-      const label = layers[size] != null ? size : (promptCatalog?.fallback || 'all');
-      return text ? [[label, text]] : [];
-    }
-
-    // An extra grid row (aligned to the scene columns) showing the prompt sent for
-    // each scene, instead of a separate accordion. Mirrors a model row so the shared
-    // width + scroll sync keep it lined up with the image columns.
-    function renderPromptRow(subjects, size) {
-      const row = document.createElement('section');
-      row.className = 'model-row prompt-row';
-      row.dataset.model = '__prompt__';
-
-      const carousel = document.createElement('div');
-      carousel.className = 'carousel';
-      carousel.setAttribute('aria-label', 'prompts');
-
-      const track = document.createElement('div');
-      track.className = 'carousel-track';
-      getSlideWidthsPx(subjects.length);
-
-      const modelEl = document.createElement('span');
-      modelEl.className = 'slide-overlay-model slide-overlay-caption';
-      modelEl.textContent = size === 'all' ? 'prompt' : `prompt · ${size.toUpperCase()}`;
-      track.appendChild(modelEl);
-
-      subjects.forEach((subject, i) => {
-        const slide = document.createElement('article');
-        slide.className = 'carousel-slide prompt-slide';
-        slide.dataset.subjectIndex = String(i);
-        slide.dataset.subject = subject;
-
-        const cell = document.createElement('div');
-        cell.className = 'prompt-cell';
-        const rows = promptRowsFor(subject, size);
-        if (!rows.length) {
-          cell.classList.add('empty');
-          cell.textContent = '—';
-        } else {
-          for (const [size, text] of rows) {
-            const block = document.createElement('div');
-            block.className = 'prompt-cell-block';
-            const badge = document.createElement('span');
-            badge.className = 'size-badge';
-            badge.textContent = String(size).toUpperCase();
-            block.appendChild(badge);
-            block.appendChild(document.createTextNode(text));
-            cell.appendChild(block);
-          }
-        }
-        slide.appendChild(cell);
-        track.appendChild(slide);
-
-        const bar = document.createElement('div');
-        bar.className = 'resize-bar';
-        bar.setAttribute('role', 'separator');
-        bar.setAttribute('aria-orientation', 'vertical');
-        bar.setAttribute('aria-label', 'Drag to resize images');
-        setupResizeBar(bar, i, track);
-        track.appendChild(bar);
-      });
-
-      carousel.appendChild(track);
-      row.appendChild(carousel);
-      return row;
-    }
-
-    function refreshPromptRow() {
-      const list = document.getElementById('modelList');
-      if (!list) return;
-      const existing = list.querySelector('.prompt-row');
-      const subjects = allSubjects();
-      if (!promptCatalog || !subjects.length) {
-        if (existing) existing.remove();
-        return;
-      }
-      const fresh = renderPromptRow(subjects, promptSizeValue());
-      if (existing) existing.replaceWith(fresh);
-      else list.prepend(fresh);
-      applySlideLayoutAll(getSlideWidthsPx(subjects.length));
-      setupSyncedCarousels();
-    }
-
-    async function loadMetaJson() {
-      if (BAKED_META) {
-        metaByPrefix = BAKED_META;
-        return;
-      }
-      metaByPrefix = {};
-      try {
-        const res = await fetch('./data/meta.json', { cache: 'no-store' });
-        if (res.ok) metaByPrefix = await res.json();
-      } catch {
-        /* optional static sidecar */
-      }
-    }
-
-    async function loadPromptsJson() {
-      if (BAKED_PROMPTS) { promptCatalog = BAKED_PROMPTS; return; }
-      promptCatalog = null;
-      try {
-        const res = await fetch('./data/prompts.json', { cache: 'no-store' });
-        if (res.ok) promptCatalog = await res.json();
-      } catch {
-        /* optional sidecar — prompt UI stays hidden when absent */
-      }
-    }
-
-    // _prompts.json model keys are raw engine keys (no dashes); catalog keys are
-    // normModel()'d. Match directly, then fall back to a normalized comparison.
-    function promptSizeOfModel(model) {
-      const models = promptCatalog?.models;
-      if (!models) return null;
-      if (model in models) return models[model];
-      const hit = Object.keys(models).find((k) => normModel(k) === model);
-      return hit ? models[hit] : null;
-    }
-    function promptForSize(subject, size) {
-      const layers = promptCatalog?.scenes?.[subject];
-      if (!layers) return null;
-      if (size && layers[size] != null) return layers[size];
-      const fb = promptCatalog.fallback || 'all';
-      return layers[fb] != null ? layers[fb] : null;
-    }
-    function promptFor(model, subject) {
-      return promptForSize(subject, promptSizeOfModel(model) || 'l');
-    }
-
-    function allSubjects() {
-      const set = new Set();
-      for (const model of Object.values(catalog)) {
-        for (const subj of Object.keys(model)) set.add(subj);
-      }
-      const preferred = SUBJECT_ORDER.filter((s) => set.has(s));
-      const rest = [...set].filter((s) => !SUBJECT_ORDER.includes(s)).sort();
-      return [...preferred, ...rest];
-    }
-
-    function rebuildSampleList() {
-      const set = new Set();
-      for (const model of Object.values(catalog)) {
-        for (const subj of Object.keys(model)) {
-          for (const n of Object.keys(model[subj])) set.add(Number(n));
-        }
-      }
-      availableSamples = [...set].sort((a, b) => a - b);
-      const slider = document.getElementById('sample');
-      if (availableSamples.length) {
-        const min = availableSamples[0];
-        const max = availableSamples[availableSamples.length - 1];
-        slider.min = String(min);
-        slider.max = String(max);
-        if (Number(slider.value) < min || Number(slider.value) > max) {
-          slider.value = availableSamples.includes(4) ? '4' : String(availableSamples[Math.floor(availableSamples.length / 2)]);
-        }
-      }
-      document.getElementById('sampleVal').textContent = slider.value;
-    }
-
-    function rebuildTimeSlider() {
-      let min = Infinity, max = 0;
-      for (const subs of Object.values(catalog))
-        for (const samps of Object.values(subs))
-          for (const cell of Object.values(samps))
-            for (const e of Object.values(cell)) {
-              const d = e.duration;
-              if (d != null && d >= 0) { if (d < min) min = d; if (d > max) max = d; }
-            }
-      const slider = document.getElementById('timeSlider');
-      const val = document.getElementById('timeVal');
-      if (!slider) return;
-      if (!isFinite(min)) { min = 1; max = 120; }
-      slider.min = String(Math.max(1, Math.floor(min)));
-      slider.max = String(Math.max(Number(slider.min), Math.ceil(max)));
-      const cur = Number(slider.value);
-      if (cur < Number(slider.min) || cur > Number(slider.max)) {
-        slider.value = String(Math.min(Number(slider.max), Math.max(Number(slider.min), 30)));
-      }
-      if (val) val.textContent = `${slider.value}s`;
-    }
-
-    function allModels() {
-      return Object.keys(catalog).sort();
-    }
-
-    function populateModelSelect() {
-      const models = allModels();
-      const sel = document.getElementById('modelSelect');
-      const prev = sel.value;
-      sel.innerHTML = '';
-      for (const m of models) {
-        const opt = document.createElement('option');
-        opt.value = m;
-        opt.textContent = m;
+  }
+  function rebuildSeedList() {
+    const set = /* @__PURE__ */ new Set();
+    for (const subjects of Object.values(catalog))
+      for (const samples of Object.values(subjects))
+        for (const cell of Object.values(samples))
+          for (const s of Object.keys(cell)) set.add(Number(s));
+    availableSeeds = [...set].sort((a, b) => a - b);
+    if (!availableSeeds.length) availableSeeds = [42];
+    if (!availableSeeds.includes(currentSeed))
+      currentSeed = availableSeeds.includes(42) ? 42 : availableSeeds[0] ?? 42;
+    const sel = document.getElementById("seedSelect");
+    const group = document.getElementById("seedGroup");
+    if (sel) {
+      sel.innerHTML = "";
+      availableSeeds.forEach((s, i) => {
+        const opt = document.createElement("option");
+        opt.value = String(s);
+        opt.textContent = `v${i + 1} \xB7 seed ${s}`;
         sel.appendChild(opt);
+      });
+      sel.value = String(currentSeed);
+    }
+    if (group) group.hidden = availableSeeds.length < 2;
+  }
+  function promptSizeValue() {
+    return document.getElementById("promptSizeSelect")?.value ?? "all";
+  }
+  function setupPromptUI() {
+    const group = document.getElementById("promptSizeGroup");
+    if (group) group.hidden = !promptCatalog;
+  }
+  function setupOvershootUI() {
+    const group = document.getElementById("overshootGroup");
+    const hasCeilings = promptCatalog?.ceilings && Object.keys(promptCatalog.ceilings).length > 0;
+    if (group) group.hidden = !hasCeilings;
+  }
+  function refreshNoteDot(slide, model, subject, sample, seed) {
+    const existing = slide.querySelector(".slide-note-dot");
+    const hasNote = sample != null && !!notesMap[makeCellKey(model, subject, sample, seed)]?.text;
+    if (hasNote && !existing) {
+      const dot = document.createElement("div");
+      dot.className = "slide-note-dot";
+      dot.title = "Has note \u2014 click to view/edit";
+      slide.appendChild(dot);
+    } else if (!hasNote && existing) {
+      existing.remove();
+    }
+  }
+  function refreshAllNoteDots() {
+    for (const slide of document.querySelectorAll(
+      ".carousel-slide:not(.prompt-slide)"
+    )) {
+      const model = slide.closest("[data-model]")?.dataset.model;
+      const subject = slide.dataset.subject;
+      const sample = slide.dataset.shownSample ? Number(slide.dataset.shownSample) : null;
+      const seed = slide.dataset.shownSeed ? Number(slide.dataset.shownSeed) : currentSeed;
+      if (model && subject && sample != null) refreshNoteDot(slide, model, subject, sample, seed);
+    }
+  }
+  var notesLightboxOpen = false;
+  var notesLightboxSaveTimer = null;
+  function closeNotesLightbox() {
+    const lb = document.getElementById("notesLightbox");
+    if (lb) lb.hidden = true;
+    notesLightboxOpen = false;
+    if (notesLightboxSaveTimer) {
+      clearTimeout(notesLightboxSaveTimer);
+      notesLightboxSaveTimer = null;
+    }
+  }
+  async function saveNote(cellKey, text) {
+    const statusEl = document.getElementById("notesSaveStatus");
+    if (statusEl) {
+      statusEl.textContent = "Saving\u2026";
+      statusEl.className = "notes-save-status";
+    }
+    try {
+      const res = await fetch("/api/notes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cellKey, text })
+      });
+      if (!res.ok) throw new Error(`${res.status}`);
+      const record = await res.json();
+      if (text === "") {
+        delete notesMap[cellKey];
+      } else {
+        notesMap[cellKey] = record;
       }
-      if (prev && models.includes(prev)) sel.value = prev;
-      else if (models.length) sel.value = models[0];
-    }
-
-    function getSelectedModel() {
-      return document.getElementById('modelSelect').value || allModels()[0] || null;
-    }
-
-    function samplesForModel(model) {
-      const set = new Set();
-      for (const subj of Object.keys(catalog[model] || {})) {
-        for (const s of Object.keys(catalog[model][subj])) set.add(Number(s));
+      refreshAllNoteDots();
+      if (statusEl) {
+        statusEl.textContent = "Saved";
+        statusEl.className = "notes-save-status saved";
+        setTimeout(() => {
+          if (statusEl) {
+            statusEl.textContent = "";
+            statusEl.className = "notes-save-status";
+          }
+        }, 2e3);
       }
-      return [...set].sort((a, b) => a - b);
+    } catch (err) {
+      if (statusEl) {
+        statusEl.textContent = `Save failed: ${err instanceof Error ? err.message : String(err)}`;
+        statusEl.className = "notes-save-status error";
+      }
     }
-
-    function closestSample(model, subject, target) {
-      const samples = Object.keys(catalog[model]?.[subject] || {}).map(Number).sort((a, b) => a - b);
-      if (!samples.length) return null;
-      const atOrBelow = samples.filter((s) => s <= target);
-      if (atOrBelow.length) return atOrBelow[atOrBelow.length - 1];
-      return samples[0];
+  }
+  function openNotesLightbox(model, subject, sample, seed, imgSrc) {
+    const lb = document.getElementById("notesLightbox");
+    if (!lb) return;
+    const cellKey = makeCellKey(model, subject, sample, seed);
+    const img = lb.querySelector(".notes-lightbox-img");
+    const meta = document.getElementById("notesLightboxMeta");
+    const textarea = document.getElementById("notesTextarea");
+    const status = document.getElementById("notesSaveStatus");
+    if (img) {
+      img.src = imgSrc || "";
+      img.alt = `${model} ${subject} ${sample}-step`;
     }
-
-    function readDirEntries(dirEntry) {
-      return new Promise((resolve, reject) => {
-        const reader = dirEntry.createReader();
-        const all = [];
-        const readBatch = () => {
-          reader.readEntries(
-            (entries) => {
-              if (!entries.length) resolve(all);
-              else {
-                all.push(...entries);
-                readBatch();
-              }
-            },
-            reject
-          );
-        };
-        readBatch();
+    if (meta) meta.textContent = `${model} \xB7 ${subject} \xB7 ${sample}-step \xB7 seed ${seed}`;
+    if (textarea) {
+      textarea.value = notesMap[cellKey]?.text ?? "";
+      textarea.dataset.cellKey = cellKey;
+      const isReadOnly = !!BAKED_FILES;
+      textarea.readOnly = isReadOnly;
+      textarea.placeholder = isReadOnly ? "Read-only on the static site \u2014 open via lig serve --flexible to add notes" : "Add a note\u2026 (Cmd/Ctrl+Enter to save, Esc to close)";
+    }
+    if (status) {
+      status.textContent = "";
+      status.className = "notes-save-status";
+    }
+    lb.hidden = false;
+    notesLightboxOpen = true;
+    if (textarea && !BAKED_FILES) setTimeout(() => textarea.focus(), 50);
+  }
+  function scheduleSave(cellKey, text) {
+    if (!cellKey) return;
+    if (notesLightboxSaveTimer) clearTimeout(notesLightboxSaveTimer);
+    notesLightboxSaveTimer = setTimeout(() => {
+      notesLightboxSaveTimer = null;
+      saveNote(cellKey, text).catch(() => {
+      });
+    }, 1e3);
+  }
+  function initNotesLightbox() {
+    const lb = document.getElementById("notesLightbox");
+    if (!lb) return;
+    lb.querySelector(".notes-lightbox-backdrop")?.addEventListener("click", closeNotesLightbox);
+    document.getElementById("notesClose")?.addEventListener("click", closeNotesLightbox);
+    const textarea = document.getElementById("notesTextarea");
+    if (textarea) {
+      textarea.addEventListener("input", () => {
+        if (BAKED_FILES) return;
+        scheduleSave(textarea.dataset.cellKey, textarea.value);
+      });
+      textarea.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          e.preventDefault();
+          closeNotesLightbox();
+          return;
+        }
+        if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+          e.preventDefault();
+          if (BAKED_FILES) return;
+          if (notesLightboxSaveTimer) {
+            clearTimeout(notesLightboxSaveTimer);
+            notesLightboxSaveTimer = null;
+          }
+          saveNote(textarea.dataset.cellKey ?? "", textarea.value).catch(() => {
+          });
+        }
+      });
+      textarea.addEventListener("blur", () => {
+        if (BAKED_FILES) return;
+        if (notesLightboxSaveTimer) {
+          clearTimeout(notesLightboxSaveTimer);
+          notesLightboxSaveTimer = null;
+        }
+        saveNote(textarea.dataset.cellKey ?? "", textarea.value).catch(() => {
+        });
       });
     }
-
-    async function collectPngFilesFromEntry(entry, files = []) {
-      if (entry.isFile) {
-        const file = await new Promise((res, rej) => entry.file(res, rej));
-        if (isImageFile(file.name)) files.push(file);
-        return files;
-      }
-      if (entry.isDirectory) {
-        if (IGNORE_DIRS.has(entry.name)) return files;
-        const children = await readDirEntries(entry);
-        for (const child of children) {
-          await collectPngFilesFromEntry(child, files);
+  }
+  function promptRowsFor(subject, size) {
+    const layers = promptCatalog?.scenes?.[subject] ?? {};
+    if (size === "all") {
+      return ["all", "s", "m", "l"].filter((k) => layers[k] != null).map((k) => [k, layers[k]]);
+    }
+    const text = promptForSize2(subject, size);
+    const label = layers[size] != null ? size : promptCatalog?.fallback ?? "all";
+    return text ? [[label, text]] : [];
+  }
+  function renderPromptRow(subjects, size) {
+    const row = document.createElement("section");
+    row.className = "model-row prompt-row";
+    row.dataset.model = "__prompt__";
+    const carousel = document.createElement("div");
+    carousel.className = "carousel";
+    carousel.setAttribute("aria-label", "prompts");
+    const track = document.createElement("div");
+    track.className = "carousel-track";
+    getSlideWidthsPx(subjects.length);
+    const modelEl = document.createElement("span");
+    modelEl.className = "slide-overlay-model slide-overlay-caption";
+    modelEl.textContent = size === "all" ? "prompt" : `prompt \xB7 ${size.toUpperCase()}`;
+    track.appendChild(modelEl);
+    subjects.forEach((subject, i) => {
+      const slide = document.createElement("article");
+      slide.className = "carousel-slide prompt-slide";
+      slide.dataset.subjectIndex = String(i);
+      slide.dataset.subject = subject;
+      const cell = document.createElement("div");
+      cell.className = "prompt-cell";
+      const rows = promptRowsFor(subject, size);
+      if (!rows.length) {
+        cell.classList.add("empty");
+        cell.textContent = "\u2014";
+      } else {
+        for (const [label, text] of rows) {
+          const block = document.createElement("div");
+          block.className = "prompt-cell-block";
+          const badge = document.createElement("span");
+          badge.className = "size-badge";
+          badge.textContent = label.toUpperCase();
+          block.appendChild(badge);
+          block.appendChild(document.createTextNode(text));
+          cell.appendChild(block);
         }
       }
+      slide.appendChild(cell);
+      track.appendChild(slide);
+      const bar = document.createElement("div");
+      bar.className = "resize-bar";
+      bar.setAttribute("role", "separator");
+      bar.setAttribute("aria-orientation", "vertical");
+      bar.setAttribute("aria-label", "Drag to resize images");
+      setupResizeBar(bar, i);
+      track.appendChild(bar);
+    });
+    carousel.appendChild(track);
+    row.appendChild(carousel);
+    return row;
+  }
+  function refreshPromptRow() {
+    const list = document.getElementById("modelList");
+    if (!list) return;
+    const existing = list.querySelector(".prompt-row");
+    const subjects = allSubjects();
+    if (!promptCatalog || !subjects.length) {
+      if (existing) existing.remove();
+      return;
+    }
+    const fresh = renderPromptRow(subjects, promptSizeValue());
+    if (existing) existing.replaceWith(fresh);
+    else list.prepend(fresh);
+    applySlideLayoutAll(getSlideWidthsPx(subjects.length));
+    setupSyncedCarousels();
+  }
+  async function loadMetaJson() {
+    if (BAKED_META) {
+      metaByPrefix = BAKED_META;
+      return;
+    }
+    metaByPrefix = {};
+    try {
+      const res = await fetch("./data/meta.json", { cache: "no-store" });
+      if (res.ok) metaByPrefix = await res.json();
+    } catch {
+    }
+  }
+  async function loadPromptsJson() {
+    if (BAKED_PROMPTS) {
+      promptCatalog = BAKED_PROMPTS;
+      return;
+    }
+    promptCatalog = null;
+    try {
+      const res = await fetch("./data/prompts.json", { cache: "no-store" });
+      if (res.ok) promptCatalog = await res.json();
+    } catch {
+    }
+  }
+  async function loadNotesJson() {
+    if (BAKED_NOTES) {
+      notesMap = BAKED_NOTES;
+      return;
+    }
+    notesMap = {};
+    try {
+      const res = await fetch("./data/notes.json", { cache: "no-store" });
+      if (res.ok) notesMap = await res.json();
+    } catch {
+    }
+  }
+  function promptSizeOfModel2(model) {
+    return promptSizeOfModel(promptCatalog, model);
+  }
+  function promptForSize2(subject, size) {
+    return promptForSize(promptCatalog, subject, size);
+  }
+  function allSubjects() {
+    const set = /* @__PURE__ */ new Set();
+    for (const model of Object.values(catalog)) {
+      for (const subj of Object.keys(model)) set.add(subj);
+    }
+    const preferred = SUBJECT_ORDER.filter((s) => set.has(s));
+    const rest = [...set].filter((s) => !SUBJECT_ORDER.includes(s)).sort();
+    return [...preferred, ...rest];
+  }
+  function rebuildSampleList() {
+    const set = /* @__PURE__ */ new Set();
+    for (const model of Object.values(catalog)) {
+      for (const subj of Object.keys(model)) {
+        for (const n of Object.keys(model[subj])) set.add(Number(n));
+      }
+    }
+    availableSamples = [...set].sort((a, b) => a - b);
+    const slider = document.getElementById("sample");
+    if (slider && availableSamples.length) {
+      const min = availableSamples[0];
+      const max = availableSamples[availableSamples.length - 1];
+      slider.min = String(min);
+      slider.max = String(max);
+      if (Number(slider.value) < min || Number(slider.value) > max) {
+        slider.value = availableSamples.includes(4) ? "4" : String(availableSamples[Math.floor(availableSamples.length / 2)]);
+      }
+    }
+    const sampleVal = document.getElementById("sampleVal");
+    if (sampleVal && slider) sampleVal.textContent = slider.value;
+  }
+  function rebuildTimeSlider() {
+    let min = Infinity, max = 0;
+    for (const subs of Object.values(catalog))
+      for (const samps of Object.values(subs))
+        for (const cell of Object.values(samps))
+          for (const e of Object.values(cell)) {
+            const d = e.duration;
+            if (d != null && d >= 0) {
+              if (d < min) min = d;
+              if (d > max) max = d;
+            }
+          }
+    const slider = document.getElementById("timeSlider");
+    const val = document.getElementById("timeVal");
+    if (!slider) return;
+    if (!isFinite(min)) {
+      min = 1;
+      max = 120;
+    }
+    slider.min = String(Math.max(1, Math.floor(min)));
+    slider.max = String(Math.max(Number(slider.min), Math.ceil(max)));
+    const cur = Number(slider.value);
+    if (cur < Number(slider.min) || cur > Number(slider.max)) {
+      slider.value = String(Math.min(Number(slider.max), Math.max(Number(slider.min), 30)));
+    }
+    if (val) val.textContent = `${slider.value}s`;
+  }
+  function allModels() {
+    return Object.keys(catalog).sort();
+  }
+  function populateModelSelect() {
+    const models = allModels();
+    const sel = document.getElementById("modelSelect");
+    if (!sel) return;
+    const prev = sel.value;
+    sel.innerHTML = "";
+    for (const m of models) {
+      const opt = document.createElement("option");
+      opt.value = m;
+      opt.textContent = m;
+      sel.appendChild(opt);
+    }
+    if (prev && models.includes(prev)) sel.value = prev;
+    else if (models.length) sel.value = models[0];
+  }
+  function getSelectedModel() {
+    return document.getElementById("modelSelect")?.value || allModels()[0] || null;
+  }
+  function samplesForModel2(model) {
+    return samplesForModel(catalog, promptCatalog?.ceilings ?? {}, model, showOvershoots);
+  }
+  function readDirEntries(dirEntry) {
+    return new Promise((resolve, reject) => {
+      const reader = dirEntry.createReader();
+      const all = [];
+      const readBatch = () => {
+        reader.readEntries((entries) => {
+          if (!entries.length) resolve(all);
+          else {
+            all.push(...entries);
+            readBatch();
+          }
+        }, reject);
+      };
+      readBatch();
+    });
+  }
+  async function collectPngFilesFromEntry(entry, files = []) {
+    if (entry.isFile) {
+      const file = await new Promise(
+        (res, rej) => entry.file(res, rej)
+      );
+      if (isImageFile(file.name)) files.push(file);
       return files;
     }
-
-    async function loadFromDroppedFiles(files, folderName = 'folder') {
+    if (entry.isDirectory) {
+      if (IGNORE_DIRS.has(entry.name)) return files;
+      const children = await readDirEntries(entry);
+      for (const child of children) {
+        await collectPngFilesFromEntry(child, files);
+      }
+    }
+    return files;
+  }
+  async function loadFromDroppedFiles(files, folderName = "folder") {
+    resetCatalog();
+    fileMap = /* @__PURE__ */ new Map();
+    dirHandle = null;
+    loadSource = "dropped";
+    droppedFolderName = folderName;
+    for (const file of files) {
+      fileMap.set(file.name, file);
+      ingestFilename(file.name);
+    }
+  }
+  function loadFromBaked() {
+    resetCatalog();
+    fileMap = /* @__PURE__ */ new Map();
+    dirHandle = null;
+    loadSource = "baked";
+    IMG_BASE = "./img/";
+    droppedFolderName = "";
+    for (const name of BAKED_FILES) ingestFilename(name);
+  }
+  async function loadFromListing() {
+    const res = await fetch("./", { cache: "no-store" });
+    if (!res.ok)
+      throw new Error(
+        `Directory listing failed (${res.status}). Drag the folder here or use Pick folder.`
+      );
+    const html = await res.text();
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    const links = [...doc.querySelectorAll("a[href]")];
+    resetCatalog();
+    fileMap = /* @__PURE__ */ new Map();
+    dirHandle = null;
+    loadSource = "listing";
+    droppedFolderName = "";
+    for (const a of links) {
+      const rawHref = a.getAttribute("href");
+      if (!rawHref) continue;
+      const href = decodeURIComponent(rawHref.split("?")[0]);
+      if (isImageFile(href)) ingestFilename(href.replace(/^\.\//, ""));
+    }
+  }
+  async function loadFromManifest() {
+    try {
+      const res = await fetch("./data/manifest.json", { cache: "no-store" });
+      if (!res.ok) return false;
+      const manifest = await res.json();
+      const files = [...new Set(Object.values(manifest))];
+      if (!files.length) return false;
       resetCatalog();
-      fileMap = new Map();
+      fileMap = /* @__PURE__ */ new Map();
       dirHandle = null;
-      loadSource = 'dropped';
-      droppedFolderName = folderName;
-      for (const file of files) {
-        fileMap.set(file.name, file);
-        ingestFilename(file.name);
+      loadSource = "served";
+      droppedFolderName = "";
+      IMG_BASE = "./img/";
+      for (const name of files) ingestFilename(name);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+  async function loadFromDirHandle(handle) {
+    resetCatalog();
+    fileMap = /* @__PURE__ */ new Map();
+    loadSource = "handle";
+    droppedFolderName = handle.name || "";
+    for await (const entry of handle.values()) {
+      if (entry.kind === "file" && isImageFile(entry.name)) {
+        ingestFilename(entry.name);
+        const file = await entry.getFile();
+        fileMap.set(entry.name, file);
       }
     }
-
-    function loadFromBaked() {
-      resetCatalog();
-      fileMap = new Map();
-      dirHandle = null;
-      loadSource = 'baked';
-      IMG_BASE = './img/';
-      droppedFolderName = '';
-      for (const name of BAKED_FILES) ingestFilename(name);
+    dirHandle = handle;
+  }
+  async function loadFromPicker() {
+    if ("showDirectoryPicker" in window) {
+      const handle = await window.showDirectoryPicker();
+      await loadFromDirHandle(handle);
+      return;
     }
-
-    async function loadFromListing() {
-      const res = await fetch('./', { cache: 'no-store' });
-      if (!res.ok) throw new Error(`Directory listing failed (${res.status}). Drag the folder here or use Pick folder.`);
-      const html = await res.text();
-      const doc = new DOMParser().parseFromString(html, 'text/html');
-      const links = [...doc.querySelectorAll('a[href]')];
-      resetCatalog();
-      fileMap = new Map();
-      dirHandle = null;
-      loadSource = 'listing';
-      droppedFolderName = '';
-      for (const a of links) {
-        const href = decodeURIComponent(a.getAttribute('href').split('?')[0]);
-        if (isImageFile(href)) ingestFilename(href.replace(/^\.\//, ''));
-      }
+    const input = document.getElementById("folderInput");
+    if (!input || !("webkitdirectory" in input)) {
+      throw new Error(
+        "Folder picker not supported in this browser. Open over HTTP or use a desktop browser."
+      );
     }
-
-    // Served (deployed/flexible) mode: discover files from data/manifest.json
-    // and load compressed images from ./img/. No directory listing needed.
-    async function loadFromManifest() {
-      try {
-        const res = await fetch('./data/manifest.json', { cache: 'no-store' });
-        if (!res.ok) return false;
-        const manifest = await res.json();
-        const files = [...new Set(Object.values(manifest))];
-        if (!files.length) return false;
-        resetCatalog();
-        fileMap = new Map();
-        dirHandle = null;
-        loadSource = 'served';
-        droppedFolderName = '';
-        IMG_BASE = './img/';
-        for (const name of files) ingestFilename(name);
-        return true;
-      } catch {
-        return false;
-      }
-    }
-
-    async function loadFromDirHandle(handle) {
-      resetCatalog();
-      fileMap = new Map();
-      loadSource = 'handle';
-      droppedFolderName = handle.name || '';
-      for await (const entry of handle.values()) {
-        if (entry.kind === 'file' && isImageFile(entry.name)) {
-          ingestFilename(entry.name);
-          const file = await entry.getFile();
-          fileMap.set(entry.name, file);
-        }
-      }
-      dirHandle = handle;
-    }
-
-    async function loadFromPicker() {
-      if (window.showDirectoryPicker) {
-        const handle = await showDirectoryPicker();
-        await loadFromDirHandle(handle);
-        return;
-      }
-      const input = document.getElementById('folderInput');
-      if (!input || !('webkitdirectory' in input)) {
-        throw new Error('Folder picker not supported in this browser. Open over HTTP or use a desktop browser.');
-      }
-      await new Promise((resolve, reject) => {
-        input.onchange = async () => {
-          input.onchange = null;
-          try {
-            const files = [...input.files].filter((f) => isImageFile(f.name));
-            input.value = '';
-            if (!files.length) throw new Error('No PNG images found in picked folder.');
-            const path = files[0].webkitRelativePath || '';
-            const folderName = path.includes('/') ? path.split('/')[0] : 'folder';
-            await loadFromDroppedFiles(files, folderName);
-            resolve();
-          } catch (err) {
-            reject(err);
-          }
-        };
-        input.click();
-      });
-    }
-
-    async function loadFromDataTransfer(dt) {
-      const items = [...dt.items];
-      const entries = items
-        .map((item) => (item.webkitGetAsEntry ? item.webkitGetAsEntry() : null))
-        .filter(Boolean);
-
-      if (!entries.length) {
-        const files = [...dt.files].filter((f) => isImageFile(f.name));
-        if (!files.length) throw new Error('Drop a folder containing PNG images.');
-        await loadFromDroppedFiles(files, 'dropped files');
-        return;
-      }
-
-      const allFiles = [];
-      let folderName = 'folder';
-      for (const entry of entries) {
-        if (entry.isDirectory) folderName = entry.name;
-        await collectPngFilesFromEntry(entry, allFiles);
-      }
-      if (!allFiles.length) throw new Error('No PNG images found in dropped folder.');
-      await loadFromDroppedFiles(allFiles, folderName);
-    }
-
-    function getSelectedModels() {
-      return [...document.getElementById('modelFilter').selectedOptions].map((o) => o.value);
-    }
-
-    function setModelSelection(models) {
-      const sel = document.getElementById('modelFilter');
-      for (const opt of sel.options) {
-        opt.selected = models.includes(opt.value);
-      }
-    }
-
-    function getSelectedSamples() {
-      return [...document.getElementById('sampleFilter').selectedOptions].map((o) => Number(o.value));
-    }
-
-    function setSampleSelection(samples) {
-      const sel = document.getElementById('sampleFilter');
-      const sampleSet = new Set(samples.map(String));
-      for (const opt of sel.options) {
-        opt.selected = sampleSet.has(opt.value);
-      }
-    }
-
-    function populateSampleFilter() {
-      const sel = document.getElementById('sampleFilter');
-      const prev = new Set(getSelectedSamples());
-      const model = compareMode === 'samples' ? getSelectedModel() : null;
-      const pool = model ? samplesForModel(model) : availableSamples;
-      sel.innerHTML = '';
-      for (const s of pool) {
-        const opt = document.createElement('option');
-        opt.value = String(s);
-        opt.textContent = `s${String(s).padStart(2, '0')}`;
-        opt.selected = prev.size ? prev.has(s) : true;
-        sel.appendChild(opt);
-      }
-      if (!getSelectedSamples().length && pool.length) {
-        setSampleSelection(pool);
-      }
-    }
-
-    function populateModelFilter() {
-      const models = Object.keys(catalog).sort();
-      const sel = document.getElementById('modelFilter');
-      const prev = new Set(getSelectedModels());
-      sel.innerHTML = '';
-      for (const m of models) {
-        const opt = document.createElement('option');
-        opt.value = m;
-        opt.textContent = m;
-        opt.selected = prev.size ? prev.has(m) : true;
-        sel.appendChild(opt);
-      }
-      if (!getSelectedModels().length && models.length) {
-        setModelSelection(models);
-      }
-    }
-
-    async function resolveImageUrl(filename) {
-      if (imageUrlCache.has(filename)) return imageUrlCache.get(filename);
-      const file = fileMap.get(filename);
-      if (file) {
-        const url = URL.createObjectURL(file);
-        imageUrlCache.set(filename, url);
-        return url;
-      }
-      if (dirHandle) {
+    await new Promise((resolve, reject) => {
+      input.onchange = async () => {
+        input.onchange = null;
         try {
-          const fh = await dirHandle.getFileHandle(filename);
-          const f = await fh.getFile();
-          const url = URL.createObjectURL(f);
-          imageUrlCache.set(filename, url);
-          return url;
-        } catch {
-          return null;
-        }
-      }
-      const url = encodeURI((IMG_BASE || '') + filename);
-      imageUrlCache.set(filename, url);
-      return url;
-    }
-
-    function preloadUrl(url) {
-      if (!url) return Promise.resolve(null);
-      return new Promise((resolve, reject) => {
-        const probe = new Image();
-        probe.decoding = 'async';
-        probe.onload = () => {
-          if (probe.decode) {
-            probe.decode().then(() => resolve(url)).catch(() => resolve(url));
-          } else {
-            resolve(url);
-          }
-        };
-        probe.onerror = reject;
-        probe.src = url;
-      });
-    }
-
-    async function preloadFilename(filename) {
-      if (preloadedFiles.has(filename)) {
-        return resolveImageUrl(filename);
-      }
-      const url = await resolveImageUrl(filename);
-      if (!url) throw new Error(`missing image: ${filename}`);
-      await preloadUrl(url);
-      preloadedFiles.add(filename);
-      return url;
-    }
-
-    function waitForPaint() {
-      return new Promise((resolve) => {
-        requestAnimationFrame(() => requestAnimationFrame(resolve));
-      });
-    }
-
-    async function waitForImageReady(img, { skipPaint = false } = {}) {
-      if (!img.getAttribute('src')) return;
-      if (!img.complete || !img.naturalWidth) {
-        await new Promise((resolve, reject) => {
-          img.addEventListener('load', resolve, { once: true });
-          img.addEventListener('error', reject, { once: true });
-        });
-      }
-      try {
-        if (img.decode) await img.decode();
-      } catch {
-        /* keep going — load already succeeded */
-      }
-      if (!skipPaint) {
-        await waitForPaint();
-        void img.offsetWidth;
-      }
-    }
-
-    function getSlideStack(wrap) {
-      return wrap.querySelector('.slide-img-stack');
-    }
-
-    function getStackLayers(stack) {
-      return stack ? [...stack.querySelectorAll('img.slide-img-layer')] : [];
-    }
-
-    function getTopStackImage(wrap) {
-      const layers = getStackLayers(getSlideStack(wrap));
-      return layers[layers.length - 1] || null;
-    }
-
-    function createStackLayer(wrap, alt) {
-      const stack = getSlideStack(wrap);
-      const img = document.createElement('img');
-      img.className = 'slide-img-layer';
-      img.alt = alt;
-      img.decoding = 'async';
-      stack.appendChild(img);
-      return img;
-    }
-
-    function pruneStackBelow(layer) {
-      const stack = layer.parentElement;
-      if (!stack) return;
-      while (stack.firstChild && stack.firstChild !== layer) {
-        stack.firstChild.remove();
-      }
-    }
-
-    function clearSlideStack(wrap) {
-      const stack = getSlideStack(wrap);
-      if (stack) stack.replaceChildren();
-    }
-
-    async function fadeInStackLayer(layer, wrap, layerGen) {
-      await new Promise((resolve) => {
-        let done = false;
-        const finish = () => {
-          if (done) return;
-          done = true;
-          layer.removeEventListener('transitionend', onEnd);
-          clearTimeout(fallback);
+          const files = [...input.files ?? []].filter((f) => isImageFile(f.name));
+          input.value = "";
+          if (!files.length) throw new Error("No PNG images found in picked folder.");
+          const path = files[0].webkitRelativePath || "";
+          const folderName = path.includes("/") ? path.split("/")[0] : "folder";
+          await loadFromDroppedFiles(files, folderName);
           resolve();
-        };
-        const onEnd = (e) => {
-          if (e.target === layer && e.propertyName === 'opacity') finish();
-        };
-        const fallback = setTimeout(finish, IMAGE_FADE_MS + 50);
-        layer.addEventListener('transitionend', onEnd);
-        requestAnimationFrame(() => {
-          layer.style.opacity = '1';
-        });
-      });
-      if (wrap._layerGen === layerGen && getTopStackImage(wrap) === layer) {
-        pruneStackBelow(layer);
+        } catch (err) {
+          reject(err);
+        }
+      };
+      input.click();
+    });
+  }
+  async function loadFromDataTransfer(dt) {
+    const items = [...dt.items];
+    const entries = items.map((item) => item.webkitGetAsEntry ? item.webkitGetAsEntry() : null).filter((e) => e !== null);
+    if (!entries.length) {
+      const files = [...dt.files].filter((f) => isImageFile(f.name));
+      if (!files.length) throw new Error("Drop a folder containing PNG images.");
+      await loadFromDroppedFiles(files, "dropped files");
+      return;
+    }
+    const allFiles = [];
+    let folderName = "folder";
+    for (const entry of entries) {
+      if (entry.isDirectory) folderName = entry.name;
+      await collectPngFilesFromEntry(entry, allFiles);
+    }
+    if (!allFiles.length) throw new Error("No PNG images found in dropped folder.");
+    await loadFromDroppedFiles(allFiles, folderName);
+  }
+  function getSelectedModels() {
+    const sel = document.getElementById("modelFilter");
+    if (!sel) return [];
+    return [...sel.selectedOptions].map((o) => o.value);
+  }
+  function setModelSelection(models) {
+    const sel = document.getElementById("modelFilter");
+    if (!sel) return;
+    for (const opt of sel.options) {
+      opt.selected = models.includes(opt.value);
+    }
+  }
+  function getSelectedSamples() {
+    const sel = document.getElementById("sampleFilter");
+    if (!sel) return [];
+    return [...sel.selectedOptions].map((o) => Number(o.value));
+  }
+  function setSampleSelection(samples) {
+    const sel = document.getElementById("sampleFilter");
+    if (!sel) return;
+    const sampleSet = new Set(samples.map(String));
+    for (const opt of sel.options) {
+      opt.selected = sampleSet.has(opt.value);
+    }
+  }
+  function populateSampleFilter() {
+    const sel = document.getElementById("sampleFilter");
+    if (!sel) return;
+    const prev = new Set(getSelectedSamples());
+    const model = compareMode === "samples" ? getSelectedModel() : null;
+    const pool = model ? samplesForModel2(model) : availableSamples;
+    const modelCeiling = model ? promptCatalog?.ceilings?.[model] ?? null : null;
+    sel.innerHTML = "";
+    for (const s of pool) {
+      const opt = document.createElement("option");
+      opt.value = String(s);
+      const atCeiling = modelCeiling != null && s === modelCeiling;
+      opt.textContent = `s${String(s).padStart(2, "0")}${atCeiling ? " \u2308" : ""}`;
+      opt.selected = prev.size ? prev.has(s) : true;
+      sel.appendChild(opt);
+    }
+    if (!getSelectedSamples().length && pool.length) {
+      setSampleSelection(pool);
+    }
+  }
+  function populateModelFilter() {
+    const models = Object.keys(catalog).sort();
+    const sel = document.getElementById("modelFilter");
+    if (!sel) return;
+    const prev = new Set(getSelectedModels());
+    sel.innerHTML = "";
+    for (const m of models) {
+      const opt = document.createElement("option");
+      opt.value = m;
+      opt.textContent = m;
+      opt.selected = prev.size ? prev.has(m) : true;
+      sel.appendChild(opt);
+    }
+    if (!getSelectedModels().length && models.length) {
+      setModelSelection(models);
+    }
+  }
+  async function resolveImageUrl(filename) {
+    const cached = imageUrlCache.get(filename);
+    if (cached !== void 0) return cached;
+    const file = fileMap.get(filename);
+    if (file) {
+      const url2 = URL.createObjectURL(file);
+      imageUrlCache.set(filename, url2);
+      return url2;
+    }
+    if (dirHandle) {
+      try {
+        const fh = await dirHandle.getFileHandle(filename);
+        const f = await fh.getFile();
+        const url2 = URL.createObjectURL(f);
+        imageUrlCache.set(filename, url2);
+        return url2;
+      } catch {
+        return null;
       }
     }
-
-    async function swapSlideImage(wrap, filename, gen) {
-      const top = getTopStackImage(wrap);
-      if (top?.dataset.filename === filename) return;
-
-      wrap._layerGen = (wrap._layerGen || 0) + 1;
-      const layerGen = wrap._layerGen;
-      const isStale = () =>
-        layerGen !== wrap._layerGen || (gen != null && gen !== renderGeneration);
-
-      let url;
-      const skipPaint = preloadedFiles.has(filename);
-      try {
-        url = await preloadFilename(filename);
-        if (isStale()) return;
-      } catch {
-        if (isStale()) return;
-        clearSlideStack(wrap);
-        return;
-      }
-
-      const slide = wrap.closest('.carousel-slide');
-      const alt = top?.alt || slide?.dataset.subject || '';
-
-      if (!top) {
-        const layer = createStackLayer(wrap, alt);
-        layer.style.opacity = '0';
-        layer.src = url;
-        try {
-          await waitForImageReady(layer, { skipPaint });
-        } catch {
-          layer.remove();
-          return;
+    const url = encodeURI((IMG_BASE || "") + filename);
+    imageUrlCache.set(filename, url);
+    return url;
+  }
+  function preloadUrl(url) {
+    if (!url) return Promise.resolve(null);
+    return new Promise((resolve, reject) => {
+      const probe = new Image();
+      probe.decoding = "async";
+      probe.onload = () => {
+        if (probe.decode) {
+          probe.decode().then(() => resolve(url)).catch(() => resolve(url));
+        } else {
+          resolve(url);
         }
-        if (isStale()) {
-          layer.remove();
-          return;
-        }
-        layer.dataset.filename = filename;
-        layer.style.opacity = '1';
-        return;
-      }
-
-      const layer = createStackLayer(wrap, alt);
-      layer.dataset.filename = filename;
-      layer.style.opacity = '0';
-      layer.src = url;
-
+      };
+      probe.onerror = reject;
+      probe.src = url;
+    });
+  }
+  async function preloadFilename(filename) {
+    if (preloadedFiles.has(filename)) {
+      const url2 = await resolveImageUrl(filename);
+      if (!url2) throw new Error(`missing image: ${filename}`);
+      return url2;
+    }
+    const url = await resolveImageUrl(filename);
+    if (!url) throw new Error(`missing image: ${filename}`);
+    await preloadUrl(url);
+    preloadedFiles.add(filename);
+    return url;
+  }
+  function waitForPaint() {
+    return new Promise((resolve) => {
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+    });
+  }
+  async function waitForImageReady(img, { skipPaint = false } = {}) {
+    if (!img.getAttribute("src")) return;
+    if (!img.complete || !img.naturalWidth) {
+      await new Promise((resolve, reject) => {
+        img.addEventListener("load", () => resolve(), { once: true });
+        img.addEventListener("error", () => reject(new Error("image load error")), { once: true });
+      });
+    }
+    try {
+      if (img.decode) await img.decode();
+    } catch {
+    }
+    if (!skipPaint) {
+      await waitForPaint();
+      void img.offsetWidth;
+    }
+  }
+  function getSlideStack(wrap) {
+    return wrap.querySelector(".slide-img-stack");
+  }
+  function getStackLayers(stack) {
+    return stack ? [...stack.querySelectorAll("img.slide-img-layer")] : [];
+  }
+  function getTopStackImage(wrap) {
+    const layers = getStackLayers(getSlideStack(wrap));
+    return layers[layers.length - 1] ?? null;
+  }
+  function createStackLayer(wrap, alt) {
+    const stack = getSlideStack(wrap);
+    const img = document.createElement("img");
+    img.className = "slide-img-layer";
+    img.alt = alt;
+    img.decoding = "async";
+    stack.appendChild(img);
+    return img;
+  }
+  function pruneStackBelow(layer) {
+    const stack = layer.parentElement;
+    if (!stack) return;
+    while (stack.firstChild && stack.firstChild !== layer) {
+      stack.firstChild.remove();
+    }
+  }
+  function clearSlideStack(wrap) {
+    const stack = getSlideStack(wrap);
+    if (stack) stack.replaceChildren();
+  }
+  async function fadeInStackLayer(layer, wrap, layerGen) {
+    await new Promise((resolve) => {
+      let done = false;
+      const finish = () => {
+        if (done) return;
+        done = true;
+        layer.removeEventListener("transitionend", onEnd);
+        clearTimeout(fallback);
+        resolve();
+      };
+      const onEnd = (e) => {
+        if (e.target === layer && e.propertyName === "opacity") finish();
+      };
+      const fallback = setTimeout(finish, IMAGE_FADE_MS + 50);
+      layer.addEventListener("transitionend", onEnd);
+      requestAnimationFrame(() => {
+        layer.style.opacity = "1";
+      });
+    });
+    if (layerGenMap.get(wrap) === layerGen && getTopStackImage(wrap) === layer) {
+      pruneStackBelow(layer);
+    }
+  }
+  async function swapSlideImage(wrap, filename, gen) {
+    const top = getTopStackImage(wrap);
+    if (top?.dataset.filename === filename) return;
+    layerGenMap.set(wrap, (layerGenMap.get(wrap) ?? 0) + 1);
+    const layerGen = layerGenMap.get(wrap);
+    const isStale = () => layerGenMap.get(wrap) !== layerGen || gen != null && gen !== renderGeneration;
+    let url;
+    const skipPaint = preloadedFiles.has(filename);
+    try {
+      url = await preloadFilename(filename);
+      if (isStale()) return;
+    } catch {
+      if (isStale()) return;
+      clearSlideStack(wrap);
+      return;
+    }
+    const slide = wrap.closest(".carousel-slide");
+    const alt = top?.alt || slide?.dataset.subject || "";
+    if (!top) {
+      const layer2 = createStackLayer(wrap, alt);
+      layer2.style.opacity = "0";
+      layer2.src = url;
       try {
-        await waitForImageReady(layer, { skipPaint });
+        await waitForImageReady(layer2, { skipPaint });
       } catch {
-        layer.remove();
+        layer2.remove();
         return;
       }
       if (isStale()) {
-        layer.remove();
+        layer2.remove();
         return;
       }
-
-      void fadeInStackLayer(layer, wrap, layerGen);
+      layer2.dataset.filename = filename;
+      layer2.style.opacity = "1";
+      return;
     }
-
-    async function setImgSrc(wrap, filename, { readyUrl = null, alt = '' } = {}) {
-      if (readyUrl) {
-        clearSlideStack(wrap);
-        const layer = createStackLayer(wrap, alt);
-        layer.src = readyUrl;
-        layer.dataset.filename = filename;
-        layer.style.opacity = '1';
-        return;
-      }
-      await swapSlideImage(wrap, filename, null);
+    const layer = createStackLayer(wrap, alt);
+    layer.dataset.filename = filename;
+    layer.style.opacity = "0";
+    layer.src = url;
+    try {
+      await waitForImageReady(layer, { skipPaint });
+    } catch {
+      layer.remove();
+      return;
     }
-
-    function getSlideAspectRatio(subjectIndex) {
-      const slide = document.querySelector(`.carousel-slide:not(.prompt-slide)[data-subject-index="${subjectIndex}"]`);
-      const wrap = slide?.querySelector('.slide-img-wrap');
-      const img = wrap ? getTopStackImage(wrap) : null;
-      if (img?.naturalWidth > 0 && img.naturalHeight > 0) {
-        return img.naturalWidth / img.naturalHeight;
-      }
-      return SLIDE_FALLBACK_ASPECT;
+    if (isStale()) {
+      layer.remove();
+      return;
     }
-
-    function heightFromWidth(subjectIndex, width) {
-      return width / getSlideAspectRatio(subjectIndex);
+    void fadeInStackLayer(layer, wrap, layerGen);
+  }
+  async function setImgSrc(wrap, filename, { readyUrl = null, alt = "" } = {}) {
+    if (readyUrl) {
+      clearSlideStack(wrap);
+      const layer = createStackLayer(wrap, alt);
+      layer.src = readyUrl;
+      layer.dataset.filename = filename;
+      layer.style.opacity = "1";
+      return;
     }
-
-    function widthFromHeight(subjectIndex, height) {
-      return height * getSlideAspectRatio(subjectIndex);
+    await swapSlideImage(wrap, filename, null);
+  }
+  function getSlideAspectRatio(subjectIndex) {
+    const slide = document.querySelector(
+      `.carousel-slide:not(.prompt-slide)[data-subject-index="${subjectIndex}"]`
+    );
+    const wrap = slide?.querySelector(".slide-img-wrap");
+    const img = wrap ? getTopStackImage(wrap) : null;
+    if (img && img.naturalWidth > 0 && img.naturalHeight > 0) {
+      return img.naturalWidth / img.naturalHeight;
     }
-
-    function minHeightForWidths(count) {
-      let minH = 80;
-      for (let i = 0; i < count; i++) {
-        minH = Math.max(minH, heightFromWidth(i, SLIDE_MIN_WIDTH_PX));
-      }
-      return minH;
+    return SLIDE_FALLBACK_ASPECT;
+  }
+  function heightFromWidth2(subjectIndex, width) {
+    return heightFromWidth(getSlideAspectRatio(subjectIndex), width);
+  }
+  function widthFromHeight2(subjectIndex, height) {
+    return widthFromHeight(getSlideAspectRatio(subjectIndex), height);
+  }
+  function minHeightForWidths2(count) {
+    const ratios = Array.from({ length: count }, (_, i) => getSlideAspectRatio(i));
+    return minHeightForWidths(ratios, SLIDE_MIN_WIDTH_PX);
+  }
+  function syncLayoutFromAnchor(anchorIndex, anchorWidth, widths = slideWidthsPx) {
+    const layout = layoutFromAnchor2(anchorIndex, anchorWidth, widths);
+    if (!layout) return;
+    applyLayoutState(layout);
+  }
+  function layoutFromAnchor2(anchorIndex, anchorWidth, widths = slideWidthsPx) {
+    if (!widths) return null;
+    const ratios = Array.from({ length: widths.length }, (_, i) => getSlideAspectRatio(i));
+    return layoutFromAnchor(ratios, anchorIndex, anchorWidth, widths, SLIDE_MIN_WIDTH_PX);
+  }
+  function applyLayoutState({ height, widths }) {
+    slideImgHeightPx = height;
+    if (!slideWidthsPx) return;
+    for (let i = 0; i < widths.length; i++) {
+      slideWidthsPx[i] = widths[i];
     }
-
-    function syncLayoutFromAnchor(anchorIndex, anchorWidth, widths = slideWidthsPx) {
-      const layout = layoutFromAnchor(anchorIndex, anchorWidth, widths);
-      if (!layout) return;
-      applyLayoutState(layout);
-    }
-
-    function layoutFromAnchor(anchorIndex, anchorWidth, widths = slideWidthsPx) {
-      if (!widths) return null;
-      const height = Math.max(
-        minHeightForWidths(widths.length),
-        heightFromWidth(anchorIndex, Math.max(SLIDE_MIN_WIDTH_PX, anchorWidth))
-      );
-      const nextWidths = widths.map((_, i) =>
-        Math.max(SLIDE_MIN_WIDTH_PX, widthFromHeight(i, height))
-      );
-      return { height, widths: nextWidths };
-    }
-
-    function applyLayoutState({ height, widths }) {
-      slideImgHeightPx = height;
-      for (let i = 0; i < widths.length; i++) {
-        slideWidthsPx[i] = widths[i];
-      }
-      applySlideLayoutAll(slideWidthsPx);
-    }
-
-    function getSlideWidthsPx(count) {
-      if (!slideWidthsPx || slideWidthsPx.length !== count) {
-        const prev = slideWidthsPx;
-        slideWidthsPx = Array(count).fill(SLIDE_DEFAULT_WIDTH_PX);
-        if (prev) {
-          for (let i = 0; i < Math.min(prev.length, count); i++) {
-            slideWidthsPx[i] = prev[i];
-          }
+    applySlideLayoutAll(slideWidthsPx);
+  }
+  function getSlideWidthsPx(count) {
+    if (!slideWidthsPx || slideWidthsPx.length !== count) {
+      const prev = slideWidthsPx;
+      slideWidthsPx = Array(count).fill(SLIDE_DEFAULT_WIDTH_PX);
+      if (prev) {
+        for (let i = 0; i < Math.min(prev.length, count); i++) {
+          slideWidthsPx[i] = prev[i];
         }
       }
-      return slideWidthsPx;
     }
-
-    function carouselPadX(carousel) {
-      if (!carousel) return 0;
-      const s = getComputedStyle(carousel);
-      return (parseFloat(s.paddingLeft) || 0) + (parseFloat(s.paddingRight) || 0);
+    return slideWidthsPx;
+  }
+  function carouselPadX(carousel) {
+    const s = getComputedStyle(carousel);
+    return (parseFloat(s.paddingLeft) || 0) + (parseFloat(s.paddingRight) || 0);
+  }
+  function measureCarouselInnerWidth() {
+    const carousel = document.querySelector(".carousel");
+    if (!carousel) return 0;
+    const padX = carouselPadX(carousel);
+    if (carousel.clientWidth > 0) return Math.max(0, carousel.clientWidth - padX);
+    const row = carousel.closest(".model-row");
+    if (row && row.clientWidth > 0) {
+      return Math.max(0, row.clientWidth - padX);
     }
-
-    function measureCarouselInnerWidth() {
-      const carousel = document.querySelector('.carousel');
-      if (!carousel) return 0;
-      const padX = carouselPadX(carousel);
-      if (carousel.clientWidth > 0) return Math.max(0, carousel.clientWidth - padX);
-      const row = carousel.closest('.model-row');
-      if (row?.clientWidth > 0) {
-        return Math.max(0, row.clientWidth - padX);
-      }
-      const main = document.querySelector('main');
-      if (main?.clientWidth > 0) {
-        const mainStyle = getComputedStyle(main);
-        const mainPad =
-          (parseFloat(mainStyle.paddingLeft) || 0) + (parseFloat(mainStyle.paddingRight) || 0);
-        return Math.max(0, main.clientWidth - mainPad - padX);
-      }
-      return 0;
+    const main = document.querySelector("main");
+    if (main && main.clientWidth > 0) {
+      const mainStyle = getComputedStyle(main);
+      const mainPad = (parseFloat(mainStyle.paddingLeft) || 0) + (parseFloat(mainStyle.paddingRight) || 0);
+      return Math.max(0, main.clientWidth - mainPad - padX);
     }
-
-    function reconcileLayout(widths) {
-      if (!widths.length) return;
-      const height = Math.max(
-        minHeightForWidths(widths.length),
-        heightFromWidth(0, widths[0])
-      );
-      slideImgHeightPx = height;
-      for (let i = 0; i < widths.length; i++) {
-        widths[i] = Math.max(SLIDE_MIN_WIDTH_PX, widthFromHeight(i, height));
-      }
+    return 0;
+  }
+  function reconcileLayout(widths) {
+    if (!widths.length) return;
+    const height = Math.max(minHeightForWidths2(widths.length), heightFromWidth2(0, widths[0]));
+    slideImgHeightPx = height;
+    for (let i = 0; i < widths.length; i++) {
+      widths[i] = Math.max(SLIDE_MIN_WIDTH_PX, widthFromHeight2(i, height));
     }
-
-    function autoSizeSlideWidths(subjectCount) {
-      const carouselWidth = measureCarouselInnerWidth();
-      if (!carouselWidth || subjectCount < 1) return false;
-      const widths = getSlideWidthsPx(subjectCount);
-      const fitCount = Math.min(subjectCount, MAX_VISIBLE_SLIDES);
-      const barTotal = subjectCount * RESIZE_BAR_TOTAL_PX;
-      let aspectSum = 0;
-      for (let i = 0; i < fitCount; i++) {
-        aspectSum += getSlideAspectRatio(i);
-      }
-      const height = Math.max(
-        minHeightForWidths(subjectCount),
-        Math.floor((carouselWidth - barTotal) / aspectSum)
-      );
-      slideImgHeightPx = height;
-      for (let i = 0; i < subjectCount; i++) {
-        widths[i] = Math.max(SLIDE_MIN_WIDTH_PX, widthFromHeight(i, height));
-      }
-      return true;
+  }
+  function autoSizeSlideWidths(subjectCount) {
+    const carouselWidth = measureCarouselInnerWidth();
+    if (!carouselWidth || subjectCount < 1) return false;
+    const widths = getSlideWidthsPx(subjectCount);
+    const fitCount = Math.min(subjectCount, MAX_VISIBLE_SLIDES);
+    const barTotal = subjectCount * RESIZE_BAR_TOTAL_PX;
+    let aspectSum = 0;
+    for (let i = 0; i < fitCount; i++) {
+      aspectSum += getSlideAspectRatio(i);
     }
-
-    function finishRenderLayout(subjects) {
-      if (!subjects.length) return;
-      const count = subjects.length;
-      const widths = getSlideWidthsPx(count);
-
-      const apply = () => {
-        if (!slidesAutoSized) {
-          if (!autoSizeSlideWidths(count)) return false;
-          slidesAutoSized = true;
-        } else {
-          reconcileLayout(widths);
-        }
-        applySlideLayoutAll(slideWidthsPx);
-        return true;
-      };
-
-      if (!slidesAutoSized) {
-        if (!apply()) {
-          requestAnimationFrame(() => requestAnimationFrame(apply));
-        }
+    const height = Math.max(
+      minHeightForWidths2(subjectCount),
+      Math.floor((carouselWidth - barTotal) / aspectSum)
+    );
+    slideImgHeightPx = height;
+    for (let i = 0; i < subjectCount; i++) {
+      widths[i] = Math.max(SLIDE_MIN_WIDTH_PX, widthFromHeight2(i, height));
+    }
+    return true;
+  }
+  function finishRenderLayout(subjects) {
+    if (!subjects.length) return;
+    const count = subjects.length;
+    const widths = getSlideWidthsPx(count);
+    const shouldAutoSize = !slidesAutoSized && !userHasResizedSlides;
+    const apply = () => {
+      if (shouldAutoSize) {
+        if (!autoSizeSlideWidths(count)) return false;
+        slidesAutoSized = true;
       } else {
         reconcileLayout(widths);
-        applySlideLayoutAll(slideWidthsPx);
       }
-    }
-
-    function updateResizeBarHitboxes(track) {
-      const slides = [...track.querySelectorAll('.carousel-slide')];
-      const bars = [...track.querySelectorAll('.resize-bar')];
-      for (let i = 0; i < bars.length; i++) {
-        const leftW = slides[i]?.offsetWidth ?? SLIDE_DEFAULT_WIDTH_PX;
-        const rightW = slides[i + 1]?.offsetWidth ?? leftW;
-        bars[i].style.setProperty('--hit-pad-left', `${leftW * RESIZE_HIT_FRACTION}px`);
-        bars[i].style.setProperty('--hit-pad-right', `${rightW * RESIZE_HIT_FRACTION}px`);
-      }
-    }
-
-    function updateAllResizeBarHitboxes() {
-      for (const track of document.querySelectorAll('.carousel-track')) {
-        updateResizeBarHitboxes(track);
-      }
-    }
-
-    function applySlideLayoutAll(widths) {
-      document.documentElement.style.setProperty('--slide-img-height', `${slideImgHeightPx}px`);
-      for (const slide of document.querySelectorAll('.carousel-slide')) {
-        const i = Number(slide.dataset.subjectIndex);
-        if (!Number.isNaN(i) && widths[i] != null) {
-          slide.style.width = `${widths[i]}px`;
-        }
-      }
-      for (const bar of document.querySelectorAll('.resize-bar')) {
-        bar.style.minHeight = `${slideImgHeightPx}px`;
-      }
-      updateAllResizeBarHitboxes();
-    }
-
-    function markSlideResize() {
-      userHasResizedSlides = true;
-    }
-
-    function setupResizeBar(bar, index, track) {
-      bar.addEventListener('pointerdown', (e) => {
-        e.preventDefault();
-        markSlideResize();
-        bar.classList.add('active');
-        document.body.classList.add('resizing');
-        bar.setPointerCapture(e.pointerId);
-
-        const startX = e.clientX;
-        const startWidth = slideWidthsPx[index];
-        let dragging = true;
-
-        // Dead simple: the dragged column's width = its start width + however
-        // many pixels the mouse has moved. syncLayoutFromAnchor reconciles the
-        // shared height + the other columns and applies it live on every move.
-        const onPointerMove = (ev) => {
-          if (!dragging) return;
-          const width = Math.max(SLIDE_MIN_WIDTH_PX, startWidth + (ev.clientX - startX));
-          syncLayoutFromAnchor(index, width);
-        };
-
-        const onPointerUp = (ev) => {
-          dragging = false;
-          bar.classList.remove('active');
-          document.body.classList.remove('resizing');
-          bar.releasePointerCapture(ev.pointerId);
-          bar.removeEventListener('pointermove', onPointerMove);
-          bar.removeEventListener('pointerup', onPointerUp);
-          bar.removeEventListener('pointercancel', onPointerUp);
-        };
-
-        bar.addEventListener('pointermove', onPointerMove);
-        bar.addEventListener('pointerup', onPointerUp);
-        bar.addEventListener('pointercancel', onPointerUp);
-      });
-    }
-
-    function linearizeSrgb(channel) {
-      const c = channel / 255;
-      return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
-    }
-
-    function rgbToLab(r, g, b) {
-      const R = linearizeSrgb(r);
-      const G = linearizeSrgb(g);
-      const B = linearizeSrgb(b);
-      let x = R * 0.4124564 + G * 0.3575761 + B * 0.1804375;
-      let y = R * 0.2126729 + G * 0.7151522 + B * 0.072175;
-      let z = R * 0.0193339 + G * 0.1191920 + B * 0.9503041;
-      x /= 0.95047;
-      y /= 1.0;
-      z /= 1.08883;
-      const f = (t) => (t > 0.008856 ? Math.cbrt(t) : 7.787 * t + 16 / 116);
-      const fx = f(x);
-      const fy = f(y);
-      const fz = f(z);
-      const L = 116 * fy - 16;
-      const a = 500 * (fx - fy);
-      const bStar = 200 * (fy - fz);
-      const C = Math.hypot(a, bStar);
-      return { L, C };
-    }
-
-    function relativeLuminance(r, g, b) {
-      const R = linearizeSrgb(r);
-      const G = linearizeSrgb(g);
-      const B = linearizeSrgb(b);
-      return 0.2126 * R + 0.7152 * G + 0.0722 * B;
-    }
-
-    function contrastRatio(lumA, lumB) {
-      const lighter = Math.max(lumA, lumB);
-      const darker = Math.min(lumA, lumB);
-      return (lighter + 0.05) / (darker + 0.05);
-    }
-
-    function rgbToHex(r, g, b) {
-      return `#${[r, g, b].map((c) => Math.round(c).toString(16).padStart(2, '0')).join('')}`;
-    }
-
-    /** Stroke/shadow = average colour of pixels behind this span's bbox. */
-    function haloFromSample(sample) {
-      return { r: sample.ar, g: sample.ag, b: sample.ab };
-    }
-
-    /** Text fill = highest-contrast readable colour against the halo. */
-    function textColorForHalo(halo) {
-      const haloLum = relativeLuminance(halo.r, halo.g, halo.b);
-      const candidates = [
-        [242, 243, 245],
-        [255, 255, 255],
-        [15, 17, 21],
-        [0, 0, 0],
-        [253, 214, 99],
-      ];
-      let best = candidates[0];
-      let bestScore = 0;
-      for (const [cr, cg, cb] of candidates) {
-        const score = contrastRatio(haloLum, relativeLuminance(cr, cg, cb));
-        if (score > bestScore) {
-          bestScore = score;
-          best = [cr, cg, cb];
-        }
-      }
-      return rgbToHex(...best);
-    }
-
-    function imageContentRect(img) {
-      const { naturalWidth: nw, naturalHeight: nh, clientWidth: cw, clientHeight: ch } = img;
-      if (!nw || !nh || !cw || !ch) return null;
-      const scale = Math.min(cw / nw, ch / nh);
-      const dw = nw * scale;
-      const dh = nh * scale;
-      return { ox: (cw - dw) / 2, oy: (ch - dh) / 2, dw, dh, nw, nh };
-    }
-
-    function elementRectOnImage(img, el, content) {
-      const imgR = img.getBoundingClientRect();
-      const elR = el.getBoundingClientRect();
-      const { ox, oy, dw, dh, nw, nh } = content;
-      if (!dw || !dh) return null;
-      const lx = elR.left - imgR.left - ox;
-      const ly = elR.top - imgR.top - oy;
-      let sx = Math.floor((lx / dw) * nw);
-      let sy = Math.floor((ly / dh) * nh);
-      let sw = Math.ceil((elR.width / dw) * nw);
-      let sh = Math.ceil((elR.height / dh) * nh);
-      const pad = Math.max(2, Math.round(nw * 0.004));
-      sx = Math.max(0, sx - pad);
-      sy = Math.max(0, sy - pad);
-      sw = Math.min(nw - sx, sw + pad * 2);
-      sh = Math.min(nh - sy, sh + pad * 2);
-      if (sw < 1 || sh < 1) return null;
-      return { sx, sy, sw, sh };
-    }
-
-    function analyzeImageData(data) {
-      const buckets = new Map();
-      let sumL = 0;
-      let sumC = 0;
-      let sumR = 0;
-      let sumG = 0;
-      let sumB = 0;
-      let n = 0;
-      for (let i = 0; i < data.length; i += 4) {
-        if (data[i + 3] < 48) continue;
-        const r = data[i];
-        const g = data[i + 1];
-        const b = data[i + 2];
-        const { L, C } = rgbToLab(r, g, b);
-        sumL += L;
-        sumC += C;
-        sumR += r;
-        sumG += g;
-        sumB += b;
-        n++;
-        const key = ((r >> 3) << 10) | ((g >> 3) << 5) | (b >> 3);
-        const entry = buckets.get(key) || { r: 0, g: 0, b: 0, n: 0 };
-        entry.r += r;
-        entry.g += g;
-        entry.b += b;
-        entry.n++;
-        buckets.set(key, entry);
-      }
-      let best = null;
-      for (const entry of buckets.values()) {
-        if (!best || entry.n > best.n) best = entry;
-      }
-      if (!best || !n) {
-        return { r: 15, g: 17, b: 21, ar: 15, ag: 17, ab: 21, avgL: 8, avgC: 0 };
-      }
-      return {
-        r: Math.round(best.r / best.n),
-        g: Math.round(best.g / best.n),
-        b: Math.round(best.b / best.n),
-        ar: Math.round(sumR / n),
-        ag: Math.round(sumG / n),
-        ab: Math.round(sumB / n),
-        avgL: sumL / n,
-        avgC: sumC / n,
-      };
-    }
-
-    function sampleImageRegion(img, region) {
-      if (!region) return { r: 15, g: 17, b: 21, ar: 15, ag: 17, ab: 21, avgL: 8, avgC: 0 };
-      const { sx, sy, sw, sh } = region;
-      const w = Math.min(48, sw);
-      const h = Math.max(1, Math.round((sh / sw) * w));
-      const canvas = document.createElement('canvas');
-      canvas.width = w;
-      canvas.height = h;
-      const ctx = canvas.getContext('2d', { willReadFrequently: true });
-      ctx.drawImage(img, sx, sy, sw, sh, 0, 0, w, h);
-      return analyzeImageData(ctx.getImageData(0, 0, w, h).data);
-    }
-
-    function captionStyleFromSample(sample) {
-      const halo = haloFromSample(sample);
-      const text = textColorForHalo(halo);
-      const stroke = `2px rgba(${halo.r}, ${halo.g}, ${halo.b}, 0.9)`;
-      const shadows = [
-        `0 0 2px rgba(${halo.r}, ${halo.g}, ${halo.b}, 1)`,
-        `0 0 7px rgba(${halo.r}, ${halo.g}, ${halo.b}, 0.95)`,
-        `0 0 14px rgba(${halo.r}, ${halo.g}, ${halo.b}, 0.8)`,
-      ].join(', ');
-      return { text, stroke, shadows };
-    }
-
-    function applyCaptionStyle(el, sample, { warn = false } = {}) {
-      const { text, stroke, shadows } = captionStyleFromSample(sample);
-      el.style.color = warn ? '#fdd663' : text;
-      el.style.webkitTextStroke = stroke;
-      el.style.textShadow = shadows;
-    }
-
-    function paintSlideCaptions(img, modelEl, subjectEl, sampleEl) {
-      if (!img.naturalWidth) return;
-      const content = imageContentRect(img);
-      if (!content) return;
-
-      if (modelEl?.textContent.trim()) {
-        applyCaptionStyle(modelEl, sampleImageRegion(img, elementRectOnImage(img, modelEl, content)));
-      }
-      if (subjectEl.textContent.trim()) {
-        applyCaptionStyle(subjectEl, sampleImageRegion(img, elementRectOnImage(img, subjectEl, content)));
-      }
-      if (sampleEl.textContent.trim() || sampleEl.querySelector('.warn')) {
-        applyCaptionStyle(
-          sampleEl,
-          sampleImageRegion(img, elementRectOnImage(img, sampleEl, content)),
-          { warn: sampleEl.classList.contains('warn') }
-        );
-      }
-    }
-
-    function bindSlideCaptions(imgWrap, modelEl, subjectEl, sampleEl) {
-      const paint = () => {
-        if (document.body.classList.contains('resizing')) return;
-        const img = getTopStackImage(imgWrap);
-        if (!img?.naturalWidth) return;
-        requestAnimationFrame(() => paintSlideCaptions(img, modelEl, subjectEl, sampleEl));
-      };
-      paint();
-
-      if (!imgWrap._captionResizeObserver) {
-        imgWrap._captionResizeObserver = new ResizeObserver(paint);
-        imgWrap._captionResizeObserver.observe(imgWrap);
-      }
-    }
-
-    function setSampleSpan(sampleEl, durationEl, shown, targetSample, exact, meta) {
-      const shownStr = `s${String(shown).padStart(2, '0')}`;
-      if (exact || shown === targetSample) {
-        sampleEl.textContent = shownStr;
-        sampleEl.classList.remove('warn');
-      } else {
-        sampleEl.classList.add('warn');
-        sampleEl.innerHTML = `<span class="warn">${targetSample}→${shownStr}</span>`;
-      }
-      if (durationEl) {
-        const seconds = meta?.seconds ?? -1;
-        durationEl.textContent = formatDuration(seconds);
-        durationEl.hidden = false;
-        durationEl.classList.toggle('missing-meta', seconds < 0);
-      }
-    }
-
-    function timeBudgetValue() {
-      return Number(document.getElementById('timeSlider')?.value || 0);
-    }
-
-    // Time mode: pick the slowest render that still fits the budget; if none fit, the
-    // fastest one (the "just over"), flagged over-budget so the outline can grade it.
-    function timeCellPick(model, subject, budget) {
-      const cell = catalog[model]?.[subject];
-      if (!cell) return null;
-      const samples = Object.keys(cell).map(Number);
-      let best = null, fastest = null;
-      for (const s of samples) {
-        const e = pickEntry(model, subject, s);
-        if (!e) continue;
-        const secs = entryMeta(model, subject, s, e).seconds;
-        if (secs == null || secs < 0) continue;
-        if (secs <= budget && (!best || secs > best.secs)) best = { sample: s, secs };
-        if (!fastest || secs < fastest.secs) fastest = { sample: s, secs };
-      }
-      if (best) return { sample: best.sample, secs: best.secs, over: false, overBy: 0 };
-      if (fastest) return { sample: fastest.sample, secs: fastest.secs, over: true, overBy: fastest.secs - budget };
-      const lo = samples.sort((a, b) => a - b)[0];
-      return lo != null ? { sample: lo, secs: null, over: false, overBy: 0 } : null;
-    }
-
-    function slideShownSample(model, subject, targetSample, exact) {
-      if (compareMode === 'time') {
-        const p = timeCellPick(model, subject, targetSample);
-        return p ? p.sample : null;
-      }
-      return exact
-        ? (catalog[model]?.[subject]?.[targetSample] ? targetSample : null)
-        : closestSample(model, subject, targetSample);
-    }
-
-    function collectFilenamesForRender() {
-      const filenames = [];
-      const subjects = allSubjects();
-      if (compareMode === 'models' || compareMode === 'time') {
-        const target = compareMode === 'time' ? timeBudgetValue() : Number(document.getElementById('sample').value);
-        for (const m of getSelectedModels()) {
-          for (const subject of subjects) {
-            const shown = slideShownSample(m, subject, target, false);
-            const e = shown != null ? pickEntry(m, subject, shown) : null;
-            if (e) filenames.push(e.file);
-          }
-        }
-      } else {
-        const model = getSelectedModel();
-        if (!model) return filenames;
-        const available = samplesForModel(model);
-        const samples = getSelectedSamples()
-          .filter((s) => available.includes(s))
-          .sort((a, b) => a - b);
-        for (const s of samples) {
-          for (const subject of subjects) {
-            const e = pickEntry(model, subject, s);
-            if (e) filenames.push(e.file);
-          }
-        }
-      }
-      return filenames;
-    }
-
-    function canUpdateInPlace() {
-      if (compareMode !== 'models' && compareMode !== 'time') return false;
-      const models = getSelectedModels();
-      const rows = document.querySelectorAll('#modelList .model-row:not(.prompt-row)');
-      if (!rows.length || rows.length !== models.length) return false;
-      const subjects = allSubjects();
-      for (let i = 0; i < models.length; i++) {
-        if (rows[i].dataset.model !== models[i]) return false;
-        const slides = rows[i].querySelectorAll('.carousel-slide');
-        if (slides.length !== subjects.length) return false;
-      }
+      applySlideLayoutAll(slideWidthsPx);
       return true;
-    }
-
-    async function updateRowsInPlace(targetSample, models, subjects, gen) {
-      const jobs = [];
-      for (let ri = 0; ri < models.length; ri++) {
-        const row = document.querySelectorAll('#modelList .model-row:not(.prompt-row)')[ri];
-        if (!row) continue;
-        const model = models[ri];
-        for (let i = 0; i < subjects.length; i++) {
-          const slide = row.querySelector(`.carousel-slide[data-subject-index="${i}"]`);
-          if (!slide) continue;
-          jobs.push(updateSlideInPlace(slide, model, subjects[i], targetSample, false, gen));
-        }
+    };
+    if (shouldAutoSize) {
+      if (!apply()) {
+        requestAnimationFrame(() => requestAnimationFrame(apply));
       }
-      await Promise.all(jobs);
+    } else {
+      reconcileLayout(widths);
+      applySlideLayoutAll(slideWidthsPx);
     }
-
-    async function updateSlideInPlace(slide, model, subject, targetSample, exact, gen) {
-      const imgWrap = slide.querySelector('.slide-img-wrap');
-      const modelEl = slide.querySelector('.slide-overlay-model');
-      const subjectEl = slide.querySelector('.slide-overlay-subject');
-      const sampleEl = slide.querySelector('.slide-overlay-sample');
-      const durationEl = slide.querySelector('.slide-overlay-duration');
-      const shown = slideShownSample(model, subject, targetSample, exact);
-
-      if (shown == null) {
-        slide.classList.add('missing');
-        sampleEl.textContent = '—';
-        if (durationEl) {
-          durationEl.textContent = '';
-          durationEl.hidden = true;
-        }
-        imgWrap.title = '';
-        clearSlideStack(imgWrap);
-        clearTimeStyle(slide, imgWrap, durationEl);
-        return;
+  }
+  function updateResizeBarHitboxes(track) {
+    const slides = [...track.querySelectorAll(".carousel-slide")];
+    const bars = [...track.querySelectorAll(".resize-bar")];
+    for (let i = 0; i < bars.length; i++) {
+      const leftW = slides[i]?.offsetWidth ?? SLIDE_DEFAULT_WIDTH_PX;
+      const rightW = slides[i + 1]?.offsetWidth ?? leftW;
+      bars[i].style.setProperty("--hit-pad-left", `${leftW * RESIZE_HIT_FRACTION}px`);
+      bars[i].style.setProperty("--hit-pad-right", `${rightW * RESIZE_HIT_FRACTION}px`);
+    }
+  }
+  function updateAllResizeBarHitboxes() {
+    for (const track of document.querySelectorAll(".carousel-track")) {
+      updateResizeBarHitboxes(track);
+    }
+  }
+  function applySlideLayoutAll(widths) {
+    document.documentElement.style.setProperty("--slide-img-height", `${slideImgHeightPx}px`);
+    for (const slide of document.querySelectorAll(".carousel-slide")) {
+      const i = Number(slide.dataset.subjectIndex);
+      if (!Number.isNaN(i) && widths[i] != null) {
+        slide.style.width = `${widths[i]}px`;
       }
-
-      slide.classList.remove('missing');
-      const entry = pickEntry(model, subject, shown);
-      const meta = entryMeta(model, subject, shown, entry);
-      setSampleSpan(sampleEl, durationEl, shown, targetSample, compareMode === 'time' ? true : exact, meta);
-      if (compareMode === 'time') applyTimeStyle(slide, imgWrap, durationEl, timeCellPick(model, subject, targetSample), targetSample);
-      else clearTimeStyle(slide, imgWrap, durationEl);
-      imgWrap.title = formatMetaTooltip(entry.file, meta);
-      await swapSlideImage(imgWrap, entry.file, gen);
-      if (gen !== renderGeneration) return;
+    }
+    for (const bar of document.querySelectorAll(".resize-bar")) {
+      bar.style.minHeight = `${slideImgHeightPx}px`;
+    }
+    updateAllResizeBarHitboxes();
+  }
+  function markSlideResize() {
+    userHasResizedSlides = true;
+  }
+  function setupResizeBar(bar, index) {
+    bar.addEventListener("pointerdown", (e) => {
+      e.preventDefault();
+      markSlideResize();
+      bar.classList.add("active");
+      document.body.classList.add("resizing");
+      bar.setPointerCapture(e.pointerId);
+      const startX = e.clientX;
+      const startWidth = slideWidthsPx?.[index] ?? SLIDE_DEFAULT_WIDTH_PX;
+      let dragging = true;
+      const onPointerMove = (ev) => {
+        if (!dragging) return;
+        const width = Math.max(SLIDE_MIN_WIDTH_PX, startWidth + (ev.clientX - startX));
+        syncLayoutFromAnchor(index, width);
+      };
+      const onPointerUp = (ev) => {
+        dragging = false;
+        bar.classList.remove("active");
+        document.body.classList.remove("resizing");
+        bar.releasePointerCapture(ev.pointerId);
+        bar.removeEventListener("pointermove", onPointerMove);
+        bar.removeEventListener("pointerup", onPointerUp);
+        bar.removeEventListener("pointercancel", onPointerUp);
+      };
+      bar.addEventListener("pointermove", onPointerMove);
+      bar.addEventListener("pointerup", onPointerUp);
+      bar.addEventListener("pointercancel", onPointerUp);
+    });
+  }
+  function imageContentRect(img) {
+    const { naturalWidth: nw, naturalHeight: nh, clientWidth: cw, clientHeight: ch } = img;
+    if (!nw || !nh || !cw || !ch) return null;
+    const scale = Math.min(cw / nw, ch / nh);
+    const dw = nw * scale;
+    const dh = nh * scale;
+    return { ox: (cw - dw) / 2, oy: (ch - dh) / 2, dw, dh, nw, nh };
+  }
+  function elementRectOnImage(img, el, content) {
+    const imgR = img.getBoundingClientRect();
+    const elR = el.getBoundingClientRect();
+    const { ox, oy, dw, dh, nw, nh } = content;
+    if (!dw || !dh) return null;
+    const lx = elR.left - imgR.left - ox;
+    const ly = elR.top - imgR.top - oy;
+    let sx = Math.floor(lx / dw * nw);
+    let sy = Math.floor(ly / dh * nh);
+    let sw = Math.ceil(elR.width / dw * nw);
+    let sh = Math.ceil(elR.height / dh * nh);
+    const pad = Math.max(2, Math.round(nw * 4e-3));
+    sx = Math.max(0, sx - pad);
+    sy = Math.max(0, sy - pad);
+    sw = Math.min(nw - sx, sw + pad * 2);
+    sh = Math.min(nh - sy, sh + pad * 2);
+    if (sw < 1 || sh < 1) return null;
+    return { sx, sy, sw, sh };
+  }
+  function sampleImageRegion(img, region) {
+    if (!region) return { r: 15, g: 17, b: 21, ar: 15, ag: 17, ab: 21, avgL: 8, avgC: 0 };
+    const { sx, sy, sw, sh } = region;
+    const w = Math.min(48, sw);
+    const h = Math.max(1, Math.round(sh / sw * w));
+    const canvas = document.createElement("canvas");
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    ctx.drawImage(img, sx, sy, sw, sh, 0, 0, w, h);
+    return analyzeImageData(ctx.getImageData(0, 0, w, h).data);
+  }
+  function applyCaptionStyle(el, sample, { warn = false } = {}) {
+    const { text, stroke, shadows } = captionStyleFromSample(sample);
+    el.style.color = warn ? "#fdd663" : text;
+    el.style.webkitTextStroke = stroke;
+    el.style.textShadow = shadows;
+  }
+  function paintSlideCaptions(img, modelEl, subjectEl, sampleEl) {
+    if (!img.naturalWidth) return;
+    const content = imageContentRect(img);
+    if (!content) return;
+    if (modelEl?.textContent?.trim()) {
+      applyCaptionStyle(modelEl, sampleImageRegion(img, elementRectOnImage(img, modelEl, content)));
+    }
+    if (subjectEl.textContent?.trim()) {
+      applyCaptionStyle(
+        subjectEl,
+        sampleImageRegion(img, elementRectOnImage(img, subjectEl, content))
+      );
+    }
+    if (sampleEl.textContent?.trim() || sampleEl.querySelector(".warn")) {
+      applyCaptionStyle(
+        sampleEl,
+        sampleImageRegion(img, elementRectOnImage(img, sampleEl, content)),
+        { warn: sampleEl.classList.contains("warn") }
+      );
+    }
+  }
+  function bindSlideCaptions(imgWrap, modelEl, subjectEl, sampleEl) {
+    const paint = () => {
+      if (document.body.classList.contains("resizing")) return;
       const img = getTopStackImage(imgWrap);
-      if (img) paintSlideCaptions(img, modelEl, subjectEl, sampleEl);
+      if (!img?.naturalWidth) return;
+      requestAnimationFrame(() => paintSlideCaptions(img, modelEl, subjectEl, sampleEl));
+    };
+    paint();
+    if (!captionObserverMap.has(imgWrap)) {
+      const observer = new ResizeObserver(paint);
+      captionObserverMap.set(imgWrap, observer);
+      observer.observe(imgWrap);
     }
-
-    let carouselScrollSync = false;
-
-    function onCarouselScroll(ev) {
-      if (carouselScrollSync) return;
-      carouselScrollSync = true;
-      const left = ev.currentTarget.scrollLeft;
-      for (const other of document.querySelectorAll('#modelList .carousel')) {
-        if (other !== ev.currentTarget) other.scrollLeft = left;
+  }
+  function setSampleSpan(sampleEl, durationEl, shown, targetSample, exact, meta, ceiling = null) {
+    const shownStr = `s${String(shown).padStart(2, "0")}`;
+    const atCeiling = ceiling != null && shown === ceiling;
+    const badge = atCeiling ? " \u2308" : "";
+    if (exact || shown === targetSample) {
+      sampleEl.textContent = shownStr + badge;
+      sampleEl.classList.remove("warn");
+    } else {
+      sampleEl.classList.add("warn");
+      sampleEl.innerHTML = `<span class="warn">${targetSample}\u2192${shownStr}</span>${badge}`;
+    }
+    if (durationEl) {
+      const seconds = meta?.seconds ?? -1;
+      durationEl.textContent = formatDuration(seconds);
+      durationEl.hidden = false;
+      durationEl.classList.toggle("missing-meta", seconds < 0);
+    }
+  }
+  function timeBudgetValue() {
+    return Number(document.getElementById("timeSlider")?.value || 0);
+  }
+  function timeCellPick2(model, subject, budget) {
+    return timeCellPick(
+      catalog,
+      metaByPrefix,
+      promptCatalog?.ceilings ?? {},
+      currentSeed,
+      model,
+      subject,
+      budget,
+      showOvershoots
+    );
+  }
+  function slideShownSample2(model, subject, targetSample, exact) {
+    const budget = compareMode === "time" ? timeBudgetValue() : 0;
+    return slideShownSample(
+      catalog,
+      metaByPrefix,
+      promptCatalog?.ceilings ?? {},
+      currentSeed,
+      model,
+      subject,
+      targetSample,
+      compareMode,
+      budget,
+      showOvershoots,
+      exact
+    );
+  }
+  function collectFilenamesForRender() {
+    const filenames = [];
+    const subjects = allSubjects();
+    if (compareMode === "models" || compareMode === "time") {
+      const target = compareMode === "time" ? timeBudgetValue() : Number(document.getElementById("sample")?.value ?? 0);
+      for (const m of getSelectedModels()) {
+        for (const subject of subjects) {
+          const shown = slideShownSample2(m, subject, target, false);
+          const e = shown != null ? pickEntry2(m, subject, shown) : null;
+          if (e) filenames.push(e.file);
+        }
       }
-      carouselScrollSync = false;
-    }
-
-    function setupSyncedCarousels() {
-      const list = document.getElementById('modelList');
-      const carousels = list.querySelectorAll('.carousel');
-      list.classList.toggle('carousel-sync-hint', carousels.length > 1);
-      for (const el of carousels) {
-        if (el.dataset.scrollSync) continue;
-        el.dataset.scrollSync = '1';
-        el.addEventListener('scroll', onCarouselScroll, { passive: true });
+    } else {
+      const model = getSelectedModel();
+      if (!model) return filenames;
+      const available = samplesForModel2(model);
+      const samples = getSelectedSamples().filter((s) => available.includes(s)).sort((a, b) => a - b);
+      for (const s of samples) {
+        for (const subject of subjects) {
+          const e = pickEntry2(model, subject, s);
+          if (e) filenames.push(e.file);
+        }
       }
     }
-
-    function clearTimeStyle(slide, imgWrap, durationEl) {
-      slide.classList.remove('time-over');
-      if (imgWrap) { imgWrap.style.outline = ''; imgWrap.style.outlineOffset = ''; }
-      if (durationEl) { durationEl.style.color = ''; durationEl.title = ''; }
+    return filenames;
+  }
+  function canUpdateInPlace() {
+    if (compareMode !== "models" && compareMode !== "time") return false;
+    const models = getSelectedModels();
+    const rows = document.querySelectorAll("#modelList .model-row:not(.prompt-row)");
+    if (!rows.length || rows.length !== models.length) return false;
+    const subjects = allSubjects();
+    for (let i = 0; i < models.length; i++) {
+      if (rows[i].dataset.model !== models[i]) return false;
+      const slides = rows[i].querySelectorAll(".carousel-slide");
+      if (slides.length !== subjects.length) return false;
     }
-
-    // Over-budget cue on a graded scale: amber + thin just over, red + thick way over.
-    function applyTimeStyle(slide, imgWrap, durationEl, info, budget) {
-      clearTimeStyle(slide, imgWrap, durationEl);
-      if (!info || !info.over) return;
-      const ratio = Math.max(0, Math.min(1, info.overBy / Math.max(1, budget)));
-      const width = (2 + ratio * 6).toFixed(1);   // 2px (just over) → 8px (way over)
-      const hue = Math.round(45 * (1 - ratio));    // amber (45) → red (0)
-      const color = `hsl(${hue}, 95%, 55%)`;
-      if (imgWrap) {
-        imgWrap.style.outline = `${width}px solid ${color}`;
-        imgWrap.style.outlineOffset = `-${width}px`;
+    return true;
+  }
+  async function updateRowsInPlace(targetSample, models, subjects, gen) {
+    const jobs = [];
+    for (let ri = 0; ri < models.length; ri++) {
+      const row = document.querySelectorAll("#modelList .model-row:not(.prompt-row)")[ri];
+      if (!row) continue;
+      const model = models[ri];
+      for (let i = 0; i < subjects.length; i++) {
+        const slide = row.querySelector(`.carousel-slide[data-subject-index="${i}"]`);
+        if (!slide) continue;
+        jobs.push(updateSlideInPlace(slide, model, subjects[i], targetSample, false, gen));
       }
-      slide.classList.add('time-over');
+    }
+    await Promise.all(jobs);
+  }
+  async function updateSlideInPlace(slide, model, subject, targetSample, exact, gen) {
+    const imgWrap = slide.querySelector(".slide-img-wrap");
+    const modelEl = slide.querySelector(".slide-overlay-model");
+    const subjectEl = slide.querySelector(".slide-overlay-subject");
+    const sampleEl = slide.querySelector(".slide-overlay-sample");
+    const durationEl = slide.querySelector(".slide-overlay-duration");
+    const shown = slideShownSample2(model, subject, targetSample, exact);
+    if (shown == null) {
+      slide.classList.add("missing");
+      sampleEl.textContent = "\u2014";
       if (durationEl) {
-        durationEl.style.color = color;
-        durationEl.title = `+${Math.round(info.overBy)}s over the ${budget}s budget`;
-      }
-    }
-
-    function renderSlide(model, subject, subjectIndex, targetSample, { exact = false, readyUrl = null, modelEl = null } = {}) {
-      const slide = document.createElement('article');
-      slide.className = 'carousel-slide';
-      slide.dataset.subjectIndex = String(subjectIndex);
-      slide.dataset.subject = subject;
-
-      const imgWrap = document.createElement('div');
-      imgWrap.className = 'slide-img-wrap';
-      const stack = document.createElement('div');
-      stack.className = 'slide-img-stack';
-      imgWrap.appendChild(stack);
-
-      const overlay = document.createElement('div');
-      overlay.className = 'slide-overlay';
-
-      const right = document.createElement('div');
-      right.className = 'slide-overlay-right';
-
-      const subjectEl = document.createElement('span');
-      subjectEl.className = 'slide-overlay-subject slide-overlay-caption';
-      subjectEl.textContent = subject;
-
-      const sampleEl = document.createElement('span');
-      sampleEl.className = 'slide-overlay-sample slide-overlay-caption';
-
-      const durationEl = document.createElement('span');
-      durationEl.className = 'slide-overlay-duration slide-overlay-caption';
-      durationEl.hidden = true;
-
-      right.appendChild(subjectEl);
-      right.appendChild(sampleEl);
-      right.appendChild(durationEl);
-      overlay.appendChild(right);
-
-      slide.appendChild(imgWrap);
-      slide.appendChild(overlay);
-
-      const shown = slideShownSample(model, subject, targetSample, exact);
-      if (shown == null) {
-        slide.classList.add('missing');
-        sampleEl.textContent = '—';
+        durationEl.textContent = "";
         durationEl.hidden = true;
-      } else {
-        const entry = pickEntry(model, subject, shown);
-        const meta = entryMeta(model, subject, shown, entry);
-        setSampleSpan(sampleEl, durationEl, shown, targetSample, compareMode === 'time' ? true : exact, meta);
-        if (compareMode === 'time') applyTimeStyle(slide, imgWrap, durationEl, timeCellPick(model, subject, targetSample), targetSample);
-        imgWrap.title = formatMetaTooltip(entry.file, meta);
-        const alt = `${model} ${subject}`;
-        setImgSrc(imgWrap, entry.file, { readyUrl: readyUrl || undefined, alt }).then(() => {
+      }
+      imgWrap.title = "";
+      clearSlideStack(imgWrap);
+      clearTimeStyle(slide, imgWrap, durationEl);
+      return;
+    }
+    slide.classList.remove("missing");
+    const entry = pickEntry2(model, subject, shown);
+    const meta = entryMeta2(model, subject, shown, entry);
+    const entrySeed = entry?.seed ?? currentSeed;
+    slide.dataset.shownSample = String(shown);
+    slide.dataset.shownSeed = String(entrySeed);
+    refreshNoteDot(slide, model, subject, shown, entrySeed);
+    setSampleSpan(
+      sampleEl,
+      durationEl,
+      shown,
+      targetSample,
+      compareMode === "time" ? true : exact,
+      meta,
+      promptCatalog?.ceilings?.[model] ?? null
+    );
+    if (compareMode === "time")
+      applyTimeStyle(
+        slide,
+        imgWrap,
+        durationEl,
+        timeCellPick2(model, subject, targetSample),
+        targetSample
+      );
+    else clearTimeStyle(slide, imgWrap, durationEl);
+    if (entry) imgWrap.title = formatMetaTooltip2(entry.file, meta);
+    if (entry) await swapSlideImage(imgWrap, entry.file, gen);
+    if (gen !== renderGeneration) return;
+    const img = getTopStackImage(imgWrap);
+    if (img) paintSlideCaptions(img, modelEl, subjectEl, sampleEl);
+  }
+  var carouselScrollSync = false;
+  function onCarouselScroll(ev) {
+    if (carouselScrollSync) return;
+    carouselScrollSync = true;
+    const target = ev.currentTarget;
+    const left = target.scrollLeft;
+    for (const other of document.querySelectorAll("#modelList .carousel")) {
+      if (other !== target) other.scrollLeft = left;
+    }
+    carouselScrollSync = false;
+  }
+  function setupSyncedCarousels() {
+    const list = document.getElementById("modelList");
+    const carousels = list.querySelectorAll(".carousel");
+    list.classList.toggle("carousel-sync-hint", carousels.length > 1);
+    for (const el of carousels) {
+      if (el.dataset.scrollSync) continue;
+      el.dataset.scrollSync = "1";
+      el.addEventListener("scroll", onCarouselScroll, { passive: true });
+    }
+  }
+  function clearTimeStyle(slide, imgWrap, durationEl) {
+    slide.classList.remove("time-over");
+    if (imgWrap) {
+      imgWrap.style.outline = "";
+      imgWrap.style.outlineOffset = "";
+    }
+    if (durationEl) {
+      durationEl.style.color = "";
+      durationEl.title = "";
+    }
+  }
+  function applyTimeStyle(slide, imgWrap, durationEl, info, budget) {
+    clearTimeStyle(slide, imgWrap, durationEl);
+    if (!info || !info.over) return;
+    const ratio = Math.max(0, Math.min(1, info.overBy / Math.max(1, budget)));
+    const width = (2 + ratio * 6).toFixed(1);
+    const hue = Math.round(45 * (1 - ratio));
+    const color = `hsl(${hue}, 95%, 55%)`;
+    if (imgWrap) {
+      imgWrap.style.outline = `${width}px solid ${color}`;
+      imgWrap.style.outlineOffset = `-${width}px`;
+    }
+    slide.classList.add("time-over");
+    if (durationEl) {
+      durationEl.style.color = color;
+      durationEl.title = `+${Math.round(info.overBy)}s over the ${budget}s budget`;
+    }
+  }
+  function renderSlide(model, subject, subjectIndex, targetSample, {
+    exact = false,
+    readyUrl = null,
+    modelEl = null
+  } = {}) {
+    const slide = document.createElement("article");
+    slide.className = "carousel-slide";
+    slide.dataset.subjectIndex = String(subjectIndex);
+    slide.dataset.subject = subject;
+    const imgWrap = document.createElement("div");
+    imgWrap.className = "slide-img-wrap";
+    const stack = document.createElement("div");
+    stack.className = "slide-img-stack";
+    imgWrap.appendChild(stack);
+    const overlay = document.createElement("div");
+    overlay.className = "slide-overlay";
+    const right = document.createElement("div");
+    right.className = "slide-overlay-right";
+    const subjectEl = document.createElement("span");
+    subjectEl.className = "slide-overlay-subject slide-overlay-caption";
+    subjectEl.textContent = subject;
+    const sampleEl = document.createElement("span");
+    sampleEl.className = "slide-overlay-sample slide-overlay-caption";
+    const durationEl = document.createElement("span");
+    durationEl.className = "slide-overlay-duration slide-overlay-caption";
+    durationEl.hidden = true;
+    right.appendChild(subjectEl);
+    right.appendChild(sampleEl);
+    right.appendChild(durationEl);
+    overlay.appendChild(right);
+    slide.appendChild(imgWrap);
+    slide.appendChild(overlay);
+    slide.dataset.model = model;
+    const shown = slideShownSample2(model, subject, targetSample, exact);
+    if (shown == null) {
+      slide.classList.add("missing");
+      sampleEl.textContent = "\u2014";
+      durationEl.hidden = true;
+    } else {
+      const entry = pickEntry2(model, subject, shown);
+      const meta = entryMeta2(model, subject, shown, entry);
+      const entrySeed = entry?.seed ?? currentSeed;
+      slide.dataset.shownSample = String(shown);
+      slide.dataset.shownSeed = String(entrySeed);
+      setSampleSpan(
+        sampleEl,
+        durationEl,
+        shown,
+        targetSample,
+        compareMode === "time" ? true : exact,
+        meta,
+        promptCatalog?.ceilings?.[model] ?? null
+      );
+      if (compareMode === "time")
+        applyTimeStyle(
+          slide,
+          imgWrap,
+          durationEl,
+          timeCellPick2(model, subject, targetSample),
+          targetSample
+        );
+      if (entry) imgWrap.title = formatMetaTooltip2(entry.file, meta);
+      const alt = `${model} ${subject}`;
+      if (entry) refreshNoteDot(slide, model, subject, shown, entrySeed);
+      if (entry) {
+        setImgSrc(imgWrap, entry.file, { readyUrl: readyUrl ?? void 0, alt }).then(() => {
           const img = getTopStackImage(imgWrap);
           if (img) paintSlideCaptions(img, modelEl, subjectEl, sampleEl);
         });
       }
-
-      bindSlideCaptions(imgWrap, modelEl, subjectEl, sampleEl);
-
-      return slide;
     }
-
-    function renderCarouselRow(header, model, subjects, targetSample, { exact = false, urlByFile = null } = {}) {
-      const row = document.createElement('section');
-      row.className = 'model-row';
-      row.dataset.model = model;
-
-      const carousel = document.createElement('div');
-      carousel.className = 'carousel';
-      carousel.setAttribute('aria-label', header);
-
-      const track = document.createElement('div');
-      track.className = 'carousel-track';
-      getSlideWidthsPx(subjects.length);
-
-      const modelEl = document.createElement('span');
-      modelEl.className = 'slide-overlay-model slide-overlay-caption';
-      const msize = promptSizeOfModel(model);
-      modelEl.textContent = msize ? `${model} · ${msize.toUpperCase()}` : model;
-      track.appendChild(modelEl);
-
-      subjects.forEach((subject, i) => {
-        const shown = slideShownSample(model, subject, targetSample, exact);
-        const pe = shown != null ? pickEntry(model, subject, shown) : null;
-        const filename = pe ? pe.file : null;
-        const readyUrl = filename && urlByFile ? urlByFile.get(filename) : null;
-        const slide = renderSlide(model, subject, i, targetSample, { exact, readyUrl, modelEl: i === 0 ? modelEl : null });
-        track.appendChild(slide);
-
-        const bar = document.createElement('div');
-        bar.className = 'resize-bar';
-        bar.setAttribute('role', 'separator');
-        bar.setAttribute('aria-orientation', 'vertical');
-        bar.setAttribute('aria-label', 'Drag to resize images');
-        setupResizeBar(bar, i, track);
-        track.appendChild(bar);
+    slide.addEventListener("click", (e) => {
+      if (e.target?.closest(".resize-bar")) return;
+      const s = Number(slide.dataset.shownSample);
+      const sd = Number(slide.dataset.shownSeed || currentSeed);
+      if (!s) return;
+      const topImg = getTopStackImage(imgWrap);
+      const imgSrc = topImg?.src || "";
+      openNotesLightbox(model, subject, s, sd, imgSrc);
+    });
+    bindSlideCaptions(imgWrap, modelEl, subjectEl, sampleEl);
+    return slide;
+  }
+  function renderCarouselRow(header, model, subjects, targetSample, {
+    exact = false,
+    urlByFile = null
+  } = {}) {
+    const row = document.createElement("section");
+    row.className = "model-row";
+    row.dataset.model = model;
+    const carousel = document.createElement("div");
+    carousel.className = "carousel";
+    carousel.setAttribute("aria-label", header);
+    const track = document.createElement("div");
+    track.className = "carousel-track";
+    getSlideWidthsPx(subjects.length);
+    const modelEl = document.createElement("span");
+    modelEl.className = "slide-overlay-model slide-overlay-caption";
+    const msize = promptSizeOfModel2(model);
+    modelEl.textContent = msize ? `${model} \xB7 ${msize.toUpperCase()}` : model;
+    track.appendChild(modelEl);
+    subjects.forEach((subject, i) => {
+      const shown = slideShownSample2(model, subject, targetSample, exact);
+      const pe = shown != null ? pickEntry2(model, subject, shown) : null;
+      const filename = pe ? pe.file : null;
+      const readyUrl = filename && urlByFile ? urlByFile.get(filename) ?? null : null;
+      const slide = renderSlide(model, subject, i, targetSample, {
+        exact,
+        readyUrl,
+        modelEl: i === 0 ? modelEl : null
       });
-
-      carousel.appendChild(track);
-      row.appendChild(carousel);
-      return row;
-    }
-
-    function renderModelRow(model, targetSample, subjects, urlByFile) {
-      return renderCarouselRow(model, model, subjects, targetSample, { urlByFile });
-    }
-
-    function renderSampleRow(sample, model, subjects, urlByFile) {
-      const header = `s${String(sample).padStart(2, '0')}`;
-      return renderCarouselRow(header, model, subjects, sample, { exact: true, urlByFile });
-    }
-
-    function updateCompareControls() {
-      const m = compareMode;
-      const acrossModels = m === 'models' || m === 'time';
-      document.getElementById('sampleSliderGroup').hidden = m !== 'models';
-      document.getElementById('timeSliderGroup').hidden = m !== 'time';
-      document.getElementById('modelSelectGroup').hidden = m !== 'samples';
-      document.getElementById('modelFilterGroup').hidden = !acrossModels;
-      document.getElementById('sampleFilterGroup').hidden = m !== 'samples';
-      const sel = document.getElementById('compareSelect');
-      if (sel) sel.value = m;
-    }
-
-    async function render() {
-      const gen = ++renderGeneration;
-      const subjects = allSubjects();
-
-      if (canUpdateInPlace()) {
-        const target = compareMode === 'time' ? timeBudgetValue() : Number(document.getElementById('sample').value);
-        const models = getSelectedModels();
-        const filenames = collectFilenamesForRender();
-        await Promise.all(filenames.map((f) => preloadFilename(f).catch(() => null)));
-        if (gen !== renderGeneration) return;
-        document.getElementById('empty').hidden = models.length > 0;
-        await updateRowsInPlace(target, models, subjects, gen);
-        if (gen !== renderGeneration) return;
-        finishRenderLayout(subjects);
-        setupSyncedCarousels();
-        return;
-      }
-
-      const filenames = collectFilenamesForRender();
-      const loaded = await Promise.all(
-        filenames.map(async (f) => {
-          try {
-            return [f, await preloadFilename(f)];
-          } catch {
-            return [f, null];
-          }
-        })
-      );
+      track.appendChild(slide);
+      const bar = document.createElement("div");
+      bar.className = "resize-bar";
+      bar.setAttribute("role", "separator");
+      bar.setAttribute("aria-orientation", "vertical");
+      bar.setAttribute("aria-label", "Drag to resize images");
+      setupResizeBar(bar, i);
+      track.appendChild(bar);
+    });
+    carousel.appendChild(track);
+    row.appendChild(carousel);
+    return row;
+  }
+  function renderModelRow(model, targetSample, subjects, urlByFile) {
+    return renderCarouselRow(model, model, subjects, targetSample, { urlByFile });
+  }
+  function renderSampleRow(sample, model, subjects, urlByFile) {
+    const header = `s${String(sample).padStart(2, "0")}`;
+    return renderCarouselRow(header, model, subjects, sample, { exact: true, urlByFile });
+  }
+  function updateCompareControls() {
+    const m = compareMode;
+    const acrossModels = m === "models" || m === "time";
+    document.getElementById("sampleSliderGroup").hidden = m !== "models";
+    document.getElementById("timeSliderGroup").hidden = m !== "time";
+    document.getElementById("modelSelectGroup").hidden = m !== "samples";
+    document.getElementById("modelFilterGroup").hidden = !acrossModels;
+    document.getElementById("sampleFilterGroup").hidden = m !== "samples";
+    const sel = document.getElementById("compareSelect");
+    if (sel) sel.value = m;
+  }
+  async function render() {
+    const gen = ++renderGeneration;
+    const subjects = allSubjects();
+    if (canUpdateInPlace()) {
+      const target = compareMode === "time" ? timeBudgetValue() : Number(document.getElementById("sample")?.value ?? 0);
+      const models = getSelectedModels();
+      const filenames2 = collectFilenamesForRender();
+      await Promise.all(filenames2.map((f) => preloadFilename(f).catch(() => null)));
       if (gen !== renderGeneration) return;
-      const urlByFile = new Map(loaded);
-
-      const list = document.getElementById('modelList');
-      list.innerHTML = '';
-
-      if (compareMode === 'models' || compareMode === 'time') {
-        const target = compareMode === 'time' ? timeBudgetValue() : Number(document.getElementById('sample').value);
-        const models = getSelectedModels();
-        document.getElementById('empty').hidden = models.length > 0;
-        for (const m of models) list.appendChild(renderModelRow(m, target, subjects, urlByFile));
-      } else {
-        const model = getSelectedModel();
-        const available = model ? samplesForModel(model) : [];
-        const samples = getSelectedSamples()
-          .filter((s) => available.includes(s))
-          .sort((a, b) => a - b);
-        document.getElementById('empty').hidden = samples.length > 0 && !!model;
-        if (model) {
-          for (const s of samples) list.appendChild(renderSampleRow(s, model, subjects, urlByFile));
-        }
-      }
-
-      if (promptCatalog && subjects.length) list.prepend(renderPromptRow(subjects, promptSizeValue()));
-
+      document.getElementById("empty").hidden = models.length > 0;
+      await updateRowsInPlace(target, models, subjects, gen);
+      if (gen !== renderGeneration) return;
       finishRenderLayout(subjects);
       setupSyncedCarousels();
+      return;
     }
-
-    function sourceLabel() {
-      if (loadSource === 'baked') return '';
-      if (loadSource === 'dropped' && droppedFolderName) return `from “${droppedFolderName}”`;
-      if (loadSource === 'handle' && droppedFolderName) return `from “${droppedFolderName}”`;
-      if (loadSource === 'listing') return 'from folder listing';
-      return '';
+    const filenames = collectFilenamesForRender();
+    const loaded = await Promise.all(
+      filenames.map(async (f) => {
+        try {
+          return [f, await preloadFilename(f)];
+        } catch {
+          return [f, null];
+        }
+      })
+    );
+    if (gen !== renderGeneration) return;
+    const urlByFile = new Map(loaded);
+    const list = document.getElementById("modelList");
+    list.innerHTML = "";
+    if (compareMode === "models" || compareMode === "time") {
+      const target = compareMode === "time" ? timeBudgetValue() : Number(document.getElementById("sample")?.value ?? 0);
+      const models = getSelectedModels();
+      document.getElementById("empty").hidden = models.length > 0;
+      for (const m of models) list.appendChild(renderModelRow(m, target, subjects, urlByFile));
+    } else {
+      const model = getSelectedModel();
+      const available = model ? samplesForModel2(model) : [];
+      const samples = getSelectedSamples().filter((s) => available.includes(s)).sort((a, b) => a - b);
+      document.getElementById("empty").hidden = samples.length > 0 && !!model;
+      if (model) {
+        for (const s of samples) list.appendChild(renderSampleRow(s, model, subjects, urlByFile));
+      }
     }
-
-    async function applyLoaded() {
-      await loadMetaJson();
-      await loadPromptsJson();
-      applyMetaToCatalog();
-      rebuildSampleList();
-      rebuildTimeSlider();
-      rebuildSeedList();
-      setupPromptUI();
-      populateModelFilter();
-      populateSampleFilter();
-      populateModelSelect();
-      updateCompareControls();
-      const n = Object.keys(catalog).length;
-      const files = Object.values(catalog).reduce(
-        (acc, m) => acc + Object.values(m).reduce((s, subj) => s + Object.keys(subj).length, 0),
-        0
-      );
-      const status = document.getElementById('status');
-      status.classList.remove('error');
-      if (!n) {
-        status.textContent = 'No matching PNGs found.';
-        status.classList.add('error');
-        document.getElementById('empty').hidden = false;
-        document.getElementById('modelList').innerHTML = '';
+    if (promptCatalog && subjects.length) list.prepend(renderPromptRow(subjects, promptSizeValue()));
+    finishRenderLayout(subjects);
+    setupSyncedCarousels();
+  }
+  function sourceLabel() {
+    if (loadSource === "baked") return "";
+    if (loadSource === "dropped" && droppedFolderName) return `from "${droppedFolderName}"`;
+    if (loadSource === "handle" && droppedFolderName) return `from "${droppedFolderName}"`;
+    if (loadSource === "listing") return "from folder listing";
+    return "";
+  }
+  async function applyLoaded() {
+    await loadMetaJson();
+    await loadPromptsJson();
+    await loadNotesJson();
+    applyMetaToCatalog();
+    rebuildSampleList();
+    rebuildTimeSlider();
+    rebuildSeedList();
+    setupPromptUI();
+    setupOvershootUI();
+    populateModelFilter();
+    populateSampleFilter();
+    populateModelSelect();
+    updateCompareControls();
+    const n = Object.keys(catalog).length;
+    const files = Object.values(catalog).reduce(
+      (acc, m) => acc + Object.values(m).reduce((s, subj) => s + Object.keys(subj).length, 0),
+      0
+    );
+    const status = document.getElementById("status");
+    status.classList.remove("error");
+    if (!n) {
+      status.textContent = "No matching PNGs found.";
+      status.classList.add("error");
+      document.getElementById("empty").hidden = false;
+      document.getElementById("modelList").innerHTML = "";
+      return;
+    }
+    const subjects = allSubjects();
+    status.textContent = `${n} models, ${files} images, ${subjects.length} subjects \u2014 samples: ${availableSamples.join(", ")} ${sourceLabel()}`;
+    document.getElementById("empty").hidden = true;
+    await render();
+  }
+  async function refresh(mode = "auto") {
+    const status = document.getElementById("status");
+    status.classList.remove("error");
+    status.textContent = "Loading\u2026";
+    try {
+      if (BAKED_FILES && mode !== "picker") {
+        loadFromBaked();
+        await applyLoaded();
         return;
       }
-      const subjects = allSubjects();
-      status.textContent = `${n} models, ${files} images, ${subjects.length} subjects — samples: ${availableSamples.join(', ')} ${sourceLabel()}`;
-      document.getElementById('empty').hidden = true;
-      await render();
-    }
-
-    async function refresh(mode = 'auto') {
-      const status = document.getElementById('status');
-      status.classList.remove('error');
-      status.textContent = 'Loading…';
-      try {
-        if (BAKED_FILES && mode !== 'picker') {
-          loadFromBaked();
-          await applyLoaded();
-          return;
-        }
-        if (mode === 'picker') {
-          await loadFromPicker();
-        } else if (mode === 'handle' && dirHandle) {
-          await loadFromDirHandle(dirHandle);
-        } else if (loadSource === 'dropped' && fileMap.size) {
-          const files = [...fileMap.values()];
-          await loadFromDroppedFiles(files, droppedFolderName);
-        } else if (loadSource === 'handle' && dirHandle) {
-          await loadFromDirHandle(dirHandle);
-        } else if (!(await loadFromManifest())) {
-          await loadFromListing();
-        }
-        await applyLoaded();
-      } catch (e) {
-        status.textContent = e.message;
-        status.classList.add('error');
-        document.getElementById('empty').hidden = false;
+      if (mode === "picker") {
+        await loadFromPicker();
+      } else if (mode === "handle" && dirHandle) {
+        await loadFromDirHandle(dirHandle);
+      } else if (loadSource === "dropped" && fileMap.size) {
+        const files = [...fileMap.values()];
+        await loadFromDroppedFiles(files, droppedFolderName);
+      } else if (loadSource === "handle" && dirHandle) {
+        await loadFromDirHandle(dirHandle);
+      } else if (!await loadFromManifest()) {
+        await loadFromListing();
       }
-    }
-
-    async function handleFolderDrop(dt) {
-      await loadFromDataTransfer(dt);
       await applyLoaded();
+    } catch (e) {
+      const err = e instanceof Error ? e : new Error(String(e));
+      status.textContent = err.message;
+      status.classList.add("error");
+      document.getElementById("empty").hidden = false;
     }
-
-    function setupDragDrop(el, { highlightHeader = false } = {}) {
-      const prevent = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-      };
-
-      el.addEventListener('dragenter', (e) => {
-        prevent(e);
-        el.classList.add('drag-over');
-        if (highlightHeader) document.getElementById('dropZone').classList.add('drag-over');
-      });
-
-      el.addEventListener('dragover', (e) => {
-        prevent(e);
-        if (e.dataTransfer) e.dataTransfer.dropEffect = 'copy';
-      });
-
-      el.addEventListener('dragleave', (e) => {
-        prevent(e);
-        const related = e.relatedTarget;
-        if (!related || !el.contains(related)) {
-          el.classList.remove('drag-over');
-          if (highlightHeader) document.getElementById('dropZone').classList.remove('drag-over');
-        }
-      });
-
-      el.addEventListener('drop', async (e) => {
-        prevent(e);
-        el.classList.remove('drag-over');
-        if (highlightHeader) document.getElementById('dropZone').classList.remove('drag-over');
-        const status = document.getElementById('status');
-        status.textContent = 'Reading dropped folder…';
-        try {
-          await handleFolderDrop(e.dataTransfer);
-        } catch (err) {
-          status.textContent = err.message;
-          status.classList.add('error');
-        }
-      });
-    }
-
-    document.getElementById('sample').addEventListener('input', (e) => {
-      document.getElementById('sampleVal').textContent = e.target.value;
-      render();
+  }
+  async function handleFolderDrop(dt) {
+    await loadFromDataTransfer(dt);
+    await applyLoaded();
+  }
+  function setupDragDrop(el, { highlightHeader = false } = {}) {
+    const prevent = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+    el.addEventListener("dragenter", (e) => {
+      prevent(e);
+      el.classList.add("drag-over");
+      if (highlightHeader) document.getElementById("dropZone").classList.add("drag-over");
     });
-    document.getElementById('modelSelect').addEventListener('change', () => {
-      if (compareMode === 'samples') populateSampleFilter();
-      render();
+    el.addEventListener("dragover", (e) => {
+      prevent(e);
+      if (e.dataTransfer) e.dataTransfer.dropEffect = "copy";
     });
-    document.getElementById('seedSelect').addEventListener('change', (e) => {
-      currentSeed = Number(e.target.value);
-      render();
-    });
-    document.getElementById('promptSizeSelect').addEventListener('change', refreshPromptRow);
-    document.getElementById('modelFilter').addEventListener('change', () => render());
-    document.getElementById('sampleFilter').addEventListener('change', () => render());
-    document.getElementById('showAllModels').addEventListener('click', () => {
-      setModelSelection(Object.keys(catalog).sort());
-      render();
-    });
-    document.getElementById('hideAllModels').addEventListener('click', () => {
-      setModelSelection([]);
-      render();
-    });
-    document.getElementById('showAllSamples').addEventListener('click', () => {
-      setSampleSelection(availableSamples);
-      render();
-    });
-    document.getElementById('hideAllSamples').addEventListener('click', () => {
-      setSampleSelection([]);
-      render();
-    });
-    document.getElementById('compareSelect').addEventListener('change', (e) => {
-      compareMode = e.target.value;
-      updateCompareControls();
-      if (compareMode === 'samples') populateSampleFilter();
-      syncCollapsedControlPlacement();
-      render();
-    });
-    document.getElementById('timeSlider').addEventListener('input', (e) => {
-      document.getElementById('timeVal').textContent = `${e.target.value}s`;
-      render();
-    });
-    document.getElementById('refresh').addEventListener('click', () => refresh('auto'));
-    document.getElementById('pickDir').addEventListener('click', () => refresh('picker'));
-
-    const headerEl = document.getElementById('dropZone');
-    const headerToggle = document.getElementById('headerToggle');
-    const headerBarSliderSlot = document.getElementById('headerBarSliderSlot');
-    const controlsSliderSlot = document.getElementById('controlsSliderSlot');
-    const sampleSliderGroup = document.getElementById('sampleSliderGroup');
-    const timeSliderGroup = document.getElementById('timeSliderGroup');
-    const modelSelectGroup = document.getElementById('modelSelectGroup');
-    const controlsEl = document.querySelector('#headerPanel .controls');
-
-    // When collapsed, lift whichever control matters in the current mode into the
-    // always-visible top bar: the sample slider when comparing models, the model
-    // picker when comparing samples (so models can still be swapped while collapsed).
-    function restoreControlHome(el) {
-      if (el === sampleSliderGroup || el === timeSliderGroup) {
-        if (el.parentElement !== controlsSliderSlot) controlsSliderSlot.appendChild(el);
-      } else if (el === modelSelectGroup && controlsEl) {
-        if (el.parentElement !== controlsEl) controlsEl.prepend(el);
+    el.addEventListener("dragleave", (e) => {
+      prevent(e);
+      const related = e.relatedTarget;
+      if (!related || !el.contains(related)) {
+        el.classList.remove("drag-over");
+        if (highlightHeader) document.getElementById("dropZone").classList.remove("drag-over");
       }
-    }
-    function syncCollapsedControlPlacement() {
-      const collapsed = headerEl.classList.contains('collapsed');
-      const primary = compareMode === 'samples' ? modelSelectGroup
-        : compareMode === 'time' ? timeSliderGroup
-        : sampleSliderGroup;
-      for (const el of [sampleSliderGroup, timeSliderGroup, modelSelectGroup]) {
-        if (el !== primary) restoreControlHome(el);
-      }
-      if (collapsed) {
-        if (primary.parentElement !== headerBarSliderSlot) headerBarSliderSlot.appendChild(primary);
-      } else {
-        restoreControlHome(primary);
-      }
-    }
-
-    headerToggle.addEventListener('click', () => {
-      const collapsed = headerEl.classList.toggle('collapsed');
-      headerToggle.setAttribute('aria-expanded', String(!collapsed));
-      headerToggle.title = collapsed ? 'Show controls' : 'Hide controls';
-      syncCollapsedControlPlacement();
     });
-    if (window.matchMedia('(max-width: 640px)').matches) {
-      headerEl.classList.add('collapsed');
-      headerToggle.setAttribute('aria-expanded', 'false');
-      headerToggle.title = 'Show controls';
-    }
+    el.addEventListener("drop", async (e) => {
+      prevent(e);
+      el.classList.remove("drag-over");
+      if (highlightHeader) document.getElementById("dropZone").classList.remove("drag-over");
+      const status = document.getElementById("status");
+      status.textContent = "Reading dropped folder\u2026";
+      try {
+        if (e.dataTransfer) await handleFolderDrop(e.dataTransfer);
+      } catch (err) {
+        status.textContent = err instanceof Error ? err.message : String(err);
+        status.classList.add("error");
+      }
+    });
+  }
+  document.getElementById("sample").addEventListener("input", (e) => {
+    document.getElementById("sampleVal").textContent = e.target.value;
+    void render();
+  });
+  document.getElementById("modelSelect").addEventListener("change", () => {
+    if (compareMode === "samples") populateSampleFilter();
+    void render();
+  });
+  document.getElementById("seedSelect").addEventListener("change", (e) => {
+    currentSeed = Number(e.target.value);
+    void render();
+  });
+  document.getElementById("promptSizeSelect").addEventListener("change", refreshPromptRow);
+  document.getElementById("modelFilter").addEventListener("change", () => void render());
+  document.getElementById("sampleFilter").addEventListener("change", () => void render());
+  document.getElementById("showAllModels").addEventListener("click", () => {
+    setModelSelection(Object.keys(catalog).sort());
+    void render();
+  });
+  document.getElementById("hideAllModels").addEventListener("click", () => {
+    setModelSelection([]);
+    void render();
+  });
+  document.getElementById("showAllSamples").addEventListener("click", () => {
+    setSampleSelection(availableSamples);
+    void render();
+  });
+  document.getElementById("hideAllSamples").addEventListener("click", () => {
+    setSampleSelection([]);
+    void render();
+  });
+  document.getElementById("compareSelect").addEventListener("change", (e) => {
+    compareMode = e.target.value;
+    updateCompareControls();
+    if (compareMode === "samples") populateSampleFilter();
     syncCollapsedControlPlacement();
-
-    setupDragDrop(document.getElementById('pickDir'));
-    setupDragDrop(document.getElementById('dropZone'), { highlightHeader: true });
-
-    document.body.addEventListener('dragover', (e) => e.preventDefault());
-    document.body.addEventListener('drop', (e) => e.preventDefault());
-
-    document.documentElement.classList.toggle('baked', !!BAKED_FILES);
-    refresh('auto');
+    void render();
+  });
+  document.getElementById("timeSlider").addEventListener("input", (e) => {
+    document.getElementById("timeVal").textContent = `${e.target.value}s`;
+    void render();
+  });
+  document.getElementById("showOvershoots").addEventListener("change", (e) => {
+    showOvershoots = e.target.checked;
+    if (compareMode === "samples") populateSampleFilter();
+    void render();
+  });
+  document.getElementById("refresh").addEventListener("click", () => void refresh("auto"));
+  document.getElementById("pickDir").addEventListener("click", () => void refresh("picker"));
+  var headerEl = document.getElementById("dropZone");
+  var headerToggle = document.getElementById("headerToggle");
+  var headerBarSliderSlot = document.getElementById("headerBarSliderSlot");
+  var controlsSliderSlot = document.getElementById("controlsSliderSlot");
+  var sampleSliderGroup = document.getElementById("sampleSliderGroup");
+  var timeSliderGroup = document.getElementById("timeSliderGroup");
+  var modelSelectGroup = document.getElementById("modelSelectGroup");
+  var controlsEl = document.querySelector("#headerPanel .controls");
+  function restoreControlHome(el) {
+    if (el === sampleSliderGroup || el === timeSliderGroup) {
+      if (el.parentElement !== controlsSliderSlot) controlsSliderSlot.appendChild(el);
+    } else if (el === modelSelectGroup && controlsEl) {
+      if (el.parentElement !== controlsEl) controlsEl.prepend(el);
+    }
+  }
+  function syncCollapsedControlPlacement() {
+    const collapsed = headerEl.classList.contains("collapsed");
+    const primary = compareMode === "samples" ? modelSelectGroup : compareMode === "time" ? timeSliderGroup : sampleSliderGroup;
+    for (const el of [sampleSliderGroup, timeSliderGroup, modelSelectGroup]) {
+      if (el !== primary) restoreControlHome(el);
+    }
+    if (collapsed) {
+      if (primary.parentElement !== headerBarSliderSlot) headerBarSliderSlot.appendChild(primary);
+    } else {
+      restoreControlHome(primary);
+    }
+  }
+  headerToggle.addEventListener("click", () => {
+    const collapsed = headerEl.classList.toggle("collapsed");
+    headerToggle.setAttribute("aria-expanded", String(!collapsed));
+    headerToggle.title = collapsed ? "Show controls" : "Hide controls";
+    syncCollapsedControlPlacement();
+  });
+  if (window.matchMedia("(max-width: 640px)").matches) {
+    headerEl.classList.add("collapsed");
+    headerToggle.setAttribute("aria-expanded", "false");
+    headerToggle.title = "Show controls";
+  }
+  syncCollapsedControlPlacement();
+  setupDragDrop(document.getElementById("pickDir"));
+  setupDragDrop(document.getElementById("dropZone"), { highlightHeader: true });
+  document.body.addEventListener("dragover", (e) => e.preventDefault());
+  document.body.addEventListener("drop", (e) => e.preventDefault());
+  document.documentElement.classList.toggle("baked", !!BAKED_FILES);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && notesLightboxOpen) {
+      e.preventDefault();
+      closeNotesLightbox();
+    }
+  });
+  initNotesLightbox();
+  void refresh("auto");
+})();
 
 </script>
 </body>
