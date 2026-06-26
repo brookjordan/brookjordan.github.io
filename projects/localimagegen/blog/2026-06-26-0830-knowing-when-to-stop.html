@@ -314,7 +314,7 @@ a:hover {
 <h1>Knowing when to stop — a time-budgeted rule for the top of the step ladder</h1>
 <p class="post-meta">2026-06-26 <time class="post-time" data-ts="1782433854000">08:30</time> · <span class="tag">decision</span> <span class="tag">lesson</span></p>
 <p><img src="img/banner_knowing-when-to-stop.webp" alt="A spiral staircase of framed doll portraits climbing from blurry to crisp, the highest frames dissolving into glowing fog where they all look identical"></p>
-<p>The <a href="2026-06-24-results-the-step-count-reckoning.html">step-count reckoning</a> answered one
+<p>The <a href="2026-06-24-2136-results-the-step-count-reckoning.html">step-count reckoning</a> answered one
 question: <strong>how few steps can each model get away with?</strong> It never asked the opposite, and
 the opposite turns out to matter just as much: <strong>how many steps is enough — and when does
 one more step stop being worth it?</strong></p>
@@ -406,9 +406,9 @@ recommend, the caps are all over the place — and almost never aligned:</p>
 <p>Two distinct failure modes fall out of that table:</p>
 <ul>
 <li><strong>Undershoot — the undistilled few.</strong> Chroma and Ideogram are <em>full</em> models with no turbo
-shortcut (see <a href="2026-06-23-the-model-menagerie.html">the menagerie</a>). They keep improving
+shortcut (see <a href="2026-06-23-2136-the-model-menagerie.html">the menagerie</a>). They keep improving
 well past where I capped them, and I stopped <em>below</em> the step count their own communities
-treat as the baseline. The bare-model <a href="2026-06-23-the-lora-question.html">no-LoRA invariant</a>
+treat as the baseline. The bare-model <a href="2026-06-23-2136-the-lora-question.html">no-LoRA invariant</a>
 means these especially lean on raw steps for quality.</li>
 <li><strong>Overshoot — the distilled crowd.</strong> Everything with a Lightning/Turbo LoRA or baked-in
 distillation was <em>trained</em> to land in ~4–8 steps. Schnell past 4 doesn&#39;t get better — it
@@ -471,7 +471,7 @@ run. For the undistilled models that&#39;s a target to <em>reach</em> (Chroma ~3
 the distilled ones it&#39;s a <strong>stop sign</strong>: the distillation step count is the ceiling, because
 the community has already established that more is no better — often worse. Don&#39;t re-derive
 what&#39;s documented; trust the prior.</p>
-<p><strong>2. Cadence = step-gap scales with per-step cost.</strong> This is the <a href="2026-06-25-never-idle-the-autopilot.html">time-budget
+<p><strong>2. Cadence = step-gap scales with per-step cost.</strong> This is the <a href="2026-06-25-2136-never-idle-the-autopilot.html">time-budget
 idea</a> applied to the ladder itself: the dearer a
 step, the wider the gap between rungs. Keep the floor (1–4) dense for everyone — it&#39;s cheap
 and it&#39;s the interesting region — then widen as you climb:</p>
@@ -509,11 +509,11 @@ because each one is ~1s. Same wall-clock philosophy everywhere; very different l
 <p><strong>3. Degradation is a claim that needs repeats.</strong> I&#39;ve watched a higher-step image look
 <em>worse</em> than a lower-step one and wanted to declare a plateau-and-decline. But a single seed
 is a sample of one: that dip can be the sampler&#39;s trajectory for <em>that noise seed</em>, not a
-property of the step count. (The <a href="2026-06-24-incident-flux4b-black-at-10-steps.html">flux4b black-at-10 incident</a>
+property of the step count. (The <a href="2026-06-24-2136-incident-flux4b-black-at-10-steps.html">flux4b black-at-10 incident</a>
 is the extreme version — a scheduler&#39;s bad spot at one exact step, invisible one rung
 either side.) To assert &quot;quality declines past N&quot; you need the <em>same</em> <code>model × scene × step</code>
 across <strong>several seeds</strong> and a <em>consistent</em> dip. We already have the machine for that: the
-<a href="2026-06-25-never-idle-the-autopilot.html">never-idle autopilot</a> adds a fresh random seed
+<a href="2026-06-25-2136-never-idle-the-autopilot.html">never-idle autopilot</a> adds a fresh random seed
 every time the matrix goes clean. So the policy is: <strong>never act on a one-seed dip; let seeds
 accumulate, then look for agreement.</strong></p>
 <h2>What it changes</h2>

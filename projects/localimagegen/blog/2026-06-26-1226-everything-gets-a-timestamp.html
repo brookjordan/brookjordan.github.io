@@ -314,7 +314,7 @@ a:hover {
 <h1>What time did that happen? (Everything gets a timestamp)</h1>
 <p class="post-meta">2026-06-26 <time class="post-time" data-ts="1782448013000">12:26</time> · <span class="tag">decision</span></p>
 <p><img src="img/banner_everything-gets-a-timestamp.webp" alt="Rows of glowing image artifacts in a dark archive, each tagged with a luminous ISO-8601 timestamp, a giant translucent clock face woven through the ledger of files"></p>
-<p>Debugging the <a href="2026-06-26-the-overnight-shift.html">overnight loop</a>, I kept hitting the same
+<p>Debugging the <a href="2026-06-26-0830-the-overnight-shift.html">overnight loop</a>, I kept hitting the same
 wall: &quot;okay, but <em>when</em> did that happen?&quot; — and half the records just shrugged. A master on
 disk, a seed in <code>seeds.auto.json</code>, a cell in <code>meta.json</code>: plenty of <em>what</em>, almost no <em>when</em>.
 So this one&#39;s less a feature and more a <strong>law</strong>.</p>
@@ -332,11 +332,11 @@ when we have it, falling back to the master file&#39;s mtime so even old renders
 best-effort <em>when</em> instead of a null.</li>
 <li><strong>A recorded time when the autopilot adds a seed.</strong> <code>seeds.auto.json</code> stays a plain
 <code>number[]</code> (don&#39;t break the effective-seeds union), and the &quot;when&quot; lives in the event log
-from the <a href="2026-06-26-the-robot-phones-home.html">resilience plan</a>.</li>
+from the <a href="2026-06-26-1226-the-robot-phones-home.html">resilience plan</a>.</li>
 </ul>
 <h2>What deliberately stays <em>un</em>-stamped</h2>
 <p>Filenames. They keep the render <strong>duration</strong> (<code>t&lt;dur&gt;s</code>), not a wall-clock — the
-<a href="2026-06-23-lesson-the-filename-grammar.html">one filename grammar</a> stays stable and
+<a href="2026-06-23-2136-lesson-the-filename-grammar.html">one filename grammar</a> stays stable and
 content-derived, so a re-render doesn&#39;t churn the name. The &quot;when&quot; belongs in <code>meta.json</code> and
 the logs, never baked into the identity of the file.</p>
 <h2>Why a whole plan for something this small?</h2>

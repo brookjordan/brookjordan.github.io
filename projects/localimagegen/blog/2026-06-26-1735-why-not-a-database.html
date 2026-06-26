@@ -323,7 +323,7 @@ a:hover {
 <p>What it doesn&#39;t give you: rename refactoring. Update <code>builder</code> to <code>recipe</code> in the Zod schema, and the YAML still has <code>builder:</code> everywhere. The schema broke the parse. You fixed the schema. The YAML is still wrong. Three files touched by hand; the compiler helped with zero of them.</p>
 <p>Zod is a runtime validator. The problem is edit-time.</p>
 <h2>What SQLite (or lowdb) gives you</h2>
-<p>A binary. You can&#39;t <code>git diff config/gallery.sqlite</code> and see what changed. You can&#39;t <code>grep</code> it. The <a href="2026-06-25-localimagegen-is-born.html">filesystem-state ethos</a> of this repo — state as text, diffable, grepable, kill-and-resume clean — is the reason there&#39;s no fragile run-state file and no database to restore after a crash. A binary store breaks that on first principles, before you even open the rename question.</p>
+<p>A binary. You can&#39;t <code>git diff config/gallery.sqlite</code> and see what changed. You can&#39;t <code>grep</code> it. The <a href="2026-06-25-2136-localimagegen-is-born.html">filesystem-state ethos</a> of this repo — state as text, diffable, grepable, kill-and-resume clean — is the reason there&#39;s no fragile run-state file and no database to restore after a crash. A binary store breaks that on first principles, before you even open the rename question.</p>
 <p>lowdb is just SQLite vibes in JavaScript: the same shape problem, minus the query language.</p>
 <h2>The right split</h2>
 <p>The dividing line is <em>who writes the file</em>.</p>

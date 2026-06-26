@@ -314,7 +314,7 @@ a:hover {
 <h1>The robot learns to phone home</h1>
 <p class="post-meta">2026-06-26 <time class="post-time" data-ts="1782448013000">12:26</time> · <span class="tag">architecture</span> <span class="tag">ops</span></p>
 <p><img src="img/banner_the-robot-phones-home.webp" alt="A lone render-farm server robot in a dark lab beaming a single glowing message up into a paper-airplane of light, one warm amber alert glow, distant monitors showing a dragon and a doll"></p>
-<p>The <a href="2026-06-26-the-overnight-shift.html">overnight shift</a> ended with the autopilot
+<p>The <a href="2026-06-26-0830-the-overnight-shift.html">overnight shift</a> ended with the autopilot
 &quot;basically filing a bug report on itself&quot; — catching its own infinite loop and quarantining
 the cells that wouldn&#39;t render. Cute. But that bug report went into a <em>log I had to go read</em>.
 The next chapter fixes two things at once: the robot should <strong>tell me</strong> when it trips, and
@@ -324,7 +324,7 @@ it should <strong>never let failures pile up silently</strong>.</p>
 where it could quietly clog. So every failure class gets a <em>bounded</em> reaction:</p>
 <ul>
 <li><strong>Transient</strong> (ComfyUI unreachable, a flaky queue read) → retry with backoff.</li>
-<li><strong>Per-cell</strong> (blank, black, one cell errors) → the <a href="2026-06-26-the-overnight-shift.html">3-strike quarantine</a>
+<li><strong>Per-cell</strong> (blank, black, one cell errors) → the <a href="2026-06-26-0830-the-overnight-shift.html">3-strike quarantine</a>
 we already shipped. Tried thrice, logged with the exact reason, set aside.</li>
 <li><strong>Per-model systemic</strong> → the new star (below).</li>
 <li><strong>Host-level</strong> (Comfy down past N, repeated stalls, disk full) → pause and back off, never
@@ -344,10 +344,10 @@ ask. The plan parses <code>/history</code> for <code>execution_error</code> entr
 exception — and maps the <code>prompt_id</code> back to its cell via the SaveImage prefix we already
 decode in <code>src/stamp.ts</code>. So <code>&quot;blank (stddev 0.7)&quot;</code> becomes <code>&quot;OOM on UNETLoader&quot;</code>. That&#39;s the
 difference between &quot;something&#39;s wrong&quot; and &quot;your fp8 weights don&#39;t load on MPS <em>again</em>&quot; (see:
-<a href="2026-06-24-lesson-krea2-on-apple-silicon.html">krea2 on Apple Silicon</a>).</p>
+<a href="2026-06-24-2136-lesson-krea2-on-apple-silicon.html">krea2 on Apple Silicon</a>).</p>
 <h2>The phone line</h2>
 <p>There&#39;s a pleasing full-circle here: this whole project started as
-<a href="2026-06-22-the-spark.html">an n8n podcast pipeline</a>, and n8n is exactly how the robot will
+<a href="2026-06-22-2136-the-spark.html">an n8n podcast pipeline</a>, and n8n is exactly how the robot will
 phone home. A new <code>src/notify.ts</code> POSTs a JSON event to a webhook; n8n routes it to Telegram.
 The cadence is deliberately <em>smart</em>, because a notifier that cries wolf gets muted by week
 two:</p>
