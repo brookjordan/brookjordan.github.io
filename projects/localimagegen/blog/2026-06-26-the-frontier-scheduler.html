@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#1a1d24" />
+    <meta name="color-scheme" content="dark" />
+    <title>The frontier scheduler: watching the ladder think</title>
+    <style>
+/* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
+   This is the single source of truth for colour, radius, spacing and type.
+   It is inlined ahead of each page's stylesheet at build time, and linked
+   first in dev so opening the .html files directly still resolves the vars.
+
+   Theming: everything below is a semantic token mapped onto a small palette of
+   primitives. To add a theme, override the *semantic* tokens under a selector
+   (see the commented [data-theme="light"] block at the bottom) — no stylesheet
+   needs to change, only these variables. */
+:root {
+  color-scheme: dark;
+
+  /* ---- palette primitives (raw colours; reference these only via the tokens below) ---- */
+  --c-ink-900: #0f1115;
+  --c-ink-800: #1a1d24;
+  --c-ink-700: #232732;
+  --c-ink-600: #2a2f3a;
+  --c-fog-100: #e8eaed;
+  --c-fog-300: #9aa0a6;
+  --c-fog-500: #6b727d;
+  --c-accent: #7c9cff;
+
+  /* ---- semantic: background / border / text, primary > secondary > tertiary ---- */
+  --bg-primary: var(--c-ink-900);
+  --bg-secondary: var(--c-ink-800);
+  --bg-tertiary: var(--c-ink-700);
+
+  --border-primary: var(--c-ink-600);
+  --border-secondary: rgba(150, 170, 210, 0.16);
+
+  --text-primary: var(--c-fog-100);
+  --text-secondary: var(--c-fog-300);
+  --text-tertiary: var(--c-fog-500);
+
+  --accent: var(--c-accent);
+
+  /* ---- radius scale ---- */
+  --radius-sm: 5px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 9999px;
+
+  /* ---- spacing / padding scale ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 2rem;
+
+  /* ---- type ---- */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* Shared cross-nav link (gallery <-> devlog). Both app.css and blog.css inline this
+   file, so defining it once here keeps the two links visually identical. */
+.cross-link {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.cross-link:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+/* Example theme override — set <html data-theme="light"> to activate (or wire it
+   to prefers-color-scheme). Left commented so we don't ship untuned colours:
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg-primary: #fbfbfd;
+  --bg-secondary: #f1f2f5;
+  --bg-tertiary: #e7e9ee;
+  --border-primary: #d4d8e0;
+  --border-secondary: rgba(20, 30, 60, 0.12);
+  --text-primary: #1a1d24;
+  --text-secondary: #555b66;
+  --text-tertiary: #7b828d;
+}
+*/
+
+</style>
+    <style>
+:root {
+  /* Local aliases mapped onto the shared tokens in tokens.css (inlined first),
+     so the devlog and the gallery share one palette, radius and spacing scale. */
+  --bg: var(--bg-primary);
+  --bg-soft: var(--bg-secondary);
+  --panel: var(--bg-tertiary);
+  --text: var(--text-primary);
+  --muted: var(--text-secondary);
+  --border: var(--border-secondary);
+  --radius: var(--radius-md);
+  /* --accent comes straight from tokens.css */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.65 var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.site-header,
+.site-footer {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 1.25rem 1.25rem;
+}
+
+.site-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text);
+}
+
+.brand span {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.content {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+
+.site-footer {
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* ---- post typography ---- */
+.content h1 {
+  font-size: 1.9rem;
+  line-height: 1.2;
+  margin: 0 0 0.5rem;
+}
+
+.content h2 {
+  font-size: 1.35rem;
+  margin: 2rem 0 0.6rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.3rem;
+}
+
+.content h3 {
+  font-size: 1.1rem;
+  margin: 1.5rem 0 0.4rem;
+}
+
+.content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  display: block;
+  margin: 1.25rem 0;
+}
+
+.content audio {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.content blockquote {
+  margin: 1.25rem 0;
+  padding: 0.5rem 1rem;
+  border-left: 3px solid var(--accent);
+  background: var(--bg-soft);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  color: var(--muted);
+}
+
+.content pre {
+  background: #12151b;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  overflow: auto;
+  font-size: 0.88rem;
+}
+
+.content code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: rgba(150, 170, 210, 0.14);
+  padding: 0.1em 0.35em;
+  border-radius: 5px;
+}
+
+.content pre code {
+  background: none;
+  padding: 0;
+}
+
+/* ---- per-post header (date + tags) ---- */
+.post-meta {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0 0 1.5rem;
+}
+
+.tag {
+  display: inline-block;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 0.1em 0.7em;
+  font-size: 0.78rem;
+  margin-right: 0.35rem;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+/* ---- index listing ---- */
+.index-intro {
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+
+.post-group-date {
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 2rem 0 0.75rem;
+}
+
+.post-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.post-list li {
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.post-list a.post-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.post-list .post-row-meta {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+}
+
+</style>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="./index.html">localimagegen <span>· devlog</span></a>
+      <nav class="site-nav"><a class="cross-link" href="../index.html">gallery →</a></nav>
+    </header>
+    <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
+<article class="post">
+<h1>The frontier scheduler: watching the ladder think</h1>
+<p class="post-meta">2026-06-26 · <span class="tag">milestone</span> <span class="tag">architecture</span> <span class="tag">rendering</span> <span class="tag">ladder</span></p>
+<p>Watch this log output for a moment.</p>
+<pre><code>[14:00:43]   juggernaut_van_s11_00001_.png -&gt; masters/juggernaut_van_s11_t29s_00042_.webp
+[14:00:43]    queued localimagegen/juggernaut_van_s13 seed=42
+
+[14:00:59]   juggernaut_van_s13_00001_.png -&gt; masters/juggernaut_van_s13_t15s_02026_.webp
+[14:00:59]    queued localimagegen/juggernaut_van_s15 seed=2026
+
+[14:01:14]   juggernaut_dragon_s13_00001_.png -&gt; masters/juggernaut_dragon_s13_t15s_00042_.webp
+[14:01:14]    queued localimagegen/juggernaut_dragon_s15 seed=42
+</code></pre>
+<p>Each line is the dynamic ladder planner doing its job on measured reality, in real time, per rung.</p>
+<h2>The flaw we fixed</h2>
+<p>Until today, <code>run</code> computed the entire desired rung set for every ladder upfront — one big disk scan, one <code>planLadder</code> call per ladder, and then every resulting cell enqueued to ComfyUI in a single batch. Juggernaut&#39;s kingdom scene: 46 items in the queue at once.</p>
+<p>The problem: <code>planLadder</code> uses render <em>durations</em> to decide how finely to space rungs. Faster renders → tighter spacing; slower renders → wider gaps. But those durations were read from already-rendered masters. If a ladder was new — nothing rendered yet — the planner had no timing and fell back to floor+ceiling only. And even with some data, the entire batch was committed on timing measured in a previous pass, sometimes minutes or hours ago. The ladder was frozen at plan-time, not adjusted at measurement-time.</p>
+<p>The planner was designed for per-rung feedback. The scheduler was ignoring that.</p>
+<h2>What changes</h2>
+<p>One frontier rung per ladder in the queue at any moment. A ladder is a (model × scene × seed) triple — juggernaut with 6 scenes and 2 seeds has 12 ladders. So the queue holds 12 items: not 46, not 1, exactly 12.</p>
+<p>When a rung completes:</p>
+<ol>
+<li>Stamp it immediately — move raw PNG to master WebP, record the <code>_t&lt;dur&gt;s_</code> duration in the filename.</li>
+<li>Fold the measured duration into that ladder&#39;s in-memory <code>rendered</code> map.</li>
+<li>Re-run <code>planLadder(floor, pins, ceiling, rendered)</code> — pure function, same algorithm, now with one more real data point.</li>
+<li>Call <code>frontierRung(planned, renderedSet)</code> — the lowest desired rung not yet on disk.</li>
+<li>Enqueue it. The slot refills instantly.</li>
+</ol>
+<p>The queue depth doesn&#39;t drop as work completes — it stays at the number of active ladders until they&#39;re all finished. Breadth keeps the GPU busy; depth is earned by measurement.</p>
+<h2>Watching it in the log</h2>
+<pre><code>s11 stamped, t=29s → gapForDur(29) = 2 → next frontier: s13
+s13 stamped, t=15s → gapForDur(15) = 2 → next frontier: s15
+s13 stamped, t=15s → gapForDur(15) = 2 → next frontier: s15
+</code></pre>
+<p>The <code>gapForDur</code> function maps render duration to a step-count gap on a square-root curve (1 at ≤9s, 4 at ≥217s). At 15–29s — juggernaut is fast — the gap is 2. If a render came back at 100s the gap would widen to 3; at 217s+ it&#39;s 4. Each ladder climbs at its own pace, calibrated to its own timing.</p>
+<p>That&#39;s the design working. The plan isn&#39;t written once at the start and frozen. It&#39;s rewritten after every measurement, ladder by ladder, rung by rung.</p>
+<h2>Crash safety</h2>
+<p>Nothing changed about where state lives: masters on disk. Kill the process mid-flight, re-run, and it re-scans <code>masters/</code>, seeds each ladder&#39;s <code>rendered</code> map from whatever&#39;s there, and picks up from the correct frontier. Rungs that were in-flight but never stamped simply stay missing. No run-state file, no partial state to reconcile.</p>
+<h2>The tail rule</h2>
+<p>When only one ladder is left — the sole source of in-flight work — strict depth-1 means the GPU sits idle for the poll interval (~5s) plus stamp time while we wait to re-plan. For short renders that&#39;s non-trivial. The scheduler checks: if that idle gap is ≥25% of the last measured render duration, it pre-queues one extra rung (depth 2). Otherwise it accepts the brief idle. Most of the time, with 12 ladders running in parallel, this never triggers — breadth handles it. It&#39;s only the tail of the very last ladder where it matters.</p>
+<h2>The number that tells you it&#39;s working</h2>
+<p>Queue depth: <strong>12</strong>. Constant. One per ladder, the whole time. Not 46 (the old &quot;everything at once&quot;), not 1 (fully serialised). Twelve parallel measurements, twelve independent climbs, zero wasted timing guesses.</p>
+<p>That&#39;s the frontier scheduler.</p>
+
+</article></main>
+    <footer class="site-footer">
+      <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>
+    </footer>
+  </body>
+</html>
