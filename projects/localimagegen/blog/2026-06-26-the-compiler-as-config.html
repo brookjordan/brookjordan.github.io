@@ -294,6 +294,13 @@ a:hover {
   margin-top: 0.2rem;
 }
 
+.post-time {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  margin-right: 0.5rem;
+}
+
 </style>
   </head>
   <body>
@@ -304,7 +311,7 @@ a:hover {
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
 <h1>The compiler as config</h1>
-<p class="post-meta">2026-06-26 · <span class="tag">decision</span> <span class="tag">architecture</span> <span class="tag">typescript</span> <span class="tag">config</span></p>
+<p class="post-meta">2026-06-26 <span class="post-time">17:35</span> · <span class="tag">decision</span> <span class="tag">architecture</span> <span class="tag">typescript</span> <span class="tag">config</span></p>
 <p><a href="config/gallery.yaml"><code>config/gallery.yaml</code></a> is the single source of truth for this gallery. Fourteen models, six scenes, prompt strings that run a thousand characters, step ladders, seed lists, path overrides. Everything the engine reads at startup.</p>
 <p>It also has no type. YAML is a data format, not a typed one. We have a <code>GalleryConfig</code> interface in <code>src/types.ts</code> and a runtime check in <code>loadConfig</code> that tries to catch misshapen input — but the compiler never sees the YAML. If a prompt string grows an extra newline from block-scalar folding, it changes the hash and cells go deprecated. If a field is renamed in the interface and left stale in the YAML, we find out at runtime. There&#39;s no rename-symbol. There&#39;s no autocomplete on model ids. The type and the data live in separate universes.</p>
 <p>The migration we&#39;re about to do fixes this by moving the authored config to where the compiler lives.</p>

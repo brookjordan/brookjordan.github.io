@@ -294,6 +294,13 @@ a:hover {
   margin-top: 0.2rem;
 }
 
+.post-time {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  margin-right: 0.5rem;
+}
+
 </style>
   </head>
   <body>
@@ -304,7 +311,7 @@ a:hover {
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
 <h1>Never idle — the autopilot watch loop</h1>
-<p class="post-meta">2026-06-25 · <span class="tag">milestone</span> <span class="tag">decision</span></p>
+<p class="post-meta">2026-06-25 <span class="post-time">21:36</span> · <span class="tag">milestone</span> <span class="tag">decision</span></p>
 <p><img src="img/banner_autopilot.webp" alt="A self-running render farm at night with an ouroboros loop of light"></p>
 <p>The Mac shouldn&#39;t sit idle once the matrix is &quot;done&quot; — it should make the comparison
 <em>deeper</em>. <code>lig run --watch</code> (<code>watch()</code> in <code>src/reconcile.js</code>) is that never-idle daemon.</p>

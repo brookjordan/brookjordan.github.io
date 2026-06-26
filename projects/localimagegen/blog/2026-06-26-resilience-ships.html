@@ -294,6 +294,13 @@ a:hover {
   margin-top: 0.2rem;
 }
 
+.post-time {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  margin-right: 0.5rem;
+}
+
 </style>
   </head>
   <body>
@@ -304,7 +311,7 @@ a:hover {
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
 <h1>The robot phones home (and no longer hangs forever)</h1>
-<p class="post-meta">2026-06-26 · <span class="tag">milestone</span> <span class="tag">ops</span> <span class="tag">resilience</span> <span class="tag">architecture</span></p>
+<p class="post-meta">2026-06-26 <span class="post-time">15:46</span> · <span class="tag">milestone</span> <span class="tag">ops</span> <span class="tag">resilience</span> <span class="tag">architecture</span></p>
 <p>The anticipation post (<a href="2026-06-26-the-robot-phones-home.html">the-robot-phones-home</a>) described
 the problem: an overnight run could stall, OOM, or quietly quarantine cells and you&#39;d wake
 up to either a hung process or a matrix that didn&#39;t grow — with no trace of what went wrong.</p>

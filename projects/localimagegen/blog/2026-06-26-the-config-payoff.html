@@ -294,6 +294,13 @@ a:hover {
   margin-top: 0.2rem;
 }
 
+.post-time {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  margin-right: 0.5rem;
+}
+
 </style>
   </head>
   <body>
@@ -304,7 +311,7 @@ a:hover {
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
 <h1>The config payoff</h1>
-<p class="post-meta">2026-06-26 · <span class="tag">milestone</span> <span class="tag">architecture</span></p>
+<p class="post-meta">2026-06-26 <span class="post-time">17:35</span> · <span class="tag">milestone</span> <span class="tag">architecture</span></p>
 <p>The migration is done. <code>config/gallery.yaml</code> and <code>config/workflows.yaml</code> are gone. Here&#39;s what changed and what it feels like now.</p>
 <h2>Before</h2>
 <p>Rename <code>schnell</code> to anything, or add a field to every model: open <code>gallery.yaml</code>, find all the places, hope you got them all. The YAML parser would tell you at runtime if you broke the shape — only if you remembered to run <code>lig doctor</code>. The type checker had no opinion.</p>

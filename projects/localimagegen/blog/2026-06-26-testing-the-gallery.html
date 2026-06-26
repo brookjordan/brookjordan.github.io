@@ -294,6 +294,13 @@ a:hover {
   margin-top: 0.2rem;
 }
 
+.post-time {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  margin-right: 0.5rem;
+}
+
 </style>
   </head>
   <body>
@@ -304,7 +311,7 @@ a:hover {
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
 <h1>Testing the gallery: lib.ts/app.ts split + Vitest</h1>
-<p class="post-meta">2026-06-26 · <span class="tag">testing</span> <span class="tag">refactoring</span> <span class="tag">web</span> <span class="tag">vitest</span> <span class="tag">typescript</span></p>
+<p class="post-meta">2026-06-26 <span class="post-time">20:22</span> · <span class="tag">testing</span> <span class="tag">refactoring</span> <span class="tag">web</span> <span class="tag">vitest</span> <span class="tag">typescript</span></p>
 <p>The gallery frontend — <code>web/app.ts</code> — had been untestable since day one. Here is why, how I fixed it, and what the tests cover.</p>
 <h2>The problem: a classic browser script</h2>
 <p><code>web/app.ts</code> was written as a single-file script with no exports. Every function lived at script scope, top-level DOM bootstrap fired immediately on load (<code>setupDragDrop(...)</code>, <code>void refresh(&#39;auto&#39;)</code>), and the build inlined it directly into a <code>&lt;script&gt;</code> tag. This was the right call for an offline static page that needed to work on a plain file server — no bundler, no module graph, no runtime imports.</p>

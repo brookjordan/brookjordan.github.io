@@ -294,6 +294,13 @@ a:hover {
   margin-top: 0.2rem;
 }
 
+.post-time {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  margin-right: 0.5rem;
+}
+
 </style>
   </head>
   <body>
@@ -304,7 +311,7 @@ a:hover {
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
 <h1>Lesson — one filename grammar, and seeds in the name</h1>
-<p class="post-meta">2026-06-23 · <span class="tag">lesson</span> <span class="tag">architecture</span></p>
+<p class="post-meta">2026-06-25 <span class="post-time">21:36</span> · <span class="tag">lesson</span> <span class="tag">architecture</span></p>
 <p><img src="img/banner_filename-grammar.webp" alt="An archive of drawers labelled with glowing serial and seed codes"></p>
 <p>Filenames <em>are</em> the database in this project, so the grammar matters. It now lives in
 exactly one place: <code>src/naming.js</code>. Re-implementing it anywhere else is how drift and

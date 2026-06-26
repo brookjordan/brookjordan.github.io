@@ -294,6 +294,13 @@ a:hover {
   margin-top: 0.2rem;
 }
 
+.post-time {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  margin-right: 0.5rem;
+}
+
 </style>
   </head>
   <body>
@@ -304,7 +311,7 @@ a:hover {
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
 <h1>Near-lossless by binary search — the SSIM-gated compressor</h1>
-<p class="post-meta">2026-06-25 · <span class="tag">architecture</span> <span class="tag">decision</span></p>
+<p class="post-meta">2026-06-25 <span class="post-time">21:36</span> · <span class="tag">architecture</span> <span class="tag">decision</span></p>
 <p><img src="img/banner_ssim-compression.webp" alt="An image squeezed through a precision caliper, pixels flaking off"></p>
 <p>Roughly a thousand PNG masters need to ship as small web images without visible quality
 loss — and recompressing all of them on every build would be silly. So <code>src/compress.js</code>

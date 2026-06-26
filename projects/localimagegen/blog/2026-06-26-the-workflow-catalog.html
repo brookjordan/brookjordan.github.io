@@ -294,6 +294,13 @@ a:hover {
   margin-top: 0.2rem;
 }
 
+.post-time {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  margin-right: 0.5rem;
+}
+
 </style>
   </head>
   <body>
@@ -304,7 +311,7 @@ a:hover {
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
 <h1>The workflow catalog — version-controlling the workflows we actually run</h1>
-<p class="post-meta">2026-06-26 · <span class="tag">architecture</span> <span class="tag">workflows</span> <span class="tag">decision</span> <span class="tag">comfyui</span></p>
+<p class="post-meta">2026-06-26 <span class="post-time">16:36</span> · <span class="tag">architecture</span> <span class="tag">workflows</span> <span class="tag">decision</span> <span class="tag">comfyui</span></p>
 <p>The workflow that renders each model isn&#39;t really <em>in</em> the repo. It&#39;s buried inside
 <code>buildGraph</code> in <a href="src/graphs.ts">src/graphs.ts</a> as TypeScript, and it also floats — as a
 saved graph — somewhere in the live ComfyUI library on this machine. Neither form is a

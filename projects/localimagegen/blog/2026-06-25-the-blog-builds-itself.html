@@ -294,6 +294,13 @@ a:hover {
   margin-top: 0.2rem;
 }
 
+.post-time {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  margin-right: 0.5rem;
+}
+
 </style>
   </head>
   <body>
@@ -304,7 +311,7 @@ a:hover {
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
 <h1>The blog builds itself (and why it's not a monorepo yet)</h1>
-<p class="post-meta">2026-06-25 · <span class="tag">decision</span> <span class="tag">architecture</span> <span class="tag">meta</span></p>
+<p class="post-meta">2026-06-25 <span class="post-time">21:36</span> · <span class="tag">decision</span> <span class="tag">architecture</span> <span class="tag">meta</span></p>
 <p>For two weeks this devlog has been a folder of Markdown you read on the file system. Today it
 became a <em>build target</em>: <code>lig blog</code> turns <code>history/*.md</code> into a small static site in <code>build/blog/</code>,
 and <code>publish</code> ships it alongside the gallery to <code>…/projects/localimagegen/blog/</code>.</p>

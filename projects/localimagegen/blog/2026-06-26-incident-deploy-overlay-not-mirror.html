@@ -294,6 +294,13 @@ a:hover {
   margin-top: 0.2rem;
 }
 
+.post-time {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  margin-right: 0.5rem;
+}
+
 </style>
   </head>
   <body>
@@ -304,7 +311,7 @@ a:hover {
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
 <h1>Incident — deploy was an overlay, not a mirror</h1>
-<p class="post-meta">2026-06-26 · <span class="tag">incident</span> <span class="tag">ops</span> <span class="tag">lesson</span></p>
+<p class="post-meta">2026-06-26 <span class="post-time">09:06</span> · <span class="tag">incident</span> <span class="tag">ops</span> <span class="tag">lesson</span></p>
 <p><strong>Symptom:</strong> Python-era files kept turning up in the published site under
 <code>projects/localimagegen/</code> — <code>optimize_images.py</code>, <code>_manifest.json</code>, <code>build.py</code>,
 <code>build_static.py</code>, and a stray <code>__pycache__/optimize_images.cpython-312.pyc</code>. Two of them

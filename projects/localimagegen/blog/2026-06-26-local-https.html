@@ -294,6 +294,13 @@ a:hover {
   margin-top: 0.2rem;
 }
 
+.post-time {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  margin-right: 0.5rem;
+}
+
 </style>
   </head>
   <body>
@@ -304,7 +311,7 @@ a:hover {
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
 <h1>Local HTTPS dev server</h1>
-<p class="post-meta">2026-06-26 · <span class="tag">serve</span> <span class="tag">https</span> <span class="tag">dx</span></p>
+<p class="post-meta">2026-06-26 <span class="post-time">21:15</span> · <span class="tag">serve</span> <span class="tag">https</span> <span class="tag">dx</span></p>
 <p>Some browser APIs — the Clipboard API, <code>navigator.mediaDevices</code>, <code>crypto.subtle</code>, and several
 others — are only available in a <a href="https://developer.mozilla.org/en-US/docs/Web/Security/Secure_contexts">secure context</a>.
 <code>localhost</code> is treated as secure by default in most browsers, but once you test against a

@@ -294,6 +294,13 @@ a:hover {
   margin-top: 0.2rem;
 }
 
+.post-time {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  margin-right: 0.5rem;
+}
+
 </style>
   </head>
   <body>
@@ -304,7 +311,7 @@ a:hover {
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
 <h1>Deprecate, don't delete — making prompt changes safe</h1>
-<p class="post-meta">2026-06-25 · <span class="tag">decision</span> <span class="tag">architecture</span></p>
+<p class="post-meta">2026-06-25 <span class="post-time">21:36</span> · <span class="tag">decision</span> <span class="tag">architecture</span></p>
 <p><img src="img/banner_deprecate.webp" alt="Old photographs dissolving as fresh vivid ones slide in to replace them"></p>
 <p>We want to keep <em>improving</em> prompts — especially to give individual models their own tuned
 variant — without two bad outcomes: blowing away coverage, or deleting a usable image
