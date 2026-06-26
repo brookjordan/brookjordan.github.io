@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#1a1d24" />
+    <meta name="color-scheme" content="dark" />
+    <title>The Python era — Patch Notes, a router dream, and the sweep that rendered everything</title>
+    <style>
+/* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
+   This is the single source of truth for colour, radius, spacing and type.
+   It is inlined ahead of each page's stylesheet at build time, and linked
+   first in dev so opening the .html files directly still resolves the vars.
+
+   Theming: everything below is a semantic token mapped onto a small palette of
+   primitives. To add a theme, override the *semantic* tokens under a selector
+   (see the commented [data-theme="light"] block at the bottom) — no stylesheet
+   needs to change, only these variables. */
+:root {
+  color-scheme: dark;
+
+  /* ---- palette primitives (raw colours; reference these only via the tokens below) ---- */
+  --c-ink-900: #0f1115;
+  --c-ink-800: #1a1d24;
+  --c-ink-700: #232732;
+  --c-ink-600: #2a2f3a;
+  --c-fog-100: #e8eaed;
+  --c-fog-300: #9aa0a6;
+  --c-fog-500: #6b727d;
+  --c-accent: #7c9cff;
+
+  /* ---- semantic: background / border / text, primary > secondary > tertiary ---- */
+  --bg-primary: var(--c-ink-900);
+  --bg-secondary: var(--c-ink-800);
+  --bg-tertiary: var(--c-ink-700);
+
+  --border-primary: var(--c-ink-600);
+  --border-secondary: rgba(150, 170, 210, 0.16);
+
+  --text-primary: var(--c-fog-100);
+  --text-secondary: var(--c-fog-300);
+  --text-tertiary: var(--c-fog-500);
+
+  --accent: var(--c-accent);
+
+  /* ---- radius scale ---- */
+  --radius-sm: 5px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 9999px;
+
+  /* ---- spacing / padding scale ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 2rem;
+
+  /* ---- type ---- */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* Shared cross-nav link (gallery <-> devlog). Both app.css and blog.css inline this
+   file, so defining it once here keeps the two links visually identical. */
+.cross-link {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.cross-link:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+/* Example theme override — set <html data-theme="light"> to activate (or wire it
+   to prefers-color-scheme). Left commented so we don't ship untuned colours:
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg-primary: #fbfbfd;
+  --bg-secondary: #f1f2f5;
+  --bg-tertiary: #e7e9ee;
+  --border-primary: #d4d8e0;
+  --border-secondary: rgba(20, 30, 60, 0.12);
+  --text-primary: #1a1d24;
+  --text-secondary: #555b66;
+  --text-tertiary: #7b828d;
+}
+*/
+
+</style>
+    <style>
+:root {
+  /* Local aliases mapped onto the shared tokens in tokens.css (inlined first),
+     so the devlog and the gallery share one palette, radius and spacing scale. */
+  --bg: var(--bg-primary);
+  --bg-soft: var(--bg-secondary);
+  --panel: var(--bg-tertiary);
+  --text: var(--text-primary);
+  --muted: var(--text-secondary);
+  --border: var(--border-secondary);
+  --radius: var(--radius-md);
+  /* --accent comes straight from tokens.css */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.65 var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.site-header,
+.site-footer {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 1.25rem 1.25rem;
+}
+
+.site-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text);
+}
+
+.brand span {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.content {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+
+.site-footer {
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* ---- post typography ---- */
+.content h1 {
+  font-size: 1.9rem;
+  line-height: 1.2;
+  margin: 0 0 0.5rem;
+}
+
+.content h2 {
+  font-size: 1.35rem;
+  margin: 2rem 0 0.6rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.3rem;
+}
+
+.content h3 {
+  font-size: 1.1rem;
+  margin: 1.5rem 0 0.4rem;
+}
+
+.content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  display: block;
+  margin: 1.25rem 0;
+}
+
+.content audio {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.content blockquote {
+  margin: 1.25rem 0;
+  padding: 0.5rem 1rem;
+  border-left: 3px solid var(--accent);
+  background: var(--bg-soft);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  color: var(--muted);
+}
+
+.content pre {
+  background: #12151b;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  overflow: auto;
+  font-size: 0.88rem;
+}
+
+.content code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: rgba(150, 170, 210, 0.14);
+  padding: 0.1em 0.35em;
+  border-radius: 5px;
+}
+
+.content pre code {
+  background: none;
+  padding: 0;
+}
+
+/* ---- per-post header (date + tags) ---- */
+.post-meta {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0 0 1.5rem;
+}
+
+.tag {
+  display: inline-block;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 0.1em 0.7em;
+  font-size: 0.78rem;
+  margin-right: 0.35rem;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+/* ---- index listing ---- */
+.index-intro {
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+
+.post-group-date {
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 2rem 0 0.75rem;
+}
+
+.post-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.post-list li {
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.post-list a.post-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.post-list .post-row-meta {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+}
+
+.post-time {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  margin-right: 0.5rem;
+  cursor: help;
+}
+
+</style>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="./index.html">localimagegen <span>· devlog</span></a>
+      <nav class="site-nav"><a class="cross-link" href="../index.html">gallery →</a></nav>
+    </header>
+    <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
+<article class="post">
+<h1>The Python era — Patch Notes, a router dream, and the sweep that rendered everything</h1>
+<p class="post-meta">2026-06-25 <time class="post-time" data-ts="1782394616000">21:36</time> · <span class="tag">history</span> <span class="tag">milestone</span></p>
+<p><img src="img/qwen2512_van_s10_t159s.webp" alt="The Patch Notes signature — a fabric patch sewn over a torn hole, on a cyberpunk van"></p>
+<p><em>The motif that names the whole thing: a patch, sewn over a tear. Qwen-Image 2512.</em></p>
+<p>Today the orchestration got <a href="2026-06-25-choosing-node-and-no-templating.html">rewritten in Node</a>.
+Before the old workhorse cools, it deserves a proper sendoff — because for the three days
+before this, <em>everything</em> ran on a pile of Python on an M3 Mac, and it was thoroughly
+documented (there are research dossiers in <code>docker-stacks/patch-notes-image-research/</code>
+older than every line of <code>localimagegen</code>).</p>
+<h2>It started as &quot;Patch Notes&quot;</h2>
+<p>The podcast&#39;s working title is <strong>Patch Notes</strong> (tentative — and probably not original, so
+the search for a better name continues) — hence the <code>PN_</code> filenames, and hence the
+signature you&#39;ll spot all over the gallery: <strong>a fabric patch sewn over a torn hole</strong> (the
+van, the dragon). <em>Patch</em> notes. The first goal was a podcast-cover pipeline with a grand
+vision — a <strong>router</strong> that tags each workflow so n8n can pick the best engine for the day&#39;s
+prompt. The guiding line, verbatim from <code>00-INDEX.md</code>:</p>
+<blockquote>
+<p>&quot;fish swim, birds fly, dinosaurs do not breathe on the moon. We do <strong>not</strong> pick one model
+for everything. Each engine is documented for its <em>best</em> foot.&quot;</p>
+</blockquote>
+<p>There are per-model dossiers and strategy docs — an 11-engine arsenal, each with its role,
+native step count, and M3 memory note. &quot;Best foot per engine&quot; is exactly what the gallery
+went on to measure.</p>
+<h2>The lab notebook</h2>
+<p><code>stage2_log.md</code> is a real experiment journal — base scene → Qwen-Image-Edit stitches the
+patch in, every entry with a clear pass/fail verdict. A favourite, on whether the slow
+non-Lightning brew was worth it:</p>
+<blockquote>
+<p>&quot;<strong>Lightning wins.</strong> Non-Lightning is ~20× slower, drifts the scene, and isn&#39;t worth it.
+Use Lightning, ~6 steps, cfg 1.&quot;</p>
+</blockquote>
+<p>That one finding is why half the builders still run a Lightning LoRA at cfg 1.</p>
+<h2>The code I&#39;m proud of: <code>reconcile.py</code></h2>
+<p>The heart was a convergent matrix filler — the direct ancestor of <code>src/reconcile.js</code>. Its
+docstring states the entire contract:</p>
+<blockquote>
+<p>add a step → filled for every scene AND every seed · add a scene → filled for every step
+AND every seed · add a seed → the whole suite is filled for that seed</p>
+</blockquote>
+<p>…and it enforced that by simply checking what&#39;s already on disk and rendering the gaps:</p>
+<pre><code class="language-python">def cell_exists(model, scene, step, seed):
+    pat = os.path.join(OUT, f&quot;{model}_{scene}_s{step:02d}_*_{seed:05d}_.png&quot;)
+    return bool(glob.glob(pat))
+
+for seed in seeds:
+    for scene, prompt in SCENES.items():
+        for s in steps:
+            if not cell_exists(model, scene, s, seed):
+                todo.append((scene, prompt, s, seed))
+</code></pre>
+<p>One model at a time, free VRAM between each, stamp seeds + durations into the filenames at
+the end. Crash-only and convergent before those were the words for it — re-run and it just
+finishes what&#39;s missing. Node later added the validity gate and deprecation tiers, but the
+soul is pure Python.</p>
+<h2>What it built, and where it went</h2>
+<p>This Python lab rendered <strong>every one of the 1026 masters</strong> in this blog, stamped their
+seeds and durations, and built the first <code>index.html</code> gallery (2367 lines) plus a <code>fixed/</code>
+static build with its own webp compressor — the ancestor of the
+<a href="2026-06-25-ssim-gated-compression.html">SSIM compressor</a>. Then the orchestration was rebuilt
+in Node to match the JS gallery, and <a href="2026-06-25-localimagegen-is-born.html">localimagegen was born</a>.</p>
+<p>The scripts still sit in <code>docker-stacks/patch-notes-image-research/run/</code> — <code>_sweep_lib.py</code>
+(474 lines of builders + prompts), <code>reconcile.py</code>, <code>stage2_tools.py</code> (the stamper),
+<code>run_gallery.py</code>, and the <code>rebuild_*.py</code> helpers — kept for reference. They did the real
+work. Pour one out.</p>
+
+</article></main>
+    <footer class="site-footer">
+      <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>
+    </footer>
+    <script>
+      // Localise all post times to the reader's timezone.
+      // Each <time class="post-time" data-ts="..."> carries a Unix epoch (ms);
+      // we replace the static server-rendered HH:MM with the local equivalent.
+      document.querySelectorAll('time.post-time[data-ts]').forEach(function (el) {
+        var d = new Date(+el.dataset.ts);
+        el.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        el.title = d.toLocaleString(); // full local datetime on hover
+      });
+    </script>
+  </body>
+</html>
