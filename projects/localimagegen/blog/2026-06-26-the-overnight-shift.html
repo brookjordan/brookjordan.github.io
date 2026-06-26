@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#1a1d24" />
     <meta name="color-scheme" content="dark" />
-    <title>The step-count reckoning — who thrived, who made soup</title>
+    <title>The overnight shift: I slept, the robot didn't</title>
     <style>
 /* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
    This is the single source of truth for colour, radius, spacing and type.
@@ -303,93 +303,25 @@ a:hover {
     </header>
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
-<h1>The step-count reckoning — who thrived, who made soup</h1>
-<p class="post-meta">2026-06-24 · <span class="tag">results</span> <span class="tag">content</span></p>
-<p>The original question was simple: <strong>how few steps can each model get away with?</strong> We render
-every model at 1, 2, 4, 6, 8… steps and look. The answer turned out to be a personality
-test, and the results surprised us.</p>
-<h2>Exhibit A — the same doll, 1 step vs 8</h2>
-<p>Chroma is the full <strong>undistilled</strong> model: no turbo shortcuts, so at a single step it has
-essentially nothing to work with.</p>
-<table>
-<thead>
-<tr>
-<th>1 step · 35s</th>
-<th>2 steps · 47s</th>
-<th>4 steps · 93s</th>
-<th>8 steps · 183s</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><img src="img/chroma_doll_s01_t35s.webp" alt="Chroma doll, 1 step, a blurry pink smear"></td>
-<td><img src="img/chroma_doll_s02_t47s.webp" alt="Chroma doll, 2 steps"></td>
-<td><img src="img/chroma_doll_s04_t93s.webp" alt="Chroma doll, 4 steps"></td>
-<td><img src="img/chroma_doll_s08_t183s.webp" alt="Chroma doll, 8 steps, a crisp porcelain doll"></td>
-</tr>
-</tbody></table>
-<p>Same seed, same prompt. One step is a smear of pink; eight steps is a porcelain
-ball-jointed doll in a sunlit parlour — fur stole, teacups, the lot. That&#39;s the whole
-thesis in two frames.</p>
-<h2>Exhibit B — fast ≠ faithful</h2>
-<p>Now SDXL with a Lightning LoRA, <strong>2 steps, 4 seconds</strong>:</p>
-<p><img src="img/sdxlbase_doll_s02_t4s.webp" alt="SDXL doll scene at 2 steps: a pretty empty parlour with no doll"></p>
-<p><em>Clean, warm, beautifully lit… and completely missing the doll the prompt asked for.</em></p>
-<p>This is the trap. The turbo models are <em>fast</em> and <em>pretty</em> at 2 steps, but they&#39;ll happily
-paint a gorgeous empty room and forget the subject entirely. Speed bought coherence, not
-obedience.</p>
-<h2>Exhibit C — the worst quadrant: slow <strong>and</strong> wrong</h2>
-<p>The cruelest cell in the whole matrix. Chroma, &quot;spirit&quot; scene, <strong>2 steps — and it still
-took 46 seconds</strong> to produce this:</p>
-<p><img src="img/chroma_spirit_s02_t46s.webp" alt="Chroma spirit at 2 steps: abstract green blur"></p>
-<p><em>Forty-six seconds. For abstract green.</em></p>
-<p>Undistilled model + too few steps = you pay full price and get soup. You cannot guess this
-from a spec sheet. You have to <em>see</em> it — which is the entire reason the matrix exists.</p>
-<h2>The 2-step league table — one scene, fourteen models</h2>
-<p>Same &quot;spirit&quot; prompt, same 2 steps, sorted fastest → slowest:</p>
-<table>
-<thead>
-<tr>
-<th>juggernaut · 4s</th>
-<th>sdxlbase · 4s</th>
-<th>zimage · 15s</th>
-<th>flux9b · 25s</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><img src="img/juggernaut_spirit_s02_t4s.webp" alt=""></td>
-<td><img src="img/sdxlbase_spirit_s02_t4s.webp" alt=""></td>
-<td><img src="img/zimage_spirit_s02_t15s.webp" alt=""></td>
-<td><img src="img/flux9b_spirit_s02_t25s.webp" alt=""></td>
-</tr>
-<tr>
-<td><strong>schnell · 26s</strong></td>
-<td><strong>qwen2512 · 35s</strong></td>
-<td><strong>chroma · 46s</strong></td>
-<td><strong>ideogram · 67s</strong></td>
-</tr>
-<tr>
-<td><img src="img/schnell_spirit_s02_t26s.webp" alt=""></td>
-<td><img src="img/qwen2512_spirit_s02_t35s.webp" alt=""></td>
-<td><img src="img/chroma_spirit_s02_t46s.webp" alt=""></td>
-<td><img src="img/ideogram_spirit_s02_t67s.webp" alt=""></td>
-</tr>
-</tbody></table>
-<p>What we actually learned, model by model:</p>
-<ul>
-<li><strong>juggernaut / sdxl (4s)</strong> — lightning fast, coherent, but collapse the busy scene down
-to <em>one</em> hero creature (a lone fuzzy critter) and quietly drop the rest of the cast.</li>
-<li><strong>flux9b (25s) &amp; qwen2512 (35s)</strong> — the surprise overachievers: at a mere 2 steps they
-already place the tardigrade, the bird, the fuzzy gremlin <em>and</em> the deer spirit. Punching
-way above their step count.</li>
-<li><strong>chroma (46s)</strong> — green soup.</li>
-<li><strong>ideogram (67s)</strong> — a near-black void. The <strong>slowest model produced the worst image.</strong></li>
-</ul>
-<h2>The takeaway we didn&#39;t expect</h2>
-<p>&quot;How many steps?&quot; is the wrong question. The right one is &quot;how many steps <em>for this
-model</em>,&quot; and the honest answer ranges from <strong>1 to 20+</strong>. That realisation is exactly why
-the config grew <strong>per-model step ladders</strong> instead of one global list — and why the gallery
-has a &quot;compare by time budget&quot; mode, so you can ask &quot;best image in 30 seconds&quot; and watch
-the rankings completely reshuffle.</p>
+<h1>The overnight shift: I slept, the robot didn't</h1>
+<p class="post-meta">2026-06-26 · <span class="tag">milestone</span> <span class="tag">ops</span> <span class="tag">lesson</span></p>
+<p>I went to bed. I told the machine to handle it. I woke up to a finished gallery. Honestly? Show me a cron job that does <em>that</em>.</p>
+<h2>The numbers, because I&#39;m proud of them</h2>
+<p><code>run --watch</code> ran all night and cleared the <strong>entire two-seed matrix: 1308 / 1308 cells. Zero missing. Zero invalid.</strong> Roughly <strong>+288 renders</strong> banked while I was unconscious, freeing exactly zero of my brain cells to worry about it. Fastest-models-first, so the lightning SDXLs (<code>sdxlbase</code> / <code>realvisxl</code> / <code>juggernaut</code>) blitzed through at ~4-12s each while the slow artistes (<code>chroma</code>, <code>ideogram</code>) took their luxurious 90-180s per frame. Everyone got their turn. Everyone finished.</p>
+<p>And it was all sitting on the new plumbing from the day before: <strong>lossless-WebP masters</strong> (~30% smaller, byte-for-byte identical), <strong>parallel compression</strong> (95% smaller serving images, all 14 cores screaming), and a live deploy at <code>brook.dev/projects/localimagegen</code> with a clean <code>/flexible/</code> URL. No notes. We cooked.</p>
+<h2>The flex: who actually drew the people</h2>
+<p>Watching <code>kingdom</code> fill in fastest-first was its own little drama. The cheap-and-quick models paint a gorgeous empty postcard - mountains, fjord, golden hour, <em>nobody home</em>. Then <strong>flux4b</strong> rolled in and was the <strong>first to actually put people on the castle steps</strong>: monks, soldiers, the crowd the prompt explicitly asked for. The quick ones are quick for a reason. Speed sends you an invoice, and it&#39;s paid in detail.</p>
+<h2>Then it ate its own tail</h2>
+<p>Here&#39;s where the robot got humble. Somewhere around dawn it got <strong>stuck in an infinite loop</strong> - re-rendering the same 7 cells forever, never advancing to a fresh seed.</p>
+<p>The culprit: 2-step <code>wan</code> and <code>ideogram</code> on <code>van</code>/<code>dragon</code> come out <strong>near-black</strong> (stddev 0.7-5.4) - the models genuinely can&#39;t form an image in two steps. Our &quot;is this a failed render?&quot; gate rejected anything under stddev 6, flagged them as blank, re-rendered them, got near-black <em>again</em>, and... you see the problem. A dog chasing its own tail, with a GPU.</p>
+<h2>The fix, smugly</h2>
+<p>Two moves:</p>
+<ol>
+<li><strong>The blank gate was paranoid.</strong> A <em>true</em> failure (the infamous flux4b NaN-black) is essentially pure black, stddev ~0. We were nuking anything under 6 - which is real-but-dark territory. Dropped it to <strong>1</strong>. Now only genuine black gets the boot; dim-but-honest renders live.</li>
+<li><strong>Three strikes.</strong> Any cell that <em>genuinely</em> refuses to render now gets tried three times, then <strong>quarantined</strong> - logged with exactly <em>what</em> failed (<code>blank (stddev 0.7)</code>), set aside, and skipped. The autopilot shrugs and moves on instead of sulking. It self-heals.</li>
+</ol>
+<p>Net result: it ran all night, finished the job, caught its own bug, and then basically filed a bug report on itself. The system that won&#39;t loop forever, won&#39;t lose your work, and won&#39;t let one stubborn pixel-soup hold the whole night hostage.</p>
+<p>Sleep is for humans. The gallery never closed. 🦕</p>
 
 </article></main>
     <footer class="site-footer">
