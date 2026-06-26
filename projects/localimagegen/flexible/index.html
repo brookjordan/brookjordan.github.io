@@ -781,10 +781,7 @@
   function pickEntry(catalog2, currentSeed2, model, subject, sample) {
     const cell = catalog2[model]?.[subject]?.[String(sample)];
     if (!cell) return null;
-    if (cell[String(currentSeed2)]) return cell[String(currentSeed2)] ?? null;
-    if (cell["42"]) return cell["42"] ?? null;
-    const ss = Object.keys(cell).map(Number).sort((a, b) => a - b);
-    return ss.length ? cell[String(ss[0])] ?? null : null;
+    return cell[String(currentSeed2)] ?? null;
   }
   function entryMeta(metaByPrefix2, model, subject, sample, entry) {
     const pref = catalogPrefix(model, subject, sample, entry?.seed ?? 42);
@@ -2306,8 +2303,20 @@
     }
     slide.classList.remove("missing");
     const entry = pickEntry2(model, subject, shown);
+    if (!entry) {
+      slide.classList.add("missing");
+      sampleEl.textContent = "\u2014";
+      if (durationEl) {
+        durationEl.textContent = "";
+        durationEl.hidden = true;
+      }
+      imgWrap.title = "";
+      clearSlideStack(imgWrap);
+      clearTimeStyle(slide, imgWrap, durationEl);
+      return;
+    }
     const meta = entryMeta2(model, subject, shown, entry);
-    const entrySeed = entry?.seed ?? currentSeed;
+    const entrySeed = entry.seed;
     slide.dataset.shownSample = String(shown);
     slide.dataset.shownSeed = String(entrySeed);
     refreshNoteDot(slide, model, subject, shown, entrySeed);
@@ -2329,8 +2338,8 @@
         targetSample
       );
     else clearTimeStyle(slide, imgWrap, durationEl);
-    if (entry) imgWrap.title = formatMetaTooltip2(entry.file, meta);
-    if (entry) await swapSlideImage(imgWrap, entry.file, gen);
+    imgWrap.title = formatMetaTooltip2(entry.file, meta);
+    await swapSlideImage(imgWrap, entry.file, gen);
     if (gen !== renderGeneration) return;
     const img = getTopStackImage(imgWrap);
     if (img) paintSlideCaptions(img, modelEl, subjectEl, sampleEl);
@@ -2424,31 +2433,35 @@
       durationEl.hidden = true;
     } else {
       const entry = pickEntry2(model, subject, shown);
-      const meta = entryMeta2(model, subject, shown, entry);
-      const entrySeed = entry?.seed ?? currentSeed;
-      slide.dataset.shownSample = String(shown);
-      slide.dataset.shownSeed = String(entrySeed);
-      setSampleSpan(
-        sampleEl,
-        durationEl,
-        shown,
-        targetSample,
-        compareMode === "time" ? true : exact,
-        meta,
-        promptCatalog?.ceilings?.[model] ?? null
-      );
-      if (compareMode === "time")
-        applyTimeStyle(
-          slide,
-          imgWrap,
+      if (!entry) {
+        slide.classList.add("missing");
+        sampleEl.textContent = "\u2014";
+        durationEl.hidden = true;
+      } else {
+        const meta = entryMeta2(model, subject, shown, entry);
+        const entrySeed = entry.seed;
+        slide.dataset.shownSample = String(shown);
+        slide.dataset.shownSeed = String(entrySeed);
+        setSampleSpan(
+          sampleEl,
           durationEl,
-          timeCellPick2(model, subject, targetSample),
-          targetSample
+          shown,
+          targetSample,
+          compareMode === "time" ? true : exact,
+          meta,
+          promptCatalog?.ceilings?.[model] ?? null
         );
-      if (entry) imgWrap.title = formatMetaTooltip2(entry.file, meta);
-      const alt = `${model} ${subject}`;
-      if (entry) refreshNoteDot(slide, model, subject, shown, entrySeed);
-      if (entry) {
+        if (compareMode === "time")
+          applyTimeStyle(
+            slide,
+            imgWrap,
+            durationEl,
+            timeCellPick2(model, subject, targetSample),
+            targetSample
+          );
+        imgWrap.title = formatMetaTooltip2(entry.file, meta);
+        const alt = `${model} ${subject}`;
+        refreshNoteDot(slide, model, subject, shown, entrySeed);
         setImgSrc(imgWrap, entry.file, { readyUrl: readyUrl ?? void 0, alt }).then(() => {
           const img = getTopStackImage(imgWrap);
           if (img) paintSlideCaptions(img, modelEl, subjectEl, sampleEl);
