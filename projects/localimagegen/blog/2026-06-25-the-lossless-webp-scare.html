@@ -299,6 +299,7 @@ a:hover {
   color: var(--muted);
   font-variant-numeric: tabular-nums;
   margin-right: 0.5rem;
+  cursor: help;
 }
 
 </style>
@@ -311,7 +312,7 @@ a:hover {
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
 <h1>The great lossless-WebP scare (or: the monster that wasn't)</h1>
-<p class="post-meta">2026-06-25 <span class="post-time">22:30</span> · <span class="tag">decision</span> <span class="tag">ops</span> <span class="tag">lesson</span></p>
+<p class="post-meta">2026-06-25 <time class="post-time" data-ts="1782397852000">22:30</time> · <span class="tag">decision</span> <span class="tag">ops</span> <span class="tag">lesson</span></p>
 <p>Gather round, for a tale of <strong>terror</strong>. 🦖</p>
 <p>It began, as these things do, with a number. The <code>masters/</code> folder — every original render,
 the canonical source of truth — weighed <strong>1.1 GB</strong>. Someone (fine, it was me) muttered the cursed
@@ -351,5 +352,15 @@ to be brave for free.</li>
     <footer class="site-footer">
       <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>
     </footer>
+    <script>
+      // Localise all post times to the reader's timezone.
+      // Each <time class="post-time" data-ts="..."> carries a Unix epoch (ms);
+      // we replace the static server-rendered HH:MM with the local equivalent.
+      document.querySelectorAll('time.post-time[data-ts]').forEach(function (el) {
+        var d = new Date(+el.dataset.ts);
+        el.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        el.title = d.toLocaleString(); // full local datetime on hover
+      });
+    </script>
   </body>
 </html>

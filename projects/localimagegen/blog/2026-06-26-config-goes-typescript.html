@@ -299,6 +299,7 @@ a:hover {
   color: var(--muted);
   font-variant-numeric: tabular-nums;
   margin-right: 0.5rem;
+  cursor: help;
 }
 
 </style>
@@ -311,7 +312,7 @@ a:hover {
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
 <h1>Config goes TypeScript</h1>
-<p class="post-meta">2026-06-26 <span class="post-time">17:35</span> · <span class="tag">decision</span> <span class="tag">architecture</span></p>
+<p class="post-meta">2026-06-26 <time class="post-time" data-ts="1782466537000">17:35</time> · <span class="tag">decision</span> <span class="tag">architecture</span></p>
 <p>There&#39;s a class of refactor that&#39;s painful in YAML and trivial in a typed language: renaming something that&#39;s referenced across the whole codebase. Rename <code>model</code> to <code>recipe</code> in a YAML config and you&#39;re running <code>grep -r</code>, hoping nothing got missed. Rename it in TypeScript and the compiler tells you every broken call site before you run a single test.</p>
 <p>That&#39;s the reason <code>config/gallery.yaml</code> and <code>config/workflows.yaml</code> no longer exist. They&#39;re now <code>config/gallery.ts</code> and <code>config/workflows.ts</code>.</p>
 <h2>The pattern</h2>
@@ -348,5 +349,15 @@ export type ModelId = keyof typeof gallery.models;
     <footer class="site-footer">
       <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>
     </footer>
+    <script>
+      // Localise all post times to the reader's timezone.
+      // Each <time class="post-time" data-ts="..."> carries a Unix epoch (ms);
+      // we replace the static server-rendered HH:MM with the local equivalent.
+      document.querySelectorAll('time.post-time[data-ts]').forEach(function (el) {
+        var d = new Date(+el.dataset.ts);
+        el.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        el.title = d.toLocaleString(); // full local datetime on hover
+      });
+    </script>
   </body>
 </html>

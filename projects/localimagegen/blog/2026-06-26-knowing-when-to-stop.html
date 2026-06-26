@@ -299,6 +299,7 @@ a:hover {
   color: var(--muted);
   font-variant-numeric: tabular-nums;
   margin-right: 0.5rem;
+  cursor: help;
 }
 
 </style>
@@ -311,7 +312,7 @@ a:hover {
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
 <h1>Knowing when to stop — a time-budgeted rule for the top of the step ladder</h1>
-<p class="post-meta">2026-06-26 <span class="post-time">08:30</span> · <span class="tag">decision</span> <span class="tag">lesson</span></p>
+<p class="post-meta">2026-06-26 <time class="post-time" data-ts="1782433854000">08:30</time> · <span class="tag">decision</span> <span class="tag">lesson</span></p>
 <p><img src="img/banner_knowing-when-to-stop.webp" alt="A spiral staircase of framed doll portraits climbing from blurry to crisp, the highest frames dissolving into glowing fog where they all look identical"></p>
 <p>The <a href="2026-06-24-results-the-step-count-reckoning.html">step-count reckoning</a> answered one
 question: <strong>how few steps can each model get away with?</strong> It never asked the opposite, and
@@ -544,5 +545,15 @@ ladder mis-capped in one direction or the other. Now there&#39;s a rule for both
     <footer class="site-footer">
       <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>
     </footer>
+    <script>
+      // Localise all post times to the reader's timezone.
+      // Each <time class="post-time" data-ts="..."> carries a Unix epoch (ms);
+      // we replace the static server-rendered HH:MM with the local equivalent.
+      document.querySelectorAll('time.post-time[data-ts]').forEach(function (el) {
+        var d = new Date(+el.dataset.ts);
+        el.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        el.title = d.toLocaleString(); // full local datetime on hover
+      });
+    </script>
   </body>
 </html>

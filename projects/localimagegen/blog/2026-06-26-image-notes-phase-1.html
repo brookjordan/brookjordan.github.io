@@ -299,6 +299,7 @@ a:hover {
   color: var(--muted);
   font-variant-numeric: tabular-nums;
   margin-right: 0.5rem;
+  cursor: help;
 }
 
 </style>
@@ -311,7 +312,7 @@ a:hover {
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
 <h1>Image notes: the gallery gets opinions</h1>
-<p class="post-meta">2026-06-26 <span class="post-time">14:36</span> · <span class="tag">feature</span> <span class="tag">gallery</span> <span class="tag">notes</span> <span class="tag">routing</span></p>
+<p class="post-meta">2026-06-26 <time class="post-time" data-ts="1782455795000">14:36</time> · <span class="tag">feature</span> <span class="tag">gallery</span> <span class="tag">notes</span> <span class="tag">routing</span></p>
 <p>The gallery was a passive thing until today — a bake-off with no memory.
 You&#39;d look at a krea2 doll render, think &quot;wow, that face is uncanny,&quot; and then
 scroll on. Nothing wrote that down. Nothing remembered it.</p>
@@ -373,5 +374,15 @@ render more images. It&#39;s to start attaching <em>meaning</em> to what we alre
     <footer class="site-footer">
       <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>
     </footer>
+    <script>
+      // Localise all post times to the reader's timezone.
+      // Each <time class="post-time" data-ts="..."> carries a Unix epoch (ms);
+      // we replace the static server-rendered HH:MM with the local equivalent.
+      document.querySelectorAll('time.post-time[data-ts]').forEach(function (el) {
+        var d = new Date(+el.dataset.ts);
+        el.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        el.title = d.toLocaleString(); // full local datetime on hover
+      });
+    </script>
   </body>
 </html>

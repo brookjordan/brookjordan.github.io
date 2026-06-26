@@ -299,6 +299,7 @@ a:hover {
   color: var(--muted);
   font-variant-numeric: tabular-nums;
   margin-right: 0.5rem;
+  cursor: help;
 }
 
 </style>
@@ -311,7 +312,7 @@ a:hover {
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
 <h1>Welcome to the devlog — yes, we're coming for Joe Rogan</h1>
-<p class="post-meta">2026-06-25 <span class="post-time">21:36</span> · <span class="tag">meta</span></p>
+<p class="post-meta">2026-06-25 <time class="post-time" data-ts="1782394616000">21:36</time> · <span class="tag">meta</span></p>
 <p><img src="img/qwen2512_spirit_s10_t165s.webp" alt="Tilt-shift rainforest with a tardigrade, a scarlet bird, a fuzzy golden creature and a glowing green deer spirit"></p>
 <p><em>Qwen-Image 2512 · &quot;spirit&quot; scene · 10 steps · 165s. One prompt: a tardigrade on a dewy fern, a scarlet-and-blue bird, a fuzzy golden gremlin, and a deer spirit glowing in the mist.</em></p>
 <blockquote>
@@ -340,5 +341,15 @@ Tuesday.</p>
     <footer class="site-footer">
       <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>
     </footer>
+    <script>
+      // Localise all post times to the reader's timezone.
+      // Each <time class="post-time" data-ts="..."> carries a Unix epoch (ms);
+      // we replace the static server-rendered HH:MM with the local equivalent.
+      document.querySelectorAll('time.post-time[data-ts]').forEach(function (el) {
+        var d = new Date(+el.dataset.ts);
+        el.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        el.title = d.toLocaleString(); // full local datetime on hover
+      });
+    </script>
   </body>
 </html>

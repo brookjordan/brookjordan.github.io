@@ -299,6 +299,7 @@ a:hover {
   color: var(--muted);
   font-variant-numeric: tabular-nums;
   margin-right: 0.5rem;
+  cursor: help;
 }
 
 </style>
@@ -311,7 +312,7 @@ a:hover {
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
 <h1>The model menagerie — 14 builders and their personalities</h1>
-<p class="post-meta">2026-06-25 <span class="post-time">21:36</span> · <span class="tag">content</span></p>
+<p class="post-meta">2026-06-25 <time class="post-time" data-ts="1782394616000">21:36</time> · <span class="tag">content</span></p>
 <p><img src="img/banner_model-menagerie.webp" alt="A stage lineup of fourteen distinct glowing mechanical creatures"></p>
 <p>A field guide to the 14 builders in <code>src/graphs.js</code>. They&#39;re grouped by <strong>tier</strong>, which
 tracks <strong>text-encoder capacity</strong> — the whole reason prompts come in s/m/l. All render
@@ -360,5 +361,15 @@ new builder here plus a <code>models</code>/<code>tiers</code> entry in config.<
     <footer class="site-footer">
       <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>
     </footer>
+    <script>
+      // Localise all post times to the reader's timezone.
+      // Each <time class="post-time" data-ts="..."> carries a Unix epoch (ms);
+      // we replace the static server-rendered HH:MM with the local equivalent.
+      document.querySelectorAll('time.post-time[data-ts]').forEach(function (el) {
+        var d = new Date(+el.dataset.ts);
+        el.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        el.title = d.toLocaleString(); // full local datetime on hover
+      });
+    </script>
   </body>
 </html>

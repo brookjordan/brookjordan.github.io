@@ -299,6 +299,7 @@ a:hover {
   color: var(--muted);
   font-variant-numeric: tabular-nums;
   margin-right: 0.5rem;
+  cursor: help;
 }
 
 </style>
@@ -311,7 +312,7 @@ a:hover {
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
 <h1>localimagegen is born — one repo to rule the matrix</h1>
-<p class="post-meta">2026-06-25 <span class="post-time">21:36</span> · <span class="tag">milestone</span> <span class="tag">architecture</span> <span class="tag">decision</span></p>
+<p class="post-meta">2026-06-25 <time class="post-time" data-ts="1782394616000">21:36</time> · <span class="tag">milestone</span> <span class="tag">architecture</span> <span class="tag">decision</span></p>
 <p>The image-model comparison work had outgrown a pile of ad-hoc Python scripts living in
 <code>docker-stacks/patch-notes-image-research/run/</code> and the ComfyUI output folder
 (<code>_sweep_lib.py</code>, <code>reconcile.py</code>, <code>normalize_grid.py</code>, <code>stage2_tools.py</code>, <code>fixed/*.py</code>,
@@ -352,5 +353,15 @@ builds + publishes to <code>brook.dev/projects/localimagegen</code> — first co
     <footer class="site-footer">
       <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>
     </footer>
+    <script>
+      // Localise all post times to the reader's timezone.
+      // Each <time class="post-time" data-ts="..."> carries a Unix epoch (ms);
+      // we replace the static server-rendered HH:MM with the local equivalent.
+      document.querySelectorAll('time.post-time[data-ts]').forEach(function (el) {
+        var d = new Date(+el.dataset.ts);
+        el.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        el.title = d.toLocaleString(); // full local datetime on hover
+      });
+    </script>
   </body>
 </html>

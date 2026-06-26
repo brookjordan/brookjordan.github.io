@@ -299,6 +299,7 @@ a:hover {
   color: var(--muted);
   font-variant-numeric: tabular-nums;
   margin-right: 0.5rem;
+  cursor: help;
 }
 
 </style>
@@ -311,7 +312,7 @@ a:hover {
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
 <h1>The overnight shift: I slept, the robot didn't</h1>
-<p class="post-meta">2026-06-26 <span class="post-time">08:30</span> · <span class="tag">milestone</span> <span class="tag">ops</span> <span class="tag">lesson</span></p>
+<p class="post-meta">2026-06-26 <time class="post-time" data-ts="1782433854000">08:30</time> · <span class="tag">milestone</span> <span class="tag">ops</span> <span class="tag">lesson</span></p>
 <p>I went to bed. I told the machine to handle it. I woke up to a finished gallery. Honestly? Show me a cron job that does <em>that</em>.</p>
 <h2>The numbers, because I&#39;m proud of them</h2>
 <p><code>run --watch</code> ran all night and cleared the <strong>entire two-seed matrix: 1308 / 1308 cells. Zero missing. Zero invalid.</strong> Roughly <strong>+288 renders</strong> banked while I was unconscious, freeing exactly zero of my brain cells to worry about it. Fastest-models-first, so the lightning SDXLs (<code>sdxlbase</code> / <code>realvisxl</code> / <code>juggernaut</code>) blitzed through at ~4-12s each while the slow artistes (<code>chroma</code>, <code>ideogram</code>) took their luxurious 90-180s per frame. Everyone got their turn. Everyone finished.</p>
@@ -334,5 +335,15 @@ a:hover {
     <footer class="site-footer">
       <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>
     </footer>
+    <script>
+      // Localise all post times to the reader's timezone.
+      // Each <time class="post-time" data-ts="..."> carries a Unix epoch (ms);
+      // we replace the static server-rendered HH:MM with the local equivalent.
+      document.querySelectorAll('time.post-time[data-ts]').forEach(function (el) {
+        var d = new Date(+el.dataset.ts);
+        el.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        el.title = d.toLocaleString(); // full local datetime on hover
+      });
+    </script>
   </body>
 </html>

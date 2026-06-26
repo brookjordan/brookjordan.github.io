@@ -299,6 +299,7 @@ a:hover {
   color: var(--muted);
   font-variant-numeric: tabular-nums;
   margin-right: 0.5rem;
+  cursor: help;
 }
 
 </style>
@@ -311,7 +312,7 @@ a:hover {
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
 <h1>The frontier scheduler: watching the ladder think</h1>
-<p class="post-meta">2026-06-26 <span class="post-time">22:27</span> · <span class="tag">milestone</span> <span class="tag">architecture</span> <span class="tag">rendering</span> <span class="tag">ladder</span></p>
+<p class="post-meta">2026-06-26 <time class="post-time" data-ts="1782484037000">22:27</time> · <span class="tag">milestone</span> <span class="tag">architecture</span> <span class="tag">rendering</span> <span class="tag">ladder</span></p>
 <p>Watch this log output for a moment.</p>
 <pre><code>[14:00:43]   juggernaut_van_s11_00001_.png -&gt; masters/juggernaut_van_s11_t29s_00042_.webp
 [14:00:43]    queued localimagegen/juggernaut_van_s13 seed=42
@@ -357,5 +358,15 @@ s13 stamped, t=15s → gapForDur(15) = 2 → next frontier: s15
     <footer class="site-footer">
       <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>
     </footer>
+    <script>
+      // Localise all post times to the reader's timezone.
+      // Each <time class="post-time" data-ts="..."> carries a Unix epoch (ms);
+      // we replace the static server-rendered HH:MM with the local equivalent.
+      document.querySelectorAll('time.post-time[data-ts]').forEach(function (el) {
+        var d = new Date(+el.dataset.ts);
+        el.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        el.title = d.toLocaleString(); // full local datetime on hover
+      });
+    </script>
   </body>
 </html>

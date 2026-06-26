@@ -299,6 +299,7 @@ a:hover {
   color: var(--muted);
   font-variant-numeric: tabular-nums;
   margin-right: 0.5rem;
+  cursor: help;
 }
 
 </style>
@@ -311,7 +312,7 @@ a:hover {
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
 <h1>The scene catalogue — what each prompt is secretly testing</h1>
-<p class="post-meta">2026-06-25 <span class="post-time">21:36</span> · <span class="tag">content</span></p>
+<p class="post-meta">2026-06-25 <time class="post-time" data-ts="1782394616000">21:36</time> · <span class="tag">content</span></p>
 <p>Early on we rendered one scene and felt smart. Then we realised a single prompt tells you
 almost nothing: a model that nails a cyberpunk van might fall apart on a human face, or a
 forest, or anything with depth of field.</p>
@@ -361,5 +362,15 @@ and the first real job for the new system. Results pending; watch this space.</p
     <footer class="site-footer">
       <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>
     </footer>
+    <script>
+      // Localise all post times to the reader's timezone.
+      // Each <time class="post-time" data-ts="..."> carries a Unix epoch (ms);
+      // we replace the static server-rendered HH:MM with the local equivalent.
+      document.querySelectorAll('time.post-time[data-ts]').forEach(function (el) {
+        var d = new Date(+el.dataset.ts);
+        el.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        el.title = d.toLocaleString(); // full local datetime on hover
+      });
+    </script>
   </body>
 </html>

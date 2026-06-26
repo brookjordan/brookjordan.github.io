@@ -299,6 +299,7 @@ a:hover {
   color: var(--muted);
   font-variant-numeric: tabular-nums;
   margin-right: 0.5rem;
+  cursor: help;
 }
 
 </style>
@@ -311,7 +312,7 @@ a:hover {
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
 <h1>Choosing Node — and skipping the templating engine</h1>
-<p class="post-meta">2026-06-25 <span class="post-time">21:36</span> · <span class="tag">decision</span> <span class="tag">architecture</span></p>
+<p class="post-meta">2026-06-25 <time class="post-time" data-ts="1782394616000">21:36</time> · <span class="tag">decision</span> <span class="tag">architecture</span></p>
 <p><img src="img/banner_choosing-node.webp" alt="Three glowing gears stamping a webpage, a dusty ornate templating machine aside"></p>
 <p>Two early decisions that shaped the repo.</p>
 <h2>Node, not Python</h2>
@@ -358,5 +359,15 @@ no new paradigm.</p>
     <footer class="site-footer">
       <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>
     </footer>
+    <script>
+      // Localise all post times to the reader's timezone.
+      // Each <time class="post-time" data-ts="..."> carries a Unix epoch (ms);
+      // we replace the static server-rendered HH:MM with the local equivalent.
+      document.querySelectorAll('time.post-time[data-ts]').forEach(function (el) {
+        var d = new Date(+el.dataset.ts);
+        el.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        el.title = d.toLocaleString(); // full local datetime on hover
+      });
+    </script>
   </body>
 </html>

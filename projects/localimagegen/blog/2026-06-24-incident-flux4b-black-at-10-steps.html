@@ -299,6 +299,7 @@ a:hover {
   color: var(--muted);
   font-variant-numeric: tabular-nums;
   margin-right: 0.5rem;
+  cursor: help;
 }
 
 </style>
@@ -311,7 +312,7 @@ a:hover {
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
 <h1>Incident — Flux Klein-4b renders pure black at exactly 10 steps</h1>
-<p class="post-meta">2026-06-25 <span class="post-time">21:36</span> · <span class="tag">incident</span> <span class="tag">lesson</span></p>
+<p class="post-meta">2026-06-25 <time class="post-time" data-ts="1782394616000">21:36</time> · <span class="tag">incident</span> <span class="tag">lesson</span></p>
 <p><img src="img/banner_flux4b-black.webp" alt="A glowing circuit-board filmstrip with one pure-black frame in the middle"></p>
 <p><strong>Symptom:</strong> Flux.2 Klein-4b (<code>flux4b</code>) produced <strong>pure black</strong> frames at exactly
 <code>s = 10</code> steps, at 1280x720. Eight steps: fine. Twelve steps: fine. Ten: black.</p>
@@ -337,5 +338,15 @@ it, mark it invalid, re-render with the workaround.</p>
     <footer class="site-footer">
       <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>
     </footer>
+    <script>
+      // Localise all post times to the reader's timezone.
+      // Each <time class="post-time" data-ts="..."> carries a Unix epoch (ms);
+      // we replace the static server-rendered HH:MM with the local equivalent.
+      document.querySelectorAll('time.post-time[data-ts]').forEach(function (el) {
+        var d = new Date(+el.dataset.ts);
+        el.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        el.title = d.toLocaleString(); // full local datetime on hover
+      });
+    </script>
   </body>
 </html>

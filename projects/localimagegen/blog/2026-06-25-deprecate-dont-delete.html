@@ -299,6 +299,7 @@ a:hover {
   color: var(--muted);
   font-variant-numeric: tabular-nums;
   margin-right: 0.5rem;
+  cursor: help;
 }
 
 </style>
@@ -311,7 +312,7 @@ a:hover {
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
 <h1>Deprecate, don't delete — making prompt changes safe</h1>
-<p class="post-meta">2026-06-25 <span class="post-time">21:36</span> · <span class="tag">decision</span> <span class="tag">architecture</span></p>
+<p class="post-meta">2026-06-25 <time class="post-time" data-ts="1782394616000">21:36</time> · <span class="tag">decision</span> <span class="tag">architecture</span></p>
 <p><img src="img/banner_deprecate.webp" alt="Old photographs dissolving as fresh vivid ones slide in to replace them"></p>
 <p>We want to keep <em>improving</em> prompts — especially to give individual models their own tuned
 variant — without two bad outcomes: blowing away coverage, or deleting a usable image
@@ -334,5 +335,15 @@ autopilot picking up the stale cells only once everything else is covered.</p>
     <footer class="site-footer">
       <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>
     </footer>
+    <script>
+      // Localise all post times to the reader's timezone.
+      // Each <time class="post-time" data-ts="..."> carries a Unix epoch (ms);
+      // we replace the static server-rendered HH:MM with the local equivalent.
+      document.querySelectorAll('time.post-time[data-ts]').forEach(function (el) {
+        var d = new Date(+el.dataset.ts);
+        el.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        el.title = d.toLocaleString(); // full local datetime on hover
+      });
+    </script>
   </body>
 </html>
