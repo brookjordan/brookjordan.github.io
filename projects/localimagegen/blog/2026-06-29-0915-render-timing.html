@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#1a1d24" />
+    <meta name="color-scheme" content="dark" />
+    <title>Where did the time go? (per-phase render timing)</title>
+    <style>
+/* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
+   This is the single source of truth for colour, radius, spacing and type.
+   It is inlined ahead of each page's stylesheet at build time, and linked
+   first in dev so opening the .html files directly still resolves the vars.
+
+   Theming: everything below is a semantic token mapped onto a small palette of
+   primitives. To add a theme, override the *semantic* tokens under a selector
+   (see the commented [data-theme="light"] block at the bottom) — no stylesheet
+   needs to change, only these variables. */
+:root {
+  color-scheme: dark;
+
+  /* ---- palette primitives (raw colours; reference these only via the tokens below) ---- */
+  --c-ink-900: #0f1115;
+  --c-ink-800: #1a1d24;
+  --c-ink-700: #232732;
+  --c-ink-600: #2a2f3a;
+  --c-fog-100: #e8eaed;
+  --c-fog-300: #9aa0a6;
+  --c-fog-500: #6b727d;
+  --c-accent: #7c9cff;
+
+  /* ---- semantic: background / border / text, primary > secondary > tertiary ---- */
+  --bg-primary: var(--c-ink-900);
+  --bg-secondary: var(--c-ink-800);
+  --bg-tertiary: var(--c-ink-700);
+
+  --border-primary: var(--c-ink-600);
+  --border-secondary: rgba(150, 170, 210, 0.16);
+
+  --text-primary: var(--c-fog-100);
+  --text-secondary: var(--c-fog-300);
+  --text-tertiary: var(--c-fog-500);
+
+  --accent: var(--c-accent);
+
+  /* ---- radius scale ---- */
+  --radius-sm: 5px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 9999px;
+
+  /* ---- spacing / padding scale ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 2rem;
+
+  /* ---- type ---- */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* Shared cross-nav link (gallery <-> devlog). Both app.css and blog.css inline this
+   file, so defining it once here keeps the two links visually identical. */
+.cross-link {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.cross-link:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+/* Example theme override — set <html data-theme="light"> to activate (or wire it
+   to prefers-color-scheme). Left commented so we don't ship untuned colours:
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg-primary: #fbfbfd;
+  --bg-secondary: #f1f2f5;
+  --bg-tertiary: #e7e9ee;
+  --border-primary: #d4d8e0;
+  --border-secondary: rgba(20, 30, 60, 0.12);
+  --text-primary: #1a1d24;
+  --text-secondary: #555b66;
+  --text-tertiary: #7b828d;
+}
+*/
+
+</style>
+    <style>
+:root {
+  /* Local aliases mapped onto the shared tokens in tokens.css (inlined first),
+     so the devlog and the gallery share one palette, radius and spacing scale. */
+  --bg: var(--bg-primary);
+  --bg-soft: var(--bg-secondary);
+  --panel: var(--bg-tertiary);
+  --text: var(--text-primary);
+  --muted: var(--text-secondary);
+  --border: var(--border-secondary);
+  --radius: var(--radius-md);
+  /* --accent comes straight from tokens.css */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.65 var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.site-header,
+.site-footer {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 1.25rem 1.25rem;
+}
+
+.site-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text);
+}
+
+.brand span {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.content {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+
+.site-footer {
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* ---- post typography ---- */
+.content h1 {
+  font-size: 1.9rem;
+  line-height: 1.2;
+  margin: 0 0 0.5rem;
+}
+
+.content h2 {
+  font-size: 1.35rem;
+  margin: 2rem 0 0.6rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.3rem;
+}
+
+.content h3 {
+  font-size: 1.1rem;
+  margin: 1.5rem 0 0.4rem;
+}
+
+.content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  display: block;
+  margin: 1.25rem 0;
+}
+
+.content audio {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.content blockquote {
+  margin: 1.25rem 0;
+  padding: 0.5rem 1rem;
+  border-left: 3px solid var(--accent);
+  background: var(--bg-soft);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  color: var(--muted);
+}
+
+.content pre {
+  background: #12151b;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  overflow: auto;
+  font-size: 0.88rem;
+}
+
+.content code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: rgba(150, 170, 210, 0.14);
+  padding: 0.1em 0.35em;
+  border-radius: 5px;
+}
+
+.content pre code {
+  background: none;
+  padding: 0;
+}
+
+/* ---- per-post header (date + tags) ---- */
+.post-meta {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0 0 1.5rem;
+}
+
+.tag {
+  display: inline-block;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 0.1em 0.7em;
+  font-size: 0.78rem;
+  margin-right: 0.35rem;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+/* ---- index listing ---- */
+.index-intro {
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+
+.post-group-date {
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 2rem 0 0.75rem;
+}
+
+.post-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.post-list li {
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.post-list a.post-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.post-list .post-row-meta {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+}
+
+.post-time {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  margin-right: 0.5rem;
+  cursor: help;
+}
+
+</style>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="./index.html">localimagegen <span>· devlog</span></a>
+      <nav class="site-nav"><a class="cross-link" href="../index.html">gallery →</a></nav>
+    </header>
+    <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
+<article class="post">
+<h1>Where did the time go? (per-phase render timing)</h1>
+<p class="post-meta">2026-06-29 <time class="post-time" data-ts="1782695700000">09:15</time> · <span class="tag">milestone</span> <span class="tag">rendering</span> <span class="tag">tooling</span></p>
+<p><img src="img/banner_render-timing.webp" alt="Banner"></p>
+<p>Something didn&#39;t add up. The undistilled heavyweights — chroma especially — climb to high
+step counts (<a href="2026-06-26-0825-knowing-when-to-stop.html">knowing when to stop</a>), and I&#39;d
+lazily assumed &quot;more steps&quot; meant &quot;proportionally slower.&quot; But the numbers refused to scale
+the way a naive <code>seconds ∝ steps</code> model predicts: a 30-step chroma cell was nowhere near
+30/4 ≈ <strong>7.5×</strong> its 4-step sibling.</p>
+<p>The reason is obvious once you say it out loud. A render isn&#39;t all sampling. It&#39;s <strong>fixed
+overhead</strong> — load the checkpoint, encode the prompt, VAE-decode, save the PNG — plus a
+<strong>variable</strong> part, the sampling loop, which is the only piece that grows with steps. Double
+the steps and you double <em>that slice only</em>; the overhead is the overhead.</p>
+<p>The trouble was I couldn&#39;t <em>prove</em> it. ComfyUI&#39;s <code>/history</code> hands back one number per
+render — the total wall-clock — and says nothing about where it went. We already stamp that
+total into every master filename as <code>_t&lt;dur&gt;s_</code> and onto <code>CellMeta</code> (see
+<a href="2026-06-26-1235-everything-gets-a-timestamp.html">everything gets a timestamp</a> — but that post
+is about recording <em>when</em> something happened; this one is about <em>how long each phase takes</em>,
+which is a different question a single total can&#39;t answer).</p>
+<h2>The cheap win: timestamp ComfyUI&#39;s stdout</h2>
+<p>Before building anything, the five-second version. ComfyUI already narrates itself to
+stdout — &quot;Requested to load…&quot;, the sampler progress bar, &quot;Prompt executed in N seconds.&quot;
+Pipe it through moreutils&#39; <code>ts</code> and every line gets a wall-clock stamp:</p>
+<pre><code class="language-bash">comfy-listen 2&gt;&amp;1 | ts &#39;[%H:%M:%.S]&#39;
+</code></pre>
+<p>Now the gap between the &quot;loading&quot; line and the first sampler step <em>is</em> the load time, by
+subtraction, right there in the terminal:</p>
+<pre><code>[09:14:02.402] model_type FLUX
+[09:14:48.911] Requested to load AutoencoderKL    # ~46s of load before a single step
+[09:15:08.044] 100%|██████████| 30/30 [00:19&lt;00:00]
+[09:15:31.677] Prompt executed in 89.21 seconds
+</code></pre>
+<p>Two shell gotchas cost me a couple of minutes, so they go here:</p>
+<ul>
+<li><strong>Quote the format.</strong> The <code>[...]</code> must be quoted, or the shell reads <code>[%H:%M:%.S]</code> as a
+glob bracket-expression and mangles it before <code>ts</code> ever sees it. Single quotes fix it.</li>
+<li><strong>Don&#39;t double-escape it inside an alias.</strong> Folding this into an alias whose body is
+double-quoted tempts you to escape the brackets — <code>&#39;\[%H…\]&#39;</code>. Don&#39;t: the single quotes
+already make the brackets literal, so the backslashes survive into <code>ts</code>, which then prints
+a literal <code>\[</code> on the front of every line.</li>
+</ul>
+<p>This is a human-eyeball tool — perfect for a spot check, useless for answering &quot;across a
+thousand renders, where does chroma actually spend its time?&quot; For that, <code>lig</code> has to record
+it.</p>
+<h2>The real fix: per-phase timing over the WebSocket</h2>
+<p>ComfyUI emits <code>executing</code> events on its WebSocket as it walks the graph — one per node, the
+moment that node <em>starts</em>. That&#39;s the hook. <code>lig</code> now:</p>
+<ol>
+<li>Submits every prompt with a stable <code>clientId</code> (a UUID) and opens one persistent WS
+(<code>/ws?clientId=…</code>), so ComfyUI routes those events back to us.</li>
+<li>For each prompt, <code>trackPhases(promptId, graph)</code> maps every node id → its <code>class_type</code> → a
+<strong>phase bucket</strong>: loaders → <code>load</code>, <code>CLIPTextEncode</code> → <code>encode</code>, the samplers → <code>sample</code>,
+<code>VAEDecode</code> → <code>decode</code>, <code>SaveImage</code> → <code>save</code>.</li>
+<li>On each <code>executing</code> transition it stamps the wall-clock and adds the elapsed time to
+whichever bucket just finished, resolving on <code>execution_success</code> (or the null-node &quot;all
+done&quot; signal).</li>
+</ol>
+<p>The result — <code>{ load, encode, sample, decode, save }</code> in seconds — is persisted on
+<code>CellMeta.phases</code>, right next to the total. It rides along with the live render in
+<code>reconcile.ts</code>: <code>trackPhases</code> fires in parallel the instant a rung is enqueued, the done-loop
+collects it (with a 5 s grace window in case the WS lags the HTTP <code>/history</code> entry), and
+<code>closeWs()</code> between models keeps it tidy.</p>
+<h2>HTTP stays the fallback — by design</h2>
+<p>The WebSocket is the <em>enhancement</em>, never a dependency. Two deliberate properties:</p>
+<ul>
+<li><strong>Graceful degradation.</strong> If the WS won&#39;t connect, drops, or times out, <code>trackPhases</code>
+returns <code>null</code>, <code>phases</code> is simply absent, and everything behaves exactly as before — the
+total still comes from HTTP <code>/history</code>, the master still gets stamped. No WS, no regression.
+This also covers the ugly case where <code>lig</code> was killed mid-pass but ComfyUI kept rendering:
+the next <code>refreshData</code> re-reads <code>/history</code> with no WS data and falls back cleanly.</li>
+<li><strong>HTTP fills what the WS can&#39;t.</strong> <code>/history</code> carries the authoritative total <em>and</em> the
+<code>cold</code> flag — <code>execution_cached</code> tells us ComfyUI reused a resident checkpoint (a warm
+load), which is exactly what explains a suspiciously tiny <code>load</code> number. <code>stampItem</code> merges
+the two: WS phases + the HTTP cold flag.</li>
+</ul>
+<p>So the timing is layered: HTTP alone always gives total + cold; the WS adds the per-phase
+split when it&#39;s there. You can lose the top layer entirely and never see a difference in the
+output.</p>
+<h2>The payoff</h2>
+<p>&quot;Where did the time go?&quot; is now answerable per cell and per model. The early data confirms
+the hypothesis: <code>load</code> / <code>encode</code> / <code>decode</code> / <code>save</code> are roughly constant for a given model,
+and <code>sample</code> is the only part that tracks step count. Which is precisely why a 30-step chroma
+render isn&#39;t 7.5× its 4-step self — most of a short render is fixed cost, and only the
+sampling slice grows.</p>
+<p>It also sharpens <a href="2026-06-26-2152-the-frontier-scheduler.html">the frontier scheduler</a>: it
+spaces rungs by <em>total</em> render duration, but a slab of that duration is overhead paid once
+per cell no matter the step count. Seeing the split is the first move toward planning against
+the part that actually scales — and toward an honest sequel to the
+<a href="2026-06-24-1753-results-the-step-count-reckoning.html">step-count reckoning</a>, where &quot;slow&quot;
+finally separates into &quot;slow to load&quot; and &quot;slow to sample.&quot;</p>
+
+</article></main>
+    <footer class="site-footer">
+      <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>
+    </footer>
+    <script>
+      // Localise all post times to the reader's timezone.
+      // Each <time class="post-time" data-ts="..."> carries a Unix epoch (ms);
+      // we replace the static server-rendered HH:MM with the local equivalent.
+      document.querySelectorAll('time.post-time[data-ts]').forEach(function (el) {
+        var d = new Date(+el.dataset.ts);
+        el.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        el.title = d.toLocaleString(); // full local datetime on hover
+      });
+    </script>
+  </body>
+</html>
