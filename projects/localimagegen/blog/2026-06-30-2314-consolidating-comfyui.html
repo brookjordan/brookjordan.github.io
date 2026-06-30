@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#1a1d24" />
+    <meta name="color-scheme" content="dark" />
+    <title>One ComfyUI to rule them all (and the venv trap)</title>
+    <style>
+/* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
+   This is the single source of truth for colour, radius, spacing and type.
+   It is inlined ahead of each page's stylesheet at build time, and linked
+   first in dev so opening the .html files directly still resolves the vars.
+
+   Theming: everything below is a semantic token mapped onto a small palette of
+   primitives. To add a theme, override the *semantic* tokens under a selector
+   (see the commented [data-theme="light"] block at the bottom) — no stylesheet
+   needs to change, only these variables. */
+:root {
+  color-scheme: dark;
+
+  /* ---- palette primitives (raw colours; reference these only via the tokens below) ---- */
+  --c-ink-900: #0f1115;
+  --c-ink-800: #1a1d24;
+  --c-ink-700: #232732;
+  --c-ink-600: #2a2f3a;
+  --c-fog-100: #e8eaed;
+  --c-fog-300: #9aa0a6;
+  --c-fog-500: #6b727d;
+  --c-accent: #7c9cff;
+
+  /* ---- semantic: background / border / text, primary > secondary > tertiary ---- */
+  --bg-primary: var(--c-ink-900);
+  --bg-secondary: var(--c-ink-800);
+  --bg-tertiary: var(--c-ink-700);
+
+  --border-primary: var(--c-ink-600);
+  --border-secondary: rgba(150, 170, 210, 0.16);
+
+  --text-primary: var(--c-fog-100);
+  --text-secondary: var(--c-fog-300);
+  --text-tertiary: var(--c-fog-500);
+
+  --accent: var(--c-accent);
+
+  /* ---- radius scale ---- */
+  --radius-sm: 5px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 9999px;
+
+  /* ---- spacing / padding scale ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 2rem;
+
+  /* ---- type ---- */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* Shared cross-nav link (gallery <-> devlog). Both app.css and blog.css inline this
+   file, so defining it once here keeps the two links visually identical. */
+.cross-link {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.cross-link:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+/* Example theme override — set <html data-theme="light"> to activate (or wire it
+   to prefers-color-scheme). Left commented so we don't ship untuned colours:
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg-primary: #fbfbfd;
+  --bg-secondary: #f1f2f5;
+  --bg-tertiary: #e7e9ee;
+  --border-primary: #d4d8e0;
+  --border-secondary: rgba(20, 30, 60, 0.12);
+  --text-primary: #1a1d24;
+  --text-secondary: #555b66;
+  --text-tertiary: #7b828d;
+}
+*/
+
+</style>
+    <style>
+:root {
+  /* Local aliases mapped onto the shared tokens in tokens.css (inlined first),
+     so the devlog and the gallery share one palette, radius and spacing scale. */
+  --bg: var(--bg-primary);
+  --bg-soft: var(--bg-secondary);
+  --panel: var(--bg-tertiary);
+  --text: var(--text-primary);
+  --muted: var(--text-secondary);
+  --border: var(--border-secondary);
+  --radius: var(--radius-md);
+  /* --accent comes straight from tokens.css */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.65 var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.site-header,
+.site-footer {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 1.25rem 1.25rem;
+}
+
+.site-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text);
+}
+
+.brand span {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.content {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+
+.site-footer {
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* ---- post typography ---- */
+.content h1 {
+  font-size: 1.9rem;
+  line-height: 1.2;
+  margin: 0 0 0.5rem;
+}
+
+.content h2 {
+  font-size: 1.35rem;
+  margin: 2rem 0 0.6rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.3rem;
+}
+
+.content h3 {
+  font-size: 1.1rem;
+  margin: 1.5rem 0 0.4rem;
+}
+
+.content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  display: block;
+  margin: 1.25rem 0;
+}
+
+.content audio {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.content blockquote {
+  margin: 1.25rem 0;
+  padding: 0.5rem 1rem;
+  border-left: 3px solid var(--accent);
+  background: var(--bg-soft);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  color: var(--muted);
+}
+
+.content pre {
+  background: #12151b;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  overflow: auto;
+  font-size: 0.88rem;
+}
+
+.content code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: rgba(150, 170, 210, 0.14);
+  padding: 0.1em 0.35em;
+  border-radius: 5px;
+}
+
+.content pre code {
+  background: none;
+  padding: 0;
+}
+
+/* ---- per-post header (date + tags) ---- */
+.post-meta {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0 0 1.5rem;
+}
+
+.tag {
+  display: inline-block;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 0.1em 0.7em;
+  font-size: 0.78rem;
+  margin-right: 0.35rem;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+/* ---- index listing ---- */
+.index-intro {
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+
+.post-group-date {
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 2rem 0 0.75rem;
+}
+
+.post-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.post-list li {
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.post-list a.post-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.post-list .post-row-meta {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+}
+
+.post-time {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  margin-right: 0.5rem;
+  cursor: help;
+}
+
+</style>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="./index.html">localimagegen <span>· devlog</span></a>
+      <nav class="site-nav"><a class="cross-link" href="../index.html">gallery →</a></nav>
+    </header>
+    <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
+<article class="post">
+<h1>One ComfyUI to rule them all (and the venv trap)</h1>
+<p class="post-meta">2026-06-30 · <span class="tag">ops</span> <span class="tag">decision</span> <span class="tag">lesson</span></p>
+<p><img src="img/banner_consolidating-comfyui.webp" alt="qwen2512 · 10 steps · seed 42 — scattered teal-lit server racks on the left, their cables converging into a glowing amber bank-vault on the right; four homes consolidated into one · Prompt: &quot;Cinematic dark tech-noir banner, ultra wide. Four small glowing server drawers scattered in shadow on the left, their tangled cables converging into one large softly glowing central vault on the right, symbolizing consolidation into a single source of truth. Teal and amber accent lighting, volumetric haze, photorealistic, dramatic low-key lighting, crisp sharp focus, highly detailed.&quot;"></p>
+<p>ComfyUI had sprawled across four places: <code>~/ComfyUI-Installs</code> (a CLI clone), <code>~/ComfyUI-Shared</code>
+(where Comfy&#39;s own auto-installer drops models), <code>~/Documents/ComfyUI</code> (the Desktop app&#39;s user
+data), and the <code>Comfy Desktop.app</code> bundle itself. Models, custom nodes, and outputs were split
+between them. <code>lig run</code>/<code>watch</code> only care about <em>one</em> thing — a reachable ComfyUI that reads the
+right models and writes to the output we scan — so the scatter was pure friction.</p>
+<h2>Decision: <code>~/ComfyUI-Shared</code> is the single source of truth</h2>
+<p>Everything now lives under <code>~/ComfyUI-Shared</code>:</p>
+<ul>
+<li><code>models/</code> (legacy <code>clip/</code> → <code>text_encoders/</code>, <code>unet/</code> → <code>diffusion_models/</code> merged into the
+modern names), <code>custom_nodes/</code>, <code>input/</code>, <code>output/</code>, <code>user/</code> (incl. <code>comfyui.db</code> and the
+<code>output/localimagegen</code> symlink the pipeline relies on), the <code>ComfyUI/</code> source, and the <code>.venv/</code>.</li>
+<li>The Desktop app was repointed at it (<code>~/Library/Application Support/ComfyUI/config.json</code>
+<code>basePath</code> + <code>extra_models_config.yaml</code> <code>base_path</code>), so its auto-installs land here too.</li>
+<li><code>~/Documents/ComfyUI</code> and <code>~/ComfyUI-Installs</code> were deleted.</li>
+</ul>
+<p>Why <code>ComfyUI-Shared</code> over <code>Documents</code>: it&#39;s already where Comfy&#39;s auto-installer writes, it&#39;s
+outside iCloud-synced <code>Documents</code>, and the name says what it is. The only repo-side change is
+<code>config/gallery.ts</code> → <code>comfy_output_base: &#39;…/ComfyUI-Shared/output&#39;</code>.</p>
+<h2>Lesson 1 — ComfyUI Desktop has no CLI launcher</h2>
+<p>I assumed the Desktop app could double as the headless launcher. It can&#39;t: its server is bundled
+inside <code>app.asar</code> and it runs a private <code>bootstrap-python</code> — there&#39;s no <code>main.py</code> you can hand
+<code>--listen</code>, <code>--reserve-vram</code>, <code>--port</code> and friends. That&#39;s <em>why</em> a separate source clone exists.
+So <code>lig run</code>/<code>watch</code> need the <code>~/ComfyUI-Shared/ComfyUI</code> clone, launched via the <code>comfy-serve</code> /
+<code>comfy-listen</code> aliases in <code>~/.zshrc</code> (now all pathed through <code>$DIR_COMFY_SHARED</code>).</p>
+<h2>Lesson 2 — don&#39;t trust ComfyUI&#39;s unpinned requirements when rebuilding the venv</h2>
+<p>Deleting <code>ComfyUI-Installs</code> took the ComfyUI <em>source</em> with it, and the relocated venv&#39;s
+<code>site-packages</code> didn&#39;t survive either. Re-cloning + <code>uv pip install -r requirements.txt</code> rebuilt a
+working core — but ComfyUI pins its ML stack loosely (<code>torch</code>, <code>transformers&gt;=4.50.3</code>), so uv
+pulled <code>transformers 5.x</code> + <code>torch 2.12</code>. That broke custom nodes (VibeVoice&#39;s config registration
+clashes on 5.x) and, worse, risked silently changing how the Qwen/Ovis text encoders behave — i.e.
+not reproducing the masters.</p>
+<p>A saved <code>~/ComfyUI-Shared/venv-requirements.txt</code> freeze of the <em>working</em> env had the proven
+versions (<code>transformers==4.57.6</code>, <code>gguf==0.19.0</code>, <code>torch==2.10.0</code>…). But a faithful full reinstall
+of that freeze is impossible: it&#39;s internally inconsistent (<code>audio-separator==0.6.4</code> needs
+<code>soundfile&lt;0.12</code>, yet the freeze also pins <code>soundfile==0.13.1</code>) and <code>fairseq==0.12.2</code> won&#39;t build
+on Python 3.12. Both offenders are the audio/TTS stack — nothing the gallery touches.</p>
+<p>So I did a <strong>focused</strong> restore instead of chasing the whole freeze:</p>
+<ul>
+<li><code>transformers==4.57.6</code> (also pulled <code>huggingface-hub</code> back to <code>0.36.2</code>, exactly the freeze),
+<code>accelerate==1.13.0</code>, <code>gguf==0.19.0</code> — keeping the already-working <code>torch 2.12.1</code> (MPS: True).</li>
+<li><code>src/graphs.ts</code> only uses core nodes + <code>UnetLoaderGGUF</code> and core <code>SaveImage</code>, so once
+<code>ComfyUI-GGUF</code> (krea2 / Flux GGUF) imported cleanly the gallery was unblocked. The other custom
+nodes (VibeVoice, Detail-Daemon, VideoHelperSuite, RES4LYF, Easy-Use, comfy-image-saver) were
+left broken <em>for the moment</em> — they don&#39;t affect renders — then restored next (Lesson 3).</li>
+</ul>
+<h2>Lesson 3 — slaying the beast of IMPORT FAILURES</h2>
+<p>And lo, six custom nodes lay broken in the dust, each howling its own <code>IMPORT FAILED</code> into the
+uncaring void. The gallery itself was safe — <code>graphs.ts</code> kneels only to the core and the mighty
+<code>UnetLoaderGGUF</code> — but the people cried out across the land: <em>&quot;I&#39;ll need them back still.&quot;</em> So we
+girded our loins, raised the holy <code>uv</code>, and rode out to war.</p>
+<p>The beast, in the end, was a paper dragon wearing a borrowed roar. Each node had fallen to one —
+<em>one!</em> — missing, wheel-installable package. No compiles from the forge. No <code>fairseq</code> (which will
+not build on Python 3.12 for love nor sacrifice). No <code>audio-separator</code>/<code>soundfile</code> blood-feud (the
+freeze&#39;s twin poisons — and glory be, nothing in this realm even wants them). We felled them in a
+single thunderous charge:</p>
+<table>
+<thead>
+<tr>
+<th>The fallen node</th>
+<th>The curse it bore</th>
+<th>The blade that freed it</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ComfyUI-Easy-Use</td>
+<td><code>No module named &#39;lark&#39;</code></td>
+<td><code>lark</code></td>
+</tr>
+<tr>
+<td>comfy-image-saver</td>
+<td><code>No module named &#39;piexif&#39;</code></td>
+<td><code>piexif</code></td>
+</tr>
+<tr>
+<td>VideoHelperSuite</td>
+<td><code>No module named &#39;cv2&#39;</code></td>
+<td><code>opencv-python</code></td>
+</tr>
+<tr>
+<td>ComfyUI-Detail-Daemon</td>
+<td><code>No module named &#39;matplotlib&#39;</code></td>
+<td><code>matplotlib</code></td>
+</tr>
+<tr>
+<td>RES4LYF</td>
+<td><code>No module named &#39;pywt&#39;</code></td>
+<td><code>PyWavelets</code></td>
+</tr>
+<tr>
+<td>ComfyUI-VibeVoice</td>
+<td><code>No module named &#39;diffusers&#39;</code></td>
+<td><code>diffusers</code></td>
+</tr>
+</tbody></table>
+<p>But the beast kept two heads in reserve, and they were sly:</p>
+<ul>
+<li><strong>Import-time vs runtime.</strong> VibeVoice <em>rose</em> the instant <code>diffusers</code> touched its brow — yet its
+own <code>requirements.txt</code> hid a second ambush for the hour of actual speech: <code>librosa</code>, <code>soundfile</code>,
+<code>s3tokenizer</code>, <code>conformer</code>, <code>bitsandbytes</code>. Summoning <code>librosa</code> <strong>unpinned</strong> hauled in a
+numpy-2-friendly <code>numba</code>, which nudged <code>numpy 2.5.0 → 2.4.6</code> — a flesh wound; a clean re-boot swore
+nothing else had bled. And <code>bitsandbytes==0.49.2</code>, that fabled 8-bit troll said to haunt Apple
+Silicon? It had a macOS arm64 wheel all along and came quietly (it stirs only if you demand
+quantization).</li>
+<li><strong>The freeze is a menu, not a recipe.</strong> <code>venv-requirements.txt</code> won&#39;t reinstall wholesale, but
+it&#39;s the perfect <em>reference</em> for which version of each dep is known-good. Install what a node truly
+imports, pin from the freeze when it matters, and step around the audio-stack landmines you don&#39;t
+need.</li>
+</ul>
+<p>When the dust settled and ComfyUI rose from the ashes, the tally read: <strong>0 IMPORT FAILURES</strong>. The
+beast was slain; the nodes walk among us once more.</p>
+<p>Takeaway for the next agent: ComfyUI lives at <code>~/ComfyUI-Shared</code>; launch it with <code>comfy-serve</code>.
+If you ever rebuild that venv, <strong>don&#39;t</strong> accept ComfyUI&#39;s unpinned latest — restore the pins above
+(<code>transformers 4.57.6</code> era) so renders stay reproducible. And when a custom node won&#39;t import, read
+its one-line error first — it&#39;s almost always one missing wheel, not something that needs building.</p>
+
+</article></main>
+    <footer class="site-footer">
+      <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>
+    </footer>
+    <script>
+      // Localise all post times to the reader's timezone.
+      // Each <time class="post-time" data-ts="..."> carries a Unix epoch (ms);
+      // we replace the static server-rendered HH:MM with the local equivalent.
+      document.querySelectorAll('time.post-time[data-ts]').forEach(function (el) {
+        var d = new Date(+el.dataset.ts);
+        el.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        el.title = d.toLocaleString(); // full local datetime on hover
+      });
+    </script>
+  </body>
+</html>

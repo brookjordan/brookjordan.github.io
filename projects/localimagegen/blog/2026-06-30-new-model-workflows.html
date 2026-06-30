@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#1a1d24" />
+    <meta name="color-scheme" content="dark" />
+    <title>Four new model workflows: Pony, Illustrious, Anima, PixArt-Sigma</title>
+    <style>
+/* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
+   This is the single source of truth for colour, radius, spacing and type.
+   It is inlined ahead of each page's stylesheet at build time, and linked
+   first in dev so opening the .html files directly still resolves the vars.
+
+   Theming: everything below is a semantic token mapped onto a small palette of
+   primitives. To add a theme, override the *semantic* tokens under a selector
+   (see the commented [data-theme="light"] block at the bottom) — no stylesheet
+   needs to change, only these variables. */
+:root {
+  color-scheme: dark;
+
+  /* ---- palette primitives (raw colours; reference these only via the tokens below) ---- */
+  --c-ink-900: #0f1115;
+  --c-ink-800: #1a1d24;
+  --c-ink-700: #232732;
+  --c-ink-600: #2a2f3a;
+  --c-fog-100: #e8eaed;
+  --c-fog-300: #9aa0a6;
+  --c-fog-500: #6b727d;
+  --c-accent: #7c9cff;
+
+  /* ---- semantic: background / border / text, primary > secondary > tertiary ---- */
+  --bg-primary: var(--c-ink-900);
+  --bg-secondary: var(--c-ink-800);
+  --bg-tertiary: var(--c-ink-700);
+
+  --border-primary: var(--c-ink-600);
+  --border-secondary: rgba(150, 170, 210, 0.16);
+
+  --text-primary: var(--c-fog-100);
+  --text-secondary: var(--c-fog-300);
+  --text-tertiary: var(--c-fog-500);
+
+  --accent: var(--c-accent);
+
+  /* ---- radius scale ---- */
+  --radius-sm: 5px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 9999px;
+
+  /* ---- spacing / padding scale ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 2rem;
+
+  /* ---- type ---- */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* Shared cross-nav link (gallery <-> devlog). Both app.css and blog.css inline this
+   file, so defining it once here keeps the two links visually identical. */
+.cross-link {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.cross-link:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+/* Example theme override — set <html data-theme="light"> to activate (or wire it
+   to prefers-color-scheme). Left commented so we don't ship untuned colours:
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg-primary: #fbfbfd;
+  --bg-secondary: #f1f2f5;
+  --bg-tertiary: #e7e9ee;
+  --border-primary: #d4d8e0;
+  --border-secondary: rgba(20, 30, 60, 0.12);
+  --text-primary: #1a1d24;
+  --text-secondary: #555b66;
+  --text-tertiary: #7b828d;
+}
+*/
+
+</style>
+    <style>
+:root {
+  /* Local aliases mapped onto the shared tokens in tokens.css (inlined first),
+     so the devlog and the gallery share one palette, radius and spacing scale. */
+  --bg: var(--bg-primary);
+  --bg-soft: var(--bg-secondary);
+  --panel: var(--bg-tertiary);
+  --text: var(--text-primary);
+  --muted: var(--text-secondary);
+  --border: var(--border-secondary);
+  --radius: var(--radius-md);
+  /* --accent comes straight from tokens.css */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.65 var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.site-header,
+.site-footer {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 1.25rem 1.25rem;
+}
+
+.site-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text);
+}
+
+.brand span {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.content {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+
+.site-footer {
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* ---- post typography ---- */
+.content h1 {
+  font-size: 1.9rem;
+  line-height: 1.2;
+  margin: 0 0 0.5rem;
+}
+
+.content h2 {
+  font-size: 1.35rem;
+  margin: 2rem 0 0.6rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.3rem;
+}
+
+.content h3 {
+  font-size: 1.1rem;
+  margin: 1.5rem 0 0.4rem;
+}
+
+.content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  display: block;
+  margin: 1.25rem 0;
+}
+
+.content audio {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.content blockquote {
+  margin: 1.25rem 0;
+  padding: 0.5rem 1rem;
+  border-left: 3px solid var(--accent);
+  background: var(--bg-soft);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  color: var(--muted);
+}
+
+.content pre {
+  background: #12151b;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  overflow: auto;
+  font-size: 0.88rem;
+}
+
+.content code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: rgba(150, 170, 210, 0.14);
+  padding: 0.1em 0.35em;
+  border-radius: 5px;
+}
+
+.content pre code {
+  background: none;
+  padding: 0;
+}
+
+/* ---- per-post header (date + tags) ---- */
+.post-meta {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0 0 1.5rem;
+}
+
+.tag {
+  display: inline-block;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 0.1em 0.7em;
+  font-size: 0.78rem;
+  margin-right: 0.35rem;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+/* ---- index listing ---- */
+.index-intro {
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+
+.post-group-date {
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 2rem 0 0.75rem;
+}
+
+.post-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.post-list li {
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.post-list a.post-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.post-list .post-row-meta {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+}
+
+.post-time {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  margin-right: 0.5rem;
+  cursor: help;
+}
+
+</style>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="./index.html">localimagegen <span>· devlog</span></a>
+      <nav class="site-nav"><a class="cross-link" href="../index.html">gallery →</a></nav>
+    </header>
+    <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
+<article class="post">
+<h1>Four new model workflows: Pony, Illustrious, Anima, PixArt-Sigma</h1>
+<p class="post-meta">2026-06-30 · <span class="tag">models</span> <span class="tag">graphs</span> <span class="tag">workflow</span></p>
+<p><img src="img/banner_new-model-workflows.webp" alt="qwen2512 · 10 steps · seed 42 — a lineup of glowing engine cores on a dark factory floor, established units lit teal and new units powering up amber; four new models joining the arsenal · Prompt: &quot;Cinematic dark tech-noir banner, ultra wide. A lineup of glowing machine engine cores on a dark factory floor, several established units lit in cool teal and a few brand-new units powering on with warm amber light, symbolizing new models joining an arsenal. Volumetric haze, photorealistic, dramatic low-key lighting, crisp sharp focus, highly detailed.&quot;"></p>
+<p>Added workflows for four models that are viable on the M3 36GB MacBook but weren&#39;t
+in the gallery yet. The assessment process (<code>history/2026-06-30-0945-the-capability-axes.md</code>)
+ruled out HiDream-I1 (FP8-only on MPS, CUDA quant) and Hunyuan Image 3 (bitsandbytes CUDA
+dep). These four passed.</p>
+<h2>What was added</h2>
+<h3><code>pony</code> — Pony Diffusion V6 XL</h3>
+<p>SDXL fine-tune with two important differences from the existing sdxl/realvisxl/juggernaut
+builders:</p>
+<ul>
+<li><strong>CLIP skip 2</strong> (<code>CLIPSetLastLayer</code>, <code>stop_at_clip_layer: -2</code>) — Pony was trained on
+Danbooru-tagged images with CLIP skip 2; without it the quality tag conditioning doesn&#39;t
+fire correctly.</li>
+<li><strong>Score-tag prefix</strong> — <code>score_9, score_8_up, score_7_up,</code> prepended to the positive
+prompt; <code>score_6_up, score_5_up, score_4_up,</code> to the negative. These are how Pony signals
+desired quality tier.</li>
+</ul>
+<p>Uses the same SDXL Lightning 4-step/8-step LoRA split (ceiling 8, <code>steps.add: [1]</code>).</p>
+<p>To make the prefix work with the JSON template, <code>applyPrompt()</code> in <code>src/graphs.ts</code> was
+changed from an equality check (<code>=== &#39;{{prompt}}&#39;</code>) to an include+replace check
+(<code>includes(&#39;{{prompt}}&#39;)</code> → <code>.replace()</code>). This is backward-compatible and lets any
+builder embed a prefix or suffix around the placeholder. The pony positive template is
+literally <code>&quot;score_9, score_8_up, score_7_up, {{prompt}}&quot;</code> in the committed JSON.</p>
+<p><code>src/workflows.ts</code> (export path) and <code>buildGraph</code> (load path) were both updated to
+include <code>pony</code> alongside <code>sdxl</code> in the 4-step/8-step LoRA threshold check, so
+<code>pony.t2i.high.json</code> is generated and loaded correctly for steps &gt; 4.</p>
+<h3><code>illustrious</code> — Illustrious-XL v2.0</h3>
+<p>Config-only addition — uses the existing <code>sdxl</code> builder with a different checkpoint
+(<code>illustriousXL_v2.safetensors</code>). Illustrious v2 is eps-pred SDXL with anime/illustration
+emphasis; no CLIP skip or score tags needed, Lightning LoRA works as-is.</p>
+<p>Deliberate decision <strong>not</strong> to add v3.5 VPred here: the V-prediction variant needs a
+<code>ModelSamplingDiscrete</code> node and can&#39;t use Lightning LoRA (mismatched training objective),
+which means 20-25 step runs — 3-4× slower than the rest of the gallery. Noted as future
+work if there&#39;s a V-pred-compatible distillation LoRA.</p>
+<h3><code>anima</code> — Anima Base v1.0</h3>
+<p>Genuinely new architecture: Cosmos-based 2B BF16 diffusion model from CircleStone Labs /
+Comfy Org. New builder:</p>
+<ul>
+<li><code>UNETLoader</code> (<code>anima-base-v1.0.safetensors</code> → <code>models/diffusion_models/</code>)</li>
+<li><code>CLIPLoader</code> (<code>qwen_3_06b_base.safetensors</code>, type: <code>qwen_image</code>) — the <code>anima</code> type was
+tried and rejected; the model is Qwen-based internally so <code>qwen_image</code> is correct</li>
+<li><code>VAELoader</code> (<code>qwen_image_vae.safetensors</code>) — already present on disk; shared with
+qwen2512 and krea2</li>
+<li>KSampler: <code>euler</code> / <code>normal</code> / CFG 4.0, ceiling 18, <code>prompt_size: m</code></li>
+</ul>
+<p>Standard ComfyUI sampler used (<code>euler</code>) rather than the community <code>er_sde</code> (which requires
+KJNodes) to avoid a custom-node dependency.</p>
+<h3><code>pixartsigma</code> — PixArt-Sigma XL-2</h3>
+<p>Pre-FLUX DiT (0.6B) with T5-XXL text encoder. New builder:</p>
+<ul>
+<li><code>PixArtCheckpointLoader</code> (<code>PixArt-Sigma-XL-2-1024-MS.pth</code>, <code>PixArtMS_Sigma_XL_2</code>) —
+<strong>requires <code>ComfyUI_ExtraModels</code> (city96)</strong> — the only custom-node dependency in the gallery</li>
+<li><code>CLIPLoader</code> (<code>t5xxl_fp8_e4m3fn.safetensors</code>, type: <code>pixart</code>) — <code>pixart</code> is a built-in
+ComfyUI CLIPLoader type (added natively). Uses the same T5 fp8 file already present for
+chroma; it runs on CPU so FP8 is fine on MPS.</li>
+<li><code>VAELoader</code> (<code>sdxl_vae.safetensors</code>) — PixArt-Sigma requires a separate SDXL VAE;
+NOT bundled in the checkpoint. Users must download separately.</li>
+<li>KSampler: <code>dpmpp_2m</code> / <code>karras</code> / CFG 4.5, ceiling 20, <code>prompt_size: m</code></li>
+</ul>
+<h2>Files changed</h2>
+<ul>
+<li><code>src/graphs.ts</code> — added <code>pony</code>, <code>anima</code>, <code>pixartsigma</code> builders; <code>PONY_BUILDER</code> and
+score-tag constants; <code>applyPrompt</code> fix; <code>PONY_BUILDER</code> in <code>isHighSDXL</code> check</li>
+<li><code>src/workflows.ts</code> — extended high-variant export check to include <code>pony</code> builder</li>
+<li><code>config/gallery.ts</code> — 4 new model entries</li>
+<li><code>config/workflows.ts</code> — 4 new catalog entries</li>
+<li><code>workflows/anima.t2i.json</code>, <code>pony.t2i.json</code>, <code>pony.t2i.high.json</code>,
+<code>pixartsigma.t2i.json</code>, <code>illustrious.t2i.json</code>, <code>illustrious.t2i.high.json</code> — exported</li>
+</ul>
+<h2>Files users need to download</h2>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>File(s)</th>
+<th>Location</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>pony</td>
+<td><code>ponyDiffusionV6XL_v6StartWithThisOne.safetensors</code></td>
+<td><code>models/checkpoints/</code></td>
+</tr>
+<tr>
+<td>illustrious</td>
+<td><code>illustriousXL_v2.safetensors</code></td>
+<td><code>models/checkpoints/</code></td>
+</tr>
+<tr>
+<td>anima</td>
+<td><code>anima-base-v1.0.safetensors</code></td>
+<td><code>models/diffusion_models/</code></td>
+</tr>
+<tr>
+<td>anima</td>
+<td><code>qwen_3_06b_base.safetensors</code></td>
+<td><code>models/text_encoders/</code></td>
+</tr>
+<tr>
+<td>anima</td>
+<td><code>qwen_image_vae.safetensors</code></td>
+<td><code>models/vae/</code> (already present)</td>
+</tr>
+<tr>
+<td>pixartsigma</td>
+<td><code>PixArt-Sigma-XL-2-1024-MS.pth</code></td>
+<td><code>models/checkpoints/</code></td>
+</tr>
+<tr>
+<td>pixartsigma</td>
+<td><code>sdxl_vae.safetensors</code></td>
+<td><code>models/vae/</code></td>
+</tr>
+<tr>
+<td>pixartsigma</td>
+<td><code>ComfyUI_ExtraModels</code> custom node</td>
+<td>ComfyUI Manager or manual git clone</td>
+</tr>
+</tbody></table>
+<h2>Status</h2>
+<p><code>lig plan</code> shows 456 new missing cells across the four models (713 total missing including
+existing backlogs). Run <code>lig run</code> when ComfyUI is up and models are downloaded.</p>
+
+</article></main>
+    <footer class="site-footer">
+      <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>
+    </footer>
+    <script>
+      // Localise all post times to the reader's timezone.
+      // Each <time class="post-time" data-ts="..."> carries a Unix epoch (ms);
+      // we replace the static server-rendered HH:MM with the local equivalent.
+      document.querySelectorAll('time.post-time[data-ts]').forEach(function (el) {
+        var d = new Date(+el.dataset.ts);
+        el.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        el.title = d.toLocaleString(); // full local datetime on hover
+      });
+    </script>
+  </body>
+</html>
