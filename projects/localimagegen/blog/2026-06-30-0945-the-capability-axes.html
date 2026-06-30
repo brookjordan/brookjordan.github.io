@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#1a1d24" />
+    <meta name="color-scheme" content="dark" />
+    <title>The capability axes — can it spell, can it count?</title>
+    <style>
+/* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
+   This is the single source of truth for colour, radius, spacing and type.
+   It is inlined ahead of each page's stylesheet at build time, and linked
+   first in dev so opening the .html files directly still resolves the vars.
+
+   Theming: everything below is a semantic token mapped onto a small palette of
+   primitives. To add a theme, override the *semantic* tokens under a selector
+   (see the commented [data-theme="light"] block at the bottom) — no stylesheet
+   needs to change, only these variables. */
+:root {
+  color-scheme: dark;
+
+  /* ---- palette primitives (raw colours; reference these only via the tokens below) ---- */
+  --c-ink-900: #0f1115;
+  --c-ink-800: #1a1d24;
+  --c-ink-700: #232732;
+  --c-ink-600: #2a2f3a;
+  --c-fog-100: #e8eaed;
+  --c-fog-300: #9aa0a6;
+  --c-fog-500: #6b727d;
+  --c-accent: #7c9cff;
+
+  /* ---- semantic: background / border / text, primary > secondary > tertiary ---- */
+  --bg-primary: var(--c-ink-900);
+  --bg-secondary: var(--c-ink-800);
+  --bg-tertiary: var(--c-ink-700);
+
+  --border-primary: var(--c-ink-600);
+  --border-secondary: rgba(150, 170, 210, 0.16);
+
+  --text-primary: var(--c-fog-100);
+  --text-secondary: var(--c-fog-300);
+  --text-tertiary: var(--c-fog-500);
+
+  --accent: var(--c-accent);
+
+  /* ---- radius scale ---- */
+  --radius-sm: 5px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 9999px;
+
+  /* ---- spacing / padding scale ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 2rem;
+
+  /* ---- type ---- */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* Shared cross-nav link (gallery <-> devlog). Both app.css and blog.css inline this
+   file, so defining it once here keeps the two links visually identical. */
+.cross-link {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.cross-link:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+/* Example theme override — set <html data-theme="light"> to activate (or wire it
+   to prefers-color-scheme). Left commented so we don't ship untuned colours:
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg-primary: #fbfbfd;
+  --bg-secondary: #f1f2f5;
+  --bg-tertiary: #e7e9ee;
+  --border-primary: #d4d8e0;
+  --border-secondary: rgba(20, 30, 60, 0.12);
+  --text-primary: #1a1d24;
+  --text-secondary: #555b66;
+  --text-tertiary: #7b828d;
+}
+*/
+
+</style>
+    <style>
+:root {
+  /* Local aliases mapped onto the shared tokens in tokens.css (inlined first),
+     so the devlog and the gallery share one palette, radius and spacing scale. */
+  --bg: var(--bg-primary);
+  --bg-soft: var(--bg-secondary);
+  --panel: var(--bg-tertiary);
+  --text: var(--text-primary);
+  --muted: var(--text-secondary);
+  --border: var(--border-secondary);
+  --radius: var(--radius-md);
+  /* --accent comes straight from tokens.css */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.65 var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.site-header,
+.site-footer {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 1.25rem 1.25rem;
+}
+
+.site-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text);
+}
+
+.brand span {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.content {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+
+.site-footer {
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* ---- post typography ---- */
+.content h1 {
+  font-size: 1.9rem;
+  line-height: 1.2;
+  margin: 0 0 0.5rem;
+}
+
+.content h2 {
+  font-size: 1.35rem;
+  margin: 2rem 0 0.6rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.3rem;
+}
+
+.content h3 {
+  font-size: 1.1rem;
+  margin: 1.5rem 0 0.4rem;
+}
+
+.content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  display: block;
+  margin: 1.25rem 0;
+}
+
+.content audio {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.content blockquote {
+  margin: 1.25rem 0;
+  padding: 0.5rem 1rem;
+  border-left: 3px solid var(--accent);
+  background: var(--bg-soft);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  color: var(--muted);
+}
+
+.content pre {
+  background: #12151b;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  overflow: auto;
+  font-size: 0.88rem;
+}
+
+.content code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: rgba(150, 170, 210, 0.14);
+  padding: 0.1em 0.35em;
+  border-radius: 5px;
+}
+
+.content pre code {
+  background: none;
+  padding: 0;
+}
+
+/* ---- per-post header (date + tags) ---- */
+.post-meta {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0 0 1.5rem;
+}
+
+.tag {
+  display: inline-block;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 0.1em 0.7em;
+  font-size: 0.78rem;
+  margin-right: 0.35rem;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+/* ---- index listing ---- */
+.index-intro {
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+
+.post-group-date {
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 2rem 0 0.75rem;
+}
+
+.post-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.post-list li {
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.post-list a.post-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.post-list .post-row-meta {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+}
+
+.post-time {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  margin-right: 0.5rem;
+  cursor: help;
+}
+
+</style>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="./index.html">localimagegen <span>· devlog</span></a>
+      <nav class="site-nav"><a class="cross-link" href="../index.html">gallery →</a></nav>
+    </header>
+    <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
+<article class="post">
+<h1>The capability axes — can it spell, can it count?</h1>
+<p class="post-meta">2026-06-30 <time class="post-time" data-ts="1782783900000">09:45</time> · <span class="tag">decision</span> <span class="tag">content</span></p>
+<p><img src="img/banner_the-capability-axes.webp" alt="Banner"></p>
+<p>The six scenes are a deliberate <a href="2026-06-24-1754-the-scene-catalogue.html">test suite</a>: each
+prompt is engineered to break a different capability — materials, faces, tilt-shift,
+emotion, crowds at depth. But a test suite is only as honest as the axes it spans, and the
+dangerous failure mode is the blind spot you can&#39;t see from inside it. Before adding a
+seventh scene on instinct, I went looking for our blind spots somewhere external.</p>
+<h2>The external yardstick</h2>
+<p>I read through <code>danielrosehill/Text-To-Image-Test-Prompts</code> — ~160 prompts across 32
+categories, a community catalogue of the things people actually use to stress image models.
+Not to copy it; it&#39;s a grab-bag, and we keep our own bare, photoreal house style. I used it
+as an audit checklist. For each of its 32 categories I asked one question: <em>does any of our
+six scenes already probe this?</em> Lighting, depth of field, photorealism, faces, dense
+composition, emotion — all yes, covered by van/spirit/doll/embrace/kingdom. Most categories
+came back a comfortable &quot;already exercised.&quot;</p>
+<p>Two did not. Two were capabilities the matrix is <em>structurally</em> blind to — and they happen
+to be the two where our lineup disagrees most violently. Those earned a scene.</p>
+<h2>Gap one: legible text (<code>signage</code>)</h2>
+<p>Nothing in the matrix asks a model to <em>write</em>. That&#39;s a glaring omission, because legible
+text is the single axis where our fourteen models split hardest: ideogram, qwen2512 and the
+flux pair can put a readable word on a sign, while the sdxl trio (see
+<a href="2026-06-23-1735-the-model-menagerie.html">the menagerie</a>) reliably turns letters into
+noodles. A real, repeatable, dramatic capability gap that the gallery currently never
+shows.</p>
+<p>So: a storefront sign bearing a <strong>short real word</strong>. The brand fusion was too good to leave
+on the table — the sign reads <strong>&quot;PATCH NOTES&quot;</strong>: the podcast name, a literal patch, and a
+text test in one frame. Short is deliberate. A long string only guarantees mush and adds no
+signal; two clean words is the whole experiment. And even the <code>s</code> (CLIP) variant still asks
+for the word — when sdxl garbles it, that garble <em>is</em> the result, not a bug to prompt
+around.</p>
+<h2>Gap two: instruction-following (<code>instructions</code>)</h2>
+<p>This one is subtler. We already split every prompt into <code>s</code>/<code>m</code>/<code>l</code> tiers — CLIP, T5, and
+LLM text encoders (<a href="2026-06-24-1723-the-kingdom-scene.html">one prompt, three token budgets</a>).
+But today that axis is invisible in the <em>output</em>. It&#39;s a token <em>budget</em> — a shortening
+exercise — not a visible capability. You cannot look at a render and tell that an LLM
+encoder understood the brief where CLIP only caught keywords.</p>
+<p>A multi-constraint composition makes it visible. Borrowing the catalogue&#39;s
+<code>very-specific-instructions</code> idea: an arrangement built from <em>checkable</em> constraints — exact
+counts, named colours in a stated order, spatial relationships. Three stacked ceramic cats,
+specified colours bottom-to-top, the middle one wearing the patch, a single lemon balanced
+on top, plain studio background. A correct render means the model parsed the brief; a wrong
+count, colour, or order means it didn&#39;t. That delta is the data — and it should track the
+encoder tier, finally making <code>s</code>/<code>m</code>/<code>l</code> mean <em>capability</em>, not just <em>length</em>. Quirky on
+purpose, too: a sterile checkerboard would waste the frame when an odd little still life
+tests the same thing and is worth looking at.</p>
+<h2>The patch goes permanent</h2>
+<p>The cloth repair patch began life as a <a href="2026-06-24-1754-the-scene-catalogue.html">van detail</a>
+— mismatched, frayed, whip-stitched, concealing a tear — a quiet compositional instruction
+that models love to ignore. It came back on the dragon&#39;s scales. As of these two scenes it
+stops being a recurring detail and becomes a <strong>mandated motif</strong>: every new scene carries the
+patch, and deliberately on a <em>different surface</em> each time.</p>
+<p>van metal → dragon scales → signage&#39;s woven awning → the instruction scene&#39;s glazed
+ceramic.</p>
+<p>The bet is simple: an unexpected element a model must integrate <em>everywhere</em>, across
+materials it was never trained to expect a patch on, is exactly the kind of thing that
+separates the careful models from the rest. Vary the surface and you test patch integration
+against metal sheen, organic scale, woven cloth, and glaze — four hard material-continuity
+problems wearing one recurring costume. It&#39;s the same instinct as running
+<a href="2026-06-23-2020-the-lora-question.html">bare, fair builders</a>: a consistent probe across every
+cell beats a flattering one, because the consistency is what makes the comparison mean
+anything.</p>
+<h2>The discipline: every scene costs a full matrix</h2>
+<p>Here&#39;s why I read 32 categories to keep 2. A scene isn&#39;t a prompt — it&#39;s a whole column of
+the matrix: all 3 seeds × 14 models × every step rung. Call it ~180–200 images, many hours
+of compute, dominated by the slow undistilled models (chroma, ideogram, longcat, ovis, wan)
+whose <a href="2026-06-26-0825-knowing-when-to-stop.html">per-step cost is brutal</a>. Adding a scene on
+a whim is signing up for an overnight render. So the bar was deliberately savage, and most
+of the catalogue got cut:</p>
+<ul>
+<li><strong>Already covered</strong> — <code>lighting-instructions</code>, <code>symbolism</code>, <code>emotion</code>: van/spirit/kingdom/embrace
+exercise these already; near-zero marginal signal.</li>
+<li><strong>Unjudgeable</strong> — <code>conflicting-prompts</code> (&quot;hot ice&quot;, &quot;dark light&quot;): fun, but there&#39;s no
+<em>correct</em> output to compare against, so it can&#39;t be scored fairly. Not gallery-grade.</li>
+<li><strong>Redundant with the text axis</strong> — <code>infographics</code>, <code>logo-design</code>, <code>graphic-design</code>: they
+all lean on text, and data-viz and logos come out uniformly weak and un-pretty.</li>
+<li><strong>World-knowledge / legally iffy</strong> — <code>world-flags</code>, <code>landmarks</code>, <code>brands</code>: trademark and
+recall trivia, niche and hard to judge.</li>
+<li><strong>Wrong shape for the matrix</strong> — <code>character-consistency</code>, <code>image-to-image</code>, <code>inpainting</code>:
+they need multiple images or a source image; ours is one-shot text-to-image by definition.</li>
+</ul>
+<p>The only honourable mention was <code>stylistic-following</code>, and I cut even that — for now — to
+protect the photoreal fair-comparison.</p>
+<p>And the tool that turned &quot;expensive&quot; from a hunch into a number is <code>lig plan</code>: drop the two
+scenes into <code>config/gallery.ts</code>, run <code>lig plan</code>, and it prints the exact count of images the
+additions push onto the backlog. You see the bill before you pay it — which is the entire
+point of being ruthless at the design stage instead of discovering the cost three nights
+into a render.</p>
+<h2>What&#39;s not in this post</h2>
+<p>Results. These scenes aren&#39;t rendered yet — this is the design call, written down while the
+<em>why</em> is still fresh. Two new axes (can it spell, can it count?), one through-line (the
+patch, now spanning four materials). When the matrix fills in, we&#39;ll get a
+<a href="2026-06-24-1753-results-the-step-count-reckoning.html">step-count reckoning</a> for <em>capability</em>
+instead of steps: who can read their own signage, who can follow a three-item brief, and —
+if the bet holds — whether the prompt_size tiers finally earn their letters.</p>
+
+</article></main>
+    <footer class="site-footer">
+      <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>
+    </footer>
+    <script>
+      // Localise all post times to the reader's timezone.
+      // Each <time class="post-time" data-ts="..."> carries a Unix epoch (ms);
+      // we replace the static server-rendered HH:MM with the local equivalent.
+      document.querySelectorAll('time.post-time[data-ts]').forEach(function (el) {
+        var d = new Date(+el.dataset.ts);
+        el.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        el.title = d.toLocaleString(); // full local datetime on hover
+      });
+    </script>
+  </body>
+</html>
