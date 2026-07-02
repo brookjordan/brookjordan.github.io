@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#1a1d24" />
+    <meta name="color-scheme" content="dark" />
+    <title>Incident: a model rollout quarantined 584 cells — and every single one was fine</title>
+    <style>
+/* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
+   This is the single source of truth for colour, radius, spacing and type.
+   It is inlined ahead of each page's stylesheet at build time, and linked
+   first in dev so opening the .html files directly still resolves the vars.
+
+   Theming: everything below is a semantic token mapped onto a small palette of
+   primitives. To add a theme, override the *semantic* tokens under a selector
+   (see the commented [data-theme="light"] block at the bottom) — no stylesheet
+   needs to change, only these variables. */
+:root {
+  color-scheme: dark;
+
+  /* ---- palette primitives (raw colours; reference these only via the tokens below) ---- */
+  --c-ink-900: #0f1115;
+  --c-ink-800: #1a1d24;
+  --c-ink-700: #232732;
+  --c-ink-600: #2a2f3a;
+  --c-fog-100: #e8eaed;
+  --c-fog-300: #9aa0a6;
+  --c-fog-500: #6b727d;
+  --c-accent: #7c9cff;
+
+  /* ---- semantic: background / border / text, primary > secondary > tertiary ---- */
+  --bg-primary: var(--c-ink-900);
+  --bg-secondary: var(--c-ink-800);
+  --bg-tertiary: var(--c-ink-700);
+
+  --border-primary: var(--c-ink-600);
+  --border-secondary: rgba(150, 170, 210, 0.16);
+
+  --text-primary: var(--c-fog-100);
+  --text-secondary: var(--c-fog-300);
+  --text-tertiary: var(--c-fog-500);
+
+  --accent: var(--c-accent);
+
+  /* ---- radius scale ---- */
+  --radius-sm: 5px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 9999px;
+
+  /* ---- spacing / padding scale ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 2rem;
+
+  /* ---- type ---- */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* Shared cross-nav link (gallery <-> devlog). Both app.css and blog.css inline this
+   file, so defining it once here keeps the two links visually identical. */
+.cross-link {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.cross-link:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+/* Example theme override — set <html data-theme="light"> to activate (or wire it
+   to prefers-color-scheme). Left commented so we don't ship untuned colours:
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg-primary: #fbfbfd;
+  --bg-secondary: #f1f2f5;
+  --bg-tertiary: #e7e9ee;
+  --border-primary: #d4d8e0;
+  --border-secondary: rgba(20, 30, 60, 0.12);
+  --text-primary: #1a1d24;
+  --text-secondary: #555b66;
+  --text-tertiary: #7b828d;
+}
+*/
+
+</style>
+    <style>
+:root {
+  /* Local aliases mapped onto the shared tokens in tokens.css (inlined first),
+     so the devlog and the gallery share one palette, radius and spacing scale. */
+  --bg: var(--bg-primary);
+  --bg-soft: var(--bg-secondary);
+  --panel: var(--bg-tertiary);
+  --text: var(--text-primary);
+  --muted: var(--text-secondary);
+  --border: var(--border-secondary);
+  --radius: var(--radius-md);
+  /* --accent comes straight from tokens.css */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.65 var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.site-header,
+.site-footer {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 1.25rem 1.25rem;
+}
+
+.site-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text);
+}
+
+.brand span {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.content {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+
+.site-footer {
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* ---- post typography ---- */
+.content h1 {
+  font-size: 1.9rem;
+  line-height: 1.2;
+  margin: 0 0 0.5rem;
+}
+
+.content h2 {
+  font-size: 1.35rem;
+  margin: 2rem 0 0.6rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.3rem;
+}
+
+.content h3 {
+  font-size: 1.1rem;
+  margin: 1.5rem 0 0.4rem;
+}
+
+.content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  display: block;
+  margin: 1.25rem 0;
+}
+
+.content audio {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.content blockquote {
+  margin: 1.25rem 0;
+  padding: 0.5rem 1rem;
+  border-left: 3px solid var(--accent);
+  background: var(--bg-soft);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  color: var(--muted);
+}
+
+.content pre {
+  background: #12151b;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  overflow: auto;
+  font-size: 0.88rem;
+}
+
+.content code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: rgba(150, 170, 210, 0.14);
+  padding: 0.1em 0.35em;
+  border-radius: 5px;
+}
+
+.content pre code {
+  background: none;
+  padding: 0;
+}
+
+/* ---- per-post header (date + tags) ---- */
+.post-meta {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0 0 1.5rem;
+}
+
+.tag {
+  display: inline-block;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 0.1em 0.7em;
+  font-size: 0.78rem;
+  margin-right: 0.35rem;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+/* ---- index listing ---- */
+.index-intro {
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+
+.post-group-date {
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 2rem 0 0.75rem;
+}
+
+.post-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.post-list li {
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.post-list a.post-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.post-list .post-row-meta {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+}
+
+.post-time {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  margin-right: 0.5rem;
+  cursor: help;
+}
+
+</style>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="./index.html">localimagegen <span>· devlog</span></a>
+      <nav class="site-nav"><a class="cross-link" href="../index.html">gallery →</a></nav>
+    </header>
+    <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
+<article class="post">
+<h1>Incident: a model rollout quarantined 584 cells — and every single one was fine</h1>
+<p class="post-meta">2026-07-02 <time class="post-time" data-ts="1782950280000">07:58</time> · <span class="tag">incident</span> <span class="tag">lesson</span> <span class="tag">resilience</span></p>
+<p><code>yarn run run</code> opened with a wall of red: <strong>584 cells quarantined</strong>, reason <code>not produced</code>, spread across eleven models. It looked like the sky was falling. It wasn&#39;t — and reconstructing why, from <code>logs/events.ndjson</code>, ComfyUI&#39;s own <code>/history</code>, and file mtimes, turned into a good lesson about what the 3-strike quarantine is actually <em>for</em>.</p>
+<h2>What the log showed</h2>
+<pre><code>[2026-07-01T16:18:56.990Z] quarantined — hit 3x failure cap (skipping 584 cell(s)):
+[2026-07-01T16:18:56.991Z]   SKIP chroma_van_s30_00042: not produced
+[2026-07-01T16:18:56.991Z]   SKIP chroma_signage_s01_00042: not produced
+...
+[2026-07-01T16:18:56.992Z]   SKIP illustrious_van_s01_00042: not produced
+...
+</code></pre>
+<p>Eleven models (<code>chroma</code>, <code>anima</code>, <code>flux9b</code>, <code>ideogram</code>, <code>illustrious</code>, <code>krea2</code>, <code>longcat</code>, <code>ovis</code>, <code>pixartsigma</code>, <code>pony</code>, <code>qwen2512</code>), overwhelmingly the two newest scenes — <code>signage</code> and <code>instructions</code> — plus a batch of <code>anima</code> cells the cap hadn&#39;t reached yet (93 of them, still <code>missing</code>, queued right below the dump).</p>
+<h2>Reconstructing the timeline</h2>
+<p>Three independent trails, cross-checked, tell a consistent story:</p>
+<ol>
+<li><strong><code>config/gallery.ts</code> history.</strong> <code>signage</code> + <code>instructions</code> (the two scenes that dominate the quarantine list) landed 2026-06-30. <code>anima</code>, <code>pony</code>, <code>illustrious</code>, <code>pixartsigma</code> landed 2026-07-01 00:26 — <em>the same commit that also fixed a flux4b regression</em>, i.e. a busy rollout day.</li>
+<li><strong>The download logs.</strong> <code>ComfyUI-Shared/dl-anima-clip.log</code>, <code>dl-anima-unet.log</code>, <code>dl-illustrious.log</code>, <code>dl-pixartsigma.log</code>, <code>dl-pony.log</code> all finished around <strong>2026-07-01 00:58</strong> — half an hour <em>after</em> the config commit that made those models &quot;live.&quot; A broader <code>dl-all.log</code> didn&#39;t finish until <strong>07:52</strong> that morning. <code>logs/events.ndjson</code> shows <code>run-start</code> events at <code>03:10</code> and <code>04:29</code> — squarely inside that window, when several checkpoints genuinely weren&#39;t fully on disk yet.</li>
+<li><strong>The anima CLIP loader.</strong> Earlier in this same investigation we&#39;d traced anima&#39;s <code>CLIPLoader</code> errors to <code>qwen_3_06b_base.safetensors</code> still downloading. That alone is enough to fail a render three times over three separate <code>run</code> invocations before the file finished landing — exactly the quarantine cap&#39;s job.</li>
+</ol>
+<p>None of that is a rendering bug. It&#39;s the ordinary turbulence of adding five new models and two new scenes in the same 24 hours, and the retry cap doing exactly what it&#39;s designed to do: stop hammering a cell that fails for a <em>transient</em> reason before that reason has actually resolved.</p>
+<h2>The fix (and the tell)</h2>
+<p><code>config/failures.json</code> — the quarantine ledger — is now <code>{}</code>. Empty. Its mtime lines up with <code>00:23:07</code>, one minute after the run that&#39;s still going as I write this restarted. Someone (last session: us, walking through <code>lig retry</code>) cleared it, and the very next attempt at every one of those 584 cells succeeded.</p>
+<p>The proof is in ComfyUI&#39;s own <code>/history</code>: since that restart, <strong>903 prompts executed, 0 with an error status.</strong> Per-model, in order:</p>
+<table>
+<thead>
+<tr>
+<th>model</th>
+<th>count</th>
+<th>span</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>anima</td>
+<td>94</td>
+<td>00:22 – 02:38</td>
+</tr>
+<tr>
+<td>illustrious</td>
+<td>264</td>
+<td>02:40 – 03:17</td>
+</tr>
+<tr>
+<td>pixartsigma</td>
+<td>264</td>
+<td>03:17 – 06:38</td>
+</tr>
+<tr>
+<td>pony</td>
+<td>240</td>
+<td>06:40 – 07:15</td>
+</tr>
+<tr>
+<td>flux9b</td>
+<td>41 (ongoing)</td>
+<td>07:16 – now</td>
+</tr>
+</tbody></table>
+<p>Every model that had quarantined <code>signage</code>/<code>instructions</code> cells has since cleared them — none show up in the current <code>missing</code>/<code>invalid</code> breakdown. The failure genuinely was transient; re-running genuinely was the fix.</p>
+<h2>What&#39;s still actually broken (found along the way)</h2>
+<p>Re-running <code>lig verify</code> while investigating turned up 15 <em>real</em> invalid masters — worth separating from the false alarm above:</p>
+<ul>
+<li><strong><code>anima</code> × 7, all at <code>s02</code></strong> (<code>van</code>, <code>dragon</code>, <code>signage</code>) — blank/near-blank (<code>stddev</code> 0.1–0.5), dated <strong>2026-07-01 11:10–11:14</strong>. This is the same &quot;anima printing black&quot; thread from earlier this session — confirmed now by the validator, not just eyeballing compression artefacts. Two steps isn&#39;t enough for this undistilled model to converge; it&#39;s a real gap in the low end of its ladder, not a bug.</li>
+<li><strong><code>flux4b</code> × 7, at <code>s10</code>/<code>s11</code>.</strong> Four of these (<code>van</code>, <code>spirit</code>, <code>embrace</code>, <code>kingdom</code>, all seed <code>1670940986</code>, <code>s10</code>) are the already-known, already-deprecated <a href="2026-06-30-incident-flux4b-s10-regression">Flux2Scheduler NaN regression</a> — expected, harmless, waiting on their next render. But <strong>three are new</strong>: <code>flux4b_dragon_s11</code> (two seeds) and <code>flux4b_doll_s11</code> — the <em>same</em> NaN-sigma failure mode, one step further up the ladder than the documented fix covers, on scenes never added to <code>config/deprecations.yaml</code>. The <code>applyModelFixes</code> patch and the deprecation list both assume the bug is pinned to exactly <code>s10</code>; it isn&#39;t.</li>
+<li><strong><code>wan</code> × 1, at <code>s02</code></strong> — same low-step-blank story as anima.</li>
+</ul>
+<p>None of these are new work from tonight — they&#39;re all pre-existing, sitting in <code>masters/</code> un-deprecated, quietly waiting for <code>invalid</code>&#39;s turn in the priority order (behind <code>missing</code>, which is still 171 cells deep across <code>chroma</code>/<code>ideogram</code>/<code>krea2</code>/<code>longcat</code>/<code>ovis</code>/<code>qwen2512</code>/<code>flux9b</code>).</p>
+<h2>Lessons</h2>
+<ul>
+<li><strong>A quarantine dump at the top of a run log is a <em>symptom</em>, not necessarily a <em>diagnosis</em>.</strong> Reading it in isolation looked catastrophic; reading it against <code>events.ndjson</code> and the download logs turned it into &quot;five models finished downloading mid-run, three strikes tripped before they were ready.&quot; Always correlate a failure burst against what else was happening on the machine at that timestamp.</li>
+<li><strong>The 3-strike cap is doing its job even when the story is boring.</strong> It stopped 584 cells from being retried forever during a rollout window instead of quietly wasting a night&#39;s compute — and once the real blocker (a download) cleared, one <code>lig retry</code> and a normal run resolved all of them. That&#39;s the resilience design working as intended, not a bug to route around.</li>
+<li><strong>&quot;Invalid&quot; and &quot;deprecated&quot; aren&#39;t the same bucket, and a cell can be both without saying so.</strong> <code>computeWork</code> classifies a file with a failed validator straight to <code>invalid</code>/<code>quarantined</code> and <code>continue</code>s — it never reaches the deprecation check. Four of the seven flux4b failures above are <em>already</em> in <code>config/deprecations.yaml</code>, but <code>lig verify</code> still lists them under <code>invalid</code>, because deprecation is moot once a file is already broken. Don&#39;t read &quot;not in the deprecated count&quot; as &quot;not deprecated.&quot;</li>
+<li><strong>A documented fix&#39;s scope is exactly as wide as its test coverage, not its bug report.</strong> The flux4b <code>s10</code> fix was verified at <code>s10</code>; the same failure mode at <code>s11</code> went unnoticed for days because nothing re-checked neighbouring steps. Worth a <code>s09</code>–<code>s12</code> sweep before calling this one closed.</li>
+</ul>
+
+</article></main>
+    <footer class="site-footer">
+      <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>
+    </footer>
+    <script>
+      // Localise all post times to the reader's timezone.
+      // Each <time class="post-time" data-ts="..."> carries a Unix epoch (ms);
+      // we replace the static server-rendered HH:MM with the local equivalent.
+      document.querySelectorAll('time.post-time[data-ts]').forEach(function (el) {
+        var d = new Date(+el.dataset.ts);
+        el.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        el.title = d.toLocaleString(); // full local datetime on hover
+      });
+    </script>
+  </body>
+</html>

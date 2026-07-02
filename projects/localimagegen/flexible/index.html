@@ -714,6 +714,13 @@
           <span class="sample-value" id="timeVal">30s</span>
         </div>
       </div>
+      <div class="control-group" id="memSliderGroup" hidden>
+        <label for="memSlider">Max memory</label>
+        <div class="slider-row">
+          <input type="range" id="memSlider" min="0" max="36" step="0.5" value="36" />
+          <span class="sample-value" id="memVal">All</span>
+        </div>
+      </div>
     </div>
     <p class="status" id="status">Loading…</p>
     </div>
@@ -1069,7 +1076,9 @@
   var BAKED_META = null;
   var BAKED_PROMPTS = null;
   var BAKED_NOTES = null;
+  var BAKED_MEM = null;
   /*!__BAKED_DATA__*/
+  var memByModel = {};
   var slideWidthsPx = null;
   var slideImgHeightPx = 270;
   var slidesAutoSized = false;
@@ -1422,6 +1431,54 @@
     } catch {
     }
   }
+  async function loadMemJson() {
+    if (BAKED_MEM) {
+      applyMemEntries(BAKED_MEM);
+      return;
+    }
+    memByModel = {};
+    try {
+      const res = await fetch("./data/mem.json", { cache: "no-store" });
+      if (res.ok)
+        applyMemEntries(await res.json());
+    } catch {
+    }
+  }
+  function applyMemEntries(entries) {
+    memByModel = {};
+    for (const e of entries) {
+      if (typeof e.footprintGB === "number") memByModel[e.model] = e.footprintGB;
+    }
+  }
+  function memThresholdGB() {
+    const group = document.getElementById("memSliderGroup");
+    if (!group || group.hidden) return null;
+    const slider = document.getElementById("memSlider");
+    if (!slider) return null;
+    const v = Number(slider.value);
+    return v >= Number(slider.max) ? null : v;
+  }
+  function initMemSlider() {
+    const group = document.getElementById("memSliderGroup");
+    const slider = document.getElementById("memSlider");
+    const val = document.getElementById("memVal");
+    if (!group || !slider || !val) return;
+    const footprints = Object.values(memByModel);
+    if (!footprints.length) {
+      group.hidden = true;
+      return;
+    }
+    const minGB = Math.floor(Math.min(...footprints) * 2) / 2;
+    const maxGB = Math.ceil(Math.max(...footprints) * 2) / 2;
+    slider.min = String(minGB);
+    slider.max = String(maxGB);
+    slider.step = "0.5";
+    if (Number(slider.value) < minGB || Number(slider.value) > maxGB) {
+      slider.value = String(maxGB);
+    }
+    val.textContent = memThresholdGB() == null ? "All" : `\u2264 ${Number(slider.value).toFixed(1)} GB`;
+    group.hidden = false;
+  }
   function promptSizeOfModel2(model) {
     return promptSizeOfModel(promptCatalog, model);
   }
@@ -1667,7 +1724,12 @@
   function getSelectedModels() {
     const sel = document.getElementById("modelFilter");
     if (!sel) return [];
-    return [...sel.selectedOptions].map((o) => o.value);
+    const threshold = memThresholdGB();
+    return [...sel.selectedOptions].map((o) => o.value).filter((m) => {
+      if (threshold == null) return true;
+      const gb = memByModel[m];
+      return gb == null || gb <= threshold;
+    });
   }
   function setModelSelection(models) {
     const sel = document.getElementById("modelFilter");
@@ -2496,7 +2558,9 @@
     const modelEl = document.createElement("span");
     modelEl.className = "slide-overlay-model slide-overlay-caption";
     const msize = promptSizeOfModel2(model);
-    modelEl.textContent = msize ? `${model} \xB7 ${msize.toUpperCase()}` : model;
+    const memGB = memByModel[model];
+    const memStr = memGB != null ? ` \xB7 ${memGB.toFixed(1)} GB` : "";
+    modelEl.textContent = msize ? `${model} \xB7 ${msize.toUpperCase()}${memStr}` : `${model}${memStr}`;
     track.appendChild(modelEl);
     subjects.forEach((subject, i) => {
       const shown = slideShownSample2(model, subject, targetSample, exact);
@@ -2598,6 +2662,7 @@
     await loadMetaJson();
     await loadPromptsJson();
     await loadNotesJson();
+    await loadMemJson();
     applyMetaToCatalog();
     rebuildSampleList();
     rebuildTimeSlider();
@@ -2605,6 +2670,7 @@
     setupPromptUI();
     setupOvershootUI();
     populateModelFilter();
+    initMemSlider();
     populateSampleFilter();
     populateModelSelect();
     updateCompareControls();
@@ -2737,6 +2803,12 @@
   });
   document.getElementById("timeSlider").addEventListener("input", (e) => {
     document.getElementById("timeVal").textContent = `${e.target.value}s`;
+    void render();
+  });
+  document.getElementById("memSlider")?.addEventListener("input", (e) => {
+    const slider = e.target;
+    const v = Number(slider.value);
+    document.getElementById("memVal").textContent = v >= Number(slider.max) ? "All" : `\u2264 ${v.toFixed(1)} GB`;
     void render();
   });
   document.getElementById("showOvershoots").addEventListener("change", (e) => {

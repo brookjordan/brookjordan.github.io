@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#1a1d24" />
+    <meta name="color-scheme" content="dark" />
+    <title>Incident: the repair sweep that out-measured the sweep</title>
+    <style>
+/* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
+   This is the single source of truth for colour, radius, spacing and type.
+   It is inlined ahead of each page's stylesheet at build time, and linked
+   first in dev so opening the .html files directly still resolves the vars.
+
+   Theming: everything below is a semantic token mapped onto a small palette of
+   primitives. To add a theme, override the *semantic* tokens under a selector
+   (see the commented [data-theme="light"] block at the bottom) — no stylesheet
+   needs to change, only these variables. */
+:root {
+  color-scheme: dark;
+
+  /* ---- palette primitives (raw colours; reference these only via the tokens below) ---- */
+  --c-ink-900: #0f1115;
+  --c-ink-800: #1a1d24;
+  --c-ink-700: #232732;
+  --c-ink-600: #2a2f3a;
+  --c-fog-100: #e8eaed;
+  --c-fog-300: #9aa0a6;
+  --c-fog-500: #6b727d;
+  --c-accent: #7c9cff;
+
+  /* ---- semantic: background / border / text, primary > secondary > tertiary ---- */
+  --bg-primary: var(--c-ink-900);
+  --bg-secondary: var(--c-ink-800);
+  --bg-tertiary: var(--c-ink-700);
+
+  --border-primary: var(--c-ink-600);
+  --border-secondary: rgba(150, 170, 210, 0.16);
+
+  --text-primary: var(--c-fog-100);
+  --text-secondary: var(--c-fog-300);
+  --text-tertiary: var(--c-fog-500);
+
+  --accent: var(--c-accent);
+
+  /* ---- radius scale ---- */
+  --radius-sm: 5px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 9999px;
+
+  /* ---- spacing / padding scale ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 2rem;
+
+  /* ---- type ---- */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* Shared cross-nav link (gallery <-> devlog). Both app.css and blog.css inline this
+   file, so defining it once here keeps the two links visually identical. */
+.cross-link {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.cross-link:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+/* Example theme override — set <html data-theme="light"> to activate (or wire it
+   to prefers-color-scheme). Left commented so we don't ship untuned colours:
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg-primary: #fbfbfd;
+  --bg-secondary: #f1f2f5;
+  --bg-tertiary: #e7e9ee;
+  --border-primary: #d4d8e0;
+  --border-secondary: rgba(20, 30, 60, 0.12);
+  --text-primary: #1a1d24;
+  --text-secondary: #555b66;
+  --text-tertiary: #7b828d;
+}
+*/
+
+</style>
+    <style>
+:root {
+  /* Local aliases mapped onto the shared tokens in tokens.css (inlined first),
+     so the devlog and the gallery share one palette, radius and spacing scale. */
+  --bg: var(--bg-primary);
+  --bg-soft: var(--bg-secondary);
+  --panel: var(--bg-tertiary);
+  --text: var(--text-primary);
+  --muted: var(--text-secondary);
+  --border: var(--border-secondary);
+  --radius: var(--radius-md);
+  /* --accent comes straight from tokens.css */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.65 var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.site-header,
+.site-footer {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 1.25rem 1.25rem;
+}
+
+.site-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text);
+}
+
+.brand span {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.content {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+
+.site-footer {
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* ---- post typography ---- */
+.content h1 {
+  font-size: 1.9rem;
+  line-height: 1.2;
+  margin: 0 0 0.5rem;
+}
+
+.content h2 {
+  font-size: 1.35rem;
+  margin: 2rem 0 0.6rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.3rem;
+}
+
+.content h3 {
+  font-size: 1.1rem;
+  margin: 1.5rem 0 0.4rem;
+}
+
+.content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  display: block;
+  margin: 1.25rem 0;
+}
+
+.content audio {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.content blockquote {
+  margin: 1.25rem 0;
+  padding: 0.5rem 1rem;
+  border-left: 3px solid var(--accent);
+  background: var(--bg-soft);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  color: var(--muted);
+}
+
+.content pre {
+  background: #12151b;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  overflow: auto;
+  font-size: 0.88rem;
+}
+
+.content code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: rgba(150, 170, 210, 0.14);
+  padding: 0.1em 0.35em;
+  border-radius: 5px;
+}
+
+.content pre code {
+  background: none;
+  padding: 0;
+}
+
+/* ---- per-post header (date + tags) ---- */
+.post-meta {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0 0 1.5rem;
+}
+
+.tag {
+  display: inline-block;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 0.1em 0.7em;
+  font-size: 0.78rem;
+  margin-right: 0.35rem;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+/* ---- index listing ---- */
+.index-intro {
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+
+.post-group-date {
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 2rem 0 0.75rem;
+}
+
+.post-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.post-list li {
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.post-list a.post-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.post-list .post-row-meta {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+}
+
+.post-time {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  margin-right: 0.5rem;
+  cursor: help;
+}
+
+</style>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="./index.html">localimagegen <span>· devlog</span></a>
+      <nav class="site-nav"><a class="cross-link" href="../index.html">gallery →</a></nav>
+    </header>
+    <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
+<article class="post">
+<h1>Incident: the repair sweep that out-measured the sweep</h1>
+<p class="post-meta">2026-07-01 <time class="post-time" data-ts="1782891300000">15:35</time> · <span class="tag">incident</span> <span class="tag">lesson</span> <span class="tag">tooling</span></p>
+<p><code>yarn mem:sweep</code> measured every model three times — 54 measurements — then announced a
+<strong>repair sweep of 66 more</strong>. More repairs than originals. The sweep meant to clean up the
+data was about to do twice the work of collecting it, and, worse, learn nothing.</p>
+<h2>What happened</h2>
+<p>The sweep flags a model for re-measurement when one of its three footprints is an
+&quot;outlier&quot; (&gt;<code>max(1.5 GB, 15%)</code> from the model&#39;s median). The old repair plan then
+re-measured each flagged model <code>REPAIR_REPEATS = 3</code> times, and ran one <strong>filler</strong> model
+before <em>each</em> repeat to avoid carry-over — so <strong>6 measurements per flagged model</strong>.</p>
+<p>11 of 18 models tripped the outlier check. 11 × 6 = <strong>66</strong>. The arithmetic was working
+perfectly; the premise was wrong.</p>
+<h2>Root cause</h2>
+<p>Two layers, one real.</p>
+<p>The surface bug: interleaving a filler <em>per repeat</em> multiplied the cost, and nothing
+capped the total, so a noisy run ballooned instead of degrading gracefully.</p>
+<p>The real cause: <strong>the threshold was tighter than the machine&#39;s own noise.</strong> Footprint is
+<code>baseline − trough</code> (free RAM before the render minus the low-water mark during it). The
+<em>baseline</em> alone swung <strong>9.3 GB (σ 2.4)</strong> across the run — 21.5 GB one restart, 30.8 GB
+the next. On Apple-Silicon unified memory there&#39;s no dedicated VRAM: &quot;free&quot; is whatever
+the OS hasn&#39;t handed to the page cache or other apps. Reading a different multi-GB model
+each restart churns that cache, so how much <em>reclaimable</em> memory is lying around — and
+therefore how far <code>free</code> drops when the model loads — varies by run. Three clean readings
+of <code>krea2</code> were 19.3 / 22.7 / 16.2 GB; of <code>sdxlbase</code>, 8.3 / 18.2 / 14.1. That&#39;s the
+environment, not the model. <strong>Re-measuring environmental noise doesn&#39;t converge</strong> — the
+repair readings are just as noisy. It&#39;s a treadmill.</p>
+<h2>The fix</h2>
+<p>Three changes (<code>src/mem-sweep.ts</code>, surfaced via <code>lig mem …</code>, orchestrated by
+<code>scripts/mem-sweep.zsh</code>):</p>
+<ol>
+<li><strong>Median, not &quot;drop outliers then mean.&quot;</strong> <code>aggregate</code> now takes the median of each
+model&#39;s readings. A single wild reading can&#39;t drag it, so the whole outlier-dropping
+heuristic — a worse reinvention of the median — is gone. <code>krea2</code>&#39;s 16.2 stays the
+answer whether or not a 22.7 shows up beside it.</li>
+<li><strong><code>diagnoseStability</code> names the failure.</strong> It separates the two modes, because they
+need opposite responses: <em>environment</em> (baseline volatile → fix the machine; re-measuring
+won&#39;t help) vs <em>measurement</em> (baseline steady but a footprint wobbles → a repair can
+average it out). The sweep prints the verdict in red at the top of every round once
+detected — and baseline volatility shows up as early as round 1.</li>
+<li><strong>Bounded, gated repair.</strong> <code>buildRepairPlan</code> returns nothing unless the baseline is
+steady <em>and</em> only a handful of models are flagged. When it does run, it repeats each
+flagged model <code>REPAIR_REPEATS</code> times and pads the pool to <strong>≥3 distinct</strong> models purely
+to interleave — no per-repeat multiplier. A circuit breaker skips repair entirely when
+more than a third of models are flagged (that&#39;s a noisy run, not a set of glitches). The
+repair can now never dwarf the main sweep.</li>
+</ol>
+<p>On the run that started this, the new code returns an <strong>empty</strong> repair plan and a red
+&quot;the machine is NOT quiet&quot; warning instead of grinding 66 measurements.</p>
+<h2>Lessons</h2>
+<ul>
+<li><strong>When your metric is a delta off a noisy baseline, fix the baseline — don&#39;t re-measure
+the noise.</strong> Quiet the machine (quit Electron apps and browsers, pause Spotlight /
+Time Machine / iCloud, drop Wi-Fi, <code>sudo purge</code> the page cache) and the footprints
+settle. No amount of re-running does that for you. The sweep now prints a read-only
+quietness preflight every run, and <code>mem:sweep --quiet</code> reversibly does the safe parts —
+an interactive &quot;which of these should I quit?&quot; checkbox of running apps (memory hogs
+pre-checked, the terminal running the sweep never offered), <code>sudo purge</code> before each
+measurement, and Wi-Fi off (restored on exit) — via <code>scripts/mem-quiet.zsh</code> (<code>mem:quiet apps</code> runs just the picker). It <strong>asks before quitting anything and never force-quits</strong> —
+a graceful <code>quit</code> lets an app keep its unsaved work — and for the daemons a script <em>can&#39;t</em>
+stop (Spotlight, Time Machine, iCloud, Photos analysis) it prints the exact command or
+setting to stop each yourself. The one thing to never quit for you is the terminal it&#39;s
+running in, so that&#39;s filtered out by <code>$TERM_PROGRAM</code>.</li>
+<li><strong>A robust estimator beats an outlier-chasing pipeline.</strong> The median did for free what
+the drop-then-average code did badly.</li>
+<li><strong>Keep the detector sensitive, but make the <em>response</em> proportionate.</strong> 15% is still an
+outlier — we <em>want</em> to notice wobble. What changed is that noticing a lot of it now
+triggers a warning, not a treadmill.</li>
+</ul>
+
+</article></main>
+    <footer class="site-footer">
+      <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>
+    </footer>
+    <script>
+      // Localise all post times to the reader's timezone.
+      // Each <time class="post-time" data-ts="..."> carries a Unix epoch (ms);
+      // we replace the static server-rendered HH:MM with the local equivalent.
+      document.querySelectorAll('time.post-time[data-ts]').forEach(function (el) {
+        var d = new Date(+el.dataset.ts);
+        el.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        el.title = d.toLocaleString(); // full local datetime on hover
+      });
+    </script>
+  </body>
+</html>
