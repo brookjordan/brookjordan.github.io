@@ -2463,13 +2463,16 @@
   function applyTimeStyle(slide, imgWrap, durationEl, info, budget) {
     clearTimeStyle(slide, imgWrap, durationEl);
     if (!info || !info.over) return;
+    const ratio = Math.max(0, Math.min(1, info.overBy / Math.max(1, budget)));
+    const hue = Math.round(45 * (1 - ratio));
+    const color = `hsl(${hue}, 95%, 55%)`;
     if (imgWrap) {
       imgWrap.style.opacity = "0.2";
-      imgWrap.style.filter = "sepia(1) saturate(3) hue-rotate(-50deg)";
+      imgWrap.style.filter = `sepia(1) saturate(3) hue-rotate(${hue - 35}deg)`;
     }
     slide.classList.add("time-over");
     if (durationEl) {
-      durationEl.style.color = "hsl(0, 85%, 60%)";
+      durationEl.style.color = color;
       durationEl.title = `+${Math.round(info.overBy)}s over the ${budget}s budget`;
     }
   }
