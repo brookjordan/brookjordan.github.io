@@ -2877,8 +2877,8 @@
     if (Number(minSlider.value) >= Number(maxSlider.value))
       minSlider.value = String(Math.max(0, Number(maxSlider.value) - 50));
     document.getElementById("timeMinVal").textContent = `${sliderToSeconds(Number(minSlider.value))}s`;
-    void render();
   });
+  document.getElementById("timeMinSlider").addEventListener("change", () => void render());
   document.getElementById("timeMaxSlider").addEventListener("input", (e) => {
     const maxSlider = e.target;
     maxSlider.dataset.userSet = "1";
@@ -2886,8 +2886,8 @@
     if (Number(maxSlider.value) <= Number(minSlider.value))
       maxSlider.value = String(Math.min(1e3, Number(minSlider.value) + 50));
     document.getElementById("timeMaxVal").textContent = `${sliderToSeconds(Number(maxSlider.value))}s`;
-    void render();
   });
+  document.getElementById("timeMaxSlider").addEventListener("change", () => void render());
   document.getElementById("memSlider")?.addEventListener("input", (e) => {
     const slider = e.target;
     const v = Number(slider.value);
