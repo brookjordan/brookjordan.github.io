@@ -2407,20 +2407,28 @@
     const img = getTopStackImage(imgWrap);
     if (img) paintSlideCaptions(img, modelEl, subjectEl, sampleEl);
   }
-  var carouselScrollSync = false;
+  var carouselScrollLock = null;
+  var carouselScrollLockRaf = null;
+  var cachedCarousels = null;
   function onCarouselScroll(ev) {
-    if (carouselScrollSync) return;
-    carouselScrollSync = true;
     const target = ev.currentTarget;
+    if (carouselScrollLock !== null && carouselScrollLock !== target) return;
+    carouselScrollLock = target;
     const left = target.scrollLeft;
-    for (const other of document.querySelectorAll("#modelList .carousel")) {
+    const carousels = cachedCarousels ?? [];
+    for (const other of carousels) {
       if (other !== target) other.scrollLeft = left;
     }
-    carouselScrollSync = false;
+    if (carouselScrollLockRaf !== null) cancelAnimationFrame(carouselScrollLockRaf);
+    carouselScrollLockRaf = requestAnimationFrame(() => {
+      carouselScrollLockRaf = null;
+      carouselScrollLock = null;
+    });
   }
   function setupSyncedCarousels() {
     const list = document.getElementById("modelList");
     const carousels = list.querySelectorAll(".carousel");
+    cachedCarousels = [...carousels];
     list.classList.toggle("carousel-sync-hint", carousels.length > 1);
     for (const el of carousels) {
       if (el.dataset.scrollSync) continue;
