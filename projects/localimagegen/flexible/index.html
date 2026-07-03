@@ -657,6 +657,7 @@
           <option value="s">S · CLIP ~77t</option>
           <option value="m">M · T5 ~512t</option>
           <option value="l">L · full</option>
+          <option value="b">B · booru tags</option>
         </select>
       </div>
       <div class="control-group" id="modelFilterGroup">
@@ -1323,7 +1324,7 @@
   function promptRowsFor(subject, size) {
     const layers = promptCatalog?.scenes?.[subject] ?? {};
     if (size === "all") {
-      return ["all", "s", "m", "l"].filter((k) => layers[k] != null).map((k) => [k, layers[k]]);
+      return ["all", "s", "m", "l", "b"].filter((k) => layers[k] != null).map((k) => [k, layers[k]]);
     }
     const text = promptForSize2(subject, size);
     const label = layers[size] != null ? size : promptCatalog?.fallback ?? "all";
