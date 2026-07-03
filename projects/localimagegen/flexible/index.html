@@ -1568,10 +1568,8 @@
     if (!minSlider || !maxSlider) return;
     minSlider.min = maxSlider.min = "0";
     minSlider.max = maxSlider.max = "1000";
-    const curMin = Number(minSlider.value);
-    const curMax = Number(maxSlider.value);
-    if (curMin <= 0 || curMin >= 1e3) minSlider.value = "0";
-    if (curMax <= 0 || curMax >= 1e3) maxSlider.value = String(secondsToSlider(median));
+    if (!minSlider.dataset.userSet) minSlider.value = "0";
+    if (!maxSlider.dataset.userSet) maxSlider.value = String(secondsToSlider(median));
     if (Number(minSlider.value) >= Number(maxSlider.value))
       minSlider.value = String(Math.max(0, Number(maxSlider.value) - 50));
     const minValEl = document.getElementById("timeMinVal");
@@ -2874,6 +2872,7 @@
   });
   document.getElementById("timeMinSlider").addEventListener("input", (e) => {
     const minSlider = e.target;
+    minSlider.dataset.userSet = "1";
     const maxSlider = document.getElementById("timeMaxSlider");
     if (Number(minSlider.value) >= Number(maxSlider.value))
       minSlider.value = String(Math.max(0, Number(maxSlider.value) - 50));
@@ -2882,6 +2881,7 @@
   });
   document.getElementById("timeMaxSlider").addEventListener("input", (e) => {
     const maxSlider = e.target;
+    maxSlider.dataset.userSet = "1";
     const minSlider = document.getElementById("timeMinSlider");
     if (Number(maxSlider.value) <= Number(minSlider.value))
       maxSlider.value = String(Math.min(1e3, Number(minSlider.value) + 50));
