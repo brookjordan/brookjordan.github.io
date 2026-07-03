@@ -206,6 +206,9 @@
     .slider-row { display: flex; align-items: center; gap: 0.75rem; min-width: 220px; }
     input[type="range"] { flex: 1; accent-color: var(--accent); }
     .sample-value { font-variant-numeric: tabular-nums; min-width: 2ch; font-weight: 600; }
+    .slider-bound-label { font-size: 0.7rem; color: var(--muted); min-width: 1.8rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    .dual-slider .slider-row { gap: 0.5rem; }
+    .dual-slider .slider-row + .slider-row { margin-top: 0.2rem; }
     select {
       background: var(--bg);
       color: var(--text);
@@ -708,11 +711,17 @@
           <span class="sample-value" id="sampleVal">4</span>
         </div>
       </div>
-      <div class="control-group" id="timeSliderGroup" hidden>
-        <label for="timeSlider">Time budget</label>
+      <div class="control-group dual-slider" id="timeSliderGroup" hidden>
+        <label>Time budget</label>
         <div class="slider-row">
-          <input type="range" id="timeSlider" min="1" max="120" value="30" />
-          <span class="sample-value" id="timeVal">30s</span>
+          <span class="slider-bound-label">Min</span>
+          <input type="range" id="timeMinSlider" min="1" max="120" value="10" />
+          <span class="sample-value" id="timeMinVal">10s</span>
+        </div>
+        <div class="slider-row">
+          <span class="slider-bound-label">Max</span>
+          <input type="range" id="timeMaxSlider" min="1" max="120" value="30" />
+          <span class="sample-value" id="timeMaxVal">30s</span>
         </div>
       </div>
       <div class="control-group" id="memSliderGroup" hidden>
@@ -829,7 +838,7 @@
   function promptFor(promptCatalog2, model, subject) {
     return promptForSize(promptCatalog2, subject, promptSizeOfModel(promptCatalog2, model) ?? "l");
   }
-  function timeCellPick(catalog2, metaByPrefix2, ceilings, currentSeed2, model, subject, budget, showOvershoots2) {
+  function timeCellPick(catalog2, metaByPrefix2, ceilings, currentSeed2, model, subject, budgetMin, budgetMax, showOvershoots2) {
     const cell = catalog2[model]?.[subject];
     if (!cell) return null;
     const allSamples = Object.keys(cell).map(Number);
@@ -841,21 +850,31 @@
       if (!e) continue;
       const secs = entryMeta(metaByPrefix2, model, subject, s, e).seconds;
       if (secs < 0) continue;
-      if (secs <= budget && (!best || secs > best.secs)) best = { sample: s, secs };
+      if (secs <= budgetMax && (!best || secs > best.secs)) best = { sample: s, secs };
       if (!fastest || secs < fastest.secs) fastest = { sample: s, secs };
     }
-    if (best) return { sample: best.sample, secs: best.secs, over: false, overBy: 0 };
+    if (best)
+      return {
+        sample: best.sample,
+        secs: best.secs,
+        over: false,
+        overBy: 0,
+        under: best.secs < budgetMin,
+        underBy: Math.max(0, budgetMin - best.secs)
+      };
     if (fastest)
       return {
         sample: fastest.sample,
         secs: fastest.secs,
         over: true,
-        overBy: fastest.secs - budget
+        overBy: fastest.secs - budgetMax,
+        under: false,
+        underBy: 0
       };
     const lo = samples.sort((a, b) => a - b)[0];
-    return lo != null ? { sample: lo, secs: null, over: false, overBy: 0 } : null;
+    return lo != null ? { sample: lo, secs: null, over: false, overBy: 0, under: false, underBy: 0 } : null;
   }
-  function slideShownSample(catalog2, metaByPrefix2, ceilings, currentSeed2, model, subject, targetSample, compareMode2, budget, showOvershoots2, exact = false) {
+  function slideShownSample(catalog2, metaByPrefix2, ceilings, currentSeed2, model, subject, targetSample, compareMode2, budgetMin, budgetMax, showOvershoots2, exact = false) {
     if (compareMode2 === "time") {
       const p = timeCellPick(
         catalog2,
@@ -864,7 +883,8 @@
         currentSeed2,
         model,
         subject,
-        budget,
+        budgetMin,
+        budgetMax,
         showOvershoots2
       );
       return p ? p.sample : null;
@@ -1522,31 +1542,42 @@
     if (sampleVal && slider) sampleVal.textContent = slider.value;
   }
   function rebuildTimeSlider() {
-    let min = Infinity, max = 0;
+    let dataMin = Infinity, dataMax = 0;
     for (const subs of Object.values(catalog))
       for (const samps of Object.values(subs))
         for (const cell of Object.values(samps))
           for (const e of Object.values(cell)) {
             const d = e.duration;
             if (d != null && d >= 0) {
-              if (d < min) min = d;
-              if (d > max) max = d;
+              if (d < dataMin) dataMin = d;
+              if (d > dataMax) dataMax = d;
             }
           }
-    const slider = document.getElementById("timeSlider");
-    const val = document.getElementById("timeVal");
-    if (!slider) return;
-    if (!isFinite(min)) {
-      min = 1;
-      max = 120;
+    if (!isFinite(dataMin)) {
+      dataMin = 1;
+      dataMax = 120;
     }
-    slider.min = String(Math.max(1, Math.floor(min)));
-    slider.max = String(Math.max(Number(slider.min), Math.ceil(max)));
-    const cur = Number(slider.value);
-    if (cur < Number(slider.min) || cur > Number(slider.max)) {
-      slider.value = String(Math.min(Number(slider.max), Math.max(Number(slider.min), 30)));
-    }
-    if (val) val.textContent = `${slider.value}s`;
+    dataMin = Math.max(1, Math.floor(dataMin));
+    dataMax = Math.max(dataMin + 1, Math.ceil(dataMax));
+    timeScaleMin = dataMin;
+    timeScaleMax = dataMax;
+    const minSlider = document.getElementById("timeMinSlider");
+    const maxSlider = document.getElementById("timeMaxSlider");
+    if (!minSlider || !maxSlider) return;
+    minSlider.min = maxSlider.min = "0";
+    minSlider.max = maxSlider.max = "1000";
+    const curMin = Number(minSlider.value);
+    const curMax = Number(maxSlider.value);
+    const defaultMin = secondsToSlider(Math.max(dataMin, Math.round(dataMin * Math.pow(dataMax / dataMin, 0.1))));
+    const defaultMax = secondsToSlider(Math.max(dataMin, Math.round(dataMin * Math.pow(dataMax / dataMin, 0.4))));
+    if (curMin <= 0 || curMin >= 1e3) minSlider.value = String(defaultMin);
+    if (curMax <= 0 || curMax >= 1e3) maxSlider.value = String(defaultMax);
+    if (Number(minSlider.value) >= Number(maxSlider.value))
+      minSlider.value = String(Math.max(0, Number(maxSlider.value) - 50));
+    const minValEl = document.getElementById("timeMinVal");
+    const maxValEl = document.getElementById("timeMaxVal");
+    if (minValEl) minValEl.textContent = `${sliderToSeconds(Number(minSlider.value))}s`;
+    if (maxValEl) maxValEl.textContent = `${sliderToSeconds(Number(maxSlider.value))}s`;
   }
   function allModels() {
     return Object.keys(catalog).sort();
@@ -2273,10 +2304,25 @@
       durationEl.classList.toggle("missing-meta", seconds < 0);
     }
   }
-  function timeBudgetValue() {
-    return Number(document.getElementById("timeSlider")?.value || 0);
+  var timeScaleMin = 1;
+  var timeScaleMax = 120;
+  function sliderToSeconds(pos) {
+    if (timeScaleMax <= timeScaleMin) return timeScaleMin;
+    return Math.round(timeScaleMin * Math.pow(timeScaleMax / timeScaleMin, pos / 1e3));
   }
-  function timeCellPick2(model, subject, budget) {
+  function secondsToSlider(secs) {
+    if (timeScaleMax <= timeScaleMin || secs <= timeScaleMin) return 0;
+    return Math.round(1e3 * Math.log(secs / timeScaleMin) / Math.log(timeScaleMax / timeScaleMin));
+  }
+  function timeBudgetMin() {
+    const v = document.getElementById("timeMinSlider")?.value;
+    return v != null ? sliderToSeconds(Number(v)) : timeScaleMin;
+  }
+  function timeBudgetMax() {
+    const v = document.getElementById("timeMaxSlider")?.value;
+    return v != null ? sliderToSeconds(Number(v)) : timeScaleMax;
+  }
+  function timeCellPick2(model, subject) {
     return timeCellPick(
       catalog,
       metaByPrefix,
@@ -2284,12 +2330,12 @@
       currentSeed,
       model,
       subject,
-      budget,
+      timeBudgetMin(),
+      timeBudgetMax(),
       showOvershoots
     );
   }
   function slideShownSample2(model, subject, targetSample, exact) {
-    const budget = compareMode === "time" ? timeBudgetValue() : 0;
     return slideShownSample(
       catalog,
       metaByPrefix,
@@ -2299,7 +2345,8 @@
       subject,
       targetSample,
       compareMode,
-      budget,
+      compareMode === "time" ? timeBudgetMin() : 0,
+      compareMode === "time" ? timeBudgetMax() : 0,
       showOvershoots,
       exact
     );
@@ -2308,7 +2355,7 @@
     const filenames = [];
     const subjects = allSubjects();
     if (compareMode === "models" || compareMode === "time") {
-      const target = compareMode === "time" ? timeBudgetValue() : Number(document.getElementById("sample")?.value ?? 0);
+      const target = compareMode === "time" ? timeBudgetMax() : Number(document.getElementById("sample")?.value ?? 0);
       for (const m of getSelectedModels()) {
         for (const subject of subjects) {
           const shown = slideShownSample2(m, subject, target, false);
@@ -2405,13 +2452,7 @@
       promptCatalog?.ceilings?.[model] ?? null
     );
     if (compareMode === "time")
-      applyTimeStyle(
-        slide,
-        imgWrap,
-        durationEl,
-        timeCellPick2(model, subject, targetSample),
-        targetSample
-      );
+      applyTimeStyle(slide, imgWrap, durationEl, timeCellPick2(model, subject));
     else clearTimeStyle(slide, imgWrap, durationEl);
     imgWrap.title = formatMetaTooltip2(entry.file, meta);
     await swapSlideImage(imgWrap, entry.file, gen);
@@ -2460,20 +2501,29 @@
       durationEl.title = "";
     }
   }
-  function applyTimeStyle(slide, imgWrap, durationEl, info, budget) {
+  function applyTimeStyle(slide, imgWrap, durationEl, info) {
     clearTimeStyle(slide, imgWrap, durationEl);
-    if (!info || !info.over) return;
-    const ratio = Math.max(0, Math.min(1, info.overBy / Math.max(1, budget)));
-    const hue = Math.round(45 * (1 - ratio));
-    const color = `hsl(${hue}, 95%, 55%)`;
-    if (imgWrap) {
-      imgWrap.style.opacity = "0.2";
-      imgWrap.style.filter = `sepia(1) saturate(3) hue-rotate(${hue - 35}deg)`;
-    }
-    slide.classList.add("time-over");
-    if (durationEl) {
-      durationEl.style.color = color;
-      durationEl.title = `+${Math.round(info.overBy)}s over the ${budget}s budget`;
+    if (!info) return;
+    if (info.over) {
+      const ratio = Math.max(0, Math.min(1, info.overBy / Math.max(1, timeBudgetMax())));
+      const hue = Math.round(45 * (1 - ratio));
+      if (imgWrap)
+        imgWrap.style.filter = `sepia(1) saturate(3) hue-rotate(${hue - 35}deg) brightness(0.4)`;
+      slide.classList.add("time-over");
+      if (durationEl) {
+        durationEl.style.color = `hsl(${hue}, 95%, 55%)`;
+        durationEl.title = `+${Math.round(info.overBy)}s over the ${timeBudgetMax()}s budget`;
+      }
+    } else if (info.under) {
+      const ratio = Math.max(0, Math.min(1, info.underBy / Math.max(1, timeBudgetMin())));
+      const hue = Math.round(120 + ratio * 120);
+      if (imgWrap)
+        imgWrap.style.filter = `sepia(1) saturate(3) hue-rotate(${hue - 35}deg) brightness(0.4)`;
+      slide.classList.add("time-over");
+      if (durationEl) {
+        durationEl.style.color = `hsl(${hue}, 80%, 50%)`;
+        durationEl.title = `${Math.round(info.underBy)}s under the ${timeBudgetMin()}s minimum`;
+      }
     }
   }
   function renderSlide(model, subject, subjectIndex, targetSample, {
@@ -2535,13 +2585,7 @@
           promptCatalog?.ceilings?.[model] ?? null
         );
         if (compareMode === "time")
-          applyTimeStyle(
-            slide,
-            imgWrap,
-            durationEl,
-            timeCellPick2(model, subject, targetSample),
-            targetSample
-          );
+          applyTimeStyle(slide, imgWrap, durationEl, timeCellPick2(model, subject));
         imgWrap.title = formatMetaTooltip2(entry.file, meta);
         const alt = `${model} ${subject}`;
         refreshNoteDot(slide, model, subject, shown, entrySeed);
@@ -2628,7 +2672,7 @@
     const gen = ++renderGeneration;
     const subjects = allSubjects();
     if (canUpdateInPlace()) {
-      const target = compareMode === "time" ? timeBudgetValue() : Number(document.getElementById("sample")?.value ?? 0);
+      const target = compareMode === "time" ? timeBudgetMax() : Number(document.getElementById("sample")?.value ?? 0);
       const models = getSelectedModels();
       const filenames2 = collectFilenamesForRender();
       await Promise.all(filenames2.map((f) => preloadFilename(f).catch(() => null)));
@@ -2655,7 +2699,7 @@
     const list = document.getElementById("modelList");
     list.innerHTML = "";
     if (compareMode === "models" || compareMode === "time") {
-      const target = compareMode === "time" ? timeBudgetValue() : Number(document.getElementById("sample")?.value ?? 0);
+      const target = compareMode === "time" ? timeBudgetMax() : Number(document.getElementById("sample")?.value ?? 0);
       const models = getSelectedModels();
       document.getElementById("empty").hidden = models.length > 0;
       for (const m of models) list.appendChild(renderModelRow(m, target, subjects, urlByFile));
@@ -2822,8 +2866,20 @@
     syncCollapsedControlPlacement();
     void render();
   });
-  document.getElementById("timeSlider").addEventListener("input", (e) => {
-    document.getElementById("timeVal").textContent = `${e.target.value}s`;
+  document.getElementById("timeMinSlider").addEventListener("input", (e) => {
+    const minSlider = e.target;
+    const maxSlider = document.getElementById("timeMaxSlider");
+    if (Number(minSlider.value) >= Number(maxSlider.value))
+      minSlider.value = String(Math.max(0, Number(maxSlider.value) - 50));
+    document.getElementById("timeMinVal").textContent = `${sliderToSeconds(Number(minSlider.value))}s`;
+    void render();
+  });
+  document.getElementById("timeMaxSlider").addEventListener("input", (e) => {
+    const maxSlider = e.target;
+    const minSlider = document.getElementById("timeMinSlider");
+    if (Number(maxSlider.value) <= Number(minSlider.value))
+      maxSlider.value = String(Math.min(1e3, Number(minSlider.value) + 50));
+    document.getElementById("timeMaxVal").textContent = `${sliderToSeconds(Number(maxSlider.value))}s`;
     void render();
   });
   document.getElementById("memSlider")?.addEventListener("input", (e) => {
