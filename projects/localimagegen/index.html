@@ -333,6 +333,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: filter 0.25s ease, box-shadow 0.25s ease;
     }
     .slide-overlay {
       position: sticky;
@@ -2493,8 +2494,8 @@
   function clearTimeStyle(slide, imgWrap, durationEl) {
     slide.classList.remove("time-over");
     if (imgWrap) {
-      imgWrap.style.opacity = "";
       imgWrap.style.filter = "";
+      imgWrap.style.boxShadow = "";
     }
     if (durationEl) {
       durationEl.style.color = "";
@@ -2507,21 +2508,27 @@
     if (info.over) {
       const ratio = Math.max(0, Math.min(1, info.overBy / Math.max(1, timeBudgetMax())));
       const hue = Math.round(45 * (1 - ratio));
-      if (imgWrap)
-        imgWrap.style.filter = `sepia(1) saturate(3) hue-rotate(${hue - 35}deg) brightness(0.4)`;
+      const color = `hsl(${hue}, 95%, 55%)`;
+      if (imgWrap) {
+        imgWrap.style.filter = `sepia(1) saturate(3) hue-rotate(${hue - 35}deg) brightness(0.28)`;
+        imgWrap.style.boxShadow = `inset 0 0 0 3px ${color}`;
+      }
       slide.classList.add("time-over");
       if (durationEl) {
-        durationEl.style.color = `hsl(${hue}, 95%, 55%)`;
+        durationEl.style.color = color;
         durationEl.title = `+${Math.round(info.overBy)}s over the ${timeBudgetMax()}s budget`;
       }
     } else if (info.under) {
       const ratio = Math.max(0, Math.min(1, info.underBy / Math.max(1, timeBudgetMin())));
       const hue = Math.round(120 + ratio * 120);
-      if (imgWrap)
-        imgWrap.style.filter = `sepia(1) saturate(3) hue-rotate(${hue - 35}deg) brightness(0.4)`;
+      const color = `hsl(${hue}, 80%, 50%)`;
+      if (imgWrap) {
+        imgWrap.style.filter = `sepia(1) saturate(3) hue-rotate(${hue - 35}deg) brightness(0.28)`;
+        imgWrap.style.boxShadow = `inset 0 0 0 3px ${color}`;
+      }
       slide.classList.add("time-over");
       if (durationEl) {
-        durationEl.style.color = `hsl(${hue}, 80%, 50%)`;
+        durationEl.style.color = color;
         durationEl.title = `${Math.round(info.underBy)}s under the ${timeBudgetMin()}s minimum`;
       }
     }
