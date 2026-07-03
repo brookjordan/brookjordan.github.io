@@ -1540,6 +1540,7 @@
   }
   function rebuildTimeSlider() {
     let dataMin = Infinity, dataMax = 0;
+    const durations = [];
     for (const subs of Object.values(catalog))
       for (const samps of Object.values(subs))
         for (const cell of Object.values(samps))
@@ -1548,6 +1549,7 @@
             if (d != null && d >= 0) {
               if (d < dataMin) dataMin = d;
               if (d > dataMax) dataMax = d;
+              durations.push(d);
             }
           }
     if (!isFinite(dataMin)) {
@@ -1558,6 +1560,9 @@
     dataMax = Math.max(dataMin + 1, Math.ceil(dataMax));
     timeScaleMin = dataMin;
     timeScaleMax = dataMax;
+    durations.sort((a, b) => a - b);
+    const mid = Math.floor(durations.length / 2);
+    const median = durations.length ? durations.length % 2 === 0 ? Math.round(((durations[mid - 1] ?? 0) + (durations[mid] ?? 0)) / 2) : durations[mid] ?? dataMax : dataMax;
     const minSlider = document.getElementById("timeMinSlider");
     const maxSlider = document.getElementById("timeMaxSlider");
     if (!minSlider || !maxSlider) return;
@@ -1565,10 +1570,8 @@
     minSlider.max = maxSlider.max = "1000";
     const curMin = Number(minSlider.value);
     const curMax = Number(maxSlider.value);
-    const defaultMin = secondsToSlider(Math.max(dataMin, Math.round(dataMin * Math.pow(dataMax / dataMin, 0.1))));
-    const defaultMax = secondsToSlider(Math.max(dataMin, Math.round(dataMin * Math.pow(dataMax / dataMin, 0.4))));
-    if (curMin <= 0 || curMin >= 1e3) minSlider.value = String(defaultMin);
-    if (curMax <= 0 || curMax >= 1e3) maxSlider.value = String(defaultMax);
+    if (curMin <= 0 || curMin >= 1e3) minSlider.value = "0";
+    if (curMax <= 0 || curMax >= 1e3) maxSlider.value = String(secondsToSlider(median));
     if (Number(minSlider.value) >= Number(maxSlider.value))
       minSlider.value = String(Math.max(0, Number(maxSlider.value) - 50));
     const minValEl = document.getElementById("timeMinVal");
