@@ -2452,8 +2452,8 @@
   function clearTimeStyle(slide, imgWrap, durationEl) {
     slide.classList.remove("time-over");
     if (imgWrap) {
-      imgWrap.style.outline = "";
-      imgWrap.style.outlineOffset = "";
+      imgWrap.style.opacity = "";
+      imgWrap.style.filter = "";
     }
     if (durationEl) {
       durationEl.style.color = "";
@@ -2463,17 +2463,13 @@
   function applyTimeStyle(slide, imgWrap, durationEl, info, budget) {
     clearTimeStyle(slide, imgWrap, durationEl);
     if (!info || !info.over) return;
-    const ratio = Math.max(0, Math.min(1, info.overBy / Math.max(1, budget)));
-    const width = (2 + ratio * 6).toFixed(1);
-    const hue = Math.round(45 * (1 - ratio));
-    const color = `hsl(${hue}, 95%, 55%)`;
     if (imgWrap) {
-      imgWrap.style.outline = `${width}px solid ${color}`;
-      imgWrap.style.outlineOffset = `-${width}px`;
+      imgWrap.style.opacity = "0.2";
+      imgWrap.style.filter = "sepia(1) saturate(3) hue-rotate(-50deg)";
     }
     slide.classList.add("time-over");
     if (durationEl) {
-      durationEl.style.color = color;
+      durationEl.style.color = "hsl(0, 85%, 60%)";
       durationEl.title = `+${Math.round(info.overBy)}s over the ${budget}s budget`;
     }
   }
