@@ -1088,7 +1088,8 @@
   var SLIDE_DEFAULT_WIDTH_PX = 480;
   var SLIDE_FALLBACK_ASPECT = 16 / 9;
   var RESIZE_BAR_TOTAL_PX = 12;
-  var RESIZE_HIT_FRACTION = 0.33;
+  var RESIZE_HIT_MAX_PX = 60;
+  var RESIZE_HIT_FRACTION = 0.15;
   var MAX_VISIBLE_SLIDES = 3;
   var IMAGE_FADE_MS = 300;
   var layerGenMap = /* @__PURE__ */ new WeakMap();
@@ -2110,8 +2111,14 @@
     for (let i = 0; i < bars.length; i++) {
       const leftW = slides[i]?.offsetWidth ?? SLIDE_DEFAULT_WIDTH_PX;
       const rightW = slides[i + 1]?.offsetWidth ?? leftW;
-      bars[i].style.setProperty("--hit-pad-left", `${leftW * RESIZE_HIT_FRACTION}px`);
-      bars[i].style.setProperty("--hit-pad-right", `${rightW * RESIZE_HIT_FRACTION}px`);
+      bars[i].style.setProperty(
+        "--hit-pad-left",
+        `${Math.min(leftW * RESIZE_HIT_FRACTION, RESIZE_HIT_MAX_PX)}px`
+      );
+      bars[i].style.setProperty(
+        "--hit-pad-right",
+        `${Math.min(rightW * RESIZE_HIT_FRACTION, RESIZE_HIT_MAX_PX)}px`
+      );
     }
   }
   function updateAllResizeBarHitboxes() {
