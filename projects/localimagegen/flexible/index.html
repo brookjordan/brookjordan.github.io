@@ -1879,6 +1879,7 @@
     img.className = "slide-img-layer";
     img.alt = alt;
     img.decoding = "async";
+    img.loading = "lazy";
     stack.appendChild(img);
     return img;
   }
@@ -2407,23 +2408,18 @@
     const img = getTopStackImage(imgWrap);
     if (img) paintSlideCaptions(img, modelEl, subjectEl, sampleEl);
   }
-  var carouselScrollLock = null;
-  var carouselScrollLockRaf = null;
+  var hoveredCarousel = null;
+  var programmaticScrolls = /* @__PURE__ */ new Set();
   var cachedCarousels = null;
   function onCarouselScroll(ev) {
     const target = ev.currentTarget;
-    if (carouselScrollLock !== null && carouselScrollLock !== target) return;
-    carouselScrollLock = target;
+    if (programmaticScrolls.delete(target)) return;
     const left = target.scrollLeft;
-    const carousels = cachedCarousels ?? [];
-    for (const other of carousels) {
-      if (other !== target) other.scrollLeft = left;
+    for (const other of cachedCarousels ?? []) {
+      if (other === target || other === hoveredCarousel) continue;
+      programmaticScrolls.add(other);
+      other.scrollLeft = left;
     }
-    if (carouselScrollLockRaf !== null) cancelAnimationFrame(carouselScrollLockRaf);
-    carouselScrollLockRaf = requestAnimationFrame(() => {
-      carouselScrollLockRaf = null;
-      carouselScrollLock = null;
-    });
   }
   function setupSyncedCarousels() {
     const list = document.getElementById("modelList");
@@ -2434,6 +2430,12 @@
       if (el.dataset.scrollSync) continue;
       el.dataset.scrollSync = "1";
       el.addEventListener("scroll", onCarouselScroll, { passive: true });
+      el.addEventListener("pointerenter", () => {
+        hoveredCarousel = el;
+      });
+      el.addEventListener("pointerleave", () => {
+        if (hoveredCarousel === el) hoveredCarousel = null;
+      });
     }
   }
   function clearTimeStyle(slide, imgWrap, durationEl) {
