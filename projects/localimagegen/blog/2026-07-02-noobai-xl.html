@@ -319,6 +319,15 @@ are a config-only <code>ckpt:</code> swap on the shared <code>sdxl</code> builde
 <a href="2026-06-23-the-model-menagerie.html">the model menagerie</a>). It half was. The other half needed a
 whole new builder, because NoobAI ships in two incompatible flavours and only one of them fits the
 matrix&#39;s rules.</p>
+<blockquote>
+<p><strong>Update (same day):</strong> the framing below — &quot;eps rides the shared Lightning builder, v-pred is the
+special case&quot; — didn&#39;t survive contact with the output. eps on the generic SDXL Lightning LoRA
+<em>stipples</em>, and both variants are Danbooru <strong>tag</strong> models we were feeding prose. Shortly after this
+post, eps got its <strong>own native builder</strong> (no Lightning) and all three anime checkpoints moved to a
+booru-tag prompt bucket. See <a href="2026-07-02-booru-bucket.html">Booru, not prose</a> for the correction.
+The eps/v-pred <em>prediction-type</em> fork below is still exactly right; the &quot;eps = Lightning&quot; part is
+not.</p>
+</blockquote>
 <h2>The fork: eps-pred vs v-pred</h2>
 <p>NoobAI publishes every version twice — an <strong>epsilon-prediction</strong> line and a <strong>v-prediction</strong> line —
 and they are <em>not</em> interchangeable:</p>
