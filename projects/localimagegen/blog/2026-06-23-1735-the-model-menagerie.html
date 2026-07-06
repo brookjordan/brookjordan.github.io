@@ -305,6 +305,79 @@ a:hover {
   font-size: 0.92rem;
 }
 
+/* ---- prev/next post nav (baked at build time, see postNav in src/blog.ts) ---- */
+.post-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 2rem 0 0;
+}
+
+.post-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-soft);
+  color: var(--text);
+  min-width: 0;
+}
+
+.post-nav-link:hover {
+  border-color: var(--accent);
+  text-decoration: none;
+}
+
+.post-nav-empty {
+  border-color: transparent;
+  background: none;
+}
+
+.post-nav-next {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.post-nav-arrow {
+  color: var(--muted);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.post-nav-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.post-nav-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.post-nav-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .post-nav {
+    grid-template-columns: 1fr;
+  }
+
+  .post-nav-next {
+    justify-content: flex-start;
+    text-align: left;
+  }
+}
+
 /* ---- index listing ---- */
 .index-intro {
   color: var(--muted);
@@ -358,10 +431,11 @@ a:hover {
     </header>
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
-<div class="banner-compare" data-count="2" role="button" tabindex="0" aria-label="Cycle through 1 earlier banner version">
+<div class="banner-compare" data-count="3" role="button" tabindex="0" aria-label="Cycle through 2 earlier banner versions">
 <img class="post-banner banner-slide" data-slide="0" src="banners/the-model-menagerie.png" alt="The model menagerie — 14 builders and their personalities" />
-<img class="post-banner banner-slide" data-slide="1" src="img/banner_model-menagerie.legacy.webp" alt="Original banner for The model menagerie — 14 builders and their personalities" />
-<span class="banner-compare-hint">click to see the earlier version</span>
+<img class="post-banner banner-slide" data-slide="1" src="banners/the-model-menagerie.legacy-1.png" alt="Earlier banner for The model menagerie — 14 builders and their personalities (version 2 of 2)" />
+<img class="post-banner banner-slide" data-slide="2" src="img/banner_model-menagerie.legacy.webp" alt="Original banner for The model menagerie — 14 builders and their personalities" />
+<span class="banner-compare-hint">click to see 2 earlier versions</span>
 </div>
 <h1>The model menagerie — 14 builders and their personalities</h1>
 <p class="post-meta">2026-06-23 <time class="post-time" data-ts="1782207315000">17:35</time> · <span class="tag">content</span></p>
@@ -408,7 +482,11 @@ incident.)</li>
 <p>Adding a <em>checkpoint</em> for an existing builder is config-only; a new <em>architecture</em> needs a
 new builder here plus a <code>models</code>/<code>tiers</code> entry in config.</p>
 
-</article></main>
+</article>
+<nav class="post-nav" aria-label="Post navigation">
+<a class="post-nav-link post-nav-prev" href="2026-06-23-1723-lesson-the-filename-grammar.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">Lesson — one filename grammar, and seeds in the name</span></span></a>
+<a class="post-nav-link post-nav-next" href="2026-06-23-2020-the-lora-question.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">The LoRA question — we tried everything, then stripped back to bare models</span></span><span class="post-nav-arrow">&rarr;</span></a>
+</nav></main>
     <footer class="site-footer">
       <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>
     </footer>

@@ -807,8 +807,8 @@
     const seconds = entry?.duration ?? (fromJson && fromJson.seconds >= 0 ? fromJson.seconds : null);
     return { ...fromJson, seconds: seconds ?? -1 };
   }
-  function closestSample(catalog2, ceilings, model, subject, target, showOvershoots2) {
-    const allSamples = Object.keys(catalog2[model]?.[subject] ?? {}).map(Number).sort((a, b) => a - b);
+  function closestSample(catalog2, ceilings, currentSeed2, model, subject, target, showOvershoots2) {
+    const allSamples = Object.entries(catalog2[model]?.[subject] ?? {}).filter(([, seedCell]) => seedCell[String(currentSeed2)] != null).map(([sample]) => Number(sample)).sort((a, b) => a - b);
     const samples = showOvershoots2 ? allSamples : allSamples.filter((s) => !isOvershoot(ceilings, model, s));
     if (!samples.length) return null;
     const atOrBelow = samples.filter((s) => s <= target);
@@ -893,7 +893,7 @@
     if (exact) {
       return catalog2[model]?.[subject]?.[String(targetSample)] ? targetSample : null;
     }
-    return closestSample(catalog2, ceilings, model, subject, targetSample, showOvershoots2);
+    return closestSample(catalog2, ceilings, currentSeed2, model, subject, targetSample, showOvershoots2);
   }
   function formatDuration(seconds) {
     if (seconds <= 0) return "\xB7\xB7\xB7";

@@ -305,6 +305,79 @@ a:hover {
   font-size: 0.92rem;
 }
 
+/* ---- prev/next post nav (baked at build time, see postNav in src/blog.ts) ---- */
+.post-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 2rem 0 0;
+}
+
+.post-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-soft);
+  color: var(--text);
+  min-width: 0;
+}
+
+.post-nav-link:hover {
+  border-color: var(--accent);
+  text-decoration: none;
+}
+
+.post-nav-empty {
+  border-color: transparent;
+  background: none;
+}
+
+.post-nav-next {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.post-nav-arrow {
+  color: var(--muted);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.post-nav-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.post-nav-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.post-nav-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .post-nav {
+    grid-template-columns: 1fr;
+  }
+
+  .post-nav-next {
+    justify-content: flex-start;
+    text-align: left;
+  }
+}
+
 /* ---- index listing ---- */
 .index-intro {
   color: var(--muted);
@@ -358,7 +431,11 @@ a:hover {
     </header>
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
-<img class="post-banner" src="banners/websocket.png" alt="Phase tracking: hooking into ComfyUI's execution lifecycle via WebSocket" />
+<div class="banner-compare" data-count="2" role="button" tabindex="0" aria-label="Cycle through 1 earlier banner version">
+<img class="post-banner banner-slide" data-slide="0" src="banners/websocket.png" alt="Phase tracking: hooking into ComfyUI's execution lifecycle via WebSocket" />
+<img class="post-banner banner-slide" data-slide="1" src="banners/websocket.legacy-1.png" alt="Original banner for Phase tracking: hooking into ComfyUI's execution lifecycle via WebSocket" />
+<span class="banner-compare-hint">click to see the earlier version</span>
+</div>
 <h1>Phase tracking: hooking into ComfyUI's execution lifecycle via WebSocket</h1>
 <p class="post-meta">2026-07-06 <time class="post-time" data-ts="1783321200000">15:00</time> · <span class="tag">tooling</span> <span class="tag">comfyui</span> <span class="tag">memory</span> <span class="tag">websocket</span></p>
 <p>The allocator peak tells you the most RAM ever used in a render. It doesn&#39;t tell you
@@ -411,7 +488,11 @@ quantized GGUF model loads much faster and produces smaller activation tensors. 
 model might hold large intermediate latents across frames. The phases make those differences
 visible in a way a single peak number doesn&#39;t.</p>
 
-</article></main>
+</article>
+<nav class="post-nav" aria-label="Post navigation">
+<a class="post-nav-link post-nav-prev" href="2026-07-06-1430-comfyui-memory-probe-node.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">Building a read-only memory probe for ComfyUI</span></span></a>
+<a class="post-nav-link post-nav-next" href="2026-07-06-1530-async-race-condition.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">The async race condition hiding your model weights</span></span><span class="post-nav-arrow">&rarr;</span></a>
+</nav></main>
     <footer class="site-footer">
       <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>
     </footer>

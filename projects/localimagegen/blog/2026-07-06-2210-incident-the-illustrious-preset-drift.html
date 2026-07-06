@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#1a1d24" />
     <meta name="color-scheme" content="dark" />
-    <title>The ladder plans itself</title>
+    <title>Incident: the banner generator's Illustrious preset never got the memo</title>
     <style>
 /* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
    This is the single source of truth for colour, radius, spacing and type.
@@ -431,92 +431,66 @@ a:hover {
     </header>
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
-<div class="banner-compare" data-count="2" role="button" tabindex="0" aria-label="Cycle through 1 earlier banner version">
-<img class="post-banner banner-slide" data-slide="0" src="banners/the-ladder-plans-itself.png" alt="The ladder plans itself" />
-<img class="post-banner banner-slide" data-slide="1" src="img/banner_the-ladder-plans-itself.legacy.webp" alt="Original banner for The ladder plans itself" />
-<span class="banner-compare-hint">click to see the earlier version</span>
-</div>
-<h1>The ladder plans itself</h1>
-<p class="post-meta">2026-06-26 <time class="post-time" data-ts="1782448496000">12:34</time> · <span class="tag">decision</span> <span class="tag">architecture</span></p>
-<p><a href="2026-06-26-0825-knowing-when-to-stop.html">Knowing when to stop</a> gave us a <em>rule</em> for how many
-steps each model deserves: dense at the bottom, climb to a community-level ceiling, widen
-the gaps as each step gets pricier. Good rule. One problem: a rule a human pastes into YAML
-by hand is still a human pasting into YAML by hand. So the next move wrote itself — make the
-machine apply the rule.</p>
-<h2>One number per model, not a hand-typed ladder</h2>
-<p>The plan: delete the hand-enumerated <code>steps:</code> lists from <code>config/gallery.yaml</code>. Each model
-keeps exactly one new knob — its <strong><code>ceiling</code></strong>: the community max-useful step count, which
-is also our <em>predicted plateau</em>. The autopilot computes the actual ladder at runtime, per
-<strong>model × scene × seed</strong>, from that ceiling plus the render times it has already measured.</p>
-<p>The bootstrap problem — &quot;you need timings to set the cadence, but timings only exist after
-you render&quot; — solves itself: the floor (<code>1, 2, 4</code>) is always rendered first, and <em>that&#39;s</em>
-what supplies each ladder its own clock.</p>
-<h2>Cadence from real data, not vibes</h2>
-<p>I didn&#39;t want to guess the gap sizes, so I scraped the <code>_tNNs_</code> durations off all <strong>1,308</strong>
-masters on disk. The distribution: P10 = 9s, median 50s, P90 = 217s, max a <em>brutal</em> 497s
-(hello, Chroma). The gap between rungs is a function of how long the rung below it took:</p>
-<pre><code class="language-js">gap(dur) = clamp(round(1 + 4 * sqrt((dur - 9) / (217 - 9))), 1, MAX_GAP)  // MAX_GAP = 4
-</code></pre>
-<p>The <code>sqrt</code> is the whole trick. I tried the obvious &quot;logarithmic&quot; idea first and it was
-<strong>backwards</strong> — geometric thresholds make the <em>slowest</em> models the <em>sparsest</em>, which is the
-opposite of what you want when slow models are exactly the ones where extra steps buy real
-image. A hard &quot;cut the top 25%&quot; clamp was worse: it pegged the four slowest models at the
-coarsest gap. The compressed <code>sqrt</code> curve does what I actually meant — longer renders get
-<em>relatively more</em> in-between rungs, and the growth never runs away:</p>
-<table>
-<thead>
-<tr>
-<th>gap</th>
-<th>models (at today&#39;s medians)</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1</td>
-<td>sdxl trio</td>
-</tr>
-<tr>
-<td>2</td>
-<td>flux4b, wan</td>
-</tr>
-<tr>
-<td>3</td>
-<td>zimage, flux9b, schnell, qwen2512, krea2</td>
-</tr>
-<tr>
-<td>4</td>
-<td>ovis, longcat, ideogram, chroma</td>
-</tr>
-</tbody></table>
-<p>And because the gap is recomputed <strong>per rung</strong>, a single slow ladder isn&#39;t uniformly coarse
-— it&#39;s dense low and only opens up near its expensive top. Chroma&#39;s own numbers: step 4 is
-89s → gap 3, but by step 6 (133s) it&#39;s gap 4. Cheap where it&#39;s cheap, sparse only where it
-hurts. <code>MAX_GAP = 4</code> (not 5) because Chroma and Ideogram are the only two slow enough to hit
-the cap, and they&#39;re precisely where I <em>don&#39;t</em> want to be coarsest. One constant; bump it
-back to 5 to relax.</p>
-<h2>Reuse, don&#39;t redo — and never delete</h2>
-<p>Here&#39;s the part that makes it safe to point at a year of legacy masters: existing rungs are
-<strong>anchors</strong>, not obstacles. A rung within one gap of where we want one? Reused. We only
-render the actual holes. So two seeds with different legacy ladders both converge to &quot;enough
-up to the ceiling&quot; while re-rendering <em>nothing</em>, and an off-grid legacy rung is just kept as
-a harmless extra — same <a href="2026-06-25-1735-deprecate-dont-delete.html">deprecate-don&#39;t-delete</a>
-spirit. Run it twice, it renders zero the second time. That&#39;s the bar.</p>
-<h2>The plateau always shows, and nothing hugs it</h2>
-<p>Two niceties fell out of staring at edge cases. The ceiling/plateau is a <strong>hard anchor</strong> —
-always rendered, even when it&#39;s off the gap grid (at 19, wanting 24, ceiling 20 → we render
-20). And the run-up rung sits in the <strong>middle</strong>, never hugging the plateau: <code>14 → 20</code> gives
-<code>14, 17, 20</code>, never the wasteful <code>14, 19, 20</code>.</p>
-<h2>The gallery tells the truth by default</h2>
-<p>Last piece, in the web app: show rungs <strong>up to the ceiling by default</strong>, so the gallery
-quotes you a <em>realistic</em> max render time. A <strong>&quot;show overshoots&quot;</strong> toggle reveals the rungs
-past it. We keep those overshoots — we rendered them on purpose, and on fast models they&#39;re
-a cheap &quot;see, more steps doesn&#39;t help&quot; datapoint — we just don&#39;t make them the headline.</p>
-<p>The cadence isn&#39;t a number I picked. It&#39;s the shape of the data we already had. The ladder
-draws itself; I just read it the curve.</p>
+<img class="post-banner" src="banners/incident-the-illustrious-preset-drift.png" alt="Incident: the banner generator's Illustrious preset never got the memo" />
+<h1>Incident: the banner generator's Illustrious preset never got the memo</h1>
+<p class="post-meta">2026-07-06 <time class="post-time" data-ts="1783347000000">22:10</time> · <span class="tag">incident</span> <span class="tag">tooling</span> <span class="tag">content</span></p>
+<p>Three banners looked off in a specific, recognizable way: <code>the-model-menagerie</code> fractured
+into a five-panel manga grid instead of one scene, <code>websocket</code>&#39;s &quot;four sequential glowing
+archways&quot; became three unrelated vertical strips, <code>booru-bucket</code>&#39;s &quot;tag cloud&quot; showed no
+text at all. All three route to <code>illustriousXL_v2.safetensors</code> via <code>scripts/banners/gen-banners.ts</code>.</p>
+<h2>The drift</h2>
+<p><code>src/graphs.ts</code> — the <em>gallery&#39;s</em> Illustrious builder — documents a specific recipe, credited
+to <code>history/2026-07-02-booru-bucket.md</code>&#39;s research: CLIP skip 2 (<code>CLIPSetLastLayer</code> at
+<code>-2</code>), cfg 5.0, and Illustrious&#39;s own leaner negative prompt. All three are load-bearing;
+the comment even calls CLIP skip out as &quot;standard for booru SDXL.&quot;</p>
+<p>The banner generator&#39;s <code>illustrious</code> preset in <code>scripts/banners/gen-banners.ts</code> — a
+hand-written duplicate of the same model&#39;s settings, kept separate because banners run at a
+different resolution and skip the gallery&#39;s Lightning LoRA — had none of the three: no
+<code>CLIPSetLastLayer</code> node anywhere in <code>buildWorkflow</code>, <code>cfg: 6</code>, and the generic
+<code>NEGATIVE_ANIME</code> string shared with NoobAI and Pony instead of Illustrious&#39;s own. The
+research had been done once and encoded correctly in exactly one of the two places that
+needed it.</p>
+<h2>Confirming it before touching anything</h2>
+<p>Before assuming CLIP skip was the fix, checked whether the <em>gallery&#39;s</em> Illustrious masters
+(same checkpoint, same missing-setting risk if the bug were upstream) actually looked wrong
+too — walked the ceiling-step render for every scene (<code>illustrious_{van,dragon,spirit, embrace,kingdom,doll}_...</code>). All clean. <code>yarn status</code> also showed zero deprecated/invalid
+cells. That ruled out the checkpoint itself or the gallery builder, and pointed squarely at
+the banner script&#39;s separate copy of the recipe.</p>
+<h2>The fix, and why cfg 6 mattered as much as CLIP skip</h2>
+<p>Added <code>clipSkip?: number</code> to <code>WorkflowPreset</code>, wired a conditional <code>CLIPSetLastLayer</code> node
+into <code>buildWorkflow</code> between the checkpoint and every <code>CLIPTextEncode</code> (positive, negative,
+and the detailer pass), and gave <code>illustrious</code> the gallery&#39;s exact values: <code>cfg: 5.0</code>,
+<code>clipSkip: -2</code>, and a new <code>NEGATIVE_ILLUSTRIOUS</code> constant matching <code>ILLUSTRIOUS_NEG</code>.</p>
+<p>Regenerated all three banners with <strong>no prompt changes</strong> — same <code>positive</code> text, same seeds —
+to isolate the parameter fix as the only variable:</p>
+<ul>
+<li><code>the-model-menagerie</code>: the five-panel grid became one continuous hallway of creatures
+converging on a central figure — closer to &quot;a stage lineup ... like a museum exhibit&quot;
+than the panelized version ever was.</li>
+<li><code>websocket</code>: the three disconnected strips became one continuous corridor with distinct
+color zones along its length.</li>
+<li><code>booru-bucket</code>: a swirl of glyph-like text now actually surrounds the character portrait,
+where the old cfg-6 render had none.</li>
+</ul>
+<p>Cfg 6 alone (without CLIP skip) is high enough for an SDXL booru checkpoint that the model
+over-commits to literal, disjoint interpretations of multi-subject prompts — a plausible
+mechanism for why &quot;fourteen distinct creatures&quot; and &quot;four sequential archways&quot; both
+fractured into grids rather than composing as one scene. CLIP skip 2 changes which encoder
+layer the conditioning is pulled from, which is what these tag-trained checkpoints were
+actually fine-tuned against. Neither setting was exotic or hard to find — both were already
+sitting, correct, one file over.</p>
+<h2>The actual lesson</h2>
+<p><code>scripts/banners/gen-banners.ts</code>&#39;s workflow catalog and <code>src/graphs.ts</code>&#39;s model builders
+encode the same handful of checkpoints&#39; recipes twice, for a real reason (different
+resolution, no Lightning LoRA, no gallery step-ladder) — but &quot;different reason to
+duplicate&quot; doesn&#39;t mean &quot;different values are fine.&quot; When a model&#39;s settings get corrected
+in one place after real research (<code>history/2026-07-02-booru-bucket.md</code>), grep the other
+implementation before assuming it already matches. It didn&#39;t, for two weeks of banners.</p>
 
 </article>
 <nav class="post-nav" aria-label="Post navigation">
-<a class="post-nav-link post-nav-prev" href="2026-06-26-1234-why-five-plans-not-one.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">Why we have five plans, not one</span></span></a>
-<a class="post-nav-link post-nav-next" href="2026-06-26-1235-the-robot-phones-home.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">The robot learns to phone home</span></span><span class="post-nav-arrow">&rarr;</span></a>
+<a class="post-nav-link post-nav-prev" href="2026-07-06-2140-decision-bake-prev-next-links.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">Decision: bake prev/next links, don't fetch them</span></span></a>
+<a class="post-nav-link post-nav-next" href="2026-07-06-2250-decision-pony-prompt-dialect-and-illustrious-floor.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">Decision: Pony's real bug was the prompt, Illustrious's wasn't</span></span><span class="post-nav-arrow">&rarr;</span></a>
 </nav></main>
     <footer class="site-footer">
       <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#1a1d24" />
     <meta name="color-scheme" content="dark" />
-    <title>The ladder plans itself</title>
+    <title>Decision: Pony's real bug was the prompt, Illustrious's wasn't</title>
     <style>
 /* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
    This is the single source of truth for colour, radius, spacing and type.
@@ -431,92 +431,51 @@ a:hover {
     </header>
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
-<div class="banner-compare" data-count="2" role="button" tabindex="0" aria-label="Cycle through 1 earlier banner version">
-<img class="post-banner banner-slide" data-slide="0" src="banners/the-ladder-plans-itself.png" alt="The ladder plans itself" />
-<img class="post-banner banner-slide" data-slide="1" src="img/banner_the-ladder-plans-itself.legacy.webp" alt="Original banner for The ladder plans itself" />
-<span class="banner-compare-hint">click to see the earlier version</span>
-</div>
-<h1>The ladder plans itself</h1>
-<p class="post-meta">2026-06-26 <time class="post-time" data-ts="1782448496000">12:34</time> · <span class="tag">decision</span> <span class="tag">architecture</span></p>
-<p><a href="2026-06-26-0825-knowing-when-to-stop.html">Knowing when to stop</a> gave us a <em>rule</em> for how many
-steps each model deserves: dense at the bottom, climb to a community-level ceiling, widen
-the gaps as each step gets pricier. Good rule. One problem: a rule a human pastes into YAML
-by hand is still a human pasting into YAML by hand. So the next move wrote itself — make the
-machine apply the rule.</p>
-<h2>One number per model, not a hand-typed ladder</h2>
-<p>The plan: delete the hand-enumerated <code>steps:</code> lists from <code>config/gallery.yaml</code>. Each model
-keeps exactly one new knob — its <strong><code>ceiling</code></strong>: the community max-useful step count, which
-is also our <em>predicted plateau</em>. The autopilot computes the actual ladder at runtime, per
-<strong>model × scene × seed</strong>, from that ceiling plus the render times it has already measured.</p>
-<p>The bootstrap problem — &quot;you need timings to set the cadence, but timings only exist after
-you render&quot; — solves itself: the floor (<code>1, 2, 4</code>) is always rendered first, and <em>that&#39;s</em>
-what supplies each ladder its own clock.</p>
-<h2>Cadence from real data, not vibes</h2>
-<p>I didn&#39;t want to guess the gap sizes, so I scraped the <code>_tNNs_</code> durations off all <strong>1,308</strong>
-masters on disk. The distribution: P10 = 9s, median 50s, P90 = 217s, max a <em>brutal</em> 497s
-(hello, Chroma). The gap between rungs is a function of how long the rung below it took:</p>
-<pre><code class="language-js">gap(dur) = clamp(round(1 + 4 * sqrt((dur - 9) / (217 - 9))), 1, MAX_GAP)  // MAX_GAP = 4
-</code></pre>
-<p>The <code>sqrt</code> is the whole trick. I tried the obvious &quot;logarithmic&quot; idea first and it was
-<strong>backwards</strong> — geometric thresholds make the <em>slowest</em> models the <em>sparsest</em>, which is the
-opposite of what you want when slow models are exactly the ones where extra steps buy real
-image. A hard &quot;cut the top 25%&quot; clamp was worse: it pegged the four slowest models at the
-coarsest gap. The compressed <code>sqrt</code> curve does what I actually meant — longer renders get
-<em>relatively more</em> in-between rungs, and the growth never runs away:</p>
-<table>
-<thead>
-<tr>
-<th>gap</th>
-<th>models (at today&#39;s medians)</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1</td>
-<td>sdxl trio</td>
-</tr>
-<tr>
-<td>2</td>
-<td>flux4b, wan</td>
-</tr>
-<tr>
-<td>3</td>
-<td>zimage, flux9b, schnell, qwen2512, krea2</td>
-</tr>
-<tr>
-<td>4</td>
-<td>ovis, longcat, ideogram, chroma</td>
-</tr>
-</tbody></table>
-<p>And because the gap is recomputed <strong>per rung</strong>, a single slow ladder isn&#39;t uniformly coarse
-— it&#39;s dense low and only opens up near its expensive top. Chroma&#39;s own numbers: step 4 is
-89s → gap 3, but by step 6 (133s) it&#39;s gap 4. Cheap where it&#39;s cheap, sparse only where it
-hurts. <code>MAX_GAP = 4</code> (not 5) because Chroma and Ideogram are the only two slow enough to hit
-the cap, and they&#39;re precisely where I <em>don&#39;t</em> want to be coarsest. One constant; bump it
-back to 5 to relax.</p>
-<h2>Reuse, don&#39;t redo — and never delete</h2>
-<p>Here&#39;s the part that makes it safe to point at a year of legacy masters: existing rungs are
-<strong>anchors</strong>, not obstacles. A rung within one gap of where we want one? Reused. We only
-render the actual holes. So two seeds with different legacy ladders both converge to &quot;enough
-up to the ceiling&quot; while re-rendering <em>nothing</em>, and an off-grid legacy rung is just kept as
-a harmless extra — same <a href="2026-06-25-1735-deprecate-dont-delete.html">deprecate-don&#39;t-delete</a>
-spirit. Run it twice, it renders zero the second time. That&#39;s the bar.</p>
-<h2>The plateau always shows, and nothing hugs it</h2>
-<p>Two niceties fell out of staring at edge cases. The ceiling/plateau is a <strong>hard anchor</strong> —
-always rendered, even when it&#39;s off the gap grid (at 19, wanting 24, ceiling 20 → we render
-20). And the run-up rung sits in the <strong>middle</strong>, never hugging the plateau: <code>14 → 20</code> gives
-<code>14, 17, 20</code>, never the wasteful <code>14, 19, 20</code>.</p>
-<h2>The gallery tells the truth by default</h2>
-<p>Last piece, in the web app: show rungs <strong>up to the ceiling by default</strong>, so the gallery
-quotes you a <em>realistic</em> max render time. A <strong>&quot;show overshoots&quot;</strong> toggle reveals the rungs
-past it. We keep those overshoots — we rendered them on purpose, and on fast models they&#39;re
-a cheap &quot;see, more steps doesn&#39;t help&quot; datapoint — we just don&#39;t make them the headline.</p>
-<p>The cadence isn&#39;t a number I picked. It&#39;s the shape of the data we already had. The ladder
-draws itself; I just read it the curve.</p>
+<img class="post-banner" src="banners/decision-pony-prompt-dialect-and-illustrious-floor.png" alt="Decision: Pony's real bug was the prompt, Illustrious's wasn't" />
+<h1>Decision: Pony's real bug was the prompt, Illustrious's wasn't</h1>
+<p class="post-meta">2026-07-06 <time class="post-time" data-ts="1783349400000">22:50</time> · <span class="tag">decision</span> <span class="tag">incident</span> <span class="tag">content</span></p>
+<p>Two models looked wrong in the gallery — Pony and Illustrious — and it took looking at
+actual renders (not just re-reading the recipe) to realize they were wrong for completely
+different reasons, one fixable and one not by the same means.</p>
+<h2>Pony: a real config bug</h2>
+<p>Pony&#39;s <code>good_at</code> tags (and its own builder — <code>PONY_POS_PREFIX = &#39;score_9, score_8_up, score_7_up, &#39;</code>) say it&#39;s a Danbooru score-tag fine-tune, exactly like Illustrious and
+NoobAI. But <code>config/gallery.ts</code> had <code>models.pony.prompt_size: &#39;s&#39;</code>, left over from before
+<a href="2026-07-02-booru-bucket.html">the booru-tag research</a> moved Illustrious/NoobAI onto tag
+prompts. Five of the six scenes (<code>van</code>, <code>dragon</code>, <code>doll</code>, <code>spirit</code>, <code>embrace</code>) don&#39;t define
+an <code>s</code> prompt, so <code>promptFor</code>&#39;s fallback chain (<code>per-model override &gt; prompt_size &gt; &quot;all&quot;</code>)
+silently handed Pony the full natural-language photoreal paragraph meant for
+Juggernaut/RealVisXL — the exact &quot;unstable or inaccurate results on prose&quot; mismatch that
+research already warned about, just never checked against Pony.</p>
+<p>Fix: <code>prompt_size: &#39;b&#39;</code>. One line. Because <code>promptHash</code> is computed from the resolved
+prompt text, changing it <strong>automatically deprecated all 216 existing Pony cells</strong> —
+<code>lig deprecate</code> never needed to run by hand.</p>
+<h2>Illustrious: not a bug, a convergence floor</h2>
+<p>Walking the actual step ladder (not just the ceiling render) told a different story. At
+step 35 every scene is clean. Below ~16 steps, <code>illustrious_doll</code> renders a completely
+different, uniformly &quot;shattered crystal&quot; composition — not a blurrier version of the final
+image, a different one. <code>euler_ancestral</code> injects fresh noise every step; a bare (no
+Lightning) SDXL model given too few of those steps hasn&#39;t found its basin yet, so it settles
+into a different, incoherent mode entirely. The recipe itself (cfg 5.0, CLIP skip 2, its own
+negative) already matches the documented research exactly — there was nothing to fix there.</p>
+<p>That distinction matters for what &quot;deprecate&quot; actually buys you. <code>KSampler</code> is
+deterministic: same seed, same steps, same settings in → same pixels out. Pony&#39;s fix
+changes the <em>input</em> (the prompt), so regenerating produces something genuinely different.
+Deprecating Illustrious&#39;s sub-21 rungs changes nothing about the render recipe, so a
+same-settings rerun reproduces the identical noise. Tried swapping to a non-ancestral
+sampler (<code>dpmpp_2m</code>) to see if it converges cleaner at low steps — the test got interrupted
+before it produced a verdict, and rather than block the fix on that, deprecated the 96
+affected cells (steps 1–20 across all scenes/seeds) anyway on the explicit call that a
+same-pixel rerun is an acceptable placeholder while a real sampler fix is investigated
+separately, over silently leaving known-broken renders live indefinitely.</p>
+<h2>The lesson</h2>
+<p>&quot;Deprecate and rerun&quot; only fixes what changed. Before marking cells deprecated, ask what&#39;s
+actually different this time — a prompt, a checkpoint, a setting — because if the answer is
+&quot;nothing,&quot; the run just spends real GPU time re-confirming the same picture.</p>
 
 </article>
 <nav class="post-nav" aria-label="Post navigation">
-<a class="post-nav-link post-nav-prev" href="2026-06-26-1234-why-five-plans-not-one.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">Why we have five plans, not one</span></span></a>
-<a class="post-nav-link post-nav-next" href="2026-06-26-1235-the-robot-phones-home.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">The robot learns to phone home</span></span><span class="post-nav-arrow">&rarr;</span></a>
+<a class="post-nav-link post-nav-prev" href="2026-07-06-2210-incident-the-illustrious-preset-drift.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">Incident: the banner generator's Illustrious preset never got the memo</span></span></a>
+<span class="post-nav-link post-nav-next post-nav-empty"></span>
 </nav></main>
     <footer class="site-footer">
       <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>

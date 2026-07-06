@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#1a1d24" />
     <meta name="color-scheme" content="dark" />
-    <title>The ladder plans itself</title>
+    <title>Decision: bake prev/next links, don't fetch them</title>
     <style>
 /* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
    This is the single source of truth for colour, radius, spacing and type.
@@ -431,92 +431,52 @@ a:hover {
     </header>
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
-<div class="banner-compare" data-count="2" role="button" tabindex="0" aria-label="Cycle through 1 earlier banner version">
-<img class="post-banner banner-slide" data-slide="0" src="banners/the-ladder-plans-itself.png" alt="The ladder plans itself" />
-<img class="post-banner banner-slide" data-slide="1" src="img/banner_the-ladder-plans-itself.legacy.webp" alt="Original banner for The ladder plans itself" />
-<span class="banner-compare-hint">click to see the earlier version</span>
-</div>
-<h1>The ladder plans itself</h1>
-<p class="post-meta">2026-06-26 <time class="post-time" data-ts="1782448496000">12:34</time> · <span class="tag">decision</span> <span class="tag">architecture</span></p>
-<p><a href="2026-06-26-0825-knowing-when-to-stop.html">Knowing when to stop</a> gave us a <em>rule</em> for how many
-steps each model deserves: dense at the bottom, climb to a community-level ceiling, widen
-the gaps as each step gets pricier. Good rule. One problem: a rule a human pastes into YAML
-by hand is still a human pasting into YAML by hand. So the next move wrote itself — make the
-machine apply the rule.</p>
-<h2>One number per model, not a hand-typed ladder</h2>
-<p>The plan: delete the hand-enumerated <code>steps:</code> lists from <code>config/gallery.yaml</code>. Each model
-keeps exactly one new knob — its <strong><code>ceiling</code></strong>: the community max-useful step count, which
-is also our <em>predicted plateau</em>. The autopilot computes the actual ladder at runtime, per
-<strong>model × scene × seed</strong>, from that ceiling plus the render times it has already measured.</p>
-<p>The bootstrap problem — &quot;you need timings to set the cadence, but timings only exist after
-you render&quot; — solves itself: the floor (<code>1, 2, 4</code>) is always rendered first, and <em>that&#39;s</em>
-what supplies each ladder its own clock.</p>
-<h2>Cadence from real data, not vibes</h2>
-<p>I didn&#39;t want to guess the gap sizes, so I scraped the <code>_tNNs_</code> durations off all <strong>1,308</strong>
-masters on disk. The distribution: P10 = 9s, median 50s, P90 = 217s, max a <em>brutal</em> 497s
-(hello, Chroma). The gap between rungs is a function of how long the rung below it took:</p>
-<pre><code class="language-js">gap(dur) = clamp(round(1 + 4 * sqrt((dur - 9) / (217 - 9))), 1, MAX_GAP)  // MAX_GAP = 4
+<img class="post-banner" src="banners/decision-bake-prev-next-links.png" alt="Decision: bake prev/next links, don't fetch them" />
+<h1>Decision: bake prev/next links, don't fetch them</h1>
+<p class="post-meta">2026-07-06 <time class="post-time" data-ts="1783345200000">21:40</time> · <span class="tag">decision</span> <span class="tag">architecture</span> <span class="tag">content</span> <span class="tag">blog</span></p>
+<p>Reading a devlog post left only one way back out: the <code>&amp;larr; all posts</code> link to the index. Fine
+for browsing, annoying for reading the whole arc in order — every post required a round trip
+through the index to find the next one.</p>
+<h2>Two shapes, one obviously simpler</h2>
+<p>Two ways to resolve &quot;what comes before/after this post&quot;:</p>
+<ol>
+<li><strong>Bake it at build time.</strong> <code>src/blog.ts</code> already sorts every post into one array before
+writing any HTML. The post immediately before/after a given one in that array <em>is</em> its
+previous/next neighbor — no lookup needed, just array indices.</li>
+<li><strong>Resolve it client-side.</strong> Ship the ordered post list (inline, or as a separate
+<code>posts.json</code>) and have a script in <code>web/blog.html</code> find the current page in it and read its
+neighbors, on every page load.</li>
+</ol>
+<p>Option 2 is strictly more machinery for the same answer: a fetch (or an inline JSON blob) plus a
+lookup, running in the browser, to recompute something that was already fully known — and static
+— the moment the build finished. This devlog already has a post about deliberately not reaching
+for infrastructure the problem doesn&#39;t need
+(<a href="2026-06-26-1721-why-not-a-database.html">why not a database</a>); resolving a fixed, pre-sorted
+list&#39;s neighbors at request time is the same shape of unnecessary indirection, just smaller.</p>
+<h2>What shipped</h2>
+<p><code>buildBlog()</code>&#39;s existing sort loop now reads its own neighbors while it&#39;s already iterating:</p>
+<pre><code class="language-ts">for (let i = 0; i &lt; posts.length; i++) {
+  const post = posts[i];
+  const newer = posts[i - 1]; // published after this one (or undefined — this is the newest)
+  const older = posts[i + 1]; // published before this one (or undefined — this is the oldest)
+  atomicWrite(path.join(outDir, post.href), renderShell(..., postPage(post, older, newer)));
+}
 </code></pre>
-<p>The <code>sqrt</code> is the whole trick. I tried the obvious &quot;logarithmic&quot; idea first and it was
-<strong>backwards</strong> — geometric thresholds make the <em>slowest</em> models the <em>sparsest</em>, which is the
-opposite of what you want when slow models are exactly the ones where extra steps buy real
-image. A hard &quot;cut the top 25%&quot; clamp was worse: it pegged the four slowest models at the
-coarsest gap. The compressed <code>sqrt</code> curve does what I actually meant — longer renders get
-<em>relatively more</em> in-between rungs, and the growth never runs away:</p>
-<table>
-<thead>
-<tr>
-<th>gap</th>
-<th>models (at today&#39;s medians)</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1</td>
-<td>sdxl trio</td>
-</tr>
-<tr>
-<td>2</td>
-<td>flux4b, wan</td>
-</tr>
-<tr>
-<td>3</td>
-<td>zimage, flux9b, schnell, qwen2512, krea2</td>
-</tr>
-<tr>
-<td>4</td>
-<td>ovis, longcat, ideogram, chroma</td>
-</tr>
-</tbody></table>
-<p>And because the gap is recomputed <strong>per rung</strong>, a single slow ladder isn&#39;t uniformly coarse
-— it&#39;s dense low and only opens up near its expensive top. Chroma&#39;s own numbers: step 4 is
-89s → gap 3, but by step 6 (133s) it&#39;s gap 4. Cheap where it&#39;s cheap, sparse only where it
-hurts. <code>MAX_GAP = 4</code> (not 5) because Chroma and Ideogram are the only two slow enough to hit
-the cap, and they&#39;re precisely where I <em>don&#39;t</em> want to be coarsest. One constant; bump it
-back to 5 to relax.</p>
-<h2>Reuse, don&#39;t redo — and never delete</h2>
-<p>Here&#39;s the part that makes it safe to point at a year of legacy masters: existing rungs are
-<strong>anchors</strong>, not obstacles. A rung within one gap of where we want one? Reused. We only
-render the actual holes. So two seeds with different legacy ladders both converge to &quot;enough
-up to the ceiling&quot; while re-rendering <em>nothing</em>, and an off-grid legacy rung is just kept as
-a harmless extra — same <a href="2026-06-25-1735-deprecate-dont-delete.html">deprecate-don&#39;t-delete</a>
-spirit. Run it twice, it renders zero the second time. That&#39;s the bar.</p>
-<h2>The plateau always shows, and nothing hugs it</h2>
-<p>Two niceties fell out of staring at edge cases. The ceiling/plateau is a <strong>hard anchor</strong> —
-always rendered, even when it&#39;s off the gap grid (at 19, wanting 24, ceiling 20 → we render
-20). And the run-up rung sits in the <strong>middle</strong>, never hugging the plateau: <code>14 → 20</code> gives
-<code>14, 17, 20</code>, never the wasteful <code>14, 19, 20</code>.</p>
-<h2>The gallery tells the truth by default</h2>
-<p>Last piece, in the web app: show rungs <strong>up to the ceiling by default</strong>, so the gallery
-quotes you a <em>realistic</em> max render time. A <strong>&quot;show overshoots&quot;</strong> toggle reveals the rungs
-past it. We keep those overshoots — we rendered them on purpose, and on fast models they&#39;re
-a cheap &quot;see, more steps doesn&#39;t help&quot; datapoint — we just don&#39;t make them the headline.</p>
-<p>The cadence isn&#39;t a number I picked. It&#39;s the shape of the data we already had. The ladder
-draws itself; I just read it the curve.</p>
+<p><code>postPage</code> bakes two plain <code>&lt;a&gt;</code> tags (or an empty placeholder at either end of the list) straight
+into the article. No script, no fetch, no per-post JSON, and it degrades to nothing special if
+JavaScript is off — because there isn&#39;t any.</p>
+<h2>The pointing-meme banner</h2>
+<p>The three-people-pointing-at-each-other meme template kept coming to mind while describing this —
+every post pointing at a neighbor, which points right back. Re-cast with the recurring
+<a href="2026-06-26-1235-the-robot-phones-home.html">render-farm server robot</a> instead of the usual meme
+cast: three identical robots in a triangle, each accusing the other of being the impostor. Unlike
+the meme, there&#39;s no ambiguity here — the order comes from one deterministic sort at build time,
+so the &quot;pointing&quot; is just a plain, boring, correct pointer in each direction.</p>
 
 </article>
 <nav class="post-nav" aria-label="Post navigation">
-<a class="post-nav-link post-nav-prev" href="2026-06-26-1234-why-five-plans-not-one.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">Why we have five plans, not one</span></span></a>
-<a class="post-nav-link post-nav-next" href="2026-06-26-1235-the-robot-phones-home.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">The robot learns to phone home</span></span><span class="post-nav-arrow">&rarr;</span></a>
+<a class="post-nav-link post-nav-prev" href="2026-07-06-2110-incident-the-compress-cache-that-never-saved.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">Incident: 7 masters recompressed on every single build, forever</span></span></a>
+<a class="post-nav-link post-nav-next" href="2026-07-06-2210-incident-the-illustrious-preset-drift.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">Incident: the banner generator's Illustrious preset never got the memo</span></span><span class="post-nav-arrow">&rarr;</span></a>
 </nav></main>
     <footer class="site-footer">
       <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>

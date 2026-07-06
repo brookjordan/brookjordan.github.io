@@ -305,6 +305,79 @@ a:hover {
   font-size: 0.92rem;
 }
 
+/* ---- prev/next post nav (baked at build time, see postNav in src/blog.ts) ---- */
+.post-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 2rem 0 0;
+}
+
+.post-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-soft);
+  color: var(--text);
+  min-width: 0;
+}
+
+.post-nav-link:hover {
+  border-color: var(--accent);
+  text-decoration: none;
+}
+
+.post-nav-empty {
+  border-color: transparent;
+  background: none;
+}
+
+.post-nav-next {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.post-nav-arrow {
+  color: var(--muted);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.post-nav-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.post-nav-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.post-nav-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .post-nav {
+    grid-template-columns: 1fr;
+  }
+
+  .post-nav-next {
+    justify-content: flex-start;
+    text-align: left;
+  }
+}
+
 /* ---- index listing ---- */
 .index-intro {
   color: var(--muted);
@@ -435,7 +508,11 @@ formalizing that revealed how much of the devlog&#39;s art wasn&#39;t from the p
 <em>that</em> revealed that &quot;trust us, it&#39;s better&quot; isn&#39;t as good as &quot;see for yourself.&quot; Same instinct each
 time: when you notice a gap, look at what&#39;s actually behind it before patching the symptom.</p>
 
-</article></main>
+</article>
+<nav class="post-nav" aria-label="Post navigation">
+<a class="post-nav-link post-nav-prev" href="2026-07-06-2030-the-great-banner-refresh.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">The great banner refresh: 53 posts, 3 checkpoint loads, one near-miss</span></span></a>
+<a class="post-nav-link post-nav-next" href="2026-07-06-2110-incident-the-compress-cache-that-never-saved.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">Incident: 7 masters recompressed on every single build, forever</span></span><span class="post-nav-arrow">&rarr;</span></a>
+</nav></main>
     <footer class="site-footer">
       <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>
     </footer>

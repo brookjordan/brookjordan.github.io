@@ -305,6 +305,79 @@ a:hover {
   font-size: 0.92rem;
 }
 
+/* ---- prev/next post nav (baked at build time, see postNav in src/blog.ts) ---- */
+.post-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 2rem 0 0;
+}
+
+.post-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-soft);
+  color: var(--text);
+  min-width: 0;
+}
+
+.post-nav-link:hover {
+  border-color: var(--accent);
+  text-decoration: none;
+}
+
+.post-nav-empty {
+  border-color: transparent;
+  background: none;
+}
+
+.post-nav-next {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.post-nav-arrow {
+  color: var(--muted);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.post-nav-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.post-nav-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.post-nav-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .post-nav {
+    grid-template-columns: 1fr;
+  }
+
+  .post-nav-next {
+    justify-content: flex-start;
+    text-align: left;
+  }
+}
+
 /* ---- index listing ---- */
 .index-intro {
   color: var(--muted);
@@ -448,7 +521,11 @@ the part that actually scales — and toward an honest sequel to the
 <a href="2026-06-24-1753-results-the-step-count-reckoning.html">step-count reckoning</a>, where &quot;slow&quot;
 finally separates into &quot;slow to load&quot; and &quot;slow to sample.&quot;</p>
 
-</article></main>
+</article>
+<nav class="post-nav" aria-label="Post navigation">
+<a class="post-nav-link post-nav-prev" href="2026-06-29-0905-render-anything.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">Render anything: the side door out of the matrix</span></span></a>
+<a class="post-nav-link post-nav-next" href="2026-06-30-2314-consolidating-comfyui.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">One ComfyUI to rule them all (and the venv trap)</span></span><span class="post-nav-arrow">&rarr;</span></a>
+</nav></main>
     <footer class="site-footer">
       <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>
     </footer>

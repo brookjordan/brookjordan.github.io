@@ -305,6 +305,79 @@ a:hover {
   font-size: 0.92rem;
 }
 
+/* ---- prev/next post nav (baked at build time, see postNav in src/blog.ts) ---- */
+.post-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 2rem 0 0;
+}
+
+.post-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-soft);
+  color: var(--text);
+  min-width: 0;
+}
+
+.post-nav-link:hover {
+  border-color: var(--accent);
+  text-decoration: none;
+}
+
+.post-nav-empty {
+  border-color: transparent;
+  background: none;
+}
+
+.post-nav-next {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.post-nav-arrow {
+  color: var(--muted);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.post-nav-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.post-nav-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.post-nav-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .post-nav {
+    grid-template-columns: 1fr;
+  }
+
+  .post-nav-next {
+    justify-content: flex-start;
+    text-align: left;
+  }
+}
+
 /* ---- index listing ---- */
 .index-intro {
   color: var(--muted);
@@ -427,7 +500,11 @@ minimal, zero-overhead way to expose it. It piggybacks on the existing HTTP serv
 no new dependencies, and is trivially installed via symlink. The <code>NODE_CLASS_MAPPINGS = {}</code>
 pattern makes it explicit that this node adds nothing to the graph UI.</p>
 
-</article></main>
+</article>
+<nav class="post-nav" aria-label="Post navigation">
+<a class="post-nav-link post-nav-prev" href="2026-07-06-1400-torch-mps-signal.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">Getting real GPU memory numbers on Apple Silicon</span></span></a>
+<a class="post-nav-link post-nav-next" href="2026-07-06-1500-phase-tracking-websocket.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">Phase tracking: hooking into ComfyUI's execution lifecycle via WebSocket</span></span><span class="post-nav-arrow">&rarr;</span></a>
+</nav></main>
     <footer class="site-footer">
       <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>
     </footer>

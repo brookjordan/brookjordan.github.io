@@ -305,6 +305,79 @@ a:hover {
   font-size: 0.92rem;
 }
 
+/* ---- prev/next post nav (baked at build time, see postNav in src/blog.ts) ---- */
+.post-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 2rem 0 0;
+}
+
+.post-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-soft);
+  color: var(--text);
+  min-width: 0;
+}
+
+.post-nav-link:hover {
+  border-color: var(--accent);
+  text-decoration: none;
+}
+
+.post-nav-empty {
+  border-color: transparent;
+  background: none;
+}
+
+.post-nav-next {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.post-nav-arrow {
+  color: var(--muted);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.post-nav-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.post-nav-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.post-nav-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .post-nav {
+    grid-template-columns: 1fr;
+  }
+
+  .post-nav-next {
+    justify-content: flex-start;
+    text-align: left;
+  }
+}
+
 /* ---- index listing ---- */
 .index-intro {
   color: var(--muted);
@@ -358,7 +431,11 @@ a:hover {
     </header>
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
-<img class="post-banner" src="banners/booru-bucket.png" alt="Booru, not prose: the `b` prompt bucket (and why the anime models looked bad)" />
+<div class="banner-compare" data-count="2" role="button" tabindex="0" aria-label="Cycle through 1 earlier banner version">
+<img class="post-banner banner-slide" data-slide="0" src="banners/booru-bucket.png" alt="Booru, not prose: the `b` prompt bucket (and why the anime models looked bad)" />
+<img class="post-banner banner-slide" data-slide="1" src="banners/booru-bucket.legacy-1.png" alt="Original banner for Booru, not prose: the `b` prompt bucket (and why the anime models looked bad)" />
+<span class="banner-compare-hint">click to see the earlier version</span>
+</div>
 <h1>Booru, not prose: the `b` prompt bucket (and why the anime models looked bad)</h1>
 <p class="post-meta">2026-07-02 <time class="post-time" data-ts="1782967500000">12:45</time> · <span class="tag">decision</span> <span class="tag">lesson</span> <span class="tag">architecture</span> <span class="tag">content</span></p>
 <p>Right after <a href="2026-07-02-noobai-xl.html">NoobAI landed</a>, the anime rows looked <em>bad</em> — muddy,
@@ -458,7 +535,11 @@ re-run — it resumes from disk like everything else.</p>
 count or the model. A tag model fed prose, or a fine-tune fed a mismatched distill LoRA, will look
 weak no matter how long you let it cook.</p>
 
-</article></main>
+</article>
+<nav class="post-nav" aria-label="Post navigation">
+<a class="post-nav-link post-nav-prev" href="2026-07-02-noobai-xl.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">NoobAI-XL: one model, two prediction types, two very different builders</span></span></a>
+<a class="post-nav-link post-nav-next" href="2026-07-02-1255-lesson-export-round-trips.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">Lesson: `workflows export` round-trips — delete the JSON to regenerate</span></span><span class="post-nav-arrow">&rarr;</span></a>
+</nav></main>
     <footer class="site-footer">
       <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>
     </footer>
