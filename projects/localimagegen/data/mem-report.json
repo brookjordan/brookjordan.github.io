@@ -1,0 +1,79 @@
+{
+  "generatedAt": "2026-07-06T07:10:01.311Z",
+  "models": [
+    {
+      "model": "illustrious",
+      "mode": "unimodal",
+      "full": {
+        "weightsGB": 5.29,
+        "peakGB": 10.96,
+        "activationsGB": 5.67,
+        "samples": 5
+      },
+      "partial": null,
+      "confidence": "medium",
+      "methods": {
+        "driverPeakGB": 10.96,
+        "currentPeakGB": 7.02,
+        "rssPeakGB": 4.16,
+        "psutilLegacyGB": 11.94,
+        "diskWeightsGB": 6.46,
+        "logModelSizeGB": 6.46
+      },
+      "samples": 5,
+      "notes": [
+        "Post-load weights (5.29 GB) differ from on-disk size (6.46 GB) by 18%."
+      ]
+    },
+    {
+      "model": "noobai",
+      "mode": "unimodal",
+      "full": {
+        "weightsGB": 5.29,
+        "peakGB": 10.96,
+        "activationsGB": 5.67,
+        "samples": 5
+      },
+      "partial": null,
+      "confidence": "medium",
+      "methods": {
+        "driverPeakGB": 10.96,
+        "currentPeakGB": 7.02,
+        "rssPeakGB": 9.23,
+        "psutilLegacyGB": 9.26,
+        "diskWeightsGB": 6.62,
+        "logModelSizeGB": 6.46
+      },
+      "samples": 5,
+      "notes": [
+        "Post-load weights (5.29 GB) differ from on-disk size (6.62 GB) by 20%.",
+        "Legacy psutil footprint (9.26 GB) diverges from the allocator peak (10.96 GB) by 16% — the old free-RAM delta was polluted."
+      ]
+    },
+    {
+      "model": "pony",
+      "mode": "unimodal",
+      "full": {
+        "weightsGB": 5.29,
+        "peakGB": 10.79,
+        "activationsGB": 5.5,
+        "samples": 5
+      },
+      "partial": null,
+      "confidence": "low",
+      "methods": {
+        "driverPeakGB": 10.79,
+        "currentPeakGB": 5.08,
+        "rssPeakGB": 3.52,
+        "psutilLegacyGB": 15.36,
+        "diskWeightsGB": 6.83,
+        "logModelSizeGB": 11.24
+      },
+      "samples": 5,
+      "notes": [
+        "Post-load weights (5.29 GB) differ from on-disk size (6.83 GB) by 23%.",
+        "Legacy psutil footprint (15.36 GB) diverges from the allocator peak (10.79 GB) by 30% — the old free-RAM delta was polluted."
+      ]
+    }
+  ]
+}

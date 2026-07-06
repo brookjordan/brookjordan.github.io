@@ -1,93 +1,162 @@
 [
   {
-    "model": "chroma",
-    "promptSize": "m",
-    "baselineGB": 22.11,
-    "troughGB": 7.96,
-    "footprintGB": 14.15
-  },
-  {
     "model": "anima",
     "promptSize": "m",
-    "baselineGB": 27.22,
-    "troughGB": 14.33,
-    "footprintGB": 12.89
+    "baselineGB": 31.62,
+    "troughGB": 20.09,
+    "footprintGB": 11.53,
+    "samples": 3
+  },
+  {
+    "model": "chroma",
+    "promptSize": "m",
+    "baselineGB": 31.38,
+    "troughGB": 11.02,
+    "footprintGB": 19.99,
+    "samples": 3
   },
   {
     "model": "flux4b",
     "promptSize": "l",
-    "baselineGB": 23.05,
-    "troughGB": 7.44,
-    "footprintGB": 15.61
+    "baselineGB": 31.83,
+    "troughGB": 8.78,
+    "footprintGB": 22.98,
+    "samples": 3
   },
   {
     "model": "flux9b",
     "promptSize": "l",
-    "baselineGB": 28.39,
-    "troughGB": 2.78,
-    "footprintGB": 25.61
+    "baselineGB": 31.6,
+    "troughGB": 5.12,
+    "footprintGB": 26.52,
+    "samples": 3
   },
   {
     "model": "ideogram",
     "promptSize": "l",
-    "baselineGB": 30.43,
-    "troughGB": 10.67,
-    "footprintGB": 19.76
+    "baselineGB": 32.21,
+    "troughGB": 10.49,
+    "footprintGB": 21.65,
+    "samples": 3
   },
   {
     "model": "illustrious",
-    "promptSize": "s",
-    "baselineGB": 30.97,
-    "troughGB": 14.65,
-    "footprintGB": 16.33
+    "promptSize": "b",
+    "baselineGB": 31.98,
+    "troughGB": 18.49,
+    "footprintGB": 13.49,
+    "samples": 3
   },
   {
     "model": "juggernaut",
     "promptSize": "s",
-    "baselineGB": 28.84,
-    "troughGB": 11.19,
-    "footprintGB": 17.65
+    "baselineGB": 31.4,
+    "troughGB": 13.05,
+    "footprintGB": 18.34,
+    "samples": 3
   },
   {
     "model": "krea2",
     "promptSize": "l",
-    "baselineGB": 27.03,
-    "troughGB": 7.33,
-    "footprintGB": 19.71
+    "baselineGB": 31.75,
+    "troughGB": 7.23,
+    "footprintGB": 24.5,
+    "samples": 3
   },
   {
     "model": "longcat",
     "promptSize": "l",
-    "baselineGB": 25.31,
-    "troughGB": 11.84,
-    "footprintGB": 13.47
+    "baselineGB": 31.72,
+    "troughGB": 10.42,
+    "footprintGB": 21.23,
+    "samples": 3
+  },
+  {
+    "model": "noobai",
+    "promptSize": "b",
+    "baselineGB": 31.69,
+    "troughGB": 15.95,
+    "footprintGB": 15.74,
+    "samples": 6
+  },
+  {
+    "model": "noobaivpred",
+    "promptSize": "b",
+    "baselineGB": 31.41,
+    "troughGB": 15.59,
+    "footprintGB": 15.79,
+    "samples": 3
   },
   {
     "model": "ovis",
     "promptSize": "l",
-    "baselineGB": 22.32,
-    "troughGB": 5.08,
-    "footprintGB": 17.23
+    "baselineGB": 31.76,
+    "troughGB": 5.91,
+    "footprintGB": 25.85,
+    "samples": 3
   },
   {
     "model": "pixartsigma",
     "promptSize": "m",
-    "baselineGB": 28.32,
-    "troughGB": 15.58,
-    "footprintGB": 12.74
+    "baselineGB": 31.7,
+    "troughGB": 16.7,
+    "footprintGB": 14.98,
+    "samples": 3
   },
   {
     "model": "pony",
     "promptSize": "s",
-    "baselineGB": 24.71,
-    "troughGB": 12.85,
-    "footprintGB": 11.86
+    "baselineGB": 32.05,
+    "troughGB": 14.85,
+    "footprintGB": 17.31,
+    "samples": 6
   },
   {
     "model": "qwen2512",
     "promptSize": "l",
-    "baselineGB": 26.56,
-    "troughGB": 7.45,
-    "footprintGB": 19.1
+    "baselineGB": 31.61,
+    "troughGB": 7.62,
+    "footprintGB": 24.06,
+    "samples": 4
+  },
+  {
+    "model": "realvisxl",
+    "promptSize": "s",
+    "baselineGB": 31.8,
+    "troughGB": 13.62,
+    "footprintGB": 18.26,
+    "samples": 3
+  },
+  {
+    "model": "schnell",
+    "promptSize": "m",
+    "baselineGB": 31.79,
+    "troughGB": 10.4,
+    "footprintGB": 21.39,
+    "samples": 3
+  },
+  {
+    "model": "sdxlbase",
+    "promptSize": "s",
+    "baselineGB": 31.72,
+    "troughGB": 13.39,
+    "footprintGB": 18.31,
+    "samples": 3
+  },
+  {
+    "model": "wan",
+    "promptSize": "m",
+    "baselineGB": 31.31,
+    "troughGB": 17.74,
+    "footprintGB": 13.71,
+    "samples": 3
+  },
+  {
+    "model": "zimage",
+    "promptSize": "l",
+    "baselineGB": 32.27,
+    "troughGB": 5.44,
+    "footprintGB": 26.56,
+    "samples": 3
   }
 ]

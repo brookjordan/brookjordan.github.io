@@ -233,6 +233,53 @@ a:hover {
   padding: 0;
 }
 
+.post-banner {
+  width: 100%;
+  max-height: 22rem;
+  object-fit: cover;
+  border-radius: var(--radius);
+  display: block;
+  margin: 0 0 1.5rem;
+}
+
+/* Click-to-cycle: slide 0 (current) sits in normal flow and sizes the box; every other
+   slide overlays it absolutely at opacity 0. web/blog.html's script sets each slide's
+   opacity directly (not CSS classes) so this scales to any number of legacy versions. */
+.banner-compare {
+  position: relative;
+  cursor: pointer;
+}
+
+.banner-compare .banner-slide {
+  margin: 0;
+  transition: opacity 0.25s ease;
+}
+
+.banner-compare .banner-slide:not([data-slide='0']) {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.banner-compare-hint {
+  position: absolute;
+  right: 0.7rem;
+  bottom: calc(1.5rem + 0.7rem);
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 0.72rem;
+  line-height: 1;
+  padding: 0.4rem 0.65rem;
+  border-radius: 999px;
+  opacity: 0.85;
+  transition: opacity 0.15s ease;
+}
+
+.banner-compare:hover .banner-compare-hint {
+  opacity: 1;
+}
+
 /* ---- per-post header (date + tags) ---- */
 .post-meta {
   color: var(--muted);
@@ -311,6 +358,7 @@ a:hover {
     </header>
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
+<img class="post-banner" src="banners/lesson-export-round-trips.png" alt="Lesson: `workflows export` round-trips — delete the JSON to regenerate" />
 <h1>Lesson: `workflows export` round-trips — delete the JSON to regenerate</h1>
 <p class="post-meta">2026-07-02 <time class="post-time" data-ts="1782968100000">12:55</time> · <span class="tag">lesson</span> <span class="tag">architecture</span></p>
 <p>While moving the anime models to <a href="2026-07-02-booru-bucket.html">native builders</a> I edited three
@@ -355,6 +403,41 @@ you&#39;d reach for the command.</p>
         var d = new Date(+el.dataset.ts);
         el.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
         el.title = d.toLocaleString(); // full local datetime on hover
+      });
+
+      // Click (or Enter/Space) a .banner-compare to cycle: current -> most recent earlier
+      // version -> ... -> oldest/original -> back to current. Each click advances one slide;
+      // opacity is set directly (not via CSS classes) so this works for any slide count.
+      document.querySelectorAll('.banner-compare').forEach(function (el) {
+        var slides = el.querySelectorAll('.banner-slide');
+        var hint = el.querySelector('.banner-compare-hint');
+        var count = slides.length;
+        var active = 0;
+        function render() {
+          slides.forEach(function (s, i) {
+            s.style.opacity = i === active ? '1' : '0';
+          });
+          if (!hint) return;
+          if (active === 0) {
+            hint.textContent =
+              'click to see ' + (count === 2 ? 'the earlier version' : count - 1 + ' earlier versions');
+          } else if (active === count - 1) {
+            hint.textContent = 'original banner · click for current';
+          } else {
+            hint.textContent = 'earlier version ' + active + ' of ' + (count - 1) + ' · click to continue';
+          }
+        }
+        function advance() {
+          active = (active + 1) % count;
+          render();
+        }
+        el.addEventListener('click', advance);
+        el.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            advance();
+          }
+        });
       });
     </script>
   </body>

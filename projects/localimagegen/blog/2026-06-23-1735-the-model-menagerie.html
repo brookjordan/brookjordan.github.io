@@ -233,6 +233,53 @@ a:hover {
   padding: 0;
 }
 
+.post-banner {
+  width: 100%;
+  max-height: 22rem;
+  object-fit: cover;
+  border-radius: var(--radius);
+  display: block;
+  margin: 0 0 1.5rem;
+}
+
+/* Click-to-cycle: slide 0 (current) sits in normal flow and sizes the box; every other
+   slide overlays it absolutely at opacity 0. web/blog.html's script sets each slide's
+   opacity directly (not CSS classes) so this scales to any number of legacy versions. */
+.banner-compare {
+  position: relative;
+  cursor: pointer;
+}
+
+.banner-compare .banner-slide {
+  margin: 0;
+  transition: opacity 0.25s ease;
+}
+
+.banner-compare .banner-slide:not([data-slide='0']) {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.banner-compare-hint {
+  position: absolute;
+  right: 0.7rem;
+  bottom: calc(1.5rem + 0.7rem);
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 0.72rem;
+  line-height: 1;
+  padding: 0.4rem 0.65rem;
+  border-radius: 999px;
+  opacity: 0.85;
+  transition: opacity 0.15s ease;
+}
+
+.banner-compare:hover .banner-compare-hint {
+  opacity: 1;
+}
+
 /* ---- per-post header (date + tags) ---- */
 .post-meta {
   color: var(--muted);
@@ -311,9 +358,13 @@ a:hover {
     </header>
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
+<div class="banner-compare" data-count="2" role="button" tabindex="0" aria-label="Cycle through 1 earlier banner version">
+<img class="post-banner banner-slide" data-slide="0" src="banners/the-model-menagerie.png" alt="The model menagerie — 14 builders and their personalities" />
+<img class="post-banner banner-slide" data-slide="1" src="img/banner_model-menagerie.legacy.webp" alt="Original banner for The model menagerie — 14 builders and their personalities" />
+<span class="banner-compare-hint">click to see the earlier version</span>
+</div>
 <h1>The model menagerie — 14 builders and their personalities</h1>
 <p class="post-meta">2026-06-23 <time class="post-time" data-ts="1782207315000">17:35</time> · <span class="tag">content</span></p>
-<p><img src="img/banner_model-menagerie.webp" alt="A stage lineup of fourteen distinct glowing mechanical creatures"></p>
 <p>A field guide to the 14 builders in <code>src/graphs.js</code>. They&#39;re grouped by <strong>tier</strong>, which
 tracks <strong>text-encoder capacity</strong> — the whole reason prompts come in s/m/l. All render
 1280x720.</p>
@@ -369,6 +420,41 @@ new builder here plus a <code>models</code>/<code>tiers</code> entry in config.<
         var d = new Date(+el.dataset.ts);
         el.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
         el.title = d.toLocaleString(); // full local datetime on hover
+      });
+
+      // Click (or Enter/Space) a .banner-compare to cycle: current -> most recent earlier
+      // version -> ... -> oldest/original -> back to current. Each click advances one slide;
+      // opacity is set directly (not via CSS classes) so this works for any slide count.
+      document.querySelectorAll('.banner-compare').forEach(function (el) {
+        var slides = el.querySelectorAll('.banner-slide');
+        var hint = el.querySelector('.banner-compare-hint');
+        var count = slides.length;
+        var active = 0;
+        function render() {
+          slides.forEach(function (s, i) {
+            s.style.opacity = i === active ? '1' : '0';
+          });
+          if (!hint) return;
+          if (active === 0) {
+            hint.textContent =
+              'click to see ' + (count === 2 ? 'the earlier version' : count - 1 + ' earlier versions');
+          } else if (active === count - 1) {
+            hint.textContent = 'original banner · click for current';
+          } else {
+            hint.textContent = 'earlier version ' + active + ' of ' + (count - 1) + ' · click to continue';
+          }
+        }
+        function advance() {
+          active = (active + 1) % count;
+          render();
+        }
+        el.addEventListener('click', advance);
+        el.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            advance();
+          }
+        });
       });
     </script>
   </body>
