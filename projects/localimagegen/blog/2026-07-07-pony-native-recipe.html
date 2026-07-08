@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#1a1d24" />
+    <meta name="color-scheme" content="dark" />
+    <title>Pony Goes Native: Dropping the Lightning LoRA</title>
+    <style>
+/* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
+   This is the single source of truth for colour, radius, spacing and type.
+   It is inlined ahead of each page's stylesheet at build time, and linked
+   first in dev so opening the .html files directly still resolves the vars.
+
+   Theming: everything below is a semantic token mapped onto a small palette of
+   primitives. To add a theme, override the *semantic* tokens under a selector
+   (see the commented [data-theme="light"] block at the bottom) — no stylesheet
+   needs to change, only these variables. */
+:root {
+  color-scheme: dark;
+
+  /* ---- palette primitives (raw colours; reference these only via the tokens below) ---- */
+  --c-ink-900: #0f1115;
+  --c-ink-800: #1a1d24;
+  --c-ink-700: #232732;
+  --c-ink-600: #2a2f3a;
+  --c-fog-100: #e8eaed;
+  --c-fog-300: #9aa0a6;
+  --c-fog-500: #6b727d;
+  --c-accent: #7c9cff;
+
+  /* ---- semantic: background / border / text, primary > secondary > tertiary ---- */
+  --bg-primary: var(--c-ink-900);
+  --bg-secondary: var(--c-ink-800);
+  --bg-tertiary: var(--c-ink-700);
+
+  --border-primary: var(--c-ink-600);
+  --border-secondary: rgba(150, 170, 210, 0.16);
+
+  --text-primary: var(--c-fog-100);
+  --text-secondary: var(--c-fog-300);
+  --text-tertiary: var(--c-fog-500);
+
+  --accent: var(--c-accent);
+
+  /* ---- radius scale ---- */
+  --radius-sm: 5px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 9999px;
+
+  /* ---- spacing / padding scale ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 2rem;
+
+  /* ---- type ---- */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* Shared cross-nav link (gallery <-> devlog). Both app.css and blog.css inline this
+   file, so defining it once here keeps the two links visually identical. */
+.cross-link {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.cross-link:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+/* Example theme override — set <html data-theme="light"> to activate (or wire it
+   to prefers-color-scheme). Left commented so we don't ship untuned colours:
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg-primary: #fbfbfd;
+  --bg-secondary: #f1f2f5;
+  --bg-tertiary: #e7e9ee;
+  --border-primary: #d4d8e0;
+  --border-secondary: rgba(20, 30, 60, 0.12);
+  --text-primary: #1a1d24;
+  --text-secondary: #555b66;
+  --text-tertiary: #7b828d;
+}
+*/
+
+</style>
+    <style>
+:root {
+  /* Local aliases mapped onto the shared tokens in tokens.css (inlined first),
+     so the devlog and the gallery share one palette, radius and spacing scale. */
+  --bg: var(--bg-primary);
+  --bg-soft: var(--bg-secondary);
+  --panel: var(--bg-tertiary);
+  --text: var(--text-primary);
+  --muted: var(--text-secondary);
+  --border: var(--border-secondary);
+  --radius: var(--radius-md);
+  /* --accent comes straight from tokens.css */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.65 var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.site-header,
+.site-footer {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 1.25rem 1.25rem;
+}
+
+.site-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text);
+}
+
+.brand span {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.content {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+
+.site-footer {
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* ---- post typography ---- */
+.content h1 {
+  font-size: 1.9rem;
+  line-height: 1.2;
+  margin: 0 0 0.5rem;
+}
+
+.content h2 {
+  font-size: 1.35rem;
+  margin: 2rem 0 0.6rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.3rem;
+}
+
+.content h3 {
+  font-size: 1.1rem;
+  margin: 1.5rem 0 0.4rem;
+}
+
+.content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  display: block;
+  margin: 1.25rem 0;
+}
+
+.content audio {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.content blockquote {
+  margin: 1.25rem 0;
+  padding: 0.5rem 1rem;
+  border-left: 3px solid var(--accent);
+  background: var(--bg-soft);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  color: var(--muted);
+}
+
+.content pre {
+  background: #12151b;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  overflow: auto;
+  font-size: 0.88rem;
+}
+
+.content code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: rgba(150, 170, 210, 0.14);
+  padding: 0.1em 0.35em;
+  border-radius: 5px;
+}
+
+.content pre code {
+  background: none;
+  padding: 0;
+}
+
+.post-banner {
+  width: 100%;
+  max-height: 22rem;
+  object-fit: cover;
+  border-radius: var(--radius);
+  display: block;
+  margin: 0 0 1.5rem;
+}
+
+/* Click-to-cycle: slide 0 (current) sits in normal flow and sizes the box; every other
+   slide overlays it absolutely at opacity 0. web/blog.html's script sets each slide's
+   opacity directly (not CSS classes) so this scales to any number of legacy versions. */
+.banner-compare {
+  position: relative;
+  cursor: pointer;
+}
+
+.banner-compare .banner-slide {
+  margin: 0;
+  transition: opacity 0.25s ease;
+}
+
+.banner-compare .banner-slide:not([data-slide='0']) {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.banner-compare-hint {
+  position: absolute;
+  right: 0.7rem;
+  bottom: calc(1.5rem + 0.7rem);
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 0.72rem;
+  line-height: 1;
+  padding: 0.4rem 0.65rem;
+  border-radius: 999px;
+  opacity: 0.85;
+  transition: opacity 0.15s ease;
+}
+
+.banner-compare:hover .banner-compare-hint {
+  opacity: 1;
+}
+
+/* ---- per-post header (date + tags) ---- */
+.post-meta {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0 0 1.5rem;
+}
+
+.tag {
+  display: inline-block;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 0.1em 0.7em;
+  font-size: 0.78rem;
+  margin-right: 0.35rem;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+/* ---- prev/next post nav (baked at build time, see postNav in src/blog.ts) ---- */
+.post-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 2rem 0 0;
+}
+
+.post-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-soft);
+  color: var(--text);
+  min-width: 0;
+}
+
+.post-nav-link:hover {
+  border-color: var(--accent);
+  text-decoration: none;
+}
+
+.post-nav-empty {
+  border-color: transparent;
+  background: none;
+}
+
+.post-nav-next {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.post-nav-arrow {
+  color: var(--muted);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.post-nav-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.post-nav-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.post-nav-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .post-nav {
+    grid-template-columns: 1fr;
+  }
+
+  .post-nav-next {
+    justify-content: flex-start;
+    text-align: left;
+  }
+}
+
+/* ---- index listing ---- */
+.index-intro {
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+
+.post-group-date {
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 2rem 0 0.75rem;
+}
+
+.post-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.post-list li {
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.post-list a.post-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.post-list .post-row-meta {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+}
+
+.post-time {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  margin-right: 0.5rem;
+  cursor: help;
+}
+
+</style>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="./index.html">localimagegen <span>· devlog</span></a>
+      <nav class="site-nav"><a class="cross-link" href="../index.html">gallery →</a></nav>
+    </header>
+    <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
+<article class="post">
+<h1>Pony Goes Native: Dropping the Lightning LoRA</h1>
+<p class="post-meta">2026-07-07 · <span class="tag">pony</span> <span class="tag">illustrious</span> <span class="tag">workflow</span> <span class="tag">research</span> <span class="tag">decision</span></p>
+<p>Pony&#39;s renders have always looked washed-out and watercolour-hazy — the exact &quot;dull colours&quot;
+complaint that opened this research thread. After a systematic side-by-side test, the cause is
+clear and the fix is unambiguous.</p>
+<h2>What was wrong</h2>
+<p>Pony Diffusion V6 XL was running on the same <code>sdxl</code> Lightning LoRA builder as sdxlbase /
+realvisxl / juggernaut: 4-step or 8-step SDXL-Lightning LoRA, cfg 1, <code>euler</code> / <code>sgm_uniform</code>,
+baked VAE. This was a mistake of convenience — Pony is an SDXL <em>checkpoint</em> so the LoRA loads,
+but SDXL-Lightning is distilled from the base model, not from Pony&#39;s fine-tune. At cfg 1 the
+negative prompt is inert (ByteDance&#39;s own docs say Lightning &quot;already used CFG during training,
+so using it again reduces quality&quot;), and at full <code>strength_model: 1.0</code> the distillation
+fully overwrites Pony&#39;s aesthetic. The result is exactly what we saw: flat, grey, low-contrast
+watercolour noise.</p>
+<p>The Pony V6 model card is explicit: <strong>CLIP skip 2, external <code>sdxl_vae.safetensors</code>, score-tag
+prefix, Euler a, 25 steps, CFG 7.</strong> We were hitting maybe two of those five requirements.</p>
+<h2>The test</h2>
+<p>We rendered all 8 scenes × {pony_old, pony_new, ill_old, ill_new} at seed 1234567, saving to
+<code>recipe-test/</code> in the ComfyUI output dir. The Pony comparison was unambiguous:</p>
+<table>
+<thead>
+<tr>
+<th>Scene</th>
+<th>Old (Lightning, cfg 1, 8st)</th>
+<th>New (bare, cfg 7, 25st, ext VAE)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>van</td>
+<td>muddy grey street</td>
+<td>saturated magenta/cyan neon night scene</td>
+</tr>
+<tr>
+<td>dragon</td>
+<td>flat brown blob</td>
+<td>vivid blue-scaled dragon in crystal cave</td>
+</tr>
+<tr>
+<td>doll</td>
+<td>hazy pastel fog</td>
+<td>crisp pink-dress BJD with depth of field</td>
+</tr>
+<tr>
+<td>kingdom</td>
+<td>washed cityscape</td>
+<td>punchy mountain kingdom at golden hour</td>
+</tr>
+</tbody></table>
+<p>Every scene improved substantially. The Illustrious comparison (cfg 5 vs cfg 6) was subtle —
+both already vibrant at step 26 — so cfg 6 is a modest polish, not a fix.</p>
+<h2>Changes made</h2>
+<p><strong><code>workflows/pony.t2i.json</code> and <code>pony.t2i.high.json</code></strong> — both rewritten:</p>
+<ul>
+<li>Removed <code>LoraLoaderModelOnly</code> (Lightning LoRA)</li>
+<li>Added <code>VAELoader</code> loading <code>sdxl_vae.safetensors</code> (already installed)</li>
+<li>KSampler: cfg <code>1</code> → <code>7</code>, sampler <code>euler</code> → <code>euler_ancestral</code>, scheduler <code>sgm_uniform</code> → <code>karras</code></li>
+<li>Model input: from LoRA output → directly from checkpoint</li>
+</ul>
+<p><strong><code>config/gallery.ts</code> (pony entry)</strong>:</p>
+<ul>
+<li><code>ceiling: 8</code> → <code>ceiling: 25</code></li>
+<li>Removed <code>steps: { add: [1] }</code> (step 1 only made sense for Lightning&#39;s 4-step LoRA)</li>
+<li>Removed <code>workflow_high</code> (no longer need a 4-step vs 8-step split)</li>
+<li>Updated comment</li>
+</ul>
+<p><strong><code>src/graphs.ts</code></strong>:</p>
+<ul>
+<li>Removed <code>PONY_BUILDER</code> constant (now unused)</li>
+<li>Removed Pony from the <code>isHighSDXL</code> check (no LoRA split to route)</li>
+<li>Rewrote the <code>pony</code> fallback builder to match the new recipe</li>
+</ul>
+<p><strong><code>workflows/illustrious.t2i.json</code></strong>: cfg <code>5</code> → <code>6</code> (modest contrast/saturation bump)</p>
+<p><strong>Deprecation</strong>: <code>lig deprecate model=pony</code> queued 21 remaining non-deprecated cells; combined
+with cells already deprecated from previous sessions, all Pony and Illustrious cells will be
+replaced on the next <code>lig run</code>.</p>
+<h2>What it means for the sweep</h2>
+<p>Pony leaves the &quot;SDXL-Lightning speed cohort&quot; (sdxlbase/realvisxl/juggernaut/krea2/qwen2512)
+and joins the &quot;native anime cohort&quot; (illustrious/noobai/noobaivpred). Each cell now takes ~55s
+instead of ~12s on M3. The step ladder grows from 5 rungs (1/2/4/6/8) to ~10+ rungs (2/4/6/…/25).
+This changes what the Pony row measures — native quality vs. distilled speed — which is the
+right comparison for an anime fine-tune with this level of curation.</p>
+<p>The <code>invariant</code> in CLAUDE.md (&quot;builders carry only the functional Lightning step-distill LoRAs&quot;)
+still holds: Pony&#39;s new builder carries <em>no</em> LoRA at all. Lightning on an incompatible fine-tune
+wasn&#39;t &quot;functional&quot; — it was actively harmful.</p>
+
+</article>
+<nav class="post-nav" aria-label="Post navigation">
+<a class="post-nav-link post-nav-prev" href="2026-07-06-2250-decision-pony-prompt-dialect-and-illustrious-floor.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">Decision: Pony's real bug was the prompt, Illustrious's wasn't</span></span></a>
+<a class="post-nav-link post-nav-next" href="2026-07-07-0046-incident-a-build-erased-the-deprecation-flag.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">Incident: a plain build silently un-deprecated 216 Pony cells</span></span><span class="post-nav-arrow">&rarr;</span></a>
+</nav></main>
+    <footer class="site-footer">
+      <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>
+    </footer>
+    <script>
+      // Localise all post times to the reader's timezone.
+      // Each <time class="post-time" data-ts="..."> carries a Unix epoch (ms);
+      // we replace the static server-rendered HH:MM with the local equivalent.
+      document.querySelectorAll('time.post-time[data-ts]').forEach(function (el) {
+        var d = new Date(+el.dataset.ts);
+        el.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        el.title = d.toLocaleString(); // full local datetime on hover
+      });
+
+      // Click (or Enter/Space) a .banner-compare to cycle: current -> most recent earlier
+      // version -> ... -> oldest/original -> back to current. Each click advances one slide;
+      // opacity is set directly (not via CSS classes) so this works for any slide count.
+      document.querySelectorAll('.banner-compare').forEach(function (el) {
+        var slides = el.querySelectorAll('.banner-slide');
+        var hint = el.querySelector('.banner-compare-hint');
+        var count = slides.length;
+        var active = 0;
+        function render() {
+          slides.forEach(function (s, i) {
+            s.style.opacity = i === active ? '1' : '0';
+          });
+          if (!hint) return;
+          if (active === 0) {
+            hint.textContent =
+              'click to see ' + (count === 2 ? 'the earlier version' : count - 1 + ' earlier versions');
+          } else if (active === count - 1) {
+            hint.textContent = 'original banner · click for current';
+          } else {
+            hint.textContent = 'earlier version ' + active + ' of ' + (count - 1) + ' · click to continue';
+          }
+        }
+        function advance() {
+          active = (active + 1) % count;
+          render();
+        }
+        el.addEventListener('click', advance);
+        el.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            advance();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

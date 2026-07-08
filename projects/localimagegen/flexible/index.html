@@ -893,7 +893,15 @@
     if (exact) {
       return catalog2[model]?.[subject]?.[String(targetSample)] ? targetSample : null;
     }
-    return closestSample(catalog2, ceilings, currentSeed2, model, subject, targetSample, showOvershoots2);
+    return closestSample(
+      catalog2,
+      ceilings,
+      currentSeed2,
+      model,
+      subject,
+      targetSample,
+      showOvershoots2
+    );
   }
   function formatDuration(seconds) {
     if (seconds <= 0) return "\xB7\xB7\xB7";
