@@ -2357,32 +2357,6 @@
       exact
     );
   }
-  function collectFilenamesForRender() {
-    const filenames = [];
-    const subjects = allSubjects();
-    if (compareMode === "models" || compareMode === "time") {
-      const target = compareMode === "time" ? timeBudgetMax() : Number(document.getElementById("sample")?.value ?? 0);
-      for (const m of getSelectedModels()) {
-        for (const subject of subjects) {
-          const shown = slideShownSample2(m, subject, target, false);
-          const e = shown != null ? pickEntry2(m, subject, shown) : null;
-          if (e) filenames.push(e.file);
-        }
-      }
-    } else {
-      const model = getSelectedModel();
-      if (!model) return filenames;
-      const available = samplesForModel2(model);
-      const samples = getSelectedSamples().filter((s) => available.includes(s)).sort((a, b) => a - b);
-      for (const s of samples) {
-        for (const subject of subjects) {
-          const e = pickEntry2(model, subject, s);
-          if (e) filenames.push(e.file);
-        }
-      }
-    }
-    return filenames;
-  }
   function canUpdateInPlace() {
     if (compareMode !== "models" && compareMode !== "time") return false;
     const models = getSelectedModels();
@@ -2686,9 +2660,6 @@
     if (canUpdateInPlace()) {
       const target = compareMode === "time" ? timeBudgetMax() : Number(document.getElementById("sample")?.value ?? 0);
       const models = getSelectedModels();
-      const filenames2 = collectFilenamesForRender();
-      await Promise.all(filenames2.map((f) => preloadFilename(f).catch(() => null)));
-      if (gen !== renderGeneration) return;
       document.getElementById("empty").hidden = models.length > 0;
       await updateRowsInPlace(target, models, subjects, gen);
       if (gen !== renderGeneration) return;
@@ -2696,18 +2667,8 @@
       setupSyncedCarousels();
       return;
     }
-    const filenames = collectFilenamesForRender();
-    const loaded = await Promise.all(
-      filenames.map(async (f) => {
-        try {
-          return [f, await preloadFilename(f)];
-        } catch {
-          return [f, null];
-        }
-      })
-    );
     if (gen !== renderGeneration) return;
-    const urlByFile = new Map(loaded);
+    const urlByFile = /* @__PURE__ */ new Map();
     const list = document.getElementById("modelList");
     list.innerHTML = "";
     if (compareMode === "models" || compareMode === "time") {
