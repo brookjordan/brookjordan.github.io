@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#1a1d24" />
+    <meta name="color-scheme" content="dark" />
+    <title>Seven small models and the guidance knob with two meanings</title>
+    <style>
+/* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
+   This is the single source of truth for colour, radius, spacing and type.
+   It is inlined ahead of each page's stylesheet at build time, and linked
+   first in dev so opening the .html files directly still resolves the vars.
+
+   Theming: everything below is a semantic token mapped onto a small palette of
+   primitives. To add a theme, override the *semantic* tokens under a selector
+   (see the commented [data-theme="light"] block at the bottom) — no stylesheet
+   needs to change, only these variables. */
+:root {
+  color-scheme: dark;
+
+  /* ---- palette primitives (raw colours; reference these only via the tokens below) ---- */
+  --c-ink-900: #0f1115;
+  --c-ink-800: #1a1d24;
+  --c-ink-700: #232732;
+  --c-ink-600: #2a2f3a;
+  --c-fog-100: #e8eaed;
+  --c-fog-300: #9aa0a6;
+  --c-fog-500: #6b727d;
+  --c-accent: #7c9cff;
+
+  /* ---- semantic: background / border / text, primary > secondary > tertiary ---- */
+  --bg-primary: var(--c-ink-900);
+  --bg-secondary: var(--c-ink-800);
+  --bg-tertiary: var(--c-ink-700);
+
+  --border-primary: var(--c-ink-600);
+  --border-secondary: rgba(150, 170, 210, 0.16);
+
+  --text-primary: var(--c-fog-100);
+  --text-secondary: var(--c-fog-300);
+  --text-tertiary: var(--c-fog-500);
+
+  --accent: var(--c-accent);
+
+  /* ---- radius scale ---- */
+  --radius-sm: 5px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 9999px;
+
+  /* ---- spacing / padding scale ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 2rem;
+
+  /* ---- type ---- */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* Shared cross-nav link (gallery <-> devlog). Both app.css and blog.css inline this
+   file, so defining it once here keeps the two links visually identical. */
+.cross-link {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.cross-link:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+/* Example theme override — set <html data-theme="light"> to activate (or wire it
+   to prefers-color-scheme). Left commented so we don't ship untuned colours:
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg-primary: #fbfbfd;
+  --bg-secondary: #f1f2f5;
+  --bg-tertiary: #e7e9ee;
+  --border-primary: #d4d8e0;
+  --border-secondary: rgba(20, 30, 60, 0.12);
+  --text-primary: #1a1d24;
+  --text-secondary: #555b66;
+  --text-tertiary: #7b828d;
+}
+*/
+
+</style>
+    <style>
+:root {
+  /* Local aliases mapped onto the shared tokens in tokens.css (inlined first),
+     so the devlog and the gallery share one palette, radius and spacing scale. */
+  --bg: var(--bg-primary);
+  --bg-soft: var(--bg-secondary);
+  --panel: var(--bg-tertiary);
+  --text: var(--text-primary);
+  --muted: var(--text-secondary);
+  --border: var(--border-secondary);
+  --radius: var(--radius-md);
+  /* --accent comes straight from tokens.css */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.65 var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.site-header,
+.site-footer {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 1.25rem 1.25rem;
+}
+
+.site-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text);
+}
+
+.brand span {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.content {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+
+.site-footer {
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* ---- post typography ---- */
+.content h1 {
+  font-size: 1.9rem;
+  line-height: 1.2;
+  margin: 0 0 0.5rem;
+}
+
+.content h2 {
+  font-size: 1.35rem;
+  margin: 2rem 0 0.6rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.3rem;
+}
+
+.content h3 {
+  font-size: 1.1rem;
+  margin: 1.5rem 0 0.4rem;
+}
+
+.content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  display: block;
+  margin: 1.25rem 0;
+}
+
+.content audio {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.content blockquote {
+  margin: 1.25rem 0;
+  padding: 0.5rem 1rem;
+  border-left: 3px solid var(--accent);
+  background: var(--bg-soft);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  color: var(--muted);
+}
+
+.content pre {
+  background: #12151b;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  overflow: auto;
+  font-size: 0.88rem;
+}
+
+.content code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: rgba(150, 170, 210, 0.14);
+  padding: 0.1em 0.35em;
+  border-radius: 5px;
+}
+
+.content pre code {
+  background: none;
+  padding: 0;
+}
+
+.post-banner {
+  width: 100%;
+  max-height: 22rem;
+  object-fit: cover;
+  border-radius: var(--radius);
+  display: block;
+  margin: 0 0 1.5rem;
+}
+
+/* Click-to-cycle: slide 0 (current) sits in normal flow and sizes the box; every other
+   slide overlays it absolutely at opacity 0. web/blog.html's script sets each slide's
+   opacity directly (not CSS classes) so this scales to any number of legacy versions. */
+.banner-compare {
+  position: relative;
+  cursor: pointer;
+}
+
+.banner-compare .banner-slide {
+  margin: 0;
+  transition: opacity 0.25s ease;
+}
+
+.banner-compare .banner-slide:not([data-slide='0']) {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.banner-compare-hint {
+  position: absolute;
+  right: 0.7rem;
+  bottom: calc(1.5rem + 0.7rem);
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 0.72rem;
+  line-height: 1;
+  padding: 0.4rem 0.65rem;
+  border-radius: 999px;
+  opacity: 0.85;
+  transition: opacity 0.15s ease;
+}
+
+.banner-compare:hover .banner-compare-hint {
+  opacity: 1;
+}
+
+/* ---- per-post header (date + tags) ---- */
+.post-meta {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0 0 1.5rem;
+}
+
+.tag {
+  display: inline-block;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 0.1em 0.7em;
+  font-size: 0.78rem;
+  margin-right: 0.35rem;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+/* ---- prev/next post nav (baked at build time, see postNav in src/blog.ts) ---- */
+.post-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 2rem 0 0;
+}
+
+.post-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-soft);
+  color: var(--text);
+  min-width: 0;
+}
+
+.post-nav-link:hover {
+  border-color: var(--accent);
+  text-decoration: none;
+}
+
+.post-nav-empty {
+  border-color: transparent;
+  background: none;
+}
+
+.post-nav-next {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.post-nav-arrow {
+  color: var(--muted);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.post-nav-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.post-nav-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.post-nav-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .post-nav {
+    grid-template-columns: 1fr;
+  }
+
+  .post-nav-next {
+    justify-content: flex-start;
+    text-align: left;
+  }
+}
+
+/* ---- index listing ---- */
+.index-intro {
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+
+.post-group-date {
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 2rem 0 0.75rem;
+}
+
+.post-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.post-list li {
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.post-list a.post-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.post-list .post-row-meta {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+}
+
+.post-time {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  margin-right: 0.5rem;
+  cursor: help;
+}
+
+</style>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="./index.html">localimagegen <span>· devlog</span></a>
+      <nav class="site-nav"><a class="cross-link" href="../index.html">gallery →</a></nav>
+    </header>
+    <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
+<article class="post">
+<h1>Seven small models and the guidance knob with two meanings</h1>
+<p class="post-meta">2026-08-08 <time class="post-time" data-ts="1786197360000">21:56</time> · <span class="tag">lesson</span> <span class="tag">architecture</span> <span class="tag">ops</span></p>
+<p>Seven small models arrived for the 8 GB M1. Unfortunately, “small” does not
+mean “interchangeable”, and “CFG 0” does not even mean the same thing in two
+programs sitting next to each other.</p>
+<p>This is the operating field guide for the seven candidates we nearly called
+workflows. It starts with model-author cards, official Stability AI material,
+ComfyUI examples/source and first-party metadata, then checks those recipes
+against CivitAI generations, Reddit reports, GitHub issues and workflows people
+actually run. Community claims are labelled as such; popularity does not turn
+folklore into an architecture specification. Where evidence disagrees, the
+disagreement stays visible.</p>
+<p>For the shorter incident versions, see
+<a href="2026-08-08-the-zero-that-ate-every-prompt.html">the zero that ate every prompt</a>,
+<a href="2026-08-08-this-suitcase-contains-only-the-engine.html">the suitcase containing only an engine</a>,
+and <a href="2026-08-08-square-was-never-the-contract.html">why square was never the contract</a>.</p>
+<h2>Read this before touching a sampler</h2>
+<h3>Diffusers <code>guidance_scale=0</code> is not ComfyUI <code>cfg=0</code></h3>
+<p>The ordinary Diffusers Stable Diffusion pipeline enables classifier-free
+guidance only when <code>guidance_scale &gt; 1</code>. At <code>0</code> or <code>1</code> it does one conditional
+UNet pass with the positive prompt; it does <strong>not</strong> evaluate the empty/negative
+branch. That is why Stability AI can say “disable guidance with
+<code>guidance_scale=0.0</code>” while still getting an image of the requested raccoon.
+<a href="https://github.com/huggingface/diffusers/blob/v0.23.1/src/diffusers/pipelines/stable_diffusion/pipeline_stable_diffusion.py">Diffusers implements that gate explicitly</a>,
+and the <a href="https://huggingface.co/stabilityai/sd-turbo">SD-Turbo card uses <code>guidance_scale=0.0</code></a>.</p>
+<p>ComfyUI&#39;s KSampler uses the actual linear CFG equation:
+<code>uncond + (cond - uncond) * cfg</code>. Therefore:</p>
+<ul>
+<li>ComfyUI <code>cfg=1</code> selects the positive conditional prediction and can optimise
+the negative pass away.</li>
+<li>ComfyUI <code>cfg=0</code> selects the unconditional/negative prediction and discards
+the positive prediction.</li>
+</ul>
+<p>That is not interpretation; it is the
+<a href="https://github.com/comfyanonymous/ComfyUI/blob/f3a36e74/comfy/samplers.py">current ComfyUI sampler formula and <code>cfg=1</code> fast path</a>.
+The official ComfyUI <strong>SDXL-Turbo</strong> workflow also has its sampler CFG field set
+to <code>1.0</code>, not <code>0</code>
+(<a href="https://github.com/comfyanonymous/ComfyUI_examples/blob/master/sdturbo/sdxlturbo_example.png">workflow image with embedded graph</a>).
+That workflow is useful evidence for ComfyUI&#39;s field value, but it is explicitly
+an <strong>SDXL-Turbo</strong> recipe; its checkpoint, architecture and sampler recipe must
+not be quietly relabelled “SD-Turbo”
+(<a href="https://comfyanonymous.github.io/ComfyUI_examples/sdturbo/">official example page</a>).</p>
+<p>This explains our smoking crater: committed <code>sdturbo</code> has ComfyUI <code>cfg=0</code> and an
+empty negative prompt. For a fixed seed and step count, every scene therefore
+samples the same empty-prompt branch. Six of the eight seed-42, step-one masters
+had byte-identical files and decoded pixels; the remaining two were visually
+indistinguishable variants. The machine was being extremely consistent about
+ignoring us.</p>
+<h3>LCM has two different guidance stories</h3>
+<p><strong>LCM-LoRA on a normal SD 1.5 pipeline</strong> is an acceleration adapter. Its author
+card recommends 2–8 steps, an LCM scheduler, and disabled guidance or a low
+value in the 1–2 range
+(<a href="https://huggingface.co/latent-consistency/lcm-lora-sdv1-5">LCM-LoRA SD 1.5 card</a>).
+In ComfyUI, <code>cfg=1</code>, the <code>lcm</code> sampler, <code>simple</code> or <code>sgm_uniform</code>, and optionally
+<code>ModelSamplingDiscrete(lcm)</code> are the corresponding documented ingredients
+(<a href="https://comfyanonymous.github.io/ComfyUI_examples/lcm/">official ComfyUI LCM example</a>).</p>
+<p><strong>LCM DreamShaper is a dedicated distilled UNet.</strong> Its guidance was distilled
+into a 256-dimensional timestep-conditioning embedding; its pipeline does not
+run an unconditional branch, so negative prompts do not steer it. The model
+card uses internal <code>guidance_scale=8</code>, recommends 1–8 steps, and says four is
+the fast path
+(<a href="https://huggingface.co/SimianLuo/LCM_Dreamshaper_v7">author card</a>);
+the <a href="https://huggingface.co/SimianLuo/LCM_Dreamshaper_v7/blob/main/lcm_pipeline.py">author pipeline constructs and passes the <code>w</code> embedding</a>.
+Diffusers documents the dedicated LCM training range as 3–13 and separately
+documents the much lower 1–2 range for LCM-LoRA
+(<a href="https://huggingface.co/docs/diffusers/main/en/using-diffusers/lcm">official LCM guide</a>).</p>
+<p>So no: “both say LCM” is not a licence to copy one CFG number into the other.</p>
+<h2>Canvas first: wide without pretending 1280×720 is cheap</h2>
+<p>None of the seven model cards promises a ComfyUI-on-MPS configuration. The
+primary evidence supports a narrower statement: PyTorch/Diffusers can run
+Stable Diffusion on Apple Silicon through MPS, but memory pressure causes
+swapping, attention slicing is recommended below 64 GB, non-standard sizes
+above 512×512 increase the risk, and batched generation can fail
+(<a href="https://huggingface.co/docs/diffusers/main/en/optimization/mps">official Diffusers MPS guide</a>).
+ComfyUI has had core MPS support since its
+<a href="https://github.com/comfyanonymous/ComfyUI/pull/244">M1 implementation was merged</a>.</p>
+<p>Square was safe, but it was not neutral for a gallery whose prompts were written
+for 16:9. The useful constraint is pixel area, not ritual devotion to 512×512:</p>
+<table>
+<thead>
+<tr>
+<th>Canvas</th>
+<th align="right">Ratio</th>
+<th align="right">Area vs 512²</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>640×360</td>
+<td align="right">exact 16:9</td>
+<td align="right">−12%</td>
+<td>lowest-memory exact widescreen</td>
+</tr>
+<tr>
+<td>640×384</td>
+<td align="right">5:3</td>
+<td align="right">−6%</td>
+<td>SD-Turbo&#39;s demonstrated Apple-oriented wide size</td>
+</tr>
+<tr>
+<td>704×384</td>
+<td align="right">11:6</td>
+<td align="right">+3%</td>
+<td>conservative near-16:9 SD1.x/SD2.x canvas</td>
+</tr>
+<tr>
+<td>768×432</td>
+<td align="right">exact 16:9</td>
+<td align="right">+27%</td>
+<td>author-supported fine-tune canvas</td>
+</tr>
+<tr>
+<td>768×512</td>
+<td align="right">3:2</td>
+<td align="right">+50%</td>
+<td>common, but no longer a near-512² test</td>
+</tr>
+<tr>
+<td>1280×720</td>
+<td align="right">exact 16:9</td>
+<td align="right">+252%</td>
+<td>the production gallery size; reject natively on the Mini</td>
+</tr>
+</tbody></table>
+<p>Divisibility by eight is the VAE requirement; multiples of 64 are conservative,
+not magic. These pre-SDXL models do not carry SDXL&#39;s explicit aspect-bucket
+conditioning. Their wide failures come from excessive area and distance from
+square training, not from missing a secret bucket ID. Community reports
+repeatedly show direct oversized SD1.5 first passes cloning people and limbs
+(<a href="https://www.reddit.com/r/StableDiffusion/comments/12td1x3/why_does_stable_diffusion_generate_multiple/">report one</a>;
+<a href="https://www.reddit.com/r/StableDiffusion/comments/11r8v6h/higher_resolution_creates_multiple_people/">report two</a>).</p>
+<p>So the admission rule becomes: <strong>batch one, one workflow at a time, a
+model-specific small landscape canvas, then measure MPS allocation and
+swapping</strong>. Fewer steps reduce elapsed work; nobody has shown that they
+proportionally reduce peak residency.</p>
+<h2>1. <code>sd15</code> — the control specimen</h2>
+<h3>Artifact and architecture</h3>
+<p>Our exact file is
+<a href="https://huggingface.co/Comfy-Org/stable-diffusion-v1-5-archive/blob/main/v1-5-pruned-emaonly-fp16.safetensors"><code>v1-5-pruned-emaonly-fp16.safetensors</code></a>,
+SHA-256
+<code>e9476a13728cd75d8279f6ec8bad753a66a1957ca375a1464dc63b37db6e3916</code>.
+Comfy Org identifies it as the original EMA-only SD 1.5 model converted to FP16
+with a metadata header; it is not claimed to be byte-identical to the original
+full-precision file
+(<a href="https://huggingface.co/Comfy-Org/stable-diffusion-v1-5-archive">archive card</a>).</p>
+<p>SD 1.5 is the v1 latent-diffusion UNet/autoencoder family with a fixed CLIP
+ViT-L/14 text encoder. It resumed from SD v1.2 and trained for 595k steps at
+512×512 with text-conditioning dropout for CFG
+(<a href="https://github.com/runwayml/stable-diffusion/blob/main/Stable_Diffusion_v1_Model_Card.html">Runway&#39;s original v1 model card</a>).</p>
+<h3>Canvas, language and conditioning</h3>
+<ul>
+<li><strong>Native/training size:</strong> 512×512. Our wide admission canvas is <strong>704×384</strong>,
+only 3% more pixels; 640×360 is the exact-16:9 fallback.</li>
+<li><strong>Prompt dialect:</strong> concise English natural-language/caption prompts for
+CLIP ViT-L/14. No trigger token.</li>
+<li><strong>Negative prompt:</strong> ordinary CFG negative conditioning; it works when
+ComfyUI CFG is greater than one.</li>
+<li><strong>CLIP skip:</strong> no first-party requirement found.</li>
+</ul>
+<p>The architecture, English limitation and known weaknesses in text, faces and
+complex composition are recorded on the
+<a href="https://huggingface.co/CompVis/stable-diffusion-v1-4">official v1 model card</a>.</p>
+<h3>Source-backed recipe and parts</h3>
+<p>The provenance recipe is 50 PLMS steps across evaluated CFG values 1.5–8; the
+standard Diffusers pipeline default is 7.5. The repository scheduler is PNDM.
+That is a reproducible reference, not proof that every image needs 50 steps
+(<a href="https://github.com/runwayml/stable-diffusion/blob/main/Stable_Diffusion_v1_Model_Card.html">v1 evaluation</a>;
+<a href="https://huggingface.co/stable-diffusion-v1-5/stable-diffusion-v1-5/blob/main/scheduler/scheduler_config.json">scheduler configuration</a>).</p>
+<p>The single checkpoint supplies UNet, CLIP and VAE through core
+<code>CheckpointLoaderSimple</code>; no LoRA, external VAE, custom node or CLIP skip is
+specified by the source recipe.</p>
+<h3>What people actually use—and regret</h3>
+<p>The recurring community production cluster is DPM++ 2M Karras, roughly 20–30
+steps and CFG 6–8
+(<a href="https://www.reddit.com/r/StableDiffusion/comments/106dmb5/which_sampler_and_how_many_steps/">sampler discussion</a>;
+<a href="https://www.reddit.com/r/StableDiffusion/comments/17aor51/what_is_the_best_sampler/">comparison discussion</a>).
+That is a useful default, not an official SD1.5 law. CLIP skip 2 is similarly
+checkpoint-specific folklore, not a universal “more quality” switch
+(<a href="https://www.reddit.com/r/StableDiffusion/comments/10ajv33/what_does_clip_skip_do/">community explanation</a>).</p>
+<p>Known bad ideas: direct 1024-class first passes, CFG 12–20, stuffing prompts
+beyond CLIP&#39;s useful context, and declaring a shared negative embedding or face
+restorer part of the checkpoint. They can improve a product image while
+destroying the comparison.</p>
+<h3>Our committed graph: <strong>uncertain</strong></h3>
+<p>The checkpoint, 704×384 latent, bundled CLIP/VAE, real negative prompt and CFG 7
+are structurally correct. The mismatch is evidence, not necessarily pixels:
+our <code>euler</code> / <code>normal</code> / 2–24 ladder is not the card&#39;s 50-step PLMS/PNDM
+reference. Treat the ladder as our experiment, not “the SD 1.5 recommended
+settings”.</p>
+<h2>2. <code>sd15lcm</code> — SD 1.5 wearing running shoes</h2>
+<h3>Artifact and architecture</h3>
+<p>This is the SD 1.5 checkpoint above plus the official
+<a href="https://huggingface.co/latent-consistency/lcm-lora-sdv1-5/blob/main/pytorch_lora_weights.safetensors"><code>pytorch_lora_weights.safetensors</code></a>,
+renamed locally to <code>lcm-lora-sdv1-5.safetensors</code>. Its SHA-256 is
+<code>8f90d840e075ff588a58e22c6586e2ae9a6f7922996ee6649a7f01072333afe4</code>.
+The card calls it a 67.5M-parameter distilled consistency adapter for SD 1.5,
+not a replacement checkpoint
+(<a href="https://huggingface.co/latent-consistency/lcm-lora-sdv1-5">author card</a>).</p>
+<h3>Canvas, language and conditioning</h3>
+<ul>
+<li><strong>Native/training size:</strong> inherited SD 1.5 512×512. Our admission canvas is
+<strong>704×384</strong>, with 640×360 as the lower-memory fallback.</li>
+<li><strong>Prompt dialect:</strong> the underlying SD 1.5 English CLIP dialect; no LCM trigger.</li>
+<li><strong>Negative prompt:</strong> at the recommended no/low-guidance setting it has no or
+little leverage. ComfyUI <code>cfg=1</code> skips the negative branch.</li>
+<li><strong>CLIP skip:</strong> none specified; inherit any requirement of the chosen base.</li>
+</ul>
+<h3>Source-backed recipe and parts</h3>
+<p>Use the LCM sampler/scheduler for 2–8 steps, with guidance disabled or between
+1 and 2
+(<a href="https://huggingface.co/latent-consistency/lcm-lora-sdv1-5">adapter card</a>).
+ComfyUI specifically calls for low CFG, sampler <code>lcm</code>, scheduler <code>simple</code> or
+<code>sgm_uniform</code>, and recommends <code>ModelSamplingDiscrete</code> set to <code>lcm</code>
+(<a href="https://comfyanonymous.github.io/ComfyUI_examples/lcm/">official ComfyUI LCM page</a>).</p>
+<p>Required pieces are the normal SD 1.5 checkpoint and the LoRA at strength 1.
+No custom nodes or external VAE/text encoder are required beyond those bundled
+with the base checkpoint.</p>
+<h3>What people actually use—and regret</h3>
+<p>The official ComfyUI graph itself uses LoRA strength 1, five steps, CFG 1.8,
+<code>lcm</code> and <code>sgm_uniform</code>; community variants commonly explore strength 0.5–1
+and four to six steps
+(<a href="https://education.civitai.com/quickstart-guide-to-lcm-lora-acceleration-modules/">CivitAI LCM guide</a>).
+Reports of dark, soft or artificial texture recur, and simply pushing to 14–24
+steps does not restore the undistilled model
+(<a href="https://www.reddit.com/r/comfyui/comments/17w8fha/comparison_of_using_lcm_in_comfyui_photogasm/">comparison</a>).</p>
+<p>Known bad ideas: one step (below this adapter&#39;s documented floor), ordinary SD
+CFG 7–12, the wrong architecture&#39;s LCM-LoRA, pairing the LoRA with a normal
+scheduler, and claiming fewer steps imply lower peak memory.</p>
+<h3>Our corrected graph: <strong>source-backed</strong></h3>
+<p>The LoRA, strength 1, <code>ModelSamplingDiscrete(lcm)</code>, <code>lcm</code> sampler,
+<code>sgm_uniform</code>, ComfyUI CFG 1 and 704×384 canvas match the documented pattern.
+The ladder is now 2/4/6/8: no invented one-step tier and no truncated ceiling.</p>
+<h2>3. <code>sdturbo</code> — the prompt was not optional, as it turns out</h2>
+<h3>Artifact and architecture</h3>
+<p>The exact artifact is
+<a href="https://huggingface.co/stabilityai/sd-turbo/blob/main/sd_turbo.safetensors"><code>sd_turbo.safetensors</code></a>,
+SHA-256
+<code>3f067a1b943cf162f2b8f8588f6cf5824bd5b4c7d1d88d87164b9ca123616549</code>.
+Stability AI describes SD-Turbo as an Adversarial Diffusion Distillation model
+distilled from <strong>Stable Diffusion 2.1</strong>, not SD 1.5 and not SDXL
+(<a href="https://huggingface.co/stabilityai/sd-turbo">official model card</a>).
+Its UNet has SD2-style 1024-wide cross-attention and epsilon prediction
+(<a href="https://huggingface.co/stabilityai/sd-turbo/blob/main/unet/config.json">official UNet config</a>).</p>
+<h3>Canvas, language and conditioning</h3>
+<ul>
+<li><strong>Native/fixed size:</strong> preferably 512×512. Our cautious wide canvas is
+<strong>640×384</strong>, directly demonstrated by an
+<a href="https://huggingface.co/keijiro-tk/coreml-sd-turbo-640x384">Apple Core ML conversion</a>;
+512² remains the fallback.</li>
+<li><strong>Prompt dialect:</strong> short English natural-language prompts; no trigger token.</li>
+<li><strong>Negative prompt:</strong> explicitly unsupported by the model recipe.</li>
+<li><strong>Guidance:</strong> explicitly disabled in Diffusers. In ComfyUI that means
+<strong><code>cfg=1</code>, not <code>cfg=0</code></strong>.</li>
+<li><strong>CLIP skip:</strong> no first-party requirement found.</li>
+</ul>
+<p>The same card warns that text is illegible, faces/people can fail, prompt
+alignment is below SDXL-Turbo, and perfect photorealism is not expected
+(<a href="https://huggingface.co/stabilityai/sd-turbo">limitations</a>).</p>
+<h3>Source-backed recipe and parts</h3>
+<p>The model&#39;s shipped scheduler is <code>EulerDiscreteScheduler</code>, epsilon prediction,
+<code>trailing</code> timestep spacing, no Karras sigmas
+(<a href="https://huggingface.co/stabilityai/sd-turbo/blob/main/scheduler/scheduler_config.json">scheduler config</a>).
+One inference step is the primary recipe; the architecture was distilled for
+one to four steps, but the card says one is enough
+(<a href="https://huggingface.co/stabilityai/sd-turbo">model card</a>).</p>
+<p>The single checkpoint supplies model, SD2 CLIP and VAE. No LoRA, custom node,
+external encoder/VAE or CLIP skip is specified.</p>
+<p>The official ComfyUI Turbo example uses <code>euler_ancestral</code>,
+<code>SDTurboScheduler</code>, one step and CFG 1, but its checkpoint is
+<code>sd_xl_turbo_1.0_fp16.safetensors</code>
+(<a href="https://github.com/comfyanonymous/ComfyUI_examples/blob/master/sdturbo/sdxlturbo_example.png">embedded official workflow</a>).
+Use it to understand ComfyUI&#39;s Turbo scheduler and CFG field, not as evidence
+that SD-Turbo itself should use the SDXL-Turbo sampler recipe. SD-Turbo&#39;s own
+packaged Diffusers scheduler is EulerDiscrete with trailing spacing, so our
+core-node translation uses ComfyUI&#39;s <code>euler</code> sampler plus
+<code>SDTurboScheduler</code>.</p>
+<h3>What people actually use—and regret</h3>
+<p>CivitAI&#39;s original-checkpoint listing independently converges on CFG 1, one
+step and 512², while noting that three or four steps can be better—or worse
+(<a href="https://civitai.com/models/220609/sd-turbo">community model page</a>).
+The stable strengths are speed, single subjects, objects and rough composition;
+faces, typography and complicated multi-subject layouts remain known weak
+points. Distillation may also reduce seed diversity, but direct evidence is
+stronger for SDXL-Turbo than this smaller checkpoint, so that stays a warning,
+not a verdict.</p>
+<p>Known bad ideas: ComfyUI CFG 0, standard SD CFG 7–9, expecting negatives to
+work at CFG 1, 20–50 steps, confusing this with SDXL-Turbo, and assuming the
+highest rung wins.</p>
+<h3>Our corrected graph: <strong>source-backed</strong></h3>
+<p>The graph now uses <code>SamplerCustom</code>, ComfyUI CFG 1, <code>euler</code> and
+<code>SDTurboScheduler</code>, preserving the 1–4-step comparison while treating one step
+as the primary recipe. The old CFG-0 files are unconditional controls, not
+scene renders, and must be replaced.</p>
+<h2>4. <code>dreamshaper8</code> — the author actually left settings</h2>
+<h3>Artifact and architecture</h3>
+<p>Our file is the author&#39;s Civitai version 8 artifact
+<a href="https://civitai.com/models/4384/dreamshaper?modelVersionId=128713"><code>dreamshaper_8.safetensors</code></a>,
+SHA-256
+<code>879db523c30d3b9017143d56705015e15a2cb5628762c11d086fed9538abd7fd</code>.
+The first-party version metadata identifies it as a pruned FP16 <strong>SD 1.5</strong>
+checkpoint
+(<a href="https://civitai.com/api/v1/model-versions/128713">version API</a>), and Lykon&#39;s
+Hugging Face card confirms it is fine-tuned from Runway SD 1.5
+(<a href="https://huggingface.co/Lykon/dreamshaper-8">author card</a>).</p>
+<h3>Canvas, language and conditioning</h3>
+<ul>
+<li><strong>Native/base size:</strong> SD 1.5-class 512². The author&#39;s version-8 examples use
+344×512, 512×640, 512×704, 512×768, 512×832 and 768×512 first passes; start
+wide admission at <strong>768×432</strong>—exact 16:9 and fewer pixels than the
+demonstrated 768×512—with 704×384 as fallback
+(<a href="https://civitai.com/api/v1/model-versions/128713">first-party preview metadata</a>).</li>
+<li><strong>Prompt dialect:</strong> natural-language/caption-style SD 1.5 prompts; no required
+trigger token. The author says v8 can do realism, art and anime rather than
+prescribing one tag dialect
+(<a href="https://huggingface.co/Lykon/dreamshaper-8">author notes</a>).</li>
+<li><strong>Negative prompt:</strong> standard SD1.x CFG. The author&#39;s samples often use
+optional external negative embeddings such as <code>BadDream</code> and
+<code>UnrealisticDream</code>; those are not built-in magic words.</li>
+<li><strong>CLIP skip:</strong> every supplied v8 Civitai preview reports CLIP skip 2, but the
+Hugging Face recipe does not call it mandatory. Record this as strong sample
+evidence, not a proved architectural requirement
+(<a href="https://civitai.com/api/v1/model-versions/128713">version metadata</a>).</li>
+</ul>
+<h3>Source-backed recipe and parts</h3>
+<p>Lykon&#39;s clean Diffusers recipe uses <code>DEISMultistepScheduler</code> and 25 steps
+(<a href="https://huggingface.co/Lykon/dreamshaper-8">author card</a>).
+The author&#39;s v8 preview metadata also shows DPM++ SDE or DPM++ 2M SDE with
+Karras, 20–30 first-pass steps and CFG 7–12. Those examples often add LoRAs,
+hires fix and ADetailer, so they describe demonstrated settings, not required
+dependencies
+(<a href="https://civitai.com/api/v1/model-versions/128713">first-party version metadata</a>).</p>
+<p>No external VAE, text encoder, LoRA or custom node is required by the clean
+author recipe. CLIP skip 2 deserves an A/B test because the examples use it.</p>
+<h3>What people actually use—and regret</h3>
+<p>The creator-image cluster is unusually coherent: DPM++ SDE or DPM++ 2M SDE
+Karras, 20–30 steps, CFG mostly 7–9 and CLIP skip 2
+(<a href="https://civitai.com/api/v1/model-versions/128713">CivitAI generation metadata</a>).
+Many showcase images also use hires fix, LoRAs, negative embeddings or
+ADetailer; those prove a production stack, not bare-checkpoint quality.</p>
+<p>Lykon explicitly advises against face restoration and warns that ADetailer can
+make identities converge
+(<a href="https://civitai.com/models/4384/dreamshaper">creator description</a>).
+Users reporting harsh malformed output at CFG 12.5 were repeatedly steered
+back toward 6–8 and roughly 25 steps
+(<a href="https://www.reddit.com/r/StableDiffusion/comments/17lwbsi/dreamshaper_8_results_look_bad/">failure thread</a>).</p>
+<p>Known bad ideas: copying the separate DreamShaper LCM recipe onto ordinary v8,
+calling BadDream/UnrealisticDream built-in features, defaulting to high CFG,
+and judging the bare model through a face-restoration pass.</p>
+<h3>Our corrected graph: <strong>creator-demonstrated</strong></h3>
+<p>The artifact now runs at 768×432, CFG 7, CLIP skip 2, DPM++ 2M SDE Karras and
+a 30-step ceiling with pinned 20/25-step author-recipe rungs. Lower rungs remain
+the gallery&#39;s deliberate convergence experiment, not recommended production
+settings.</p>
+<h2>5. <code>dreamlike</code> — one optional password, not a sampler manifesto</h2>
+<h3>Artifact and architecture</h3>
+<p>Our exact file is
+<a href="https://huggingface.co/dreamlike-art/dreamlike-diffusion-1.0/blob/main/dreamlike-diffusion-1.0.safetensors"><code>dreamlike-diffusion-1.0.safetensors</code></a>,
+SHA-256
+<code>c86a1a99b8c2a2891d9fac4990a8b90cee598d3e16c682fae76c0ab31212983d</code>.
+The author describes it as SD 1.5 fine-tuned on high-quality art
+(<a href="https://huggingface.co/dreamlike-art/dreamlike-diffusion-1.0">model card</a>).</p>
+<h3>Canvas, language and conditioning</h3>
+<ul>
+<li><strong>Native/base size:</strong> SD 1.5-class. The author explicitly prefers slightly
+higher sizes such as 640×640, 512×768 and 768×512, and recommends portrait
+2:3/9:16 or landscape 3:2/16:9 where appropriate
+(<a href="https://huggingface.co/dreamlike-art/dreamlike-diffusion-1.0">author card</a>).
+Our admission canvas is therefore <strong>768×432</strong> exact 16:9, below the pixel
+area of every larger author-recommended example; 704×384 is the fallback.</li>
+<li><strong>Prompt dialect:</strong> “same prompts as SD 1.5”.</li>
+<li><strong>Trigger:</strong> <code>dreamlikeart</code> is optional when the model&#39;s art style is too
+weak, not required for every image
+(<a href="https://huggingface.co/dreamlike-art/dreamlike-diffusion-1.0">author card</a>).</li>
+<li><strong>Negative prompt:</strong> standard SD1.x CFG; the author publishes no special
+negative recipe.</li>
+<li><strong>CLIP skip:</strong> no first-party requirement found.</li>
+</ul>
+<h3>Source-backed recipe and parts</h3>
+<p>The repository declares a <code>DDIMScheduler</code>; the model-card example omits both
+step count and guidance, so it inherits the Stable Diffusion pipeline defaults
+rather than publishing a model-specific override
+(<a href="https://huggingface.co/dreamlike-art/dreamlike-diffusion-1.0/blob/main/model_index.json">model index</a>;
+<a href="https://huggingface.co/dreamlike-art/dreamlike-diffusion-1.0/blob/main/scheduler/scheduler_config.json">DDIM config</a>).
+The ordinary pipeline defaults are 50 steps and guidance 7.5
+(<a href="https://huggingface.co/docs/diffusers/api/pipelines/stable_diffusion/text2img">official Stable Diffusion pipeline API</a>).</p>
+<p>The single checkpoint supplies the ordinary SD1.5 model/CLIP/VAE set. No LoRA,
+custom node, external VAE/encoder or CLIP skip is documented.</p>
+<h3>What people actually use—and regret</h3>
+<p>Community examples often use roughly 20–30-step DPM++ samplers and CFG 7–10,
+but the evidence is much weaker than DreamShaper&#39;s creator metadata. Treat
+DPM++ 2M Karras as generic SD1.5 practice, not a Dreamlike requirement. The
+author&#39;s launch discussion reinforces that <code>dreamlikeart</code> controls style
+intensity rather than activating the checkpoint
+(<a href="https://www.reddit.com/r/StableDiffusion/comments/10es0sl/dreamlike_diffusion_10_released/">launch thread</a>).</p>
+<p>Known bad ideas: claiming the trigger is mandatory, claiming CLIP skip 2 is
+mandatory, expecting exact cross-UI seed reproduction, and treating arbitrary
+pickle conversions as equivalent to the verified safetensors artifact.</p>
+<h3>Our committed graph: <strong>plausible, deliberately comparative</strong></h3>
+<p>The checkpoint, loader, negative conditioning, CFG 7 and author-supported
+768×432 shape are sound. Euler/normal with a 30-step ceiling remains our shared
+SD1.x comparison recipe rather than a creator mandate. Missing <code>dreamlikeart</code>
+is <strong>not</strong> a bug unless the scene intends to demand the house style.</p>
+<h2>6. <code>lcmdreamshaper</code> — rejected: this suitcase contains only the engine</h2>
+<h3>Artifact and architecture</h3>
+<p>Our exact file is
+<a href="https://huggingface.co/SimianLuo/LCM_Dreamshaper_v7/blob/main/LCM_Dreamshaper_v7_4k.safetensors"><code>LCM_Dreamshaper_v7_4k.safetensors</code></a>,
+SHA-256
+<code>84feab3a32f1d36108b762b25dad483ca9e37f719b23e0cfd0fdc4ad3fd5409b</code>.
+It is a dedicated LCM UNet distilled from the DreamShaper v7 SD 1.5 fine-tune
+for 4,000 iterations, not the LCM-LoRA adapter and not DreamShaper 8
+(<a href="https://huggingface.co/SimianLuo/LCM_Dreamshaper_v7">author card</a>).</p>
+<p>Most importantly, the standalone safetensors file is <strong>UNet weights only</strong>.
+The author&#39;s reference script separately loads DreamShaper v7&#39;s VAE, CLIP text
+encoder, tokenizer and safety checker, then loads this file into the UNet
+(<a href="https://huggingface.co/SimianLuo/LCM_Dreamshaper_v7/blob/main/inference.py">author inference script</a>).
+Its 3.44 GB size is not evidence that those missing components are secretly
+inside.</p>
+<h3>Canvas, language and conditioning</h3>
+<ul>
+<li><strong>Demonstrated/default size:</strong> 768×768. The author benchmarks at 768² and the
+LCM UNet config has <code>sample_size: 96</code>, which becomes 768 pixels through the
+×8 VAE scale
+(<a href="https://huggingface.co/SimianLuo/LCM_Dreamshaper_v7">author card</a>;
+<a href="https://huggingface.co/SimianLuo/LCM_Dreamshaper_v7/blob/main/unet/config.json">UNet config</a>).
+A future faithful implementation could test <strong>768×432</strong>, only 58% of the
+demonstrated square area, with 704×384 as fallback.</li>
+<li><strong>Prompt dialect:</strong> DreamShaper-v7/SD1.5 natural-language CLIP prompts; no
+trigger token.</li>
+<li><strong>Negative prompt:</strong> ineffective in the dedicated LCM pipeline because no
+unconditional text embedding is evaluated.</li>
+<li><strong>Internal guidance:</strong> author default/recommendation is <code>guidance_scale=8</code>
+through the model&#39;s timestep-conditioning embedding.</li>
+<li><strong>CLIP skip:</strong> none specified.</li>
+</ul>
+<p>The no-negative behavior and internal guidance mechanism are visible directly
+in the
+<a href="https://huggingface.co/SimianLuo/LCM_Dreamshaper_v7/blob/main/lcm_pipeline.py">author pipeline</a>
+and summarised in the
+<a href="https://huggingface.co/docs/diffusers/main/en/using-diffusers/lcm">official LCM documentation</a>.</p>
+<h3>Source-backed recipe and parts</h3>
+<p>Use LCMScheduler, four steps as the reference, with 1–8 recommended and
+<code>lcm_origin_steps=50</code>; the model card supplies internal guidance 8
+(<a href="https://huggingface.co/SimianLuo/LCM_Dreamshaper_v7">author card</a>).</p>
+<p>In core ComfyUI, a full-parameter LCM UNet is loaded with <code>UNETLoader</code>, patched
+with <code>ModelSamplingDiscrete(lcm)</code>, and sampled with <code>lcm</code>; a separate compatible
+base checkpoint supplies CLIP and VAE. ComfyUI&#39;s own example workflow uses
+exactly that split
+(<a href="https://github.com/comfyanonymous/ComfyUI/issues/1933">official maintainer workflow in the LCM support issue</a>).
+That example uses an SDXL LCM, so its CFG, canvas and base checkpoint are not
+DreamShaper settings; the reusable fact is the <strong>UNet-only loading topology</strong>.
+All those loader nodes are core ComfyUI nodes. The guidance path is not.
+ComfyUI&#39;s <code>ModelSamplingDiscrete(lcm)</code> patches the noise schedule and output
+parameterisation; it does not inject the model&#39;s learned 256-dimensional
+guidance embedding.</p>
+<h3>What people actually use—and regret</h3>
+<p>Native ComfyUI reports only begin working after the UNet is loaded correctly,
+paired with compatible SD1.5 CLIP/VAE, and sampled with <code>lcm</code>, low external CFG
+and very few steps
+(<a href="https://github.com/comfyanonymous/ComfyUI/issues/1954">ComfyUI issue</a>).
+Copying Diffusers <code>guidance_scale=8</code> into KSampler CFG 8 is the wrong mechanism;
+adding LCM-LoRA on top double-applies acceleration weights; and loading the raw
+UNet through <code>CheckpointLoaderSimple</code> asks an engine for seats and windows.</p>
+<h3>Repository decision: <strong>remove, do not fake</strong></h3>
+<p>Our graph did exactly that last bad idea: it fed a UNet-only file to
+<code>CheckpointLoaderSimple</code> and requested CLIP and VAE outputs that do not exist.
+Even after repairing the loader, ordinary KSampler cannot reproduce the
+author&#39;s learned guidance embedding. The candidate has therefore been removed
+from the executable catalog. It can return only with an explicit custom-node or
+Diffusers integration that implements the real pipeline; “it emitted pixels”
+is not an admission standard.</p>
+<h2>7. <code>sd21</code> — the 512 model, not its 768 sibling</h2>
+<h3>Artifact and architecture</h3>
+<p>Our file is
+<a href="https://huggingface.co/sd2-community/stable-diffusion-2-1-base/blob/main/v2-1_512-ema-pruned.safetensors"><code>v2-1_512-ema-pruned.safetensors</code></a>
+from the public mirror, SHA-256
+<code>df955bdf6b682338ea9b55dfc0d8f3475aadf4836e204893d28b82355e0956d2</code>,
+size 5,214,604,494 bytes. Those are the same identity values published for the
+original Stability AI artifact, so this is a byte-identical mirror, not a
+model substitution
+(<a href="https://huggingface.co/stabilityai/stable-diffusion-2-1-base/blob/main/v2-1_512-ema-pruned.safetensors">official Stability AI artifact location</a>;
+<a href="https://huggingface.co/sd2-community/stable-diffusion-2-1-base/blob/main/v2-1_512-ema-pruned.safetensors">mirror artifact pointer</a>).</p>
+<p>This is Stable Diffusion <strong>2.1 Base at 512</strong>, a latent diffusion model using
+OpenCLIP ViT-H text conditioning. It is not the separate 768-v checkpoint
+(<a href="https://huggingface.co/stabilityai/stable-diffusion-2-1-base">Stability AI model card</a>).
+The 512 pipeline config is epsilon prediction; the 768 sibling is the
+v-prediction variant
+(<a href="https://huggingface.co/sd2-community/stable-diffusion-2-1-base/blob/main/scheduler/scheduler_config.json">512 scheduler config</a>).</p>
+<h3>Canvas, language and conditioning</h3>
+<ul>
+<li><strong>Native/training size:</strong> 512×512; the base trained at 256 then 512 and v2.1
+added 220k further steps. Our conservative wide canvas is <strong>704×384</strong>, only
+3% more pixels; 640×360 is the fallback.</li>
+<li><strong>Prompt dialect:</strong> English natural language through OpenCLIP ViT-H; no
+trigger token.</li>
+<li><strong>Negative prompt:</strong> ordinary CFG negative conditioning works.</li>
+<li><strong>CLIP skip:</strong> no first-party requirement found.</li>
+</ul>
+<p>Those details and the model&#39;s weak text/faces/compositionality limitations are
+on the
+<a href="https://huggingface.co/stabilityai/stable-diffusion-2-1-base">Stability AI card</a>.</p>
+<h3>Source-backed recipe and parts</h3>
+<p>Stability AI&#39;s example replaces the default PNDM/PLMS scheduler with
+<code>EulerDiscreteScheduler</code>; its evaluation uses 50 DDIM steps across CFG
+1.5–8
+(<a href="https://huggingface.co/stabilityai/stable-diffusion-2-1-base">official card</a>).
+As with SD1.5, that is a provenance reference. The ordinary pipeline guidance
+default is 7.5
+(<a href="https://huggingface.co/docs/diffusers/api/pipelines/stable_diffusion/text2img">Stable Diffusion API</a>).</p>
+<p>The single checkpoint supplies the SD2.1 UNet, OpenCLIP text encoder and VAE.
+No LoRA, external VAE/encoder, custom node or CLIP skip is specified.</p>
+<h3>What people actually use—and regret</h3>
+<p>Community practice clusters around Euler/normal at roughly 20 steps and CFG
+4–8, or DPM++ 2M Karras at 25–30
+(<a href="https://sbcode.net/genai/model-comparison/">ComfyUI comparison</a>).
+Stability itself emphasized negative prompts for anatomy, framing, blur, text
+and watermarks
+(<a href="https://stability.ai/news-updates/stablediffusion2-1-release7-dec-2022">release notes</a>).
+Broad negative lists can also erase the intended style, so the list should be
+literal rather than ceremonial.</p>
+<p>Known bad ideas: loading the 512 epsilon checkpoint as its 768 v-pred sibling,
+using 768² because “2.1” appears in both names, reusing SD1.5 LoRAs/embeddings,
+running without useful negatives then blaming OpenCLIP, CFG 12–20, and hundreds
+of steps. The wrong 512/768 config famously produces solid brown, black or
+nonsense images
+(<a href="https://github.com/AUTOMATIC1111/stable-diffusion-webui/discussions/5458">launch discussion</a>).</p>
+<h3>Our committed graph: <strong>community-backed baseline</strong></h3>
+<p>The exact artifact, 704×384 canvas, <code>CheckpointLoaderSimple</code>, negative prompt,
+epsilon auto-detection and CFG 7 are correct in shape and semantics. Our
+<code>euler</code> / <code>normal</code> graph and 30-step ceiling match common ComfyUI practice;
+the low rungs remain the gallery&#39;s experiment rather than a production recipe.</p>
+<h2>What changed before another matrix run</h2>
+<ol>
+<li><strong>SD-Turbo now uses ComfyUI CFG 1, Euler and <code>SDTurboScheduler</code>.</strong> Existing
+CFG-0 outputs are deprecated unconditional controls.</li>
+<li><strong>SD1.5 LCM-LoRA now starts at two steps and reaches eight</strong>, using the
+official <code>sgm_uniform</code> option.</li>
+<li><strong>DreamShaper 8 now carries its own recipe:</strong> CLIP skip 2, DPM++ 2M SDE
+Karras, CFG 7 and author-demonstrated 20/25/30-step rungs.</li>
+<li><strong>The small models are wide again</strong>, at 640×384, 704×384 or 768×432
+according to their evidence instead of one square pretending to fit all.</li>
+<li><strong>LCM DreamShaper left the executable catalog.</strong> A future implementation
+must load the UNet correctly and implement learned guidance conditioning.</li>
+<li><strong>Classic low rungs remain labelled experiments.</strong> A convergence gallery is
+allowed to ask what happens at two steps; it is not allowed to call two
+steps the author&#39;s recommendation.</li>
+</ol>
+<p>Seven suitcases, then. One had the steering wheel connected backwards, one
+contained only an engine, and several arrived with Reddit recipes taped over
+their passports. Six are now honest workflows. The seventh is an honest
+rejection, which is more useful than 120 confidently meaningless PNGs.</p>
+
+</article>
+<nav class="post-nav" aria-label="Post navigation">
+<a class="post-nav-link post-nav-prev" href="2026-08-08-the-tiny-model-paints-its-own-poster.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">The tiny model paints its own poster</span></span></a>
+<a class="post-nav-link post-nav-next" href="2026-08-08-the-zero-that-ate-every-prompt.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">The zero that ate every prompt</span></span><span class="post-nav-arrow">&rarr;</span></a>
+</nav></main>
+    <footer class="site-footer">
+      <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>
+    </footer>
+    <script>
+      // Localise all post times to the reader's timezone.
+      // Each <time class="post-time" data-ts="..."> carries a Unix epoch (ms);
+      // we replace the static server-rendered HH:MM with the local equivalent.
+      document.querySelectorAll('time.post-time[data-ts]').forEach(function (el) {
+        var d = new Date(+el.dataset.ts);
+        el.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        el.title = d.toLocaleString(); // full local datetime on hover
+      });
+
+      // Click (or Enter/Space) a .banner-compare to cycle: current -> most recent earlier
+      // version -> ... -> oldest/original -> back to current. Each click advances one slide;
+      // opacity is set directly (not via CSS classes) so this works for any slide count.
+      document.querySelectorAll('.banner-compare').forEach(function (el) {
+        var slides = el.querySelectorAll('.banner-slide');
+        var hint = el.querySelector('.banner-compare-hint');
+        var count = slides.length;
+        var active = 0;
+        function render() {
+          slides.forEach(function (s, i) {
+            s.style.opacity = i === active ? '1' : '0';
+          });
+          if (!hint) return;
+          if (active === 0) {
+            hint.textContent =
+              'click to see ' + (count === 2 ? 'the earlier version' : count - 1 + ' earlier versions');
+          } else if (active === count - 1) {
+            hint.textContent = 'original banner · click for current';
+          } else {
+            hint.textContent = 'earlier version ' + active + ' of ' + (count - 1) + ' · click to continue';
+          }
+        }
+        function advance() {
+          active = (active + 1) % count;
+          render();
+        }
+        el.addEventListener('click', advance);
+        el.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            advance();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

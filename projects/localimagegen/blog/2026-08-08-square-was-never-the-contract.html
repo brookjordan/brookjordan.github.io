@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#1a1d24" />
     <meta name="color-scheme" content="dark" />
-    <title>The tiny model paints its own poster</title>
+    <title>Square was never the contract</title>
     <style>
 /* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
    This is the single source of truth for colour, radius, spacing and type.
@@ -431,49 +431,57 @@ a:hover {
     </header>
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
-<img class="post-banner" src="banners/tiny-model-poster.png" alt="The tiny model paints its own poster" />
-<h1>The tiny model paints its own poster</h1>
-<p class="post-meta">2026-08-08 <time class="post-time" data-ts="1786191000000">20:10</time> · <span class="tag">milestone</span> <span class="tag">content</span> <span class="tag">tooling</span></p>
-<p>Today&#39;s nine provisioning-arc posts all got banners, and the obvious question
-came up first: with <a href="2026-08-08-seven-tiny-suitcases.html">seven shiny new low-memory models</a>
-sitting in the catalog, shouldn&#39;t <em>they</em> make the banners?</p>
-<p>Mostly: no, and the reason is worth writing down. House banners are 1280×512 —
-an ultra-wide canvas the SDXL-class checkpoints handle because they trained on
-~1-megapixel buckets. The new candidates are SD1.5-class, trained at 512×512.
-Ask SD1.5 for a canvas 2.5× wider than anything it saw in school and it does
-what it always does: <strong>clones the subject sideways</strong> until the space is full.
-Two detectives. Three doorways. A regrettable number of moustaches. So eight
-of the nine banners went through the existing <code>goodFor</code>-tag catalog as usual —
-Juggernaut for the cinematic ones, RealVisXL for the photoreal close-ups,
-Illustrious for the one that wanted to be a cartoon.</p>
-<p>But there was one banner where the cloning habit is not a bug. The
-<a href="2026-08-08-seven-tiny-suitcases.html">seven tiny suitcases</a> post <em>wants</em> a row
-of near-identical objects — so that banner was dogfooded through
-<code>dreamshaper8</code> itself, at 768×320 (same ~2.4:1 shape, honest 512-class
-buckets). The model repeated suitcases down a rainy night platform exactly the
-way its detractors said it would, and for once that was the assignment. The
-banner for the tiny models is made by a tiny model. It took 10 seconds.
-Juggernaut takes 50 for the same job at 4× the pixels; make of that ratio what
-you will (we intend to, on an 8 GB Mac mini).</p>
-<p>Mechanically this meant one small, deliberately fenced addition to the banner
-catalog: a <code>dreamshaper8</code> preset reachable <strong>only</strong> through an explicit
-<code>low-memory</code> tag, never by ordinary tag-overlap scoring — so no future banner
-accidentally rolls a 512-class model onto a 1280-wide canvas and inherits the
-clone army.</p>
-<p>One footnote for the capability ledger. The
-<a href="2026-08-08-where-are-the-cartoons.html">where-are-the-cartoons banner</a> asked
-Illustrious for <em>seven</em> robots and an empty spotlight; it delivered a lovely
-stage lineup of about ten. Counting remains the
-<a href="2026-06-30-0945-the-capability-axes.html">instruction-following test</a> that
-diffusion models flunk live, on camera, even while being praised. The empty
-spotlight and the floating question mark landed, though — and honestly, &quot;we
-asked for seven and got ten&quot; is the most on-brand possible banner for a post
-about auditing what&#39;s missing.</p>
+<h1>Square was never the contract</h1>
+<p class="post-meta">2026-08-08 <time class="post-time" data-ts="1786199100000">22:25</time> · <span class="tag">decision</span> <span class="tag">lesson</span></p>
+<p>The seven low-memory candidates arrived with one shared rule: 512×512, batch
+one, serial execution. It was a sensible M1 safety baseline and a terrible
+reason to make every gallery scene look through a porthole.</p>
+<p>The prompts were composed for 16:9. The gallery was designed for 16:9. We had
+quietly promoted “the cheapest familiar test” into “the correct shape”.</p>
+<h2>The issue</h2>
+<p>Stable Diffusion 1.5 and SD 2.1 Base were trained around 512², so jumping
+straight to 1280×720 would be expensive and compositionally risky. But square
+is not an API contract. For latent diffusion, pixel area drives much of the
+memory cost, while dimensions divisible by eight satisfy the VAE.</p>
+<p>We could preserve nearly the same area and recover a landscape composition.
+The choice was not square versus reckless. It was square versus arithmetic.</p>
+<h2>How we researched it</h2>
+<p>We checked each model separately instead of inventing one universal bucket:</p>
+<ul>
+<li>SD1.5 and SD2.1 Base remain 512-class models. Community failures at oversized
+direct first passes repeatedly show cloned people and repeated limbs
+(<a href="https://www.reddit.com/r/StableDiffusion/comments/12td1x3/why_does_stable_diffusion_generate_multiple/">example</a>).</li>
+<li><a href="https://civitai.com/api/v1/model-versions/128713">DreamShaper 8&#39;s creator metadata</a>
+demonstrates landscape and portrait first passes including 768×512.</li>
+<li><a href="https://huggingface.co/dreamlike-art/dreamlike-diffusion-1.0">Dreamlike Diffusion&#39;s author</a>
+explicitly recommends slightly larger portrait and landscape ratios,
+including 3:2 and 16:9.</li>
+<li>SD-Turbo&#39;s official card prefers 512², while an
+<a href="https://huggingface.co/keijiro-tk/coreml-sd-turbo-640x384">Apple Core ML conversion</a>
+demonstrates a modest 640×384 wide build.</li>
+</ul>
+<p>Then we compared area rather than vibes. 704×384 is only 3% larger than 512².
+640×384 is 6% smaller. Even 768×432 is 27% larger—material, but nowhere near
+1280×720&#39;s 252% increase.</p>
+<h2>The outcome</h2>
+<p>The corrected catalog now uses:</p>
+<ul>
+<li><strong>640×384</strong> for SD-Turbo;</li>
+<li><strong>704×384</strong> for SD1.5, SD1.5 LCM-LoRA and SD2.1 Base;</li>
+<li><strong>768×432</strong> for DreamShaper 8 and Dreamlike Diffusion.</li>
+</ul>
+<p>Batch one and serial execution remain non-negotiable. Existing square masters
+stay on disk and serve until their replacements pass validation; the affected
+models were deprecated through the normal resilience path.</p>
+<p>Square was useful evidence about memory. It was never evidence that landscapes
+had been abolished.</p>
+<p>The full per-model recipes, fallbacks and failure modes live in the
+<a href="2026-08-08-low-memory-model-field-guide.html">low-memory field guide</a>.</p>
 
 </article>
 <nav class="post-nav" aria-label="Post navigation">
-<a class="post-nav-link post-nav-prev" href="2026-08-08-the-symlink-gets-evicted.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">Incident: the symlink gets evicted</span></span></a>
-<a class="post-nav-link post-nav-next" href="2026-08-08-low-memory-model-field-guide.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">Seven small models and the guidance knob with two meanings</span></span><span class="post-nav-arrow">&rarr;</span></a>
+<a class="post-nav-link post-nav-prev" href="2026-08-08-this-suitcase-contains-only-the-engine.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">This suitcase contains only the engine</span></span></a>
+<span class="post-nav-link post-nav-next post-nav-empty"></span>
 </nav></main>
     <footer class="site-footer">
       <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>

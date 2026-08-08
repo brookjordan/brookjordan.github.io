@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#1a1d24" />
     <meta name="color-scheme" content="dark" />
-    <title>The tiny model paints its own poster</title>
+    <title>This suitcase contains only the engine</title>
     <style>
 /* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
    This is the single source of truth for colour, radius, spacing and type.
@@ -431,49 +431,52 @@ a:hover {
     </header>
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
-<img class="post-banner" src="banners/tiny-model-poster.png" alt="The tiny model paints its own poster" />
-<h1>The tiny model paints its own poster</h1>
-<p class="post-meta">2026-08-08 <time class="post-time" data-ts="1786191000000">20:10</time> · <span class="tag">milestone</span> <span class="tag">content</span> <span class="tag">tooling</span></p>
-<p>Today&#39;s nine provisioning-arc posts all got banners, and the obvious question
-came up first: with <a href="2026-08-08-seven-tiny-suitcases.html">seven shiny new low-memory models</a>
-sitting in the catalog, shouldn&#39;t <em>they</em> make the banners?</p>
-<p>Mostly: no, and the reason is worth writing down. House banners are 1280×512 —
-an ultra-wide canvas the SDXL-class checkpoints handle because they trained on
-~1-megapixel buckets. The new candidates are SD1.5-class, trained at 512×512.
-Ask SD1.5 for a canvas 2.5× wider than anything it saw in school and it does
-what it always does: <strong>clones the subject sideways</strong> until the space is full.
-Two detectives. Three doorways. A regrettable number of moustaches. So eight
-of the nine banners went through the existing <code>goodFor</code>-tag catalog as usual —
-Juggernaut for the cinematic ones, RealVisXL for the photoreal close-ups,
-Illustrious for the one that wanted to be a cartoon.</p>
-<p>But there was one banner where the cloning habit is not a bug. The
-<a href="2026-08-08-seven-tiny-suitcases.html">seven tiny suitcases</a> post <em>wants</em> a row
-of near-identical objects — so that banner was dogfooded through
-<code>dreamshaper8</code> itself, at 768×320 (same ~2.4:1 shape, honest 512-class
-buckets). The model repeated suitcases down a rainy night platform exactly the
-way its detractors said it would, and for once that was the assignment. The
-banner for the tiny models is made by a tiny model. It took 10 seconds.
-Juggernaut takes 50 for the same job at 4× the pixels; make of that ratio what
-you will (we intend to, on an 8 GB Mac mini).</p>
-<p>Mechanically this meant one small, deliberately fenced addition to the banner
-catalog: a <code>dreamshaper8</code> preset reachable <strong>only</strong> through an explicit
-<code>low-memory</code> tag, never by ordinary tag-overlap scoring — so no future banner
-accidentally rolls a 512-class model onto a 1280-wide canvas and inherits the
-clone army.</p>
-<p>One footnote for the capability ledger. The
-<a href="2026-08-08-where-are-the-cartoons.html">where-are-the-cartoons banner</a> asked
-Illustrious for <em>seven</em> robots and an empty spotlight; it delivered a lovely
-stage lineup of about ten. Counting remains the
-<a href="2026-06-30-0945-the-capability-axes.html">instruction-following test</a> that
-diffusion models flunk live, on camera, even while being praised. The empty
-spotlight and the floating question mark landed, though — and honestly, &quot;we
-asked for seven and got ten&quot; is the most on-brand possible banner for a post
-about auditing what&#39;s missing.</p>
+<h1>This suitcase contains only the engine</h1>
+<p class="post-meta">2026-08-08 <time class="post-time" data-ts="1786199040000">22:24</time> · <span class="tag">incident</span> <span class="tag">architecture</span></p>
+<p><code>LCM_Dreamshaper_v7_4k.safetensors</code> is 3.44 GB. It says DreamShaper. It says
+LCM. It is large enough to look important. We put it in <code>checkpoints/</code>, handed
+it to <code>CheckpointLoaderSimple</code>, and asked ComfyUI for a model, CLIP and VAE.</p>
+<p>The suitcase was heavy because it contained an engine, not because somebody
+had packed the rest of the car.</p>
+<h2>The issue</h2>
+<p>The file is a dedicated distilled <strong>UNet only</strong>. Our graph treated it as a full
+Stable Diffusion checkpoint. The requested CLIP and VAE outputs simply did not
+exist, which explains why every attempted <code>lcmdreamshaper</code> cell went straight
+to the failure ledger.</p>
+<p>Even fixing the loader would have left a subtler error. This model learned a
+256-dimensional guidance embedding during distillation. Its reference pipeline
+passes that embedding into the UNet. Ordinary ComfyUI KSampler CFG does not.</p>
+<p>Pixels from a four-step <code>lcm</code> sampler would not prove we had implemented the
+model; they would prove that ComfyUI is very patient with our improvisation.</p>
+<h2>How we researched it</h2>
+<p>We followed the artifact instead of its filename:</p>
+<ol>
+<li>The <a href="https://huggingface.co/SimianLuo/LCM_Dreamshaper_v7/blob/main/inference.py">author&#39;s inference script</a>
+loads DreamShaper v7&#39;s VAE, text encoder and tokenizer separately, then
+inserts this safetensors file into the UNet.</li>
+<li>The <a href="https://huggingface.co/SimianLuo/LCM_Dreamshaper_v7/blob/main/lcm_pipeline.py">author&#39;s pipeline</a>
+constructs and passes the learned guidance embedding.</li>
+<li>The <a href="https://huggingface.co/SimianLuo/LCM_Dreamshaper_v7">model card</a>
+recommends four steps, internal guidance 8 and a dedicated LCM scheduler.</li>
+<li>ComfyUI community reports confirmed the split <code>UNETLoader</code> topology, but
+did not establish that core nodes reproduce this model&#39;s guidance path.</li>
+</ol>
+<p>That last distinction mattered. “People can make it emit an image” and “this
+is the author&#39;s model recipe” are different admission tests.</p>
+<h2>The outcome</h2>
+<p>We removed <code>lcmdreamshaper</code> from <code>config/gallery.ts</code>, the workflow catalog and
+the provisioning script. The invalid committed workflow went too. <code>yarn doctor</code>
+now reports 26 complete, provisioned workflows rather than 27 with one dressed
+as a checkpoint.</p>
+<p>The candidate can return if we add a Diffusers integration or a ComfyUI node
+that implements the learned guidance conditioning explicitly. Until then,
+removing it is not giving up on a model. It is giving up on lying to ourselves
+about which model we ran.</p>
 
 </article>
 <nav class="post-nav" aria-label="Post navigation">
-<a class="post-nav-link post-nav-prev" href="2026-08-08-the-symlink-gets-evicted.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">Incident: the symlink gets evicted</span></span></a>
-<a class="post-nav-link post-nav-next" href="2026-08-08-low-memory-model-field-guide.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">Seven small models and the guidance knob with two meanings</span></span><span class="post-nav-arrow">&rarr;</span></a>
+<a class="post-nav-link post-nav-prev" href="2026-08-08-the-zero-that-ate-every-prompt.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">The zero that ate every prompt</span></span></a>
+<a class="post-nav-link post-nav-next" href="2026-08-08-square-was-never-the-contract.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">Square was never the contract</span></span><span class="post-nav-arrow">&rarr;</span></a>
 </nav></main>
     <footer class="site-footer">
       <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>

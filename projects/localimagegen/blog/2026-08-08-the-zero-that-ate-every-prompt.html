@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#1a1d24" />
     <meta name="color-scheme" content="dark" />
-    <title>The tiny model paints its own poster</title>
+    <title>The zero that ate every prompt</title>
     <style>
 /* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
    This is the single source of truth for colour, radius, spacing and type.
@@ -431,49 +431,60 @@ a:hover {
     </header>
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
-<img class="post-banner" src="banners/tiny-model-poster.png" alt="The tiny model paints its own poster" />
-<h1>The tiny model paints its own poster</h1>
-<p class="post-meta">2026-08-08 <time class="post-time" data-ts="1786191000000">20:10</time> · <span class="tag">milestone</span> <span class="tag">content</span> <span class="tag">tooling</span></p>
-<p>Today&#39;s nine provisioning-arc posts all got banners, and the obvious question
-came up first: with <a href="2026-08-08-seven-tiny-suitcases.html">seven shiny new low-memory models</a>
-sitting in the catalog, shouldn&#39;t <em>they</em> make the banners?</p>
-<p>Mostly: no, and the reason is worth writing down. House banners are 1280×512 —
-an ultra-wide canvas the SDXL-class checkpoints handle because they trained on
-~1-megapixel buckets. The new candidates are SD1.5-class, trained at 512×512.
-Ask SD1.5 for a canvas 2.5× wider than anything it saw in school and it does
-what it always does: <strong>clones the subject sideways</strong> until the space is full.
-Two detectives. Three doorways. A regrettable number of moustaches. So eight
-of the nine banners went through the existing <code>goodFor</code>-tag catalog as usual —
-Juggernaut for the cinematic ones, RealVisXL for the photoreal close-ups,
-Illustrious for the one that wanted to be a cartoon.</p>
-<p>But there was one banner where the cloning habit is not a bug. The
-<a href="2026-08-08-seven-tiny-suitcases.html">seven tiny suitcases</a> post <em>wants</em> a row
-of near-identical objects — so that banner was dogfooded through
-<code>dreamshaper8</code> itself, at 768×320 (same ~2.4:1 shape, honest 512-class
-buckets). The model repeated suitcases down a rainy night platform exactly the
-way its detractors said it would, and for once that was the assignment. The
-banner for the tiny models is made by a tiny model. It took 10 seconds.
-Juggernaut takes 50 for the same job at 4× the pixels; make of that ratio what
-you will (we intend to, on an 8 GB Mac mini).</p>
-<p>Mechanically this meant one small, deliberately fenced addition to the banner
-catalog: a <code>dreamshaper8</code> preset reachable <strong>only</strong> through an explicit
-<code>low-memory</code> tag, never by ordinary tag-overlap scoring — so no future banner
-accidentally rolls a 512-class model onto a 1280-wide canvas and inherits the
-clone army.</p>
-<p>One footnote for the capability ledger. The
-<a href="2026-08-08-where-are-the-cartoons.html">where-are-the-cartoons banner</a> asked
-Illustrious for <em>seven</em> robots and an empty spotlight; it delivered a lovely
-stage lineup of about ten. Counting remains the
-<a href="2026-06-30-0945-the-capability-axes.html">instruction-following test</a> that
-diffusion models flunk live, on camera, even while being praised. The empty
-spotlight and the floating question mark landed, though — and honestly, &quot;we
-asked for seven and got ten&quot; is the most on-brand possible banner for a post
-about auditing what&#39;s missing.</p>
+<h1>The zero that ate every prompt</h1>
+<p class="post-meta">2026-08-08 <time class="post-time" data-ts="1786198980000">22:23</time> · <span class="tag">incident</span> <span class="tag">lesson</span></p>
+<p>SD-Turbo was fast. Suspiciously fast. It could paint the van, the dragon, the
+doll and the kingdom with such astonishing consistency that every scene looked
+exactly the same.</p>
+<p>Not “Turbo has a recognisable style” same. Six of the eight seed-42,
+step-one scenes had <strong>byte-identical files and decoded pixels</strong>; the other two
+were visually indistinguishable variants of the same promptless picture.</p>
+<h2>The issue</h2>
+<p>The graph used ComfyUI <code>cfg: 0</code>, copied from Stability AI&#39;s official Diffusers
+recipe:</p>
+<pre><code class="language-python">guidance_scale=0.0
+</code></pre>
+<p>That looked like a faithful translation. It was actually a tiny bilingual
+disaster.</p>
+<p><img src="img/sdturbo-cfg-zero-repeat.webp" alt="Six different scene prompts producing the same SD-Turbo image"></p>
+<p>Diffusers disables classifier-free guidance when <code>guidance_scale &lt;= 1</code>, but it
+still evaluates the <strong>positive</strong> prompt. ComfyUI&#39;s ordinary CFG equation is
+<code>uncond + (cond - uncond) * cfg</code>; at zero it selects the <strong>unconditional</strong>
+branch. Our graph was not generating the same scene repeatedly. It was
+generating no scene at all, very reliably.</p>
+<h2>How we researched it</h2>
+<p>We stopped borrowing the number and traced its meaning:</p>
+<ol>
+<li><a href="https://github.com/huggingface/diffusers/blob/v0.23.1/src/diffusers/pipelines/stable_diffusion/pipeline_stable_diffusion.py">Diffusers&#39; Stable Diffusion pipeline</a>
+gates CFG above one while retaining positive conditioning below it.</li>
+<li><a href="https://github.com/comfyanonymous/ComfyUI/blob/f3a36e74/comfy/samplers.py">ComfyUI&#39;s sampler source</a>
+exposes the literal linear equation and its CFG-1 fast path.</li>
+<li><a href="https://huggingface.co/stabilityai/sd-turbo">Stability AI&#39;s SD-Turbo card</a>
+confirmed one-step Euler with guidance disabled.</li>
+<li>ComfyUI&#39;s installed node schemas confirmed that <code>SamplerCustom</code>,
+<code>SDTurboScheduler</code> and <code>KSamplerSelect</code> could express that recipe without a
+custom extension.</li>
+</ol>
+<p>The broader
+<a href="2026-08-08-low-memory-model-field-guide.html">seven-model field guide</a> records
+the evidence and the difference between SD-Turbo and SDXL-Turbo.</p>
+<h2>The outcome</h2>
+<p><a href="../src/graphs.ts"><code>src/graphs.ts</code></a> now uses ComfyUI CFG 1, Euler,
+<code>SDTurboScheduler</code> and <code>SamplerCustom</code>. The canvas moved to 640×384, a
+small landscape size demonstrated by an Apple Core ML conversion. All 192
+old SD-Turbo cells were deprecated rather than deleted.</p>
+<p>Then we repeated the incriminating experiment: same seed, same one step, one
+prompt for a red fire engine in snow and another for a blue whale over a neon
+city. The resulting WebPs had different SHA-256 hashes and, more importantly,
+contained a fire engine and a whale.</p>
+<p><img src="img/sdturbo-cfg-one-prompts.webp" alt="Two corrected CFG-1 prompts producing visibly different SD-Turbo images"></p>
+<p>The zero was innocent in its native language. We had merely hired it as a
+translator.</p>
 
 </article>
 <nav class="post-nav" aria-label="Post navigation">
-<a class="post-nav-link post-nav-prev" href="2026-08-08-the-symlink-gets-evicted.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">Incident: the symlink gets evicted</span></span></a>
-<a class="post-nav-link post-nav-next" href="2026-08-08-low-memory-model-field-guide.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">Seven small models and the guidance knob with two meanings</span></span><span class="post-nav-arrow">&rarr;</span></a>
+<a class="post-nav-link post-nav-prev" href="2026-08-08-low-memory-model-field-guide.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">Seven small models and the guidance knob with two meanings</span></span></a>
+<a class="post-nav-link post-nav-next" href="2026-08-08-this-suitcase-contains-only-the-engine.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">This suitcase contains only the engine</span></span><span class="post-nav-arrow">&rarr;</span></a>
 </nav></main>
     <footer class="site-footer">
       <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>

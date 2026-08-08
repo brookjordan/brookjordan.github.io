@@ -439,6 +439,15 @@ a:hover {
 airline restriction — <strong>512×512, batch one, serial execution</strong> — because their
 final destination is an 8 GB M1 Mac mini where ComfyUI, macOS, and
 TurboFieldfare all share one pool of unified memory.</p>
+<blockquote>
+<p><strong>Customs update:</strong> the
+<a href="2026-08-08-low-memory-model-field-guide.html">model-by-model field guide</a>
+caught two bad passports. ComfyUI CFG 0 made SD-Turbo ignore every prompt,
+while LCM DreamShaper was a UNet-only artifact rather than a complete
+checkpoint—and its learned guidance path was missing. Turbo was repaired;
+LCM DreamShaper left the executable catalog. The remaining six now use small
+landscape canvases instead of one square pretending to fit all.</p>
+</blockquote>
 <p>Each suitcase tests something specific:</p>
 <ul>
 <li><strong>sd15</strong> is the control group — the 2022 baseline every SD1.x claim gets
