@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#1a1d24" />
     <meta name="color-scheme" content="dark" />
-    <title>Incident: a plain build silently un-deprecated 216 Pony cells</title>
+    <title>Incident: the symlink gets evicted</title>
     <style>
 /* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
    This is the single source of truth for colour, radius, spacing and type.
@@ -431,57 +431,40 @@ a:hover {
     </header>
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
-<img class="post-banner" src="banners/incident-a-build-erased-the-deprecation-flag.png" alt="Incident: a plain build silently un-deprecated 216 Pony cells" />
-<h1>Incident: a plain build silently un-deprecated 216 Pony cells</h1>
-<p class="post-meta">2026-07-07 <time class="post-time" data-ts="1783356360000">00:46</time> · <span class="tag">incident</span> <span class="tag">resilience</span> <span class="tag">gallery</span></p>
-<p>Last night&#39;s overnight run was supposed to re-render Pony with its corrected booru-tag
-prompts. This morning the gallery said Pony was fully done. It wasn&#39;t — not one Pony master
-had a modified timestamp since the fix landed. The run had nothing to do, because something
-had already told it Pony didn&#39;t need doing.</p>
-<h2>What actually happened</h2>
-<p>Auto-deprecation works by comparing each master&#39;s <em>recorded</em> <code>promptHash</code> (written the
-moment it was rendered) against the hash the <em>current</em> config would produce for that cell.
-Mismatch means the prompt changed since the render — deprecated, needs a rerun.</p>
-<p><code>refreshData</code> rebuilds <code>data/meta.json</code> from scratch on every call — <code>run</code>, <code>watch</code>,
-<code>build</code>, <code>refresh-data</code> all call it — by merging three layers: <code>scanMasters()</code> (whatever
-<code>meta.json</code> doesn&#39;t have a fresher record for, reconstructed straight from each master&#39;s
-filename), <code>histMeta</code> (from ComfyUI&#39;s own <code>/history</code>, which only remembers a rolling
-window of recent jobs), and <code>liveMetaMap</code> (this run&#39;s own in-flight renders). The bug was
-in the base layer: <code>scanMasters</code> doesn&#39;t know what prompt a master was <em>actually</em> rendered
-with, so for the <code>promptHash</code> field it just computed the hash of what the prompt <em>would be
-under the current config</em> — a tautology. Any master old enough to have rotated out of
-ComfyUI&#39;s history (i.e. almost all of them) got its recorded hash silently replaced with
-one that, by construction, always matches the live config. Deprecated-by-prompt-change
-cells look freshly rendered the instant a <code>build</code> runs, render or no render.</p>
-<p>Timeline: fixed Pony&#39;s <code>prompt_size</code>, config auto-deprecated 216 cells, confirmed via
-<code>status</code>. Ran <code>yarn build</code> a few minutes later (routine — build before commit, per house
-rules) — that alone flipped Pony back to &quot;done&quot; with zero renders. The overnight run
-started after that and, correctly following what the data told it, skipped Pony entirely.
-Illustrious&#39;s sub-21-step deprecation survived the same build untouched, because it&#39;s a
-manual selector in <code>config/deprecations.yaml</code> — a completely different, hash-independent
-mechanism that this bug can&#39;t touch. That&#39;s what made it visible at all: two cells
-deprecated in the same breath, one silently reverted a few minutes later, one not.</p>
-<h2>The fix</h2>
-<p><code>refreshData</code> now reads whatever <code>promptHash</code> is already on record before layering
-<code>scanMasters</code> underneath it, and keeps the recorded value when one exists. <code>scanMasters</code>&#39;s
-guess only wins for a cell with no prior record at all — i.e. the first time it&#39;s ever
-seen, when there&#39;s nothing to drift from yet. Only a real observed render (ComfyUI history,
-or this run&#39;s own live capture) is trusted to overwrite a promptHash going forward.</p>
-<p>Recorded the true historical hash was already gone by the time this was caught, so there
-was no way to &quot;restore&quot; it — re-added Pony&#39;s 216 cells to the deprecation list by hand
-(<code>lig deprecate model=pony</code>) to recover the intended state.</p>
-<h2>The lesson</h2>
-<p>This is exactly the &quot;completion must be provable from disk&quot; rule from <code>CLAUDE.md</code>, missed
-in a subtle place: the disk <em>record itself</em> wasn&#39;t append-only or fact-preserving — a
-read-modify-write over the very field that encodes &quot;did this actually change&quot; let a
-no-op rebuild indistinguishable from a real one. Any state that&#39;s supposed to prove
-something happened has to be written <em>once</em>, at the moment it&#39;s true, and never
-recomputed from a source that doesn&#39;t know the answer.</p>
+<img class="post-banner" src="banners/symlink-evicted.png" alt="Incident: the symlink gets evicted" />
+<h1>Incident: the symlink gets evicted</h1>
+<p class="post-meta">2026-08-08 <time class="post-time" data-ts="1786189680000">19:48</time> · <span class="tag">incident</span> <span class="tag">lesson</span> <span class="tag">ops</span></p>
+<p>The first actual SD 1.5 render did not fail because SD 1.5 was too big, MPS
+was haunted, or the prompt asked too much of a two-step sampler. It rendered,
+then tripped over the finish line:</p>
+<pre><code class="language-text">**** ERROR: Saving image outside the output folder is not allowed.
+full_output_folder: /Users/brook.jordan/ComfyUI-Shared/output/localimagegen
+        output_dir: /Users/brook.jordan/ComfyUI-Shared/output
+</code></pre>
+<p>Once upon a ComfyUI ago, <code>output/localimagegen</code> was a symlink to the repo&#39;s
+gitignored <code>.comfy-output</code> inbox. ComfyUI checked paths with <code>abspath</code>, saw a
+perfectly respectable child of <code>output/</code>, and followed the link when it wrote.
+Raw PNGs landed in the repo; everybody won.</p>
+<p>New ComfyUI checks the path with <code>realpath</code> instead. This is the correct
+security behaviour — a symlink inside <code>output/</code> that points somewhere else is
+exactly how a filename prefix becomes a write-anywhere party trick. Our clever
+inbox was therefore evicted from the party, with cause.</p>
+<p>The fix is less clever and more durable: <code>localimagegen/</code> is now a real,
+ComfyUI-owned directory directly under <code>ComfyUI-Shared/output/</code>. It is still a
+disposable raw-render inbox; <code>masters/</code> remains the committed canonical store,
+so no provenance or crash-resume guarantee moved. <code>lig link</code> learned the new
+direct mode, safely removes the old symlink, and reports:</p>
+<pre><code class="language-text">link: direct /Users/brook.jordan/ComfyUI-Shared/output/localimagegen (ComfyUI-owned inbox)
+</code></pre>
+<p>The same previously failing SD 1.5 smoke render then saved successfully in
+five seconds. Lesson: never make your persistence model depend on a security
+check staying permissive. The symlink had a good run. It may now enjoy a quiet
+retirement.</p>
 
 </article>
 <nav class="post-nav" aria-label="Post navigation">
-<a class="post-nav-link post-nav-prev" href="2026-07-07-pony-native-recipe.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">Pony Goes Native: Dropping the Lightning LoRA</span></span></a>
-<a class="post-nav-link post-nav-next" href="2026-08-08-m1-capability-baseline.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">The Mini gets a proving ground, not a promise</span></span><span class="post-nav-arrow">&rarr;</span></a>
+<a class="post-nav-link post-nav-prev" href="2026-08-08-where-are-the-cartoons.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">Where are the cartoons?</span></span></a>
+<a class="post-nav-link post-nav-next" href="2026-08-08-the-tiny-model-paints-its-own-poster.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">The tiny model paints its own poster</span></span><span class="post-nav-arrow">&rarr;</span></a>
 </nav></main>
     <footer class="site-footer">
       <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>

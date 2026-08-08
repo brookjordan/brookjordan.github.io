@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#1a1d24" />
     <meta name="color-scheme" content="dark" />
-    <title>Incident: a plain build silently un-deprecated 216 Pony cells</title>
+    <title>Where are the cartoons?</title>
     <style>
 /* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
    This is the single source of truth for colour, radius, spacing and type.
@@ -431,57 +431,47 @@ a:hover {
     </header>
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
-<img class="post-banner" src="banners/incident-a-build-erased-the-deprecation-flag.png" alt="Incident: a plain build silently un-deprecated 216 Pony cells" />
-<h1>Incident: a plain build silently un-deprecated 216 Pony cells</h1>
-<p class="post-meta">2026-07-07 <time class="post-time" data-ts="1783356360000">00:46</time> · <span class="tag">incident</span> <span class="tag">resilience</span> <span class="tag">gallery</span></p>
-<p>Last night&#39;s overnight run was supposed to re-render Pony with its corrected booru-tag
-prompts. This morning the gallery said Pony was fully done. It wasn&#39;t — not one Pony master
-had a modified timestamp since the fix landed. The run had nothing to do, because something
-had already told it Pony didn&#39;t need doing.</p>
-<h2>What actually happened</h2>
-<p>Auto-deprecation works by comparing each master&#39;s <em>recorded</em> <code>promptHash</code> (written the
-moment it was rendered) against the hash the <em>current</em> config would produce for that cell.
-Mismatch means the prompt changed since the render — deprecated, needs a rerun.</p>
-<p><code>refreshData</code> rebuilds <code>data/meta.json</code> from scratch on every call — <code>run</code>, <code>watch</code>,
-<code>build</code>, <code>refresh-data</code> all call it — by merging three layers: <code>scanMasters()</code> (whatever
-<code>meta.json</code> doesn&#39;t have a fresher record for, reconstructed straight from each master&#39;s
-filename), <code>histMeta</code> (from ComfyUI&#39;s own <code>/history</code>, which only remembers a rolling
-window of recent jobs), and <code>liveMetaMap</code> (this run&#39;s own in-flight renders). The bug was
-in the base layer: <code>scanMasters</code> doesn&#39;t know what prompt a master was <em>actually</em> rendered
-with, so for the <code>promptHash</code> field it just computed the hash of what the prompt <em>would be
-under the current config</em> — a tautology. Any master old enough to have rotated out of
-ComfyUI&#39;s history (i.e. almost all of them) got its recorded hash silently replaced with
-one that, by construction, always matches the live config. Deprecated-by-prompt-change
-cells look freshly rendered the instant a <code>build</code> runs, render or no render.</p>
-<p>Timeline: fixed Pony&#39;s <code>prompt_size</code>, config auto-deprecated 216 cells, confirmed via
-<code>status</code>. Ran <code>yarn build</code> a few minutes later (routine — build before commit, per house
-rules) — that alone flipped Pony back to &quot;done&quot; with zero renders. The overnight run
-started after that and, correctly following what the data told it, skipped Pony entirely.
-Illustrious&#39;s sub-21-step deprecation survived the same build untouched, because it&#39;s a
-manual selector in <code>config/deprecations.yaml</code> — a completely different, hash-independent
-mechanism that this bug can&#39;t touch. That&#39;s what made it visible at all: two cells
-deprecated in the same breath, one silently reverted a few minutes later, one not.</p>
-<h2>The fix</h2>
-<p><code>refreshData</code> now reads whatever <code>promptHash</code> is already on record before layering
-<code>scanMasters</code> underneath it, and keeps the recorded value when one exists. <code>scanMasters</code>&#39;s
-guess only wins for a cell with no prior record at all — i.e. the first time it&#39;s ever
-seen, when there&#39;s nothing to drift from yet. Only a real observed render (ComfyUI history,
-or this run&#39;s own live capture) is trusted to overwrite a promptHash going forward.</p>
-<p>Recorded the true historical hash was already gone by the time this was caught, so there
-was no way to &quot;restore&quot; it — re-added Pony&#39;s 216 cells to the deprecation list by hand
-(<code>lig deprecate model=pony</code>) to recover the intended state.</p>
-<h2>The lesson</h2>
-<p>This is exactly the &quot;completion must be provable from disk&quot; rule from <code>CLAUDE.md</code>, missed
-in a subtle place: the disk <em>record itself</em> wasn&#39;t append-only or fact-preserving — a
-read-modify-write over the very field that encodes &quot;did this actually change&quot; let a
-no-op rebuild indistinguishable from a real one. Any state that&#39;s supposed to prove
-something happened has to be written <em>once</em>, at the moment it&#39;s true, and never
-recomputed from a source that doesn&#39;t know the answer.</p>
+<div class="banner-compare" data-count="2" role="button" tabindex="0" aria-label="Cycle through 1 earlier banner version">
+<img class="post-banner banner-slide" data-slide="0" src="banners/where-cartoons.png" alt="Where are the cartoons?" />
+<img class="post-banner banner-slide" data-slide="1" src="banners/where-cartoons.legacy-1.png" alt="Original banner for Where are the cartoons?" />
+<span class="banner-compare-hint">click to see the earlier version</span>
+</div>
+<h1>Where are the cartoons?</h1>
+<p class="post-meta">2026-08-08 <time class="post-time" data-ts="1786189320000">19:42</time> · <span class="tag">content</span> <span class="tag">decision</span></p>
+<p>An audit question worth writing down before it gets forgotten: does the
+low-memory candidate set cover the same stylistic ground as the big roster?</p>
+<p>The 36 GB gallery earned a deliberate three-way spread — photoreal
+(RealVisXL, Juggernaut), stylised/painterly (Chroma, Illustrious), and a
+whole <a href="2026-07-02-booru-bucket.html">booru-tag anime cohort</a> (NoobAI ×2,
+Illustrious, Pony) with its own prompt dialect. The
+<a href="2026-08-08-seven-tiny-suitcases.html">seven tiny suitcases</a>? Audit says:</p>
+<ul>
+<li><strong>Realistic:</strong> generic bases only (<code>sd15</code>, <code>sd21</code>, <code>sdturbo</code>). No
+purpose-built photoreal fine-tune — no RealVis-of-512-land.</li>
+<li><strong>Stylised:</strong> <code>dreamlike</code> is a genuine art fine-tune; <code>dreamshaper8</code> is a
+capable all-rounder. Covered, roughly.</li>
+<li><strong>Animé:</strong> <em>nobody.</em> All seven speak prose (<code>prompt_size: &#39;s&#39;</code>); not one
+Danbooru-tag model in the set, and no <code>b</code>-bucket prompt would even reach
+them.</li>
+</ul>
+<p>That&#39;s not an accident to fix today — it&#39;s a sequencing choice. The current
+seven exist to answer <em>&quot;does SD1.x/SD2.x fit in 8 GB at all?&quot;</em>, which is a
+hardware question, and duplicating SD 1.5&#39;s graph five more times teaches us
+nothing new about memory. But the moment the first group passes admission,
+the interesting question becomes <em>routing</em> — which model should a Telegram
+request land on — and routing needs the style axes covered.</p>
+<p>So, queued behind the first empirical passes: one SD1.5-era photoreal
+fine-tune, and one SD1.5-era anime tag-model (plus its <code>b</code> prompt wiring, and
+the lesson from <a href="2026-07-02-booru-bucket.html">the booru bucket</a> about not
+feeding tag models prose). Each arrives through the same
+<a href="2026-08-08-m1-capability-baseline.html">proving ground</a> as everyone else — an
+SD1.5 fine-tune fitting where SD 1.5 fits is <em>likely</em>, and likely is exactly
+the kind of claim this project has learned not to file as evidence.</p>
 
 </article>
 <nav class="post-nav" aria-label="Post navigation">
-<a class="post-nav-link post-nav-prev" href="2026-07-07-pony-native-recipe.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">Pony Goes Native: Dropping the Lightning LoRA</span></span></a>
-<a class="post-nav-link post-nav-next" href="2026-08-08-m1-capability-baseline.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">The Mini gets a proving ground, not a promise</span></span><span class="post-nav-arrow">&rarr;</span></a>
+<a class="post-nav-link post-nav-prev" href="2026-08-08-the-pantry-is-stocked.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">The pantry is stocked; nobody gets promoted</span></span></a>
+<a class="post-nav-link post-nav-next" href="2026-08-08-the-symlink-gets-evicted.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">Incident: the symlink gets evicted</span></span><span class="post-nav-arrow">&rarr;</span></a>
 </nav></main>
     <footer class="site-footer">
       <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>

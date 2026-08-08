@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#1a1d24" />
     <meta name="color-scheme" content="dark" />
-    <title>Incident: a plain build silently un-deprecated 216 Pony cells</title>
+    <title>Computers are very literal colleagues</title>
     <style>
 /* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
    This is the single source of truth for colour, radius, spacing and type.
@@ -431,57 +431,37 @@ a:hover {
     </header>
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
-<img class="post-banner" src="banners/incident-a-build-erased-the-deprecation-flag.png" alt="Incident: a plain build silently un-deprecated 216 Pony cells" />
-<h1>Incident: a plain build silently un-deprecated 216 Pony cells</h1>
-<p class="post-meta">2026-07-07 <time class="post-time" data-ts="1783356360000">00:46</time> · <span class="tag">incident</span> <span class="tag">resilience</span> <span class="tag">gallery</span></p>
-<p>Last night&#39;s overnight run was supposed to re-render Pony with its corrected booru-tag
-prompts. This morning the gallery said Pony was fully done. It wasn&#39;t — not one Pony master
-had a modified timestamp since the fix landed. The run had nothing to do, because something
-had already told it Pony didn&#39;t need doing.</p>
-<h2>What actually happened</h2>
-<p>Auto-deprecation works by comparing each master&#39;s <em>recorded</em> <code>promptHash</code> (written the
-moment it was rendered) against the hash the <em>current</em> config would produce for that cell.
-Mismatch means the prompt changed since the render — deprecated, needs a rerun.</p>
-<p><code>refreshData</code> rebuilds <code>data/meta.json</code> from scratch on every call — <code>run</code>, <code>watch</code>,
-<code>build</code>, <code>refresh-data</code> all call it — by merging three layers: <code>scanMasters()</code> (whatever
-<code>meta.json</code> doesn&#39;t have a fresher record for, reconstructed straight from each master&#39;s
-filename), <code>histMeta</code> (from ComfyUI&#39;s own <code>/history</code>, which only remembers a rolling
-window of recent jobs), and <code>liveMetaMap</code> (this run&#39;s own in-flight renders). The bug was
-in the base layer: <code>scanMasters</code> doesn&#39;t know what prompt a master was <em>actually</em> rendered
-with, so for the <code>promptHash</code> field it just computed the hash of what the prompt <em>would be
-under the current config</em> — a tautology. Any master old enough to have rotated out of
-ComfyUI&#39;s history (i.e. almost all of them) got its recorded hash silently replaced with
-one that, by construction, always matches the live config. Deprecated-by-prompt-change
-cells look freshly rendered the instant a <code>build</code> runs, render or no render.</p>
-<p>Timeline: fixed Pony&#39;s <code>prompt_size</code>, config auto-deprecated 216 cells, confirmed via
-<code>status</code>. Ran <code>yarn build</code> a few minutes later (routine — build before commit, per house
-rules) — that alone flipped Pony back to &quot;done&quot; with zero renders. The overnight run
-started after that and, correctly following what the data told it, skipped Pony entirely.
-Illustrious&#39;s sub-21-step deprecation survived the same build untouched, because it&#39;s a
-manual selector in <code>config/deprecations.yaml</code> — a completely different, hash-independent
-mechanism that this bug can&#39;t touch. That&#39;s what made it visible at all: two cells
-deprecated in the same breath, one silently reverted a few minutes later, one not.</p>
-<h2>The fix</h2>
-<p><code>refreshData</code> now reads whatever <code>promptHash</code> is already on record before layering
-<code>scanMasters</code> underneath it, and keeps the recorded value when one exists. <code>scanMasters</code>&#39;s
-guess only wins for a cell with no prior record at all — i.e. the first time it&#39;s ever
-seen, when there&#39;s nothing to drift from yet. Only a real observed render (ComfyUI history,
-or this run&#39;s own live capture) is trusted to overwrite a promptHash going forward.</p>
-<p>Recorded the true historical hash was already gone by the time this was caught, so there
-was no way to &quot;restore&quot; it — re-added Pony&#39;s 216 cells to the deprecation list by hand
-(<code>lig deprecate model=pony</code>) to recover the intended state.</p>
-<h2>The lesson</h2>
-<p>This is exactly the &quot;completion must be provable from disk&quot; rule from <code>CLAUDE.md</code>, missed
-in a subtle place: the disk <em>record itself</em> wasn&#39;t append-only or fact-preserving — a
-read-modify-write over the very field that encodes &quot;did this actually change&quot; let a
-no-op rebuild indistinguishable from a real one. Any state that&#39;s supposed to prove
-something happened has to be written <em>once</em>, at the moment it&#39;s true, and never
-recomputed from a source that doesn&#39;t know the answer.</p>
+<img class="post-banner" src="banners/literal-colleagues.png" alt="Computers are very literal colleagues" />
+<h1>Computers are very literal colleagues</h1>
+<p class="post-meta">2026-08-08 <time class="post-time" data-ts="1786187400000">19:10</time> · <span class="tag">lesson</span> <span class="tag">tooling</span></p>
+<p>Small lesson from stocking the model shelf: <strong>a download list needs three
+fields, not two.</strong></p>
+<p><code>scripts/fetch-models.zsh</code> used to describe each file as
+<code>&lt;url&gt;|&lt;subdir&gt;</code> and derive the filename from the URL&#39;s basename. Perfectly
+adequate — right up until the LCM-LoRA. Upstream, latent-consistency publish
+it as the majestically generic <code>pytorch_lora_weights.safetensors</code>. Our
+workflow, quite reasonably, loads <code>lcm-lora-sdv1-5.safetensors</code>.</p>
+<p>Derive the name from the URL and you get a file ComfyUI will never find.
+Rename it by hand and you&#39;ve created an undocumented step that the next
+machine (hello, Mini) will rediscover as a mysterious red
+<code>lcm-lora-sdv1-5.safetensors not found in models/loras/</code>.</p>
+<p>So every row is now explicit:</p>
+<pre><code class="language-zsh"># &quot;&lt;url&gt;|&lt;subdir under models/&gt;|&lt;destination filename&gt;&quot;
+&quot;https://huggingface.co/latent-consistency/lcm-lora-sdv1-5/resolve/main/pytorch_lora_weights.safetensors|loras|lcm-lora-sdv1-5.safetensors&quot;
+</code></pre>
+<p>The generalizable bit: the filename in <code>config/gallery.ts</code> is a <em>contract</em>
+with ComfyUI&#39;s loader, and the URL basename is a <em>coincidence</em> of whoever
+uploaded the file. Where contract and coincidence happen to agree, two fields
+look fine — and the design quietly waits for the first upstream artifact named
+something else. Write the contract down.</p>
+<p>(Also filed under &quot;duh, in retrospect&quot;: the same edit session briefly shipped
+a mode selector referencing arrays that didn&#39;t exist yet. <code>zsh -n</code> is cheap;
+run it before yarn does.)</p>
 
 </article>
 <nav class="post-nav" aria-label="Post navigation">
-<a class="post-nav-link post-nav-prev" href="2026-07-07-pony-native-recipe.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">Pony Goes Native: Dropping the Lightning LoRA</span></span></a>
-<a class="post-nav-link post-nav-next" href="2026-08-08-m1-capability-baseline.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">The Mini gets a proving ground, not a promise</span></span><span class="post-nav-arrow">&rarr;</span></a>
+<a class="post-nav-link post-nav-prev" href="2026-08-08-seven-tiny-suitcases.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">Seven tiny suitcases for one tiny computer</span></span></a>
+<a class="post-nav-link post-nav-next" href="2026-08-08-reproducible-low-memory-provisioning.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">Choose your own provisioning adventure</span></span><span class="post-nav-arrow">&rarr;</span></a>
 </nav></main>
     <footer class="site-footer">
       <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>

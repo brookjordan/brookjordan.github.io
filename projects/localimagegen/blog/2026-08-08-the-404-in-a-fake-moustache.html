@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#1a1d24" />
     <meta name="color-scheme" content="dark" />
-    <title>Incident: a plain build silently un-deprecated 216 Pony cells</title>
+    <title>Incident: the 404 in a fake moustache</title>
     <style>
 /* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
    This is the single source of truth for colour, radius, spacing and type.
@@ -431,57 +431,38 @@ a:hover {
     </header>
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
-<img class="post-banner" src="banners/incident-a-build-erased-the-deprecation-flag.png" alt="Incident: a plain build silently un-deprecated 216 Pony cells" />
-<h1>Incident: a plain build silently un-deprecated 216 Pony cells</h1>
-<p class="post-meta">2026-07-07 <time class="post-time" data-ts="1783356360000">00:46</time> · <span class="tag">incident</span> <span class="tag">resilience</span> <span class="tag">gallery</span></p>
-<p>Last night&#39;s overnight run was supposed to re-render Pony with its corrected booru-tag
-prompts. This morning the gallery said Pony was fully done. It wasn&#39;t — not one Pony master
-had a modified timestamp since the fix landed. The run had nothing to do, because something
-had already told it Pony didn&#39;t need doing.</p>
-<h2>What actually happened</h2>
-<p>Auto-deprecation works by comparing each master&#39;s <em>recorded</em> <code>promptHash</code> (written the
-moment it was rendered) against the hash the <em>current</em> config would produce for that cell.
-Mismatch means the prompt changed since the render — deprecated, needs a rerun.</p>
-<p><code>refreshData</code> rebuilds <code>data/meta.json</code> from scratch on every call — <code>run</code>, <code>watch</code>,
-<code>build</code>, <code>refresh-data</code> all call it — by merging three layers: <code>scanMasters()</code> (whatever
-<code>meta.json</code> doesn&#39;t have a fresher record for, reconstructed straight from each master&#39;s
-filename), <code>histMeta</code> (from ComfyUI&#39;s own <code>/history</code>, which only remembers a rolling
-window of recent jobs), and <code>liveMetaMap</code> (this run&#39;s own in-flight renders). The bug was
-in the base layer: <code>scanMasters</code> doesn&#39;t know what prompt a master was <em>actually</em> rendered
-with, so for the <code>promptHash</code> field it just computed the hash of what the prompt <em>would be
-under the current config</em> — a tautology. Any master old enough to have rotated out of
-ComfyUI&#39;s history (i.e. almost all of them) got its recorded hash silently replaced with
-one that, by construction, always matches the live config. Deprecated-by-prompt-change
-cells look freshly rendered the instant a <code>build</code> runs, render or no render.</p>
-<p>Timeline: fixed Pony&#39;s <code>prompt_size</code>, config auto-deprecated 216 cells, confirmed via
-<code>status</code>. Ran <code>yarn build</code> a few minutes later (routine — build before commit, per house
-rules) — that alone flipped Pony back to &quot;done&quot; with zero renders. The overnight run
-started after that and, correctly following what the data told it, skipped Pony entirely.
-Illustrious&#39;s sub-21-step deprecation survived the same build untouched, because it&#39;s a
-manual selector in <code>config/deprecations.yaml</code> — a completely different, hash-independent
-mechanism that this bug can&#39;t touch. That&#39;s what made it visible at all: two cells
-deprecated in the same breath, one silently reverted a few minutes later, one not.</p>
-<h2>The fix</h2>
-<p><code>refreshData</code> now reads whatever <code>promptHash</code> is already on record before layering
-<code>scanMasters</code> underneath it, and keeps the recorded value when one exists. <code>scanMasters</code>&#39;s
-guess only wins for a cell with no prior record at all — i.e. the first time it&#39;s ever
-seen, when there&#39;s nothing to drift from yet. Only a real observed render (ComfyUI history,
-or this run&#39;s own live capture) is trusted to overwrite a promptHash going forward.</p>
-<p>Recorded the true historical hash was already gone by the time this was caught, so there
-was no way to &quot;restore&quot; it — re-added Pony&#39;s 216 cells to the deprecation list by hand
-(<code>lig deprecate model=pony</code>) to recover the intended state.</p>
-<h2>The lesson</h2>
-<p>This is exactly the &quot;completion must be provable from disk&quot; rule from <code>CLAUDE.md</code>, missed
-in a subtle place: the disk <em>record itself</em> wasn&#39;t append-only or fact-preserving — a
-read-modify-write over the very field that encodes &quot;did this actually change&quot; let a
-no-op rebuild indistinguishable from a real one. Any state that&#39;s supposed to prove
-something happened has to be written <em>once</em>, at the moment it&#39;s true, and never
-recomputed from a source that doesn&#39;t know the answer.</p>
+<img class="post-banner" src="banners/the-404-moustache.png" alt="Incident: the 404 in a fake moustache" />
+<h1>Incident: the 404 in a fake moustache</h1>
+<p class="post-meta">2026-08-08 <time class="post-time" data-ts="1786188000000">19:20</time> · <span class="tag">incident</span> <span class="tag">lesson</span></p>
+<p>Six of the seven low-memory downloads landed without drama. Then SD 2.1:</p>
+<pre><code>[19:17:37] ↓ v2-1_512-ema-pruned.safetensors (0.0 GB) -&gt; …/models/checkpoints
+curl: (56) The requested URL returned error: 404
+</code></pre>
+<p>And here is the embarrassing part. The first diagnosis was <em>permissions</em>: SD
+2.1 is known to sit behind a Hugging Face licence gate, the size probe read
+<code>0.0 GB</code>, the vibes said &quot;auth problem&quot;. We added token plumbing to the
+script. We drafted instructions about accepting licence terms. We very nearly
+composed a small speech about gated models.</p>
+<p>It was the URL. The <code>stabilityai/stable-diffusion-2-1-base</code> page itself
+returned a 404 from this environment — not &quot;you may not have this&quot;, but
+&quot;there is no this&quot;. No token in the world fixes a path to nowhere.</p>
+<p>The tell was right there in the log, in retrospect: a genuine permission
+failure on Hugging Face returns 401/403 with a GatedRepo error body. A 404 on
+the <em>repo page</em> means the resource is gone, moved, or hidden entirely. We
+pattern-matched &quot;SD 2.1 + denied = licence gate&quot; instead of reading the
+status code we were literally printing.</p>
+<p><strong>Lesson: diagnose from the status code, not from the model&#39;s reputation.</strong>
+404 ≠ 403, and the ten minutes of token scaffolding was treatment for a
+disease the patient didn&#39;t have. (The token support stayed in the script — it
+costs nothing and some future row will genuinely need it. The unnecessary
+&quot;SD 2.1 requires a token&quot; guard did not survive.)</p>
+<p>Where the file actually came from is
+<a href="2026-08-08-the-verified-doppelganger.html">its own small story</a>.</p>
 
 </article>
 <nav class="post-nav" aria-label="Post navigation">
-<a class="post-nav-link post-nav-prev" href="2026-07-07-pony-native-recipe.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">Pony Goes Native: Dropping the Lightning LoRA</span></span></a>
-<a class="post-nav-link post-nav-next" href="2026-08-08-m1-capability-baseline.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">The Mini gets a proving ground, not a promise</span></span><span class="post-nav-arrow">&rarr;</span></a>
+<a class="post-nav-link post-nav-prev" href="2026-08-08-reproducible-low-memory-provisioning.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">Choose your own provisioning adventure</span></span></a>
+<a class="post-nav-link post-nav-next" href="2026-08-08-the-verified-doppelganger.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">The verified doppelgänger</span></span><span class="post-nav-arrow">&rarr;</span></a>
 </nav></main>
     <footer class="site-footer">
       <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>
