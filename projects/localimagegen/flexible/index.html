@@ -515,6 +515,9 @@
     .carousel-slide.nsfw-hidden .slide-note-dot {
       background: #f87171;
     }
+    .carousel-slide.rating-hidden {
+      display: none;
+    }
 
     /* ---- Notes lightbox overlay ---- */
     .notes-lightbox {
@@ -579,6 +582,12 @@
       border-color: var(--accent);
     }
     .notes-nsfw-label {
+      font-size: 0.82rem;
+    }
+    .notes-rating-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
       font-size: 0.82rem;
     }
     .notes-lightbox-actions {
@@ -740,6 +749,17 @@
             <span>Show NSFW</span>
           </label>
         </div>
+        <div class="control-group" id="ratingGroup">
+          <label for="minimumRating">Minimum rating</label>
+          <select id="minimumRating" title="Show only images rated at least this high.">
+            <option value="0">All images</option>
+            <option value="1">1+ · usable</option>
+            <option value="2">2+ · fair</option>
+            <option value="3">3+ · good</option>
+            <option value="4">4+ · strong</option>
+            <option value="5">5 · excellent</option>
+          </select>
+        </div>
       </div>
       <div id="controlsSliderSlot" class="controls-slider-row">
         <div class="control-group" id="sampleSliderGroup">
@@ -793,6 +813,17 @@
           <input type="checkbox" id="notesNsfw" />
           <span>Mark as NSFW (blur in gallery by default)</span>
         </label>
+        <label class="notes-rating-label" for="notesRating">
+          Rating
+          <select id="notesRating">
+            <option value="">Unrated</option>
+            <option value="1">1 · poor</option>
+            <option value="2">2 · fair</option>
+            <option value="3">3 · good</option>
+            <option value="4">4 · strong</option>
+            <option value="5">5 · excellent</option>
+          </select>
+        </label>
         <div class="notes-lightbox-actions">
           <span class="notes-save-status" id="notesSaveStatus"></span>
           <button type="button" class="secondary" id="notesClose">Close</button>
@@ -817,6 +848,109 @@
   }
   function makeCellKey(model, scene, sample, seed) {
     return `${model}_${scene}_s${String(sample).padStart(2, "0")}_${String(seed).padStart(5, "0")}`;
+  }
+  function isRecord(value) {
+    return typeof value === "object" && value !== null && !Array.isArray(value);
+  }
+  function isValidCellKey(value) {
+    return typeof value === "string" && value.length > 0 && value.length < 256 && /^[a-zA-Z0-9_-]+$/.test(value);
+  }
+  function isIsoTimestamp(value) {
+    return typeof value === "string" && value.length > 0 && !Number.isNaN(Date.parse(value));
+  }
+  function normalizeRating(value) {
+    if (value == null || value === "") return void 0;
+    if (typeof value !== "number" || !Number.isInteger(value) || value < 1 || value > 5) {
+      throw new Error("rating must be an integer from 1 to 5");
+    }
+    return value;
+  }
+  function normalizeNoteRow(value) {
+    if (!isRecord(value)) throw new Error("note row must be an object");
+    if (!isValidCellKey(value.cellKey)) throw new Error("note row has an invalid cellKey");
+    if (typeof value.text !== "string")
+      throw new Error(`note ${value.cellKey} text must be a string`);
+    if (value.nsfw != null && typeof value.nsfw !== "boolean") {
+      throw new Error(`note ${value.cellKey} nsfw must be a boolean`);
+    }
+    if (!isIsoTimestamp(value.createdAt) || !isIsoTimestamp(value.updatedAt)) {
+      throw new Error(`note ${value.cellKey} timestamps must be ISO-8601 strings`);
+    }
+    const rating = normalizeRating(value.rating);
+    return {
+      cellKey: value.cellKey,
+      text: value.text,
+      nsfw: value.nsfw === true,
+      ...rating == null ? {} : { rating },
+      createdAt: value.createdAt,
+      updatedAt: value.updatedAt
+    };
+  }
+  function rowsFromResponse(value) {
+    if (Array.isArray(value)) return value;
+    if (isRecord(value) && Array.isArray(value.rows)) return value.rows;
+    if (isRecord(value) && Array.isArray(value.data)) return value.data;
+    throw new Error("hosted notes response must be an array of rows");
+  }
+  function normalizeNotesRows(value) {
+    const notes = {};
+    for (const valueRow of rowsFromResponse(value)) {
+      const { cellKey, ...record } = normalizeNoteRow(valueRow);
+      notes[cellKey] = record;
+    }
+    return notes;
+  }
+  function selectNotesEndpoint(hostedUrl, isBakedPage) {
+    const url = hostedUrl?.trim() ?? "";
+    if (url) return { kind: "hosted", url };
+    return isBakedPage ? null : { kind: "local", url: "/api/notes" };
+  }
+  async function loadHostedNotesWithFallback(fallback, hostedUrl, request) {
+    try {
+      return {
+        notes: normalizeNotesRows(await request(hostedUrl)),
+        source: "hosted",
+        error: null
+      };
+    } catch (error) {
+      return {
+        notes: fallback,
+        source: "fallback",
+        error: error instanceof Error ? error.message : String(error)
+      };
+    }
+  }
+  function serializeNoteForm(cellKey, text, nsfw, rating) {
+    return new URLSearchParams({
+      cellKey,
+      text,
+      nsfw: String(nsfw),
+      rating: rating == null ? "" : String(rating)
+    });
+  }
+  function normalizeNoteSaveResponse(value, expectedCellKey) {
+    if (value === null) return null;
+    if (isRecord(value) && value.deleted === true) return null;
+    const candidate = Array.isArray(value) && value.length === 1 ? value[0] : value;
+    const row = normalizeNoteRow(candidate);
+    if (row.cellKey !== expectedCellKey) {
+      throw new Error(`notes API returned ${row.cellKey} while saving ${expectedCellKey}`);
+    }
+    return row;
+  }
+  function notesRequestError(status, rawBody) {
+    let detail = rawBody.trim();
+    if (detail) {
+      try {
+        const parsed = JSON.parse(detail);
+        if (isRecord(parsed)) {
+          if (typeof parsed.error === "string") detail = parsed.error;
+          else if (typeof parsed.message === "string") detail = parsed.message;
+        }
+      } catch {
+      }
+    }
+    return new Error(`Notes API request failed (${status})${detail ? `: ${detail}` : ""}`);
   }
   function parseFilename(name) {
     const base = name.split("/").at(-1) ?? "";
@@ -1128,6 +1262,7 @@
   var promptCatalog = null;
   var notesMap = {};
   var showNsfw = localStorage.getItem("localimagegen.showNsfw") === "true";
+  var minimumRating = Number(localStorage.getItem("localimagegen.minimumRating") ?? "0");
   var imageUrlCache = /* @__PURE__ */ new Map();
   var preloadedFiles = /* @__PURE__ */ new Set();
   var renderGeneration = 0;
@@ -1147,6 +1282,11 @@
   var BAKED_NOTES = null;
   var BAKED_MEM = null;
   /*!__BAKED_DATA__*/
+  var NOTES_API_URL = "";
+  NOTES_API_URL = "https://ug-nas-x4800.tail4148b0.ts.net/webhook/localimagegen-notes";
+  var notesEndpoint = selectNotesEndpoint(NOTES_API_URL, !!BAKED_FILES);
+  var notesBackendReady = notesEndpoint?.kind === "local";
+  var notesLoadError = null;
   var memByModel = {};
   var slideWidthsPx = null;
   var slideImgHeightPx = 270;
@@ -1246,7 +1386,7 @@
   function refreshNoteDot(slide, model, subject, sample, seed) {
     const existing = slide.querySelector(".slide-note-dot");
     const record = sample != null ? notesMap[makeCellKey(model, subject, sample, seed)] : void 0;
-    const hasNote = !!record?.text || !!record?.nsfw;
+    const hasNote = !!record?.text || !!record?.nsfw || record?.rating != null;
     if (hasNote && !existing) {
       const dot = document.createElement("div");
       dot.className = "slide-note-dot";
@@ -1256,6 +1396,10 @@
       existing.remove();
     }
     slide.classList.toggle("nsfw-hidden", !!record?.nsfw && !showNsfw);
+    slide.classList.toggle(
+      "rating-hidden",
+      minimumRating > 0 && (record?.rating == null || record.rating < minimumRating)
+    );
   }
   function refreshAllNoteDots() {
     for (const slide of document.querySelectorAll(
@@ -1282,23 +1426,53 @@
   function notesNsfwValue() {
     return document.getElementById("notesNsfw")?.checked ?? false;
   }
-  async function saveNote(cellKey, text, nsfw) {
+  function notesRatingValue() {
+    const value = Number(document.getElementById("notesRating")?.value);
+    return value >= 1 && value <= 5 ? value : void 0;
+  }
+  function canEditNotes() {
+    return notesEndpoint != null && notesBackendReady;
+  }
+  function notesReadOnlyMessage() {
+    if (notesEndpoint?.kind === "hosted" && !notesBackendReady) {
+      return "Hosted notes unavailable \u2014 showing baked/local notes read-only; refresh to retry";
+    }
+    return "Read-only baked notes \u2014 configure gallery.notes.hosted_url to edit";
+  }
+  async function responseJson(response) {
+    const raw = await response.text();
+    if (!response.ok) throw notesRequestError(response.status, raw);
+    if (!raw.trim()) throw new Error("Notes API returned an empty response");
+    try {
+      const parsed = JSON.parse(raw);
+      return parsed;
+    } catch {
+      throw new Error("Notes API returned invalid JSON");
+    }
+  }
+  async function saveNote(cellKey, text, nsfw, rating) {
     const statusEl = document.getElementById("notesSaveStatus");
     if (statusEl) {
       statusEl.textContent = "Saving\u2026";
       statusEl.className = "notes-save-status";
     }
     try {
-      const res = await fetch("/api/notes", {
+      if (!notesEndpoint || !canEditNotes()) throw new Error(notesReadOnlyMessage());
+      const request = notesEndpoint.kind === "hosted" ? {
+        method: "POST",
+        body: serializeNoteForm(cellKey, text, nsfw, rating)
+      } : {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cellKey, text, nsfw })
-      });
-      if (!res.ok) throw new Error(`${res.status}`);
-      const record = await res.json();
-      if (text === "" && !nsfw) {
+        body: JSON.stringify({ cellKey, text, nsfw, rating })
+      };
+      const response = await fetch(notesEndpoint.url, request);
+      const row = normalizeNoteSaveResponse(await responseJson(response), cellKey);
+      if (row === null) {
         delete notesMap[cellKey];
       } else {
+        const { cellKey: returnedCellKey, ...record } = row;
+        if (returnedCellKey !== cellKey) throw new Error("Notes API returned the wrong cell");
         notesMap[cellKey] = record;
       }
       refreshAllNoteDots();
@@ -1327,6 +1501,7 @@
     const meta = document.getElementById("notesLightboxMeta");
     const textarea = document.getElementById("notesTextarea");
     const nsfw = document.getElementById("notesNsfw");
+    const rating = document.getElementById("notesRating");
     const status = document.getElementById("notesSaveStatus");
     if (img) {
       img.src = imgSrc || "";
@@ -1336,29 +1511,34 @@
     if (textarea) {
       textarea.value = notesMap[cellKey]?.text ?? "";
       textarea.dataset.cellKey = cellKey;
-      const isReadOnly = !!BAKED_FILES;
+      const isReadOnly = !canEditNotes();
       textarea.readOnly = isReadOnly;
-      textarea.placeholder = isReadOnly ? "Read-only on the static site \u2014 open via lig serve --flexible to add notes" : "Add a note\u2026 (Cmd/Ctrl+Enter to save, Esc to close)";
+      textarea.placeholder = isReadOnly ? notesReadOnlyMessage() : "Add a note\u2026 (Cmd/Ctrl+Enter to save, Esc to close)";
     }
     if (nsfw) {
       nsfw.checked = !!notesMap[cellKey]?.nsfw;
-      nsfw.disabled = !!BAKED_FILES;
+      nsfw.disabled = !canEditNotes();
       nsfw.dataset.cellKey = cellKey;
     }
+    if (rating) {
+      rating.value = String(notesMap[cellKey]?.rating ?? "");
+      rating.disabled = !canEditNotes();
+      rating.dataset.cellKey = cellKey;
+    }
     if (status) {
-      status.textContent = "";
-      status.className = "notes-save-status";
+      status.textContent = notesLoadError ? `Read-only: ${notesLoadError}` : "";
+      status.className = `notes-save-status${notesLoadError ? " error" : ""}`;
     }
     lb.hidden = false;
     notesLightboxOpen = true;
-    if (textarea && !BAKED_FILES) setTimeout(() => textarea.focus(), 50);
+    if (textarea && canEditNotes()) setTimeout(() => textarea.focus(), 50);
   }
   function scheduleSave(cellKey, text) {
     if (!cellKey) return;
     if (notesLightboxSaveTimer) clearTimeout(notesLightboxSaveTimer);
     notesLightboxSaveTimer = setTimeout(() => {
       notesLightboxSaveTimer = null;
-      saveNote(cellKey, text, notesNsfwValue()).catch(() => {
+      saveNote(cellKey, text, notesNsfwValue(), notesRatingValue()).catch(() => {
       });
     }, 1e3);
   }
@@ -1370,7 +1550,7 @@
     const textarea = document.getElementById("notesTextarea");
     if (textarea) {
       textarea.addEventListener("input", () => {
-        if (BAKED_FILES) return;
+        if (!canEditNotes()) return;
         scheduleSave(textarea.dataset.cellKey, textarea.value);
       });
       textarea.addEventListener("keydown", (e) => {
@@ -1381,30 +1561,57 @@
         }
         if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
           e.preventDefault();
-          if (BAKED_FILES) return;
+          if (!canEditNotes()) return;
           if (notesLightboxSaveTimer) {
             clearTimeout(notesLightboxSaveTimer);
             notesLightboxSaveTimer = null;
           }
-          saveNote(textarea.dataset.cellKey ?? "", textarea.value, notesNsfwValue()).catch(() => {
+          saveNote(
+            textarea.dataset.cellKey ?? "",
+            textarea.value,
+            notesNsfwValue(),
+            notesRatingValue()
+          ).catch(() => {
           });
         }
       });
       textarea.addEventListener("blur", () => {
-        if (BAKED_FILES) return;
+        if (!canEditNotes()) return;
         if (notesLightboxSaveTimer) {
           clearTimeout(notesLightboxSaveTimer);
           notesLightboxSaveTimer = null;
         }
-        saveNote(textarea.dataset.cellKey ?? "", textarea.value, notesNsfwValue()).catch(() => {
+        saveNote(
+          textarea.dataset.cellKey ?? "",
+          textarea.value,
+          notesNsfwValue(),
+          notesRatingValue()
+        ).catch(() => {
         });
       });
     }
     const nsfw = document.getElementById("notesNsfw");
     nsfw?.addEventListener("change", () => {
-      if (BAKED_FILES) return;
+      if (!canEditNotes()) return;
       const textarea2 = document.getElementById("notesTextarea");
-      saveNote(nsfw.dataset.cellKey ?? "", textarea2?.value ?? "", nsfw.checked).catch(() => {
+      saveNote(
+        nsfw.dataset.cellKey ?? "",
+        textarea2?.value ?? "",
+        nsfw.checked,
+        notesRatingValue()
+      ).catch(() => {
+      });
+    });
+    const rating = document.getElementById("notesRating");
+    rating?.addEventListener("change", () => {
+      if (!canEditNotes()) return;
+      const textarea2 = document.getElementById("notesTextarea");
+      saveNote(
+        rating.dataset.cellKey ?? "",
+        textarea2?.value ?? "",
+        notesNsfwValue(),
+        notesRatingValue()
+      ).catch(() => {
       });
     });
   }
@@ -1508,15 +1715,26 @@
     }
   }
   async function loadNotesJson() {
-    if (BAKED_NOTES) {
-      notesMap = BAKED_NOTES;
-      return;
+    notesEndpoint = selectNotesEndpoint(NOTES_API_URL, !!BAKED_FILES);
+    notesBackendReady = notesEndpoint?.kind === "local";
+    notesLoadError = null;
+    let fallback = BAKED_NOTES ?? {};
+    if (!BAKED_NOTES) {
+      try {
+        const res = await fetch("./data/notes.json", { cache: "no-store" });
+        if (res.ok) fallback = await res.json();
+      } catch {
+      }
     }
-    notesMap = {};
-    try {
-      const res = await fetch("./data/notes.json", { cache: "no-store" });
-      if (res.ok) notesMap = await res.json();
-    } catch {
+    notesMap = fallback;
+    if (notesEndpoint?.kind === "hosted") {
+      const loaded = await loadHostedNotesWithFallback(fallback, notesEndpoint.url, async (url) => {
+        const response = await fetch(url, { cache: "no-store" });
+        return responseJson(response);
+      });
+      notesMap = loaded.notes;
+      notesBackendReady = loaded.source === "hosted";
+      notesLoadError = loaded.source === "fallback" ? `hosted notes unavailable (${loaded.error ?? "unknown error"}); using baked/local fallback` : null;
     }
   }
   async function loadMemJson() {
@@ -2755,6 +2973,12 @@
     if (loadSource === "listing") return "from folder listing";
     return "";
   }
+  function notesSourceLabel() {
+    if (notesEndpoint?.kind === "hosted") {
+      return notesBackendReady ? "hosted notes" : "baked/local notes (read-only fallback)";
+    }
+    return notesEndpoint?.kind === "local" ? "local notes" : "baked notes (read-only)";
+  }
   async function applyLoaded() {
     await loadMetaJson();
     await loadPromptsJson();
@@ -2786,7 +3010,7 @@
       return;
     }
     const subjects = allSubjects();
-    status.textContent = `${n} models, ${files} images, ${subjects.length} subjects \u2014 samples: ${availableSamples.join(", ")} ${sourceLabel()}`;
+    status.textContent = `${n} models, ${files} images, ${subjects.length} subjects \u2014 samples: ${availableSamples.join(", ")} ${sourceLabel()} \xB7 ${notesSourceLabel()}`;
     document.getElementById("empty").hidden = true;
     await render();
   }
@@ -2932,6 +3156,13 @@
   showNsfwInput.addEventListener("change", () => {
     showNsfw = showNsfwInput.checked;
     localStorage.setItem("localimagegen.showNsfw", String(showNsfw));
+    refreshAllNoteDots();
+  });
+  var minimumRatingInput = document.getElementById("minimumRating");
+  minimumRatingInput.value = String(minimumRating);
+  minimumRatingInput.addEventListener("change", () => {
+    minimumRating = Number(minimumRatingInput.value);
+    localStorage.setItem("localimagegen.minimumRating", String(minimumRating));
     refreshAllNoteDots();
   });
   document.getElementById("refresh").addEventListener("click", () => void refresh("auto"));
