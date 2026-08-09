@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <base href="../" />
@@ -468,6 +469,27 @@
       background: transparent;
       transition: opacity 300ms ease;
     }
+    .carousel-slide.nsfw-hidden .slide-img-layer {
+      filter: blur(24px);
+      transform: scale(1.08);
+    }
+    .carousel-slide.nsfw-hidden .slide-img-wrap::after {
+      content: 'NSFW · use Show NSFW to reveal';
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: grid;
+      place-items: center;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.35);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-align: center;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.95);
+      pointer-events: none;
+    }
     .carousel-slide.missing .slide-img-wrap { opacity: 0.45; }
     .empty {
       padding: 2rem;
@@ -489,6 +511,9 @@
       border: 1px solid rgba(0, 0, 0, 0.5);
       pointer-events: none;
       z-index: 3;
+    }
+    .carousel-slide.nsfw-hidden .slide-note-dot {
+      background: #f87171;
     }
 
     /* ---- Notes lightbox overlay ---- */
@@ -552,6 +577,9 @@
     .notes-textarea:focus {
       outline: none;
       border-color: var(--accent);
+    }
+    .notes-nsfw-label {
+      font-size: 0.82rem;
     }
     .notes-lightbox-actions {
       display: flex;
@@ -618,20 +646,15 @@
 
 </style>
 </head>
+
 <body>
   <header id="dropZone">
     <div class="header-bar">
       <div id="headerBarSliderSlot" class="header-slider-slot"></div>
       <nav class="gallery-nav"><a class="cross-link" href="./blog/">devlog →</a></nav>
       <div id="headerToggleSlot" class="header-toggle-slot">
-        <button
-          type="button"
-          id="headerToggle"
-          class="header-toggle secondary"
-          aria-expanded="true"
-          aria-controls="headerPanel"
-          title="Hide controls"
-        >
+        <button type="button" id="headerToggle" class="header-toggle secondary" aria-expanded="true"
+          aria-controls="headerPanel" title="Hide controls">
           <svg class="icon-collapse" viewBox="0 0 24 24" aria-hidden="true">
             <polyline points="6 14 12 8 18 14" />
             <line x1="4" y1="19" x2="20" y2="19" />
@@ -645,101 +668,116 @@
       </div>
     </div>
     <div class="header-panel" id="headerPanel">
-    <div class="controls">
-      <div class="control-group" id="modelSelectGroup" hidden>
-        <label for="modelSelect">Model</label>
-        <select id="modelSelect"></select>
-      </div>
-      <div class="control-group" id="seedGroup" hidden>
-        <label for="seedSelect">Version (seed)</label>
-        <select id="seedSelect" title="Scrub between seed-versions; cells without this seed fall back to v1."></select>
-      </div>
-      <div class="control-group" id="promptSizeGroup" hidden>
-        <label for="promptSizeSelect">Prompt size</label>
-        <select id="promptSizeSelect" title="Show the prompt variant sent at each token budget. Models are grouped by encoder size.">
-          <option value="all">All sizes</option>
-          <option value="s">S · CLIP ~77t</option>
-          <option value="m">M · T5 ~512t</option>
-          <option value="l">L · full</option>
-          <option value="b">B · booru tags</option>
-        </select>
-      </div>
-      <div class="control-group" id="modelFilterGroup">
-        <label for="modelFilter">Visible models</label>
-        <select id="modelFilter" multiple title="Tap or Cmd/Ctrl+click to toggle. Selected models are shown."></select>
-        <div class="filter-actions">
-          <button type="button" class="secondary" id="showAllModels">All</button>
-          <button type="button" class="secondary" id="hideAllModels">None</button>
+      <div class="controls">
+        <div class="control-group" id="modelSelectGroup" hidden>
+          <label for="modelSelect">Model</label>
+          <select id="modelSelect"></select>
+        </div>
+        <div class="control-group" id="seedGroup" hidden>
+          <label for="seedSelect">Version (seed)</label>
+          <select id="seedSelect"
+            title="Scrub between seed-versions; cells without this seed fall back to v1."></select>
+        </div>
+        <div class="control-group" id="promptSizeGroup" hidden>
+          <label for="promptSizeSelect">Prompt size</label>
+          <select id="promptSizeSelect"
+            title="Show the prompt variant sent at each token budget. Models are grouped by encoder size.">
+            <option value="all">All sizes</option>
+            <option value="s">S · CLIP ~77t</option>
+            <option value="m">M · T5 ~512t</option>
+            <option value="l">L · full</option>
+            <option value="b">B · booru tags</option>
+          </select>
+        </div>
+        <div class="control-group" id="modelFilterGroup">
+          <label for="modelFilter">Visible models</label>
+          <select id="modelFilter" multiple
+            title="Tap or Cmd/Ctrl+click to toggle. Selected models are shown."></select>
+          <div class="filter-actions">
+            <button type="button" class="secondary" id="showAllModels">All</button>
+            <button type="button" class="secondary" id="hideAllModels">None</button>
+          </div>
+        </div>
+        <div class="control-group" id="sampleFilterGroup" hidden>
+          <label for="sampleFilter">Visible samples</label>
+          <select id="sampleFilter" multiple
+            title="Tap or Cmd/Ctrl+click to toggle. Selected sample counts are shown."></select>
+          <div class="filter-actions">
+            <button type="button" class="secondary" id="showAllSamples">All</button>
+            <button type="button" class="secondary" id="hideAllSamples">None</button>
+          </div>
+        </div>
+        <div class="control-group" id="compareGroup">
+          <label for="compareSelect">Compare by</label>
+          <select id="compareSelect"
+            title="Compare models at a step count, sample counts for one model, or each model's best image within a time budget.">
+            <option value="models">Models · step count</option>
+            <option value="samples">Samples · one model</option>
+            <option value="time">Time budget</option>
+          </select>
+        </div>
+        <div class="control-group" id="pickDirGroup">
+          <label>&nbsp;</label>
+          <button type="button" class="secondary" id="pickDir" title="Click to browse, or drag a folder here">Pick or
+            drop folder…</button>
+        </div>
+        <div class="control-group" id="refreshGroup">
+          <label>&nbsp;</label>
+          <button type="button" id="refresh">Refresh</button>
+        </div>
+        <div class="control-group" id="overshootGroup" hidden>
+          <label>&nbsp;</label>
+          <label class="checkbox-label"
+            title="Steps above a model's quality plateau. Hidden by default; toggle to compare beyond the ceiling.">
+            <input type="checkbox" id="showOvershoots" />
+            <span>Show overshoots</span>
+          </label>
+        </div>
+        <div class="control-group" id="nsfwGroup">
+          <label>&nbsp;</label>
+          <label class="checkbox-label" title="Images marked NSFW in their note are blurred by default.">
+            <input type="checkbox" id="showNsfw" />
+            <span>Show NSFW</span>
+          </label>
         </div>
       </div>
-      <div class="control-group" id="sampleFilterGroup" hidden>
-        <label for="sampleFilter">Visible samples</label>
-        <select id="sampleFilter" multiple title="Tap or Cmd/Ctrl+click to toggle. Selected sample counts are shown."></select>
-        <div class="filter-actions">
-          <button type="button" class="secondary" id="showAllSamples">All</button>
-          <button type="button" class="secondary" id="hideAllSamples">None</button>
+      <div id="controlsSliderSlot" class="controls-slider-row">
+        <div class="control-group" id="sampleSliderGroup">
+          <label for="sample">Sample count</label>
+          <div class="slider-row">
+            <input type="range" id="sample" min="1" max="8" value="4" />
+            <span class="sample-value" id="sampleVal">4</span>
+          </div>
+        </div>
+        <div class="control-group dual-slider" id="timeSliderGroup" hidden>
+          <label>Time budget</label>
+          <div class="slider-row">
+            <span class="slider-bound-label">Min</span>
+            <input type="range" id="timeMinSlider" min="1" max="120" value="10" />
+            <span class="sample-value" id="timeMinVal">10s</span>
+          </div>
+          <div class="slider-row">
+            <span class="slider-bound-label">Max</span>
+            <input type="range" id="timeMaxSlider" min="1" max="120" value="30" />
+            <span class="sample-value" id="timeMaxVal">30s</span>
+          </div>
+        </div>
+        <div class="control-group" id="memSliderGroup" hidden>
+          <label for="memSlider">Max memory</label>
+          <div class="slider-row">
+            <input type="range" id="memSlider" min="0" max="36" step="0.5" value="36" />
+            <span class="sample-value" id="memVal">All</span>
+          </div>
         </div>
       </div>
-      <div class="control-group" id="compareGroup">
-        <label for="compareSelect">Compare by</label>
-        <select id="compareSelect" title="Compare models at a step count, sample counts for one model, or each model's best image within a time budget.">
-          <option value="models">Models · step count</option>
-          <option value="samples">Samples · one model</option>
-          <option value="time">Time budget</option>
-        </select>
-      </div>
-      <div class="control-group" id="pickDirGroup">
-        <label>&nbsp;</label>
-        <button type="button" class="secondary" id="pickDir" title="Click to browse, or drag a folder here">Pick or drop folder…</button>
-      </div>
-      <div class="control-group" id="refreshGroup">
-        <label>&nbsp;</label>
-        <button type="button" id="refresh">Refresh</button>
-      </div>
-      <div class="control-group" id="overshootGroup" hidden>
-        <label>&nbsp;</label>
-        <label class="checkbox-label" title="Steps above a model's quality plateau. Hidden by default; toggle to compare beyond the ceiling.">
-          <input type="checkbox" id="showOvershoots" />
-          <span>Show overshoots</span>
-        </label>
-      </div>
-    </div>
-    <div id="controlsSliderSlot" class="controls-slider-row">
-      <div class="control-group" id="sampleSliderGroup">
-        <label for="sample">Sample count</label>
-        <div class="slider-row">
-          <input type="range" id="sample" min="1" max="8" value="4" />
-          <span class="sample-value" id="sampleVal">4</span>
-        </div>
-      </div>
-      <div class="control-group dual-slider" id="timeSliderGroup" hidden>
-        <label>Time budget</label>
-        <div class="slider-row">
-          <span class="slider-bound-label">Min</span>
-          <input type="range" id="timeMinSlider" min="1" max="120" value="10" />
-          <span class="sample-value" id="timeMinVal">10s</span>
-        </div>
-        <div class="slider-row">
-          <span class="slider-bound-label">Max</span>
-          <input type="range" id="timeMaxSlider" min="1" max="120" value="30" />
-          <span class="sample-value" id="timeMaxVal">30s</span>
-        </div>
-      </div>
-      <div class="control-group" id="memSliderGroup" hidden>
-        <label for="memSlider">Max memory</label>
-        <div class="slider-row">
-          <input type="range" id="memSlider" min="0" max="36" step="0.5" value="36" />
-          <span class="sample-value" id="memVal">All</span>
-        </div>
-      </div>
-    </div>
-    <p class="status" id="status">Loading…</p>
+      <p class="status" id="status">Loading…</p>
     </div>
   </header>
   <input type="file" id="folderInput" hidden multiple webkitdirectory directory />
   <main>
     <div class="model-list" id="modelList"></div>
-    <p class="empty" id="empty" hidden>No images found. Drag the output folder here, pick it, or open this folder over HTTP.</p>
+    <p class="empty" id="empty" hidden>No images found. Drag the output folder here, pick it, or open this folder over
+      HTTP.</p>
   </main>
 
   <!-- Notes lightbox: full-screen click-to-open image + note editor -->
@@ -749,12 +787,12 @@
       <img class="notes-lightbox-img" src="" alt="" />
       <div class="notes-lightbox-editor">
         <div class="notes-lightbox-meta" id="notesLightboxMeta"></div>
-        <textarea
-          id="notesTextarea"
-          class="notes-textarea"
-          placeholder="Add a note… (Cmd/Ctrl+Enter to save, Esc to close)"
-          rows="4"
-        ></textarea>
+        <textarea id="notesTextarea" class="notes-textarea"
+          placeholder="Add a note… (Cmd/Ctrl+Enter to save, Esc to close)" rows="4"></textarea>
+        <label class="checkbox-label notes-nsfw-label">
+          <input type="checkbox" id="notesNsfw" />
+          <span>Mark as NSFW (blur in gallery by default)</span>
+        </label>
         <div class="notes-lightbox-actions">
           <span class="notes-save-status" id="notesSaveStatus"></span>
           <button type="button" class="secondary" id="notesClose">Close</button>
@@ -1089,6 +1127,7 @@
   var metaByPrefix = {};
   var promptCatalog = null;
   var notesMap = {};
+  var showNsfw = localStorage.getItem("localimagegen.showNsfw") === "true";
   var imageUrlCache = /* @__PURE__ */ new Map();
   var preloadedFiles = /* @__PURE__ */ new Set();
   var renderGeneration = 0;
@@ -1206,7 +1245,8 @@
   }
   function refreshNoteDot(slide, model, subject, sample, seed) {
     const existing = slide.querySelector(".slide-note-dot");
-    const hasNote = sample != null && !!notesMap[makeCellKey(model, subject, sample, seed)]?.text;
+    const record = sample != null ? notesMap[makeCellKey(model, subject, sample, seed)] : void 0;
+    const hasNote = !!record?.text || !!record?.nsfw;
     if (hasNote && !existing) {
       const dot = document.createElement("div");
       dot.className = "slide-note-dot";
@@ -1215,6 +1255,7 @@
     } else if (!hasNote && existing) {
       existing.remove();
     }
+    slide.classList.toggle("nsfw-hidden", !!record?.nsfw && !showNsfw);
   }
   function refreshAllNoteDots() {
     for (const slide of document.querySelectorAll(
@@ -1238,7 +1279,10 @@
       notesLightboxSaveTimer = null;
     }
   }
-  async function saveNote(cellKey, text) {
+  function notesNsfwValue() {
+    return document.getElementById("notesNsfw")?.checked ?? false;
+  }
+  async function saveNote(cellKey, text, nsfw) {
     const statusEl = document.getElementById("notesSaveStatus");
     if (statusEl) {
       statusEl.textContent = "Saving\u2026";
@@ -1248,11 +1292,11 @@
       const res = await fetch("/api/notes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cellKey, text })
+        body: JSON.stringify({ cellKey, text, nsfw })
       });
       if (!res.ok) throw new Error(`${res.status}`);
       const record = await res.json();
-      if (text === "") {
+      if (text === "" && !nsfw) {
         delete notesMap[cellKey];
       } else {
         notesMap[cellKey] = record;
@@ -1282,6 +1326,7 @@
     const img = lb.querySelector(".notes-lightbox-img");
     const meta = document.getElementById("notesLightboxMeta");
     const textarea = document.getElementById("notesTextarea");
+    const nsfw = document.getElementById("notesNsfw");
     const status = document.getElementById("notesSaveStatus");
     if (img) {
       img.src = imgSrc || "";
@@ -1294,6 +1339,11 @@
       const isReadOnly = !!BAKED_FILES;
       textarea.readOnly = isReadOnly;
       textarea.placeholder = isReadOnly ? "Read-only on the static site \u2014 open via lig serve --flexible to add notes" : "Add a note\u2026 (Cmd/Ctrl+Enter to save, Esc to close)";
+    }
+    if (nsfw) {
+      nsfw.checked = !!notesMap[cellKey]?.nsfw;
+      nsfw.disabled = !!BAKED_FILES;
+      nsfw.dataset.cellKey = cellKey;
     }
     if (status) {
       status.textContent = "";
@@ -1308,7 +1358,7 @@
     if (notesLightboxSaveTimer) clearTimeout(notesLightboxSaveTimer);
     notesLightboxSaveTimer = setTimeout(() => {
       notesLightboxSaveTimer = null;
-      saveNote(cellKey, text).catch(() => {
+      saveNote(cellKey, text, notesNsfwValue()).catch(() => {
       });
     }, 1e3);
   }
@@ -1336,7 +1386,7 @@
             clearTimeout(notesLightboxSaveTimer);
             notesLightboxSaveTimer = null;
           }
-          saveNote(textarea.dataset.cellKey ?? "", textarea.value).catch(() => {
+          saveNote(textarea.dataset.cellKey ?? "", textarea.value, notesNsfwValue()).catch(() => {
           });
         }
       });
@@ -1346,10 +1396,17 @@
           clearTimeout(notesLightboxSaveTimer);
           notesLightboxSaveTimer = null;
         }
-        saveNote(textarea.dataset.cellKey ?? "", textarea.value).catch(() => {
+        saveNote(textarea.dataset.cellKey ?? "", textarea.value, notesNsfwValue()).catch(() => {
         });
       });
     }
+    const nsfw = document.getElementById("notesNsfw");
+    nsfw?.addEventListener("change", () => {
+      if (BAKED_FILES) return;
+      const textarea2 = document.getElementById("notesTextarea");
+      saveNote(nsfw.dataset.cellKey ?? "", textarea2?.value ?? "", nsfw.checked).catch(() => {
+      });
+    });
   }
   function promptRowsFor(subject, size) {
     const layers = promptCatalog?.scenes?.[subject] ?? {};
@@ -2393,6 +2450,7 @@
     const shown = slideShownSample2(model, subject, targetSample, exact);
     if (shown == null) {
       slide.classList.add("missing");
+      slide.classList.remove("nsfw-hidden");
       sampleEl.textContent = "\u2014";
       if (durationEl) {
         durationEl.textContent = "";
@@ -2407,6 +2465,7 @@
     const entry = pickEntry2(model, subject, shown);
     if (!entry) {
       slide.classList.add("missing");
+      slide.classList.remove("nsfw-hidden");
       sampleEl.textContent = "\u2014";
       if (durationEl) {
         durationEl.textContent = "";
@@ -2868,6 +2927,13 @@
     if (compareMode === "samples") populateSampleFilter();
     void render();
   });
+  var showNsfwInput = document.getElementById("showNsfw");
+  showNsfwInput.checked = showNsfw;
+  showNsfwInput.addEventListener("change", () => {
+    showNsfw = showNsfwInput.checked;
+    localStorage.setItem("localimagegen.showNsfw", String(showNsfw));
+    refreshAllNoteDots();
+  });
   document.getElementById("refresh").addEventListener("click", () => void refresh("auto"));
   document.getElementById("pickDir").addEventListener("click", () => void refresh("picker"));
   var headerEl = document.getElementById("dropZone");
@@ -2926,4 +2992,5 @@
 
 </script>
 </body>
+
 </html>

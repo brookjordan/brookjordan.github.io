@@ -479,6 +479,19 @@ prompt for a red fire engine in snow and another for a blue whale over a neon
 city. The resulting WebPs had different SHA-256 hashes and, more importantly,
 contained a fire engine and a whale.</p>
 <p><img src="img/sdturbo-cfg-one-prompts.webp" alt="Two corrected CFG-1 prompts producing visibly different SD-Turbo images"></p>
+<h2>The sampler reached customs</h2>
+<p>The corrected graph exposed a second assumption. Our importer knew how to read
+seeds from <code>KSampler</code> and <code>RandomNoise</code>; SD-Turbo&#39;s <code>SamplerCustom</code> carries
+<code>noise_seed</code> itself. ComfyUI finished each image successfully, but the importer
+called the history entry unrecognised, wrote no master, and queued the same cell
+again. Fast models are excellent at turning a small bookkeeping bug into two
+thousand disposable PNGs.</p>
+<p><a href="../src/stamp.ts"><code>src/stamp.ts</code></a> now understands <code>SamplerCustom</code>,
+<code>KSamplerSelect</code> and <code>SDTurboScheduler</code>; <a href="../src/comfy.ts"><code>src/comfy.ts</code></a> also
+counts <code>SamplerCustom</code> as sampling time. A regression test feeds the importer
+the exact graph shape that failed. We deprecated the entire SD-Turbo set once
+more and started a clean replacement run instead of promoting any output from
+the accidental loop.</p>
 <p>The zero was innocent in its native language. We had merely hired it as a
 translator.</p>
 

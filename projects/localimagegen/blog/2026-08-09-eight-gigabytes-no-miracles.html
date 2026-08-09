@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#1a1d24" />
+    <meta name="color-scheme" content="dark" />
+    <title>Eight gigabytes, no miracles, and one useful loophole</title>
+    <style>
+/* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
+   This is the single source of truth for colour, radius, spacing and type.
+   It is inlined ahead of each page's stylesheet at build time, and linked
+   first in dev so opening the .html files directly still resolves the vars.
+
+   Theming: everything below is a semantic token mapped onto a small palette of
+   primitives. To add a theme, override the *semantic* tokens under a selector
+   (see the commented [data-theme="light"] block at the bottom) — no stylesheet
+   needs to change, only these variables. */
+:root {
+  color-scheme: dark;
+
+  /* ---- palette primitives (raw colours; reference these only via the tokens below) ---- */
+  --c-ink-900: #0f1115;
+  --c-ink-800: #1a1d24;
+  --c-ink-700: #232732;
+  --c-ink-600: #2a2f3a;
+  --c-fog-100: #e8eaed;
+  --c-fog-300: #9aa0a6;
+  --c-fog-500: #6b727d;
+  --c-accent: #7c9cff;
+
+  /* ---- semantic: background / border / text, primary > secondary > tertiary ---- */
+  --bg-primary: var(--c-ink-900);
+  --bg-secondary: var(--c-ink-800);
+  --bg-tertiary: var(--c-ink-700);
+
+  --border-primary: var(--c-ink-600);
+  --border-secondary: rgba(150, 170, 210, 0.16);
+
+  --text-primary: var(--c-fog-100);
+  --text-secondary: var(--c-fog-300);
+  --text-tertiary: var(--c-fog-500);
+
+  --accent: var(--c-accent);
+
+  /* ---- radius scale ---- */
+  --radius-sm: 5px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 9999px;
+
+  /* ---- spacing / padding scale ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 2rem;
+
+  /* ---- type ---- */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* Shared cross-nav link (gallery <-> devlog). Both app.css and blog.css inline this
+   file, so defining it once here keeps the two links visually identical. */
+.cross-link {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.cross-link:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+/* Example theme override — set <html data-theme="light"> to activate (or wire it
+   to prefers-color-scheme). Left commented so we don't ship untuned colours:
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg-primary: #fbfbfd;
+  --bg-secondary: #f1f2f5;
+  --bg-tertiary: #e7e9ee;
+  --border-primary: #d4d8e0;
+  --border-secondary: rgba(20, 30, 60, 0.12);
+  --text-primary: #1a1d24;
+  --text-secondary: #555b66;
+  --text-tertiary: #7b828d;
+}
+*/
+
+</style>
+    <style>
+:root {
+  /* Local aliases mapped onto the shared tokens in tokens.css (inlined first),
+     so the devlog and the gallery share one palette, radius and spacing scale. */
+  --bg: var(--bg-primary);
+  --bg-soft: var(--bg-secondary);
+  --panel: var(--bg-tertiary);
+  --text: var(--text-primary);
+  --muted: var(--text-secondary);
+  --border: var(--border-secondary);
+  --radius: var(--radius-md);
+  /* --accent comes straight from tokens.css */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.65 var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.site-header,
+.site-footer {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 1.25rem 1.25rem;
+}
+
+.site-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text);
+}
+
+.brand span {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.content {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+
+.site-footer {
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* ---- post typography ---- */
+.content h1 {
+  font-size: 1.9rem;
+  line-height: 1.2;
+  margin: 0 0 0.5rem;
+}
+
+.content h2 {
+  font-size: 1.35rem;
+  margin: 2rem 0 0.6rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.3rem;
+}
+
+.content h3 {
+  font-size: 1.1rem;
+  margin: 1.5rem 0 0.4rem;
+}
+
+.content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  display: block;
+  margin: 1.25rem 0;
+}
+
+.content audio {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.content blockquote {
+  margin: 1.25rem 0;
+  padding: 0.5rem 1rem;
+  border-left: 3px solid var(--accent);
+  background: var(--bg-soft);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  color: var(--muted);
+}
+
+.content pre {
+  background: #12151b;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  overflow: auto;
+  font-size: 0.88rem;
+}
+
+.content code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: rgba(150, 170, 210, 0.14);
+  padding: 0.1em 0.35em;
+  border-radius: 5px;
+}
+
+.content pre code {
+  background: none;
+  padding: 0;
+}
+
+.post-banner {
+  width: 100%;
+  max-height: 22rem;
+  object-fit: cover;
+  border-radius: var(--radius);
+  display: block;
+  margin: 0 0 1.5rem;
+}
+
+/* Click-to-cycle: slide 0 (current) sits in normal flow and sizes the box; every other
+   slide overlays it absolutely at opacity 0. web/blog.html's script sets each slide's
+   opacity directly (not CSS classes) so this scales to any number of legacy versions. */
+.banner-compare {
+  position: relative;
+  cursor: pointer;
+}
+
+.banner-compare .banner-slide {
+  margin: 0;
+  transition: opacity 0.25s ease;
+}
+
+.banner-compare .banner-slide:not([data-slide='0']) {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.banner-compare-hint {
+  position: absolute;
+  right: 0.7rem;
+  bottom: calc(1.5rem + 0.7rem);
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 0.72rem;
+  line-height: 1;
+  padding: 0.4rem 0.65rem;
+  border-radius: 999px;
+  opacity: 0.85;
+  transition: opacity 0.15s ease;
+}
+
+.banner-compare:hover .banner-compare-hint {
+  opacity: 1;
+}
+
+/* ---- per-post header (date + tags) ---- */
+.post-meta {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0 0 1.5rem;
+}
+
+.tag {
+  display: inline-block;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 0.1em 0.7em;
+  font-size: 0.78rem;
+  margin-right: 0.35rem;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+/* ---- prev/next post nav (baked at build time, see postNav in src/blog.ts) ---- */
+.post-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 2rem 0 0;
+}
+
+.post-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-soft);
+  color: var(--text);
+  min-width: 0;
+}
+
+.post-nav-link:hover {
+  border-color: var(--accent);
+  text-decoration: none;
+}
+
+.post-nav-empty {
+  border-color: transparent;
+  background: none;
+}
+
+.post-nav-next {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.post-nav-arrow {
+  color: var(--muted);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.post-nav-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.post-nav-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.post-nav-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .post-nav {
+    grid-template-columns: 1fr;
+  }
+
+  .post-nav-next {
+    justify-content: flex-start;
+    text-align: left;
+  }
+}
+
+/* ---- index listing ---- */
+.index-intro {
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+
+.post-group-date {
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 2rem 0 0.75rem;
+}
+
+.post-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.post-list li {
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.post-list a.post-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.post-list .post-row-meta {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+}
+
+.post-time {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  margin-right: 0.5rem;
+  cursor: help;
+}
+
+</style>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="./index.html">localimagegen <span>· devlog</span></a>
+      <nav class="site-nav"><a class="cross-link" href="../index.html">gallery →</a></nav>
+    </header>
+    <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
+<article class="post">
+<h1>Eight gigabytes, no miracles, and one useful loophole</h1>
+<p class="post-meta">2026-08-09 <time class="post-time" data-ts="1786231560000">07:26</time> · <span class="tag">decision</span> <span class="tag">architecture</span> <span class="tag">ops</span></p>
+<p>The <a href="2026-08-08-seven-tiny-suitcases.html">seven tiny suitcases</a> fit through the
+door. Then we opened them and discovered that “fits in memory” and “can draw a
+convincing person” are entirely different product requirements.</p>
+<p>The tiny models are bad at humans. Not charmingly vintage bad. Faces collapse,
+hands negotiate their own treaties, and bodies occasionally remember that
+elbows exist only after the image has finished.</p>
+<p>So we went back to research with a better question:</p>
+<blockquote>
+<p>What is the highest-quality local image pipeline that can coexist with
+macOS and TurboFieldfare on an 8 GB M1, even if it has to quantize, tile,
+crop, unload, or generate the image in pieces?</p>
+</blockquote>
+<p>The answer is not one magic checkpoint. It is <strong>two deliberately separate
+lanes</strong>.</p>
+<h2>The recommendation</h2>
+<p><strong>Lane A — dependable now:</strong> use a human-focused SD1.5 checkpoint, then repair
+faces and hands through small sequential inpainting crops. Generate composition
+at a modest landscape resolution, upscale through tiled diffusion, decode
+through tiled VAE, and unload between stages.</p>
+<p><strong>Lane B — higher ceiling, admission required:</strong> run a photoreal SDXL fine-tune
+with compressed weights through a separate low-memory runtime. Start with
+RealVisXL Q5/Q4 in <code>stable-diffusion.cpp</code>; keep Draw Things and Core ML as
+fallback runtimes. This may produce substantially better people, but nobody
+upstream has proved the exact model/runtime combination on an 8 GB M1.</p>
+<p>Do both. Lane A gives us something trustworthy. Lane B discovers whether the
+Mini has a better trick available.</p>
+<h2>Why fewer steps did not save us</h2>
+<p>LCM, Lightning and Turbo reduce <strong>how many times</strong> the denoiser runs. They do
+not make the denoiser, text encoders, VAE, or one step&#39;s activations disappear.
+That is why a four-step SDXL still has SDXL&#39;s weight floor.</p>
+<p>Our own allocator measurements on the 36 GB M3 put ordinary SDXL workflows at
+about 11 GB peak: roughly 5.3 GB resident weights plus another 5.5–5.7 GB of
+sampling activations
+(<a href="2026-07-06-1700-actual-memory-numbers.html">the measured numbers</a>). An 8 GB
+unified-memory machine cannot turn that into a safe production route by
+crossing out twenty-six sampler steps.</p>
+<p>Four different tools attack four different parts of the budget:</p>
+<ul>
+<li><strong>Weight quantization</strong> shrinks model residency.</li>
+<li><strong>Crop inpainting and tiled diffusion</strong> shrink diffusion activations by
+operating on less spatial area at once.</li>
+<li><strong>Tiled VAE</strong> shrinks the decode peak only.</li>
+<li><strong>Hard unload boundaries</strong> ensure that yesterday&#39;s model is not still sitting
+in memory when tomorrow&#39;s stage begins.</li>
+</ul>
+<p>Apple Silicon&#39;s CPU and GPU share one physical pool. CPU offload can change
+which processor owns a tensor, but it does not reveal a secret second 8 GB
+cupboard
+(<a href="https://developer.apple.com/videos/play/wwdc2020/10686/">Apple&#39;s unified-memory architecture</a>;
+<a href="https://github.com/Comfy-Org/ComfyUI/blob/fed4ac03/comfy/model_management.py">ComfyUI classifies MPS as shared memory</a>).</p>
+<h2>Lane A: give SD1.5 a job it is actually good at</h2>
+<p>DreamShaper 8 is versatile; it is not the strongest portrait checkpoint. The
+first new candidates should be:</p>
+<h3>Realistic Vision V6.0 B1</h3>
+<p>The creator targets realism and photorealism, publishes a roughly 2.1 GB FP16
+SD1.5-class checkpoint, and provides a dedicated inpainting release
+(<a href="https://huggingface.co/SG161222/Realistic_Vision_V6.0_B1_noVAE">model card</a>;
+<a href="https://civitai.com/models/4201?modelVersionId=114600">inpainting release</a>).
+It uses the familiar SD1.5 CLIP-L encoder; the no-VAE artifact needs
+<code>sd-vae-ft-mse</code>.</p>
+<p>This is the first prototype because it changes the model&#39;s <strong>training target</strong>
+without changing the Mini&#39;s basic memory shape.</p>
+<h3>epiCRealism Pure Evolution</h3>
+<p>The creator describes it as people- and photorealism-focused, demonstrates
+512×768 and 768×512 generations, and publishes inpainting variants
+(<a href="https://civitai.com/models/25694/epicrealism?modelVersionId=134065">creator release</a>).
+It is the honest comparator: same SD1.5-class budget, different portrait
+fine-tune.</p>
+<p>There is no controlled evidence that it beats Realistic Vision. That is why we
+have a test matrix instead of a fan club.</p>
+<h3>DreamShaper 8 stays</h3>
+<p>DreamShaper remains the general-purpose control. Its author explicitly notes
+that specialist realism models can beat it, and its showcase images commonly
+use hires fix or img2img
+(<a href="https://huggingface.co/Lykon/dreamshaper-8">base model</a>;
+<a href="https://huggingface.co/Lykon/dreamshaper-8-inpainting">inpainting model</a>).</p>
+<p>It should stop carrying the burden of proving that all SD1.5 models are bad at
+people.</p>
+<h2>The useful loophole: redraw only the broken bits</h2>
+<p>The smallest high-quality second pass is the one that never sees most of the
+image.</p>
+<p>ADetailer documents the core sequence as generate → detect → mask → inpaint
+(<a href="https://github.com/Bing-su/adetailer">official repository</a>). ComfyUI Impact
+Pack&#39;s FaceDetailer and SEGSDetailer apply the same idea to detected crops
+(<a href="https://github.com/ltdrdata/ComfyUI-Impact-Pack">Impact Pack</a>).</p>
+<p>The proposed Mini pipeline is:</p>
+<ol>
+<li>Generate one 704×384 or 768×432 image with Realistic Vision, epiCRealism, or
+DreamShaper.</li>
+<li>Latent-upscale 1.5×.</li>
+<li>Run the second diffusion pass through MultiDiffusion-style overlapping
+512-pixel tiles, tile batch one
+(<a href="https://multidiffusion.github.io/">MultiDiffusion</a>;
+<a href="https://github.com/shiimizu/ComfyUI-TiledDiffusion">ComfyUI tiled implementation</a>).</li>
+<li>Decode with ComfyUI&#39;s built-in <code>VAEDecodeTiled</code>, initially 512-pixel tiles
+with 64-pixel overlap
+(<a href="https://docs.comfy.org/built-in-nodes/VAEDecodeTiled">official node documentation</a>).</li>
+<li>Detect and inpaint one face crop at a time, around 512 pixels, with moderate
+denoise.</li>
+<li>Detect and inpaint each hand separately with a wider context crop.</li>
+<li>Save, call ComfyUI&#39;s <code>/free</code> endpoint, and prove TurboFieldfare recovers
+before starting another stage
+(<a href="https://github.com/Comfy-Org/ComfyUI/blob/5e3f15a830ff27d3563ef4b43e9f6a0321ea36cd/openapi.yaml">ComfyUI API</a>).</li>
+</ol>
+<p>Crop processing lowers the activation peak; it does not shrink the checkpoint.
+Hands can still fail because a detector finds the region but supplies no 3D
+hand solution. Still, this is the highest-confidence quality-per-memory move.</p>
+<p>Avoid SAM initially. Bounding boxes with dilation and feathering avoid loading
+another segmentation model. Our current ComfyUI has tiled VAE and GGUF loaders,
+but no FaceDetailer node installed as of this post, so the detailer pack is a
+real prerequisite rather than a box already ticked.</p>
+<h2>OpenPose, restoration, and other tempting side quests</h2>
+<p>OpenPose supplies body, hand and face keypoints
+(<a href="https://github.com/CMU-Perceptual-Computing-Lab/openpose">official implementation</a>).
+An SD1.5 OpenPose ControlNet can materially improve <strong>pose</strong>, but ControlNet
+must operate alongside the UNet during denoising. It adds memory rather than
+reducing it
+(<a href="https://openaccess.thecvf.com/content/ICCV2023/papers/Zhang_Adding_Conditional_Control_to_Text-to-Image_Diffusion_Models_ICCV_2023_paper.pdf">ControlNet paper</a>).
+Use it only for pose-critical jobs, and unload the pose preprocessor before
+sampling.</p>
+<p>CodeFormer and GFPGAN are final-resort face reconstruction tools, not anatomy
+engines. CodeFormer&#39;s fidelity weight explicitly trades restoration quality
+against identity
+(<a href="https://proceedings.neurips.cc/paper_files/paper/2022/file/c573258c38d0a3919d8c1364053c45df-Paper-Conference.pdf">paper</a>);
+GFPGAN&#39;s authors warn that some versions can change identity
+(<a href="https://github.com/TencentARC/GFPGAN">official repository</a>).</p>
+<p>If we use either, it runs after diffusion has unloaded, and the original face
+stays beside the restored one for review.</p>
+<h2>Lane B: compressed SDXL, outside ordinary ComfyUI</h2>
+<p>Full SDXL is too close to the ceiling. A photoreal SDXL with compressed weights
+may not be.</p>
+<h3>First runtime: <code>stable-diffusion.cpp</code></h3>
+<p>This is the best service-shaped experiment. It supports Metal, SDXL,
+<code>.safetensors</code> and GGUF, VAE tiling, component placement, and an HTTP server
+with OpenAI-style image endpoints
+(<a href="https://github.com/leejet/stable-diffusion.cpp">project</a>;
+<a href="https://github.com/leejet/stable-diffusion.cpp/blob/master/docs/quantization_and_gguf.html">quantization guide</a>;
+<a href="https://github.com/leejet/stable-diffusion.cpp/blob/master/examples/server/api.html">server API</a>).
+A Node client can use ordinary <code>fetch</code>; no Python state has to leak into
+localimagegen.</p>
+<p>Prototype <strong>RealVisXL V5 Q5 first</strong>, then Q4 only if Q5 does not fit. One
+available third-party Q5 UNet is 1.84 GB; with both SDXL text encoders and VAE,
+the file-size floor is roughly 3.8 GB
+(<a href="https://huggingface.co/hum-ma/SDXL-models-GGUF/tree/main">quant repository</a>;
+<a href="https://huggingface.co/SG161222/RealVisXL_V5.0">RealVisXL author card</a>).</p>
+<p>That number is not a prediction of peak memory. Dequantization buffers,
+activations, mapped files, macOS and TurboFieldfare still exist. The
+<code>stable-diffusion.cpp</code> project has no exact M1/8 GB RealVisXL proof, so this
+remains an admission experiment.</p>
+<p>Quantization is also awkward for SDXL: much of its UNet is convolution-heavy,
+and ComfyUI-GGUF explicitly warns that these models gain less than
+transformer-heavy DiTs
+(<a href="https://github.com/city96/ComfyUI-GGUF/blob/main/tools/README.html">loader tooling</a>).
+Every Q5/Q4 output must be compared against an FP16 reference for faces, skin
+texture, prompt adherence and style drift.</p>
+<h3>Draw Things: easiest operational comparison</h3>
+<p>Draw Things documents 8-bit SDXL/Juggernaut as workable—slowly—on an 8 GB M1
+MacBook Air, supports model conversion, and publishes a headless macOS
+<code>gRPCServerCLI</code>
+(<a href="https://wiki.drawthings.ai/wiki/How_Powerful_Is_My_Device">device guide</a>;
+<a href="https://wiki.drawthings.ai/wiki/Convert_to_8-bit">8-bit conversion</a>;
+<a href="https://github.com/drawthingsai/draw-things-community">open server repository</a>).</p>
+<p>It may be the fastest way to answer “does an 8-bit portrait SDXL look good on
+this Mini?” before building our own sidecar. Its exact claim is product
+documentation rather than a controlled allocator trace, so it does not bypass
+the admission gate.</p>
+<h3>Core ML: strongest compression machinery, most engineering</h3>
+<p>Apple&#39;s converter supports SDXL, post-training palettization, mixed-bit
+compression, and just-in-time model loading. Apple&#39;s 4.5-bit SDXL recipe shrinks
+the UNet from about 5.2 GB to 1.46 GB
+(<a href="https://github.com/apple/ml-stable-diffusion">Apple repository</a>).</p>
+<p>The attractive architecture is:</p>
+<ul>
+<li>convert the photoreal fine-tune on the 36 GB laptop;</li>
+<li>deploy compiled resources to the Mini;</li>
+<li>run a persistent Swift sidecar with <code>reduceMemory</code>;</li>
+<li>let Core ML schedule CPU, GPU and Neural Engine.</li>
+</ul>
+<p>Apple says base-model compression recipes are likely to transfer to compatible
+fine-tunes, but marks that assumption untested. There is no RealVisXL/Juggernaut
+8 GB M1 proof. Core ML is the long-term native option, not the first weekend
+prototype.</p>
+<h3>MLX SDXL-Turbo: the known-fit control, not the quality winner</h3>
+<p>Apple&#39;s MLX example is the one exact upstream demonstration on an 8 GB M1 Mac
+mini. It quantizes both text encoders to four bits and the UNet to eight bits,
+then runs SDXL-Turbo without generation-time swapping
+(<a href="https://github.com/ml-explore/mlx-examples/blob/main/stable_diffusion/README.html">README</a>;
+<a href="https://github.com/ml-explore/mlx-examples/blob/main/stable_diffusion/txt2image.py">implementation</a>).</p>
+<p>That proves an SDXL-shaped pipeline can fit. It does not solve this product
+problem: Stability&#39;s own SDXL-Turbo card warns about faces, people and imperfect
+photorealism
+(<a href="https://huggingface.co/stabilityai/sdxl-turbo">model card</a>).</p>
+<p>Use it as a memory-control specimen. Do not crown it portrait champion because
+it survived.</p>
+<h2>Other candidates worth one controlled attempt</h2>
+<p><strong>SD3.5 Medium Q4 without T5</strong> has a roughly 1.79 GB quantized denoiser and can
+use only CLIP-L plus CLIP-G, sacrificing long-prompt comprehension. Stability
+explicitly permits omitting T5 and recommends Skip Layer Guidance for anatomy
+(<a href="https://huggingface.co/stabilityai/stable-diffusion-3.5-medium">official card</a>;
+<a href="https://huggingface.co/city96/stable-diffusion-3.5-medium-gguf">GGUF artifact</a>).
+It is the best architecture-level alternative after RealVisXL.</p>
+<p><strong>KOALA 700M</strong> compresses SDXL&#39;s UNet while retaining its dual encoders and VAE.
+The authors ran it at 1024² on an 8 GB RTX where SDXL Base failed
+(<a href="https://huggingface.co/etri-vilab/koala-700m">model card</a>).
+Discrete VRAM is not unified memory, and its portrait advantage over Realistic
+Vision is unproved, but its approximately 3.5 GB component floor makes it a
+reasonable fit experiment.</p>
+<p><strong>FLUX.2 Klein 4B</strong> is a modern 4B transformer under Apache 2.0
+(<a href="https://huggingface.co/black-forest-labs/FLUX.2-klein-4B">official card</a>).
+Q3/Q4 transformer plus Qwen3-4B encoder leaves very little headroom in 8 GB.
+Test only after the two SDXL experiments; “4B” does not include the text
+encoder or activations.</p>
+<h2>Do not spend another night on these</h2>
+<ul>
+<li><strong>SDXL Lightning and LCM-LoRA:</strong> fewer steps, same SDXL residency.</li>
+<li><strong>Full SDXL in ordinary MPS ComfyUI:</strong> our own 11 GB peak already answered it.</li>
+<li><strong>SD3.5 Large/Turbo:</strong> the model is larger; Turbo changes time, not size.</li>
+<li><strong>PixArt Sigma as a self-contained pipeline:</strong> the denoiser is small but
+T5-XXL is not. Diffusers&#39; under-8-GB recipe quantizes and unloads T5 on CUDA,
+not MPS
+(<a href="https://huggingface.co/docs/diffusers/main/en/api/pipelines/pixart_sigma">official documentation</a>).</li>
+<li><strong>Sana for humans:</strong> compact and clever, but its current model card explicitly
+lists weak hands and imperfect photorealism
+(<a href="https://huggingface.co/Efficient-Large-Model/Sana_600M_1024px_diffusers">model card</a>).</li>
+<li><strong>Stable Cascade:</strong> multiple large stages and no separate CPU memory pool.</li>
+<li><strong>FLUX.1, Z-Image, Qwen-Image and other 6–20B families:</strong> low-bit main weights
+still leave encoders, VAE, buffers and the operating system fighting over the
+same eight gigabytes.</li>
+<li><strong>Face restoration as the default:</strong> a more plausible stranger is not
+necessarily the same person.</li>
+</ul>
+<h2>The admission sequence</h2>
+<p>No new model joins the production route by reputation.</p>
+<ol>
+<li>Add the normal Realistic Vision V6 and epiCRealism checkpoints to the
+gallery at an M1-sized 640×384; keep their inpainting variants in the test
+catalog until the crop pipeline exists.</li>
+<li>Use a small fixed human prompt suite: close portrait, full body, two people,
+hands interacting with an object, and the existing patch scenes.</li>
+<li>Establish plain 512-class outputs first.</li>
+<li>Add one-face-at-a-time and one-hand-at-a-time crop inpainting.</li>
+<li>Add tiled upscale/decode only after the crop pipeline is stable.</li>
+<li>Run the existing Mini admission gate: allocator peak, complete/partial load,
+swap, duration, thermal behavior, <code>/free</code> recovery, and TurboFieldfare
+responsiveness.</li>
+<li>In parallel, run one RealVisXL Q5 fixed-seed comparison through
+<code>stable-diffusion.cpp</code> at 512² and 704×384.</li>
+<li>Compare every compressed SDXL result against the laptop&#39;s FP16 reference,
+not against our disappointment with SD1.5.</li>
+<li>If Q5 fails memory, try Q4. If Q4 damages faces or prompt adherence, stop;
+do not keep shaving bits until a file fits and the model disappears.</li>
+<li>Only after those results consider SD3.5 Medium Q4 or KOALA.</li>
+</ol>
+<h2>The first tiny reference matrix</h2>
+<p>Before asking the Mini to prove memory safety, we ran one deliberately small
+quality reference on the 36 GB development Mac. Three SD1.5-class checkpoints
+got the same three human prompts and seeds: a close portrait at 512×512, a
+full-body mechanic at 384×640, and two people repairing a satchel at 640×384.
+Every canvas stays at or below roughly 512² pixels.</p>
+<p><img src="img/low-memory-quality-matrix.webp" alt="Realistic Vision V6, epiCRealism V5 and DreamShaper 8 across three human prompts"></p>
+<p>The result supports the two-lane recommendation without pretending to finish
+the admission test. Realistic Vision and epiCRealism both produce materially
+more convincing portraits and full bodies than the tiny speed-first models;
+DreamShaper remains a useful general-purpose control. The interaction row is
+the useful failure: Realistic Vision and epiCRealism understand the shared
+repair scene but do not deliver four trustworthy hands, while DreamShaper
+collapses the two-person composition to one person. A better checkpoint raises
+the base quality floor; it does not remove the need for crop inpainting.</p>
+<p>That was enough evidence to promote the two normal checkpoints into the full
+existing-prompt matrix—not to mark them M1-supported, but to inspect their
+behaviour across every patch scene and step rung. Their gallery workflows stay
+at 640×384, below the pixel area of 512×512.</p>
+<p>The exact batch-one graphs live under <a href="../workflows/m1/"><code>workflows/m1/</code></a>:
+512×512 templates for Realistic Vision V6, epiCRealism V5 and the DreamShaper 8
+control, with no FP8 or cosmetic adapter. The resumable runner is
+<a href="../scripts/low-memory-quality-matrix.ts"><code>scripts/low-memory-quality-matrix.ts</code></a>
+(<code>yarn matrix:low-memory-quality</code>); it consumes those committed workflows and
+keeps every scenario at or below roughly 512² pixels. Its generated manifest
+records prompts, seeds, dimensions and recipes. These images prove that the
+candidates are worth taking to the Mini; they do <strong>not</strong> prove M1 support,
+allocator safety or TurboFieldfare coexistence.</p>
+<h2>A portrait model found an unwelcome shortcut</h2>
+<p>The first full-prompt sweep exposed a safety property that the tidy human test
+did not: Realistic Vision occasionally recast the sleeping dragon scene as a
+nude person, and made a clothed embrace unexpectedly exposed. More steps did
+not reliably cure the semantic substitution; one seed stayed unsafe at 13, 25
+and 29 steps.</p>
+<p>The gallery notes sidecar now supports an <code>nsfw</code> flag per cell. Marked images
+are blurred in the gallery by default; the viewer must explicitly enable
+<strong>Show NSFW</strong> to reveal them. The note editor can set the flag while recording
+why it was marked. That keeps the comparison evidence intact without making a
+surprise image the default public view.</p>
+<h2>Decision</h2>
+<p>The Mini does not need a smaller imagination. It needs a better division of
+labour.</p>
+<p>Use a specialist small model where the evidence is strong. Redraw the expensive
+details in small pieces. Meanwhile, compress one genuinely better large model
+and make it prove that the quality survived.</p>
+<p>Eight gigabytes offers no miracles. It does, however, offer one useful
+loophole: the whole image never has to be difficult at the same time.</p>
+
+</article>
+<nav class="post-nav" aria-label="Post navigation">
+<a class="post-nav-link post-nav-prev" href="2026-08-08-square-was-never-the-contract.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">Square was never the contract</span></span></a>
+<span class="post-nav-link post-nav-next post-nav-empty"></span>
+</nav></main>
+    <footer class="site-footer">
+      <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>
+    </footer>
+    <script>
+      // Localise all post times to the reader's timezone.
+      // Each <time class="post-time" data-ts="..."> carries a Unix epoch (ms);
+      // we replace the static server-rendered HH:MM with the local equivalent.
+      document.querySelectorAll('time.post-time[data-ts]').forEach(function (el) {
+        var d = new Date(+el.dataset.ts);
+        el.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        el.title = d.toLocaleString(); // full local datetime on hover
+      });
+
+      // Click (or Enter/Space) a .banner-compare to cycle: current -> most recent earlier
+      // version -> ... -> oldest/original -> back to current. Each click advances one slide;
+      // opacity is set directly (not via CSS classes) so this works for any slide count.
+      document.querySelectorAll('.banner-compare').forEach(function (el) {
+        var slides = el.querySelectorAll('.banner-slide');
+        var hint = el.querySelector('.banner-compare-hint');
+        var count = slides.length;
+        var active = 0;
+        function render() {
+          slides.forEach(function (s, i) {
+            s.style.opacity = i === active ? '1' : '0';
+          });
+          if (!hint) return;
+          if (active === 0) {
+            hint.textContent =
+              'click to see ' + (count === 2 ? 'the earlier version' : count - 1 + ' earlier versions');
+          } else if (active === count - 1) {
+            hint.textContent = 'original banner · click for current';
+          } else {
+            hint.textContent = 'earlier version ' + active + ' of ' + (count - 1) + ' · click to continue';
+          }
+        }
+        function advance() {
+          active = (active + 1) % count;
+          render();
+        }
+        el.addEventListener('click', advance);
+        el.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            advance();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
