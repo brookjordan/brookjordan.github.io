@@ -1,1082 +1,2777 @@
 [
   {
-    "model": "noobai",
+    "model": "epicrealism",
     "driverBaseGB": 0,
-    "driverPeakGB": 10.96,
-    "driverPostLoadGB": 5.29,
-    "currentPeakGB": 7.05,
-    "rssPeakGB": 9.34,
-    "psutilFootprintGB": 8.06,
-    "recommendedMaxGB": 27,
-    "diskWeightsGB": 6.62,
-    "logModelSizeGB": 6.46,
+    "driverPeakGB": 4.01,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 3.42,
+    "rssPeakGB": 1.52,
+    "psutilFootprintGB": 4.94,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 1.99,
+    "logModelSizeGB": 1.99,
     "loadMode": "complete",
     "phases": [
       {
         "phase": "load",
-        "atMs": 9,
+        "atMs": 18,
         "driverGB": 0,
         "currentGB": 0,
-        "rssGB": 0.7
+        "rssGB": 0.62
       },
       {
         "phase": "done",
-        "atMs": 5216,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.86
+        "atMs": 1767,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.33
       },
       {
         "phase": "encode",
-        "atMs": 5218,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.86
+        "atMs": 1768,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.33
       },
       {
         "phase": "encode",
-        "atMs": 5521,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.92
+        "atMs": 1820,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.33
       },
       {
         "phase": "sample",
-        "atMs": 5878,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.94
+        "atMs": 1860,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.34
       },
       {
         "phase": "decode",
-        "atMs": 10118,
-        "driverGB": 5.3,
-        "currentGB": 4.78,
-        "rssGB": 3.05
+        "atMs": 3165,
+        "driverGB": 2.21,
+        "currentGB": 1.61,
+        "rssGB": 1.2
       },
       {
         "phase": "save",
-        "atMs": 12081,
-        "driverGB": 10.95,
-        "currentGB": 4.94,
-        "rssGB": 1.49
+        "atMs": 3532,
+        "driverGB": 3.21,
+        "currentGB": 1.76,
+        "rssGB": 1.21
       }
     ],
-    "at": "2026-07-06T07:01:13.517Z"
+    "at": "2026-08-12T10:37:06.537Z"
   },
   {
-    "model": "illustrious",
+    "model": "sd15lcm",
     "driverBaseGB": 0,
-    "driverPeakGB": 10.96,
-    "driverPostLoadGB": 5.29,
-    "currentPeakGB": 7.02,
-    "rssPeakGB": 4.19,
-    "psutilFootprintGB": 9.76,
-    "recommendedMaxGB": 27,
-    "diskWeightsGB": 6.46,
-    "logModelSizeGB": 6.46,
+    "driverPeakGB": 3.26,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 1.76,
+    "rssPeakGB": 1.7,
+    "psutilFootprintGB": 5.74,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 2.11,
+    "logModelSizeGB": 3.59,
     "loadMode": "complete",
     "phases": [
       {
         "phase": "load",
-        "atMs": 9,
+        "atMs": 18,
         "driverGB": 0,
         "currentGB": 0,
-        "rssGB": 0.7
-      },
-      {
-        "phase": "done",
-        "atMs": 5084,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.74
-      },
-      {
-        "phase": "done",
-        "atMs": 5085,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.74
-      },
-      {
-        "phase": "encode",
-        "atMs": 5086,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.74
-      },
-      {
-        "phase": "encode",
-        "atMs": 5386,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.85
-      },
-      {
-        "phase": "sample",
-        "atMs": 5755,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.88
-      },
-      {
-        "phase": "decode",
-        "atMs": 9825,
-        "driverGB": 5.3,
-        "currentGB": 4.78,
-        "rssGB": 3
-      },
-      {
-        "phase": "save",
-        "atMs": 11563,
-        "driverGB": 10.95,
-        "currentGB": 4.94,
-        "rssGB": 3.04
-      }
-    ],
-    "at": "2026-07-06T07:01:48.647Z"
-  },
-  {
-    "model": "pony",
-    "driverBaseGB": 0,
-    "driverPeakGB": 10.96,
-    "driverPostLoadGB": 5.29,
-    "currentPeakGB": 7.15,
-    "rssPeakGB": 4.11,
-    "psutilFootprintGB": 15.36,
-    "recommendedMaxGB": 27,
-    "diskWeightsGB": 6.83,
-    "logModelSizeGB": 11.24,
-    "loadMode": "complete",
-    "phases": [
-      {
-        "phase": "load",
-        "atMs": 7,
-        "driverGB": 0,
-        "currentGB": 0,
-        "rssGB": 0.7
-      },
-      {
-        "phase": "done",
-        "atMs": 5112,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.71
-      },
-      {
-        "phase": "done",
-        "atMs": 5114,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.72
-      },
-      {
-        "phase": "encode",
-        "atMs": 5114,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.73
-      },
-      {
-        "phase": "encode",
-        "atMs": 5433,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.82
-      },
-      {
-        "phase": "done",
-        "atMs": 5814,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.87
-      },
-      {
-        "phase": "sample",
-        "atMs": 6140,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.9
-      },
-      {
-        "phase": "decode",
-        "atMs": 10020,
-        "driverGB": 5.31,
-        "currentGB": 4.79,
-        "rssGB": 3.41
-      },
-      {
-        "phase": "save",
-        "atMs": 12848,
-        "driverGB": 10.95,
-        "currentGB": 4.94,
-        "rssGB": 1.93
-      }
-    ],
-    "at": "2026-07-06T07:02:23.192Z"
-  },
-  {
-    "model": "illustrious",
-    "driverBaseGB": 0,
-    "driverPeakGB": 10.96,
-    "driverPostLoadGB": 5.29,
-    "currentPeakGB": 7.59,
-    "rssPeakGB": 4.16,
-    "psutilFootprintGB": 11.94,
-    "recommendedMaxGB": 27,
-    "diskWeightsGB": 6.46,
-    "logModelSizeGB": 6.46,
-    "loadMode": "complete",
-    "phases": [
-      {
-        "phase": "load",
-        "atMs": 12,
-        "driverGB": 0,
-        "currentGB": 0,
-        "rssGB": 0.7
-      },
-      {
-        "phase": "done",
-        "atMs": 5083,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.72
-      },
-      {
-        "phase": "done",
-        "atMs": 5084,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.72
-      },
-      {
-        "phase": "encode",
-        "atMs": 5085,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.74
-      },
-      {
-        "phase": "encode",
-        "atMs": 5399,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.83
-      },
-      {
-        "phase": "sample",
-        "atMs": 5756,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.86
-      },
-      {
-        "phase": "decode",
-        "atMs": 9833,
-        "driverGB": 5.3,
-        "currentGB": 4.78,
-        "rssGB": 2.98
-      },
-      {
-        "phase": "save",
-        "atMs": 11367,
-        "driverGB": 10.95,
-        "currentGB": 4.94,
-        "rssGB": 3.02
-      }
-    ],
-    "at": "2026-07-06T07:02:59.321Z"
-  },
-  {
-    "model": "noobai",
-    "driverBaseGB": 0,
-    "driverPeakGB": 10.96,
-    "driverPostLoadGB": 5.29,
-    "currentPeakGB": 7.02,
-    "rssPeakGB": 9.15,
-    "psutilFootprintGB": 10.28,
-    "recommendedMaxGB": 27,
-    "diskWeightsGB": 6.62,
-    "logModelSizeGB": 6.46,
-    "loadMode": "complete",
-    "phases": [
-      {
-        "phase": "load",
-        "atMs": 5,
-        "driverGB": 0,
-        "currentGB": 0,
-        "rssGB": 0.7
-      },
-      {
-        "phase": "done",
-        "atMs": 4697,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.84
-      },
-      {
-        "phase": "encode",
-        "atMs": 4698,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.85
-      },
-      {
-        "phase": "encode",
-        "atMs": 5021,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.9
-      },
-      {
-        "phase": "sample",
-        "atMs": 5462,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.92
-      },
-      {
-        "phase": "decode",
-        "atMs": 9669,
-        "driverGB": 5.3,
-        "currentGB": 4.79,
-        "rssGB": 3.03
-      },
-      {
-        "phase": "save",
-        "atMs": 11148,
-        "driverGB": 10.95,
-        "currentGB": 4.94,
-        "rssGB": 3.08
-      }
-    ],
-    "at": "2026-07-06T07:03:33.731Z"
-  },
-  {
-    "model": "pony",
-    "driverBaseGB": 0,
-    "driverPeakGB": 10.96,
-    "driverPostLoadGB": 5.29,
-    "currentPeakGB": 6.05,
-    "rssPeakGB": 4.11,
-    "psutilFootprintGB": 15.69,
-    "recommendedMaxGB": 27,
-    "diskWeightsGB": 6.83,
-    "logModelSizeGB": 11.24,
-    "loadMode": "complete",
-    "phases": [
-      {
-        "phase": "load",
-        "atMs": 7,
-        "driverGB": 0,
-        "currentGB": 0,
-        "rssGB": 0.69
-      },
-      {
-        "phase": "done",
-        "atMs": 5139,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.73
-      },
-      {
-        "phase": "done",
-        "atMs": 5139,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.74
-      },
-      {
-        "phase": "encode",
-        "atMs": 5141,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.74
-      },
-      {
-        "phase": "encode",
-        "atMs": 5445,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.84
-      },
-      {
-        "phase": "done",
-        "atMs": 5842,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.86
-      },
-      {
-        "phase": "sample",
-        "atMs": 6168,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.89
-      },
-      {
-        "phase": "decode",
-        "atMs": 10259,
-        "driverGB": 5.3,
-        "currentGB": 4.78,
-        "rssGB": 3.41
-      },
-      {
-        "phase": "save",
-        "atMs": 12995,
-        "driverGB": 10.95,
-        "currentGB": 4.94,
-        "rssGB": 1.81
-      }
-    ],
-    "at": "2026-07-06T07:04:07.932Z"
-  },
-  {
-    "model": "illustrious",
-    "driverBaseGB": 0,
-    "driverPeakGB": 10.96,
-    "driverPostLoadGB": 5.29,
-    "currentPeakGB": 7.02,
-    "rssPeakGB": 4.43,
-    "psutilFootprintGB": 12.47,
-    "recommendedMaxGB": 27,
-    "diskWeightsGB": 6.46,
-    "logModelSizeGB": 6.46,
-    "loadMode": "complete",
-    "phases": [
-      {
-        "phase": "load",
-        "atMs": 6,
-        "driverGB": 0,
-        "currentGB": 0,
-        "rssGB": 0.7
-      },
-      {
-        "phase": "done",
-        "atMs": 5172,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.75
-      },
-      {
-        "phase": "done",
-        "atMs": 5173,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.76
-      },
-      {
-        "phase": "encode",
-        "atMs": 5173,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.76
-      },
-      {
-        "phase": "encode",
-        "atMs": 5508,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.85
-      },
-      {
-        "phase": "sample",
-        "atMs": 5877,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.88
-      },
-      {
-        "phase": "decode",
-        "atMs": 9977,
-        "driverGB": 5.3,
-        "currentGB": 4.78,
-        "rssGB": 2.99
-      },
-      {
-        "phase": "save",
-        "atMs": 11519,
-        "driverGB": 10.95,
-        "currentGB": 4.94,
-        "rssGB": 3.04
-      }
-    ],
-    "at": "2026-07-06T07:04:44.199Z"
-  },
-  {
-    "model": "noobai",
-    "driverBaseGB": 0,
-    "driverPeakGB": 10.96,
-    "driverPostLoadGB": 5.29,
-    "currentPeakGB": 7.02,
-    "rssPeakGB": 9.45,
-    "psutilFootprintGB": 8.68,
-    "recommendedMaxGB": 27,
-    "diskWeightsGB": 6.62,
-    "logModelSizeGB": 6.46,
-    "loadMode": "complete",
-    "phases": [
-      {
-        "phase": "load",
-        "atMs": 6,
-        "driverGB": 0,
-        "currentGB": 0,
-        "rssGB": 0.7
-      },
-      {
-        "phase": "done",
-        "atMs": 5572,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.84
-      },
-      {
-        "phase": "encode",
-        "atMs": 5573,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.84
-      },
-      {
-        "phase": "encode",
-        "atMs": 5890,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.89
-      },
-      {
-        "phase": "sample",
-        "atMs": 6268,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.91
-      },
-      {
-        "phase": "decode",
-        "atMs": 10552,
-        "driverGB": 5.3,
-        "currentGB": 4.78,
-        "rssGB": 2.98
-      },
-      {
-        "phase": "save",
-        "atMs": 12620,
-        "driverGB": 10.95,
-        "currentGB": 4.94,
-        "rssGB": 1.43
-      }
-    ],
-    "at": "2026-07-06T07:05:18.754Z"
-  },
-  {
-    "model": "pony",
-    "driverBaseGB": 0,
-    "driverPeakGB": 10.79,
-    "driverPostLoadGB": 5.29,
-    "currentPeakGB": 5.08,
-    "rssPeakGB": 3.26,
-    "psutilFootprintGB": 13.09,
-    "recommendedMaxGB": 27,
-    "diskWeightsGB": 6.83,
-    "logModelSizeGB": 11.24,
-    "loadMode": "complete",
-    "phases": [
-      {
-        "phase": "load",
-        "atMs": 7,
-        "driverGB": 0,
-        "currentGB": 0,
-        "rssGB": 0.7
-      },
-      {
-        "phase": "done",
-        "atMs": 5919,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 1.61
-      },
-      {
-        "phase": "done",
-        "atMs": 5920,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 1.61
-      },
-      {
-        "phase": "encode",
-        "atMs": 5920,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 1.61
-      },
-      {
-        "phase": "encode",
-        "atMs": 6479,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.33
-      },
-      {
-        "phase": "done",
-        "atMs": 6903,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.37
-      },
-      {
-        "phase": "sample",
-        "atMs": 7258,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.4
-      },
-      {
-        "phase": "decode",
-        "atMs": 13256,
-        "driverGB": 6.31,
-        "currentGB": 4.78,
-        "rssGB": 2.48
-      },
-      {
-        "phase": "save",
-        "atMs": 15532,
-        "driverGB": 10.78,
-        "currentGB": 3.18,
-        "rssGB": 2.06
-      }
-    ],
-    "at": "2026-07-06T07:05:54.474Z"
-  },
-  {
-    "model": "pony",
-    "driverBaseGB": 0,
-    "driverPeakGB": 10.7,
-    "driverPostLoadGB": 5.29,
-    "currentPeakGB": 5.08,
-    "rssPeakGB": 3.34,
-    "psutilFootprintGB": 15.51,
-    "recommendedMaxGB": 27,
-    "diskWeightsGB": 6.83,
-    "logModelSizeGB": 11.24,
-    "loadMode": "complete",
-    "phases": [
-      {
-        "phase": "load",
-        "atMs": 31,
-        "driverGB": 0,
-        "currentGB": 0,
-        "rssGB": 0.69
-      },
-      {
-        "phase": "done",
-        "atMs": 5240,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 1.36
-      },
-      {
-        "phase": "done",
-        "atMs": 5242,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 1.36
-      },
-      {
-        "phase": "encode",
-        "atMs": 5243,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 1.37
-      },
-      {
-        "phase": "encode",
-        "atMs": 5807,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.28
-      },
-      {
-        "phase": "done",
-        "atMs": 6242,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.32
-      },
-      {
-        "phase": "sample",
-        "atMs": 6578,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.35
-      },
-      {
-        "phase": "decode",
-        "atMs": 12451,
-        "driverGB": 6.31,
-        "currentGB": 4.78,
-        "rssGB": 2.43
-      },
-      {
-        "phase": "save",
-        "atMs": 14495,
-        "driverGB": 10.69,
-        "currentGB": 2.21,
-        "rssGB": 2.28
-      }
-    ],
-    "at": "2026-07-06T07:06:33.419Z"
-  },
-  {
-    "model": "noobai",
-    "driverBaseGB": 0,
-    "driverPeakGB": 10.96,
-    "driverPostLoadGB": 5.29,
-    "currentPeakGB": 7.04,
-    "rssPeakGB": 9.23,
-    "psutilFootprintGB": 10.81,
-    "recommendedMaxGB": 27,
-    "diskWeightsGB": 6.62,
-    "logModelSizeGB": 6.46,
-    "loadMode": "complete",
-    "phases": [
-      {
-        "phase": "load",
-        "atMs": 9,
-        "driverGB": 0,
-        "currentGB": 0,
-        "rssGB": 0.69
-      },
-      {
-        "phase": "done",
-        "atMs": 4866,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.84
-      },
-      {
-        "phase": "encode",
-        "atMs": 4867,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.84
-      },
-      {
-        "phase": "encode",
-        "atMs": 5272,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.93
-      },
-      {
-        "phase": "sample",
-        "atMs": 5758,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.95
-      },
-      {
-        "phase": "decode",
-        "atMs": 10382,
-        "driverGB": 5.3,
-        "currentGB": 4.78,
-        "rssGB": 2.31
-      },
-      {
-        "phase": "save",
-        "atMs": 12327,
-        "driverGB": 10.95,
-        "currentGB": 4.94,
-        "rssGB": 2.1
-      }
-    ],
-    "at": "2026-07-06T07:07:11.075Z"
-  },
-  {
-    "model": "illustrious",
-    "driverBaseGB": 0,
-    "driverPeakGB": 10.96,
-    "driverPostLoadGB": 5.29,
-    "currentPeakGB": 7.02,
-    "rssPeakGB": 3.46,
-    "psutilFootprintGB": 11.65,
-    "recommendedMaxGB": 27,
-    "diskWeightsGB": 6.46,
-    "logModelSizeGB": 6.46,
-    "loadMode": "complete",
-    "phases": [
-      {
-        "phase": "load",
-        "atMs": 10,
-        "driverGB": 0,
-        "currentGB": 0,
-        "rssGB": 0.7
-      },
-      {
-        "phase": "done",
-        "atMs": 6350,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 1.85
-      },
-      {
-        "phase": "done",
-        "atMs": 6352,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 1.87
-      },
-      {
-        "phase": "encode",
-        "atMs": 6352,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 1.87
-      },
-      {
-        "phase": "encode",
-        "atMs": 6805,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.29
-      },
-      {
-        "phase": "sample",
-        "atMs": 7273,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.33
-      },
-      {
-        "phase": "decode",
-        "atMs": 11653,
-        "driverGB": 5.3,
-        "currentGB": 4.78,
-        "rssGB": 2.45
-      },
-      {
-        "phase": "save",
-        "atMs": 13975,
-        "driverGB": 10.95,
-        "currentGB": 4.94,
-        "rssGB": 1.53
-      }
-    ],
-    "at": "2026-07-06T07:07:46.423Z"
-  },
-  {
-    "model": "pony",
-    "driverBaseGB": 0,
-    "driverPeakGB": 8.7,
-    "driverPostLoadGB": 5.29,
-    "currentPeakGB": 5.08,
-    "rssPeakGB": 3.52,
-    "psutilFootprintGB": 12.48,
-    "recommendedMaxGB": 27,
-    "diskWeightsGB": 6.83,
-    "logModelSizeGB": 11.24,
-    "loadMode": "complete",
-    "phases": [
-      {
-        "phase": "load",
-        "atMs": 8,
-        "driverGB": 0,
-        "currentGB": 0,
-        "rssGB": 0.7
-      },
-      {
-        "phase": "done",
-        "atMs": 6647,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 1.9
-      },
-      {
-        "phase": "done",
-        "atMs": 6649,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 1.91
-      },
-      {
-        "phase": "encode",
-        "atMs": 6650,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 1.92
-      },
-      {
-        "phase": "encode",
-        "atMs": 7037,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.21
-      },
-      {
-        "phase": "done",
-        "atMs": 7458,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.24
-      },
-      {
-        "phase": "sample",
-        "atMs": 7812,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.27
-      },
-      {
-        "phase": "decode",
-        "atMs": 15288,
-        "driverGB": 6.31,
-        "currentGB": 4.78,
-        "rssGB": 2.21
-      },
-      {
-        "phase": "save",
-        "atMs": 17126,
-        "driverGB": 8.69,
-        "currentGB": 1.32,
-        "rssGB": 2.26
-      }
-    ],
-    "at": "2026-07-06T07:08:23.615Z"
-  },
-  {
-    "model": "illustrious",
-    "driverBaseGB": 0,
-    "driverPeakGB": 10.92,
-    "driverPostLoadGB": 5.29,
-    "currentPeakGB": 6.99,
-    "rssPeakGB": 3.32,
-    "psutilFootprintGB": 14.39,
-    "recommendedMaxGB": 27,
-    "diskWeightsGB": 6.46,
-    "logModelSizeGB": 6.46,
-    "loadMode": "complete",
-    "phases": [
-      {
-        "phase": "load",
-        "atMs": 8,
-        "driverGB": 0,
-        "currentGB": 0,
-        "rssGB": 0.69
-      },
-      {
-        "phase": "done",
-        "atMs": 7221,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 1.73
-      },
-      {
-        "phase": "done",
-        "atMs": 7223,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 1.73
-      },
-      {
-        "phase": "encode",
-        "atMs": 7223,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 1.74
-      },
-      {
-        "phase": "encode",
-        "atMs": 7680,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.12
-      },
-      {
-        "phase": "sample",
-        "atMs": 8100,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.16
-      },
-      {
-        "phase": "decode",
-        "atMs": 12547,
-        "driverGB": 8.22,
-        "currentGB": 4.78,
-        "rssGB": 2.13
-      },
-      {
-        "phase": "save",
-        "atMs": 15601,
-        "driverGB": 10.91,
-        "currentGB": 3.54,
         "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 1649,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1651,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1701,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.33
+      },
+      {
+        "phase": "done",
+        "atMs": 1747,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.34
+      },
+      {
+        "phase": "done",
+        "atMs": 1825,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.35
+      },
+      {
+        "phase": "sample",
+        "atMs": 1825,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.35
+      },
+      {
+        "phase": "decode",
+        "atMs": 4447,
+        "driverGB": 2.21,
+        "currentGB": 1.61,
+        "rssGB": 1.53
+      },
+      {
+        "phase": "save",
+        "atMs": 4780,
+        "driverGB": 3.22,
+        "currentGB": 1.76,
+        "rssGB": 1.54
       }
     ],
-    "at": "2026-07-06T07:09:03.839Z"
+    "at": "2026-08-12T10:37:32.744Z"
   },
   {
-    "model": "noobai",
+    "model": "sdturbo",
     "driverBaseGB": 0,
-    "driverPeakGB": 10.96,
-    "driverPostLoadGB": 5.29,
-    "currentPeakGB": 7.02,
-    "rssPeakGB": 8.79,
-    "psutilFootprintGB": 9.26,
-    "recommendedMaxGB": 27,
-    "diskWeightsGB": 6.62,
-    "logModelSizeGB": 6.46,
+    "driverPeakGB": 3.21,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 1.92,
+    "rssPeakGB": 6.47,
+    "psutilFootprintGB": 6.37,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 4.86,
+    "logModelSizeGB": 2.43,
     "loadMode": "complete",
     "phases": [
       {
         "phase": "load",
-        "atMs": 9,
+        "atMs": 19,
         "driverGB": 0,
         "currentGB": 0,
-        "rssGB": 0.7
+        "rssGB": 0.61
       },
       {
         "phase": "done",
-        "atMs": 5781,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.02
+        "atMs": 4300,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.61
+      },
+      {
+        "phase": "done",
+        "atMs": 4301,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.61
+      },
+      {
+        "phase": "done",
+        "atMs": 4608,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.7
       },
       {
         "phase": "encode",
-        "atMs": 5783,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.02
+        "atMs": 4608,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.7
       },
       {
         "phase": "encode",
-        "atMs": 6214,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.28
+        "atMs": 4710,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.71
       },
       {
         "phase": "sample",
-        "atMs": 6631,
-        "driverGB": 5.29,
-        "currentGB": 4.78,
-        "rssGB": 2.3
+        "atMs": 4819,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.72
       },
       {
         "phase": "decode",
-        "atMs": 13590,
-        "driverGB": 5.3,
-        "currentGB": 4.79,
-        "rssGB": 2.42
+        "atMs": 5145,
+        "driverGB": 2.2,
+        "currentGB": 1.62,
+        "rssGB": 1.65
       },
       {
         "phase": "save",
-        "atMs": 16087,
-        "driverGB": 10.95,
-        "currentGB": 4.94,
-        "rssGB": 2.42
+        "atMs": 5448,
+        "driverGB": 3.2,
+        "currentGB": 1.77,
+        "rssGB": 1.65
       }
     ],
-    "at": "2026-07-06T07:09:42.588Z"
+    "at": "2026-08-12T10:38:01.287Z"
+  },
+  {
+    "model": "sd21",
+    "driverBaseGB": 0,
+    "driverPeakGB": 4.15,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 2.05,
+    "rssPeakGB": 6.37,
+    "psutilFootprintGB": 9.42,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 4.86,
+    "logModelSizeGB": 2.43,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 17,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.62
+      },
+      {
+        "phase": "done",
+        "atMs": 4361,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.61
+      },
+      {
+        "phase": "encode",
+        "atMs": 4362,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.61
+      },
+      {
+        "phase": "encode",
+        "atMs": 4471,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.62
+      },
+      {
+        "phase": "sample",
+        "atMs": 4580,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.62
+      },
+      {
+        "phase": "decode",
+        "atMs": 6463,
+        "driverGB": 2.2,
+        "currentGB": 1.62,
+        "rssGB": 1.65
+      },
+      {
+        "phase": "save",
+        "atMs": 6833,
+        "driverGB": 3.21,
+        "currentGB": 1.77,
+        "rssGB": 1.65
+      }
+    ],
+    "at": "2026-08-12T10:38:30.446Z"
+  },
+  {
+    "model": "dreamlike",
+    "driverBaseGB": 0,
+    "driverPeakGB": 4.77,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 1.89,
+    "rssPeakGB": 1.48,
+    "psutilFootprintGB": 6.24,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 1.99,
+    "logModelSizeGB": 1.99,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 17,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 1600,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1602,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1654,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.33
+      },
+      {
+        "phase": "sample",
+        "atMs": 1692,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.34
+      },
+      {
+        "phase": "decode",
+        "atMs": 3933,
+        "driverGB": 2.22,
+        "currentGB": 1.61,
+        "rssGB": 1.2
+      },
+      {
+        "phase": "save",
+        "atMs": 4320,
+        "driverGB": 3.22,
+        "currentGB": 1.76,
+        "rssGB": 1.2
+      }
+    ],
+    "at": "2026-08-12T10:39:01.151Z"
+  },
+  {
+    "model": "realisticvision",
+    "driverBaseGB": 0,
+    "driverPeakGB": 4.01,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 2.02,
+    "rssPeakGB": 1.48,
+    "psutilFootprintGB": 5.16,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 1.99,
+    "logModelSizeGB": 1.99,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 17,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 1641,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1642,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1694,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.33
+      },
+      {
+        "phase": "sample",
+        "atMs": 1733,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.34
+      },
+      {
+        "phase": "decode",
+        "atMs": 3034,
+        "driverGB": 2.2,
+        "currentGB": 1.61,
+        "rssGB": 1.2
+      },
+      {
+        "phase": "save",
+        "atMs": 3382,
+        "driverGB": 3.21,
+        "currentGB": 1.76,
+        "rssGB": 1.2
+      }
+    ],
+    "at": "2026-08-12T10:39:29.342Z"
+  },
+  {
+    "model": "dreamshaper8",
+    "driverBaseGB": 0,
+    "driverPeakGB": 4.8,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 2.95,
+    "rssPeakGB": 1.48,
+    "psutilFootprintGB": 5.88,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 1.99,
+    "logModelSizeGB": 1.99,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 17,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 1579,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "done",
+        "atMs": 1580,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1580,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1633,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.33
+      },
+      {
+        "phase": "sample",
+        "atMs": 1671,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.34
+      },
+      {
+        "phase": "decode",
+        "atMs": 3006,
+        "driverGB": 2.21,
+        "currentGB": 1.61,
+        "rssGB": 1.2
+      },
+      {
+        "phase": "save",
+        "atMs": 3445,
+        "driverGB": 3.22,
+        "currentGB": 1.76,
+        "rssGB": 1.2
+      }
+    ],
+    "at": "2026-08-12T10:39:56.531Z"
+  },
+  {
+    "model": "sd15",
+    "driverBaseGB": 0,
+    "driverPeakGB": 4.29,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 1.92,
+    "rssPeakGB": 1.7,
+    "psutilFootprintGB": 5.8,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 1.99,
+    "logModelSizeGB": 1.99,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 17,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 1646,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1647,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1698,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.33
+      },
+      {
+        "phase": "sample",
+        "atMs": 1737,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.34
+      },
+      {
+        "phase": "decode",
+        "atMs": 3231,
+        "driverGB": 2.21,
+        "currentGB": 1.61,
+        "rssGB": 1.2
+      },
+      {
+        "phase": "save",
+        "atMs": 3604,
+        "driverGB": 3.22,
+        "currentGB": 1.76,
+        "rssGB": 1.2
+      }
+    ],
+    "at": "2026-08-12T10:40:23.700Z"
+  },
+  {
+    "model": "sd21",
+    "driverBaseGB": 0,
+    "driverPeakGB": 3.51,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 2.97,
+    "rssPeakGB": 6.47,
+    "psutilFootprintGB": 8.49,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 4.86,
+    "logModelSizeGB": 2.43,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 18,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 4296,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.61
+      },
+      {
+        "phase": "encode",
+        "atMs": 4297,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.61
+      },
+      {
+        "phase": "encode",
+        "atMs": 4403,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.62
+      },
+      {
+        "phase": "sample",
+        "atMs": 4511,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.63
+      },
+      {
+        "phase": "decode",
+        "atMs": 5513,
+        "driverGB": 2.21,
+        "currentGB": 1.62,
+        "rssGB": 1.65
+      },
+      {
+        "phase": "save",
+        "atMs": 5885,
+        "driverGB": 3.21,
+        "currentGB": 1.77,
+        "rssGB": 1.66
+      }
+    ],
+    "at": "2026-08-12T10:40:51.300Z"
+  },
+  {
+    "model": "sd15lcm",
+    "driverBaseGB": 0,
+    "driverPeakGB": 3.26,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 1.92,
+    "rssPeakGB": 1.7,
+    "psutilFootprintGB": 6.21,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 2.11,
+    "logModelSizeGB": 3.59,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 16,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 1653,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1655,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1704,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.33
+      },
+      {
+        "phase": "done",
+        "atMs": 1746,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.34
+      },
+      {
+        "phase": "done",
+        "atMs": 1834,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.35
+      },
+      {
+        "phase": "sample",
+        "atMs": 1835,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.35
+      },
+      {
+        "phase": "decode",
+        "atMs": 3436,
+        "driverGB": 2.21,
+        "currentGB": 1.61,
+        "rssGB": 1.54
+      },
+      {
+        "phase": "save",
+        "atMs": 3822,
+        "driverGB": 3.22,
+        "currentGB": 1.76,
+        "rssGB": 1.41
+      }
+    ],
+    "at": "2026-08-12T10:41:21.120Z"
+  },
+  {
+    "model": "realisticvision",
+    "driverBaseGB": 0,
+    "driverPeakGB": 4.86,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 1.85,
+    "rssPeakGB": 1.63,
+    "psutilFootprintGB": 6.18,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 1.99,
+    "logModelSizeGB": 1.99,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 17,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 1704,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1705,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1758,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.33
+      },
+      {
+        "phase": "sample",
+        "atMs": 1797,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.34
+      },
+      {
+        "phase": "decode",
+        "atMs": 3108,
+        "driverGB": 2.21,
+        "currentGB": 1.61,
+        "rssGB": 1.2
+      },
+      {
+        "phase": "save",
+        "atMs": 3486,
+        "driverGB": 3.21,
+        "currentGB": 1.76,
+        "rssGB": 1.2
+      }
+    ],
+    "at": "2026-08-12T10:41:48.657Z"
+  },
+  {
+    "model": "sdturbo",
+    "driverBaseGB": 0,
+    "driverPeakGB": 3.21,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 1.8,
+    "rssPeakGB": 6.27,
+    "psutilFootprintGB": 8.15,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 4.86,
+    "logModelSizeGB": 2.43,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 17,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 4218,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.61
+      },
+      {
+        "phase": "done",
+        "atMs": 4219,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.61
+      },
+      {
+        "phase": "done",
+        "atMs": 4501,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.7
+      },
+      {
+        "phase": "encode",
+        "atMs": 4501,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.7
+      },
+      {
+        "phase": "encode",
+        "atMs": 4602,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.71
+      },
+      {
+        "phase": "sample",
+        "atMs": 4712,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.72
+      },
+      {
+        "phase": "decode",
+        "atMs": 4973,
+        "driverGB": 2.2,
+        "currentGB": 1.62,
+        "rssGB": 1.65
+      },
+      {
+        "phase": "save",
+        "atMs": 5336,
+        "driverGB": 3.2,
+        "currentGB": 1.77,
+        "rssGB": 1.66
+      }
+    ],
+    "at": "2026-08-12T10:42:16.139Z"
+  },
+  {
+    "model": "sd15",
+    "driverBaseGB": 0,
+    "driverPeakGB": 4.29,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 1.92,
+    "rssPeakGB": 1.7,
+    "psutilFootprintGB": 4.33,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 1.99,
+    "logModelSizeGB": 1.99,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 18,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 1660,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1662,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1714,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.33
+      },
+      {
+        "phase": "sample",
+        "atMs": 1754,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.34
+      },
+      {
+        "phase": "decode",
+        "atMs": 2871,
+        "driverGB": 2.22,
+        "currentGB": 1.61,
+        "rssGB": 1.2
+      },
+      {
+        "phase": "save",
+        "atMs": 3255,
+        "driverGB": 3.22,
+        "currentGB": 1.76,
+        "rssGB": 1.2
+      }
+    ],
+    "at": "2026-08-12T10:42:45.272Z"
+  },
+  {
+    "model": "dreamshaper8",
+    "driverBaseGB": 0,
+    "driverPeakGB": 4.8,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 1.89,
+    "rssPeakGB": 1.48,
+    "psutilFootprintGB": 6.18,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 1.99,
+    "logModelSizeGB": 1.99,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 18,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 1628,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "done",
+        "atMs": 1629,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1630,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1681,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.33
+      },
+      {
+        "phase": "sample",
+        "atMs": 1719,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.34
+      },
+      {
+        "phase": "decode",
+        "atMs": 3076,
+        "driverGB": 2.22,
+        "currentGB": 1.61,
+        "rssGB": 1.2
+      },
+      {
+        "phase": "save",
+        "atMs": 3519,
+        "driverGB": 3.22,
+        "currentGB": 1.76,
+        "rssGB": 1.2
+      }
+    ],
+    "at": "2026-08-12T10:43:12.333Z"
+  },
+  {
+    "model": "dreamlike",
+    "driverBaseGB": 0,
+    "driverPeakGB": 4.8,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 1.96,
+    "rssPeakGB": 1.48,
+    "psutilFootprintGB": 5.86,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 1.99,
+    "logModelSizeGB": 1.99,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 23,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 1619,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1621,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1672,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.33
+      },
+      {
+        "phase": "sample",
+        "atMs": 1713,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.34
+      },
+      {
+        "phase": "decode",
+        "atMs": 3063,
+        "driverGB": 2.21,
+        "currentGB": 1.61,
+        "rssGB": 1.2
+      },
+      {
+        "phase": "save",
+        "atMs": 3511,
+        "driverGB": 3.22,
+        "currentGB": 1.76,
+        "rssGB": 1.2
+      }
+    ],
+    "at": "2026-08-12T10:43:39.736Z"
+  },
+  {
+    "model": "epicrealism",
+    "driverBaseGB": 0,
+    "driverPeakGB": 4.01,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 1.79,
+    "rssPeakGB": 1.55,
+    "psutilFootprintGB": 5.5,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 1.99,
+    "logModelSizeGB": 1.99,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 17,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 1746,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1748,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1800,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.33
+      },
+      {
+        "phase": "sample",
+        "atMs": 1839,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.34
+      },
+      {
+        "phase": "decode",
+        "atMs": 3144,
+        "driverGB": 2.21,
+        "currentGB": 1.61,
+        "rssGB": 1.2
+      },
+      {
+        "phase": "save",
+        "atMs": 3500,
+        "driverGB": 3.21,
+        "currentGB": 1.76,
+        "rssGB": 1.2
+      }
+    ],
+    "at": "2026-08-12T10:44:06.854Z"
+  },
+  {
+    "model": "sd15",
+    "driverBaseGB": 0,
+    "driverPeakGB": 4.29,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 1.92,
+    "rssPeakGB": 1.48,
+    "psutilFootprintGB": 4.32,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 1.99,
+    "logModelSizeGB": 1.99,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 19,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 1625,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1627,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1680,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.33
+      },
+      {
+        "phase": "sample",
+        "atMs": 1719,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.34
+      },
+      {
+        "phase": "decode",
+        "atMs": 2803,
+        "driverGB": 2.22,
+        "currentGB": 1.61,
+        "rssGB": 1.2
+      },
+      {
+        "phase": "save",
+        "atMs": 3189,
+        "driverGB": 3.22,
+        "currentGB": 1.76,
+        "rssGB": 1.2
+      }
+    ],
+    "at": "2026-08-12T10:44:34.466Z"
+  },
+  {
+    "model": "dreamlike",
+    "driverBaseGB": 0,
+    "driverPeakGB": 4.8,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 1.89,
+    "rssPeakGB": 1.48,
+    "psutilFootprintGB": 6.19,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 1.99,
+    "logModelSizeGB": 1.99,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 18,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 1626,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1628,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1678,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.33
+      },
+      {
+        "phase": "sample",
+        "atMs": 1717,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.34
+      },
+      {
+        "phase": "decode",
+        "atMs": 3068,
+        "driverGB": 2.22,
+        "currentGB": 1.61,
+        "rssGB": 1.2
+      },
+      {
+        "phase": "save",
+        "atMs": 3519,
+        "driverGB": 3.22,
+        "currentGB": 1.76,
+        "rssGB": 1.2
+      }
+    ],
+    "at": "2026-08-12T10:45:01.471Z"
+  },
+  {
+    "model": "sd21",
+    "driverBaseGB": 0,
+    "driverPeakGB": 3.51,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 1.87,
+    "rssPeakGB": 6.47,
+    "psutilFootprintGB": 8.86,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 4.86,
+    "logModelSizeGB": 2.43,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 18,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 4313,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.61
+      },
+      {
+        "phase": "encode",
+        "atMs": 4314,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.61
+      },
+      {
+        "phase": "encode",
+        "atMs": 4420,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.62
+      },
+      {
+        "phase": "sample",
+        "atMs": 4529,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.63
+      },
+      {
+        "phase": "decode",
+        "atMs": 5615,
+        "driverGB": 2.21,
+        "currentGB": 1.62,
+        "rssGB": 1.65
+      },
+      {
+        "phase": "save",
+        "atMs": 5941,
+        "driverGB": 3.21,
+        "currentGB": 1.77,
+        "rssGB": 1.66
+      }
+    ],
+    "at": "2026-08-12T10:45:28.842Z"
+  },
+  {
+    "model": "dreamshaper8",
+    "driverBaseGB": 0,
+    "driverPeakGB": 4.8,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 1.96,
+    "rssPeakGB": 1.48,
+    "psutilFootprintGB": 5.91,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 1.99,
+    "logModelSizeGB": 1.99,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 18,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 1618,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "done",
+        "atMs": 1619,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1619,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1672,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.33
+      },
+      {
+        "phase": "sample",
+        "atMs": 1711,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.34
+      },
+      {
+        "phase": "decode",
+        "atMs": 3048,
+        "driverGB": 2.21,
+        "currentGB": 1.61,
+        "rssGB": 1.2
+      },
+      {
+        "phase": "save",
+        "atMs": 3495,
+        "driverGB": 3.22,
+        "currentGB": 1.76,
+        "rssGB": 1.2
+      }
+    ],
+    "at": "2026-08-12T10:45:58.533Z"
+  },
+  {
+    "model": "sd15lcm",
+    "driverBaseGB": 0,
+    "driverPeakGB": 3.26,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 1.92,
+    "rssPeakGB": 1.64,
+    "psutilFootprintGB": 6.18,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 2.11,
+    "logModelSizeGB": 3.59,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 18,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 1634,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1636,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1687,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.33
+      },
+      {
+        "phase": "done",
+        "atMs": 1740,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.34
+      },
+      {
+        "phase": "done",
+        "atMs": 1816,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.35
+      },
+      {
+        "phase": "sample",
+        "atMs": 1816,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.35
+      },
+      {
+        "phase": "decode",
+        "atMs": 3487,
+        "driverGB": 2.21,
+        "currentGB": 1.61,
+        "rssGB": 1.53
+      },
+      {
+        "phase": "save",
+        "atMs": 3830,
+        "driverGB": 3.22,
+        "currentGB": 1.76,
+        "rssGB": 1.41
+      }
+    ],
+    "at": "2026-08-12T10:46:25.781Z"
+  },
+  {
+    "model": "sdturbo",
+    "driverBaseGB": 0,
+    "driverPeakGB": 3.21,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 1.77,
+    "rssPeakGB": 6.29,
+    "psutilFootprintGB": 8.33,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 4.86,
+    "logModelSizeGB": 2.43,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 18,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 4213,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.61
+      },
+      {
+        "phase": "done",
+        "atMs": 4214,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.61
+      },
+      {
+        "phase": "done",
+        "atMs": 4533,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.7
+      },
+      {
+        "phase": "encode",
+        "atMs": 4533,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.7
+      },
+      {
+        "phase": "encode",
+        "atMs": 4633,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.71
+      },
+      {
+        "phase": "sample",
+        "atMs": 4739,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.72
+      },
+      {
+        "phase": "decode",
+        "atMs": 5075,
+        "driverGB": 2.2,
+        "currentGB": 1.62,
+        "rssGB": 1.65
+      },
+      {
+        "phase": "save",
+        "atMs": 5383,
+        "driverGB": 3.2,
+        "currentGB": 1.77,
+        "rssGB": 1.65
+      }
+    ],
+    "at": "2026-08-12T10:46:53.370Z"
+  },
+  {
+    "model": "epicrealism",
+    "driverBaseGB": 0,
+    "driverPeakGB": 4.01,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 3.03,
+    "rssPeakGB": 1.58,
+    "psutilFootprintGB": 5.35,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 1.99,
+    "logModelSizeGB": 1.99,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 18,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 1740,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1742,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1793,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.33
+      },
+      {
+        "phase": "sample",
+        "atMs": 1832,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.34
+      },
+      {
+        "phase": "decode",
+        "atMs": 3128,
+        "driverGB": 2.21,
+        "currentGB": 1.61,
+        "rssGB": 1.2
+      },
+      {
+        "phase": "save",
+        "atMs": 3489,
+        "driverGB": 3.21,
+        "currentGB": 1.76,
+        "rssGB": 1.2
+      }
+    ],
+    "at": "2026-08-12T10:47:22.621Z"
+  },
+  {
+    "model": "realisticvision",
+    "driverBaseGB": 0,
+    "driverPeakGB": 4.01,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 1.85,
+    "rssPeakGB": 1.61,
+    "psutilFootprintGB": 5.36,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 1.99,
+    "logModelSizeGB": 1.99,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 16,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 1713,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1714,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1766,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.33
+      },
+      {
+        "phase": "sample",
+        "atMs": 1803,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.33
+      },
+      {
+        "phase": "decode",
+        "atMs": 3180,
+        "driverGB": 2.2,
+        "currentGB": 1.61,
+        "rssGB": 1.2
+      },
+      {
+        "phase": "save",
+        "atMs": 3492,
+        "driverGB": 3.21,
+        "currentGB": 1.76,
+        "rssGB": 1.2
+      }
+    ],
+    "at": "2026-08-12T10:47:50.012Z"
+  },
+  {
+    "model": "epicrealism",
+    "driverBaseGB": 0,
+    "driverPeakGB": 4.01,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 1.78,
+    "rssPeakGB": 1.55,
+    "psutilFootprintGB": 5.33,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 1.99,
+    "logModelSizeGB": 1.99,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 19,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 1753,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1754,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1807,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.33
+      },
+      {
+        "phase": "sample",
+        "atMs": 1846,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.34
+      },
+      {
+        "phase": "decode",
+        "atMs": 3157,
+        "driverGB": 2.21,
+        "currentGB": 1.61,
+        "rssGB": 1.2
+      },
+      {
+        "phase": "save",
+        "atMs": 3511,
+        "driverGB": 3.21,
+        "currentGB": 1.76,
+        "rssGB": 1.2
+      }
+    ],
+    "at": "2026-08-12T10:48:17.682Z"
+  },
+  {
+    "model": "dreamshaper8",
+    "driverBaseGB": 0,
+    "driverPeakGB": 4.8,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 1.89,
+    "rssPeakGB": 1.48,
+    "psutilFootprintGB": 6.21,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 1.99,
+    "logModelSizeGB": 1.99,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 18,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 1641,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "done",
+        "atMs": 1643,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1643,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1694,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.33
+      },
+      {
+        "phase": "sample",
+        "atMs": 1733,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.34
+      },
+      {
+        "phase": "decode",
+        "atMs": 3084,
+        "driverGB": 2.22,
+        "currentGB": 1.61,
+        "rssGB": 1.2
+      },
+      {
+        "phase": "save",
+        "atMs": 3532,
+        "driverGB": 3.22,
+        "currentGB": 1.76,
+        "rssGB": 1.2
+      }
+    ],
+    "at": "2026-08-12T10:48:45.165Z"
+  },
+  {
+    "model": "sd15lcm",
+    "driverBaseGB": 0,
+    "driverPeakGB": 3.26,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 1.92,
+    "rssPeakGB": 1.71,
+    "psutilFootprintGB": 6.11,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 2.11,
+    "logModelSizeGB": 3.59,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 18,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 1657,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1659,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1708,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.33
+      },
+      {
+        "phase": "done",
+        "atMs": 1754,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.34
+      },
+      {
+        "phase": "done",
+        "atMs": 1839,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.35
+      },
+      {
+        "phase": "sample",
+        "atMs": 1839,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.35
+      },
+      {
+        "phase": "decode",
+        "atMs": 3477,
+        "driverGB": 2.21,
+        "currentGB": 1.61,
+        "rssGB": 1.54
+      },
+      {
+        "phase": "save",
+        "atMs": 3865,
+        "driverGB": 3.22,
+        "currentGB": 1.76,
+        "rssGB": 1.41
+      }
+    ],
+    "at": "2026-08-12T10:49:12.628Z"
+  },
+  {
+    "model": "sdturbo",
+    "driverBaseGB": 0,
+    "driverPeakGB": 3.21,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 1.77,
+    "rssPeakGB": 6.26,
+    "psutilFootprintGB": 8.3,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 4.86,
+    "logModelSizeGB": 2.43,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 19,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 4231,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.61
+      },
+      {
+        "phase": "done",
+        "atMs": 4231,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.61
+      },
+      {
+        "phase": "done",
+        "atMs": 4537,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.7
+      },
+      {
+        "phase": "encode",
+        "atMs": 4537,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.7
+      },
+      {
+        "phase": "encode",
+        "atMs": 4640,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.7
+      },
+      {
+        "phase": "sample",
+        "atMs": 4749,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.72
+      },
+      {
+        "phase": "decode",
+        "atMs": 5004,
+        "driverGB": 2.2,
+        "currentGB": 1.62,
+        "rssGB": 1.65
+      },
+      {
+        "phase": "save",
+        "atMs": 5353,
+        "driverGB": 3.2,
+        "currentGB": 1.77,
+        "rssGB": 1.65
+      }
+    ],
+    "at": "2026-08-12T10:49:40.275Z"
+  },
+  {
+    "model": "dreamlike",
+    "driverBaseGB": 0,
+    "driverPeakGB": 4.8,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 1.96,
+    "rssPeakGB": 1.48,
+    "psutilFootprintGB": 6.18,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 1.99,
+    "logModelSizeGB": 1.99,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 18,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 1597,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1598,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1649,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.33
+      },
+      {
+        "phase": "sample",
+        "atMs": 1688,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.34
+      },
+      {
+        "phase": "decode",
+        "atMs": 3097,
+        "driverGB": 2.22,
+        "currentGB": 1.61,
+        "rssGB": 1.2
+      },
+      {
+        "phase": "save",
+        "atMs": 3475,
+        "driverGB": 3.22,
+        "currentGB": 1.76,
+        "rssGB": 1.2
+      }
+    ],
+    "at": "2026-08-12T10:50:09.405Z"
+  },
+  {
+    "model": "sd21",
+    "driverBaseGB": 0,
+    "driverPeakGB": 3.51,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 1.93,
+    "rssPeakGB": 6.13,
+    "psutilFootprintGB": 8.87,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 4.86,
+    "logModelSizeGB": 2.43,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 17,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 4292,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.61
+      },
+      {
+        "phase": "encode",
+        "atMs": 4294,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.61
+      },
+      {
+        "phase": "encode",
+        "atMs": 4401,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.62
+      },
+      {
+        "phase": "sample",
+        "atMs": 4508,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.63
+      },
+      {
+        "phase": "decode",
+        "atMs": 5501,
+        "driverGB": 2.2,
+        "currentGB": 1.62,
+        "rssGB": 1.65
+      },
+      {
+        "phase": "save",
+        "atMs": 5869,
+        "driverGB": 3.21,
+        "currentGB": 1.77,
+        "rssGB": 1.66
+      }
+    ],
+    "at": "2026-08-12T10:50:36.597Z"
+  },
+  {
+    "model": "sd15",
+    "driverBaseGB": 0,
+    "driverPeakGB": 4.29,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 2.02,
+    "rssPeakGB": 1.48,
+    "psutilFootprintGB": 5.59,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 1.99,
+    "logModelSizeGB": 1.99,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 19,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 1620,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1621,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1674,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.33
+      },
+      {
+        "phase": "sample",
+        "atMs": 1712,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.34
+      },
+      {
+        "phase": "decode",
+        "atMs": 2798,
+        "driverGB": 2.22,
+        "currentGB": 1.61,
+        "rssGB": 1.2
+      },
+      {
+        "phase": "save",
+        "atMs": 3169,
+        "driverGB": 3.22,
+        "currentGB": 1.76,
+        "rssGB": 1.2
+      }
+    ],
+    "at": "2026-08-12T10:51:06.321Z"
+  },
+  {
+    "model": "realisticvision",
+    "driverBaseGB": 0,
+    "driverPeakGB": 4.01,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 1.91,
+    "rssPeakGB": 1.68,
+    "psutilFootprintGB": 5.43,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 1.99,
+    "logModelSizeGB": 1.99,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 18,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 1682,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1683,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1733,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.33
+      },
+      {
+        "phase": "sample",
+        "atMs": 1772,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.33
+      },
+      {
+        "phase": "decode",
+        "atMs": 3057,
+        "driverGB": 2.21,
+        "currentGB": 1.61,
+        "rssGB": 1.2
+      },
+      {
+        "phase": "save",
+        "atMs": 3417,
+        "driverGB": 3.21,
+        "currentGB": 1.76,
+        "rssGB": 1.2
+      }
+    ],
+    "at": "2026-08-12T10:51:33.212Z"
+  },
+  {
+    "model": "dreamlike",
+    "driverBaseGB": 0,
+    "driverPeakGB": 4.8,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 1.96,
+    "rssPeakGB": 1.48,
+    "psutilFootprintGB": 6.07,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 1.99,
+    "logModelSizeGB": 1.99,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 18,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 1611,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1613,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1665,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.33
+      },
+      {
+        "phase": "sample",
+        "atMs": 1703,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.33
+      },
+      {
+        "phase": "decode",
+        "atMs": 3087,
+        "driverGB": 2.22,
+        "currentGB": 1.61,
+        "rssGB": 1.2
+      },
+      {
+        "phase": "save",
+        "atMs": 3472,
+        "driverGB": 3.22,
+        "currentGB": 1.76,
+        "rssGB": 1.2
+      }
+    ],
+    "at": "2026-08-12T10:52:00.648Z"
+  },
+  {
+    "model": "sdturbo",
+    "driverBaseGB": 0,
+    "driverPeakGB": 3.21,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 1.86,
+    "rssPeakGB": 6.32,
+    "psutilFootprintGB": 8.27,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 4.86,
+    "logModelSizeGB": 2.43,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 18,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 4196,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.61
+      },
+      {
+        "phase": "done",
+        "atMs": 4197,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.61
+      },
+      {
+        "phase": "done",
+        "atMs": 4490,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.7
+      },
+      {
+        "phase": "encode",
+        "atMs": 4490,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.7
+      },
+      {
+        "phase": "encode",
+        "atMs": 4592,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.71
+      },
+      {
+        "phase": "sample",
+        "atMs": 4700,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.72
+      },
+      {
+        "phase": "decode",
+        "atMs": 4951,
+        "driverGB": 2.2,
+        "currentGB": 1.62,
+        "rssGB": 1.65
+      },
+      {
+        "phase": "save",
+        "atMs": 5289,
+        "driverGB": 3.2,
+        "currentGB": 1.77,
+        "rssGB": 1.65
+      }
+    ],
+    "at": "2026-08-12T10:52:27.830Z"
+  },
+  {
+    "model": "sd21",
+    "driverBaseGB": 0,
+    "driverPeakGB": 3.51,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 1.93,
+    "rssPeakGB": 6.18,
+    "psutilFootprintGB": 8.62,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 4.86,
+    "logModelSizeGB": 2.43,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 18,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 4272,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.61
+      },
+      {
+        "phase": "encode",
+        "atMs": 4273,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.61
+      },
+      {
+        "phase": "encode",
+        "atMs": 4382,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.62
+      },
+      {
+        "phase": "sample",
+        "atMs": 4489,
+        "driverGB": 2.16,
+        "currentGB": 1.61,
+        "rssGB": 1.63
+      },
+      {
+        "phase": "decode",
+        "atMs": 5471,
+        "driverGB": 2.21,
+        "currentGB": 1.62,
+        "rssGB": 1.65
+      },
+      {
+        "phase": "save",
+        "atMs": 5838,
+        "driverGB": 3.21,
+        "currentGB": 1.77,
+        "rssGB": 1.66
+      }
+    ],
+    "at": "2026-08-12T10:52:56.832Z"
+  },
+  {
+    "model": "epicrealism",
+    "driverBaseGB": 0,
+    "driverPeakGB": 4.01,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 1.85,
+    "rssPeakGB": 1.56,
+    "psutilFootprintGB": 5.42,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 1.99,
+    "logModelSizeGB": 1.99,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 17,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 1749,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1750,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1802,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.33
+      },
+      {
+        "phase": "sample",
+        "atMs": 1842,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.34
+      },
+      {
+        "phase": "decode",
+        "atMs": 3129,
+        "driverGB": 2.21,
+        "currentGB": 1.61,
+        "rssGB": 1.2
+      },
+      {
+        "phase": "save",
+        "atMs": 3471,
+        "driverGB": 3.21,
+        "currentGB": 1.76,
+        "rssGB": 1.2
+      }
+    ],
+    "at": "2026-08-12T10:53:26.523Z"
+  },
+  {
+    "model": "dreamshaper8",
+    "driverBaseGB": 0,
+    "driverPeakGB": 4.8,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 2.95,
+    "rssPeakGB": 1.48,
+    "psutilFootprintGB": 5.91,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 1.99,
+    "logModelSizeGB": 1.99,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 17,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 1578,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "done",
+        "atMs": 1580,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1580,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1632,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.33
+      },
+      {
+        "phase": "sample",
+        "atMs": 1670,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.33
+      },
+      {
+        "phase": "decode",
+        "atMs": 3008,
+        "driverGB": 2.21,
+        "currentGB": 1.61,
+        "rssGB": 1.2
+      },
+      {
+        "phase": "save",
+        "atMs": 3446,
+        "driverGB": 3.22,
+        "currentGB": 1.76,
+        "rssGB": 1.2
+      }
+    ],
+    "at": "2026-08-12T10:53:53.938Z"
+  },
+  {
+    "model": "sd15lcm",
+    "driverBaseGB": 0,
+    "driverPeakGB": 3.26,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 1.8,
+    "rssPeakGB": 1.64,
+    "psutilFootprintGB": 6.28,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 2.11,
+    "logModelSizeGB": 3.59,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 19,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 1621,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1623,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1675,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.33
+      },
+      {
+        "phase": "done",
+        "atMs": 1718,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.34
+      },
+      {
+        "phase": "done",
+        "atMs": 1802,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.35
+      },
+      {
+        "phase": "sample",
+        "atMs": 1803,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.35
+      },
+      {
+        "phase": "decode",
+        "atMs": 3339,
+        "driverGB": 2.21,
+        "currentGB": 1.61,
+        "rssGB": 1.53
+      },
+      {
+        "phase": "save",
+        "atMs": 3714,
+        "driverGB": 3.22,
+        "currentGB": 1.76,
+        "rssGB": 1.54
+      }
+    ],
+    "at": "2026-08-12T10:54:21.096Z"
+  },
+  {
+    "model": "realisticvision",
+    "driverBaseGB": 0,
+    "driverPeakGB": 4.01,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 1.91,
+    "rssPeakGB": 1.69,
+    "psutilFootprintGB": 5.6,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 1.99,
+    "logModelSizeGB": 1.99,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 17,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 1674,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1675,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1728,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.33
+      },
+      {
+        "phase": "sample",
+        "atMs": 1769,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.34
+      },
+      {
+        "phase": "decode",
+        "atMs": 3070,
+        "driverGB": 2.21,
+        "currentGB": 1.61,
+        "rssGB": 1.2
+      },
+      {
+        "phase": "save",
+        "atMs": 3420,
+        "driverGB": 3.21,
+        "currentGB": 1.76,
+        "rssGB": 1.2
+      }
+    ],
+    "at": "2026-08-12T10:54:48.710Z"
+  },
+  {
+    "model": "sd15",
+    "driverBaseGB": 0,
+    "driverPeakGB": 4.29,
+    "driverPostLoadGB": 2.16,
+    "currentPeakGB": 1.92,
+    "rssPeakGB": 1.48,
+    "psutilFootprintGB": 4.62,
+    "recommendedMaxGB": 28.08,
+    "diskWeightsGB": 1.99,
+    "logModelSizeGB": 1.99,
+    "loadMode": "complete",
+    "phases": [
+      {
+        "phase": "load",
+        "atMs": 20,
+        "driverGB": 0,
+        "currentGB": 0,
+        "rssGB": 0.61
+      },
+      {
+        "phase": "done",
+        "atMs": 1639,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1641,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.32
+      },
+      {
+        "phase": "encode",
+        "atMs": 1695,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.33
+      },
+      {
+        "phase": "sample",
+        "atMs": 1735,
+        "driverGB": 2.16,
+        "currentGB": 1.6,
+        "rssGB": 1.34
+      },
+      {
+        "phase": "decode",
+        "atMs": 2843,
+        "driverGB": 2.22,
+        "currentGB": 1.61,
+        "rssGB": 1.2
+      },
+      {
+        "phase": "save",
+        "atMs": 3213,
+        "driverGB": 3.22,
+        "currentGB": 1.76,
+        "rssGB": 1.2
+      }
+    ],
+    "at": "2026-08-12T10:55:15.859Z"
   }
 ]

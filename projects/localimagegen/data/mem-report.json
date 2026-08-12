@@ -1,78 +1,203 @@
 {
-  "generatedAt": "2026-07-06T07:10:01.311Z",
+  "generatedAt": "2026-08-12T10:55:21.441Z",
   "models": [
     {
-      "model": "illustrious",
+      "model": "dreamlike",
       "mode": "unimodal",
       "full": {
-        "weightsGB": 5.29,
-        "peakGB": 10.96,
-        "activationsGB": 5.67,
+        "weightsGB": 2.16,
+        "peakGB": 4.8,
+        "activationsGB": 2.64,
+        "samples": 5
+      },
+      "partial": null,
+      "confidence": "high",
+      "methods": {
+        "driverPeakGB": 4.8,
+        "currentPeakGB": 1.96,
+        "rssPeakGB": 1.48,
+        "psutilLegacyGB": 6.18,
+        "diskWeightsGB": 1.99,
+        "logModelSizeGB": 1.99
+      },
+      "samples": 5,
+      "notes": [
+        "Post-load weights (2.16 GB) match on-disk size (1.99 GB).",
+        "Legacy psutil footprint (6.18 GB) diverges from the allocator peak (4.8 GB) by 22% — the old free-RAM delta was polluted."
+      ]
+    },
+    {
+      "model": "dreamshaper8",
+      "mode": "unimodal",
+      "full": {
+        "weightsGB": 2.16,
+        "peakGB": 4.8,
+        "activationsGB": 2.64,
+        "samples": 5
+      },
+      "partial": null,
+      "confidence": "high",
+      "methods": {
+        "driverPeakGB": 4.8,
+        "currentPeakGB": 1.96,
+        "rssPeakGB": 1.48,
+        "psutilLegacyGB": 5.91,
+        "diskWeightsGB": 1.99,
+        "logModelSizeGB": 1.99
+      },
+      "samples": 5,
+      "notes": [
+        "Post-load weights (2.16 GB) match on-disk size (1.99 GB).",
+        "Legacy psutil footprint (5.91 GB) diverges from the allocator peak (4.8 GB) by 19% — the old free-RAM delta was polluted."
+      ]
+    },
+    {
+      "model": "epicrealism",
+      "mode": "unimodal",
+      "full": {
+        "weightsGB": 2.16,
+        "peakGB": 4.01,
+        "activationsGB": 1.85,
+        "samples": 5
+      },
+      "partial": null,
+      "confidence": "high",
+      "methods": {
+        "driverPeakGB": 4.01,
+        "currentPeakGB": 1.85,
+        "rssPeakGB": 1.55,
+        "psutilLegacyGB": 5.35,
+        "diskWeightsGB": 1.99,
+        "logModelSizeGB": 1.99
+      },
+      "samples": 5,
+      "notes": [
+        "Post-load weights (2.16 GB) match on-disk size (1.99 GB).",
+        "Legacy psutil footprint (5.35 GB) diverges from the allocator peak (4.01 GB) by 25% — the old free-RAM delta was polluted."
+      ]
+    },
+    {
+      "model": "realisticvision",
+      "mode": "unimodal",
+      "full": {
+        "weightsGB": 2.16,
+        "peakGB": 4.01,
+        "activationsGB": 1.85,
         "samples": 5
       },
       "partial": null,
       "confidence": "medium",
       "methods": {
-        "driverPeakGB": 10.96,
-        "currentPeakGB": 7.02,
-        "rssPeakGB": 4.16,
-        "psutilLegacyGB": 11.94,
-        "diskWeightsGB": 6.46,
-        "logModelSizeGB": 6.46
+        "driverPeakGB": 4.01,
+        "currentPeakGB": 1.91,
+        "rssPeakGB": 1.63,
+        "psutilLegacyGB": 5.43,
+        "diskWeightsGB": 1.99,
+        "logModelSizeGB": 1.99
       },
       "samples": 5,
       "notes": [
-        "Post-load weights (5.29 GB) differ from on-disk size (6.46 GB) by 18%."
+        "Post-load weights (2.16 GB) match on-disk size (1.99 GB).",
+        "Legacy psutil footprint (5.43 GB) diverges from the allocator peak (4.01 GB) by 26% — the old free-RAM delta was polluted."
       ]
     },
     {
-      "model": "noobai",
+      "model": "sd15",
       "mode": "unimodal",
       "full": {
-        "weightsGB": 5.29,
-        "peakGB": 10.96,
-        "activationsGB": 5.67,
+        "weightsGB": 2.16,
+        "peakGB": 4.29,
+        "activationsGB": 2.13,
+        "samples": 5
+      },
+      "partial": null,
+      "confidence": "high",
+      "methods": {
+        "driverPeakGB": 4.29,
+        "currentPeakGB": 1.92,
+        "rssPeakGB": 1.48,
+        "psutilLegacyGB": 4.62,
+        "diskWeightsGB": 1.99,
+        "logModelSizeGB": 1.99
+      },
+      "samples": 5,
+      "notes": [
+        "Post-load weights (2.16 GB) match on-disk size (1.99 GB)."
+      ]
+    },
+    {
+      "model": "sd15lcm",
+      "mode": "unimodal",
+      "full": {
+        "weightsGB": 2.16,
+        "peakGB": 3.26,
+        "activationsGB": 1.1,
         "samples": 5
       },
       "partial": null,
       "confidence": "medium",
       "methods": {
-        "driverPeakGB": 10.96,
-        "currentPeakGB": 7.02,
-        "rssPeakGB": 9.23,
-        "psutilLegacyGB": 9.26,
-        "diskWeightsGB": 6.62,
-        "logModelSizeGB": 6.46
+        "driverPeakGB": 3.26,
+        "currentPeakGB": 1.92,
+        "rssPeakGB": 1.7,
+        "psutilLegacyGB": 6.18,
+        "diskWeightsGB": 2.11,
+        "logModelSizeGB": 3.59
       },
       "samples": 5,
       "notes": [
-        "Post-load weights (5.29 GB) differ from on-disk size (6.62 GB) by 20%.",
-        "Legacy psutil footprint (9.26 GB) diverges from the allocator peak (10.96 GB) by 16% — the old free-RAM delta was polluted."
+        "Post-load weights (2.16 GB) match on-disk size (2.11 GB).",
+        "Legacy psutil footprint (6.18 GB) diverges from the allocator peak (3.26 GB) by 47% — the old free-RAM delta was polluted."
       ]
     },
     {
-      "model": "pony",
+      "model": "sd21",
       "mode": "unimodal",
       "full": {
-        "weightsGB": 5.29,
-        "peakGB": 10.79,
-        "activationsGB": 5.5,
+        "weightsGB": 2.16,
+        "peakGB": 3.51,
+        "activationsGB": 1.35,
         "samples": 5
       },
       "partial": null,
       "confidence": "low",
       "methods": {
-        "driverPeakGB": 10.79,
-        "currentPeakGB": 5.08,
-        "rssPeakGB": 3.52,
-        "psutilLegacyGB": 15.36,
-        "diskWeightsGB": 6.83,
-        "logModelSizeGB": 11.24
+        "driverPeakGB": 3.51,
+        "currentPeakGB": 1.93,
+        "rssPeakGB": 6.37,
+        "psutilLegacyGB": 8.86,
+        "diskWeightsGB": 4.86,
+        "logModelSizeGB": 2.43
       },
       "samples": 5,
       "notes": [
-        "Post-load weights (5.29 GB) differ from on-disk size (6.83 GB) by 23%.",
-        "Legacy psutil footprint (15.36 GB) diverges from the allocator peak (10.79 GB) by 30% — the old free-RAM delta was polluted."
+        "Post-load weights (2.16 GB) differ from on-disk size (4.86 GB) by 56%.",
+        "Legacy psutil footprint (8.86 GB) diverges from the allocator peak (3.51 GB) by 60% — the old free-RAM delta was polluted."
+      ]
+    },
+    {
+      "model": "sdturbo",
+      "mode": "unimodal",
+      "full": {
+        "weightsGB": 2.16,
+        "peakGB": 3.21,
+        "activationsGB": 1.05,
+        "samples": 5
+      },
+      "partial": null,
+      "confidence": "medium",
+      "methods": {
+        "driverPeakGB": 3.21,
+        "currentPeakGB": 1.8,
+        "rssPeakGB": 6.29,
+        "psutilLegacyGB": 8.27,
+        "diskWeightsGB": 4.86,
+        "logModelSizeGB": 2.43
+      },
+      "samples": 5,
+      "notes": [
+        "Post-load weights (2.16 GB) differ from on-disk size (4.86 GB) by 56%.",
+        "Legacy psutil footprint (8.27 GB) diverges from the allocator peak (3.21 GB) by 61% — the old free-RAM delta was polluted."
       ]
     }
   ]
