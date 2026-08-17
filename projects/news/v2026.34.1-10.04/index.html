@@ -1,0 +1,856 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Patch Notes v2026.34.1-10.04</title>
+    <base href="/projects/news/v2026.34.1-10.04/">
+    <style>
+        body {
+          background: #121212;
+          color: #eee;
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-height: 100vh;
+          margin: 0;
+          padding: 20px;
+          box-sizing: border-box;
+        }
+    
+        .card {
+          background: #1e1e1e;
+          padding: 2rem;
+          border-radius: 24px;
+          text-align: center;
+          width: 100%;
+          max-width: 500px;
+          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+          display: flex;
+          flex-direction: column;
+        }
+    
+        h1 {
+          margin: 0 0 1rem 0;
+          color: #fff;
+          font-size: 1.6rem;
+        }
+
+        .media-stage {
+          position: relative;
+          width: 100%;
+          aspect-ratio: 16 / 9;
+          border-radius: 16px;
+          margin-bottom: 0.75rem;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+          border: 1px solid #333;
+          overflow: hidden;
+          cursor: pointer;
+          background: #1a1a1a;
+        }
+
+        .cover-art,
+        .podcast-video {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: opacity 650ms ease;
+        }
+
+        .cover-primary { z-index: 3; opacity: 1; }
+        .podcast-video { z-index: 2; opacity: 0; }
+        .cover-alt { z-index: 4; opacity: 0; }
+        .media-stage.video-playing .cover-primary { opacity: 0; }
+        .media-stage.video-playing .podcast-video { opacity: 1; }
+        .media-stage.show-final .cover-alt { opacity: 1; }
+        .media-stage.show-final .podcast-video { opacity: 1; }
+
+        .image-hint {
+          position: absolute;
+          right: 10px;
+          bottom: 10px;
+          z-index: 2;
+          padding: 5px 9px;
+          border-radius: 999px;
+          background: rgba(18,18,18,0.72);
+          color: #ddd;
+          font-size: 0.68rem;
+          pointer-events: none;
+          backdrop-filter: blur(5px);
+        }
+
+        .media-viewport {
+          position: relative;
+          width: 100%;
+          padding-top: 56.25%; /* Force uniform 16:9 Aspect Ratio box */
+          border-radius: 16px;
+          margin-bottom: 1.5rem;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+          border: 1px solid #333;
+          background: #1a1a1a;
+          overflow: hidden;
+        }
+        
+        .cover-media {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: 15px;
+        }
+    
+        .podcast-nav {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
+          margin: 0 0 1.25rem 0;
+        }
+
+        .podcast-nav a {
+          color: #ddd;
+          background: #292929;
+          border: 1px solid #3a3a3a;
+          border-radius: 10px;
+          padding: 9px 12px;
+          text-decoration: none;
+          font-size: 0.78rem;
+          transition: 0.2s;
+        }
+
+        .podcast-nav a:hover { border-color: #bb86fc; color: #fff; }
+        .podcast-nav a.disabled { opacity: 0.35; pointer-events: none; }
+
+        /* Navigation & Status Row */
+        .nav-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 0.5rem;
+        }
+    
+        #st {
+          color: #888;
+          font-size: 0.75rem;
+          text-transform: uppercase;
+          letter-spacing: 1.5px;
+          margin: 0;
+          flex-grow: 1;
+        }
+    
+        .skip-btn {
+          background: #333;
+          color: #fff;
+          border: none;
+          border-radius: 50%;
+          width: 36px;
+          height: 36px;
+          cursor: pointer;
+          transition: 0.2s;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1rem;
+        }
+    
+        .skip-btn:hover:not(:disabled) {
+          background: #bb86fc;
+          color: #121212;
+        }
+    
+        .skip-btn:disabled {
+          opacity: 0.3;
+          cursor: not-allowed;
+        }
+    
+        audio {
+          width: 100%;
+          margin: 0.5rem 0 1rem 0;
+          outline: none;
+          flex-shrink: 0;
+        }
+    
+        /* 'Now Playing' Transcript Box */
+        .transcript-box {
+          background: #252525;
+          padding: 1.5rem;
+          border-radius: 16px;
+          margin: 0.5rem 0;
+          min-height: 60px;
+          text-align: left;
+          border-left: 4px solid #444;
+          flex-shrink: 0;
+          transition: border-color 0.3s;
+        }
+    
+        #ts-text {
+          line-height: 1.5;
+          font-size: 1.05rem;
+          margin: 0;
+          color: #f0f0f0;
+        }
+    
+        #ts-voice {
+          font-weight: bold;
+          font-size: 0.7rem;
+          text-transform: uppercase;
+          margin-bottom: 0.4rem;
+          opacity: 0.6;
+        }
+    
+        /* Links & Buttons */
+        .link-container {
+          margin-top: 1rem;
+          opacity: 0;
+          transition: opacity 0.3s;
+          pointer-events: none;
+          flex-shrink: 0;
+        }
+    
+        .link-container.visible {
+          opacity: 1;
+          pointer-events: auto;
+        }
+    
+        .btn {
+          background: #bb86fc;
+          color: #121212;
+          padding: 12px 20px;
+          text-decoration: none;
+          border-radius: 12px;
+          display: inline-flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          transition: transform 0.2s;
+          gap: 4px;
+          box-shadow: 0 4px 15px rgba(187, 134, 252, 0.2);
+        }
+    
+        .btn:hover {
+          transform: scale(1.03);
+        }
+    
+        .btn-title {
+          font-weight: 800;
+          font-size: 1rem;
+        }
+    
+        .btn-summary {
+          font-size: 0.75rem;
+          font-weight: 600;
+          opacity: 0.75;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+    
+        /* Messenger Toggle */
+        .toggle-btn {
+          background: none;
+          border: 1px solid #555;
+          color: #aaa;
+          padding: 8px 16px;
+          border-radius: 20px;
+          cursor: pointer;
+          margin: 1.5rem auto 0.5rem auto;
+          font-size: 0.85rem;
+          transition: all 0.2s;
+          flex-shrink: 0;
+        }
+    
+        .toggle-btn:hover {
+          background: #333;
+          color: #fff;
+        }
+    
+        /* Full Messenger Chat */
+        .chat-container {
+          display: none;
+          flex-direction: column;
+          gap: 20px;
+          margin-top: 1rem;
+          text-align: left;
+          overflow-y: auto;
+          padding: 10px 15px 10px 5px;
+          border-top: 1px solid #333;
+          scrollbar-width: thin;
+          scroll-behavior: smooth;
+        }
+    
+        .chat-container.visible {
+          display: flex;
+          flex-grow: 1;
+        }
+    
+        .chat-container::-webkit-scrollbar {
+          width: 6px;
+        }
+    
+        .chat-container::-webkit-scrollbar-thumb {
+          background-color: #555;
+          border-radius: 10px;
+        }
+    
+        /* Topic Wrapper */
+        .topic-group {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          position: relative;
+        }
+    
+        /* Sticky Topic Header */
+        .topic-header {
+          position: sticky;
+          top: 5px;
+          align-self: center;
+          background: rgba(35, 35, 35, 0.95);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          color: #bb86fc;
+          padding: 8px 16px;
+          font-size: 0.75rem;
+          font-weight: bold;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          text-align: center;
+          border-radius: 12px;
+          z-index: 10;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+          border: 1px solid rgba(187, 134, 252, 0.2);
+          max-width: 85%;
+        }
+    
+        .chat-bubble {
+          padding: 12px 16px;
+          border-radius: 18px;
+          max-width: 85%;
+          font-size: 0.95rem;
+          line-height: 1.4;
+          position: relative;
+          opacity: 0.4;
+          transition: all 0.3s;
+          cursor: pointer;
+        }
+    
+        .chat-bubble:hover {
+          opacity: 0.8;
+          transform: scale(1.01);
+        }
+    
+        .chat-bubble.active {
+          opacity: 1;
+          cursor: default;
+          transform: none;
+        }
+    
+        .chat-label {
+          font-size: 0.65rem;
+          font-weight: bold;
+          margin-bottom: 4px;
+          text-transform: uppercase;
+          opacity: 0.7;
+          pointer-events: none;
+        }
+    
+        /* Dynamic Character Styles */
+        .am_adam {
+          border-color: #00d2ff;
+        }
+    
+        .af_sky {
+          border-color: #bb86fc;
+        }
+    
+        .chat-bubble.am_adam {
+          align-self: flex-start;
+          background: #2a2a2a;
+          color: #e0e0e0;
+          border-bottom-left-radius: 4px;
+          border-left: 3px solid #00d2ff;
+        }
+    
+        .chat-bubble.af_sky {
+          align-self: flex-end;
+          background: #3c2a4d;
+          color: #e0e0e0;
+          border-bottom-right-radius: 4px;
+          border-right: 3px solid #bb86fc;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div id="media-stage" class="media-stage" tabindex="0" role="button" aria-label="Play animated briefing">
+            <img id="primary-cover" src="cover.png" class="cover-art cover-primary" alt="Patch Notes v2026.34.1-10.04 — A wide 16:9 cinematic establishing shot of a brutalist news studio constructed from polished obsidian and glowing neon filaments. In the center, a massive holographic globe made of liquid mercury drips upwards into a ceiling of flickering cathode-ray monitors. A news anchor with skin like cracked porcelain sits behind a desk carved from a single block of frozen smoke, their hands hovering over floating glass keys. To the left, a row of vintage 1970s mainframe computers hums with visible heat haze and orange sparks. To the right, a large window reveals a skyline where skyscrapers are draped in heavy velvet curtains and orbiting satellites cast moving shadows across the floor. The lighting is high-contrast noir, dominated by deep cobalt blue and searing amber. Volumetric dust motes dance in the light beams." />
+            <video id="podcast-video" class="podcast-video" muted playsinline preload="auto" poster="cover.png">
+                <source src="animated_briefing.mp4" type="video/mp4" />
+            </video>
+            <img id="final-cover" src="cover-alt.png" class="cover-art cover-alt" loading="eager" alt="Final keyframe — Edit Picture 1 to create keyframe 2. Make only these visible changes:
+Keep these regions fixed: news anchor, frozen smoke desk, velvet-draped skyscrapers.
+Keep Picture 1's camera, framing, composition, spatial layout, identities, object count, exact text, and these protected details unchanged: liquid mercury globe, cracked porcelain skin, frozen smoke desk, cathode-ray monitors, velvet-draped skyscrapers, cobalt and amber lighting, vintage 1970s mainframe computers, polished obsidian floor, color, texture, opacity, size.
+Do not describe animation or intent. Do not add material without visibly reducing its named source. Do not add, remove, duplicate, or rewrite people, objects, signs, labels, captions, symbols, or lettering." />
+            <span id="media-hint" class="image-hint">Loading motion…</span>
+        </div>
+        <nav id="podcast-nav" class="podcast-nav" aria-label="Podcast navigation">
+            <a id="podcast-older" class="disabled" aria-disabled="true">&#8592; Older</a>
+            <a id="podcast-newer" class="disabled" aria-disabled="true">Newer &#8594;</a>
+        </nav>
+
+        <!--
+        <div class="media-viewport">
+            <video 
+                id="podcast-video"
+                class="cover-media" 
+                poster="cover.png"
+                preload="auto"
+                playsinline
+                muted
+                loop>
+                <source src="animated_briefing.mp4" type="video/mp4">
+                <img src="cover.png" class="cover-media" alt="A wide 16:9 cinematic establishing shot of a brutalist news studio constructed from polished obsidian and glowing neon filaments. In the center, a massive holographic globe made of liquid mercury drips upwards into a ceiling of flickering cathode-ray monitors. A news anchor with skin like cracked porcelain sits behind a desk carved from a single block of frozen smoke, their hands hovering over floating glass keys. To the left, a row of vintage 1970s mainframe computers hums with visible heat haze and orange sparks. To the right, a large window reveals a skyline where skyscrapers are draped in heavy velvet curtains and orbiting satellites cast moving shadows across the floor. The lighting is high-contrast noir, dominated by deep cobalt blue and searing amber. Volumetric dust motes dance in the light beams.">
+            </video>
+        </div>
+        -->
+        
+        <div class="nav-row">
+            <button id="btn-prev" class="skip-btn" disabled>&#9198;</button>
+            <p id="st">Ready to play</p>
+            <button id="btn-next" class="skip-btn">&#9199;</button>
+        </div>
+
+        <audio id="pl1" controls autoplay></audio>
+        <audio id="pl2" controls style="display:none;"></audio>
+        
+        <div id="ts-box" class="transcript-box">
+            <div id="ts-voice"></div>
+            <p id="ts-text">Press play to start the briefing...</p>
+        </div>
+
+        <div id="lnk-wrap" class="link-container">
+            <a id="lnk" class="btn" target="_blank">
+                <span class="btn-title">Read Source Article</span>
+                <span id="summ" class="btn-summary"></span>
+            </a>
+        </div>
+
+        <button id="toggle-chat" class="toggle-btn">Show Full Transcript</button>
+        <div id="full-chat" class="chat-container"></div>
+    </div>
+
+    <script>
+        const OVERLAP_SECONDS = 2;
+        const playlist = [{"file":"intro.mp3","url":null,"text":"🎵 (sung) Watermarks and AI visions fly / Stripe's big move hits the sky / Then a fold in Samsung style","voice":"intro","speaker":"Intro Theme","summary":"Intro"},{"file":"audio_0.mp3","url":"https://daringfireball.net/2026/08/anthropics_watermark_text_adulteration_in_claude_is_a_perversion_of_writing","text":"I was just looking at the news about Anthropic's new watermarking... it feels like we're entering this weird era where 'authenticity' is becoming a technical specification rather than a human quality.","voice":1,"speaker":"Brook","summary":"Claude Text Watermarking"},{"file":"audio_1.mp3","url":"https://daringfireball.net/2026/08/anthropics_watermark_text_adulteration_in_claude_is_a_perversion_of_writing","text":"It’s the ultimate engineering trade-off, isn't it? You want to satisfy the regulators, but you risk degrading the very thing that makes the output useful in the first place. It's like trying to put a 'Made in China' sticker on a thought.","voice":2,"speaker":"Conrad","summary":"Claude Text Watermarking"},{"file":"audio_2.mp3","url":"https://techcrunch.com/2026/08/16/stripe-will-reportedly-acquire-ai-gateway-startup-openrouter-for-7b/","text":"Exactly! And then there's the sheer scale of these AI moves... Stripe potentially buying OpenRouter for over seven billion? That’s a massive consolidation of the 'pipes' for the next industrial revolution.","voice":1,"speaker":"Brook","summary":"Stripe Acquisition News"},{"file":"audio_3.mp3","url":"https://techcrunch.com/2026/08/16/stripe-will-reportedly-acquire-ai-gateway-startup-openrouter-for-7b/","text":"It makes sense. If you control the gateway, you control the flow. It's less about the models themselves and more about the infrastructure of how we interact with them.","voice":2,"speaker":"Conrad","summary":"Stripe Acquisition News"},{"file":"audio_4.mp3","url":null,"text":"I'm Brook.","voice":1,"speaker":"Brook","summary":null},{"file":"audio_5.mp3","url":null,"text":"And I'm Conrad, and on today's episode of Patch Notes, we're looking at the friction between high-tech expansion and some very heavy geopolitical shifts.","voice":2,"speaker":"Conrad","summary":null},{"file":"audio_6.mp3","url":"https://www.bbc.co.uk/news/articles/cx2lll7zvn0o?at_medium=RSS&at_campaign=rss","text":"We'll start with the US scaling back military drills with South Korea. Trump is citing his 'very good relationship' with Kim Jong Un as a reason for the downsizing, especially since South Korea stayed out of the Iran war.","voice":1,"speaker":"Brook","summary":"US Drill Scaleback"},{"file":"audio_7.mp3","url":"https://www.aljazeera.com/news/2026/8/17/trump-says-us-to-substantially-reduce-military-drills-with-south-korea?traffic_source=rss","text":"It’s a fascinating pivot. He's essentially using personal diplomacy to recalibrate regional security dynamics in real-time.","voice":2,"speaker":"Conrad","summary":"Reduced Military Drills"},{"file":"audio_8.mp3","url":"https://www.aljazeera.com/video/newsfeed/2026/8/17/08-17-26-pal-prisoners-release-sv-mp4?traffic_source=rss","text":"And on the ground in Gaza, Israel has released 35 Palestinian prisoners back into the territory, which is being met with some very emotional reunions.","voice":1,"speaker":"Brook","summary":"Prisoner Release Update"},{"file":"audio_9.mp3","url":"https://www.bbc.co.uk/news/articles/c77gg5vn44yo?at_medium=RSS&at_campaign=rss","text":"A significant human moment amidst a lot of complexity. We also see Jared Kushner meeting with a Hamas leader to push for a peace plan, just a week after Israel rejected Trump's own proposal.","voice":2,"speaker":"Conrad","summary":"Kushner Hamas Meeting"},{"file":"audio_10.mp3","url":"https://www.theguardian.com/world/2026/aug/17/ebola-outbreak-drc-democratic-republic-of-congo-deadliest-in-history","text":"It’s a lot of moving pieces in the Middle East right now. On a different note, we have some sobering news from the DRC—the Ebola outbreak there is now the deadliest in the country's history, with over 2,300 deaths.","voice":2,"speaker":"Conrad","summary":"Deadliest Ebola Outbreak"},{"file":"audio_11.mp3","url":"https://www.wired.com/review/samsung-galaxy-z-fold8-and-z-fold8-ultra/","text":"That's devastating. It really highlights how these health crises can outpace infrastructure. In terms of tech news, we have the Samsung Galaxy Z Fold8 and Ultra reviews coming in—it looks like the foldable form factor is finally finding its 'right shape' after nearly a decade.","voice":1,"speaker":"Brook","summary":"Samsung Fold Review"},{"file":"audio_12.mp3","url":"https://www.theinformation.com/articles/anthropics-first-lady-took-winding-road-top?rc=jfy0lk","text":"It takes time for hardware to mature. Speaking of maturity, there's a profile on Cami Clark—she’s linked to Anthropic and Ivanka Trump, and apparently has a pretty eclectic background involving the porn industry.","voice":2,"speaker":"Conrad","summary":"Anthropic Executive Profile"},{"file":"audio_13.mp3","url":"https://www.wired.com/story/black-hole-stars-are-becoming-less-hypothetical/","text":"The 'First Lady' of AI... that's quite a title. Also, for those following the space side of things, astronomers found evidence of a 'black hole star,' which might explain some mysterious red spots in the early universe.","voice":1,"speaker":"Brook","summary":"Black Hole Discovery"},{"file":"audio_14.mp3","url":"https://techcrunch.com/2026/08/16/why-people-arent-buying-mark-zuckerbergs-ai-future/","text":"The James Webb Telescope keeps finding things that challenge our models. On the business side, people aren't exactly buying into Mark Zuckerberg’s vision for AI just yet, according to a recent podcast.","voice":2,"speaker":"Conrad","summary":"Zuckerberg AI Vision"},{"file":"audio_15.mp3","url":"https://openai.com/index/previewing-ultrafast","text":"The skepticism is understandable given the hype cycle. We also have some updates on OpenAI—they're previewing an 'Ultrafast' mode for GPT-5.6 Sol that runs up to 14 times faster.","voice":1,"speaker":"Brook","summary":"OpenAI Ultrafast Mode"},{"file":"audio_16.mp3","url":"https://openai.com/index/builders-guide-to-gpt-5-6","text":"Speed is the next frontier. And for the builders out there, there's a new guide on using GPT-5.6 to create more cost-efficient AI agents.","voice":2,"speaker":"Conrad","summary":"GPT-5.6 Builder Guide"},{"file":"audio_17.mp3","url":"https://apnews.com/article/cincinnati-open-96c6926ef76f91976a44be1193d4e34a","text":"In sports, Iga Swiatek won her first match at the Cincinnati Open after a tough win in Toronto, and Nolan Arenado of the Diamondbacks is dealing with some left trunk discomfort after a recent loss to the Braves.","voice":1,"speaker":"Brook","summary":"Swiatek Tennis Win"},{"file":"audio_18.mp3","url":"https://www.bbc.co.uk/news/articles/c1411pgje8xo?at_medium=RSS&at_campaign=rss","text":"Injuries always loom large. We also have reports from Russia saying at least seven were killed in what they call the largest Ukrainian attack of 2026, with strikes hitting Kyiv.","voice":2,"speaker":"Conrad","summary":"Ukraine Attack Toll"},{"file":"audio_19.mp3","url":"https://www.theguardian.com/world/2026/aug/15/more-bodies-recovered-after-zimbabwe-boat-accident","text":"And a tragic boat accident in Zimbabwe has seen the death toll hit 68, including eighteen children.","voice":1,"speaker":"Brook","summary":"Zimbabwe Boat Tragedy"},{"file":"audio_20.mp3","url":null,"text":"A heavy end to the news. We'll leave it there for today.","voice":2,"speaker":"Conrad","summary":null}]; 
+        let cur = 0; 
+        
+        let plActive = document.getElementById('pl1'); 
+        let plStandby = document.getElementById('pl2'); 
+        
+        const st = document.getElementById('st'); 
+        const btnPrev = document.getElementById('btn-prev');
+        const btnNext = document.getElementById('btn-next');
+        const lnkWrap = document.getElementById('lnk-wrap');
+        const lnk = document.getElementById('lnk');
+        const summ = document.getElementById('summ');
+        const tsText = document.getElementById('ts-text');
+        const tsVoice = document.getElementById('ts-voice');
+        const tsBox = document.getElementById('ts-box');
+        const mediaStage = document.getElementById('media-stage');
+        const podcastVideo = document.getElementById('podcast-video');
+        const finalCover = document.getElementById('final-cover');
+        const mediaHint = document.getElementById('media-hint');
+        
+        const chatContainer = document.getElementById('full-chat');
+        const toggleBtn = document.getElementById('toggle-chat');
+        
+        // --- PRIMARY KEYFRAME → FIRST/LAST-FRAME VIDEO → HIGH-QUALITY FINAL KEYFRAME ---
+        let videoReady = podcastVideo.readyState >= HTMLMediaElement.HAVE_ENOUGH_DATA;
+        let finalImageReady = finalCover.complete && finalCover.naturalWidth > 0;
+        let videoStarted = false;
+        let videoUnavailable = false;
+
+        function maybeStartVideo() {
+            if (videoStarted || videoUnavailable || !videoReady || !finalImageReady) return;
+            videoStarted = true;
+            mediaStage.classList.remove('show-final');
+            mediaStage.classList.add('video-playing');
+            mediaHint.textContent = 'Playing motion';
+            podcastVideo.currentTime = 0;
+            podcastVideo.play().catch(() => {
+                videoStarted = false;
+                mediaHint.textContent = 'Tap to play motion';
+            });
+        }
+
+        podcastVideo.addEventListener('canplaythrough', () => {
+            videoReady = true;
+            maybeStartVideo();
+        }, { once: true });
+
+        finalCover.addEventListener('load', () => {
+            finalImageReady = true;
+            maybeStartVideo();
+        }, { once: true });
+
+        podcastVideo.addEventListener('ended', () => {
+            mediaStage.classList.add('show-final');
+            mediaHint.textContent = 'Tap to replay';
+        });
+
+        podcastVideo.addEventListener('error', () => {
+            videoUnavailable = true;
+            mediaHint.textContent = 'Motion unavailable · tap for frame 2';
+        });
+
+        function activateMediaStage() {
+            if (videoUnavailable) {
+                mediaStage.classList.toggle('show-final');
+                return;
+            }
+            if (mediaStage.classList.contains('show-final')) {
+                mediaStage.classList.remove('show-final');
+                videoStarted = false;
+            }
+            maybeStartVideo();
+        }
+
+        mediaStage.addEventListener('click', activateMediaStage);
+        mediaStage.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                activateMediaStage();
+            }
+        });
+
+        setTimeout(maybeStartVideo, 0);
+
+        // --- BACKGROUND PRELOADER (+/- 2 Tracks) ---
+        const preloadBuffer = {};
+        
+        function updatePreloadBuffer(index) {
+            // Define the exact target window: 2 behind, 2 ahead
+            const targets = [index - 2, index - 1, index + 1, index + 2]
+                .filter(i => i >= 0 && i < playlist.length);
+                
+            // 1. Fetch new tracks into the invisible background buffer
+            targets.forEach(i => {
+                if (!preloadBuffer[i]) {
+                    const bgAudio = new Audio();
+                    bgAudio.src = playlist[i].file;
+                    bgAudio.preload = 'auto'; // Forces browser to download/cache
+                    preloadBuffer[i] = bgAudio;
+                }
+            });
+            
+            // 2. Clean up old tracks outside the +/- 2 window to save RAM
+            Object.keys(preloadBuffer).forEach(key => {
+                if (!targets.includes(parseInt(key))) {
+                    preloadBuffer[key].src = ''; // Instantly kills the network request
+                    delete preloadBuffer[key];
+                }
+            });
+        }
+
+        // --- KEYBOARD SHORTCUTS (J, K, L) ---
+        document.addEventListener('keydown', (e) => {
+            // Ignore keystrokes if the user holds Ctrl, Alt, or Cmd (e.g. Cmd+R to refresh)
+            if (e.metaKey || e.ctrlKey || e.altKey) return;
+            
+            switch(e.key.toLowerCase()) {
+                case 'j': // Previous
+                    if (!btnPrev.disabled) btnPrev.click();
+                    break;
+                case 'l': // Next
+                    if (!btnNext.disabled) btnNext.click();
+                    break;
+                case 'k': // Play/Pause
+                    if (plActive.paused) {
+                        plActive.play().catch(err => {});
+                    } else {
+                        plActive.pause();
+                    }
+                    break;
+            }
+        });
+
+        // --- CHAT BUBBLE GENERATION ---
+        let lastTopic = null;
+        let currentGroup = null;
+        
+        playlist.forEach((item, idx) => {
+            const currentTopic = item.summary || "Banter & Hot Takes";
+            
+            if (currentTopic !== lastTopic) {
+                currentGroup = document.createElement('div');
+                currentGroup.className = 'topic-group';
+                chatContainer.appendChild(currentGroup);
+                
+                const header = document.createElement('div');
+                header.className = 'topic-header';
+                header.innerText = currentTopic;
+                currentGroup.appendChild(header);
+                
+                lastTopic = currentTopic;
+            }
+
+            const bubble = document.createElement('div');
+            bubble.className = 'chat-bubble ' + item.voice;
+            bubble.id = 'chat-msg-' + idx;
+            bubble.innerHTML = '<div class="chat-label">' + item.speaker + '</div>' + item.text;
+            
+            bubble.onclick = () => {
+                if (cur !== idx) {
+                    cur = idx;
+                    updateUI(cur);
+                    playNewTrack(cur);
+                }
+            };
+            currentGroup.appendChild(bubble);
+        });
+
+        // --- UI TOGGLES ---
+        toggleBtn.onclick = () => {
+            const isVis = chatContainer.classList.toggle('visible');
+            toggleBtn.innerText = isVis ? 'Hide Transcript' : 'Show Full Transcript';
+            tsBox.style.display = isVis ? 'none' : 'block';
+
+            if (isVis) {
+                const activeBubble = document.getElementById('chat-msg-' + cur);
+                if (activeBubble) activeBubble.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        };
+
+        btnPrev.onclick = () => { if (cur > 0) { cur--; updateUI(cur); playNewTrack(cur); } };
+        btnNext.onclick = () => { if (cur < playlist.length - 1) { cur++; updateUI(cur); playNewTrack(cur); } };
+
+        // --- DUAL PLAYER LOGIC ---
+        let isOverlapping = false;
+
+        function updateUI(i) {
+            if (i >= playlist.length) {
+                st.innerText = 'Broadcast Ended';
+                tsText.innerText = 'See you tomorrow!';
+                tsVoice.innerText = '';
+                lnkWrap.classList.remove('visible');
+                btnNext.disabled = true;
+                return;
+            } 
+            
+            btnPrev.disabled = (i === 0);
+            btnNext.disabled = (i >= playlist.length - 1);
+
+            const t = playlist[i]; 
+            st.innerText = 'Segment ' + (i + 1) + ' of ' + playlist.length;
+            try { history.replaceState(null, '', '#section=' + (i + 1)); } catch (e) {}
+            
+            tsText.innerText = t.text;
+            tsVoice.innerText = t.speaker;
+            tsBox.className = 'transcript-box ' + t.voice;
+
+            document.querySelectorAll('.chat-bubble').forEach((b, idx) => {
+                if (idx === i) {
+                    b.classList.add('active');
+                    if (chatContainer.classList.contains('visible')) {
+                        b.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                } else {
+                    b.classList.remove('active');
+                }
+            });
+
+            if (t.url) { 
+                lnk.href = t.url; 
+                if (t.summary) {
+                    summ.innerText = t.summary;
+                    summ.style.display = 'block';
+                } else {
+                    summ.style.display = 'none';
+                }
+                lnkWrap.classList.add('visible'); 
+            } else { 
+                lnkWrap.classList.remove('visible'); 
+            } 
+        }
+
+        function attachPlayerLogic(playerIndex) {
+            isOverlapping = false;
+
+            plActive.ontimeupdate = () => {
+                if (!isOverlapping && playerIndex < playlist.length - 1) {
+                    const nextText = playlist[playerIndex + 1].text.trim();
+                    if (nextText.startsWith('--')) {
+                        if (plActive.duration && (plActive.duration - plActive.currentTime) <= OVERLAP_SECONDS) {
+                            isOverlapping = true;
+                            cur++;
+                            updateUI(cur);
+                            plStandby.src = playlist[cur].file;
+                            plStandby.play().catch(e => {});
+                        }
+                    }
+                }
+            };
+
+            plActive.onended = () => {
+                if (isOverlapping) {
+                    const temp = plActive;
+                    plActive = plStandby;
+                    plStandby = temp;
+
+                    plActive.style.display = 'block';
+                    plStandby.style.display = 'none';
+                    attachPlayerLogic(cur);
+                } else {
+                    if (cur < playlist.length - 1) {
+                        cur++;
+                        updateUI(cur);
+                        playNewTrack(cur);
+                    }
+                }
+            };
+        }
+
+        function playNewTrack(i) {
+            plActive.pause();
+            plStandby.pause();
+            
+            // Trigger our background cache manager!
+            updatePreloadBuffer(i);
+            
+            // Check if the file is already cached in our buffer
+            if (preloadBuffer[i] && preloadBuffer[i].readyState === 4) {
+                // If it is fully loaded in the background, assign it instantly
+                plActive.src = preloadBuffer[i].src;
+            } else {
+                // Fallback normal loading
+                plActive.src = playlist[i].file;
+            }
+            
+            plActive.style.display = 'block';
+            plStandby.style.display = 'none';
+            plActive.play().catch(e => {});
+            attachPlayerLogic(i);
+        }
+
+        cur = (function () { var m = (location.hash || '').match(/(d+)/); if (m) { var i = parseInt(m[1], 10) - 1; if (i >= 0 && i < playlist.length) return i; } return 0; })();
+        updateUI(cur);
+        playNewTrack(cur);
+
+        // ==========================================
+        // SIDEBAR NAVIGATION INJECTION MODULE
+        // ==========================================
+        async function initSidebarMenu() {
+            try {
+                // Fetch the static json database generated by n8n!
+                const response = await fetch('/projects/news/menu-data.json');
+                if (!response.ok) return;
+                const foldersArray = await response.json();
+                injectPodcastNavigation(foldersArray);
+                injectSidebarUI(foldersArray);
+            } catch (error) { console.error('Menu failed:', error); }
+        }
+
+        function injectPodcastNavigation(foldersArray) {
+            const currentFolder = 'v2026.34.1-10.04';
+            const currentIndex = foldersArray.indexOf(currentFolder);
+            if (currentIndex < 0) return;
+
+            const older = foldersArray[currentIndex + 1];
+            const newer = currentIndex > 0 ? foldersArray[currentIndex - 1] : null;
+            const olderLink = document.getElementById('podcast-older');
+            const newerLink = document.getElementById('podcast-newer');
+
+            if (older) {
+                olderLink.href = '/projects/news/' + older + '/';
+                olderLink.textContent = '← Older · ' + older;
+                olderLink.classList.remove('disabled');
+                olderLink.removeAttribute('aria-disabled');
+            }
+            if (newer) {
+                newerLink.href = '/projects/news/' + newer + '/';
+                newerLink.textContent = 'Newer · ' + newer + ' →';
+                newerLink.classList.remove('disabled');
+                newerLink.removeAttribute('aria-disabled');
+            }
+        }
+
+        function injectSidebarUI(foldersArray) {
+            const style = document.createElement('style');
+            style.innerHTML = `
+                #news-menu-btn { position: fixed; top: 20px; left: 20px; z-index: 1000; background: #1e1e1e; border: 1px solid #333; color: #fff; padding: 10px 16px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.5); transition: 0.2s; font-weight: bold; }
+                #news-menu-btn:hover { background: #2a2a2a; transform: scale(1.05); border-color: #bb86fc; }
+                #news-sidebar { position: fixed; top: 0; left: -300px; width: 280px; height: 100vh; background: #121212; z-index: 1001; transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 4px 0 25px rgba(0,0,0,0.8); overflow-y: auto; display: flex; flex-direction: column; border-right: 1px solid #333; }
+                #news-sidebar.open { left: 0; }
+                .sidebar-header { padding: 20px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; background: #1a1a1a; }
+                .sidebar-header h2 { margin: 0; font-size: 1.1rem; color: #bb86fc; text-transform: uppercase; letter-spacing: 1px; }
+                .sidebar-close { background: none; border: none; color: #888; font-size: 1.8rem; cursor: pointer; transition: 0.2s; line-height: 1; padding: 0; }
+                .sidebar-close:hover { color: #fff; transform: scale(1.1); }
+                .sidebar-list { list-style: none; padding: 0; margin: 0; }
+                .sidebar-list li a { display: block; padding: 16px 20px; color: #ccc; text-decoration: none; border-bottom: 1px solid #222; transition: 0.2s; font-size: 0.95rem; }
+                .sidebar-list li a:hover { background: #1e1e1e; padding-left: 26px; color: #bb86fc; border-left: 4px solid #bb86fc; }
+                #sidebar-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 1000; display: none; backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); opacity: 0; transition: opacity 0.3s; }
+                #sidebar-overlay.open { display: block; opacity: 1; }
+            `;
+            document.head.appendChild(style);
+
+            const overlay = document.createElement('div');
+            overlay.id = 'sidebar-overlay';
+            document.body.appendChild(overlay);
+
+            const sidebar = document.createElement('div');
+            sidebar.id = 'news-sidebar';
+            sidebar.innerHTML = '<div class="sidebar-header"><h2>Archives</h2><button class="sidebar-close" id="news-close-btn">&times;</button></div>';
+            
+            const list = document.createElement('ul');
+            list.className = 'sidebar-list';
+            
+            foldersArray.forEach(folderString => {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = `/projects/news/${folderString}/`;
+                
+                const parts = folderString.split('-');
+                if (parts.length >= 4) {
+                    const dateObj = new Date(`${parts[0]}-${parts[1]}-${parts[2]}T00:00:00`);
+                    const suffix = parts.slice(3).join(' ').replace(/\b\w/g, c => c.toUpperCase());
+                    a.innerText = `${dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} - ${suffix}`;
+                } else {
+                    a.innerText = folderString;
+                }
+                
+                li.appendChild(a);
+                list.appendChild(li);
+            });
+            sidebar.appendChild(list);
+            document.body.appendChild(sidebar);
+
+            const btn = document.createElement('button');
+            btn.id = 'news-menu-btn';
+            btn.innerHTML = '&#9776; Menu';
+            document.body.appendChild(btn);
+
+            const closeBtn = document.getElementById('news-close-btn');
+            const toggleMenu = () => {
+                if (sidebar.classList.contains('open')) {
+                    sidebar.classList.remove('open');
+                    overlay.classList.remove('open');
+                    setTimeout(() => overlay.style.display = 'none', 300);
+                } else {
+                    overlay.style.display = 'block';
+                    setTimeout(() => { sidebar.classList.add('open'); overlay.classList.add('open'); }, 10);
+                }
+            };
+            btn.addEventListener('click', toggleMenu);
+            closeBtn.addEventListener('click', toggleMenu);
+            overlay.addEventListener('click', toggleMenu);
+        }
+        
+        if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initSidebarMenu); } 
+        else { initSidebarMenu(); }
+    </script>
+</body>
+</html>
