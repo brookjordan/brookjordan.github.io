@@ -68,73 +68,108 @@ function syncSongToUrl(name: string) {
 const songFromLocation = songFromUrl();
 let selectedSongName = songFromLocation || Object.keys(songs)[0];
 if (songFromLocation) syncSongToUrl(songFromLocation);
+let userTransposeOffset = 0;
+const statusElement = document.createElement("div");
+const controlsElement = document.createElement("div");
+const notesMount = document.createElement("div");
+const formatOffset = (value: number) => `${value > 0 ? "+" : ""}${value}`;
 
-function renderSong() {
-  if (!staveElement) return;
-
-  staveElement.innerHTML = "";
-
-  let song = songs[selectedSongName];
-
+function computeLayout() {
+  const song = songs[selectedSongName];
   const maxAllowedNoteNumber = availableNotes.length - 1;
-
   const numberedNotes = song.filter(
     (note) => typeof note === "number"
   ) as number[];
   const maxNote = Math.max(...numberedNotes);
   const minNote = Math.min(...numberedNotes);
-  const rangeDifference = maxNote - minNote - maxAllowedNoteNumber;
-  const outOfRangeBy = Math.max(0, rangeDifference);
-
+  const outOfRangeBy = Math.max(
+    0,
+    maxNote - minNote - maxAllowedNoteNumber
+  );
   const distanceOver = Math.max(0, maxNote - maxAllowedNoteNumber);
   const distanceUnder = Math.abs(Math.min(0, minNote));
-
-  let reRangedSong = [...song];
-  let transposedSemitones = 0;
+  let baseOffset = 0;
   let errorMessage = "";
-
   if (maxNote - minNote > availableNotes.length - 1) {
     errorMessage = `Song out of range by ${outOfRangeBy} semitones`;
   }
-
   if (distanceOver || distanceUnder) {
-    if (distanceUnder) {
-      transposedSemitones = distanceUnder;
-      reRangedSong = song.map((noteNumber) =>
-        typeof noteNumber === "number" ? noteNumber + distanceUnder : noteNumber
-      );
-    } else {
-      transposedSemitones = -distanceOver;
-      reRangedSong = song.map((noteNumber) =>
-        typeof noteNumber === "number" ? noteNumber - distanceOver : noteNumber
-      );
-    }
+    baseOffset = distanceUnder ? distanceUnder : -distanceOver;
   }
+  const fittedMin = minNote + baseOffset;
+  const fittedMax = maxNote + baseOffset;
+  const minUserOffset = errorMessage ? 0 : -fittedMin;
+  const maxUserOffset = errorMessage ? 0 : maxAllowedNoteNumber - fittedMax;
+  userTransposeOffset = Math.min(
+    maxUserOffset,
+    Math.max(minUserOffset, userTransposeOffset)
+  );
+  const totalOffset = baseOffset + userTransposeOffset;
+  const reRangedSong = song.map((noteNumber) =>
+    typeof noteNumber === "number" ? noteNumber + totalOffset : noteNumber
+  );
+  return {
+    errorMessage,
+    totalOffset,
+    minUserOffset,
+    maxUserOffset,
+    reRangedSong,
+  };
+}
 
-  /* Print messages */
+function renderStatus(errorMessage: string, totalOffset: number) {
+  statusElement.innerHTML = "";
   if (errorMessage) {
-    staveElement.append(`Error: ${errorMessage}`);
-    staveElement.append(document.createElement("br"));
+    statusElement.append(`Error: ${errorMessage}`);
+    statusElement.append(document.createElement("br"));
   }
-
-  if (transposedSemitones) {
-    staveElement.append(
-      `Transposed ${transposedSemitones > 0 ? "up" : "down"} by ${Math.abs(
-        transposedSemitones
+  if (totalOffset) {
+    statusElement.append(
+      `Transposed ${totalOffset > 0 ? "up" : "down"} by ${Math.abs(
+        totalOffset
       )}`
     );
-    staveElement.append(document.createElement("br"));
+    statusElement.append(document.createElement("br"));
   }
+}
 
-  if (rangeDifference < 0) {
-    staveElement.append(
-      `Song could expand its range by ${-rangeDifference} semitones`
-    );
-    staveElement.append(document.createElement("br"));
-  }
-  /* END => Print messages */
+function renderNotes(reRangedSong: ("|" | "-" | number)[]) {
+  notesMount.innerHTML = "";
+  reRangedSong.forEach((number) => {
+    if (number === "|") {
+      notesMount.append(document.createElement("br"));
+      return;
+    }
+    const wrapper = document.createElement("div");
+    wrapper.style.display = "inline-block";
+    const label = document.createElement("p");
+    const note = typeof number === "number" ? availableNotes[number] : null;
+    const svg =
+      noteImages[
+        note === undefined ? "broken" : note === null ? "blank" : note
+      ].cloneNode(true);
+    label.textContent = note === undefined ? "?" : note === null ? "" : note;
+    wrapper.append(label);
+    wrapper.appendChild(svg);
+    notesMount.append(wrapper);
+  });
+}
 
-  /* Print select menu */
+function renderSong() {
+  if (!staveElement) return;
+
+  const {
+    errorMessage,
+    totalOffset,
+    minUserOffset,
+    maxUserOffset,
+    reRangedSong,
+  } = computeLayout();
+
+  staveElement.innerHTML = "";
+  controlsElement.innerHTML = "";
+  renderStatus(errorMessage, totalOffset);
+
   const selectMenu = document.createElement("select");
   Object.keys(songs).forEach((songName) => {
     const option = document.createElement("option");
@@ -146,32 +181,48 @@ function renderSong() {
   });
   selectMenu.addEventListener("change", () => {
     selectedSongName = selectMenu.selectedOptions[0].value;
+    userTransposeOffset = 0;
     syncSongToUrl(selectedSongName);
     renderSong();
   });
-  staveElement.append(selectMenu);
-  staveElement.append(document.createElement("br"));
-  /* END => Print select menu */
+  controlsElement.append(selectMenu);
+  controlsElement.append(document.createElement("br"));
 
-  reRangedSong.forEach((number) => {
-    if (number === "|") {
-      staveElement.append(document.createElement("br"));
-      return;
-    } else {
-      const wrapper = document.createElement("div");
-      wrapper.style.display = "inline-block";
-      const label = document.createElement("p");
-      // undefined means out of range, null means a note wasn’t requested
-      const note = typeof number === "number" ? availableNotes[number] : null;
-      /** @type {SVGElement} */
-      const svg =
-        noteImages[
-          note === undefined ? "broken" : note === null ? "blank" : note
-        ].cloneNode(true);
-      label.textContent = note === undefined ? "?" : note === null ? "" : note;
-      wrapper.append(label);
-      wrapper.appendChild(svg);
-      staveElement.append(wrapper);
-    }
-  });
+  if (maxUserOffset > minUserOffset) {
+    const transposeRow = document.createElement("label");
+    transposeRow.style.display = "inline-flex";
+    transposeRow.style.alignItems = "center";
+    transposeRow.style.gap = "0.5rem";
+    transposeRow.style.margin = "0.5rem 0";
+    const transposeLabel = document.createElement("span");
+    transposeLabel.textContent = `Shift ${formatOffset(userTransposeOffset)}`;
+    const transposeSlider = document.createElement("input");
+    transposeSlider.type = "range";
+    transposeSlider.min = String(minUserOffset);
+    transposeSlider.max = String(maxUserOffset);
+    transposeSlider.step = "1";
+    transposeSlider.value = String(userTransposeOffset);
+    transposeSlider.setAttribute(
+      "aria-label",
+      `Transpose within ${maxUserOffset - minUserOffset} semitones`
+    );
+    const transposeBounds = document.createElement("span");
+    transposeBounds.style.opacity = "0.7";
+    transposeBounds.textContent = `(${formatOffset(
+      minUserOffset
+    )}…${formatOffset(maxUserOffset)})`;
+    transposeSlider.addEventListener("input", () => {
+      userTransposeOffset = Number(transposeSlider.value);
+      transposeLabel.textContent = `Shift ${formatOffset(userTransposeOffset)}`;
+      const layout = computeLayout();
+      renderStatus(layout.errorMessage, layout.totalOffset);
+      renderNotes(layout.reRangedSong);
+    });
+    transposeRow.append(transposeLabel, transposeSlider, transposeBounds);
+    controlsElement.append(transposeRow);
+    controlsElement.append(document.createElement("br"));
+  }
+
+  staveElement.append(statusElement, controlsElement, notesMount);
+  renderNotes(reRangedSong);
 }
