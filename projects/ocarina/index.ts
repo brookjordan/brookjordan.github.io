@@ -44,7 +44,30 @@ const staveElement = document.querySelector("#staveElement");
 const songs = availableSongs as Readonly<{
   [SongName: string]: ("|" | "-" | number)[];
 }>;
-let selectedSongName = Object.keys(songs)[0];
+
+function songFromUrl(): string | null {
+  const fromQuery = new URLSearchParams(location.search).get("song");
+  const fromHash = location.hash.replace(/^#/, "");
+  const raw = fromQuery || (fromHash ? decodeURIComponent(fromHash) : "");
+  if (!raw) return null;
+  if (songs[raw]) return raw;
+  return (
+    Object.keys(songs).find(
+      (name) => name.toLowerCase() === raw.toLowerCase()
+    ) || null
+  );
+}
+
+function syncSongToUrl(name: string) {
+  const url = new URL(location.href);
+  url.searchParams.set("song", name);
+  url.hash = "";
+  history.replaceState(null, "", url);
+}
+
+const songFromLocation = songFromUrl();
+let selectedSongName = songFromLocation || Object.keys(songs)[0];
+if (songFromLocation) syncSongToUrl(songFromLocation);
 
 function renderSong() {
   if (!staveElement) return;
@@ -123,6 +146,7 @@ function renderSong() {
   });
   selectMenu.addEventListener("change", () => {
     selectedSongName = selectMenu.selectedOptions[0].value;
+    syncSongToUrl(selectedSongName);
     renderSong();
   });
   staveElement.append(selectMenu);
