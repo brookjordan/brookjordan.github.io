@@ -123,14 +123,14 @@ function renderStatus(errorMessage: string, totalOffset: number) {
     statusElement.append(`Error: ${errorMessage}`);
     statusElement.append(document.createElement("br"));
   }
-  if (totalOffset) {
-    statusElement.append(
-      `Transposed ${totalOffset > 0 ? "up" : "down"} by ${Math.abs(
-        totalOffset
-      )}`
-    );
-    statusElement.append(document.createElement("br"));
-  }
+  statusElement.append(
+    totalOffset
+      ? `Transposed ${totalOffset > 0 ? "up" : "down"} by ${Math.abs(
+          totalOffset
+        )}`
+      : "No transposition"
+  );
+  statusElement.append(document.createElement("br"));
 }
 
 function renderNotes(reRangedSong: ("|" | "-" | number)[]) {
