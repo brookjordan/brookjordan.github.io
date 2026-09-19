@@ -389,8 +389,9 @@
         <div id="media-stage" class="media-stage" tabindex="0" role="button" aria-label="Play animated briefing">
             <img id="primary-cover" src="https://assets.brook.dev/podcasts/v2026.38.5-23.51/cover.png" class="cover-art cover-primary" alt="Patch Notes v2026.38.5-23.51 — A wide 16:9 cinematic shot of a brutalist concrete news studio where the floor is covered in three inches of thick, iridescent violet mercury. In the center, a massive mahogany desk is fused with glowing fiber-optic cables and organic tree roots. A news anchor with skin made of polished chrome sits behind it, holding a microphone shaped like a frozen bird wing. Above them, a holographic ticker tape displays scrolling binary code in neon orange. In the background, a large window reveals a sky filled with floating, oversized smartphones orbiting a cracked moon. Dust motes dance in heavy volumetric god-rays cutting through a haze of lavender smoke." />
             <video id="podcast-video" class="podcast-video" muted playsinline preload="auto" poster="https://assets.brook.dev/podcasts/v2026.38.5-23.51/cover.png">
-                <source src="https://assets.brook.dev/podcasts/v2026.38.5-23.51/animated_briefing.mp4" type="video/mp4" />
+                <source src="https://assets.brook.dev/podcasts/v2026.38.5-23.51/animated_briefing_v2.mp4" type="video/mp4" />
             </video>
+                        <button id="video-version-toggle" style="position:absolute;left:10px;top:10px;z-index:5;padding:5px 10px;border-radius:999px;border:1px solid #555;background:rgba(18,18,18,0.72);color:#ddd;font-size:0.7rem;cursor:pointer;backdrop-filter:blur(5px);">Watch legacy video</button>
             <img id="final-cover" src="https://assets.brook.dev/podcasts/v2026.38.5-23.51/cover-alt.png" class="cover-art cover-alt" loading="eager" alt="Final keyframe — Edit Picture 1 to create keyframe 2. Make only these visible changes:
 - The mercury floor transitions from a static reflection to an active ripple originating specifically at the desk's base.
 - The lavender smoke moves laterally toward the center.
@@ -853,6 +854,37 @@ Do not describe animation or intent. Do not add material without visibly reducin
         
         if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initSidebarMenu); } 
         else { initSidebarMenu(); }
-    </script>
+    
+        // --- PCB-013: new/legacy video toggle ---
+        const VIDEO_SOURCES = {
+            v2: 'https://assets.brook.dev/podcasts/v2026.38.5-23.51/animated_briefing_v2.mp4',
+            legacy: 'https://assets.brook.dev/podcasts/v2026.38.5-23.51/animated_briefing.mp4'
+        };
+        let currentVideoVersion = 'v2';
+        const versionToggle = document.getElementById('video-version-toggle');
+        function setVideoVersion(version) {
+            if (currentVideoVersion === version) return;
+            currentVideoVersion = version;
+            const wasPlaying = !podcastVideo.paused;
+            podcastVideo.pause();
+            podcastVideo.querySelector('source').src = VIDEO_SOURCES[version];
+            podcastVideo.load();
+            videoStarted = false;
+            videoReady = false;
+            mediaStage.classList.remove('show-final', 'video-playing');
+            mediaHint.textContent = version === 'v2' ? 'Loading motion' : 'Loading legacy motion';
+            versionToggle.textContent = version === 'v2' ? 'Watch legacy video' : 'Watch new video';
+            podcastVideo.addEventListener('canplaythrough', () => {
+                videoReady = true;
+                if (wasPlaying) maybeStartVideo();
+            }, { once: true });
+        }
+        if (versionToggle) {
+            versionToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                setVideoVersion(currentVideoVersion === 'v2' ? 'legacy' : 'v2');
+            });
+        }
+</script>
 </body>
 </html>
