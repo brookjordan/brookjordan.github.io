@@ -1,0 +1,66 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Source: 15 September environment and NAS preflight — PodCast Builder devlog</title>
+<style>
+body{max-width:760px;margin:2.5rem auto;padding:0 1.2rem;font-family:ui-sans-serif,system-ui,sans-serif;background:#16181f;color:#dfe2ea;line-height:1.65}
+a{color:#7aa2f7} h1,h2{line-height:1.25} code{background:#262a33;padding:.1em .35em;border-radius:4px;font-size:.9em}
+pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{color:#8b90a0;font-size:.85rem}
+.back{font-size:.85rem} .backnote{background:#262a33;border:1px solid #333;border-radius:8px;padding:.8rem 1rem;font-size:.85rem;color:#aeb3c2}
+</style></head><body>
+<p class="back"><a href="../index.html">← PodCast Builder devlog</a></p>
+<p class="backnote">This is a public snapshot of a private project-tracking note, sanitised for
+publication: internal links, status metadata and personal paths are removed. The live private
+version lives in the author's Obsidian vault.</p>
+<h1>15 September environment and NAS preflight</h1>
+<h1 id="2026-09-15-n8n-environment-and-nas-preflight-conversation">2026-09-15 n8n environment and NAS preflight conversation</h1>
+<h2 id="source-and-purpose">Source and purpose</h2>
+<p>Conversation evidence for PCB-007. Preserve the facts and the design request that led to the ticket; do not treat this packet as the current workflow state.</p>
+<h2 id="verified-topology">Verified topology</h2>
+<ul>
+<li>n8n runs on the NAS: <code>100.84.158.31</code>.</li>
+<li>ComfyUI and Ollama run on the MacBook: <code>100.98.203.89</code>.</li>
+<li>The podcast workflow must keep these roles separate:<ul>
+<li><code>serviceHost</code>: NAS / n8n;</li>
+<li><code>comfyHost</code>: MacBook / ComfyUI;</li>
+<li><code>llmHost</code>: MacBook / Ollama.</li>
+</ul>
+</li>
+</ul>
+<h2 id="nas-and-smb-checks">NAS and SMB checks</h2>
+<ul>
+<li>Route selection must be checked per NAS address; <code>smbutil view</code> alone does not identify the transport.</li>
+<li>On 2026-09-15, <code>10.10.10.2</code> and <code>192.168.0.224</code> routed via <code>en0</code> (local/LAN), while <code>100.84.158.31</code> routed via <code>utun4</code> (Tailscale).</li>
+<li>TCP port 445 is reachable on the Tailscale address.</li>
+<li><code>smbutil view //100.84.158.31</code> succeeds and lists <code>model-store</code>, <code>model-cache</code>, <code>docker</code>, and other NAS shares.</li>
+<li>The preflight should try configured candidate addresses independently and record the selected interface, route class, latency/reachability, SMB discovery result, authentication state, and mount state.</li>
+<li>No SMB share was mounted under <code>/Volumes</code> during the check.</li>
+<li><code>/Volumes/model-store</code> did not exist.</li>
+<li><code>open smb://UG-NAS-X4800/model-store</code> returned successfully, but did not produce a mounted share in the observed session.</li>
+<li>A direct <code>mount_smbfs</code> attempt without credentials failed with an authentication error. No credential was entered into chat or stored in this packet.</li>
+</ul>
+<h2 id="comfyui-model-path-checks">ComfyUI model-path checks</h2>
+<p>The MacBook&#39;s ComfyUI configuration contains:</p>
+<pre><code class="language-yaml">nas_fallback:
+  base_path: /Volumes/model-store/models/comfyui
+</code></pre>
+<p>The active ComfyUI profile advertised several GGUF models but not the required:</p>
+<pre><code class="language-text">LTX-2.5-Distilled-Q3_K_M.gguf
+</code></pre>
+<p>The local search path did not contain that exact filename. This does not prove the NAS copy is absent; it proves that the MacBook&#39;s current ComfyUI process was not advertising it and the expected NAS mount was not present.</p>
+<h2 id="follow-up-failure-yue2-host-role-miss">Follow-up failure: YuE2 host-role miss</h2>
+<p>Execution <code>2524</code> failed at <code>TEST — YuE2 synth</code> with <code>ECONNREFUSED 100.84.158.31:8087</code>. The node was using <code>serviceHost</code>, which correctly identifies the NAS but is wrong for this MacBook-side media endpoint. It was corrected to use the configured MacBook <code>llmHost</code> on port <code>8087</code>; the workflow read-back confirmed no remaining <code>8087</code> URL through <code>serviceHost</code>.</p>
+<h2 id="design-request-captured">Design request captured</h2>
+<p>The workflow should discover, before expensive generation:</p>
+<ul>
+<li>active Ethernet, Wi-Fi, and Tailscale paths;</li>
+<li>usable routes to the MacBook, NAS, Ollama, and ComfyUI;</li>
+<li>SMB share discovery, authentication, and mount status;</li>
+<li>local and NAS model/custom-node availability;</li>
+<li>the exact models registered by the active ComfyUI profile;</li>
+<li>whether each required asset is local, NAS-backed, or unavailable.</li>
+</ul>
+<p>It should create one capability manifest and fail early with checked locations and a precise cause. It should never silently substitute another model or profile. The LTX assertion must remain fail-closed.</p>
+<h2 id="important-distinction">Important distinction</h2>
+<p>A file existing on disk is not enough. The active ComfyUI profile must be able to see and register the file through its loader endpoint. The preflight therefore needs both filesystem checks and live ComfyUI capability checks.</p>
+
+</body></html>

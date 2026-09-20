@@ -455,6 +455,11 @@ a:hover {
 .part-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.16em;color:var(--text-tertiary,#8b90a0);margin:0 0 .6rem;font-weight:700}
 .post-title{margin:0 0 .8rem;font-size:1.7rem;line-height:1.25}
 .lead{font-size:1.02rem;color:var(--text-secondary,#aeb3c2);line-height:1.55;margin:0 0 1.8rem;max-width:64ch}
+.sources{margin-top:2.5rem;padding-top:1.2rem;border-top:1px solid var(--border-primary,#333)}
+.sources h2{font-size:1.1rem;margin:0 0 .4rem}
+.sources-note{font-size:.8rem;color:var(--text-tertiary,#8b90a0);margin:0 0 .6rem}
+.sources ul{margin:0;padding-left:1.2rem}
+.sources li{margin:.25rem 0;font-size:.9rem}
 @media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
 </style></head>
   <body>
@@ -473,12 +478,7 @@ a:hover {
 <h2>Where we left it</h2>
 <p>The storage and publication decision was recorded, and the service stack, mount contract and non-root configuration were reported present in the implementation ticket. Deployment behind Nginx Proxy Manager, NAS-side deployment and public verification remained pending. The split-publication workflow was still a scope item blocked by the asset service.</p>
 <p>So the honest sentence was &quot;we chose where the pieces should live&quot;, not &quot;the route is live&quot;. A durable asset architecture is useful only when the asset can be fetched, ranged and recovered. Until those checks were dated and read back, <code>assets.brook.dev</code> was a destination in the design, not a certificate of deployment.</p>
-<h2>Source notes</h2>
-<ul>
-<li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FPCB-001%20Decide%20public%20podcast%20asset%20origin">T01 evidence</a></li>
-<li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FPCB-003%20Split%20podcast%20publication%20between%20NAS%20and%20GitHub">T03 evidence</a></li>
-</ul>
-<nav class="post-nav"><a class="post-nav-link" href="p46-backup-remembered-more.html">← earlier: The backup remembered things the live system had forgotten</a><a class="post-nav-link" href="p11-fifty-songs-was-a-test-plan.html">later →: We generated fifty songs on purpose. It was a test matrix.</a></nav></main>
+<section class="sources"><h2>Source notes</h2><p class="sources-note">Each source is a sanitised public snapshot of a private project-tracking note.</p><ul><li><a href="sources/pcb-001-decide-public-podcast-asset-origin.html">T01 evidence</a></li><li><a href="sources/pcb-003-split-podcast-publication-between-nas-and-github.html">T03 evidence</a></li></ul></section><nav class="post-nav"><a class="post-nav-link" href="p46-backup-remembered-more.html">← earlier: The backup remembered things the live system had forgotten</a><a class="post-nav-link" href="p11-fifty-songs-was-a-test-plan.html">later →: We generated fifty songs on purpose. It was a test matrix.</a></nav></main>
     <footer class="site-footer">
       <p>Private review preview of the <strong>PodCast Builder</strong> devlog — built from the senior-accepted draft set, 2026-09-19.</p>
     </footer>

@@ -455,6 +455,11 @@ a:hover {
 .part-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.16em;color:var(--text-tertiary,#8b90a0);margin:0 0 .6rem;font-weight:700}
 .post-title{margin:0 0 .8rem;font-size:1.7rem;line-height:1.25}
 .lead{font-size:1.02rem;color:var(--text-secondary,#aeb3c2);line-height:1.55;margin:0 0 1.8rem;max-width:64ch}
+.sources{margin-top:2.5rem;padding-top:1.2rem;border-top:1px solid var(--border-primary,#333)}
+.sources h2{font-size:1.1rem;margin:0 0 .4rem}
+.sources-note{font-size:.8rem;color:var(--text-tertiary,#8b90a0);margin:0 0 .6rem}
+.sources ul{margin:0;padding-left:1.2rem}
+.sources li{margin:.25rem 0;font-size:.9rem}
 @media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
 </style></head>
   <body>
@@ -473,13 +478,7 @@ a:hover {
 <p>The first full production run, execution <code>2560</code>, completed 98/98 nodes green and published an episode. That is the recorded milestone. It does not mean spoken TTS changed too, and it does not prove that all media had become NAS-independent. Local LTX model transfer, storage reliability and a clean NAS-absent validation run remained with PCB-008. YuE2 music, spoken TTS and the earlier MiniMax lyric contract were separate stages, so the music cutover did not quietly replace the speech engine.</p>
 <p>We kept rollback in place, because architecture diagrams are optimistic and storage outages are not. The practical result was a production cutover with a recoverable old path, not a declaration that every dependency had vanished.</p>
 <p>That boundary kept the cutover honest: a measured hand-off, not a promise that the storage layer had stopped mattering.</p>
-<h2>Source notes</h2>
-<ul>
-<li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FPCB-006%20Replace%20remote%20music%20and%20video%20generation%20with%20YuE2%20and%20native%20LTX-2.5">YuE2 and native LTX cutover ticket</a></li>
-<li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FREADME">Podcast builder map and cutover chronology</a></li>
-<li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FPCB-005%20Improve%20story-song%20format%20and%20lyric%20presentation">Story-song contract and audio route</a></li>
-</ul>
-<nav class="post-nav"><a class="post-nav-link" href="p16-style-tags-and-guidance.html">← earlier: Our style tags did nothing, because the knob controlling them was off</a><a class="post-nav-link" href="p23-episode-published-cleanup-failed.html">later →: The episode shipped. The broom swept up a ghost node.</a></nav></main>
+<section class="sources"><h2>Source notes</h2><p class="sources-note">Each source is a sanitised public snapshot of a private project-tracking note.</p><ul><li><a href="sources/pcb-006-replace-remote-music-and-video-generation-with-yue2-.html">YuE2 and native LTX cutover ticket</a></li><li><a href="sources/readme.html">Podcast builder map and cutover chronology</a></li><li><a href="sources/pcb-005-improve-story-song-format-and-lyric-presentation.html">Story-song contract and audio route</a></li></ul></section><nav class="post-nav"><a class="post-nav-link" href="p16-style-tags-and-guidance.html">← earlier: Our style tags did nothing, because the knob controlling them was off</a><a class="post-nav-link" href="p23-episode-published-cleanup-failed.html">later →: The episode shipped. The broom swept up a ghost node.</a></nav></main>
     <footer class="site-footer">
       <p>Private review preview of the <strong>PodCast Builder</strong> devlog — built from the senior-accepted draft set, 2026-09-19.</p>
     </footer>

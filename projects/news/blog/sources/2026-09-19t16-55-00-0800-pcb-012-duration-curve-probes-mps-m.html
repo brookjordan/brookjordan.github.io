@@ -1,0 +1,87 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Source: DURATION evidence — PodCast Builder devlog</title>
+<style>
+body{max-width:760px;margin:2.5rem auto;padding:0 1.2rem;font-family:ui-sans-serif,system-ui,sans-serif;background:#16181f;color:#dfe2ea;line-height:1.65}
+a{color:#7aa2f7} h1,h2{line-height:1.25} code{background:#262a33;padding:.1em .35em;border-radius:4px;font-size:.9em}
+pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{color:#8b90a0;font-size:.85rem}
+.back{font-size:.85rem} .backnote{background:#262a33;border:1px solid #333;border-radius:8px;padding:.8rem 1rem;font-size:.85rem;color:#aeb3c2}
+</style></head><body>
+<p class="back"><a href="../index.html">← PodCast Builder devlog</a></p>
+<p class="backnote">This is a public snapshot of a private project-tracking note, sanitised for
+publication: internal links, status metadata and personal paths are removed. The live private
+version lives in the author's Obsidian vault.</p>
+<h1>DURATION evidence</h1>
+<h1 id="2026-09-19t16550800---pcb-012-duration-curve-probes---mps-memory-envelope-at-1280x704">2026-09-19T16:55+0800 - PCB-012 duration-curve probes - MPS memory envelope at 1280x704</h1>
+<p><strong>Tickets:</strong> PCB-012 · evidence for PCB-013 and PCB-014</p>
+<p>Captured 2026-09-19, M3 Max 36 GB, production podcast transition graph (one-stage, Q3_K_M distilled, 1280×704 latent, euler_ancestral, 9-sigma manual schedule, DualCFG 1.0, FLF2V guides at frame 0 and N-1, strength 1.0, tiled VAE decode 512/64/64/16, 25 fps). Case C pair (exec 2572, <code>v2026.38.4-18.29</code> cover / cover-alt), seed <code>abs(2572*2654435761) % 2^32</code> = 2505745537.</p>
+<h2 id="duration-curve-probes-single-render-one-job-at-a-time">Duration-curve probes (single render, one job at a time)</h2>
+<table>
+<thead>
+<tr>
+<th align="right">Frames</th>
+<th align="right">Clip length</th>
+<th>Server</th>
+<th align="right">Wall</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">49</td>
+<td align="right">1.96 s</td>
+<td>capped (0.8 watermark)</td>
+<td align="right">602 s</td>
+<td>✅ success, endpoints 4.7/4.8 /255</td>
+</tr>
+<tr>
+<td align="right">121</td>
+<td align="right">4.84 s</td>
+<td>capped</td>
+<td align="right">1053 s</td>
+<td>✅ success, endpoints 4.5/4.0 /255</td>
+</tr>
+<tr>
+<td align="right">188</td>
+<td align="right">7.52 s</td>
+<td>capped</td>
+<td align="right">—</td>
+<td>❌ MPS OOM ~6 min in: 21.92 GiB held, +2.79 GiB refused (cap 22.46)</td>
+</tr>
+<tr>
+<td align="right">250</td>
+<td align="right">9.96 s</td>
+<td>capped</td>
+<td align="right">—</td>
+<td>❌ MPS OOM ~6 min in, twice (14:27 retry 15:20): 20.71 GiB held, +1.83 GiB refused</td>
+</tr>
+<tr>
+<td align="right">250</td>
+<td align="right">9.96 s</td>
+<td><strong>uncapped</strong> (<code>PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.0</code>)</td>
+<td align="right">2196 s</td>
+<td>✅ success, endpoints 4.2/3.3 /255</td>
+</tr>
+</tbody></table>
+<h2 id="memory-envelope-facts">Memory envelope facts</h2>
+<ul>
+<li>The <code>normal</code>/<code>ltx</code> <code>comfy-profile</code> wrapper sets <code>PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.8</code>, capping MPS at ~22.46 GiB on this 36 GB machine. The LTX-013 launch contract names <code>0.0</code> but the wrapper did not apply it; probes ran both ways.</li>
+<li>Failure mode is deterministic, not stochastic: both capped 250f attempts requested the identical +1.83 GiB at the same phase (~6 min in, early sigma steps = peak attention allocation). Freeing desktop memory did not help; the deficit is inside the MPS cap.</li>
+<li>Uncapped 250f: sampler plateaued at 7.6–9.4 GiB server-free for the whole sampling phase (flat slope, −5.7 MB/s); no swap growth; CPU near-idle (GPU-bound). Second memory event is the tiled VAE decode at the end.</li>
+<li>Uncapped server was launched as a bare process with the env var applied (wrapper hard-codes the value); <code>pcb012-uncapped.log</code> in ComfyUI-Shared/user/logs.</li>
+<li>Time scaling <del>linear above the load phase: 49f→602 s, 121f→1053 s, 250f→2196 s (</del>8.8 s/frame wall).</li>
+</ul>
+<h2 id="quality-observations-fog-motion-artefact">Quality observations (fog-motion artefact)</h2>
+<ul>
+<li>Measured fog centroid (bright-pixel threshold, 2 fps samples): 10 s run drifts continuously 0.355→0.444 (normalised y) with coverage 0.52→0.67, then <strong>snaps back to 0.392 in the final half-second</strong> — the model warping fog to satisfy the end keyframe.</li>
+<li>5 s run is worse: mid-clip reversal (0.304→0.411) plus end snap. Endpoint interpolation on amorphous elements (fog/smoke) produces global shape-morphing rather than local motion.</li>
+<li>Community/official mitigations identified: Motion Control IC-LoRA (sketched point trajectories), AInVFX fluid IC-LoRA (paint blobs → smoke/fire, LTX 2.5, free), prompt-side ambient-not-directional phrasing (weak), and the two-part arm (shorter interpolation arc per render).</li>
+<li>MLX context: <code>ComfyUI-LTXVideo-mlx</code> node was import-broken at pipeline-build time (LTX-001 note) and is excluded from the <code>ltx</code> profile; GGUF+MPS was proven and frozen instead. MLX memory/speed profiles differ — envelope numbers here are MPS/GGUF-specific and do not transfer.</li>
+</ul>
+<h2 id="server-state-side-effects-2026-09-19">Server-state side effects (2026-09-19)</h2>
+<ul>
+<li>ComfyUI was killed mid-run once (uncancelable 500f submission at 13:43) and twice restarted; since 15:56 the server is a bare process with the watermark disabled, logged to <code>pcb012-uncapped.log</code>. The <code>comfy-profile</code> wrapper (<code>pcb012-curve</code> run) was retired at that point. n8n production is unaffected (it manages its own isolated profile).</li>
+<li>A 500f (20 s) submission at 13:43 was cancelled before completion and produced no file; the 20 s point remains unmeasured.</li>
+</ul>
+<p>LTX operating envelope map · Scratchpad index</p>
+
+</body></html>

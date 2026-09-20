@@ -1,0 +1,60 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Source: PCB-015 brief — PodCast Builder devlog</title>
+<style>
+body{max-width:760px;margin:2.5rem auto;padding:0 1.2rem;font-family:ui-sans-serif,system-ui,sans-serif;background:#16181f;color:#dfe2ea;line-height:1.65}
+a{color:#7aa2f7} h1,h2{line-height:1.25} code{background:#262a33;padding:.1em .35em;border-radius:4px;font-size:.9em}
+pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{color:#8b90a0;font-size:.85rem}
+.back{font-size:.85rem} .backnote{background:#262a33;border:1px solid #333;border-radius:8px;padding:.8rem 1rem;font-size:.85rem;color:#aeb3c2}
+</style></head><body>
+<p class="back"><a href="../index.html">← PodCast Builder devlog</a></p>
+<p class="backnote">This is a public snapshot of a private project-tracking note, sanitised for
+publication: internal links, status metadata and personal paths are removed. The live private
+version lives in the author's Obsidian vault.</p>
+<h1>PCB-015 brief</h1>
+<h1 id="pcb-015-retroactively-build-the-podcast-builder-blog">PCB-015 Retroactively build the podcast builder blog</h1>
+<h2 id="question">Question</h2>
+<p>What does the Podcast Builder&#39;s history look like when told as a story — and can a deep dive through the vault&#39;s evidence produce the first posts of a builder blog in the same spirit as the local image gen project&#39;s blog?</p>
+<h2 id="brief">Brief</h2>
+<p>A weaker agent is deliberately the right tool here: the job is reading vault history, not writing prose. It should go back in time through the evidence listed below, reconstruct what actually happened, and draft blog posts from it.</p>
+<p><strong>Voice and tone (this is the point of the ticket):</strong> tongue-in-cheek, fun to read, first-person-plural confessional. NOT a white paper. Think &quot;we taught a computer to kill the intro silence and it deleted the whole chorus&quot; energy, not &quot;Phase 2 optimised the TTS latency envelope&quot;. The local image gen project blog is the house style — match its register, structure and self-deprecation. Jokes should land because they are true.</p>
+<h2 id="evidence-trail-read-in-this-order">Evidence trail (read in this order)</h2>
+<ol>
+<li><strong>Map + tickets</strong> — the podcast builder map and PCB-001 through PCB-015; every ticket has a story arc (decision, failure, fix).</li>
+<li><strong>Daily diary beats</strong> — <code>Daily/2026-08-17</code> onward; the map&#39;s own &quot;Recent diary&quot; section is a curated index.</li>
+<li><strong>Scratchpad packets</strong> — the podcast scratchpad index, especially the 2026-09-15 NAS/ComfyUI preflight conversation capture.</li>
+<li><strong>The failure museum</strong> — SIGBUS death when the NAS vanished mid-run (run 2567); the ComfyUI lock collision (execution 2415); the archived-but-critical workflow node (<code>Plan verified animation endpoints</code>) that broke both builders; the MiniMax lyric that sang &quot;Intro song&quot; as literal lyrics; <code>Delete MP3s via SSH</code> throwing after every successful publish; the 2026-09-19 server kill that took a render down with the production schedule&#39;s profile swap.</li>
+<li><strong>The LTX envelope project</strong> — the LTX-2.5 operating-envelope map for the overnight-run sagas, the duration boundary, and the 2026-09-19 uncapped-watermark adventure.</li>
+<li><strong>Today&#39;s 10-second arc</strong> — PCB-013 and the probe packet: binary-searching a memory ceiling, negotiating with an OOM, and the smoke that flew up then came back down.</li>
+</ol>
+<h2 id="deliverables">Deliverables</h2>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> 3–5 draft blog posts covering: the YuE2/LTX cutover (PCB-006), the SIGBUS incident and the local-models fix (PCB-008), the failure-alert saga, and the 10-second duration probes.</li>
+<li><input checked="" disabled="" type="checkbox"> Each post grounded in at least two linked evidence notes; no invented timestamps or quotes.</li>
+<li><input disabled="" type="checkbox"> Drafts reviewed by Brook before publishing; publishing destination decided separately.</li>
+</ul>
+<h2 id="progress--2026-09-20-private-review-preview-built">Progress — 2026-09-20: private review preview built</h2>
+<p>The drafting swarm completed a 48-slot batch on 2026-09-19 (superseding the 3–5 post brief);
+the senior review accepted 43 drafts, held 5 (<code>P05</code> held-evidence; <code>P07/P08/P21/P34</code> held-quality).
+On 2026-09-20 a private, isolated preview was built from the accepted set:</p>
+<ul>
+<li>Preview workspace (build script + verifier + output): <code>the local vault/Documents/hermes/podcast-blog-preview-20260920/</code></li>
+<li>Rendered preview (open <code>index.html</code>): <code>the local vault/Documents/hermes/podcast-blog-preview-20260920/preview/index.html</code></li>
+<li><strong>Published 2026-09-20 at Brook&#39;s request:</strong> <code>https://brook.dev/projects/news/blog/</code> — copy of <code>preview/</code> committed to <code>brookjordan.github.io</code> as <code>projects/news/blog/</code> (commit <code>50a54908</code>), pushed to master, index and a sample post verified HTTP 200. Redesigned the same day (commit <code>858016a4</code>): featured latest post with intro, card grid with hand-written one-line blurbs (<code>meta.ts</code> in the preview workspace) and colour-coded topic thumbnails (CSS gradient tiles, no images). Dates were subsequently corrected (commit <code>9337e712</code>) to each post&#39;s <strong>evidence-coverage window</strong> parsed from its research preamble (e.g. &quot;records covering 22 June 2026&quot;), replacing the uniform drafting date; ordering is newest evidence-window start first, still labelled as reconstruction rather than exact chronology. <strong>Banners added 2026-09-20 (commit <code>7e4de0b7</code>):</strong> every post and card now carries a real image sourced from the localimagegen masters corpus (9,880 committed lossless renders) — topic→scene mapping (music/workflow→<code>signage</code> PATCH NOTES shopfront, incidents→<code>dragon</code>, cutover/migration→<code>van</code>, models/video→<code>spirit</code>, origins→<code>kingdom</code>) with a per-topic model rotation, highest-quality ladder step, seed 42 preferred; recompressed with cwebp q82 at 1280w (~4.8 MB total). Mapping lives in <code>image-plan.ts</code> in the preview workspace. <strong>No new renders were needed</strong> — all 43 posts matched existing masters. If bespoke per-post images are wanted later, prompt plans per scene are in the localimagegen config (<code>config/gallery.ts</code> scene prompts with the patch motif); a generation pass would follow the <code>local-imagegen</code> skill (queue checks, smoke render, provenance manifest). <strong>Editorial pass 2026-09-20 (commit <code>20f7a0e2</code>):</strong> all 43 display titles rewritten in <code>meta.ts</code> to stand alone without project background, each carrying a joke and a concept summary; blurbs upgraded to lead-in summaries shown on both the card and the post page; posts now carry chronological <strong>Part N of 43</strong> numbers (oldest = Part 1, evidence-window order) instead of exposed Pxx swarm IDs; prev/next navigation relabelled earlier/later to match the oldest-first sort. Draft frontmatter titles are unchanged in the source <code>.md</code> files; the editorial titles live only in the build layer. The its citation links source-note links are inert for public visitors (local scheme) but their link text names private scratchpad note titles — a possible later edit if Brook wants them stripped publicly.</li>
+<li>Dispositions source of truth: <code>the local vault/Documents/hermes/podcast-blog-drafts-20260919/senior/dispositions.json</code>; senior final report <code>senior/FINAL.md</code> in the same tree.</li>
+<li>Build only from <code>disposition: accepted-draft</code> rows; P05/P07/P08/P21/P34 excluded; no worker drafts, ledgers or review sidecars in the build tree.</li>
+<li>All 11 acceptance checks pass (<code>acceptance-results.json</code> in the workspace); branding is <code>PodCast Builder devlog</code>; source drafts unchanged.</li>
+<li>Posts keep their private Obsidian source-note deep links (its citation links URIs) pending the publication-citation decision.</li>
+<li>Ordering is date-then-slot-id and explicitly labelled as not exact historical chronology.</li>
+</ul>
+<h2 id="out-of-scope">Out of scope</h2>
+<ul>
+<li><p>Actually publishing anywhere (destination is a later decision).</p>
+</li>
+<li><p>The LTX blog itself if the image-gen-style site format needs its own ticket.</p>
+</li>
+<li><p>the podcast builder map · the local image gen blog project (house style)</p>
+</li>
+</ul>
+
+</body></html>

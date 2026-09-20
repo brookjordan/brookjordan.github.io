@@ -1,0 +1,53 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Source: PCB-014 motion-control scope — PodCast Builder devlog</title>
+<style>
+body{max-width:760px;margin:2.5rem auto;padding:0 1.2rem;font-family:ui-sans-serif,system-ui,sans-serif;background:#16181f;color:#dfe2ea;line-height:1.65}
+a{color:#7aa2f7} h1,h2{line-height:1.25} code{background:#262a33;padding:.1em .35em;border-radius:4px;font-size:.9em}
+pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{color:#8b90a0;font-size:.85rem}
+.back{font-size:.85rem} .backnote{background:#262a33;border:1px solid #333;border-radius:8px;padding:.8rem 1rem;font-size:.85rem;color:#aeb3c2}
+</style></head><body>
+<p class="back"><a href="../index.html">← PodCast Builder devlog</a></p>
+<p class="backnote">This is a public snapshot of a private project-tracking note, sanitised for
+publication: internal links, status metadata and personal paths are removed. The live private
+version lives in the author's Obsidian vault.</p>
+<h1>PCB-014 motion-control scope</h1>
+<h1 id="pcb-014-evaluate-ic-lora-control-for-fog-and-fluid-motion">PCB-014 Evaluate IC-LoRA control for fog and fluid motion</h1>
+<h2 id="question">Question</h2>
+<p>Do the Motion Control IC-LoRA or the AInVFX fluid IC-LoRA remove the fog/smoke motion artefacts (mid-clip reversal, final-frame snap) that FLF2V endpoint interpolation produces on amorphous elements, at acceptable quality on the local MPS path?</p>
+<h2 id="evidence-motivating-the-question">Evidence motivating the question</h2>
+<p>Measured on the PCB-013 case C renders (see the probe packet):</p>
+<ul>
+<li>10 s render: fog centroid drifts continuously then <strong>snaps back in the final half-second</strong> — the model warping the fog to satisfy the end keyframe.</li>
+<li>5 s render: mid-clip <strong>reversal</strong> (fog moves down, reverses up) plus the same end snap; coverage swings 0.46→0.65.</li>
+<li>Both match Brook&#39;s visual report (&quot;smoke flying up and then down again, not drifting naturally&quot;).</li>
+</ul>
+<p>Community/official mitigations to evaluate:</p>
+<ol>
+<li><strong>Motion Control IC-LoRA</strong> (official, <code>ltx-2.3-22b-ic-lora-motion-track-control-ref0.5</code>): sketched sparse point trajectories; the LoRA follows paths instead of interpolating keyframe states. Docs: <a href="https://docs.ltx.io/open-source-model/feature-guides/structural-control/motion-control.md">https://docs.ltx.io/open-source-model/feature-guides/structural-control/motion-control.md</a></li>
+<li><strong>AInVFX fluid IC-LoRA</strong> (free, rank-32 654 MB, LTX 2.5): painted blobs on keyframes → animated smoke/steam/fire matching shapes. Trained on smoke/steam/fire only. <a href="https://huggingface.co">https://huggingface.co</a> (ainvfx-fluid) + ready ComfyUI workflow.</li>
+<li>Two-part arm with matched endpoints (shorter interpolation arc) — already part of PCB-012&#39;s planned arms; compare rather than re-test.</li>
+</ol>
+<h2 id="scope-guards">Scope guards</h2>
+<ul>
+<li>Evaluation happens <strong>after</strong> PCB-012&#39;s frozen-recipe experiment completes; no IC-LoRA variables inside PCB-012&#39;s 15-render matrix.</li>
+<li>Compute budget: two control renders (one per LoRA) on the case C pair, judged against the plain case C 10 s render, before any wider use.</li>
+<li>MPS memory cost of each LoRA must be recorded (PCB-013 showed the 250f uncapped ceiling; a LoRA on top may reduce it).</li>
+<li>MLX is out of scope here; see the operating-envelope packet&#39;s MLX note.</li>
+</ul>
+<h2 id="acceptance-criteria">Acceptance criteria</h2>
+<ul>
+<li><p><input disabled="" type="checkbox"> 
+Both LoRAs run (or fail with recorded cause) on the case C pair at 250 frames.</p>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+Fog-motion artefact measured with the same centroid/snap metric as the plain render.</p>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+Recommendation recorded: adopt per-episode, adopt for fluid cases only, or reject.</p>
+</li>
+<li><p>PCB-012 · PCB-013</p>
+</li>
+</ul>
+
+</body></html>

@@ -1,0 +1,388 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Source: Podcast source inventory and dated live snapshot — PodCast Builder devlog</title>
+<style>
+body{max-width:760px;margin:2.5rem auto;padding:0 1.2rem;font-family:ui-sans-serif,system-ui,sans-serif;background:#16181f;color:#dfe2ea;line-height:1.65}
+a{color:#7aa2f7} h1,h2{line-height:1.25} code{background:#262a33;padding:.1em .35em;border-radius:4px;font-size:.9em}
+pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{color:#8b90a0;font-size:.85rem}
+.back{font-size:.85rem} .backnote{background:#262a33;border:1px solid #333;border-radius:8px;padding:.8rem 1rem;font-size:.85rem;color:#aeb3c2}
+</style></head><body>
+<p class="back"><a href="../index.html">← PodCast Builder devlog</a></p>
+<p class="backnote">This is a public snapshot of a private project-tracking note, sanitised for
+publication: internal links, status metadata and personal paths are removed. The live private
+version lives in the author's Obsidian vault.</p>
+<h1>Podcast source inventory and dated live snapshot</h1>
+<h1 id="2026-09-19t2000250800---localimagegen-blog-and-podcast-research-data-source-inventory">2026-09-19T20:00:25+0800 - localimagegen blog and podcast research data-source inventory</h1>
+<p><strong>Packet type:</strong> research inventory and routing note<br><strong>Captured:</strong> 2026-09-19T20:00:25+0800<br><strong>Scope:</strong> locate the localimagegen blog&#39;s source material and every major evidence route needed to reconstruct the PodCast Builder&#39;s history before drafting posts.<br><strong>Owner:</strong> the PodCast Builder project map<br><strong>Parent work:</strong> PCB-015, the retroactive blog research ticket</p>
+<p>This packet is a map of sources, not a blog draft and not a current-state synthesis. It records where an agent should look, what each location owns, and the numbers visible at capture time. Raw source notes remain authoritative for their own contents.</p>
+<h2 id="read-in-this-order">Read in this order</h2>
+<ol>
+<li>Start with the PodCast Builder project map for current scope and the source-of-truth split.</li>
+<li>Read PCB-015 for the requested posts, voice, and evidence trail.</li>
+<li>Read this inventory. Do not preload every file listed below.</li>
+<li>For the story being researched, read the relevant podcast ticket and then its linked scratchpad packet.</li>
+<li>For implementation and run facts, read the live n8n record and the named execution evidence. The mutable n8n workflow outranks dated map prose for its current name, version and node graph.</li>
+<li>For chronology, read the relevant Daily note and the dated packet. Use the localimagegen history entry as the style reference and, where applicable, as supporting evidence.</li>
+<li>Draft only after checking contradictions between the map, ticket, scratchpad, Daily note, live workflow and execution record.</li>
+</ol>
+<p>The scratchpad index is the podcast scratchpad manifest. This packet should be opened from that index when an agent needs the full source map.</p>
+<h2 id="1-the-localimagegen-blog-canonical-source-locations">1. The localimagegen blog: canonical source locations</h2>
+<h3 id="source-repository">Source repository</h3>
+<ul>
+<li>Repository: <code>the local vault/git/brookjordan/localimagegen</code></li>
+<li>Project map: the localimagegen project map</li>
+<li>Repository operating guide: <code>the local vault/git/brookjordan/localimagegen/CLAUDE.md</code></li>
+<li>Blog content: <code>the local vault/git/brookjordan/localimagegen/history/</code></li>
+<li>Blog convention: <code>the local vault/git/brookjordan/localimagegen/history/README.md</code></li>
+<li>Blog parser and renderer: <code>the local vault/git/brookjordan/localimagegen/src/blog.ts</code></li>
+<li>Blog shell and styles: <code>the local vault/git/brookjordan/localimagegen/web/blog.html</code>, <code>web/blog.css</code>, and <code>web/tokens.css</code></li>
+<li>Build command and package scripts: <code>the local vault/git/brookjordan/localimagegen/package.json</code></li>
+<li>Generated site, useful for checking the rendered result but not for source claims: <code>the local vault/git/brookjordan/localimagegen/build/blog/</code></li>
+<li>Generated output has 181 HTML files at capture time. It contains stale and duplicate-looking filenames, so use <code>history/*.md</code> as the content authority and treat <code>build/blog/</code> as a derived artefact.</li>
+</ul>
+<h3 id="corpus-size-and-chronology">Corpus size and chronology</h3>
+<ul>
+<li><code>history/*.md</code>, excluding <code>history/README.md</code>: <strong>99 dated entries</strong> at capture time.</li>
+<li>Filename chronology begins on <strong>2026-06-22</strong> and reaches <strong>2026-08-29</strong>.</li>
+<li>The history directory contains <strong>284 files</strong> in total, including Markdown, banner images and audio.</li>
+<li><code>history/img/</code> contains <strong>93 files</strong>.</li>
+<li><code>history/audio/</code> contains <strong>1 file</strong>.</li>
+<li>The repository has <strong>38 workflow JSON files</strong> under <code>workflows/</code> and <strong>6 config files</strong> under <code>config/</code>.</li>
+<li>The Git history runs from commit <code>0a2b329</code> on <strong>2026-06-25 16:44:42 +0800</strong> to <code>3f18ae0</code> on <strong>2026-07-09 11:08:35 +0800</strong> in the checked-out history.</li>
+<li>The working tree is not clean. At capture time, the branch was <code>master...origin/master</code>; modified engine/config files were present, and these blog posts were untracked: <code>history/2026-08-12-small-model-peaks.md</code>, <code>history/2026-08-13-non-sd-eight-gigabyte-trenches.md</code>, and <code>history/2026-08-29-the-workflow-bends-to-the-prompt.md</code>. Do not assume the latest blog entries are committed.</li>
+<li>Some frontmatter <code>date</code> values are plain dates, some contain ISO timestamps, and some later entries contain quoted timestamp values. Filenames with <code>HHMM</code> and the Git history are useful chronology evidence, but an agent must preserve the original frontmatter rather than normalising it while researching.</li>
+</ul>
+<h3 id="house-style-and-mechanics-to-copy">House style and mechanics to copy</h3>
+<ul>
+<li>One dated Markdown file per post, with <code>title</code>, <code>date</code> and <code>tags</code> frontmatter.</li>
+<li>Posts explain why a choice was made, what failed, what was rejected, and what the numbers showed. They are short, concrete and written as an engineering story rather than a white paper.</li>
+<li>Incidents are especially useful for the podcast blog. They name the symptom, the misleading first theory, the evidence that changed the diagnosis, the fix, and the remaining uncertainty.</li>
+<li>The blog build sorts entries and rewrites internal Markdown links. Do not use generated HTML as the primary evidence when the source Markdown exists.</li>
+<li><code>CLAUDE.md</code> says a blog post is expected for a notable feature, migration, decision, incident or lesson. That makes the history directory the best style reference for the podcast posts, not merely a visual example.</li>
+</ul>
+<h3 id="style-exemplars-for-the-next-agent">Style exemplars for the next agent</h3>
+<p>Open these first, then select narrower posts by topic:</p>
+<ul>
+<li><code>the local vault/git/brookjordan/localimagegen/history/2026-06-25-1753-welcome-to-the-devlog.md</code> , tone-setter and explanation of the blog&#39;s voice.</li>
+<li><code>the local vault/git/brookjordan/localimagegen/history/2026-06-22-1814-the-spark.md</code> , origin story connecting the podcast pipeline and image work.</li>
+<li><code>the local vault/git/brookjordan/localimagegen/history/2026-06-25-1833-the-python-era.md</code> , retrospective reconstruction and the older system that the current project replaced.</li>
+<li><code>the local vault/git/brookjordan/localimagegen/history/2026-06-24-1723-lesson-krea2-on-apple-silicon.md</code> , a technical failure told as a human-scale incident.</li>
+<li><code>the local vault/git/brookjordan/localimagegen/history/2026-06-24-1734-incident-flux4b-black-at-10-steps.md</code> , a small, sharply bounded failure post.</li>
+<li><code>the local vault/git/brookjordan/localimagegen/history/2026-06-26-0843-incident-deploy-overlay-not-mirror.md</code> , operational failure and the exact correction.</li>
+<li><code>the local vault/git/brookjordan/localimagegen/history/2026-06-26-2319-incident-the-backfill-that-ate-the-dates.md</code> , data and chronology failure, relevant to reconstructing podcast history.</li>
+<li><code>the local vault/git/brookjordan/localimagegen/history/2026-07-06-2110-incident-the-compress-cache-that-never-saved.md</code> , repeated work caused by missing durable state.</li>
+<li><code>the local vault/git/brookjordan/localimagegen/history/2026-08-08-the-zero-that-ate-every-prompt.md</code> , a prompt/config incident with raw numbers and linked evidence.</li>
+<li><code>the local vault/git/brookjordan/localimagegen/history/2026-08-09-eight-gigabytes-no-miracles.md</code> , long-form constrained-hardware research with measured limits.</li>
+<li><code>the local vault/git/brookjordan/localimagegen/history/2026-08-29-the-workflow-bends-to-the-prompt.md</code> , the closest recent example of workflow behaviour being changed by prompt semantics.</li>
+</ul>
+<h3 id="localimagegen-chronology-index">Localimagegen chronology index</h3>
+<p>Use <code>the local vault/git/brookjordan/localimagegen/history/README.md</code> as the first chronological index. The major clusters are:</p>
+<ul>
+<li><strong>2026-06-22:</strong> the podcast/image-generation origin and Detail Daemon experiments.</li>
+<li><strong>2026-06-23:</strong> the prehistory of the ComfyUI sweeps, filename grammar, 14-model menagerie and the decision to test bare models rather than hide differences behind LoRAs.</li>
+<li><strong>2026-06-24:</strong> step-count comparisons, scene design, Flux black-output incident, Krea-2 Apple-Silicon revert and the three-token-budget kingdom scene.</li>
+<li><strong>2026-06-25:</strong> localimagegen is born as one repository; phantom seeds, SSIM-gated compression, Node instead of Python, deprecation instead of deletion, the watch loop, deployment, the Python-era retrospective, the self-building blog and the lossless-WebP scare.</li>
+<li><strong>2026-06-26:</strong> overnight rendering, time-budgeted stopping, deploy mirroring, dynamic ladders, timestamps, notifications, image notes, resilience, workflow cataloguing, TypeScript config, tests, local HTTPS, esbuild, the frontier scheduler and the date-backfill incident.</li>
+<li><strong>2026-06-28 to 2026-06-30:</strong> quarantine retry, stall diagnostics, false-positive stalls, ad-hoc renders, phase timing, capability axes, ComfyUI consolidation, deployment cache, hooks, Flux regression and new model workflows.</li>
+<li><strong>2026-07-01 to 2026-07-03:</strong> repair-sweep noise, model-rollout quarantine, workflow export, booru prompt bucket, NoobAI prediction types, gallery controls and new masters.</li>
+<li><strong>2026-07-06 to 2026-07-07:</strong> allocator measurement, ComfyUI memory probes, WebSocket phase tracking, async races, partial offload, the model memory table, banner selection and refresh, TypeScript blind spots, cache failure, preset drift, Pony prompt dialect and the native Pony recipe.</li>
+<li><strong>2026-08-08 to 2026-08-13:</strong> low-memory model candidates, M1 baseline, provisioning, model-store/symlink failures, prompt and shape contracts, hosted notes, LCM calibration, reviews, small-model peaks and non-SD eight-gigabyte limits.</li>
+<li><strong>2026-08-29:</strong> the workflow-bends-to-the-prompt post. This is a later uncommitted entry and should be checked against its file contents before citation.</li>
+</ul>
+<p>The individual history files are the place to extract exact numbers, timestamps, commands and rejected approaches for style or comparison. The localimagegen project tickets in Obsidian are a second source for durable project decisions, not a replacement for the repository posts.</p>
+<h2 id="2-podcast-builder-project-sources">2. Podcast Builder project sources</h2>
+<h3 id="project-map-and-tickets">Project map and tickets</h3>
+<ul>
+<li>Map: the PodCast Builder project map</li>
+<li>Ticket under research: PCB-015</li>
+<li>Ticket files: <code>the local vault/Documents/Obsidian Vault/Project tracking/podcast builder/PCB-001 ...md</code> through <code>PCB-015 ...md</code></li>
+<li>At capture time there are <strong>15 PCB tickets</strong>. Stored statuses are: PCB-001 <code>done</code>; PCB-002 <code>in-progress</code>; PCB-003 and PCB-004 <code>todo</code>; PCB-005 <code>in-progress</code>; PCB-006 <code>Done</code>; PCB-007 and PCB-008 <code>in-progress</code>; PCB-009 through PCB-012 <code>todo</code>; PCB-013 <code>in-progress</code>; PCB-014 and PCB-015 <code>todo</code>.</li>
+<li>Each ticket is a bounded story source. Read the ticket before its evidence, then use the ticket&#39;s resolution and evidence links to avoid treating an old scratchpad as current state.</li>
+</ul>
+<h3 id="ticket-to-story-map">Ticket-to-story map</h3>
+<ul>
+<li><strong>Origin and publication:</strong> PCB-001, PCB-002, PCB-003 and PCB-004. These own NAS asset storage, the <code>assets.brook.dev</code> route, GitHub Pages metadata, and legacy migration.</li>
+<li><strong>Prompt and intro-song arc:</strong> PCB-005, plus Daily notes from 2026-08-22 through 2026-08-26 and the 2026-09-09 map section about MiniMax Music 3 lyrics. The relevant failure is that production directions and intro concepts entered the lyrics boundary.</li>
+<li><strong>Cutover:</strong> PCB-006. It contains the YuE2/WAV contract, LTX guide crop, profile ownership, ComfyUI ports, execution IDs 2491, 2497, 2502, 2503 and 2505, and the final production resolution.</li>
+<li><strong>Preflight and reliability:</strong> PCB-007 and its linked scratchpad material. It owns route preference, capability manifests and fail-closed endpoint checks.</li>
+<li><strong>SIGBUS and local model fix:</strong> PCB-008. It owns the 26.762 GB four-file LTX model set, SMB throughput, the <code>SIGBUS</code> run 2567, detached resumable sync, content-addressed verification and the remaining NAS/path uncertainty.</li>
+<li><strong>TTS replacement:</strong> PCB-009 and PCB-010. These own maintained local TTS candidates and the three-pass speaker-accuracy harness.</li>
+<li><strong>Longer video:</strong> PCB-011, PCB-012 and PCB-013. PCB-013 owns the current five-case 10-second probe and its raw result file.</li>
+<li><strong>Fog and fluid motion:</strong> PCB-014, with LTX scratchpads on IC-LoRA, fog reversal and first/last-frame conditioning.</li>
+<li><strong>Blog reconstruction:</strong> PCB-015. Its brief explicitly requests 3 to 5 drafts covering the YuE2/LTX cutover, the SIGBUS incident and local-model fix, the failure-alert saga, and the 10-second duration probes. It requires at least two linked evidence notes per draft and forbids publishing at this stage.</li>
+</ul>
+<h3 id="podcast-scratchpad">Podcast scratchpad</h3>
+<ul>
+<li>Index: the podcast scratchpad index</li>
+<li>Folder: <code>the local vault/Documents/Obsidian Vault/Project tracking/podcast builder/Scratchpad/</code></li>
+<li>Existing packets at capture time:<ul>
+<li><code>2026-09-15 n8n environment and NAS preflight conversation.md</code> , verified topology, SMB reachability, missing mount and capability-manifest proposal.</li>
+<li><code>2026-09-15 raw conversation NAS route-aware SMB preflight.md</code> , preserves the requirement to identify the route supplying SMB.</li>
+<li><code>2026-09-15 raw conversation Ethernet endpoint correction.md</code> , records the failed YuE2 route, direct Ethernet check and workflow correction.</li>
+<li><code>2026-09-19 - PCB-012 frozen five cases.md</code> , frozen real podcast cases for longer-video testing.</li>
+<li>This packet , the localimagegen/blog and podcast data-source inventory.</li>
+</ul>
+</li>
+<li>Raw conversation packets preserve context and wording. Ticket notes and evidence packets own verified conclusions. Do not use a raw conversation packet alone to claim current workflow state.</li>
+</ul>
+<h2 id="3-ltx-25-evidence-route">3. LTX-2.5 evidence route</h2>
+<p>The LTX project is a separate project map but is directly relevant to the podcast blog&#39;s video stories.</p>
+<ul>
+<li>Map: the LTX-2.5 operating-envelope map</li>
+<li>Scratchpad index: the LTX scratchpad index</li>
+<li>Relevant ticket range: LTX-001 through LTX-020, especially LTX-001, LTX-004, LTX-005, LTX-006, LTX-007, LTX-008, LTX-009, LTX-010, LTX-011, LTX-012, LTX-013, LTX-014, LTX-015, LTX-016, LTX-017, LTX-018, LTX-019 and LTX-020.</li>
+<li>A broad search under the LTX map and scratchpad returned <strong>69 matching notes/files</strong> at capture time, including dated run reports, research gates, user observations, handovers and the 2026-09-19 duration-curve packet.</li>
+<li>Use the LTX map for the settled production preset and failure classes. Use its scratchpad for the exact run chronology and raw observations.</li>
+<li>The current duration packet is the 2026-09-19 duration-curve evidence packet. Its raw numbers are: 49 frames / 1.96 s / 602 s wall / success; 121 frames / 4.84 s / 1053 s / success; 188 frames / 7.52 s / capped MPS OOM; 250 frames / 9.96 s / capped MPS OOM twice; 250 frames / 9.96 s / uncapped / 2196 s / success.</li>
+<li>The packet records the 36 GB M3 Max, 1280×704 latent, 25 fps, Q3_K_M distilled model, manual nine-sigma schedule, DualCFG 1.0, FLF2V guides, tiled VAE decode and the fog end-keyframe snap. Do not transfer these MPS/GGUF numbers to MLX without a separate test.</li>
+</ul>
+<h2 id="4-daily-notes-and-chronological-reconstruction">4. Daily notes and chronological reconstruction</h2>
+<p>Search <code>the local vault/Documents/Obsidian Vault/Daily/</code> for <code>podcast</code>, <code>n8n</code>, <code>YuE2</code>, <code>LTX</code>, <code>ComfyUI</code> and <code>NAS</code>. The first search at capture time returned <strong>31 Daily notes</strong> and <strong>166 matching lines</strong>. The most useful date route is:</p>
+<ul>
+<li><strong>2026-08-22:</strong> story-song format and the planned 50-song evaluation. See <code>Daily/2026-08-22.md</code> and PCB-005.</li>
+<li><strong>2026-08-23:</strong> n8n MCP plumbing, removal of the dead <code>qwen3.6:27b</code> vision reviewer after execution 2205, and prompt-engagement work. See <code>Daily/2026-08-23.md</code>.</li>
+<li><strong>2026-08-24:</strong> option-2 script-prompt rewrite and the conversational two-host default. See <code>Daily/2026-08-24.md</code>.</li>
+<li><strong>2026-08-25:</strong> lock/401 failures, ComfyUI cleanup, autosave trouble and audio-before-imaging wiring. See <code>Daily/2026-08-25.md</code>.</li>
+<li><strong>2026-08-26:</strong> two further failed runs and a return to workflow debugging. See <code>Daily/2026-08-26.md</code>.</li>
+<li><strong>2026-08-27:</strong> failed podcast run recovery, another production run and Pony/ComfyUI work. See <code>Daily/2026-08-27.md</code>.</li>
+<li><strong>2026-08-31 to 2026-09-02:</strong> LTX operating-envelope scaffolding, overnight workers, Stage-2 smear diagnosis, resolution/duration boundaries, style and temporal artefact observations. Use the LTX map and scratchpad rather than relying on the Daily summary alone.</li>
+<li><strong>2026-09-09:</strong> the exact MiniMax Music 3 node and the lyric-boundary failure were identified; the failure alert was repaired and execution 2417 verified the real diagnostics. The durable details are on the podcast map.</li>
+<li><strong>2026-09-11:</strong> automated podcast failures continued while local TTS candidates were expanded. See <code>Daily/2026-09-11.md</code> and PCB-009.</li>
+<li><strong>2026-09-13:</strong> YuE2 prompt matrix results included classical piano for a modern-metal prompt, an eight-bit test that grew lyrics, and the observation that songs need roughly 150 seconds to avoid sounding rushed. See <code>Daily/2026-09-13.md</code>; this is related context, not automatically the production setting.</li>
+<li><strong>2026-09-14 to 2026-09-15:</strong> broken paths, missing models, hard-coded IPs, refused connections and the NAS/ComfyUI preflight conversation. See <code>Daily/2026-09-14.md</code>, <code>Daily/2026-09-15.md</code> and the podcast scratchpad packets.</li>
+<li><strong>2026-09-16:</strong> the YuE2/native-LTX cutover and first 98/98 production run. See PCB-006 and the project map.</li>
+<li><strong>2026-09-17:</strong> the archived critical endpoint node was restored, runtime endpoint discovery was added, run 2567 lost the NAS during a 14.6 GB text-encoder memory map and died with <code>SIGBUS</code> / status 138, and local LTX model sync was built. See the project map and PCB-008.</li>
+<li><strong>2026-09-19:</strong> current live n8n runs include successes, errors and the five-case 10-second probe work. See PCB-013 and the LTX duration packet.</li>
+</ul>
+<p>Daily notes are chronology leads. The ticket or scratchpad owning the event must supply the final numbers and evidence links.</p>
+<h2 id="5-live-n8n-data-read-only-snapshot">5. Live n8n data, read-only snapshot</h2>
+<p>The live n8n instance was read without changing it on 2026-09-19. Treat this as a dated external-state snapshot, not a permanent copy of the workflow.</p>
+<h3 id="current-workflow-identity">Current workflow identity</h3>
+<ul>
+<li>Workflow ID: <code>2k7x4U8GgLeSFpRE</code></li>
+<li>Live name at capture: <strong>Podcast – 20260918</strong></li>
+<li>The project map says <strong>Podcast – latest</strong>. That is a discrepancy to preserve and check before drafting a sentence about the current name.</li>
+<li>Active: <code>true</code>; archived: <code>false</code>; available in MCP: <code>true</code></li>
+<li>Node count: <strong>102</strong>; connection keys: <strong>101</strong></li>
+<li>Current <code>versionId</code> and <code>activeVersionId</code>: <code>8f206b3f-6e03-47df-9db7-578db7a99f3b</code></li>
+<li>Workflow created: <code>2026-09-14T11:28:36.732Z</code></li>
+<li>Last updated in the live readback: <code>2026-09-19T11:44:29.249Z</code></li>
+<li>Error workflow: <code>kyZcvt1CxQq8FQ0j</code></li>
+<li>Timezone: <code>Asia/Singapore</code></li>
+<li>Execution order: <code>v1</code>; error data saved: <code>all</code>; execution progress saved: <code>true</code>; binary mode: <code>separate</code></li>
+<li>Schedule trigger node: <code>Run podcast schedule</code></li>
+<li>Schedule times: <strong>04:30</strong>, <strong>12:10</strong>, <strong>18:00</strong> in the workflow timezone.</li>
+<li>Legacy workflow: <code>S9v0UpCVYcrtVJH4</code>, <strong>Build and publish scheduled podcast</strong>, inactive at capture. It is the rollback/reference workflow in the map and tickets.</li>
+</ul>
+<h3 id="recent-live-execution-index">Recent live execution index</h3>
+<p>The read-only search returned <strong>44 executions</strong> for workflow <code>2k7x4U8GgLeSFpRE</code>: <strong>10 success</strong>, <strong>33 error</strong>, <strong>1 canceled</strong>. Modes were <strong>6 trigger</strong>, <strong>28 manual</strong>, <strong>10 retry</strong>.</p>
+<p>Use the n8n execution record for node-level inputs and outputs. The IDs below are the chronology index returned at capture, newest first:</p>
+<ul>
+<li><code>2585</code> success, trigger, 2026-09-19 11:22:22Z to 12:00:05Z</li>
+<li><code>2583</code> error, trigger, 2026-09-19 11:17:55Z to 11:18:26Z</li>
+<li><code>2581</code> error, trigger, 2026-09-19 10:00:56Z to 10:01:47Z</li>
+<li><code>2579</code> success, trigger, 2026-09-19 04:10:56Z to 04:48:54Z</li>
+<li><code>2577</code> success, trigger, 2026-09-18 20:30:56Z to 21:13:26Z</li>
+<li><code>2575</code> success, manual, 2026-09-18 15:15:04Z to 15:51:22Z</li>
+<li><code>2572</code> success, manual, 2026-09-17 09:25:29Z to 10:30:10Z</li>
+<li><code>2571</code> error, manual, 2026-09-17 05:24:16Z to 05:36:24Z</li>
+<li><code>2569</code> error, retry, 2026-09-17 05:20:32Z to 05:20:33Z</li>
+<li><code>2567</code> error, manual, 2026-09-17 04:38:21Z to 05:17:21Z</li>
+<li><code>2566</code> error, manual, 2026-09-17 04:22:21Z to 04:22:37Z</li>
+<li><code>2564</code> error, trigger, 2026-09-17 04:10:56Z to 04:11:15Z</li>
+<li><code>2560</code> success, manual, 2026-09-16 16:04:16Z to 17:01:17Z</li>
+<li><code>2559</code> canceled, manual, 2026-09-16 14:47:33Z to 15:18:58Z</li>
+<li><code>2543</code> error, manual, 2026-09-16 08:40:34Z to 08:41:14Z</li>
+<li><code>2524</code> error, manual, 2026-09-15 08:56:46Z to 10:48:47Z</li>
+<li><code>2522</code>, <code>2520</code> error, retry, 2026-09-15 08:56:30Z to 08:56:33Z</li>
+<li><code>2519</code>, <code>2518</code>, <code>2516</code>, <code>2514</code>, <code>2513</code>, <code>2511</code> error, manual, 2026-09-15</li>
+<li><code>2508</code>, <code>2507</code> error, retry/manual, 2026-09-15</li>
+<li><code>2506</code> success, retry, 2026-09-15 03:29:26Z to 03:29:36Z</li>
+<li><code>2505</code> success, manual, 2026-09-15 02:30:41Z to 02:30:55Z</li>
+<li><code>2503</code> error, manual, 2026-09-15 00:06:40Z to 00:49:24Z</li>
+<li><code>2502</code> success, manual, 2026-09-15 00:02:17Z to 00:02:19Z</li>
+<li><code>2501</code>, <code>2500</code> error, manual, 2026-09-15</li>
+<li><code>2499</code> success, manual, 2026-09-14 23:55:37Z to 23:55:39Z</li>
+<li><code>2497</code>, <code>2495</code> error, retry, 2026-09-14</li>
+<li><code>2491</code> error, manual, 2026-09-14 16:19:41Z to 16:58:30Z</li>
+<li><code>2489</code>, <code>2487</code>, <code>2485</code> error, retry, 2026-09-14</li>
+<li><code>2483</code>, <code>2481</code>, <code>2479</code>, <code>2477</code>, <code>2475</code> error, manual, 2026-09-14</li>
+</ul>
+<p>The grouped entries retain the exact IDs and dates needed to start an execution-level dive, but the full node data is not copied into this inventory. Fetch it from n8n when researching a specific failure.</p>
+<h3 id="where-the-live-workflow-stores-its-useful-data">Where the live workflow stores its useful data</h3>
+<ul>
+<li><strong>Feed source declarations:</strong> <code>Daring Fireball1</code>, <code>Kottke1</code>, <code>Wired1</code>, <code>First Things1</code>, <code>TechCrunch1</code>, <code>Open AI1</code>, <code>BBC local news1</code>, <code>Al Jazeera1</code>, <code>The Guardian1</code>, <code>Associated Press1</code>, <code>BBC News1</code>, <code>Novara Media</code>, <code>The Bristol Cable</code>, <code>Catanduanes Tribune</code>, <code>Google News: Catanduanes</code>, <code>The Straits Times: Singapore</code>, <code>CNA: Singapore</code>, <code>This Week in React</code>, and <code>Smashing Magazine</code>.</li>
+<li><strong>Feed fetch and selection:</strong> <code>Merge Feeds</code>, <code>Merge added feeds</code>, <code>Merge all feeds</code>, <code>Fetch RSS feed</code>, <code>Limit &amp; Attach Priority</code>, <code>Format previous script</code>, and <code>Merge news</code>.</li>
+<li><strong>Script and summaries:</strong> <code>Generate summaries</code>, <code>Generate script</code>, <code>Parse script response</code>, <code>Make text TTS compatible</code>, <code>Combine scripts</code>, and <code>Restore full scripts after TTS setup</code>.</li>
+<li><strong>Runtime configuration and route evidence:</strong> <code>Discover MacBook endpoints</code> → <code>LLM config</code>. The live Code node records model <code>gemma4:12b-it-qat</code>, <code>num_ctx = 2 ** 13</code>, intro vocals enabled, temperature <code>0.1</code>, repeat penalty <code>1.1</code>, route preference Ethernet → WLAN → Tailscale, ComfyUI port <code>8188</code>, YuE2 port <code>8087</code>, Ollama port <code>11434</code>, and the static fallback routes. The live discovery output is the evidence for the route actually used on a run.</li>
+<li><strong>Cover art:</strong> <code>Generate image prompt</code>, <code>Parse audio prompt response</code>, <code>Tag cover needs</code>, <code>Parse cover tags</code>, <code>Score cover model</code>, <code>Build cover Comfy workflow</code>, <code>Generate image</code>, <code>Get image file</code>, and <code>Prepare first image for vision</code>.</li>
+<li><strong>Frame planning and video:</strong> <code>Parse second image plan</code>, <code>Generate additional frames</code>, <code>Prepare frame downloads</code>, <code>Get generated frame files</code>, <code>Prepare video render</code>, <code>Start isolated LTX ComfyUI</code>, <code>Assert isolated LTX ComfyUI ready</code>, <code>LTX-2.5 transitions</code>, <code>Get podcast video file</code>, <code>Restore normal ComfyUI after LTX</code>, <code>Assert normal ComfyUI after LTX</code>, <code>Stitch video clips</code>, <code>Drop LTX video models</code>.</li>
+<li><strong>Local LTX protection:</strong> <code>Start LTX model sync</code>, <code>Gate LTX models local</code>, and <code>Assert LTX models local</code>. The live commands launch <code>the local vault/.local/bin/ltx-models-local.py start --supervise --rate-limit-mb 20 --budget 21600 --max-attempts 40</code> and gate with a 900-second budget.</li>
+<li><strong>YuE2:</strong> <code>Start YuE2 server</code>, <code>Generate song spec</code>, <code>Parse song spec</code>, <code>YuE2 synth</code>, <code>YuE2 materialise audio</code>, <code>Collate intro song</code>, <code>Label intro song</code>, <code>Wait for normal video before music</code>, <code>Trim intro silence</code>.</li>
+<li><strong>Final media and publication:</strong> <code>Prepare final media manifest</code>, <code>Download final media</code>, <code>Normalise final media</code>, <code>Prepare publication directory</code>, <code>Create NAS episode directory</code>, <code>Build podcast webpage</code>, <code>Fetch Repo Folders</code>, <code>Fetch publishing branch head</code>, <code>Commit podcast webpage</code>, <code>Telegram: podcast published</code>, and <code>Release ComfyUI run lock</code>.</li>
+<li><strong>Live publication destinations:</strong> GitHub repository <code>brookjordan/brookjordan.github.io</code>, GitHub content path <code>projects/news</code>, NAS path <code>/files/assets/podcast/&lt;folderName&gt;</code>, public asset base <code>https://assets.brook.dev/podcasts/&lt;folderName&gt;</code>, and page base <code>/projects/news/&lt;folderName&gt;/</code>.</li>
+<li><strong>Episode ID format in the live Code node:</strong> <code>vYYYY.W.E-HH.MM</code>, generated from the n8n timezone-aware <code>$now</code>. The node checks the format before writing media.</li>
+<li><strong>Current LTX graph values:</strong> one-stage Q3_K_M distilled model, 1280×720 empty latent in the live workflow, 49 frames, 25 fps, first guide at frame 0, last guide at frame 48, Euler ancestral sampler, manual sigmas <code>1.0, 0.99375, 0.9875, 0.98125, 0.975, 0.909375, 0.725, 0.421875, 0.0</code>, DualCFG video/audio <code>1.0</code>, tiled VAE decode 512/64/64/16. The 2026-09-19 research probes use 1280×704 and longer frame counts in a separate test path. Keep those two contexts separate.</li>
+</ul>
+<h3 id="current-feed-declarations-from-the-live-workflow">Current feed declarations from the live workflow</h3>
+<p>These are raw routing values from the Set nodes, not a claim that every feed succeeded on every run:</p>
+<ul>
+<li>Novara Media , <code>https://novaramedia.com/feed</code> , priority 20</li>
+<li>The Bristol Cable , <code>https://thebristolcable.org/feed/</code> , priority 20</li>
+<li>Catanduanes Tribune , <code>https://catanduanestribune.net/feed/</code> , priority 10</li>
+<li>Google News: Catanduanes , <code>https://news.google.com/rss/search?q=Catanduanes+when:7d&amp;hl=en-PH&amp;gl=PH&amp;ceid=PH:en</code> , priority 15</li>
+<li>The Straits Times: Singapore , <code>https://www.straitstimes.com/news/singapore/rss.xml</code> , priority 20</li>
+<li>CNA: Singapore , <code>https://www.channelnewsasia.com/api/v1/rss-outbound-feed?_format=xml&amp;category=10416</code> , priority 20</li>
+<li>This Week in React , <code>https://thisweekinreact.com/newsletter/rss.xml</code> , priority 25</li>
+<li>Smashing Magazine , <code>https://www.smashingmagazine.com/feed</code> , priority 25</li>
+<li>Daring Fireball , <code>https://daringfireball.net/feeds/main</code> , priority 10</li>
+<li>Kottke , <code>https://feeds.kottke.org/main</code> , priority 10</li>
+<li>Wired , <code>https://www.wired.com/feed/rss</code> , priority 20</li>
+<li>First Things , <code>https://www.firstthings.com/rss</code> , priority 20</li>
+<li>TechCrunch , <code>https://techcrunch.com/feed/</code> , priority 20</li>
+<li>Open AI , <code>https://openai.com/news/rss.xml</code> , priority 20</li>
+<li>BBC local news , <code>https://feeds.bbci.co.uk/news/rss.xml</code> , priority 30</li>
+<li>Al Jazeera , <code>https://aljazeera.com/rss</code> , priority 30</li>
+<li>The Guardian , <code>https://theguardian.com/world/rss</code> , priority 30</li>
+<li>Associated Press , <code>https://feedx.net/rss/ap.xml</code> , priority 30</li>
+<li>BBC News , <code>https://feeds.bbci.co.uk/news/world/rss.xml</code> , priority 30</li>
+</ul>
+<h2 id="6-working-research-recipes-for-later-agents">6. Working research recipes for later agents</h2>
+<h3 id="to-reconstruct-one-podcast-incident">To reconstruct one podcast incident</h3>
+<ol>
+<li>Start at the relevant PCB ticket.</li>
+<li>Follow its evidence links into the podcast or LTX scratchpad.</li>
+<li>Find the n8n execution ID in the ticket or packet.</li>
+<li>Read the live workflow node graph before interpreting an execution, because node names and version state change.</li>
+<li>Fetch the execution with node data and record the failed node, input, output, exact error, timestamps, route manifest and any file names.</li>
+<li>Check the Daily note for what Brook observed or changed that day.</li>
+<li>Compare the result with the localimagegen incident style, then draft from the facts.</li>
+</ol>
+<h3 id="to-reconstruct-a-date-or-timeline">To reconstruct a date or timeline</h3>
+<ul>
+<li>Use the ticket&#39;s dated resolution first.</li>
+<li>Use filename timestamps in scratchpad packets and n8n <code>startedAt</code>/<code>stoppedAt</code> values second.</li>
+<li>Use Daily notes for context and user-visible sequence.</li>
+<li>Use Git history and localimagegen frontmatter only for the house-style chronology or the image-generation origin story.</li>
+<li>Never infer a precise event time from a note&#39;s modification time or from a generated <code>build/blog</code> file.</li>
+</ul>
+<h3 id="to-collect-raw-numbers">To collect raw numbers</h3>
+<p>Look for: execution IDs, <code>startedAt</code>/<code>stoppedAt</code>, node names, HTTP ports, route class, model names, file sizes, frame counts, clip durations, wall time, MPS held/refused memory, episode folder names, feed priorities, and Git commit hashes. Keep units and timezone in every extracted value.</p>
+<h3 id="contradiction-checks-already-exposed">Contradiction checks already exposed</h3>
+<ul>
+<li>Project map name <strong>Podcast – latest</strong> versus live n8n name <strong>Podcast – 20260918</strong>.</li>
+<li>Project map&#39;s older version references versus live <code>versionId</code>/<code>activeVersionId</code> <code>8f206b3f-6e03-47df-9db7-578db7a99f3b</code>.</li>
+<li>Live LTX graph&#39;s 49-frame 1280×720 path versus the 2026-09-19 10-second probe&#39;s 250-frame 1280×704 path.</li>
+<li>The localimagegen Git baseline ends on 2026-07-09 while the working tree contains later untracked history posts through 2026-08-29.</li>
+<li>Scratchpad evidence records historical state. The map and live n8n workflow own current state; do not promote old packet values without checking them.</li>
+</ul>
+<h2 id="7-what-is-not-here-yet">7. What is not here yet</h2>
+<ul>
+<li>No podcast blog draft has been written.</li>
+<li>No n8n execution has been re-run or modified for this inventory.</li>
+<li>The full node-level execution payloads remain in n8n and should be fetched per story. This packet stores the routing index, not a second execution database.</li>
+<li>External publication of the podcast blog is out of scope under PCB-015.</li>
+<li>The next useful step is to assign one research pass per proposed post, with each pass returning a dated event timeline, raw measurements, exact evidence links, contradictions and a short list of claims safe to turn into prose.</li>
+</ul>
+<h2 id="8-cross-agent-conversation-archives">8. Cross-agent conversation archives</h2>
+<p>This section is routing information only. It identifies where future interns should search. It does not treat conversation titles or snippets as verified project facts.</p>
+<h3 id="cursor-composer-archive">Cursor Composer archive</h3>
+<p>Cursor stores its agent conversations locally in SQLite rather than as one readable transcript directory.</p>
+<ul>
+<li>Application data root: <code>the local vault/Library/Application Support/Cursor/</code></li>
+<li>Main database: <code>the local vault/Library/Application Support/Cursor/User/globalStorage/state.vscdb</code></li>
+<li><code>composerHeaders</code> contains <strong>1,767</strong> conversation headers at capture time. Important fields are <code>composerId</code>, <code>workspaceId</code>, <code>createdAt</code>, <code>lastUpdatedAt</code>, <code>isArchived</code> and a JSON <code>value</code> containing the conversation name or subtitle.</li>
+<li><code>cursorDiskKV</code> contains <strong>900,036</strong> records at capture time. This is the large content/blob store. Do not dump or grep the whole table. Correlate <code>composerHeaders.composerId</code> with the relevant workspace and then retrieve only selected records.</li>
+<li>Workspace mapping files are under <code>the local vault/Library/Application Support/Cursor/User/workspaceStorage/*/workspace.json</code>.</li>
+</ul>
+<h4 id="cursor-workspace-ids-worth-searching">Cursor workspace IDs worth searching</h4>
+<ul>
+<li><p><strong>localimagegen:</strong> workspace <code>78df7ceb3c08d269e9afb9e5b125f140</code>, mapped to <code>file://the local vault/git/brookjordan/localimagegen</code>. It has <strong>114</strong> Composer records, from 2026-06-25 through 2026-08-13.</p>
+<ul>
+<li><code>066fa1d2-170b-440f-9d77-302805a9d4b1</code> — <code>Local image generation build plan</code></li>
+<li><code>8b82d7c9-15f4-47d0-9e3f-49fdcf73825c</code> — <code>Local image generation plan review</code></li>
+<li><code>14a57cb5-921b-48fd-857d-4973e248f649</code> — <code>Workflow catalog blog post</code></li>
+<li><code>4c6160d7-1282-4cac-b0cf-379074b5c620</code> — <code>Config-to-TypeScript migration + during/after blog posts</code></li>
+<li><code>a64e021a-a398-482b-8292-617dfdfb717d</code> — <code>Config-to-TS anticipation blog posts (before)</code></li>
+<li><code>ac6d5f6e-defb-42b1-b2aa-0022f5708d40</code> — <code>Frontier-rung dynamic ladder scheduler</code></li>
+<li><code>14fc32ea-e051-4a3f-a5ea-0ac820e2db88</code> — <code>Write blog post for lig retry feature</code></li>
+<li><code>a7ee0ed2-82d3-4137-a5a8-1d3fe735034b</code> — <code>Write blog post about stall detection lesson</code></li>
+<li><code>8dc8d610-fd22-4d20-a5f2-f483c71a9ff9</code> — <code>Write blog post about false-positive stall detection</code></li>
+<li><code>0b62482a-a811-443c-8389-acc410b519e7</code> — <code>Render-timing devlog post</code></li>
+<li><code>823da40a-98a6-4a50-8b41-100bcf1f6522</code> — <code>Draft design-decision devlog post for new scenes</code></li>
+<li><code>0954efe4-41e0-4306-869e-27d71d5011e1</code> — <code>Research seven model recipes</code></li>
+<li><code>b90d91e3-cfd6-412b-8d03-1367ceab962e</code> — <code>Memory test instructions</code></li>
+<li><code>f4ea560d-f885-4149-badc-30f8fbcbdfa3</code> — <code>Mac Mini 8GB workflows</code></li>
+<li><code>5fb982b8-1012-42a4-b119-fd233ac51621</code> — <code>Cursor conversations review</code></li>
+</ul>
+</li>
+<li><p><strong>docker-n8n:</strong> workspace <code>5a1e4ff15e2887898c48856ccb40cf28</code>, mapped to <code>file://the local vault/git/brookjordan/docker-stacks/docker-n8n</code>. It has <strong>18</strong> Composer records, from 2026-06-22 through 2026-08-01. Search this workspace for the early workflow, ComfyUI, Qwen, Wan, animation and n8n prompt material.</p>
+<ul>
+<li><code>0dea4d8f-559b-4b29-a8ac-7c1892531bae</code> — <code>Image generation workflow</code></li>
+<li><code>8ed245e5-eddf-4509-8df7-08e4f52a1f5f</code> — <code>Inspect Comfy image workflows</code></li>
+<li><code>6784051a-44ff-44a3-83e2-1e6023f6c6cb</code> — <code>Find multi-image video workflows</code></li>
+<li><code>b5af5ef2-9b47-448d-a67b-00dae64ad039</code> and <code>958951ec-1856-48cc-abd8-6d77f720a113</code> — <code>Research Qwen edit prompting</code></li>
+<li><code>4610902d-dd0f-47d6-bbba-b33bb65b444e</code> — <code>Research Wan prompting</code></li>
+<li><code>960b28d8-56ac-4cae-941a-4021b6efba19</code> — <code>Map animation planning workflow</code></li>
+<li><code>9cbf67f5-189c-4828-a9a7-6d3f4c038b47</code> — <code>Research motion continuation systems</code></li>
+</ul>
+</li>
+<li><p><strong>docker-stacks:</strong> workspace <code>28223c674be853e03475b185de626d5b</code>, mapped to <code>file://the local vault/git/brookjordan/docker-stacks</code>. It has <strong>71</strong> Composer records, beginning 2026-06-22 and reaching 2026-08-17. This is the strongest Cursor archive for the original shared n8n/image/podcast work.</p>
+<ul>
+<li><code>30ec12e8-5390-47f5-ae0f-6d751ca408e1</code> — <code>n8n git repository initialization</code></li>
+<li><code>a73df9e0-3990-4598-9145-e44ecf6a7ada</code> — <code>Podcast builder workflow review</code></li>
+<li><code>50ef19f3-6b7f-4672-80ad-23a0513f0b69</code> — <code>Podcast jingle comparison</code></li>
+<li><code>906bb074-e661-437e-8dd2-aed0e8c58be4</code> — <code>Podcast host personality update</code></li>
+<li><code>2d0bcede-c856-4498-99bb-ce53d8600f63</code> — <code>Cursor chats review</code></li>
+<li><code>2444f0bd-dcd5-4482-8d16-f24ce7520e6b</code> — <code>n8n workflow failure analysis</code></li>
+<li><code>912c0309-7192-4c02-8e60-662d76652993</code> — <code>Find Wan FLF in n8n</code></li>
+<li><code>6b0d5e9e-041c-4e65-9c43-5e5e03cfcf50</code> — <code>Telegram to Turbo transition</code></li>
+<li><code>37399c3e-c050-478f-bf97-6f9ba4b317f0</code> — <code>Map image-generation project</code></li>
+<li><code>b6d704fa-e6d0-43a0-82a2-98adf2004e6f</code> — <code>Inventory localimagegen evidence</code></li>
+</ul>
+</li>
+<li><p><strong>Obsidian workspace:</strong> workspace <code>9be658b6fdf26812d80500fa53276f4a</code>, mapped to <code>file://the local vault/Documents/Obsidian%20Vault</code>. It has <strong>5</strong> Composer records. Treat the vault files as the canonical source, and use these conversations only to recover search trails or missing context.</p>
+</li>
+</ul>
+<h3 id="claude-code-claude-desktop-and-vs-code-archives">Claude Code, Claude Desktop and VS Code archives</h3>
+<ul>
+<li>Claude Code project transcripts found at <code>the local vault/.claude/projects/</code>. The current machine has <strong>3</strong> JSONL transcripts, all under the Motional transcribe project path. A direct search for <code>localimagegen</code>, <code>podcast</code>, <code>YuE2</code> and <code>LTX-2.5</code> found no matching Claude Code transcript.</li>
+<li><code>the local vault/.claude/history.jsonl</code> exists, but the same direct search found no matching localimagegen or podcast content.</li>
+<li>Claude Desktop keeps application data under <code>the local vault/Library/Application Support/Claude/</code>, including <code>local-agent-mode-sessions/</code>, IndexedDB, LevelDB and caches. A direct keyword search found no matching project content. Treat caches as a last resort, not a source index.</li>
+<li>VS Code/Gemini Code Assist data is under <code>the local vault/Library/Application Support/Code/</code>. Keyword search found four editor-history or backup files, but no recognised conversation archive for this project. Relevant paths are <code>User/History/</code>, <code>Backups/</code> and the dated <code>logs/</code> directories.</li>
+<li>Codex rollout sessions are under <code>the local vault/.codex/sessions/</code> as JSONL. The current file inventory contains six rollout JSONL files, but a direct project-keyword search found no exact localimagegen or podcast matches. Search this store if a missing implementation conversation is suspected.</li>
+</ul>
+<h3 id="hermes-conversation-archive">Hermes conversation archive</h3>
+<p>Use the <code>session_search</code> tool for Hermes conversations. Useful hits already found include:</p>
+<ul>
+<li><code>@session:default/20260822_202002_441297</code> — the first podcast story-song format discussion and the 50-song evaluation idea.</li>
+<li><code>@session:default/20260823_000353_8bf016</code> — reconstruction of the 2026-08-22 podcast work and its Obsidian updates.</li>
+<li><code>@session:default/20260823_091235_af5e76</code> — removal of the missing <code>qwen3.6:27b</code> reviewer from the podcast workflow.</li>
+<li><code>@session:default/20260823_142354_495e16</code> — localimagegen assets migration planning and the Obsidian/localimagegen evidence route.</li>
+<li><code>@session:default/20260823_185634_9dd625</code> — podcast prompt engagement work.</li>
+<li><code>@session:default/20260825_202021_065768</code> — <code>Assert music ComfyUI ready</code> failure investigation for execution 2240.</li>
+<li><code>@session:default/20260827_122343_f35b6545</code> — the relationship between podcast cover art, the Pony image workflow and localimagegen.</li>
+</ul>
+<p>Use the session link exactly as written when opening one of these records. Search variants such as <code>six-frame</code>, <code>PodCast Builder</code>, <code>Qwen 27B vision reviewer</code>, <code>Pony</code>, <code>YuE2</code>, <code>LTX</code>, <code>intro music</code>, <code>ComfyUI lock</code>, <code>assets stack</code> and <code>n8n failure</code>.</p>
+<h2 id="9-additional-obsidian-routes-discovered">9. Additional Obsidian routes discovered</h2>
+<p>The first inventory underweighted two related maps. Interns should search them after the podcast map, not treat them as competing project boards.</p>
+<ul>
+<li>Local music-generation map: the local music-generation on M3 Mac project map. Its raw evidence is in <code>the local vault/Documents/Obsidian Vault/Project tracking/local music generation on M3 Mac/Scratchpad/</code>. The map says generated audio lives outside the vault at <code>the local vault/tmp/yue2.cpp/</code>, while requests live under <code>the local vault/tmp/yue2.cpp/requests/</code> and runtime logs own what actually happened. This is the main YuE2 research route.</li>
+<li>Local music-generation scratchpad index: the local music-generation scratchpad manifest. It indexes the 2026-09-13 feasibility run and the 2026-09-16 full-song, ska, register, lyric-revision, spoken-dialogue and CFG packets.</li>
+<li>Quinn song map: the Quinn song project map. It is a separate songwriting project, but its YuE2 request formatting, lyric structure and generated-take evidence may explain why later song prompts behave as they do. Do not merge its personal content into the podcast blog without a specific reason.</li>
+<li>Daily raw material is split between <code>Daily/YYYY-MM-DD.md</code> and <code>Scratchpads/Daily/YYYY-MM-DD/</code>. The Daily note is the route; the scratchpad preserves conversation fragments and source material.</li>
+</ul>
+<h2 id="10-recommended-intern-search-order">10. Recommended intern search order</h2>
+<ol>
+<li>Read the podcast map, PCB-015, and this packet.</li>
+<li>Search Cursor&#39;s <code>docker-stacks</code> workspace for the original podcast workflow, failure and jingle conversations.</li>
+<li>Search Cursor&#39;s <code>docker-n8n</code> workspace for the underlying ComfyUI, Qwen, Wan and animation work.</li>
+<li>Search Cursor&#39;s <code>localimagegen</code> workspace for blog mechanics, origin decisions, dates, and the conversations that produced each post.</li>
+<li>Read the canonical Obsidian tickets and scratchpad manifests selected by the conversation hit.</li>
+<li>Search the local music-generation map and its packets for YuE2-specific facts.</li>
+<li>Use Hermes <code>session_search</code> to recover missing decision context and link the exact session in the evidence record.</li>
+<li>Check Claude Code, Codex and VS Code archives only when the above routes leave a gap. The current direct searches found no strong project match there.</li>
+</ol>
+<p>No intern should write a blog post directly from a conversation title, a generated HTML file or a stale packet. The conversation points to the source. The ticket, current code, live n8n execution or dated evidence packet supplies the claim.</p>
+
+</body></html>

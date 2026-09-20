@@ -455,6 +455,11 @@ a:hover {
 .part-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.16em;color:var(--text-tertiary,#8b90a0);margin:0 0 .6rem;font-weight:700}
 .post-title{margin:0 0 .8rem;font-size:1.7rem;line-height:1.25}
 .lead{font-size:1.02rem;color:var(--text-secondary,#aeb3c2);line-height:1.55;margin:0 0 1.8rem;max-width:64ch}
+.sources{margin-top:2.5rem;padding-top:1.2rem;border-top:1px solid var(--border-primary,#333)}
+.sources h2{font-size:1.1rem;margin:0 0 .4rem}
+.sources-note{font-size:.8rem;color:var(--text-tertiary,#8b90a0);margin:0 0 .6rem}
+.sources ul{margin:0;padding-left:1.2rem}
+.sources li{margin:.25rem 0;font-size:.9rem}
 @media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
 </style></head>
   <body>
@@ -472,12 +477,7 @@ a:hover {
 <p>The endpoint contract therefore carries different information from the motion contract. The ticket requires the same start and end images for both experiment arms, while preserving the motion prompt and the recipe controls. That makes the comparison interpretable: if the output behaves oddly, we can ask whether the endpoints, the motion instructions, or the recipe changed. We cannot get that clarity by describing a second picture and calling it animation.</p>
 <h2>Where we left it</h2>
 <p>The records demonstrate a planning architecture, not a universal promise that Qwen or LTX will obey every instruction. They also do not turn a proposed graph into a completed render. The later experiment still requires decoded output, guide-frame preservation, duration, memory and full-speed visual review. A pair of attractive stills can be perfectly consistent and still produce a terrible transition. We have, at least, stopped asking the first picture to invent the middle. That is a modest architectural win, but modest wins are how a pipeline becomes inspectable instead of merely hopeful.</p>
-<h2>Source notes</h2>
-<ul>
-<li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FScratchpad%2F2026-09-19%20raw%20Cursor%20docker-n8n%20image-generation%20archive">image planning archive, 29 July</a></li>
-<li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FPCB-012%20Test%20longer%20LTX%20recipes%20against%20past%20podcast%20prompts">longer LTX recipe contract, 19 September</a></li>
-</ul>
-<nav class="post-nav"><a class="post-nav-link" href="p48-backfill-story-not-evidence.html">← earlier: Writing the history without forging the timestamps</a><a class="post-nav-link" href="p45-workflow-id-changing-name.html">later →: The workflow changed its name twice. Its ID never blinked.</a></nav></main>
+<section class="sources"><h2>Source notes</h2><p class="sources-note">Each source is a sanitised public snapshot of a private project-tracking note.</p><ul><li><a href="sources/2026-09-19-raw-cursor-docker-n8n-image-generation-archive.html">image planning archive, 29 July</a></li><li><a href="sources/pcb-012-test-longer-ltx-recipes-against-past-podcast-prompts.html">longer LTX recipe contract, 19 September</a></li></ul></section><nav class="post-nav"><a class="post-nav-link" href="p48-backfill-story-not-evidence.html">← earlier: Writing the history without forging the timestamps</a><a class="post-nav-link" href="p45-workflow-id-changing-name.html">later →: The workflow changed its name twice. Its ID never blinked.</a></nav></main>
     <footer class="site-footer">
       <p>Private review preview of the <strong>PodCast Builder</strong> devlog — built from the senior-accepted draft set, 2026-09-19.</p>
     </footer>

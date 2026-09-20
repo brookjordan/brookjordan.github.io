@@ -1,0 +1,42 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Source: Route-aware SMB preflight evidence — PodCast Builder devlog</title>
+<style>
+body{max-width:760px;margin:2.5rem auto;padding:0 1.2rem;font-family:ui-sans-serif,system-ui,sans-serif;background:#16181f;color:#dfe2ea;line-height:1.65}
+a{color:#7aa2f7} h1,h2{line-height:1.25} code{background:#262a33;padding:.1em .35em;border-radius:4px;font-size:.9em}
+pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{color:#8b90a0;font-size:.85rem}
+.back{font-size:.85rem} .backnote{background:#262a33;border:1px solid #333;border-radius:8px;padding:.8rem 1rem;font-size:.85rem;color:#aeb3c2}
+</style></head><body>
+<p class="back"><a href="../index.html">← PodCast Builder devlog</a></p>
+<p class="backnote">This is a public snapshot of a private project-tracking note, sanitised for
+publication: internal links, status metadata and personal paths are removed. The live private
+version lives in the author's Obsidian vault.</p>
+<h1>Route-aware SMB preflight evidence</h1>
+<h1 id="raw-conversation--nas-route-aware-smb-preflight">Raw conversation — NAS route-aware SMB preflight</h1>
+<p>Date: 2026-09-15
+Project: PodCast Builder project map
+Related ticket: PCB-007</p>
+<h2 id="conversation">Conversation</h2>
+<p><strong>User:</strong> and put raw coverstaion into scratchpads etc. right? Like /obsidian-vault … or /obsidian-design-principles digs into</p>
+<p><strong>Assistant:</strong> Yes. The right pattern is:</p>
+<ul>
+<li>Project map: short current state and links.</li>
+<li>Ticket: executable work and acceptance criteria.</li>
+<li>Scratchpad: raw conversation/evidence packets.</li>
+<li>Durable design principles: only for reusable vault/knowledge-graph rules, not every project-specific investigation.</li>
+</ul>
+<p>A synthesized evidence packet already exists for the NAS/ComfyUI investigation. This packet preserves the route-specific SMB clarification as raw conversation context.</p>
+<p><strong>User:</strong> <code>Verify the NAS SMB share with smbutil view.</code> Note that this could be over the 10.10.10, the WAN, or the tailscale connection, right?</p>
+<p><strong>Assistant:</strong> Yes. <code>smbutil view</code> is transport-agnostic: it uses the route selected for the specific hostname or IP. The command alone does not tell us whether the connection used LAN, WAN, or Tailscale.</p>
+<p>The observed routes were:</p>
+<ul>
+<li><code>10.10.10.2</code> via <code>en0</code>: local/direct LAN.</li>
+<li><code>192.168.0.224</code> via <code>en0</code>: local LAN.</li>
+<li><code>100.84.158.31</code> via <code>utun4</code>: Tailscale.</li>
+</ul>
+<p><code>smbutil view //100.84.158.31</code> succeeded and listed <code>model-store</code> and <code>model-cache</code>. That proves SMB discovery over Tailscale, not authenticated access or a mounted share usable by ComfyUI.</p>
+<p>The preflight should test each candidate address independently and record the address, selected interface, route class, TCP/445 result, SMB discovery, authentication state, mount state, and ComfyUI model registration. The test belongs on the MacBook, because ComfyUI runs there; n8n on the NAS cannot infer the MacBook&#39;s interface state without querying it.</p>
+<h2 id="preservation-note">Preservation note</h2>
+<p>This is intentionally a raw conversation packet. The verified facts and implementation requirements are also summarized in the evidence packet, while the durable project work belongs in PCB-007.</p>
+
+</body></html>

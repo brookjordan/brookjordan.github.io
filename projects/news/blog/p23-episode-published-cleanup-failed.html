@@ -455,6 +455,11 @@ a:hover {
 .part-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.16em;color:var(--text-tertiary,#8b90a0);margin:0 0 .6rem;font-weight:700}
 .post-title{margin:0 0 .8rem;font-size:1.7rem;line-height:1.25}
 .lead{font-size:1.02rem;color:var(--text-secondary,#aeb3c2);line-height:1.55;margin:0 0 1.8rem;max-width:64ch}
+.sources{margin-top:2.5rem;padding-top:1.2rem;border-top:1px solid var(--border-primary,#333)}
+.sources h2{font-size:1.1rem;margin:0 0 .4rem}
+.sources-note{font-size:.8rem;color:var(--text-tertiary,#8b90a0);margin:0 0 .6rem}
+.sources ul{margin:0;padding-left:1.2rem}
+.sources li{margin:.25rem 0;font-size:.9rem}
 @media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
 </style></head>
   <body>
@@ -474,13 +479,7 @@ a:hover {
 <h2>Where we left it</h2>
 <p>The episode publication was real, and the cleanup error was real. The fix recorded in PCB-008 disabled the obsolete cleanup path. It did not prove a whole end-to-end run after local LTX transfer, nor did it settle whether the node should eventually be deleted. Those questions belong to their own evidence.</p>
 <p>We had managed to publish the thing and then trip over the broom cupboard. The result was a successful publication followed by a failed cleanup stage, which is less elegant but much more useful to say. The status needed both halves.</p>
-<h2>Source notes</h2>
-<ul>
-<li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FPCB-008%20Keep%20the%20LTX%20video%20stage%20off%20the%20network%20mount">LTX mount incident and cleanup reference, PCB-008</a></li>
-<li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FPCB-006%20Replace%20remote%20music%20and%20video%20generation%20with%20YuE2%20and%20native%20LTX-2.5">YuE2 and native LTX cutover evidence, PCB-006</a></li>
-<li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FREADME">Project map cleanup status, 19 September 2026</a></li>
-</ul>
-<nav class="post-nav"><a class="post-nav-link" href="p17-music-and-video-onto-the-mac.html">← earlier: Evicting the cloud: music and video generation moves onto the Mac</a><a class="post-nav-link" href="p25-saved-is-not-scheduled.html">later →: Saved is not scheduled: the edit that never reached the alarm clock</a></nav></main>
+<section class="sources"><h2>Source notes</h2><p class="sources-note">Each source is a sanitised public snapshot of a private project-tracking note.</p><ul><li><a href="sources/pcb-008-keep-the-ltx-video-stage-off-the-network-mount.html">LTX mount incident and cleanup reference, PCB-008</a></li><li><a href="sources/pcb-006-replace-remote-music-and-video-generation-with-yue2-.html">YuE2 and native LTX cutover evidence, PCB-006</a></li><li><a href="sources/readme.html">Project map cleanup status, 19 September 2026</a></li></ul></section><nav class="post-nav"><a class="post-nav-link" href="p17-music-and-video-onto-the-mac.html">← earlier: Evicting the cloud: music and video generation moves onto the Mac</a><a class="post-nav-link" href="p25-saved-is-not-scheduled.html">later →: Saved is not scheduled: the edit that never reached the alarm clock</a></nav></main>
     <footer class="site-footer">
       <p>Private review preview of the <strong>PodCast Builder</strong> devlog — built from the senior-accepted draft set, 2026-09-19.</p>
     </footer>

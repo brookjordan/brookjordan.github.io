@@ -1,0 +1,20 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Source: T03 evidence — PodCast Builder devlog</title>
+<style>
+body{max-width:760px;margin:2.5rem auto;padding:0 1.2rem;font-family:ui-sans-serif,system-ui,sans-serif;background:#16181f;color:#dfe2ea;line-height:1.65}
+a{color:#7aa2f7} h1,h2{line-height:1.25} code{background:#262a33;padding:.1em .35em;border-radius:4px;font-size:.9em}
+pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{color:#8b90a0;font-size:.85rem}
+.back{font-size:.85rem} .backnote{background:#262a33;border:1px solid #333;border-radius:8px;padding:.8rem 1rem;font-size:.85rem;color:#aeb3c2}
+</style></head><body>
+<p class="back"><a href="../index.html">← PodCast Builder devlog</a></p>
+<p class="backnote">This is a public snapshot of a private project-tracking note, sanitised for
+publication: internal links, status metadata and personal paths are removed. The live private
+version lives in the author's Obsidian vault.</p>
+<h1>T03 evidence</h1>
+<h1 id="pcb-003-·-split-podcast-publication-between-nas-and-github">PCB-003 · Split podcast publication between NAS and GitHub</h1>
+<h2 id="scope">Scope</h2>
+<p>Update n8n so final hydrated media is written to the NAS asset service before publication. Build pages with <code>assets.brook.dev</code> media URLs and send only the episode HTML, site index, and menu metadata through the GitHub publication path.</p>
+<p>The page publication must be gated on successful NAS writes and preserve a recoverable manifest for retries.</p>
+
+</body></html>

@@ -1,0 +1,1651 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Source: June origin and intro takes — PodCast Builder devlog</title>
+<style>
+body{max-width:760px;margin:2.5rem auto;padding:0 1.2rem;font-family:ui-sans-serif,system-ui,sans-serif;background:#16181f;color:#dfe2ea;line-height:1.65}
+a{color:#7aa2f7} h1,h2{line-height:1.25} code{background:#262a33;padding:.1em .35em;border-radius:4px;font-size:.9em}
+pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{color:#8b90a0;font-size:.85rem}
+.back{font-size:.85rem} .backnote{background:#262a33;border:1px solid #333;border-radius:8px;padding:.8rem 1rem;font-size:.85rem;color:#aeb3c2}
+</style></head><body>
+<p class="back"><a href="../index.html">← PodCast Builder devlog</a></p>
+<p class="backnote">This is a public snapshot of a private project-tracking note, sanitised for
+publication: internal links, status metadata and personal paths are removed. The live private
+version lives in the author's Obsidian vault.</p>
+<h1>June origin and intro takes</h1>
+<h1 id="pcb-015-raw-cursor-composer-podcastn8n-archive">PCB-015 raw Cursor Composer podcast/n8n archive</h1>
+<p>Capture is a source-preserving extraction from Cursor&#39;s local state database. Dates are source timestamps in UTC; no inferred timeline is added. Secrets and credential-like values are redacted. This packet is immutable; later corrections belong in a new packet.</p>
+<h2 id="source-scope">Source scope</h2>
+<ul>
+<li>Cursor workspace ID: <code>28223c674be853e03475b185de626d5b</code></li>
+<li>Workspace mapping: <code>the local vault/Library/Application Support/Cursor/User/workspaceStorage/28223c674be853e03475b185de626d5b/workspace.json</code> → <code>the local vault/git/brookjordan/docker-stacks</code></li>
+<li>Composer records found: <strong>10</strong></li>
+<li>Selection: exact requested titles plus early records whose titles contain podcast, n8n, localimagegen, image-generation, or image gen.</li>
+<li>Source fields retained: raw dates, Composer IDs, exact titles, message excerpts, identifier/path/link matches.</li>
+</ul>
+<h2 id="records">Records</h2>
+<h3 id="1-n8n-git-repository-initialization">1. n8n git repository initialization</h3>
+<ul>
+<li>Composer ID: <code>30ec12e8-5390-47f5-ae0f-6d751ca408e1</code></li>
+<li>Created at (UTC): <code>2026-06-22T00:18:05.441000+00:00</code></li>
+<li>Last updated at (UTC): <code>2026-06-25T14:17:19.646000+00:00</code></li>
+<li>Messages with text retained: <code>27314</code></li>
+<li>Execution IDs: <code>312</code>, <code>314</code></li>
+<li>Workflow IDs: <code>-management</code>, <code>-templates</code>, <code>configurations</code>, <code>creation</code>, <code>deliberately</code>, <code>embedded</code>, <code>generating</code>, <code>management</code>, <code>structure</code>, <code>topology</code></li>
+<li>Paths: <code>the local vault/.cursor/mcp.json</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/agent-transcripts/30ec12e8-5390-47f5-ae0f-6d751ca408e1/subagents/0943b2f9-7131-4e14-b921-edd7e605bfca.jsonl</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/agent-transcripts/30ec12e8-5390-47f5-ae0f-6d751ca408e1/subagents/0a2dde9b-69a2-48ee-9780-b5b51b1413e4.jsonl</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/agent-transcripts/30ec12e8-5390-47f5-ae0f-6d751ca408e1/subagents/176370f0-9765-44a3-bc87-620fd72a6cd4.jsonl</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/agent-transcripts/30ec12e8-5390-47f5-ae0f-6d751ca408e1/subagents/22a2ac89-26c1-45c8-916f-64b65dc9eb37.jsonl</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/agent-transcripts/30ec12e8-5390-47f5-ae0f-6d751ca408e1/subagents/2d47b412-f54e-4544-bb3d-f5f0224b9567.jsonl</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/agent-transcripts/30ec12e8-5390-47f5-ae0f-6d751ca408e1/subagents/391efc5d-1b09-4063-b02f-7d77e59ef81a.jsonl</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/agent-transcripts/30ec12e8-5390-47f5-ae0f-6d751ca408e1/subagents/4dd2a59f-3a15-4442-b566-a7e20d7d99d5.jsonl</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/agent-transcripts/30ec12e8-5390-47f5-ae0f-6d751ca408e1/subagents/50867e2e-0665-494a-96ad-c96359910fa2.jsonl</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/agent-transcripts/30ec12e8-5390-47f5-ae0f-6d751ca408e1/subagents/a2f8868b-2235-41b7-8f88-c2a0d7c9da2c.jsonl</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/agent-transcripts/30ec12e8-5390-47f5-ae0f-6d751ca408e1/subagents/cfe1dbdb-cbf9-4633-8377-b62d9bb12e7c.jsonl</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/agent-transcripts/30ec12e8-5390-47f5-ae0f-6d751ca408e1/subagents/dbda13f6-9e30-4a43-9114-54b41a7aeb16.jsonl</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/agent-transcripts/30ec12e8-5390-47f5-ae0f-6d751ca408e1/subagents/dc547380-5468-4655-b96a-5b96b2a7a610.jsonl</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/agent-transcripts/30ec12e8-5390-47f5-ae0f-6d751ca408e1/subagents/e12c6fbd-df29-4a6a-8b5b-ba13d4fc50c3.jsonl</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/agent-transcripts/30ec12e8-5390-47f5-ae0f-6d751ca408e1/subagents/ff1bcf7f-e7ab-45ff-a211-ceef60506255.jsonl</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/terminals/152592.txt</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/terminals/216554.txt</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/terminals/225202.txt</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/terminals/228200.txt</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/terminals/289944.txt</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/terminals/305817.txt</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/terminals/339341.txt</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/terminals/349528.txt</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/terminals/399375.txt</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/terminals/4.txt:7-23</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/terminals/400125.txt</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/terminals/457704.txt</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/terminals/468933.txt</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/terminals/486319.txt</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/terminals/514751.txt</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/terminals/659758.txt</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/terminals/841367.txt</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/terminals/872497.txt</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/terminals/929171.txt</code>, <code>the local vault/.mcp.json</code>, <code>the local vault/.nvm/versions/node/vXX/bin/npx</code>, <code>the local vault/ComfyUI-Installs/ComfyUI/ComfyUI</code>, <code>the local vault/ComfyUI-Installs/ComfyUI/ComfyUI/comfy/k_diffusion/sampling.py</code>, <code>the local vault/ComfyUI-Installs/ComfyUI/ComfyUI/comfy/ldm/krea2/model.py</code>, <code>the local vault/ComfyUI-Installs/ComfyUI/ComfyUI/comfy/model_base.py</code>, <code>the local vault/ComfyUI-Installs/ComfyUI/ComfyUI/comfy/ops.py</code>, <code>the local vault/ComfyUI-Installs/ComfyUI/ComfyUI/comfy/patcher_extension.py</code>, <code>the local vault/ComfyUI-Installs/ComfyUI/ComfyUI/comfy/sample.py</code>, <code>the local vault/ComfyUI-Installs/ComfyUI/ComfyUI/comfy/samplers.py</code>, <code>the local vault/ComfyUI-Installs/ComfyUI/ComfyUI/execution.py</code>, <code>the local vault/ComfyUI-Installs/ComfyUI/ComfyUI/main.py</code>, <code>the local vault/ComfyUI-Installs/ComfyUI/ComfyUI/nodes.py</code>, <code>the local vault/ComfyUI-Installs/ComfyUI/ComfyUI2026-06-24T20:30:28.565463</code>, <code>the local vault/ComfyUI-Installs/ComfyUI/ComfyUI2026-06-24T20:30:28.565492</code>, <code>the local vault/ComfyUI-Shared/models/CogVideo</code>, <code>the local vault/ComfyUI-Shared/models/Joy_caption</code>, <code>the local vault/ComfyUI-Shared/models/LLM</code>, <code>the local vault/ComfyUI-Shared/models/animatediff_models</code>, <code>the local vault/ComfyUI-Shared/models/animatediff_motion_lora</code>, <code>the local vault/ComfyUI-Shared/models/animatediff_video_formats</code>, <code>the local vault/ComfyUI-Shared/models/blip</code>, <code>the local vault/ComfyUI-Shared/models/clip</code>, <code>the local vault/ComfyUI-Shared/models/insightface</code>, <code>the local vault/ComfyUI-Shared/models/layerstyle</code>, <code>the local vault/ComfyUI-Shared/models/liveportrait</code>, <code>the local vault/ComfyUI-Shared/models/tts</code>, <code>the local vault/ComfyUI-Shared/models/tts/VibeVoice</code>, <code>the local vault/ComfyUI-Shared/models/unet</code>, <code>the local vault/ComfyUI-Shared/models/vae</code>, <code>the local vault/ComfyUI-Shared/models/vae_approx</code>, <code>the local vault/ComfyUI-Shared/models/vibevoice</code>, <code>the local vault/ComfyUI-Shared/models/xlabs</code>, <code>the local vault/Documents/ComfyUI</code>, <code>the local vault/Documents/ComfyUI/.venv</code>, <code>the local vault/Documents/ComfyUI/.venv/bin/python</code>, <code>the local vault/Documents/ComfyUI/.venv/bin/python3</code>, <code>the local vault/Documents/ComfyUI/.venv/bin/python32026-06-24T20:30:28.565436</code>, <code>the local vault/Documents/ComfyUI/.venv/lib/python3.12/site-packages/av/.dylibs/libavdevice.62.1.100.dylib</code>, <code>the local vault/Documents/ComfyUI/.venv/lib/python3.12/site-packages/comfy_kitchen/__init__.py</code>, <code>the local vault/Documents/ComfyUI/.venv/lib/python3.12/site-packages/comfy_kitchen/backends/cuda/_C.abi3.so</code>, <code>the local vault/Documents/ComfyUI/.venv/lib/python3.12/site-packages/comfy_kitchen/backends/eager/quantization.py</code>, <code>the local vault/Documents/ComfyUI/.venv/lib/python3.12/site-packages/comfy_kitchen/tensor/base.py</code>, <code>the local vault/Documents/ComfyUI/.venv/lib/python3.12/site-packages/comfy_kitchen/tensor/fp8.py</code>, <code>the local vault/Documents/ComfyUI/.venv/lib/python3.12/site-packages/comfyui_frontend_package/static</code>, <code>the local vault/Documents/ComfyUI/.venv/lib/python3.12/site-packages/comfyui_manager/custom-node-list.json2026-06-24T20:30:40.486190</code>, <code>the local vault/Documents/ComfyUI/.venv/lib/python3.12/site-packages/cv2/.dylibs/libavdevice.61.3.100.dylib</code>, <code>the local vault/Documents/ComfyUI/.venv/lib/python3.12/site-packages/librosa/util/files.py:10:</code>, <code>the local vault/Documents/ComfyUI/.venv/lib/python3.12/site-packages/torch/_compile.py</code>, <code>the local vault/Documents/ComfyUI/.venv/lib/python3.12/site-packages/torch/_dynamo/eval_frame.py</code>, <code>the local vault/Documents/ComfyUI/.venv/lib/python3.12/site-packages/torch/_library/custom_ops.py</code>, <code>the local vault/Documents/ComfyUI/.venv/lib/python3.12/site-packages/torch/_ops.py</code>, <code>the local vault/Documents/ComfyUI/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py</code>, <code>the local vault/Documents/ComfyUI/.venv/lib/python3.12/site-packages/torch/utils/_contextlib.py</code>, <code>the local vault/Documents/ComfyUI/custom_nodes</code>, <code>the local vault/Documents/ComfyUI/custom_nodes/ComfyUI-ConditioningKrea2Rebalance</code>, <code>the local vault/Documents/ComfyUI/custom_nodes/ComfyUI-Detail-Daemon</code>, <code>the local vault/Documents/ComfyUI/custom_nodes/ComfyUI-Easy-Use</code>, <code>the local vault/Documents/ComfyUI/custom_nodes/ComfyUI-Easy-Use/web_version/v2</code>, <code>the local vault/Documents/ComfyUI/custom_nodes/ComfyUI-GGUF</code>, <code>the local vault/Documents/ComfyUI/custom_nodes/ComfyUI-VibeVoice</code>, <code>the local vault/Documents/ComfyUI/custom_nodes/RES4LYF</code>, <code>the local vault/Documents/ComfyUI/custom_nodes/VibeVoice-ComfyUI</code>, <code>the local vault/Documents/ComfyUI/custom_nodes/comfy-image-saver</code>, <code>the local vault/Documents/ComfyUI/custom_nodes/comfyui-custom-scripts</code>, <code>the local vault/Documents/ComfyUI/custom_nodes/comfyui-ideogram-autoprompter</code>, <code>the local vault/Documents/ComfyUI/custom_nodes/comfyui-ideogram-guidance</code>, <code>the local vault/Documents/ComfyUI/custom_nodes/comfyui-kjnodes</code>, <code>the local vault/Documents/ComfyUI/custom_nodes/comfyui-videohelpersuite</code>, <code>the local vault/Documents/ComfyUI/custom_nodes/comfyui_essentials</code>, <code>the local vault/Documents/ComfyUI/custom_nodes/controlaltai-nodes</code>, <code>the local vault/Documents/ComfyUI/custom_nodes/gguf</code>, <code>the local vault/Documents/ComfyUI/custom_nodes/qweneditutils</code>, <code>the local vault/Documents/ComfyUI/custom_nodes/rgthree-comfy</code>, <code>the local vault/Documents/ComfyUI/input</code>, <code>the local vault/Documents/ComfyUI/models</code>, <code>the local vault/Documents/ComfyUI/models/CogVideo</code>, <code>the local vault/Documents/ComfyUI/models/Joy_caption</code>, <code>the local vault/Documents/ComfyUI/models/LLM</code>, <code>the local vault/Documents/ComfyUI/models/animatediff_models</code>, <code>the local vault/Documents/ComfyUI/models/animatediff_motion_lora</code>, <code>the local vault/Documents/ComfyUI/models/animatediff_video_formats</code>, <code>the local vault/Documents/ComfyUI/models/audio_encoders</code>, <code>the local vault/Documents/ComfyUI/models/background_removal</code>, <code>the local vault/Documents/ComfyUI/models/blip</code>, <code>the local vault/Documents/ComfyUI/models/checkpoints</code>, <code>the local vault/Documents/ComfyUI/models/classifiers</code>, <code>the local vault/Documents/ComfyUI/models/clip</code>, <code>the local vault/Documents/ComfyUI/models/clip_vision</code>, <code>the local vault/Documents/ComfyUI/models/configs</code>, <code>the local vault/Documents/ComfyUI/models/controlnet</code>, <code>the local vault/Documents/ComfyUI/models/detection</code>, <code>the local vault/Documents/ComfyUI/models/diffusers</code>, <code>the local vault/Documents/ComfyUI/models/diffusion_models</code>, <code>the local vault/Documents/ComfyUI/models/embeddings</code>, <code>the local vault/Documents/ComfyUI/models/frame_interpolation</code>, <code>the local vault/Documents/ComfyUI/models/geometry_estimation</code>, <code>the local vault/Documents/ComfyUI/models/gligen</code>, <code>the local vault/Documents/ComfyUI/models/hypernetworks</code>, <code>the local vault/Documents/ComfyUI/models/insightface</code>, <code>the local vault/Documents/ComfyUI/models/latent_upscale_models</code>, <code>the local vault/Documents/ComfyUI/models/layerstyle</code>, <code>the local vault/Documents/ComfyUI/models/liveportrait</code>, <code>the local vault/Documents/ComfyUI/models/loras</code>, <code>the local vault/Documents/ComfyUI/models/model_patches</code>, <code>the local vault/Documents/ComfyUI/models/optical_flow</code>, <code>the local vault/Documents/ComfyUI/models/photomaker</code>, <code>the local vault/Documents/ComfyUI/models/style_models</code>, <code>the local vault/Documents/ComfyUI/models/t2i_adapter</code>, <code>the local vault/Documents/ComfyUI/models/text_encoders</code>, <code>the local vault/Documents/ComfyUI/models/tts</code>, <code>the local vault/Documents/ComfyUI/models/tts/VibeVoice</code>, <code>the local vault/Documents/ComfyUI/models/unet</code>, <code>the local vault/Documents/ComfyUI/models/upscale_models</code>, <code>the local vault/Documents/ComfyUI/models/vae</code>, <code>the local vault/Documents/ComfyUI/models/vae_approx</code>, <code>the local vault/Documents/ComfyUI/models/vibevoice</code>, <code>the local vault/Documents/ComfyUI/models/xlabs</code>, <code>the local vault/Documents/ComfyUI/output</code>, <code>the local vault/Documents/ComfyUI/output/</code>, <code>the local vault/Documents/ComfyUI/output/PN_01_flux4b_fast_00001_.png</code>, <code>the local vault/Documents/ComfyUI/output/_stage2_single3</code>, <code>the local vault/Documents/ComfyUI/output/_stage2_single3/index.html</code>, <code>the local vault/Documents/ComfyUI/output/_stage2_single3/stage2_tools.py</code>, <code>the local vault/Documents/ComfyUI/output/audio/ab_aio_00001_.mp3</code>, <code>the local vault/Documents/ComfyUI/output/audio/ab_split_00001_.mp3</code>, <code>the local vault/Documents/ComfyUI/output/audio/intro_poc_00001_.mp3</code>, <code>the local vault/Documents/ComfyUI/output/audio/intro_poc_00002_.mp3</code>, <code>the local vault/Documents/ComfyUI/output/intro_305_00001_.mp3</code>, <code>the local vault/Documents/ComfyUI/output/intro_312_00001_.mp3</code>, <code>the local vault/Documents/ComfyUI/output/pn_gallery</code>, <code>the local vault/Documents/ComfyUI/output/podcast_{{</code>, <code>the local vault/Documents/ComfyUI/user</code>, <code>the local vault/Documents/ComfyUI/user/__manager/cache/1514988643_custom-node-list.json2026-06-24T20:32:50.117083</code>, <code>the local vault/Documents/ComfyUI/user/__manager/config.ini</code>, <code>the local vault/Documents/ComfyUI/user/__manager/config.ini2026-06-24T20:30:28.565553</code>, <code>the local vault/Documents/ComfyUI/user/comfyui.db</code>, <code>the local vault/Documents/ComfyUI/user/comfyui.log</code>, <code>the local vault/Documents/ComfyUI/user/comfyui.log2026-06-24T20:30:28.565591</code>, <code>the local vault/Documents/ComfyUI/user2026-06-24T20:30:28.565520</code>, <code>the local vault/Downloads/image_krea2_turbo_t2i.json</code>, <code>the local vault/Library/Application</code>, <code>the local vault/git/brookjordan/brookjordan.github.io</code>, <code>the local vault/git/brookjordan/docker-stacks/logs.log</code>, <code>the local vault/git/brookjordan/docker-stacks/patch-notes-image-research</code>, <code>the local vault/git/brookjordan/docker-stacks/patch-notes-image-research/run</code>, <code>the local vault/git/brookjordan/docker-stacks/patch-notes-image-research/run/_sweep_lib.py</code>, <code>the local vault/git/brookjordan/docker-stacks/patch-notes-image-research/run/krea2_bf16_lora_api.json</code>, <code>the local vault/git/brookjordan/docker-stacks/patch-notes-image-research/run/krea2_lora_api.json</code>, <code>the local vault/git/brookjordan/localimagegen/.claude/plans/localimagegen_build_system_e00616a3.plan.md</code>, <code>the local vault/git/brookjordan/localimagegen/.comfy-output/_banners/00-blog_00001_.png</code>, <code>the local vault/git/brookjordan/localimagegen/history/img/banner_kingdom.webp</code>, <code>the local vault/git/brookjordan/localimagegen/history/img/banner_krea2.webp</code>, <code>the local vault/git/brookjordan/localimagegen/history/img/chroma_doll_s01_t35s.webp</code>, <code>the local vault/git/brookjordan/localimagegen/history/img/chroma_doll_s08_t183s.webp</code>, <code>the local vault/git/brookjordan/localimagegen/history/img/chroma_spirit_s02_t46s.webp</code>, <code>the local vault/git/brookjordan/localimagegen/history/img/origin_flux4b_fast.webp</code>, <code>the local vault/git/brookjordan/localimagegen/history/img/origin_flux9b_hero.webp</code>, <code>the local vault/git/brookjordan/localimagegen/history/img/qwen2512_dragon_s10_t159s.webp</code>, <code>/etc/caddy/Caddyfile</code>, <code>/etc/localtime:ro</code>, <code>/etc/nginx/conf.d/zz-proxy-timeouts.conf:ro</code>, <code>/etc/systemd/system/n8n-mcp.service</code>, <code>/home/node</code>, <code>/opt/homebrew/bin/ffmpeg</code>, <code>/opt/n8n-mcp</code>, <code>/opt/n8n-mcp/dist/mcp/index.js</code>, <code>/tmp/bench/SUMMARY.md</code>, <code>/tmp/bench/bench_real.mjs</code>, <code>/tmp/bench/outputs/&lt;config&gt;_&lt;method&gt;.json</code>, <code>/tmp/bench/prompts/&lt;config&gt;_&lt;method&gt;.txt</code>, <code>/tmp/bench/results.json</code>, <code>/tmp/bench/truncate.mjs</code>, <code>/tmp/pn_wf2/</code>, <code>/volume1/docker/karakeep</code>, <code>/volume1/docker/n8n</code>, <code>/volume1/docker/n8n/</code>, <code>/volume1/docker/n8n/...</code>, <code>/volume1/docker/n8n/data</code>, <code>/volume1/docker/n8n/db</code>, <code>/volume1/docker/n8n/redis</code>, <code>/volume1/docker/receipt-wrangler</code>, <code>/volume1/docker/swingmusic</code>, <code>/volume1/docker/swingmusic/config</code>, <code>/volume2/Brett_Music</code>, <code>/volume2/Music</code>, <code>/volume2/karakeep/...</code>, <code>/volume2/karakeep/data</code>, <code>/volume2/karakeep/meili_data</code>, <code>/volume2/karakeep/{data</code>, <code>/volume2/receipt-wrangler</code></li>
+<li>Links: <code>http://0.0.0.0:8188</code>, <code>http://100.109.206.17:11434/api/ps</code>, <code>http://100.98.203.89</code>, <code>http://127.0.0.1:8000</code>, <code>http://127.0.0.1:8188/view?filename=test_flux2_4b_base_00001_.png&amp;subfolder=&amp;type=output</code>, <code>http://127.0.0.1:8188/view?filename=test_flux4b_dd_00001_.png&amp;subfolder=&amp;type=output</code>, <code>http://127.0.0.1:8188/view?filename=test_flux9b_base_00001_.png&amp;subfolder=&amp;type=output</code>, <code>http://127.0.0.1:8188/view?filename=test_flux9b_dd_00001_.png&amp;subfolder=&amp;type=output</code>, <code>http://127.0.0.1:8188/view?filename=test_patchnotes_A_00001_.png&amp;subfolder=&amp;type=output</code>, <code>http://127.0.0.1:8188/view?filename=test_zimage_bf16_00001_.png&amp;subfolder=&amp;type=output</code>, <code>http://192.168.0.198</code>, <code>http://192.168.0.25</code>, <code>http://192.168.0.{{</code>, <code>http://localhost:3000/health</code>, <code>http://localhost:3000/mcp</code>, <code>http://localhost:3001/health</code>, <code>http://localhost:3001/mcp</code>, <code>http://localhost:5678</code>, <code>http://n8n-mcp:3000</code>, <code>http://n8n-mcp:3000/health</code>, <code>http://n8n-mcp:3000/mcp</code>, <code>http://n8n:5678</code>, <code>http://ug-nas-x4800.tail4148b0.ts.net:5678</code>, <code>http://ug-nas-x4800.tail4148b0.ts.net:5678/</code>, <code>http://ug-nas-x4800.tail4148b0.ts.net:5678/workflow/CjiMNnVeDIam6ZsC</code>, <code>http://ug-nas-x4800.tail4148b0.ts.net:5679/health</code>, <code>http://ug-nas-x4800.tail4148b0.ts.net:5679/mcp</code>, <code>http://www.apple.com/DTDs/PropertyList-1.0.dtd</code>, <code>http://your-server:3000/health</code>, <code>http://your-server:3000/mcp</code>, <code>http://{{</code>, <code>https://agentskills.io</code>, <code>https://api.comfy.org/nodes</code>, <code>https://apnews.com/article/congo-ebola-outbreak-bundibugyo-1000-cases-d298bfadf678a07412c8fbb8c46263ad</code>, <code>https://apnews.com/article/de-la-espriella-cepeda-petro-colombia-election-0962dc76d22ba37c8fa29575cb2456a3\</code>, <code>https://apnews.com/article/keir-starmer-resignation-pressure-burnham-uk-politics-8aa1c427418c487fe644f5d5c40d1518\</code>, <code>https://apnews.com/article/philippines-high-school-shooting-tacloban-san-jose-022bd9892d858b1bc5e9ed741e0d7222</code>, <code>https://basicappleguy.com/basicappleblog/macos-golden-gate-icon-comparison\</code>, <code>https://brook.dev/projects/news/2026-06-22-morning/audio_21.mp3</code>, <code>https://brook.dev/projects/news/v2026.26.1-22.54/#section=4</code>, <code>https://cursor.com/docs/skills</code>, <code>https://firstthings.com/theistic-transhumanism/\</code>, <code>https://firstthings.com/toward-ethical-populism/\</code>, <code>https://forum.cursor.com/t/mcp-client-wrong-handling-of-http-not-found-in-session-management-stateful-mcp-server/134781</code>, <code>https://get.docker.com</code>, <code>https://github.com/brookjordan/brookjordan.github.io/commit/359c6593c84ec058ad2969e54daf8df6b61b1677</code>, <code>https://github.com/brookjordan/docker-n8n</code>, <code>https://github.com/czlonkowski/n8n-mcp.git</code>, <code>https://github.com/czlonkowski/n8n-mcp/blob/main/docs/N8N_DEPLOYMENT.md</code>, <code>https://github.com/czlonkowski/n8n-mcp/issues/548</code>, <code>https://github.com/czlonkowski/n8n-mcp/pull/674</code>, <code>https://github.com/czlonkowski/n8n-mcp/pull/699</code>, <code>https://github.com/nova452/ComfyUI-Co...</code>, <code>https://github.com/ostris/ai-toolkit</code>, <code>https://huggingface.co/Beinsezii/Krea-2-Turbo-Projector-Scale-LoRA-Diffusers/blob/main/README.md</code>, <code>https://huggingface.co/Beinsezii/Krea-2-Turbo-Projector-Scale-LoRA-Diffusers/tree/main</code>, <code>https://huggingface.co/Comfy-Org/Krea-2</code>, <code>https://huggingface.co/Comfy-Org/Krea-2/blob/eb298315eb54d26561537cacb25a1bb52b6efcca/diffusion_models/krea2_turbo_bf16.safetensors</code>, <code>https://kottke.org/26/06/0049176-the-side-that-won-the-civ\</code>, <code>https://kottke.org/26/06/0049177-record-winter-temperature\</code>, <code>https://mcp.yourdomain.com/mcp</code>, <code>https://openai.com/index/chatgpt-enterprise-spend-controls\</code>, <code>https://openai.com/index/samsung-electronics-chatgpt-codex-deployment\</code>, <code>https://setuptools.pypa.io/en/latest/pkg_resources.html.</code>, <code>https://techcrunch.com/2026/06/21/ethan-thornton-is-trying-to-do-everything-all-at-once/</code>, <code>https://techcrunch.com/2026/06/21/ethan-thornton-is-trying-to-do-everything-all-at-once/\</code>, <code>https://techcrunch.com/2026/06/21/ubisoft-co-founder-claude-guillemot-dies-in-plane-crash/\</code>, <code>https://ug-nas-x4800.tail4148b0.ts.net</code>, <code>https://ug-nas-x4800.tail4148b0.ts.net/</code>, <code>https://www.aljazeera.com/video/newsfeed/2026/6/22/encouraging-progress-made-as-first-round-us-iran-talks-end?traffic_source=rss</code>, <code>https://www.aljazeera.com/video/newsfeed/2026/6/22/encouraging-progress-made-as-first-round-us-iran-talks-end?traffic_source=rss\</code>, <code>https://www.aljazeera.com/video/newsfeed/2026/6/22/new-york-city-welcomes-the-summer-solstice-with-times-square-yoga?traffic_source=rss</code>, <code>https://www.aljazeera.com/video/newsfeed/2026/6/22/new-york-city-welcomes-the-summer-solstice-with-times-square-yoga?traffic_source=rss\</code>, <code>https://www.bbc.com/news/articles/c39yd12zed9o?at_medium=RSS&amp;at_campaign=rss</code>, <code>https://www.bbc.com/news/articles/c39yd12zed9o?at_medium=RSS&amp;at_campaign=rss\</code>, <code>https://www.bbc.com/news/articles/clye4ky2yzpo?at_medium=RSS&amp;at_campaign=rss</code>, <code>https://www.bbc.com/news/articles/clye4ky2yzpo?at_medium=RSS&amp;at_campaign=rss\</code>, <code>https://www.bbc.com/news/articles/cwy0q41v1lzo?at_medium=RSS&amp;at_campaign=rss\</code>, <code>https://www.krea.ai/blog/krea-2-techn...</code>, <code>https://www.mux.com/?utm_campaign=fireball&amp;utm_source=DF\</code>, <code>https://www.theguardian.com/news/2026/jun/19/global-framework-reparations-justice-adopted-at-landmark-conference-in-accra-ghana\</code>, <code>https://www.theguardian.com/world/2026/jun/21/comrades-ultramarathon-south-africa\</code>, <code>https://www.wired.com/story/lg-promo-code/\</code>, <code>https://www.wired.com/story/priceline-promo-code/\</code>, <code>https://www.youtube.com/watch?v=1U8dJ94QFNc</code>, <code>https://your-n8n-instance.com</code>, <code>https://your-n8n-instance.com/api/v1/workflows</code></li>
+<li>Obsidian links: <code>100</code></li>
+</ul>
+<h4 id="message-excerpts">Message excerpts</h4>
+<ul>
+<li><p><code>2026-06-24T20:18:43.200Z</code> · bubble <code>00024402-f0eb-4083-a1b3-a8f39e1befb7</code> · type <code>2</code></p>
+<p>There&#39;s <code>list_workflows</code> and <code>health_check</code>. Let me read their schemas, then call them.</p>
+</li>
+<li><p><code>2026-06-25T09:45:21.296Z</code> · bubble <code>000c2dbe-d5bc-49f2-ba11-53e423d62d8f</code> · type <code>2</code></p>
+<p>Nothing new to act on — this corroborates the earlier Flux-family build: same 7–8 graphs, validated and render-proven (Flux.2-9b ~81s, schnell ~58s, Chroma ~560s, and the Flux9b→RealVisXL SDXL-polish combo ~141s all wrote real PNGs). The combo polish was correctly kept on SDXL/custom-sampler path, so no black-image trap.</p>
+<p>One genuinely useful datapoint: this agent saw the queue at <strong>~121 pending</strong> (down from ~590 earlier) — so the M3 is churning through the backlog steadily overnight, exactly as hoped. No pruning needed; it&#39;s draining on its own.</p>
+<p>I remain on hold — no new waves. We pick winners from the gallery in the morning.</p>
+<p><a href="176370f0-9765-44a3-bc87-620fd72a6cd4">Flux-family workflow build</a> completed successfully; no other subagents are running.</p>
+</li>
+<li><p><code>2026-06-24T11:01:52.806Z</code> · bubble <code>000f0626-0487-44d5-a5bf-469d5519a90e</code> · type <code>2</code></p>
+<p>Confirmed — that <code>9216</code> is one of my four benchmark configs, not Ollama doing anything weird:</p>
+<pre><code class="language-15:18:/tmp/bench/bench_real.mjs">  { label: &#39;e4b_8k&#39;, model: &#39;gemma4:e4b&#39;, num_ctx: 8192 },
+  { label: &#39;e4b_4k&#39;, model: &#39;gemma4:e4b&#39;, num_ctx: 4096 },
+  { label: &#39;e2b_9k&#39;, model: &#39;gemma4:e2b&#39;, num_ctx: 9216 },
+  { label: &#39;e2b_4k&#39;, model: &#39;gemma4:e2b&#39;, num_ctx: 4096 },
+</code></pre>
+<p>So what you caught with <code>api/ps</code> is the <strong>live benchmark</strong> currently on its <code>e2b_9k</code> run (e2b loaded, <code>context_length: 9216</code>).</p>
+<p><strong>Why 9216 and not 4/8k?</strong> Deliberate. <code>e2b</code> is tiny (~1.6 GB vs e4b&#39;s ~3.1 GB), so on the 8 GB mini there&#39;s spare room. 9216 (= 8192 + 1024) is a probe to see whether the smaller model can afford a slightly roomier window <em>and still be fast/fit the full 22-story prompt</em> — vs e4b which I cap at 8192. It&#39;s only used inside the benchmark; your n8n workflow is unaffected and the model unloads when the run finishes.</p>
+<p><strong>Does it reserve 16k? No.</strong> Ollama allocates KV cache for <em>exactly</em> <code>num_ctx</code> tokens — the <code>context_length: 9216</code> in <code>api/ps</code> <strong>is</strong> the reservation. It doesn&#39;t round up to 16k. (It only nudges to a multiple of the batch size, 256/512; 9216 is already a clean multiple, so it&#39;s honor …[excerpt truncated]</p>
+</li>
+<li><p><code>2026-06-24T11:02:05.785Z</code> · bubble <code>000f8924-9737-4368-90d0-ebbed29f6097</code> · type <code>2</code></p>
+<p>Nothing new to act on — this corroborates the earlier Flux-family build: same 7–8 graphs, validated and render-proven (Flux.2-9b ~81s, schnell ~58s, Chroma ~560s, and the Flux9b→RealVisXL SDXL-polish combo ~141s all wrote real PNGs). The combo polish was correctly kept on SDXL/custom-sampler path, so no black-image trap.</p>
+<p>One genuinely useful datapoint: this agent saw the queue at <strong>~121 pending</strong> (down from ~590 earlier) — so the M3 is churning through the backlog steadily overnight, exactly as hoped. No pruning needed; it&#39;s draining on its own.</p>
+<p>I remain on hold — no new waves. We pick winners from the gallery in the morning.</p>
+<p><a href="176370f0-9765-44a3-bc87-620fd72a6cd4">Flux-family workflow build</a> completed successfully; no other subagents are running.</p>
+</li>
+<li><p><code>2026-06-24T10:13:56.392Z</code> · bubble <code>00123ca7-1699-402a-9228-b8390e8a9127</code> · type <code>2</code></p>
+<p>Validated — <code>docker compose config</code> parses cleanly with the new service and <code>.env</code> values resolved.</p>
+<p>Here&#39;s what I added (the &quot;same server as n8n&quot; pattern, all on your existing <code>app-network</code> so traffic stays internal):</p>
+<p><strong><code>docker-compose.yaml</code></strong> — new <code>n8n-mcp</code> service:</p>
+<pre><code class="language-40:73:docker-n8n/docker-compose.yaml">  n8n-mcp:
+    container_name: n8n-mcp
+    image: ghcr.io/czlonkowski/n8n-mcp:${N8N_MCP_VERSION:-latest}
+    restart: unless-stopped
+    environment:
+      - N8N_MODE=true
+      - MCP_MODE=http
+      - PORT=3000
+      ...
+      - N8N_API_URL=http://n8n:5678
+      - N8N_API_KEY=[REDACTED]
+      - WEBHOOK_SECURITY_MODE=${MCP_WEBHOOK_SECURITY_MODE:-moderate}
+      - MCP_AUTH_TOKEN=[REDACTED]
+      - AUTH_TOKEN=[REDACTED]
+</code></pre>
+<p>Key design choices:</p>
+<ul>
+<li>**`AUTH_TOKEN=[REDACTED] — both required vars source from one value so they can never drift out of sync (the #1 troubleshooting item in the guide).</li>
+<li><strong><code>N8N_API_URL=http://n8n:5678</code></strong> — internal Docker DNS, plain http (n8n&#39;s <code>https</code> is just URL-generation; its listener is plain on 5678).</li>
+<li><strong><code>WEBHOOK_SECURITY_MODE=moderate</code></strong> — correct for n8n being an internal/RFC1918 host.</li>
+<li><strong>Version pinned via <code>${N8N_MCP_VERSION:-latest}</code></strong> per you …[excerpt truncated]</li>
+</ul>
+</li>
+<li><p><code>2026-06-22T12:40:28.254Z</code> · bubble <code>0018ea18-d212-4b8e-b817-c0f00595db08</code> · type <code>2</code></p>
+<p>I have the full node. Two things to note: you already toggled <strong><code>Always Output Data</code> on</strong> <code>Generate intro music</code> (good) — so I just need to flip <code>generate_audio_codes</code> to <code>true</code> there. And I can detect the intro in <code>Build podcast webpage</code> by its <code>voice === &#39;intro&#39;</code> marker (segments use numeric voices), so no extra field needed.</p>
+<p>Here&#39;s my plan for <code>Build podcast webpage</code> (surgical — leaving the giant HTML/JS template 100% untouched):</p>
+<ul>
+<li><strong>Classify by role</strong>: intro = audio item with <code>voice === &#39;intro&#39;</code>; segments = other audio items; cover = <code>cover_image</code> item.</li>
+<li><strong>Playlist</strong> = <code>[intro→intro.mp3]?</code> then segments <code>audio_0…N</code> (segments keep their numbering, intro never renumbers them).</li>
+<li><strong>Write files</strong> by role (intro→<code>intro.mp3</code>, segment→<code>audio_&lt;segIdx&gt;</code>, cover→<code>cover.png</code>) — cover is <strong>no longer</strong> a playlist entry, killing the phantom <code>audio_21</code>.</li>
+<li><code>lastScript</code> derives from segments only.</li>
+</ul>
+<p>Let me validate the patches (intro-music <code>generate_audio_codes</code> + the three Build-webpage edits).</p>
+</li>
+<li><p><code>2026-06-25T09:50:14.425Z</code> · bubble <code>00208e92-2c56-4848-880b-0db1790b17a1</code> · type <code>2</code></p>
+<p>Config is faithful. One correction: the generated config includes <code>embrace2</code> (a stray duplicate of <code>embrace</code> that was never part of the rendered matrix and has no masters). Including it would make the first <code>run</code> render ~218 unwanted cells. Let me look at that block and the scene tail to remove it.</p>
+</li>
+<li><p><code>2026-06-24T11:02:52.098Z</code> · bubble <code>0020f1a0-813e-48b9-988a-d2eed33dce0c</code> · type <code>2</code></p>
+<p>Good news — you don&#39;t have to build anything for the <strong>total</strong>: n8n already times every run. But there&#39;s an even better option for <em>your</em> goal (finding what to optimize), so here are three tiers:</p>
+<p><strong>1. Built-in total (zero work).</strong> Open the workflow&#39;s <strong>Executions</strong> tab (or the global <strong>Executions</strong> list in the sidebar). Every run shows its <strong>duration</strong> (e.g. <code>1m 10s</code>, <code>70m</code>), plus start/stop times. That&#39;s your &quot;real check&quot; — already recorded for the runs you&#39;ve done.</p>
+<p><strong>2. Per-node breakdown (I pull it — most useful).</strong> The execution data stores <code>executionTime</code> for <em>each node</em>. After your next run, give me the execution and I&#39;ll pull the timing breakdown so you see exactly where the minutes go:</p>
+<ul>
+<li><code>Generate script</code> (the LLM on the mini),</li>
+<li>the 41× <code>Generate audio</code> (VibeVoice on the MacBook),</li>
+<li><code>Generate intro music</code> (ACE),</li>
+<li><code>Generate image</code> (Flux),</li>
+<li>GitHub commit.</li>
+</ul>
+<p>That tells you whether to chase the script step (think/q8/e2b) or the TTS step (1.5B), instead of guessing. This is what I&#39;d actually use.</p>
+<p><strong>3. Surface it in the output (if you want it embedded).</strong> I can add a lightweight timer: a tiny <strong><code>Start timer</code></strong> Set node right after the <code>Schedule Trigger</code> storing `{{ Date.now( …[excerpt truncated]</p>
+</li>
+<li><p><code>2026-06-24T21:13:23.212Z</code> · bubble <code>00219947-20da-474e-8171-75bede7d761a</code> · type <code>2</code></p>
+<p>While that renders (Turbo 12), here&#39;s the strategic gold from the research:</p>
+<p><strong>Ideogram 4 reads structured JSON</strong> — <code>high_level_description</code> + <code>style_description</code> + <code>compositional_deconstruction.elements[]</code>, where each element has a <strong><code>bbox: [y_min, x_min, y_max, x_max]</code> (0–1000)</strong>, a type (<code>obj</code>/<code>text</code>), a description, and a color palette. It anchors things to those boxes. You already have the <strong>Ideogram 4 Prompt Builder KJ</strong> node (it&#39;s in comfyui-kjnodes, installed), and there&#39;s a <strong>ComfyUI-IdeogramHelper</strong> pack with a programmatic <em>&quot;Element Override&quot;</em> node — the exact hook for automation.</p>
+<p><strong>Your &quot;hidden spider&quot; instinct is spot-on and very automatable:</strong> every episode, the LLM writes the day&#39;s scene as the <code>high_level_description</code>, and we <strong>append one constant signature element</strong> — a fixed bbox (say bottom-right <code>[800,750,980,980]</code>) with a desc like <em>&quot;a tiny [mascot], subtly tucked into the scene.&quot;</em> Ideogram pins it to that spot every time → instant &quot;that&#39;s <em>our</em> cover&quot; recognition, plus a fun &quot;spot-the-mascot&quot; hook. None of Flux/Z-Image can place a consistent element reliably; this is genuinely Ideogram-only. (Bonus: Ideogram&#39;s legible text rendering could also stamp a consist …[excerpt truncated]</p>
+</li>
+<li><p><code>2026-06-22T12:36:00.502Z</code> · bubble <code>00262623-8505-49a1-8e72-9c11e48d3d40</code> · type <code>2</code></p>
+<p>Now fetching the workflow topology to locate the relevant nodes.</p>
+</li>
+<li><p><code>2026-06-24T19:24:50.140Z</code> · bubble <code>0027de36-fbd2-4ab1-b0d2-b1c2c9af82b8</code> · type <code>2</code></p>
+<p>The main job finished. Let me grab the full results, then immediately fire the re-run of the failed datapoint as planned.</p>
+</li>
+<li><p><code>2026-06-24T19:24:50.191Z</code> · bubble <code>002cd4a4-bb56-4283-97fe-b271365d668a</code> · type <code>2</code></p>
+<p>All 28 landed, none missing, none black. Let me look at the key ones — especially whether longcat/ovis/wan finally resolve at 6–8, and whether chroma 10 sharpens up.</p>
+</li>
+<li><p><code>2026-06-25T07:19:36.465Z</code> · bubble <code>002effc8-021b-440d-bff3-010888a0e5b8</code> · type <code>2</code></p>
+<p>Love it — the transitional &quot;magic hour&quot; is the strongest possible lighting choice for this, and skies are one thing even the small CLIP models render <em>beautifully</em>, so it&#39;s worth prime real estate in every tier.</p>
+<p>Craft notes on the sky:</p>
+<ul>
+<li><strong>&quot;Just got bright / about to get dark&quot; = golden hour at the horizon.</strong> The purple-and-orange you want is the twilight gradient: hot orange/amber low at the horizon, shading up through pink to violet overhead. I committed the prompts to <strong>just before dusk</strong> (it pairs naturally with a visible moon + planets) — swap &quot;dusk&quot; → &quot;dawn&quot; for sunrise; the palette is identical.</li>
+<li><strong>Two distinct cloud layers</strong> now, so I name them separately or models merge them: high <strong>wispy cirrus</strong> in the sky vs the <strong>low &quot;sea of cloud&quot;</strong> in the valleys.</li>
+<li><strong>Huge-but-not-too-huge sun:</strong> &quot;a large low sun, prominent near the horizon but not oversized.&quot; Calling it <em>low</em> keeps it near the horizon; &quot;not oversized&quot; stops the cartoon-planet look.</li>
+<li><strong>Moon + planets</strong> read best as &quot;a pale moon and a couple of bright planets like points of light&quot; high in the darker part of the sky.</li>
+</ul>
+<p><strong>Distillation priority ladder</strong> (how I decided what survives into the smaller tiers): subject → ter …[excerpt truncated]</p>
+</li>
+<li><p><code>2026-06-24T11:02:05.832Z</code> · bubble <code>0030e3e1-4764-4f00-aff4-1586dbcfd939</code> · type <code>2</code></p>
+<p>Here&#39;s the full image-diffusion inventory. Note the REST API only reports <code>.safetensors</code>, but you also have <strong>GGUF</strong> image models (loaded via <code>UnetLoaderGGUF</code>) that we&#39;ve definitely rendered with — they don&#39;t show in the REST list and my filesystem globs of both ComfyUI dirs came up empty (they&#39;re likely behind a symlink or in the Comfy Desktop bundle), but their existence is confirmed by your working workflows.</p>
+<h2 id="image-models-you-have">Image models you have</h2>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>What it is</th>
+<th>Used in our tests?</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>flux-2-klein-4b.safetensors</strong></td>
+<td>Flux.2 Klein 4B (distilled)</td>
+<td>✅ <strong>Yes</strong> — base + Detail Daemon</td>
+</tr>
+<tr>
+<td><strong>flux-2-klein-9b.safetensors</strong></td>
+<td>Flux.2 Klein 9B, full bf16 (~18 GB)</td>
+<td>❌ No — we used the Q4 GGUF instead</td>
+</tr>
+<tr>
+<td><strong>Flux-2-Klein-9B-KV-Q4_K_M.gguf</strong></td>
+<td>Flux.2 Klein 9B (Q4 quant)</td>
+<td>✅ <strong>Yes</strong> — 9B base + Detail Daemon</td>
+</tr>
+<tr>
+<td><strong>z_image_turbo_bf16.safetensors</strong></td>
+<td>Z-Image Turbo</td>
+<td>✅ <strong>Yes</strong> — Z-Image test</td>
+</tr>
+<tr>
+<td><strong>z_image_turbo-Q3_K_M.gguf</strong></td>
+<td>Z-Image Turbo (Q3 quant)</td>
+<td>❌ No — we used the bf16</td>
+</tr>
+<tr>
+<td><strong>ideogram4-Q4_0.gguf</strong> + <strong>ideogram4_uncond-Q4_0.gguf</strong></td>
+<td>Ideogram 4 (cond + uncond, Q4)</td>
+<td>✅ <strong>Yes</strong> — all the Patch Notes tests</td>
+</tr>
+</tbody></table>
+<h2 id="not-image-so-out-of-scope-for-covers">Not image (so out of scope for covers)</h2>
+<ul>
+<li>*<em>acestep_v1.5_turbo.safetensors</em> …[excerpt truncated]</li>
+</ul>
+</li>
+<li><p><code>2026-06-25T11:41:45.870Z</code> · bubble <code>003b649f-4951-4717-8d27-fbcf3727b8b9</code> · type <code>2</code></p>
+<p>Now let me add the <code>n8n-mcp</code> service to the compose, after the worker.</p>
+</li>
+<li><p><code>2026-06-22T12:40:28.376Z</code> · bubble <code>003cefe1-dd74-4de4-908c-e5488d7bfcec</code> · type <code>2</code></p>
+<p>Now the n8n-mcp service — its container port, the host mapping, and the internal n8n API URL.</p>
+</li>
+<li><p><code>2026-06-25T07:19:36.998Z</code> · bubble <code>003ddb2b-47db-480e-b6e7-4496bd31098c</code> · type <code>2</code></p>
+<p>Stamper syntax is good. The stdin import is being stripped by safe-path; let me drop a tiny smoke script that re-inserts its own dir, run it, then remove it.</p>
+</li>
+<li><p><code>2026-06-24T20:18:43.156Z</code> · bubble <code>00430b9e-ac72-43a1-a8d7-d94663a0ce37</code> · type <code>2</code></p>
+<p>Good call — let me read both actual scripts and compare them head-to-head. I&#39;ll use the <code>no_prev</code> method for both (our chosen truncation), with <code>e2b_9k</code> standing in for <code>e2b_8k</code> (it only used ~3.5k tokens, so 8k is identical).</p>
+</li>
+<li><p><code>2026-06-22T12:40:28.353Z</code> · bubble <code>00434230-184c-442b-98e9-9eec15b0343f</code> · type <code>2</code></p>
+<p>Running (pid 34162) — first call (<code>e4b_8k recency</code>) is generating. Let me do a quick sanity check that it&#39;s reaching the mini (not erroring on network), then I&#39;ll let it run.</p>
+</li>
+<li><p><code>2026-06-24T21:35:03.294Z</code> · bubble <code>004a13de-330e-4acd-a997-b9fdc88ff304</code> · type <code>2</code></p>
+<p>It&#39;s now registered as <strong><code>user-n8n</code></strong>. Let me use that and pull the Ollama nodes to start the fixes.</p>
+</li>
+<li><p><code>2026-06-24T21:13:23.179Z</code> · bubble <code>004c351a-9b7c-4b54-a9f9-70a08006090d</code> · type <code>2</code></p>
+<p>Latest is <strong>execution 312</strong> (status: success, ~2m15s — the run that made <code>intro_312</code>). Let me read what its commit step (<code>HTTP Request1</code>) actually returned.</p>
+</li>
+<li><p><code>2026-06-25T09:50:14.057Z</code> · bubble <code>0053e01b-a1a4-4221-9523-6d9a14fec31b</code> · type <code>2</code></p>
+<p>Good question — there are two standard idioms, and which one you want depends on whether you prize portability or visibility of the data.</p>
+<h2 id="your-current-setup">Your current setup</h2>
+<p>Right now your mounts use <strong>absolute NAS paths</strong> from <code>.env</code>:</p>
+<pre><code class="language-6:13:docker-n8n/.env.example">N8N_HOST_DIR=/volume1/docker/n8n/data
+DB_HOST_DIR=/volume1/docker/n8n/db
+REDIS_HOST_DIR=/volume1/docker/n8n/redis
+</code></pre>
+<p>Because the data lives <em>outside</em> the repo folder (<code>/volume1/docker/n8n/...</code> vs the repo at <code>.../docker-n8n</code>), nothing the container writes ever lands in the repo. So today there&#39;s actually nothing to gitignore — it&#39;s already self-contained by virtue of the paths pointing elsewhere. The trade-off is it&#39;s NAS-specific: clone it on another box and those paths won&#39;t exist.</p>
+<h2 id="the-two-reusable-patterns">The two reusable patterns</h2>
+<p><strong>Option A — relative bind mounts (data lives in the repo folder, gitignored)</strong></p>
+<p>Point the mounts at <code>./data</code>, <code>./db</code>, <code>./redis</code> inside the stack dir, then ignore them. This is exactly what you described:</p>
+<pre><code class="language-bash"># .gitignore
+.env
+.DS_Store
+/data/
+/db/
+/redis/
+</code></pre>
+<pre><code class="language-bash"># .env
+N8N_HOST_DIR=./data
+DB_HOST_DIR=./db
+REDIS_HOST_DIR=./redis
+</code></pre>
+<p>The folders get created by Docker on first run, sit next to the compose fi …[excerpt truncated]</p>
+</li>
+<li><p><code>2026-06-22T12:36:27.737Z</code> · bubble <code>0054480e-3b55-489d-87fe-03388a0f9564</code> · type <code>2</code></p>
+<p>The sandbox blocks writes outside the workspace. Let me run it with elevated permissions since the file is in your home directory.</p>
+</li>
+<li><p><code>2026-06-24T11:02:05.860Z</code> · bubble <code>005b612c-f568-46f5-b955-c9eaee4192fb</code> · type <code>2</code></p>
+<p>While that renders (Turbo 12), here&#39;s the strategic gold from the research:</p>
+<p><strong>Ideogram 4 reads structured JSON</strong> — <code>high_level_description</code> + <code>style_description</code> + <code>compositional_deconstruction.elements[]</code>, where each element has a <strong><code>bbox: [y_min, x_min, y_max, x_max]</code> (0–1000)</strong>, a type (<code>obj</code>/<code>text</code>), a description, and a color palette. It anchors things to those boxes. You already have the <strong>Ideogram 4 Prompt Builder KJ</strong> node (it&#39;s in comfyui-kjnodes, installed), and there&#39;s a <strong>ComfyUI-IdeogramHelper</strong> pack with a programmatic <em>&quot;Element Override&quot;</em> node — the exact hook for automation.</p>
+<p><strong>Your &quot;hidden spider&quot; instinct is spot-on and very automatable:</strong> every episode, the LLM writes the day&#39;s scene as the <code>high_level_description</code>, and we <strong>append one constant signature element</strong> — a fixed bbox (say bottom-right <code>[800,750,980,980]</code>) with a desc like <em>&quot;a tiny [mascot], subtly tucked into the scene.&quot;</em> Ideogram pins it to that spot every time → instant &quot;that&#39;s <em>our</em> cover&quot; recognition, plus a fun &quot;spot-the-mascot&quot; hook. None of Flux/Z-Image can place a consistent element reliably; this is genuinely Ideogram-only. (Bonus: Ideogram&#39;s legible text rendering could also stamp a consist …[excerpt truncated]</p>
+</li>
+<li><p><code>2026-06-24T11:02:24.143Z</code> · bubble <code>00642107-eecd-4214-9674-a59d4b413e8b</code> · type <code>2</code></p>
+<p>That log is gold — it tells us <em>exactly</em> why 4k failed, and it&#39;s not what we assumed. Look at the final line:</p>
+<pre><code>done_reason: &quot;length&quot;
+prompt_eval_count: 2948      ← input was fine (~2948, matches my trim estimate)
+eval_count: 1148             ← generated 1148 tokens... but ALL in &quot;thinking&quot;, content stayed &quot;&quot;
+</code></pre>
+<p><strong><code>gemma4:e4b</code> is a <em>thinking</em> model.</strong> It spent <strong>1148 tokens reasoning</strong> (<code>&quot;thinking&quot;: &quot;...&quot;</code>, <code>&quot;content&quot;: &quot;&quot;</code> the whole way) and <strong>2948 + 1148 = 4096</strong> → it hit the ceiling <strong>mid-thought and never wrote a single line of script</strong>. <code>done_reason: &quot;length&quot;</code>. So 4k didn&#39;t truncate the script — it died before the script even started.</p>
+<p>Two consequences:</p>
+<ol>
+<li><strong>4k is genuinely infeasible</strong>, even ignoring thinking: input 2948 + a ~3k script ≈ <strong>6k</strong>, already past 4096. Confirmed dead end.</li>
+<li><strong>8k should work</strong> (your run-in-progress): 2948 + ~1.5k thinking + ~3k script ≈ <strong>7.4k</strong> &lt; 8192. 👍</li>
+</ol>
+<p>But the real prize here: <strong>disable the thinking pass.</strong> It&#39;s pure waste for this task — it burned ~1148 tokens <em>and</em> ~72 seconds (the mini runs ~16 tok/s), producing zero usable output. Turning it off:</p>
+<ul>
+<li>frees ~1.5k+ of context (makes 8k roomy, prefill lighter),</li>
+<li>**cuts ~60–90s off every ru …[excerpt truncated]</li>
+</ul>
+</li>
+<li><p><code>2026-06-24T21:13:23.133Z</code> · bubble <code>00644400-adcd-4f75-bfe3-29cd10b92446</code> · type <code>2</code></p>
+<p>Lots of progress. The earlier stamping pass finished (<strong>60 files stamped</strong>), the high-step sweep drained, and the <strong>doll rebuild is now running</strong> — a few models are already done. Let me check where it&#39;s up to and eyeball the first doll results to confirm the new prompt is landing (brightness, placement, doll-ness).</p>
+</li>
+<li><p><code>2026-06-22T12:38:40.884Z</code> · bubble <code>0069ae14-1108-4e72-952f-463acae2e969</code> · type <code>2</code></p>
+<p>The notification matched on <code>&quot;error&quot;</code> — let me check whether that&#39;s a single failed run or the whole job dying.</p>
+</li>
+<li><p><code>2026-06-24T11:01:52.807Z</code> · bubble <code>006e925b-6122-4c3d-b886-c8c8b63c3fa6</code> · type <code>2</code></p>
+<p>Not a git checkout — so this is likely the <strong>ComfyUI Desktop</strong> app (which keeps models/output in <code>~/Documents/ComfyUI</code> but the actual code elsewhere). Let me find the real install and how it runs.</p>
+</li>
+<li><p><code>2026-06-25T09:48:45.394Z</code> · bubble <code>0075e773-9017-4293-9e80-405b1af269a3</code> · type <code>2</code></p>
+<p>Now let me run it to generate <code>index.html</code> and verify the baked data injected correctly.</p>
+</li>
+<li><p><code>2026-06-24T20:18:43.190Z</code> · bubble <code>0079e097-ae93-4b3b-ae7e-af4a71d77547</code> · type <code>2</code></p>
+<p>Not <em>quite</em> — but more than halfway! The Q8_0 GGUF is at <strong>7.0 GB of <del>13 GB (</del>54%)</strong>, downloading steadily. Runner&#39;s still parked, waiting for it.</p>
+<p>Roughly <strong>8–10 more minutes</strong> of download, then the probe fires instantly. I know the suspense is killing you — the moment a real <code>krea2_van_s04.png</code> appears I&#39;ll show it to you. Hang in there. 🙂</p>
+</li>
+<li><p><code>2026-06-25T10:38:24.204Z</code> · bubble <code>007fef02-819a-4ff2-8019-b3648614d945</code> · type <code>2</code></p>
+<p>Great direction — that&#39;s a much better concept than a generic hook. Answering your questions first:</p>
+<p><strong>How many lines fit in ~12s sung?</strong> Singing is slower than speech (~1.5–2.5 words/sec vs ~3), so:</p>
+<ul>
+<li><strong>2 short lines</strong> (~6–8 words each, ~14 words total) fit <em>tidily</em> in ~12s.</li>
+<li><strong>3 short lines</strong> fit if you give it ~15–18s — which we already do (the vocal path renders an 18s canvas, then <code>Trim intro silence</code> chops the tail). So <strong>2–3 short lines</strong> is the sweet spot, ending on the weird one as the punchline.</li>
+</ul>
+<p><strong>Is it currently theming the style to the lyrics?</strong> No — right now it just says &quot;matching today&#39;s mood&quot; generically, and the <code>tags</code> are the heavy-handed forced trio you flagged. Your instinct is right: have it <strong>write the witty summary first, then design a style that tightly fits those specific lyrics + the episode tone</strong>, and drop the over-prescriptive vocal tags (keeping just a light &quot;clear lead vocals, start early&quot; so ACE actually sings promptly — that was the fix for vocals-coming-in-late).</p>
+<p>Here&#39;s the reworked <strong>sung</strong> prompt I&#39;ll set (instrumental branch unchanged):</p>
+<blockquote>
+<p>You are the music director AND lyricist for a daily tech-news podcast intro. Read today&#39;s story summarie …[excerpt truncated]</p>
+</blockquote>
+</li>
+<li><p><code>2026-06-22T12:37:36.338Z</code> · bubble <code>008276fc-a830-4cfa-b6cc-404feaf6eb39</code> · type <code>2</code></p>
+<p>Honest answer: I <strong>didn&#39;t</strong> modify that node — and by design I shouldn&#39;t need to. My approach was to make the intro song <strong>arrive as item index 0</strong> so the node&#39;s existing index-based logic treats it as <code>audio_0</code> automatically. Let me walk through <em>why</em> that works, based on the version I read earlier (when it was still called <code>Code</code>):</p>
+<pre><code class="language-js">const items = $input.all();
+let playlist = items.map((item, index) =&gt; {
+  const script = item.json.script || item.json;
+  return { file: `audio_${index}.mp3`, url: script.url || null, text: script.text,
+           voice: script.voice, speaker: script.speaker || &#39;Unknown speaker&#39;,
+           summary: script.summary || null };
+});
+// ...later, writing files:
+for (let i = 0; i &lt; items.length; i++) {
+  if (items[i].binary &amp;&amp; items[i].binary.file) {
+    const audioBuffer = await this.helpers.getBinaryDataBuffer(i, &#39;file&#39;);
+    additions.push({ path: `projects/news/${folderName}/audio_${i}.mp3`, contents: ... });
+  }
+}
+</code></pre>
+<p>It&#39;s <strong>purely positional</strong> — no sorting, no filtering. So if the items arriving are <code>[song, seg1…segN, image]</code>:</p>
+<ul>
+<li><code>playlist[0]</code> = the song → <code>file: &#39;audio_0.mp3&#39;</code>, and the loop writes <code>audio_0.mp3</code> from <code>items[0].binary.file</code>.</li>
+<li>Th …[excerpt truncated]</li>
+</ul>
+</li>
+<li><p><code>2026-06-22T12:39:51.300Z</code> · bubble <code>009068ca-dda9-4389-8a56-e0348779beea</code> · type <code>2</code></p>
+<p>Only <strong>docker-n8n</strong> is outstanding (the other three show no &quot;ahead&quot; marker — already pushed and current). n8n is on branch <code>master</code> with no remote. I&#39;ll create the private repo and push, matching your <code>git@github.com:brookjordan/docker-&lt;stack&gt;.git</code> convention.</p>
+</li>
+<li><p><code>2026-06-25T07:19:36.523Z</code> · bubble <code>00985e98-85f6-4735-96e7-9e32e5f41cc2</code> · type <code>2</code></p>
+<p>Everything&#39;s in place for your from-scratch run. Summary of what&#39;s now live in <strong>PodCast Builder - for cursor</strong> (49 nodes):</p>
+<p><strong>This batch (just applied):</strong></p>
+<ul>
+<li><strong><code>Trim intro silence</code></strong> SSH node inserted <code>Generate intro music → Trim intro silence → Collate intro song</code> — runs ffmpeg to strip ACE&#39;s trailing dead air (proven 12s→7.6s). So the bumper is exactly as long as the music.</li>
+<li><strong><code>Delete MP3s via SSH</code></strong> now also removes <code>intro_&lt;execId&gt;_00001_.mp3</code> (with <code>-f</code>) — no more accumulating intro files.</li>
+<li><strong>Meatier song spec</strong> — <code>Generate song spec</code> now returns <code>{ tags, bpm, key, timesignature }</code> (rich descriptors + mood-matched), <code>Parse song spec</code> validates each (key against ACE&#39;s allowed list, time-sig ∈ {4,3,6}, bpm clamped), and <code>Generate intro music</code> now feeds <code>keyscale ← {{ $json.key }}</code> and <code>timesignature ← {{ $json.timesignature }}</code> (no longer hardcoded <code>C major</code>/<code>4</code>).</li>
+</ul>
+<p><strong>Earlier this session:</strong> single-source <code>llmHost</code> (4-way local/tail × mb/mini), <code>generate_audio_codes: true</code> (audible), and the role-based <code>Build podcast webpage</code> (intro→<code>intro.mp3</code> first, segments keep <code>audio_0…N</code>, cover excluded → no phantom <code>audio_21</code>).</p>
+<p><strong>Your turn — the clean run:</strong></p>
+<ol>
+<li><strong>Unpin</strong> the badged nodes …[excerpt truncated]</li>
+</ol>
+</li>
+<li><p><code>2026-06-22T15:27:26.577Z</code> · bubble <code>0098a0c6-3d8f-4c54-9487-809b557db98a</code> · type <code>2</code></p>
+<p>Reverted — the main <code>Generate script</code> call is back to its lean single-key <code>script</code> output (4 fields/line), and labels currently fall back to the <strong>full article title</strong> (so: reliable, but potentially long).</p>
+<p>Now, how to get <em>short</em> labels without re-introducing the risk you flagged. The key insight from your point: the big script call is exactly where JSON breaks (huge output) — so the safe way to still get LLM quips is to <strong>isolate</strong> them in their own tiny call where a simple <code>{id,label}</code> schema is easy to get right, and where a failure can&#39;t touch the script. Since n8n runs serially, there&#39;s no race, and we keep the title as a fallback if that mini-call ever flops.</p>
+<p>Your call on which way to go:</p>
+</li>
+<li><p><code>2026-06-22T12:36:10.863Z</code> · bubble <code>009986fe-eeb3-4f2f-bbc2-2b6e0ce3219e</code> · type <code>2</code></p>
+<p>Reconnected as <code>user-n8n</code> — and this immediately answers your IP question. Here&#39;s what the three nodes actually contain:</p>
+<ul>
+<li><strong><code>Generate script</code></strong> (your fixed one) — whole-IP ternary: <code>tail → http://100.98.203.89</code>, <code>local → http://192.168.0.25</code>, else <code>→ http://192.168.0.198</code>.</li>
+<li><strong><code>Generate song spec</code></strong> (you&#39;ve since edited it) — a cleaner <strong>lookup map</strong>: <code>{ local: &#39;192.168.0.25&#39;, tail: &#39;100.109.206.17&#39;, macMini: &#39;192.168.0.198&#39; }</code>.</li>
+<li><strong><code>Generate image prompt</code></strong> — still on the <strong>old broken octet form</strong> (<code>192.168.0.{25:198}</code>), so on <code>tail</code> it wrongly hits <code>192.168.0.198</code>.</li>
+</ul>
+<p>So you fixed two of three, in two <em>different</em> styles — and there&#39;s a real discrepancy I shouldn&#39;t guess past:</p>
+<p>⚠️ <strong>The <code>tail</code> IP doesn&#39;t match between nodes:</strong> <code>Generate script</code> uses <strong><code>100.98.203.89</code></strong>, but <code>Generate song spec</code> uses <strong><code>100.109.206.17</code></strong> (which is the Ollama host from your karakeep <code>.env</code>). Only one can be the real Ollama-over-Tailscale address.</p>
+</li>
+<li><p><code>2026-06-24T15:56:30.297Z</code> · bubble <code>009b1bed-5fcd-44c0-848a-78e315ea63ad</code> · type <code>2</code></p>
+<p>Found the real culprit — and it&#39;s a known Apple-Silicon limitation, not our wiring:</p>
+<pre><code>KSampler: Trying to convert Float8_e4m3fn to the MPS backend
+but it does not have support for that dtype.
+</code></pre>
+<p>The <code>fp8_scaled</code> <strong>diffusion model can&#39;t run on MPS at all</strong> — Apple&#39;s Metal backend has no fp8 dtype support, so it errors the moment sampling touches those weights. (The fp8 <em>text encoder</em> loaded fine — it&#39;s just the diffusion transformer.) So <code>EmptyLatentImage</code> was a red herring; the probe-guard just saved us 20 wasted renders.</p>
+<p>The fix is a non-fp8 diffusion model. Let me quickly check whether a Mac-friendly <strong>GGUF</strong> exists (lighter, like your <code>qwen2512</code>) before falling back to the big <strong>bf16</strong> (~25 GB).</p>
+</li>
+<li><p><code>2026-06-24T15:56:30.597Z</code> · bubble <code>00a105c4-9702-4981-b72e-2c6594c6e323</code> · type <code>2</code></p>
+<p>Done — ripped all the clever stuff out. Dragging is now dead simple:</p>
+<pre><code class="language-1262:1270:the">        // Dead simple: the dragged column&#39;s width = its start width + however
+        // many pixels the mouse has moved. syncLayoutFromAnchor reconciles the
+        // shared height + the other columns and applies it live on every move.
+        const onPointerMove = (ev) =&gt; {
+          if (!dragging) return;
+          const width = Math.max(SLIDE_MIN_WIDTH_PX, startWidth + (ev.clientX - startX));
+          syncLayoutFromAnchor(index, width);
+        };
+</code></pre>
+<p>On pointer-down it records the start X and the column&#39;s start width; every move sets <code>width = startWidth + (mouseX − startX)</code> and applies it live. <strong>1px of mouse = 1px of width.</strong></p>
+<p>Removed entirely: the transform preview, the FLIP settle (<code>animateLayoutSettle</code>), the 100 ms throttle + interval commit, <code>liveResizeDragged</code>/<code>commitLiveLayout</code>/<code>clearResizeDragOverrides</code>/<code>resizePreviewError</code>, the <code>RESIZE_COMMIT_MS</code> constant, and all the <code>layout-live</code> / <code>flip-play</code> / <code>layout-settling</code> / <code>resize-preview</code> CSS. <code>body.resizing</code> is back to just cursor + no-select + overflow. No dangling …[excerpt truncated]</p>
+</li>
+<li><p><code>2026-06-25T11:41:45.813Z</code> · bubble <code>00a257f4-bb4a-4b7e-963e-0a4f0e92d985</code> · type <code>1</code></p>
+<p>KEEP GOING! I HAVE ALL NIGHT! If I’m messaging you, you have time to find more ideas. Make more workflows, then give me 3, 6, 9, 12 (or reasonable equivilents) steps of each! LET’S GOOOOO!</p>
+</li>
+<li><p><code>2026-06-24T19:24:50.150Z</code> · bubble <code>00a91430-bcf7-4129-9a20-4867ec0f59eb</code> · type <code>2</code></p>
+<p>Love it — good to hear ACE&#39;s been landing the words better than I&#39;d expect.</p>
+<p>Go for it. When this run finishes, ping me and I&#39;ll pull execution details to check the good stuff:</p>
+<ul>
+<li>the <strong><code>Parse song spec</code></strong> output — the actual <strong>lyrics</strong> (the witty 2–3 line teaser) + the <strong>style/key/bpm</strong> the LLM chose,</li>
+<li>that <strong><code>Trim intro silence</code></strong> ran (so no tail),</li>
+<li><code>intro.mp3</code> committed first + a real (non-empty) commit → site updates.</li>
+</ul>
+<p>That&#39;ll tell us how well the &quot;summary ending on the weird item&quot; concept translates once sung — and from there it&#39;s easy dials (line count, bpm, enunciation tags) if you want to tweak.</p>
+<p>I&#39;ll leave the <code>SESSION_TIMEOUT_MINUTES=120</code> MCP fix on the back burner — just say the word whenever you want it added to the <code>docker-n8n</code> repo so the connection stops dropping mid-session. Good luck — excited to hear the first themed sung intro. �ьmusic</p>
+</li>
+</ul>
+<h3 id="2-map-image-generation-project">2. Map image-generation project</h3>
+<ul>
+<li>Composer ID: <code>37399c3e-c050-478f-bf97-6f9ba4b317f0</code></li>
+<li>Created at (UTC): <code>2026-08-08T09:53:21.433000+00:00</code></li>
+<li>Last updated at (UTC): <code>[not recorded]</code></li>
+<li>Messages with text retained: <code>2</code></li>
+<li>Workflow IDs: <code>descriptions</code></li>
+<li>Paths: <code>the local vault/ComfyUI-Shared/output</code>, <code>the local vault/git/brookjordan/localimagegen</code>, <code>the local vault/git/brookjordan/localimagegen/CLAUDE.md</code>, <code>the local vault/git/brookjordan/localimagegen/README.md</code>, <code>the local vault/git/brookjordan/localimagegen/config/gallery.ts</code>, <code>the local vault/git/brookjordan/localimagegen/config/workflows.ts</code>, <code>the local vault/git/brookjordan/localimagegen/history/2026-06-23-1735-the-model-menagerie.md</code>, <code>the local vault/git/brookjordan/localimagegen/history/2026-06-24-1723-lesson-krea2-on-apple-silicon.md</code>, <code>the local vault/git/brookjordan/localimagegen/history/2026-06-26-0822-the-overnight-shift.md</code>, <code>the local vault/git/brookjordan/localimagegen/history/2026-07-06-1400-torch-mps-signal.md</code>, <code>the local vault/git/brookjordan/localimagegen/history/2026-07-06-1600-comfyui-partial-offload.md</code>, <code>the local vault/git/brookjordan/localimagegen/history/2026-07-06-1700-actual-memory-numbers.md</code>, <code>the local vault/git/brookjordan/localimagegen/workflows/</code></li>
+<li>Links: <code>http://127.0.0.1:8188</code></li>
+</ul>
+<h4 id="message-excerpts-1">Message excerpts</h4>
+<ul>
+<li><p><code>2026-08-08T09:53:38.824Z</code> · bubble <code>69fc1a2b-9c2e-47f6-99d8-35743cbbb292</code> · type <code>2</code></p>
+<p>Inspected <code>the local vault/git/brookjordan/localimagegen</code> read-only.</p>
+<ul>
+<li><p>Repository purpose and layout: <code>the local vault/git/brookjordan/localimagegen/README.md</code></p>
+<ul>
+<li>Node/TypeScript tool orchestrating a local ComfyUI instance.</li>
+<li>Renders a <code>model × scene × step × seed</code> matrix.</li>
+<li>Stores committed lossless-WebP masters in <code>masters/</code>.</li>
+<li>Generates static/flexible galleries under ignored <code>build/</code>.</li>
+<li>Main implementation is in <code>src/</code>; model workflows are in <code>workflows/</code>; configuration is in <code>config/</code>; engineering history is in <code>history/</code>.</li>
+</ul>
+</li>
+<li><p>Runtime requirements and workflow:</p>
+<ul>
+<li>Node ≥22.18, Yarn, reachable ComfyUI at <code>http://127.0.0.1:8188</code>.</li>
+<li>ComfyUI output is linked into <code>.comfy-output</code>; configured source path is <code>the local vault/ComfyUI-Shared/output</code>.</li>
+<li><code>run</code> processes one model at a time, frees memory between models, prioritizes fastest models, and can resume safely.</li>
+<li><code>run --watch</code> supports overnight/autonomous rendering; the docs recommend <code>caffeinate -s yarn watch</code>.</li>
+<li>Workflow graphs are committed API-format JSON files in <code>the local vault/git/brookjordan/localimagegen/workflows/</code>, catalogued by `the local vault/git/brookjordan/localimagegen/conf …[excerpt truncated]</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><code>2026-08-08T09:53:21.451Z</code> · bubble <code>7eb928fa-29db-43fd-a30a-943ae928e67f</code> · type <code>1</code></p>
+<p>Inspect <code>the local vault/git/brookjordan/localimagegen</code> read-only (do not edit files or run mutating commands). Thoroughness: medium. Identify repository structure, existing documentation, intended image-generation runtimes/workflows, installed or referenced models, and any documented Mac mini hardware/specs. Return concise findings with exact paths and key details useful for planning durable documentation that predicts what workloads/models will fit on the Mac mini.</p>
+</li>
+</ul>
+<h3 id="3-assess-localimagegen-progress">3. Assess localimagegen progress</h3>
+<ul>
+<li>Composer ID: <code>2bf6618c-020b-44a6-b707-4443e52dbcbc</code></li>
+<li>Created at (UTC): <code>2026-08-08T09:55:45.763000+00:00</code></li>
+<li>Last updated at (UTC): <code>[not recorded]</code></li>
+<li>Messages with text retained: <code>2</code></li>
+<li>Workflow IDs: <code>migrated</code>, <code>migration</code></li>
+<li>Paths: <code>the local vault/git/brookjordan/localimagegen</code>, <code>the local vault/git/brookjordan/localimagegen/.claude/plans/image_notes_and_routing_a5640991.plan.md#L5-L27</code>, <code>the local vault/git/brookjordan/localimagegen/.claude/plans/localimagegen_next_steps_65795151.plan.md#L4-L16</code>, <code>the local vault/git/brookjordan/localimagegen/.claude/plans/localimagegen_next_steps_65795151.plan.md#L67-L72</code>, <code>the local vault/git/brookjordan/localimagegen/.claude/plans/overshoot_ceiling_toggle_7b82f37d.plan.md#L5-L27</code>, <code>the local vault/git/brookjordan/localimagegen/.claude/plans/resilience_and_notifications_03ba729e.plan.md#L4-L25</code>, <code>the local vault/git/brookjordan/localimagegen/.claude/plans/timestamp_everything_72de9740.plan.md#L5-L19</code>, <code>the local vault/git/brookjordan/localimagegen/README.md#L3-L16</code>, <code>the local vault/git/brookjordan/localimagegen/README.md#L44-L58</code>, <code>the local vault/git/brookjordan/localimagegen/history/2026-07-07-0046-incident-a-build-erased-the-deprecation-flag.md#L31-L59</code>, <code>the local vault/git/brookjordan/localimagegen/history/2026-07-07-pony-native-recipe.md#L40-L71</code></li>
+</ul>
+<h4 id="message-excerpts-2">Message excerpts</h4>
+<ul>
+<li><p><code>2026-08-08T09:55:45.778Z</code> · bubble <code>58ea4f39-df7a-4662-8701-1438fe4a3d60</code> · type <code>1</code></p>
+<p>Inspect the local repository at the local vault/git/brookjordan/localimagegen to determine current project progress from README files, blog posts, documentation, git history/status, and any planning artifacts. Do not edit files. Return: (1) concise evidence-backed summary of completed work, current work, and likely next steps; (2) exact source file paths and relevant section/line references; (3) suggested concise tracker updates and work-item titles/statuses. Focus only on information verified from repository sources.</p>
+</li>
+<li><p><code>2026-08-08T09:56:11.457Z</code> · bubble <code>61f9dd46-370e-4768-8838-4aa7b6a64afe</code> · type <code>2</code></p>
+<p>Repository: <code>the local vault/git/brookjordan/localimagegen</code></p>
+<h2 id="1-progress-summary">1. Progress summary</h2>
+<ul>
+<li><strong>Completed:</strong> Core config-driven ComfyUI renderer, validation/quarantine, compression, static/flexible gallery, devlog build, deployment, autopilot/watch mode, dynamic step ladders, resilience/notifications, timestamps, and image-notes phase 1.</li>
+<li><strong>Recent completed work:</strong> Pony workflow migrated from Lightning LoRA to native CFG-7 rendering; Illustrious CFG updated; prompt-hash preservation and compression pruning fixed; gallery eager image preloading removed.</li>
+<li><strong>Current state:</strong> Git working tree is clean on <code>master</code>, tracking <code>origin/master</code>. HEAD is <code>3f18ae0</code>, dated 2026-07-09.</li>
+<li><strong>Likely next work:</strong> Image-notes phase 2 model profiles, then phase 3 model recommendation/router. Other documented deferred triggers include Yarn workspaces, EJS templating, and Git LFS when masters reach roughly 3–4 GB.</li>
+</ul>
+<h2 id="2-evidence-and-references">2. Evidence and references</h2>
+<ul>
+<li>Project purpose and architecture: [<code>README.md:3-16</code>](the local vault/git/brookjordan/localimagegen/README.md#L3-L16)</li>
+<li>Available CLI and build/deploy workflow: [<code>README.md:44-58</code>](the local vault/git/brookjordan/localimagegen/README.md#L44-L58)</li>
+<li>Comple …[excerpt truncated]</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-localimagegen-project-tracking">4. Localimagegen project tracking</h3>
+<ul>
+<li>Composer ID: <code>1346a351-f3a6-48d2-9cc4-95d5af141dc3</code></li>
+<li>Created at (UTC): <code>2026-08-08T10:06:34.567000+00:00</code></li>
+<li>Last updated at (UTC): <code>2026-08-08T10:23:01.961000+00:00</code></li>
+<li>Messages with text retained: <code>7</code></li>
+<li>Workflow IDs: <code>definitions</code>, <code>integration</code></li>
+<li>Paths: <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/agent-transcripts/1346a351-f3a6-48d2-9cc4-95d5af141dc3/subagents/b6d704fa-e6d0-43a0-82a2-98adf2004e6f.jsonl</code>, <code>the local vault/git/brookjordan/localimagegen</code>, <code>the local vault/git/brookjordan/localimagegen/docs/</code></li>
+</ul>
+<h4 id="message-excerpts-3">Message excerpts</h4>
+<ul>
+<li><p><code>2026-08-08T10:07:10.228Z</code> · bubble <code>0133aa0e-f706-4a22-93cc-de37922197e6</code> · type <code>1</code></p>
+<p>Check readmes, blogs, etc, from @the local vault/git/brookjordan/localimagegen and help back-fill tickets, status, etc, for the localimagegen project in /obsidian-project-tracking</p>
+</li>
+<li><p><code>2026-08-08T10:11:37.130Z</code> · bubble <code>03940a7f-8b7f-4f27-9657-464d8318200f</code> · type <code>1</code></p>
+<p><timestamp>Saturday, Aug 8, 2026, 6:11 PM (UTC+8)</timestamp></p>
+<system_notification>
+The following task has finished. If you were already aware, ignore this notification and do not restate prior responses.
+
+<task>
+kind: subagent
+status: success
+task_id: b6d704fa-e6d0-43a0-82a2-98adf2004e6f
+title: Inventory localimagegen evidence
+tool_call_id: call_uE2zkBgOZJVeTRLdWRs25STL
+fc_0dfe9016922c5ca4016a76ffd8ae2c81a18854137dbab6afb5
+agent_id: b6d704fa-e6d0-43a0-82a2-98adf2004e6f
+detail: <user_visible_high_level_summary>
+Repository research completed: localimagegen is a shipped, config-driven ComfyUI gallery builder with dynamic ladders, resilient rendering, notes, notifications, workflow tooling, and a published devlog. Remaining roadmap is concentrated in image-note aggregation/router work, deferred scaling decisions, and the separately unpopulated M1 capability experiment.
+</user_visible_high_level_summary>
+<response>
+## 1. Purpose and destination
+
+<p><code>the local vault/git/brookjordan/localimagegen</code> is a self-contained, config-driven Node/TypeScript tool for rendering a <code>model × scene × step × seed</code> matrix through local ComfyUI, validating and compressing masters, and producing fixed/flex …[excerpt truncated]</p>
+</li>
+<li><p><code>2026-08-08T10:11:30.826Z</code> · bubble <code>05ee1fcf-3db6-42c5-af4d-21aa718f3426</code> · type <code>2</code></p>
+<p>Back-filled the localimagegen tracker:</p>
+<ul>
+<li>Added 7 completed milestone tickets: LIG-010, LIG-011, LIG-012, LIG-013, LIG-014, LIG-015, and LIG-016.</li>
+<li>Added actionable tickets LIG-009: curate an annotation corpus: <code>2026-08-08T10:07:20.860000+00:00</code></li>
+</ul>
+</li>
+<li><p>Last updated at (UTC): <code>[not recorded]</code></p>
+</li>
+<li><p>Messages with text retained: <code>2</code></p>
+</li>
+<li><p>Workflow IDs: <code>definitions</code>, <code>integration</code></p>
+</li>
+<li><p>Paths: <code>the local vault/git/brookjordan/localimagegen</code>, <code>the local vault/git/brookjordan/localimagegen.</code>, <code>the local vault/git/brookjordan/localimagegen/docs/</code></p>
+</li>
+</ul>
+<h4 id="message-excerpts-4">Message excerpts</h4>
+<ul>
+<li><p><code>2026-08-08T10:07:41.944Z</code> · bubble <code>8cfc00ef-76f0-431a-b895-d580bd140a3b</code> · type <code>2</code></p>
+<h2 id="1-purpose-and-destination">1. Purpose and destination</h2>
+<p><code>the local vault/git/brookjordan/localimagegen</code> is a self-contained, config-driven Node/TypeScript tool for rendering a <code>model × scene × step × seed</code> matrix through local ComfyUI, validating and compressing masters, and producing fixed/flexible galleries plus a devlog.</p>
+<ul>
+<li>Purpose: <code>README.md:3-16</code></li>
+<li>Published destination: <code>README.md:113-117</code></li>
+<li>Current architecture/layout: <code>CLAUDE.md:92-112</code></li>
+<li>Package metadata and CLI: <code>package.json:2-57</code></li>
+<li>Current branch/status: <code>master</code>, aligned with <code>origin/master</code>; latest commit <code>3f18ae0</code> (2026-07-09).</li>
+<li>Working tree discrepancy: untracked <code>the local vault/git/brookjordan/localimagegen/docs/</code> containing the M1 Mac mini documents.</li>
+</ul>
+<h2 id="2-shippedcompleted-capabilities">2. Shipped/completed capabilities</h2>
+<h3 id="core-gallery-engine">Core gallery engine</h3>
+<ul>
+<li>Config-driven models, scenes, prompts, seeds, paths, and workflow definitions.<ul>
+<li><code>README.md:18-29</code></li>
+<li><code>CLAUDE.md:92-111</code></li>
+</ul>
+</li>
+<li>Native Node TypeScript execution with Node ≥22.18; no compile step.<ul>
+<li><code>README.md:31-42</code></li>
+<li><code>package.json:56-80</code></li>
+</ul>
+</li>
+<li>ComfyUI graph generation, render queueing, stamping, validation, and master storage.<ul>
+<li><code>CLAUDE.md:143-152</code></li>
+<li>Implementations: <code>src/graphs.ts</code>, <code>src/comfy.ts</code>, `src/reconcile …[excerpt truncated]</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><code>2026-08-08T10:07:20.876Z</code> · bubble <code>ffc0c05f-d3a9-4a94-9175-9d4b3a61863d</code> · type <code>1</code></p>
+<p>Explore the local repository at the local vault/git/brookjordan/localimagegen. Thoroughness: very thorough. This is read-only research to back-fill an Obsidian project tracker. Inspect README files, docs, blog posts, changelogs, TODOs, plans, package metadata, git history/status if useful, and implementation/tests only as needed to verify claimed progress. Return a concise structured report containing: (1) repository purpose and destination, (2) shipped/completed capabilities with exact evidence file paths and relevant line ranges or commit hashes, (3) unfinished/explicitly planned work, (4) decisions and out-of-scope boundaries, (5) likely ticket breakdown and dependencies, (6) discrepancies/stale claims. Do not edit anything.</p>
+</li>
+</ul>
+<h3 id="6-n8n-workflow-failure-analysis">6. n8n workflow failure analysis</h3>
+<ul>
+<li>Composer ID: <code>2444f0bd-dcd5-4482-8d16-f24ce7520e6b</code></li>
+<li>Created at (UTC): <code>2026-08-12T00:12:43.394000+00:00</code></li>
+<li>Last updated at (UTC): <code>2026-08-12T00:17:58.653000+00:00</code></li>
+<li>Messages with text retained: <code>10</code></li>
+</ul>
+<h4 id="message-excerpts-5">Message excerpts</h4>
+<ul>
+<li><p><code>2026-08-12T00:14:31.475Z</code> · bubble <code>0ad134b4-b77a-437b-9e5e-c742215f4570</code> · type <code>2</code></p>
+<p>It failed on purpose at <strong>Validate escalated plan</strong> — not from an n8n crash.</p>
+<p><strong>What happened:</strong> In <code>Plan verified animation endpoints</code> (exec <code>#1948</code>), Gemma’s plan failed the gates twice (<code>Baseline passes</code> and <code>Repair passes</code> both empty), so it escalated to <strong>Qwen 27B</strong>. Qwen’s plan still had two <code>NON_STATIC_STATE</code> violations, and that node <strong>throws</strong> when anything is left (“fail closed” — no more retries).</p>
+<p><strong>Why those two failed:</strong> Each track’s <code>frameStates</code> must be a static still description. The gate rejects temporal/process wording (<code>begins</code>, <code>pulses</code>, <code>moves</code>, <code>continues</code>, …). Qwen still wrote:</p>
+<ol>
+<li><code>foreground_resonance_track</code> — <em>“At frame 15, subtle jitter <strong>begins</strong> on the lettuce cradle.”</em></li>
+<li><code>screen_pulse_track</code> — <em>“At frame 120, screen completes multiple <strong>pulse</strong> cycles.”</em></li>
+</ol>
+<p><strong>Bottom line:</strong> The motion plan never cleared the static-state contract after three attempts (Gemma → Gemma repair → Qwen). Fix is to rewrite those states as pose/appearance at that still (e.g. cradle offset by N px; screen at brightness X), not as time-evolving actions.</p>
+</li>
+<li><p><code>2026-08-12T00:14:18.497Z</code> · bubble <code>12f6e257-b1e7-43f9-bf9d-f47be1c2215d</code> · type <code>2</code></p>
+<p>The failure is a deliberate fail-closed from your planner after Qwen escalation retries — I&#39;ll pull the workflow and that validate node to pinpoint what tripped <code>NON_STATIC_STATE</code>.</p>
+</li>
+<li><p><code>2026-08-12T00:14:13.849Z</code> · bubble <code>4d2a315d-22e8-4a23-8613-4f7bd6dee2d0</code> · type <code>1</code></p>
+<p>Why did my n8n workflow fail?</p>
+<p>Error in 11m 29.118s | 2MB | ID#1948 | Autosave</p>
+<p>Validate escalated plan</p>
+<p>Output
+1 item, 1 sub-execution
+ View sub-execution
+&quot;Escalation retry limit reached; fail closed.&quot;}] [line 1]
+&quot;screen_pulse_track&quot;,&quot;repair&quot;
+Error details</p>
+<p> Other info
+n8n version</p>
+<p>2.33.7 (Self Hosted)</p>
+<p>Stack trace</p>
+<p>Error: Planner failed closed after Qwen escalation: [{&quot;severity&quot;:&quot;blocking&quot;,&quot;code&quot;:&quot;NON_STATIC_STATE&quot;,&quot;message&quot;:&quot;State is abstract or temporal: At frame 15, subtle jitter begins on the lettuce cradle.&quot;,&quot;frame&quot;:1,&quot;track&quot;:&quot;foreground_resonance_track&quot;,&quot;repair&quot;:&quot;Escalation retry limit reached; fail closed.&quot;},{&quot;severity&quot;:&quot;blocking&quot;,&quot;code&quot;:&quot;NON_STATIC_STATE&quot;,&quot;message&quot;:&quot;State is abstract or temporal: At frame 120, screen completes multiple pulse cycles.&quot;,&quot;frame&quot;:2,&quot;track&quot;:&quot;screen_pulse_track&quot;,&quot;repair&quot;:&quot;Escalation retry limit reached; fail closed.&quot;}] at VmCodeWrapper (evalmachine.<anonymous>:1:3668) at evalmachine.<anonymous>:2:2 at Script.runInContext (node:vm:149:12) at runInContext (node:vm:301:6) at result (/usr/local/lib/node_modules/n8n/node_modules/.pnpm/@n8n+task-runner@file+packages+@n8n+task-runner_@<a href="mailto:&#x6f;&#112;&#x65;&#x6e;&#x74;&#x65;&#108;&#x65;&#109;&#x65;&#116;&#x72;&#x79;&#x2b;&#97;&#x70;&#x69;&#x40;&#49;&#x2e;&#x39;">&#x6f;&#112;&#x65;&#x6e;&#x74;&#x65;&#108;&#x65;&#109;&#x65;&#116;&#x72;&#x79;&#x2b;&#97;&#x70;&#x69;&#x40;&#49;&#x2e;&#x39;</a>.0_@opentelemetry_f4c4f0962cb44afa934cbd57e3eb …[excerpt truncated]</p>
+</li>
+<li><p><code>2026-08-12T00:14:22.883Z</code> · bubble <code>afef2f9e-6b1a-4399-9624-e775f20fbffb</code> · type <code>2</code></p>
+<p>I have the execution path — pulling the validator logic and Qwen’s review output next so we can see exactly which plan fields failed the static-state gate.</p>
+</li>
+<li><p><code>2026-08-12T00:18:45.986Z</code> · bubble <code>b73ccb4f-e91a-4e57-a154-00c3624df741</code> · type <code>2</code></p>
+<p>Done. In <strong>Plan verified animation endpoints</strong>, a fourth path now runs when all three gate passes fail:</p>
+<ol>
+<li><strong>Validate escalated plan</strong> no longer throws — it sets <code>gate.pass</code> like the other assessors.</li>
+<li><strong>Escalation passes</strong> → compile if clean.</li>
+<li>Else <strong>Pick most static plan</strong> ranks baseline / repair / Qwen by:<ul>
+<li>compileable structure first</li>
+<li>fewest <code>NON_STATIC_STATE</code> + <code>ABSTRACT_DELTA</code></li>
+<li>then fewest blocking findings</li>
+<li>then latest attempt on ties<br>…and compiles the winner as a judgment call (<code>approval.gate: most-static-judgment</code>).</li>
+</ul>
+</li>
+</ol>
+<p>It still fails closed only if none of the three plans are structurally compileable.</p>
+</li>
+<li><p><code>2026-08-12T00:18:03.085Z</code> · bubble <code>d7eba49b-36fd-42ba-88c8-1d6936a3445b</code> · type <code>2</code></p>
+<p>I&#39;ll inspect the planner workflow&#39;s three gate stages and how plans are stored, then wire a fourth “most static” judgment when all three fail.</p>
+</li>
+<li><p><code>2026-08-12T00:18:27.303Z</code> · bubble <code>db114779-fa72-48d4-867f-cfb06041d9f2</code> · type <code>2</code></p>
+<p>Wiring a fourth path: if escalation still fails, score the three attempts and compile the most static one instead of failing closed.</p>
+</li>
+<li><p><code>2026-08-12T00:16:43.121Z</code> · bubble <code>f4781007-ac90-4dda-be3e-eca89e804f14</code> · type <code>1</code></p>
+<p>What does NON_STATIC_STATE mean?</p>
+</li>
+</ul>
+<h3 id="7-podcast-builder-workflow-review">7. Podcast builder workflow review</h3>
+<ul>
+<li>Composer ID: <code>a73df9e0-3990-4598-9145-e44ecf6a7ada</code></li>
+<li>Created at (UTC): <code>2026-08-14T11:07:47.480000+00:00</code></li>
+<li>Last updated at (UTC): <code>2026-08-17T04:42:57.717000+00:00</code></li>
+<li>Messages with text retained: <code>615</code></li>
+<li>Execution IDs: <code>2013</code>, <code>2089</code>, <code>2099</code>, <code>2102</code>, <code>2109</code>, <code>2110</code>, <code>2111</code>, <code>2112</code>, <code>2115</code>, <code>2116</code>, <code>2118</code>, <code>2120</code>, <code>2124</code>, <code>2125</code>, <code>2128</code></li>
+<li>Workflow IDs: <code>-execute</code>, <code>-ordering</code>, <code>automatically</code>, <code>capability</code>, <code>definition</code>, <code>deliberately</code>, <code>directly</code>, <code>execution</code>, <code>failures</code>, <code>immediately</code>, <code>includes</code>, <code>publisher</code>, <code>switched</code>, <code>validates</code>, <code>validation</code>, <code>versions</code></li>
+<li>Paths: <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/terminals/960490.txt</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/terminals/960492.txt</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/terminals/960495.txt</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/terminals/960497.txt</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/terminals/960498.txt</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/terminals/960501.txt</code>, <code>the local vault/.local/bin/comfy-profile</code>, <code>the local vault/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/multiprocessing/resource_tracker.py:279:</code>, <code>the local vault/ComfyUI-Shared/.venv/bin/python</code>, <code>the local vault/ComfyUI-Shared/output/podcast_transition1_2099_00001.mp4</code>, <code>the local vault/ComfyUI-Shared/output/podcast_transition1_2099_00001.mp4\</code>, <code>the local vault/ComfyUI-Shared/user/comfyui-normal.log</code>, <code>the local vault/git/brookjordan/docker-stacks/.tmp-storyframe-test/gallery.html</code>, <code>the local vault/git/brookjordan/docker-stacks/.tmp-storyframe-test/model-roster-editor.html</code>, <code>the local vault/git/brookjordan/localimagegen</code>, <code>/etc/nginx/conf.d/default.conf</code>, <code>/home/node/.n8n/nodes/node_modules/n8n-nodes-comfyui/nodes/ComfyUI/Comfyui.node.ts:192:26</code>, <code>/home/node/.n8n/nodes/node_modules/n8n-nodes-comfyui/nodes/ComfyUI/Comfyui.node.ts:356:10</code>, <code>/opt/homebrew/bin</code>, <code>/opt/homebrew/bin/ffmpeg</code>, <code>/tmp/brook-news-assets/projects/news/v2026.33.7-15.41/index.html</code>, <code>/volume1/docker/assets</code>, <code>/volume1/docker/assets/</code>, <code>/volume1/docker/n8n/</code>, <code>/volume1/docker/podcast-assets</code>, <code>/volume2/assets</code>, <code>/volume2/assets/podcast</code>, <code>/volume2/assets/podcast/.n8n-write-test</code>, <code>/volume2/assets/podcast/.n8n-write-test/ok</code>, <code>/volume2/assets/podcast/&lt;episode-id&gt;/</code>, <code>/volume2/assets/podcast/&lt;episode-id&gt;/…</code>, <code>/volume2/assets/podcast/test/</code>, <code>/volume2/assets/podcast/v2026.34.1-12.20</code>, <code>/volume2/assets/podcast/v&lt;episode-id&gt;/</code>, <code>/volume2/assets/podcast^C</code>, <code>/volume2/podcast-assets/&lt;episode-id&gt;/</code>, <code>/volume2/podcast-assets/v2026.34.1-10.04/audio_0.mp3</code></li>
+<li>Links: <code>http://100.98.203.89:8188/api/view?filename=storyframe_2013_00001_.png&amp;type=output</code>, <code>http://100.98.203.89:8188/queue</code>, <code>http://100.98.203.89:8189</code>, <code>http://127.0.0.1:8189/system_stats</code>, <code>http://192.168.0</code>, <code>http://localhost:8765/gallery.html</code>, <code>http://localhost:8765/gallery.html](http://localhost:8765/gallery.html</code>, <code>https://assets.brook.dev/podcasts/</code>, <code>https://assets.brook.dev/podcasts/test/</code>, <code>https://assets.brook.dev/podcasts/test/podcast_2116_13_00001.mp3</code>, <code>https://assets.brook.dev/podcasts/v2026.34.1-10.04/audio_0.mp3</code>, <code>https://assets.brook.dev/podcasts/v2026.34.1-12.20/...</code>, <code>https://brook.dev</code>, <code>https://brook.dev/projects/news/v2026.33.5-18.59/cover.png</code>, <code>https://brook.dev/projects/news/v2026.33.7-15.41/#section=1</code>, <code>https://brook.dev/projects/news/v2026.33.7-20.18/</code>, <code>https://brook.dev/projects/news/v2026.34.1-10.04/</code>, <code>https://openrouter.ai/api</code></li>
+</ul>
+<h4 id="message-excerpts-6">Message excerpts</h4>
+<ul>
+<li><p><code>2026-08-17T03:06:18.472Z</code> · bubble <code>00a40c97-af55-4893-a03c-45096b7a7910</code> · type <code>2</code></p>
+<p>Yes. With that existing setup, the NAS is a viable public media origin.</p>
+<p>I’d put a deliberately narrow, read-only media server behind Nginx Proxy Manager, such as <code>assets.brook.dev</code>, rather than exposing a general NAS share. Store each episode at a stable path like:</p>
+<p><code>/volume2/podcast-assets/v2026.34.1-10.04/audio_0.mp3</code></p>
+<p>The published page would reference:</p>
+<p><code>https://assets.brook.dev/podcasts/v2026.34.1-10.04/audio_0.mp3</code></p>
+<p>That setup needs byte-range support for seeking, correct MP3/MP4 MIME types, immutable cache headers, and Cloudflare caching. Tailscale remains for administration; public listeners use Cloudflare and the reverse proxy.</p>
+<p>A small nginx container with the asset directory mounted read-only is cleaner and safer than making an existing NAS share directly public.</p>
+</li>
+<li><p><code>2026-08-16T09:25:24.280Z</code> · bubble <code>00d162b7-f732-4aee-b21e-8b5aaefbd7e6</code> · type <code>2</code></p>
+<p>Don’t pause/resume it for MiniMax. A resumed n8n execution uses the workflow version captured when that execution started, so it would retain the ACE-Step graph.</p>
+<p>The latest execution visible to me is <code>2106</code>, and it already completed successfully at 15:42—there is no active or paused run to resume.</p>
+<p>To use MiniMax, start a new execution. If you want to avoid re-running the normal image/video work, we can instead create a controlled manual run beginning at the music hand-off with pinned video/song-spec data—but it should not be a resume of the old execution.</p>
+</li>
+<li><p><code>2026-08-14T12:21:26.204Z</code> · bubble <code>01513c44-c05e-41cd-8554-c73c97e26676</code> · type <code>2</code></p>
+<p>Webhook is live. Updating the runner for fire-and-forget, then kicking off the 10 cases and polling executions for results.</p>
+</li>
+<li><p><code>2026-08-16T22:16:40.495Z</code> · bubble <code>01690f23-c2f1-4539-b5da-8971a882752b</code> · type <code>2</code></p>
+<p>You are partly right: the workflow does re-fetch media files, but it does not scan the ComfyUI output directory.</p>
+<p><code>Collate audio files</code> constructs one exact URL per incoming speech item:</p>
+<pre><code class="language-text">.../api/view?filename=podcast_&lt;run-id&gt;_&lt;position&gt;_00001.mp3
+</code></pre>
+<p>It downloads that known file from ComfyUI because the ComfyUI generation node returns metadata, not the MP3 binary itself.</p>
+<p>The problem is where it sits: it is downstream of <code>Generate audio</code>. On the retry, n8n restarted only the failed intro-music route, so no speech items entered <code>Collate audio files</code>. Therefore it had neither:</p>
+<ul>
+<li>the 41 expected filenames, nor</li>
+<li>the script metadata to attach to each downloaded MP3.</li>
+</ul>
+<p>The existing MP3s were never lost; that branch simply never ran again.</p>
+<p>The robust design is to move/add a “re-hydrate spoken media” step after <code>Combine scripts</code>, where it can always:</p>
+<ol>
+<li>use the 41 script entries to know exactly which filenames are expected;</li>
+<li>fetch <code>podcast_&lt;run-id&gt;_0…40_00001.mp3</code> from ComfyUI;</li>
+<li>attach each script’s transcript, speaker, and source URL;</li>
+<li>feed those items into final publishing.</li>
+</ol>
+<p>That makes the recovery path work for both normal runs and retries, without holding the full MP3s …[excerpt truncated]</p>
+</li>
+<li><p><code>2026-08-16T05:06:37.137Z</code> · bubble <code>02368c8c-6e43-4a56-bf7e-0a7535ef37ac</code> · type <code>2</code></p>
+<p>You’re right—the merge mode was not the root cause. The screenshot shows each feed input is already carrying about 93 items, so the multiplication happens before <code>Merge Feeds</code>. I’ll inspect the latest execution data to find the first node that turns one run into dozens of items.</p>
+</li>
+<li><p><code>2026-08-17T04:33:22.315Z</code> · bubble <code>0299f5e6-8797-4e9e-bc4e-f414e4932b7d</code> · type <code>2</code></p>
+<p>Do this in order.</p>
+<ol>
+<li>Future runs — redeploy n8n once<br>In UGOS Docker, open the <code>docker-n8n</code> project and redeploy it. This loads the new workflow capability that creates each episode directory automatically.</li>
+</ol>
+<p>After restart, open PodCast Builder and confirm this node exists between <code>Prepare publication directory</code> and <code>Prepare final media manifest</code>:</p>
+<pre><code class="language-text">Create NAS episode directory
+</code></pre>
+<p>That is the automatic future-run fix.</p>
+<ol start="2">
+<li>Recover this already-started execution<br>Its saved workflow version predates that node, so create only its missing directory:</li>
+</ol>
+<pre><code class="language-zsh">sudo install -d -o assets -g users -m 2770 \
+  /volume2/assets/podcast/v2026.34.1-12.20
+</code></pre>
+<p>Then in n8n resume the failed execution from <code>Write final media to NAS</code>.</p>
+<ol start="3">
+<li>Verify<br>The resumed flow should write media, publish only lightweight HTML/menu data to GitHub, and reference <code>https://assets.brook.dev/podcasts/v2026.34.1-12.20/...</code>.</li>
+</ol>
+<p>Do not create episode directories manually after this recovery; new runs create them themselves.</p>
+</li>
+<li><p><code>2026-08-16T12:14:37.216Z</code> · bubble <code>035f29ba-a358-41fd-9435-a5a75b6f4ee4</code> · type <code>1</code></p>
+<p>oh, ok, I don&#39;t see any executions</p>
+</li>
+<li><p><code>2026-08-16T02:58:14.498Z</code> · bubble <code>0389fd52-c75c-4870-92e7-e6c0f463c75c</code> · type <code>1</code></p>
+<p>Can you update this so that music listens on a different port, but otherwise it falls back to the existing default?</p>
+<p>comfy-start() {
+  emulate -L zsh
+  setopt pipefail</p>
+<p>  local listen_ip=&quot;$1&quot;
+  local profile=&quot;${2:-normal}&quot;
+  local -a profile_args</p>
+<p>  case &quot;$profile&quot; in
+normal)
+  profile_args=(--reserve-vram 5)
+  ;;
+music)
+  profile_args=(--gpu-only)
+  ;;
+*)
+  print -u2 &quot;Usage: comfy-start <listen-ip> [normal|music]&quot;
+  return 2
+  ;;
+  esac</p>
+<p>  (
+ulimit -n 8192
+
+&quot;${DIR_COMFY_SHARED}/.venv/bin/python&quot; <br>  &quot;${DIR_COMFY_INSTALL}/ComfyUI/main.py&quot; <br>  --user-directory &quot;${DIR_COMFY_SHARED}/user&quot; <br>  --input-directory &quot;${DIR_COMFY_SHARED}/input&quot; <br>  --output-directory &quot;${DIR_COMFY_SHARED}/output&quot; <br>  --base-directory &quot;${DIR_COMFY_SHARED}&quot; <br>  --database-url &quot;sqlite:///${DIR_COMFY_SHARED}/user/comfyui.db&quot; <br>  --extra-model-paths-config &quot;$HOME/Library/Application Support/ComfyUI/extra_models_config.yaml&quot; <br>  &quot;${profile_args[@]}&quot; <br>  --log-stdout <br>  --listen &quot;$listen_ip&quot; <br>  --port &quot;$listen_port&quot; <br>  --enable-manager <br>  2&gt;&amp;1 | ts &#39;[%H:%M:%.S]&#39;
+  )
+}</p>
+<p>comfy-local() {
+  comfy-start 127.0.0.1 norma …[excerpt truncated]</p>
+</li>
+<li><p><code>2026-08-16T22:29:43.767Z</code> · bubble <code>0426eac1-234a-4113-9528-a78176edef26</code> · type <code>2</code></p>
+<p>Fixed and made it observable.</p>
+<ul>
+<li>n8n’s <code>comfy-profile</code> now explicitly launches music with <code>PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.9</code>.</li>
+<li>Your interactive <code>comfy-music</code> now does the same, because it exports the per-profile value before Python starts.</li>
+<li>Future lifecycle logs will include the exact effective watermark, for example:</li>
+</ul>
+<pre><code class="language-text">PROCESS starting run=… profile=music port=8189 watermark=0.9
+</code></pre>
+<p>So we will no longer have to infer the applied ratio from the MPS error message.</p>
+</li>
+<li><p><code>2026-08-16T04:59:24.161Z</code> · bubble <code>04423fd4-2769-4375-8f66-6e7aede7d501</code> · type <code>2</code></p>
+<p>Implemented the ordering you were aiming for.</p>
+<p>The start now is:</p>
+<pre><code class="language-text">Drop invalid input
+  → Make text TTS compatible
+    → Generate audio
+    → Restore full scripts after TTS setup
+      → Combine scripts
+</code></pre>
+<p><code>Combine scripts</code> can no longer run before TTS preparation. The relay restores every validated script item from the original source, so cover/song context is not reduced when <code>audioItemLimit</code> limits TTS work.</p>
+<p>The existing video-completion gate still ensures music mode and jingle generation are the final ComfyUI phase.</p>
+</li>
+<li><p><code>2026-08-16T12:13:41.008Z</code> · bubble <code>0451a0e7-2bae-455a-94b4-9aac4ae31b4e</code> · type <code>2</code></p>
+<p>There are two different runs:</p>
+<ul>
+<li><code>2115</code> is the latest completed record returned by the API. It was cancelled and never got ComfyUI ready.</li>
+<li><code>2116</code> is the run that got far. It started normal ComfyUI at 18:59, was healthy at 18:59:22, then generated the TTS clips, cover, Qwen frame work, and reached Wan video rendering.</li>
+</ul>
+<p>The per-launch log for <code>2116</code> shows no error or exit. Its latest entries are active Wan 2.1 sampling at 20:12, so it appears to still be running rather than failed.</p>
+<p>That is why you do not see a completed execution record that matches the progress: the helper is returning the latest finished/cancelled run (<code>2115</code>), while <code>2116</code> is still active.</p>
+</li>
+<li><p><code>2026-08-16T04:45:08.746Z</code> · bubble <code>04ddfd50-16b0-48ca-a8f7-af8715be5529</code> · type <code>1</code></p>
+<p>Feel free to make some kind of reusable node that picks a server, runs it before doing comfy stuff, then turns it off… or something?</p>
+</li>
+<li><p><code>2026-08-16T22:00:18.635Z</code> · bubble <code>04fee111-6beb-4fa4-83b1-2656822a02a6</code> · type <code>2</code></p>
+<p>Implemented and enabled the watchdog.</p>
+<ul>
+<li>The lock is now a 3-hour lease for n8n execution IDs.</li>
+<li>Every new run checks the lock owner’s live n8n execution state before refusing it.<ul>
+<li><code>error</code> or <code>success</code> → reclaimed immediately.</li>
+<li>active/waiting → retained.</li>
+<li>n8n unreachable → retained until the three-hour lease expires.</li>
+</ul>
+</li>
+<li>A macOS LaunchAgent runs the same check every 10 minutes, including after n8n worker crashes.</li>
+<li>Existing success/error/cancellation releases remain in place.</li>
+</ul>
+<p>It immediately detected and reclaimed the stale <code>2118</code> lock (<code>reason=n8n-error</code>). The watchdog is loaded and healthy.</p>
+<p>This addresses lock recovery only; MiniMax’s MPS memory limit still needs a separate adjustment.</p>
+</li>
+<li><p><code>2026-08-16T22:23:11.381Z</code> · bubble <code>05c0fce0-b2b5-46c2-bd12-111780c58d38</code> · type <code>2</code></p>
+<p>Removed the redundant final-media aggregation nodes:</p>
+<ul>
+<li><code>Prepend intro</code></li>
+<li><code>Gather images</code></li>
+<li><code>Gather media</code></li>
+<li><code>Gather video media</code></li>
+<li><code>Complete podcast media</code></li>
+</ul>
+<p><code>Finalise podcast media</code> is now only a simple completion gate:</p>
+<ul>
+<li>input 0: labelled intro finished;</li>
+<li>input 1: video animation completed.</li>
+</ul>
+<p>Once both are complete, the final manifest downloads every asset afresh and hands the complete normalised bundle to the page builder.</p>
+<p>The visual-generation chain still retains only the downloads it genuinely needs to create later frames and video. The old branch merges no longer carry publishing media.</p>
+<p>Validation passes with zero errors.</p>
+</li>
+<li><p><code>2026-08-14T23:05:54.048Z</code> · bubble <code>063067f6-f7ce-4f74-af70-5ba7a0ba0adb</code> · type <code>2</code></p>
+<p>I’ll make it a self-contained roster editor seeded with the revised profiles now in the workflow, plus the five <code>+1</code> tag bonuses.</p>
+</li>
+<li><p><code>2026-08-14T11:10:13.027Z</code> · bubble <code>06b7096e-34a5-4827-890b-b7d58fe65aa0</code> · type <code>2</code></p>
+<p>Current path is locked to Flux 4B; next I’ll compare that to the older high-quality Comfy graphs and sketch a theme→workflow router.</p>
+</li>
+<li><p><code>2026-08-16T13:10:46.878Z</code> · bubble <code>076ba864-83f7-4c45-a134-04bf7b8026eb</code> · type <code>2</code></p>
+<p>Reset complete.</p>
+<ul>
+<li>Stopped ComfyUI on both <code>8188</code> and <code>8189</code>.</li>
+<li>Released stale lock <code>2116</code>.</li>
+<li>Preserved all generated output files for inspection.</li>
+<li>Confirmed both ports are closed and no lock remains.</li>
+</ul>
+<p>You can start a fresh run now.</p>
+</li>
+<li><p><code>2026-08-14T13:25:58.680Z</code> · bubble <code>08b1561c-fba9-4d20-8f44-c288816be97f</code> · type <code>2</code></p>
+<p>Done — and much shorter.</p>
+<p><strong>Fast path for <code>v2026.33.5-18.59</code>:</strong> published cover → canned edit prompts from the existing summary titles → Qwen-Edit only. <strong>~5 minutes</strong>, 3 frames, gallery now shows <strong>1/10</strong>.</p>
+<p>Skipped: Tag, Score, Prompt LLM, planner, and base-model cover gen. Still not cancelling the slow n8n run <strong>2013</strong> if it’s still going.</p>
+<p>Gallery: <a href="http://localhost:8765/gallery.html">http://localhost:8765/gallery.html</a></p>
+<p>Say the word and I’ll run the remaining nine the same way, one at a time.</p>
+</li>
+<li><p><code>2026-08-16T02:56:27.510Z</code> · bubble <code>08b7c5d9-142c-405b-ba68-588b7834d9b5</code> · type <code>1</code></p>
+<p>Can you help me make these aliases more modular?</p>
+<p>alias comfy-local=&quot;ulimit -n 8192; ${DIR_COMFY_SHARED}/.venv/bin/python &quot;${DIR_COMFY_INSTALL}/ComfyUI/main.py&quot; <br>--user-directory ${DIR_COMFY_SHARED}/user <br>--input-directory ${DIR_COMFY_SHARED}/input <br>--output-directory ${DIR_COMFY_SHARED}/output <br>--base-directory ${DIR_COMFY_SHARED} <br>--database-url sqlite:///${DIR_COMFY_SHARED}/user/comfyui.db <br>--extra-model-paths-config &quot;$HOME/Library/Application Support/ComfyUI/extra_models_config.yaml&quot; <br>--reserve-vram 5 <br>--log-stdout <br>--listen 127.0.0.1 <br>--port 8188 <br>--enable-manager <br>2&gt;&amp;1
+| ts &#39;[%H:%M:%.S]&#39;&quot;
+alias comfy-serve=&quot;ulimit -n 8192; ${DIR_COMFY_SHARED}/.venv/bin/python &quot;${DIR_COMFY_INSTALL}/ComfyUI/main.py&quot; <br>--user-directory ${DIR_COMFY_SHARED}/user <br>--input-directory ${DIR_COMFY_SHARED}/input <br>--output-directory ${DIR_COMFY_SHARED}/output <br>--base-directory ${DIR_COMFY_SHARED} <br>--database-url sqlite:///${DIR_COMFY_SHARED}/user/comfyui.db <br>--extra-model-paths-config &quot;$HOME/Library/Application Support/ComfyUI/extra_models_config.yaml&quot; <br>--reserve-vram 5 <br>--log-stdout <br>--listen 0.0.0.0 <br>--port 8188 <br>--enable-manager <br>2&gt;&amp;1
+| ts &#39;[%H …[excerpt truncated]</p>
+</li>
+<li><p><code>2026-08-17T04:41:47.884Z</code> · bubble <code>09defc90-2c36-43f8-ae9b-d20c6d3d4cb4</code> · type <code>1</code></p>
+<p>I think staticData.lastScript may not always exist, if n8n has restarted, or lost some kind of cache. The code needs to work without it. Or maybe I misundersrstood the issue?</p>
+</li>
+<li><p><code>2026-08-14T13:58:31.650Z</code> · bubble <code>09f7ec7b-11f3-4037-a899-d37fd40013b1</code> · type <code>2</code></p>
+<p>That tracks with the fast-reuse path — checking what the gallery is actually showing versus what n8n 2013 generated.</p>
+</li>
+<li><p><code>2026-08-14T11:44:09.009Z</code> · bubble <code>0bac9dd7-d1af-4704-bbb6-46921096c56f</code> · type <code>2</code></p>
+<p>I&#39;ll pull ~10 past podcast covers plus the archived/older builder graphs, then isolate the cover → Qwen-edit frame path and how it behaves per base workflow.</p>
+</li>
+<li><p><code>2026-08-14T13:16:03.394Z</code> · bubble <code>0bb7a774-5762-416e-a0eb-8b6de5c191df</code> · type <code>1</code></p>
+<p>Oh, you&#39;re right, comfy hasn&#39;t been hit yet
+[20:58:13.298485] [INFO] Requested to load AutoencoderKL
+[20:58:13.401622] [INFO] loaded completely;  159.56 MB loaded, full load: True
+[20:58:14.343406] [INFO] Prompt executed in 53.24 seconds
+[20:58:16.128789] [INFO] Using RAM pressure cache.</p>
+<p>Do we need to make new image prompts? I thought we already had some from previous runs we could use</p>
+</li>
+<li><p><code>2026-08-16T22:08:10.049Z</code> · bubble <code>0bdbb948-7d6b-47e0-8ea0-df25305855a4</code> · type <code>2</code></p>
+<p>Yes—if you manually ran <code>comfy-music</code>, it successfully bound port <code>8189</code>, and then restarted <code>Generate intro music</code>, n8n used that instance. Its “music” credential points at <code>:8189</code>.</p>
+<p>And nowhere in this code is <code>0.8</code> overridden. This:</p>
+<pre><code class="language-zsh">mps_high_watermark=0.9
+</code></pre>
+<p>only assigns a shell variable. It does not change the exported environment variable inherited by Python. Your Python process still receives:</p>
+<pre><code class="language-zsh">PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.8
+</code></pre>
+<p>from the top-level export.</p>
+<p>Add the override immediately inside the subshell, before Python:</p>
+<pre><code class="language-zsh">(
+  ulimit -n 8192
+  export PYTORCH_MPS_HIGH_WATERMARK_RATIO=&quot;$mps_high_watermark&quot;
+
+  &quot;${DIR_COMFY_SHARED}/.venv/bin/python&quot; \
+    &quot;${DIR_COMFY_INSTALL}/ComfyUI/main.py&quot; \
+    # …
+)
+</code></pre>
+<p>Also make these function-local:</p>
+<pre><code class="language-zsh">local listen_port mps_high_watermark
+</code></pre>
+<p>So the relevant corrected portion is:</p>
+<pre><code class="language-zsh">local listen_port mps_high_watermark
+
+case &quot;$profile&quot; in
+  normal)
+    profile_args=(--reserve-vram 5)
+    listen_port=&quot;${listen_port:-8188}&quot;
+    mps_high_watermark=0.8
+    ;;
+  music)
+    profile_args=(--gpu-only)
+    listen_port=&quot;${listen_port:-8189}&quot;
+    mps_high_watermark=0.9
+    ;;
+esac
+
+(
+  ulimit -n 8192
+  export …[excerpt truncated]
+</code></pre>
+</li>
+<li><p><code>2026-08-14T22:40:18.576Z</code> · bubble <code>0be7eb6b-c48b-4feb-a6ef-27d749d9922c</code> · type <code>2</code></p>
+<p>Re-scored with:</p>
+<ul>
+<li>Normalised aliases and deduplication</li>
+<li><code>complex_scenes</code>, <code>detailed_scenes</code>, <code>highly_detailed_scenes</code> → one <code>busy_scene</code></li>
+<li>Schnell and Flux9b: <strong>−2 final score</strong></li>
+<li>Existing +2 / +1 / −2 capability scoring</li>
+<li>No additional preference-margin rule</li>
+</ul>
+<p>Results:</p>
+<ul>
+<li><p><code>v2026.33.5-18.59</code> → <strong>Pony 4</strong><br>Qwen 3, Z-Image 3, Schnell 2, Flux9b 2, Illustrious 0</p>
+</li>
+<li><p><code>v2026.33.4-19.06</code> → <strong>Z-Image 3</strong><br>Schnell 2, Flux9b 2, Pony 2, Qwen 1, Illustrious −2</p>
+</li>
+<li><p><code>v2026.33.4-13.32</code> → <strong>Z-Image 5</strong><br>Pony 3, Schnell 2, Flux9b 1, Illustrious −2, Qwen −3</p>
+</li>
+<li><p><code>v2026.33.4-06.52</code> → <strong>Z-Image 3</strong><br>Schnell 2, Flux9b 2, Pony 2, Qwen 1, Illustrious 0</p>
+</li>
+<li><p><code>v2026.33.3-13.12</code> → <strong>Schnell 4</strong><br>Z-Image 3, Flux9b 2, Pony 2, Qwen 1, Illustrious −2</p>
+</li>
+<li><p><code>v2026.33.3-09.28</code> → <strong>Flux9b 4</strong><br>Z-Image 3, Schnell 2, Pony 2, Qwen 1, Illustrious −2</p>
+</li>
+<li><p><code>v2026.33.3-08.52</code> → <strong>Z-Image 3</strong><br>Schnell 2, Flux9b 2, Pony 2, Qwen 1, Illustrious −2</p>
+</li>
+</ul>
+<p>New distribution:</p>
+<ul>
+<li><strong>Z-Image: 4</strong></li>
+<li><strong>Pony: 1</strong></li>
+<li><strong>Schnell: 1</strong></li>
+<li><strong>Flux9b: 1</strong></li>
+<li>Qwen/Illustrious: 0</li>
+</ul>
+<p>The two Flux-family wins now look justified:</p>
+<ul>
+<li>Schnell wins because of <code>unusual_camera</code> plus <code>surreal_combination</code></li>
+<li>Flux9b wins because of <code>vehicles</code> plus `busy_s …[excerpt truncated]</li>
+</ul>
+</li>
+<li><p><code>2026-08-17T03:36:11.679Z</code> · bubble <code>0c7a6fac-f901-4c23-9340-3eb7d1bee31d</code> · type <code>2</code></p>
+<p>Perfect. The asset service is verified:</p>
+<ul>
+<li><code>200 OK</code></li>
+<li>Correct <code>audio/mpeg</code></li>
+<li>Immutable one-year cache header</li>
+<li>Byte-range support advertised</li>
+<li>Security/CORS headers present</li>
+<li>Served through <code>assets.brook.dev</code></li>
+</ul>
+<p>The repeated <code>chown</code> interrupted with Ctrl-C is harmless; the first completed.</p>
+<p>Next redeploy <code>docker-n8n</code> so the live workflow gets <code>/volume2/assets/podcast</code> mounted at <code>/files/assets/podcast</code>. Then run one new podcast episode; it will validate the NAS write, lightweight GitHub publish, and browser playback end-to-end.</p>
+</li>
+<li><p><code>2026-08-17T02:51:24.165Z</code> · bubble <code>0f67f964-fc39-4d1e-84f4-060d09098647</code> · type <code>2</code></p>
+<p>I’ll replay the exact publication against GitHub from this Mac, using the already-built files. That preserves the successful generation and gives us the real HTTP status and response headers, rather than n8n’s collapsed <code>499</code> message.</p>
+</li>
+<li><p><code>2026-08-17T02:54:54.012Z</code> · bubble <code>0f94ef01-a69c-4548-b68a-960ebdccbef3</code> · type <code>2</code></p>
+<p>Published successfully: <a href="https://brook.dev/projects/news/v2026.34.1-10.04/">https://brook.dev/projects/news/v2026.34.1-10.04/</a></p>
+<p>I restored the exact 28 generated files from execution 2128, merged them on top of the newer concurrent episode, committed, and pushed them. Netlify has deployed it and the page loads.</p>
+<p>This proves the generated media and site payload are valid. The <code>499</code> remains isolated to n8n’s single 8.8 MB GraphQL commit request, not ComfyUI or the content itself. I have not changed the workflow publisher yet.</p>
+</li>
+<li><p><code>2026-08-16T22:28:45.294Z</code> · bubble <code>0fc756ed-2dcc-45b8-a1ad-dd347ad18826</code> · type <code>2</code></p>
+<p>The workflow changes are already consistent and validated. One remaining configuration mismatch would affect the next full run: n8n’s standalone <code>comfy-profile</code> launcher still uses music watermark <code>0.85</code>, while your manual music profile is intended to use <code>0.9</code>. I’m synchronising those launch paths.</p>
+</li>
+<li><p><code>2026-08-16T10:57:59.172Z</code> · bubble <code>0fdab5b2-2a62-4ba8-98f4-816acb1616d5</code> · type <code>2</code></p>
+<p>No. The lock is still present and owned by run <code>2115</code>.</p>
+<p>Cancellation did not trigger the n8n error workflow, so the error-handler release did not run. The cancellation path needs separate handling; for now the lock must be released manually:</p>
+<pre><code class="language-zsh">comfy-profile release --run 2115
+</code></pre>
+</li>
+<li><p><code>2026-08-16T09:22:36.011Z</code> · bubble <code>101a9e4f-21e2-4e32-988c-2983be182ef9</code> · type <code>2</code></p>
+<p>No. <code>Generate intro music</code> uses local ComfyUI with ACE-Step 1.5 Turbo:</p>
+<ul>
+<li><code>acestep_v1.5_turbo.safetensors</code></li>
+<li>ACE 1.5 text encoder and VAE</li>
+<li>8-step Euler sampling</li>
+<li>the <code>ComfyUI - music</code> credential</li>
+</ul>
+<p>It is not MiniMax Music.</p>
+<p>There is also a live configuration error: after generating on the music profile, <code>Collate intro song</code> is currently downloading from <code>:8188</code>, but music runs on <code>:8189</code>. That needs changing before you run it, or the intro download will fail once normal ComfyUI has been stopped.</p>
+</li>
+<li><p><code>2026-08-14T11:47:31.713Z</code> · bubble <code>117f648c-36ea-480b-b36c-ebc8970d52ea</code> · type <code>2</code></p>
+<p><strong>Verdict:</strong> every published cover in the last ~10 episodes is still the old <strong>Flux.2 Klein 4B + LoRAs</strong> look. Qwen-Edit has only been proven on that photoreal/surreal base — not on illustrious/pony/schnell/zimage/flux9b. The edit stage itself does <strong>not</strong> branch by cover model; one Comfy graph handles every frame 2–N.</p>
+<h2 id="builder-lineage-image-section-only">Builder lineage (image section only)</h2>
+<table>
+<thead>
+<tr>
+<th>Builder</th>
+<th>Cover gen</th>
+<th>Extra frames</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>PodCast Builder</strong> (<code>IsIWbfTUgNRpcL1G</code>, archived)</td>
+<td>Hard-coded flux4b + Asian_B / All_A LoRAs, 4 steps, 1280×720</td>
+<td>None — still → publish</td>
+</tr>
+<tr>
+<td><strong>PodCast Builder - for cursor</strong> (<code>CjiMNnVeDIam6ZsC</code>)</td>
+<td>Same flux4b stack</td>
+<td>None</td>
+</tr>
+<tr>
+<td><strong>FLF test</strong> (<code>S9v0UpCVYcrtVJH4</code>)</td>
+<td>Now routed (<code>Build cover Comfy workflow</code>)</td>
+<td>Qwen-Edit 2511 Lightning → Wan FLF</td>
+</tr>
+</tbody></table>
+<p>So historically the production look is one family. The new router is the first time other bases feed the same edit chain.</p>
+<h2 id="what-the-last-10-published-episodes-show">What the last 10 published episodes show</h2>
+<p>Sampled <code>v2026.33.5-18.59</code> … <code>v2026.33.1-19.04</code>:</p>
+<ul>
+<li>All have <code>cover.png</code> in the same cinematic, photoreal-surreal Flux house style (weird objects, mood colour, dense props, occasional broken text).</li>
+<li>9/10 have <code>animated_briefing.mp4</code> (~1.8s, 16fps, <strong>608×336</strong> — downs …[excerpt truncated]</li>
+</ul>
+</li>
+<li><p><code>2026-08-16T03:02:16.583Z</code> · bubble <code>1252ba45-3107-42ee-8f15-10284f407e7c</code> · type <code>2</code></p>
+<p>There is no separate <code>:8189</code> ComfyUI credential yet, so I can’t safely point just the music node at it without breaking the other ComfyUI nodes.</p>
+<p>Please create this one credential in n8n:</p>
+<ul>
+<li>Type: <code>ComfyUI API</code></li>
+<li>Name: <code>ComfyUI music — Tailscale</code></li>
+<li>API URL: same host as <code>ComfyUI account - Tailscale</code>, but port <code>8189</code> (normally <code>http://100.98.203.89:8189</code>)</li>
+</ul>
+<p>Once it exists, I’ll bind only <code>Generate intro music</code> to it, validate the workflow, and verify the other nodes still use the existing <code>:8188</code> credential.</p>
+</li>
+<li><p><code>2026-08-14T14:04:31.743Z</code> · bubble <code>12cef3ca-73bc-4499-84f0-e993eaedfd89</code> · type <code>2</code></p>
+<p>Exactly — once we stash prompts on the cases (or pull them from prior runs), that LLM step can go.</p>
+</li>
+<li><p><code>2026-08-14T11:50:02.197Z</code> · bubble <code>13462206-0256-4aef-bd2f-4d51e4b48ac7</code> · type <code>2</code></p>
+<p>I&#39;ll check how the FLF workflow exposes a dry-run/test path so we can stop after storyframes (prompt → router → cover → Qwen edits) and skip Wan.</p>
+</li>
+<li><p><code>2026-08-16T07:30:50.848Z</code> · bubble <code>13cb34f1-8eed-4471-b540-6aa7fc49d4a5</code> · type <code>1</code></p>
+<p>Now?
+{
+  &quot;errorMessage&quot;: &quot;ComfyUI API Error: 400 - {&quot;error&quot;:{&quot;type&quot;:&quot;prompt_outputs_failed_validation&quot;,&quot;message&quot;:&quot;Prompt outputs failed validation&quot;,&quot;details&quot;:&quot;&quot;,&quot;extra_info&quot;:{}},&quot;node_errors&quot;:{&quot;1&quot;:{&quot;errors&quot;:[{&quot;type&quot;:&quot;custom_validation_failed&quot;,&quot;message&quot;:&quot;Custom validation failed for node&quot;,&quot;details&quot;:&quot;video - Invalid file path: the local vault/ComfyUI-Shared/output/podcast_transition1_2099_00001.mp4&quot;,&quot;extra_info&quot;:{&quot;input_name&quot;:&quot;video&quot;}}],&quot;dependent_outputs&quot;:[&quot;200&quot;],&quot;class_type&quot;:&quot;VHS_LoadVideoPath&quot;}}}&quot;,
+  &quot;errorDetails&quot;: {
+&quot;rawErrorMessage&quot;: [
+  &quot;ComfyUI API Error: 400 - {&quot;error&quot;:{&quot;type&quot;:&quot;prompt_outputs_failed_validation&quot;,&quot;message&quot;:&quot;Prompt outputs failed validation&quot;,&quot;details&quot;:&quot;&quot;,&quot;extra_info&quot;:{}},&quot;node_errors&quot;:{&quot;1&quot;:{&quot;errors&quot;:[{&quot;type&quot;:&quot;custom_validation_failed&quot;,&quot;message&quot;:&quot;Custom validation failed for node&quot;,&quot;details&quot;:&quot;video - Invalid file path: the local vault/ComfyUI-Shared/output/podcast_transition1_2099_00001.mp4&quot;,&quot;extra_info&quot;:{&quot;input_name&quot;:&quot;video&quot;}}],&quot;dependent_outputs&quot;:[&quot;200&quot;],&quot;class_type&quot;:&quot;VHS_LoadVideoPath&quot;}}}&quot;
+]
+  },
+  &quot;n8nDetails&quot;: {
+&quot;nodeName&quot;: &quot;Stitch video cl …[excerpt truncated]</p>
+</li>
+<li><p><code>2026-08-14T23:42:45.896Z</code> · bubble <code>143dc081-30e0-42b6-aa12-4c458ea76fad</code> · type <code>1</code></p>
+<p>Ok, let&#39;s go with this. Then let&#39;s re-run the sytem. Clean up the previous runs… looking at this, I rated z-imge technically high for most things other than chaarcter and dynamaism.</p>
+<p>{
+  &quot;version&quot;: 1,
+  &quot;scoring&quot;: {
+&quot;veryGood&quot;: 2,
+&quot;good&quot;: 1,
+&quot;ok&quot;: 0,
+&quot;bad&quot;: -1,
+&quot;veryBad&quot;: -2,
+&quot;tagBonusAppliesTo&quot;: &quot;good_or_very_good&quot;,
+&quot;modelPenaltyAppliedBeforeTagScores&quot;: true
+  },
+  &quot;tagBonuses&quot;: {
+&quot;humans&quot;: 1,
+&quot;text&quot;: 1,
+&quot;human_interaction&quot;: 1,
+&quot;unusual_interaction&quot;: 1,
+&quot;busy_scene&quot;: 1
+  },
+  &quot;models&quot;: {
+&quot;flux9b&quot;: {
+  &quot;modelPenalty&quot;: -2,
+  &quot;ratings&quot;: {
+    &quot;humans&quot;: 0,
+    &quot;text&quot;: 1,
+    &quot;animals&quot;: 0,
+    &quot;vehicles&quot;: 2,
+    &quot;cityscape&quot;: 0,
+    &quot;architecture&quot;: 0,
+    &quot;landscape&quot;: 0,
+    &quot;greenery&quot;: -1,
+    &quot;human_interaction&quot;: 1,
+    &quot;unusual_interaction&quot;: 1,
+    &quot;busy_scene&quot;: 0,
+    &quot;precise_composition&quot;: 1,
+    &quot;surreal&quot;: -1,
+    &quot;painterly&quot;: -1,
+    &quot;illustration&quot;: 0,
+    &quot;cute&quot;: 0,
+    &quot;mood_lighting&quot;: 1,
+    &quot;colour_direction&quot;: 0,
+    &quot;depth_of_field&quot;: 0,
+    &quot;dynamic_camera&quot;: 0,
+    &quot;dynamic_pose&quot;: -1,
+    &quot;expressive_character&quot;: -1
+  }
+}, …[excerpt truncated]</p>
+</li>
+<li><p><code>2026-08-16T04:52:41.126Z</code> · bubble <code>14861b04-e7c2-4c9d-b2fa-2dff30b5bd81</code> · type <code>1</code></p>
+<p>Maybe we put this between gather video music and build podcast webpage?
+It&#39;s still possible that n8n chooses to do generate Audio after Generate intro music</p>
+</li>
+<li><p><code>2026-08-16T06:47:53.506Z</code> · bubble <code>1529edf6-9734-4c87-9f3e-f7b01758b4a8</code> · type <code>2</code></p>
+<p>Done.</p>
+<ul>
+<li>Added an explicit Homebrew PATH to <code>comfy-profile</code>.</li>
+<li>Restarted normal ComfyUI on port 8188 successfully.</li>
+<li>Confirmed <code>ffmpeg</code> resolves under that exact PATH.</li>
+</ul>
+<p>You can resume execution 2099; <code>Generate video transitions</code> should now be able to create its MP4.</p>
+</li>
+<li><p><code>2026-08-16T22:05:05.545Z</code> · bubble <code>15552d22-21cc-4284-b0a4-ca6d95dc283f</code> · type <code>2</code></p>
+<p>The new limit proves n8n did not use <code>0.9</code>: <code>22.46 GiB</code> is exactly an <code>0.80</code> MPS ceiling on this Mac, not <code>0.90</code>. I’m tracing the actual process launch configuration, because changing the interactive <code>comfy-music</code> function does not automatically change the separate <code>comfy-profile</code> script that n8n calls.</p>
+</li>
+</ul>
+<h3 id="8-find-wan-flf-in-n8n">8. Find Wan FLF in n8n</h3>
+<ul>
+<li>Composer ID: <code>912c0309-7192-4c02-8e60-662d76652993</code></li>
+<li>Created at (UTC): <code>2026-08-14T14:24:13.736000+00:00</code></li>
+<li>Last updated at (UTC): <code>[not recorded]</code></li>
+<li>Messages with text retained: <code>2</code></li>
+<li>Workflow IDs: <code>identity</code></li>
+<li>Paths: <code>the local vault/git/brookjordan/docker-stacks</code>, <code>the local vault/git/brookjordan/docker-stacks/docker-n8n/docs/research/motion-benchmark-current-wan-v5-run-2026-08-01.json:14-34</code>, <code>the local vault/git/brookjordan/docker-stacks/docker-n8n/docs/research/run_motion_benchmark_current_wan.py</code>, <code>the local vault/git/brookjordan/docker-stacks/docker-n8n/docs/research/run_motion_benchmark_current_wan.py:132-199</code>, <code>the local vault/git/brookjordan/docker-stacks/docker-n8n/docs/research/run_motion_benchmark_current_wan.py:166-285</code>, <code>the local vault/git/brookjordan/docker-stacks/docker-n8n/docs/research/run_motion_benchmark_current_wan.py:22-35</code>, <code>the local vault/git/brookjordan/docker-stacks/docker-n8n/scripts/replace-execution-id-with-runid.mjs:3-26</code></li>
+</ul>
+<h4 id="message-excerpts-7">Message excerpts</h4>
+<ul>
+<li><p><code>2026-08-14T14:24:13.759Z</code> · bubble <code>a1f3f887-a1a9-4f1a-ae69-4c5306ff25bd</code> · type <code>1</code></p>
+<p>Search the n8n workflows accessible via context OR search files under the local vault/git/brookjordan/docker-stacks for how the podcast FLF builder generates Wan video from cover frames. Look in docker-n8n docs and any workflow JSON dumps. Return: (1) workflow name/id if known from files, (2) how frames are passed to Wan (filenames, prompts), (3) key Comfy node types/model names used for FLF, (4) whether there&#39;s an existing script that can render FLF from two image filenames + a motion prompt. Be concrete with file paths.</p>
+</li>
+<li><p><code>2026-08-14T14:24:41.327Z</code> · bubble <code>bc366906-1c96-412a-9541-3761be00367c</code> · type <code>2</code></p>
+<ol>
+<li>Workflow identity</li>
+</ol>
+<ul>
+<li>Name: <code>PodCast Builder - for cursor</code></li>
+<li>ID: <code>CjiMNnVeDIam6ZsC</code></li>
+<li>Evidence: <code>the local vault/git/brookjordan/docker-stacks/docker-n8n/scripts/replace-execution-id-with-runid.mjs:3-26</code></li>
+<li>No complete podcast workflow JSON dump was found locally. The live n8n listing request terminated.</li>
+</ul>
+<ol start="2">
+<li>Frame inputs and prompts</li>
+</ol>
+<ul>
+<li>Frames are passed as ComfyUI output filenames with <code>[output]</code>, e.g.:<ul>
+<li><code>cover_frame3_410_00001_.png</code></li>
+<li><code>smoke_round2_s08a_funnel_410_00001_.png</code></li>
+</ul>
+</li>
+<li>The Wan graph loads them through <code>LoadImageOutput</code>, scales each to approximately 0.2 MP, then supplies them as <code>start_image</code> and <code>end_image</code>.</li>
+<li>Prompts are motion-focused, e.g. locked camera, continuous rightward smoke drift, flickering sign, no pause/restart/reversal/camera movement.</li>
+<li>Evidence:<ul>
+<li><code>the local vault/git/brookjordan/docker-stacks/docker-n8n/docs/research/run_motion_benchmark_current_wan.py:22-35</code></li>
+<li><code>the local vault/git/brookjordan/docker-stacks/docker-n8n/docs/research/run_motion_benchmark_current_wan.py:132-199</code></li>
+<li><code>the local vault/git/brookjordan/docker-stacks/docker-n8n/docs/research/motion-benchmark-current-wan-v5-run-2026-08-01.json:14-34</code></li>
+</ul>
+</li>
+</ul>
+<ol start="3">
+<li>Key Comfy node type …[excerpt truncated]</li>
+</ol>
+</li>
+</ul>
+<h3 id="9-podcast-jingle-comparison">9. Podcast jingle comparison</h3>
+<ul>
+<li>Composer ID: <code>50ef19f3-6b7f-4672-80ad-23a0513f0b69</code></li>
+<li>Created at (UTC): <code>2026-08-15T10:38:33.859000+00:00</code></li>
+<li>Last updated at (UTC): <code>2026-08-15T12:34:30.908000+00:00</code></li>
+<li>Messages with text retained: <code>104</code></li>
+<li>Paths: <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/terminals/281043.txt</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/terminals/935739.txt</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/terminals/935740.txt</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/terminals/935741.txt</code>, <code>the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/terminals/935742.txt</code>, <code>the local vault/ComfyUI-Installs/ComfyUI/ComfyUI/comfy/model_management.py</code>, <code>the local vault/ComfyUI-Shared</code>, <code>the local vault/ComfyUI-Shared/user</code>, <code>the local vault/Downloads/audio_minimax_music_3.json</code>, <code>the local vault/Library/Application</code>, <code>the local vault/git/brookjordan/docker-stacks/.tmp-jingle-minimax/gallery.html</code></li>
+<li>Links: <code>https://brook.dev/projects/news/</code>, <code>https://github.com/pawel-mazurkiewicz/ComfyUI-AppleSilicon-FP8</code>, <code>https://github.com/pawel-mazurkiewicz/ComfyUI-AppleSilicon-FP8.git</code>, <code>https://huggingface.co/Comfy-Org/MiniMax-Music-3</code>, <code>https://lilting.ch/en/articles/anima-turbo-int8convrot-comfyui-m1-max</code>, <code>https://note.com/joh_luck/n/n93791ea89a2e</code>, <code>https://www.reddit.com/r/comfyui/comments/1vefklw/has_anyone_tried_running_minimax_h3_on_mac/</code></li>
+</ul>
+<h4 id="message-excerpts-8">Message excerpts</h4>
+<ul>
+<li><p><code>2026-08-15T10:59:33.838Z</code> · bubble <code>1537b8e4-35be-440c-898a-42a0c56e0583</code> · type <code>2</code></p>
+<p>You’ve already got the smoking gun: Comfy Desktop is launching with <strong><code>--lowvram</code></strong>, and Comfy’s own docs say that mode <strong>puts the text encoder on CPU</strong>.</p>
+<p>Your launch line:</p>
+<pre><code class="language-23:23:the">&quot;launchArgs&quot;: &quot;--lowvram --enable-manager --user-directory the local vault/ComfyUI-Shared/user --base-directory the local vault/ComfyUI-Shared --use-quad-cross-attention&quot;,
+</code></pre>
+<h3 id="do-this-simplest">Do this (simplest)</h3>
+<ol>
+<li>Let the current 3 finish (no need to cancel the queue).</li>
+<li>In <strong>Comfy Desktop</strong> → instance settings / Server Config → <strong>Memory</strong>:<ul>
+<li>turn <strong>off</strong> Low VRAM  </li>
+<li>prefer <strong>High VRAM</strong> (or leave default empty) on unified memory Macs</li>
+</ul>
+</li>
+<li>Restart Comfy after those 3 finish (or whenever you’re happy to restart).</li>
+<li>Confirm in the log you no longer see:<ul>
+<li><code>CLIP/text encoder model load device: cpu</code><br>and ideally see MPS / gpu instead.</li>
+</ul>
+</li>
+</ol>
+<p>Equivalent edit in <code>installations.json</code>: replace <code>--lowvram</code> with <code>--highvram</code> (or <code>--gpu-only</code> if you want encoders forced onto Metal hardest). Then restart Desktop so it picks up the new <code>launchArgs</code>.</p>
+<p>On a <strong>36 GB M3</strong>, <code>--lowvram</code> is the wrong instinct — it slows Music 3’s AR a l …[excerpt truncated]</p>
+</li>
+<li><p><code>2026-08-15T10:42:38.566Z</code> · bubble <code>16ebca99-0370-483a-9fa9-6b3b13396823</code> · type <code>2</code></p>
+<p>I&#39;ll inspect your n8n podcast workflows, the news site, and the Minimax 3 Comfy workflow, then research Minimax style prompting and run ~10 jingle recreations for a comparison page.</p>
+</li>
+<li><p><code>2026-08-15T10:42:51.827Z</code> · bubble <code>18cb93d0-a08f-4c7e-8be5-b445341de5c7</code> · type <code>2</code></p>
+<p>Next I&#39;ll pull the podcast builder workflow for jingle prompts, and dig through the site / storage for existing jingle audio.</p>
+</li>
+<li><p><code>2026-08-15T11:01:50.439Z</code> · bubble <code>1abb749c-2a56-42b2-8497-da87b89af095</code> · type <code>1</code></p>
+<p><timestamp>Saturday, Aug 15, 2026, 7:01 PM (UTC+8)</timestamp></p>
+<system_notification>
+The following task has finished. If you were already aware, ignore this notification and do not restate prior responses.
+
+<task>
+kind: shell
+status: success
+task_id: 935740
+title: Restart unbuffered job collector
+tool_call_id: call-cbabdda8-4af1-4669-922b-65b8496f25fd-86
+fc_8cf01a08-80c2-99b5-a2c7-15443ebc6bed_0
+output_path: the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/terminals/935740.txt
+</task>
+</system_notification>
+<user_query>Briefly inform the user about the task result and perform any follow-up actions (if needed). If there's no follow-ups needed, don't explicitly say that.</user_query>
+</li>
+<li><p><code>2026-08-15T10:43:46.499Z</code> · bubble <code>1b4ba62a-aa97-4bff-a1ee-09f02400a0fb</code> · type <code>2</code></p>
+<p>I&#39;ve got ACE-Step tags and lyrics from the runs. Next I&#39;ll pull more song specs, rewrite them into MiniMax captions, and queue the regenerations.</p>
+</li>
+<li><p><code>2026-08-15T12:12:04.734Z</code> · bubble <code>2462fc98-ce83-4513-8887-f2a058b7e6c8</code> · type <code>1</code></p>
+<p><timestamp>Saturday, Aug 15, 2026, 8:12 PM (UTC+8)</timestamp></p>
+<system_notification>
+The following task has finished. If you were already aware, ignore this notification and do not restate prior responses.
+
+<task>
+kind: shell
+status: success
+task_id: 281043
+title: Wait up to 10m then enqueue 9 Verse jobs
+tool_call_id: call-15f7377a-10c2-4c4e-99f2-057e1cf35dcb-91
+fc_f4e52cb6-60b1-9b1f-b7df-c62f7b5e44bf_0
+output_path: the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/terminals/281043.txt
+</task>
+</system_notification>
+<user_query>Briefly inform the user about the task result and perform any follow-up actions (if needed). If there's no follow-ups needed, don't explicitly say that.</user_query>
+</li>
+<li><p><code>2026-08-15T10:58:11.949Z</code> · bubble <code>24b43b0c-5ee4-4c37-b826-c73aaf08e53b</code> · type <code>2</code></p>
+<p>Yes — that hour was real, and the painful part is specifically the AR “text encode,” not the diffusion.</p>
+<h3 id="whats-actually-slow">What’s actually slow</h3>
+<p>Music 3’s encoder is an <strong>~8B autoregressive music LM</strong>, not a one-shot CLIP pass. Length scales with duration:</p>
+<ul>
+<li>~60s song → <strong>1501 AR steps · ~48 min</strong> @ ~1.9s/it  </li>
+<li>~18s jingle → <strong>451 AR steps · ~14 min</strong> AR alone</li>
+</ul>
+<p>Your log also shows:</p>
+<p><code>CLIP/text encoder model load device: cpu</code></p>
+<p>On Apple Silicon, Comfy’s default <strong>SHARED</strong> memory mode parks text/LLM encoders on <strong>CPU</strong>. That’s why AR feels like a crawl.</p>
+<h3 id="supported-music-3-encoder-variants">Supported Music 3 encoder variants</h3>
+<p>From <a href="https://huggingface.co/Comfy-Org/MiniMax-Music-3">Comfy-Org/MiniMax-Music-3</a>:</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>minimax_music3_text_encoder_bf16</code></td>
+<td>full</td>
+</tr>
+<tr>
+<td><code>minimax_music3_text_encoder_pruned_bf16</code></td>
+<td><strong>what you have</strong> (best Mac default)</td>
+</tr>
+<tr>
+<td><code>minimax_music3_text_encoder_pruned_int8_convrot</code></td>
+<td>low-VRAM / CUDA-oriented</td>
+</tr>
+</tbody></table>
+<p>There is <strong>no smaller distilled / turbo Music 3 AR model</strong>. INT8 is a quant of the same 8B AR stack, not a lighter architecture.</p>
+<h3 id="what-will--wont-help-on-a-36gb-m3">What will / won’t help on a 36 GB M3</h3>
+<p><strong>Likely biggest win: get AR onto Metal</strong></p>
+<ol>
+<li>Install [ComfyUI-AppleSilicon-FP8](<a href="https://github.com/pawel-mazurkiewicz/">https://github.com/pawel-mazurkiewicz/</a> …[excerpt truncated]</li>
+</ol>
+</li>
+<li><p><code>2026-08-15T11:00:32.695Z</code> · bubble <code>2b46a540-1e3e-4f23-b08c-707ad0eb62c9</code> · type <code>2</code></p>
+<p>Not PyTorch — <strong>ComfyUI-AppleSilicon-FP8</strong> is a <strong>custom node pack</strong> that patches Comfy’s MPS path (FP8/INT8 + redirecting text encoders onto Metal). Separate from your torch install.</p>
+<p>Your CLI alias is already better than Desktop: <strong>no <code>--lowvram</code></strong>. For Music 3 AR, tweak it like this:</p>
+<h3 id="recommended-for-this-use-case">Recommended for this use-case</h3>
+<pre><code class="language-zsh">alias comfy-serve=&quot;ulimit -n 8192; ${DIR_COMFY_SHARED}/.venv/bin/python \&quot;${DIR_COMFY_INSTALL}/ComfyUI/main.py\&quot; \
+  --user-directory ${DIR_COMFY_SHARED}/user \
+  --input-directory ${DIR_COMFY_SHARED}/input \
+  --output-directory ${DIR_COMFY_SHARED}/output \
+  --base-directory ${DIR_COMFY_SHARED} \
+  --database-url sqlite:///${DIR_COMFY_SHARED}/user/comfyui.db \
+  --extra-model-paths-config \&quot;$HOME/Library/Application Support/ComfyUI/extra_models_config.yaml\&quot; \
+  --highvram \
+  --log-stdout \
+  --listen 0.0.0.0 \
+  --port 8188 \
+  --enable-manager \
+  2&gt;&amp;1 | ts &#39;[%H:%M:%.S]&#39;&quot;
+</code></pre>
+<h3 id="what-to-change--keep">What to change / keep</h3>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Your alias</th>
+<th>For Music 3</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--lowvram</code></td>
+<td>absent ✅</td>
+<td>Keep it absent — that was the Desktop killer</td>
+</tr>
+<tr>
+<td><code>--highvram</code></td>
+<td>missing</td>
+<td><strong>Add</strong> — on MPS this is what gets TE off CPU (with <code>--gpu-only</code> as the harder option)</td>
+</tr>
+<tr>
+<td>`--reserve- …[excerpt truncated]</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+</li>
+<li><p><code>2026-08-15T11:17:26.944Z</code> · bubble <code>2ea17718-3860-4449-84d9-adf6aeb5352b</code> · type <code>2</code></p>
+<p>Nothing changed for a documented reason — not a bad guess about flags.</p>
+<h3 id="why---highvram-did-nothing-on-your-mac">Why <code>--highvram</code> did nothing on your Mac</h3>
+<p>In your installed ComfyUI (<code>model_management.py</code>):</p>
+<pre><code class="language-562:579:the">elif args.highvram or args.gpu_only:
+    vram_state = VRAMState.HIGH_VRAM
+...
+if cpu_state == CPUState.MPS:
+    vram_state = VRAMState.SHARED
+</code></pre>
+<p>On MPS, <strong><code>SHARED</code> always wins</strong>. That matches your log: <code>Set vram state to: SHARED</code> even with <code>--highvram</code>.</p>
+<p>Then:</p>
+<pre><code class="language-1189:1198:the">def text_encoder_device():
+    if args.gpu_only:
+        return get_torch_device()
+    elif vram_state in (VRAMState.HIGH_VRAM, VRAMState.NORMAL_VRAM) or ...:
+        ...
+    else:
+        return torch.device(&quot;cpu&quot;)
+</code></pre>
+<p>With <code>SHARED</code>, you hit the <code>else</code> → <strong>CPU</strong>. Same ~1.9s/it AR as before.</p>
+<p><a href="https://github.com/pawel-mazurkiewicz/ComfyUI-AppleSilicon-FP8">ComfyUI-AppleSilicon-FP8’s README</a> documents this exact failure mode for AR encoders (~1.7s/token on CPU) and that Mac hardcodes <code>SHARED</code>.</p>
+<h3 id="what-people-actually-do-sourced">What people actually do (sourced)</h3>
+<p>| Approach | Evidence | Notes |
+|---|---|---| …[excerpt truncated]</p>
+</li>
+<li><p><code>2026-08-15T10:56:09.341Z</code> · bubble <code>364338ab-7066-4189-8b86-823e3e0eca8c</code> · type <code>2</code></p>
+<p>Yes — that earlier successful run really did clock about an hour. Checking the live queue and log timings so we can separate AR encode vs diffusion.</p>
+</li>
+<li><p><code>2026-08-15T11:59:50.415Z</code> · bubble <code>39e7a9d5-1c9d-45ee-b8c8-94eb6b9545c0</code> · type <code>2</code></p>
+<p>Investigating how lyrics are wired into the MiniMax workflows versus the original ACE specs.</p>
+</li>
+<li><p><code>2026-08-15T10:42:32.506Z</code> · bubble <code>3dc9064b-4a99-4cde-996f-6c2028c428eb</code> · type <code>1</code></p>
+<p>Can you check my n8n, /n8n-agents-official , specifically the podcast workflows, and maybe my podcast website, <a href="https://brook.dev/projects/news/">https://brook.dev/projects/news/</a> , and see if you can put together a little html page where you gather the intro jingles from the existing stories, and recreate them using @the local vault/Downloads/audio_minimax_music_3.json this minimax 3 music workflow? Similar durations, same lyrics, do a bit of research to see if you can find out better ways to give style prompts to minimax as I assume it&#39;s different, and allows more detail, than what we are curently using. Run about 10 comparisons, if we have that many jingles. Just run them straight through comfy UI, you can use the comfy UI mcp and the n8n one. No need to build a new n8n workflow for this test.</p>
+</li>
+<li><p><code>2026-08-15T11:04:41.365Z</code> · bubble <code>3e20b494-c450-4df6-bae6-dc8331e164ee</code> · type <code>2</code></p>
+<p>Gallery is ready at:</p>
+<p><code>the local vault/git/brookjordan/docker-stacks/.tmp-jingle-minimax/gallery.html</code></p>
+<p><strong>1/10 ready</strong> (<code>2072</code> ACE vs MiniMax). The other nine show as pending.</p>
+<h3 id="duration">Duration</h3>
+<p>Yes — control it with <code>max_duration</code> on <code>MiniMaxMusic3TextEncode</code>.</p>
+<p>Reading “18 seconds isn’t enough” as the <strong>lyrics feeling cramped</strong>, I’ve rebuilt the remaining nine at <strong>24s</strong> (2072 stays the finished 18s compare). Tradeoff: longer audio ⇒ more AR steps ⇒ slower.</p>
+<p>If you meant the opposite (shorter for speed), say so and I’ll drop them to ~14s before enqueue.</p>
+<h3 id="when-cli-comfy-is-up">When CLI Comfy is up</h3>
+<p>Say the word (or run):</p>
+<pre><code class="language-zsh">python3 .tmp-jingle-minimax/enqueue_when_ready.py
+python3 -u .tmp-jingle-minimax/collect_jobs.py --interval 60
+</code></pre>
+<p>That skips <code>2072</code> and queues the other nine at 24s. Prefer <code>--highvram</code> on your <code>comfy-serve</code> alias for this batch.</p>
+</li>
+<li><p><code>2026-08-15T11:42:35.850Z</code> · bubble <code>51976512-2308-48e7-8cf3-c4f91dd87de4</code> · type <code>2</code></p>
+<p>Here’s what those lines mean:</p>
+<p><strong>Normal load chatter</strong></p>
+<ul>
+<li><code>loaded completely; 15921.75 MB … full load: True</code> — text encoder (~16 GB) fully on Metal, no partial/offload.</li>
+<li><code>4686.50 MB</code> — the diffusion model, also full load.</li>
+<li><code>Unloaded partially: … MB freed</code> — Comfy swapping stages (TE ↔ diffusion ↔ VAE) to free room between steps.</li>
+</ul>
+<p><strong>The real problem</strong>
+PyTorch is hitting the <strong>MPS soft cap</strong> (~22.5 GiB of your ~36 GB unified memory):</p>
+<pre><code>MPS backend out of memory (MPS allocated: 22.37 GiB … max allowed: 22.46 GiB).
+Tried to allocate 288.00 MiB …
+Use PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.0 to disable upper limit …
+</code></pre>
+<p>So TE-on-MPS helped speed, but with <code>--gpu-only</code> everything wants to stay resident and later jobs are OOMing. <strong><code>1931</code>, <code>1925</code>, <code>1926</code> already failed</strong> that way; more may follow.</p>
+<p><code>--gpu-only</code> didn’t invent a bigger GPU — it just stopped parking the TE on CPU, so peak MPS use is higher.</p>
+</li>
+<li><p><code>2026-08-15T10:59:05.338Z</code> · bubble <code>5207e950-2ce9-4cea-b9fe-cb85602950b0</code> · type <code>1</code></p>
+<p>We don&#39;t need to cancel them to get the time down, we can just let 3 finish then check in, looking at the rest as they arrive.</p>
+<blockquote>
+<p>The real lever is stop running that 8B AR on CPU
+How do we do that?</p>
+</blockquote>
+</li>
+<li><p><code>2026-08-15T12:12:09.363Z</code> · bubble <code>5d7bbfb4-d9af-43fb-bc6a-434ae8d917c2</code> · type <code>2</code></p>
+<p>The waiter finished successfully: all 9 <code>[Verse]</code> jobs were queued after Comfy came back. Still <strong>1 running / 8 pending</strong>, with <code>1967</code> kept.</p>
+</li>
+<li><p><code>2026-08-15T11:48:44.219Z</code> · bubble <code>64214bcb-2412-43ba-8c52-28ffee246260</code> · type <code>2</code></p>
+<p>All set.</p>
+<ul>
+<li><strong>Done (kept):</strong> <code>2072</code>, <code>1971</code>, plus collected/trimmed <strong><code>1967</code></strong> → gallery <strong>3/10</strong></li>
+<li><strong>Running:</strong> <code>1965</code></li>
+<li><strong>Queued:</strong> <code>1953</code>, <code>1931</code>, <code>1925</code>, <code>1926</code>, <code>1909</code>, <code>1895</code></li>
+</ul>
+<p>Watch the logs for another MPS OOM; if <code>0.9</code> holds through diffusion/VAE, you’re clear.</p>
+</li>
+<li><p><code>2026-08-15T11:02:12.754Z</code> · bubble <code>6e3feb01-c34e-4ebe-9524-2dcbf4db0999</code> · type <code>1</code></p>
+<p><timestamp>Saturday, Aug 15, 2026, 7:02 PM (UTC+8)</timestamp></p>
+<system_notification>
+The following task has finished. If you were already aware, ignore this notification and do not restate prior responses.
+
+<task>
+kind: shell
+status: success
+task_id: 935739
+title: Poll ComfyUI until jingle jobs finish
+tool_call_id: call-4cfc5471-82bb-42bc-90ad-8e7ab0a82041-81
+fc_98d5fe3f-f7e2-936c-a48e-238eed06575a_2
+output_path: the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/terminals/935739.txt
+</task>
+</system_notification>
+<user_query>Briefly inform the user about the task result and perform any follow-up actions (if needed). If there's no follow-ups needed, don't explicitly say that.</user_query>
+</li>
+<li><p><code>2026-08-15T11:00:27.509Z</code> · bubble <code>72171e71-1cf3-47ae-bc91-f26a0078e673</code> · type <code>1</code></p>
+<p>apple silicone FP*, do you mean pytorch?</p>
+<p>Maybe I&quot;ll run in in cli.</p>
+<p>I have this:
+alias comfy-serve=&quot;ulimit -n 8192; ${DIR_COMFY_SHARED}/.venv/bin/python &quot;${DIR_COMFY_INSTALL}/ComfyUI/main.py&quot; --user-directory ${DIR_COMFY_SHARED}/user --input-directory ${DIR_COMFY_SHARED}/input --output-directory ${DIR_COMFY_SHARED}/output --base-directory ${DIR_COMFY_SHARED} --database-url sqlite:///${DIR_COMFY_SHARED}/user/comfyui.db --extra-model-paths-config &quot;$HOME/Library/Application Support/ComfyUI/extra_models_config.yaml&quot; --reserve-vram 5 --log-stdout --listen 0.0.0.0 --port 8188 --enable-manager  2&gt;&amp;1 | ts &#39;[%H:%M:%.S]&#39;&quot;</p>
+<p>Is that good, or should I update something for this use-case?</p>
+</li>
+<li><p><code>2026-08-15T10:43:21.087Z</code> · bubble <code>7793ada3-ccc4-4999-b348-35a9a9aa619b</code> · type <code>2</code></p>
+<p>Found 15 intro jingles locally. Next I&#39;ll pull the song-spec prompts from n8n and match them to the published stories.</p>
+</li>
+<li><p><code>2026-08-15T10:48:48.349Z</code> · bubble <code>7b7040df-4600-4c15-9d78-71aacd3b5c73</code> · type <code>2</code></p>
+<p>Each MiniMax run is ~15–20 min on this Mac (AR sampling alone). Waiting for the first finish, then I&#39;ll keep collecting.</p>
+</li>
+<li><p><code>2026-08-15T10:57:57.951Z</code> · bubble <code>8182962e-a10e-4c22-9190-bf1b5b290c44</code> · type <code>1</code></p>
+<p>That&#39;s crazy… how can I reduce that time? Is there supported AR sampling (text encode / structure) models I can use that would run better on my 36gb m3 laptop?</p>
+</li>
+<li><p><code>2026-08-15T11:02:12.767Z</code> · bubble <code>8668eecc-991c-4fcd-830f-5a8124e5fcb9</code> · type <code>1</code></p>
+<p><timestamp>Saturday, Aug 15, 2026, 7:02 PM (UTC+8)</timestamp></p>
+<system_notification>
+The following task has finished. If you were already aware, ignore this notification and do not restate prior responses.
+
+<task>
+kind: shell
+status: success
+task_id: 935741
+title: Resume polling for remaining jingles
+tool_call_id: call-6b52ab77-95d2-4760-b0ea-e9f6c9f58dec-112
+fc_62743743-8de9-9762-98f4-9770f1de8643_1
+output_path: the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/terminals/935741.txt
+</task>
+</system_notification>
+<user_query>Briefly inform the user about the task result and perform any follow-up actions (if needed). If there's no follow-ups needed, don't explicitly say that.</user_query>
+</li>
+<li><p><code>2026-08-15T10:44:46.369Z</code> · bubble <code>8d7dc155-8268-47e5-8722-fef0bc87269b</code> · type <code>2</code></p>
+<p>Replacing the missing 1929 original with 1925, then validating and queueing the MiniMax runs.</p>
+</li>
+<li><p><code>2026-08-15T11:05:53.746Z</code> · bubble <code>8d9d8fb3-a6bb-46e4-a6b1-15c776394b72</code> · type <code>2</code></p>
+<p>Comfy’s up with <code>--highvram</code> — <strong>9 remaining jobs are queued</strong>, collector is running. Gallery refreshed.</p>
+<h3 id="avoiding-cutoff-at-18s">Avoiding cutoff at ~18s</h3>
+<p>Yes — don’t trust <code>max_duration</code> alone. Better pattern:</p>
+<ol>
+<li><strong>Generate a bit long</strong> (we’re using <strong>20s</strong> for the remaining nine) with caption: vocals on beat one, hard stop, no long pre-roll  </li>
+<li><strong>Post-trim with ffmpeg silence detection</strong> (<code>trim_jingle.py</code>):<ul>
+<li>find onset (first non-silence ≈ drum/vocal start) → short fade-in  </li>
+<li>find end of audible content → drop trailing pad  </li>
+<li>only hard-cap at <strong>18s</strong> if it’s still longer</li>
+</ul>
+</li>
+</ol>
+<p>Tried on <code>2072</code>: raw 18.0s → <strong>trimmed 13.3s</strong> (mostly trailing silence). Gallery file is the trimmed one; raw kept in <code>minimax_raw/</code>.</p>
+<p>That’s <strong>not</strong> true lyric ASR — it’s onset/energy. For “lyrics start” specifically you’d add vocal separation (e.g. Demucs) then energy on the vocal stem; usually overkill if the caption forces vocals on bar 1.</p>
+<p>If 18s still feels long as a bumper, lower <code>--max</code> to 12–15 after onset trim.</p>
+<p><strong>Note:</strong> even with <code>--highvram</code>, this CLI boot still logged <code>vram state: SHARED</code> on MPS — TE may still be on CPU until ASFP8. Watch AR it/s on this batch.</p>
+</li>
+<li><p><code>2026-08-15T10:45:12.480Z</code> · bubble <code>8ddf52dd-e347-403c-9fe9-5fa99e62491c</code> · type <code>2</code></p>
+<p>All 10 are queued. I&#39;ll monitor progress and build the comparison page while they run.</p>
+</li>
+<li><p><code>2026-08-15T12:13:27.251Z</code> · bubble <code>945b6bea-04c6-419b-aadb-eb2f20532072</code> · type <code>2</code></p>
+<p>Yes — <code>[Intro]</code> is a good fallback for these. They’re cold-open bumpers that start on beat one, so Intro matches the role better than Verse/Chorus if Verse still goes quiet.</p>
+<p>Leave the current <code>[Verse]</code> batch running; if lyrics stay thin we can rebuild with <code>[Intro]</code> and re-queue the weak ones.</p>
+</li>
+<li><p><code>2026-08-15T11:04:43.531Z</code> · bubble <code>a26ff996-b90f-4252-8dc8-7a80e6d6f24c</code> · type <code>1</code></p>
+<p><timestamp>Saturday, Aug 15, 2026, 7:04 PM (UTC+8)</timestamp></p>
+<system_notification>
+The following task has finished. If you were already aware, ignore this notification and do not restate prior responses.
+
+<task>
+kind: shell
+status: error
+task_id: 935742
+title: Restart fixed jingle job collector
+tool_call_id: call-ec91ff47-f519-40e8-a155-718006b9c4dc-118
+fc_6b32011f-55b4-9125-a4e5-ee1c6b26b90e_1
+detail: exit_code=1
+output_path: the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan-docker-stacks/terminals/935742.txt
+</task>
+</system_notification>
+<user_query>Briefly inform the user about the task result and perform any follow-up actions (if needed). If there's no follow-ups needed, don't explicitly say that.</user_query>
+</li>
+<li><p><code>2026-08-15T12:12:02.531Z</code> · bubble <code>a315c833-04fc-4cb6-b3a3-8dc323988f44</code> · type <code>2</code></p>
+<p>No need — Comfy is already back up (watermark <code>0.9</code> is in your shell env), and the waiter already re-queued the <strong><code>[Verse]</code></strong> batch:</p>
+<ul>
+<li><strong>Kept:</strong> <code>1967</code></li>
+<li><strong>Running:</strong> <code>2072</code></li>
+<li><strong>Pending (8):</strong> <code>1971</code>, <code>1965</code>, <code>1953</code>, <code>1931</code>, <code>1925</code>, <code>1926</code>, <code>1909</code>, <code>1895</code></li>
+</ul>
+<p>You’re good — leave it cooking.</p>
+</li>
+<li><p><code>2026-08-15T12:04:11.746Z</code> · bubble <code>a9c0ac60-8012-4ded-8ab6-1fb36917c2cf</code> · type <code>2</code></p>
+<p>Kept <strong><code>1967</code></strong>. Switched the rest to <code>[Verse]</code>-only lyrics (no parenthetical Intro/Outro), rebuilt workflows, cleared the old MiniMax outs.</p>
+<p>Comfy went down when I interrupted the old queue — <strong>restart <code>comfy-music</code></strong> (with the <code>0.9</code> watermark). A waiter is already polling and will auto-queue these 9 once <code>:8188</code> is back:</p>
+<p><code>2072</code>, <code>1971</code>, <code>1965</code>, <code>1953</code>, <code>1931</code>, <code>1925</code>, <code>1926</code>, <code>1909</code>, <code>1895</code></p>
+</li>
+<li><p><code>2026-08-15T10:43:27.941Z</code> · bubble <code>c3677d8a-7fe1-4927-9887-d604c7872f37</code> · type <code>2</code></p>
+<p>I&#39;ll harvest lyrics and styles from the published episode pages, then map those into MiniMax captions for the comparison runs.</p>
+</li>
+<li><p><code>2026-08-15T11:47:20.540Z</code> · bubble <code>e78e5939-71d8-4c11-a03a-100d4490b5af</code> · type <code>2</code></p>
+<p>Yes — that flag is <code>--reserve-vram</code>, but it’s <strong>not</strong> what’s failing you here.</p>
+<p><strong><code>--reserve-vram</code></strong></p>
+<ul>
+<li>Comfy’s “leave this much free for the OS/other apps” knob.</li>
+<li>Default on Mac is about <strong>0.4 GB</strong>, not 4. Your <code>comfy-local</code> / <code>comfy-serve</code> use <strong>5</strong>.</li>
+<li><code>comfy-music</code> doesn’t set it, so you’re already on that small default.</li>
+<li>Lowering it (e.g. to 3) only matters if you’d set it high; it tells Comfy to <strong>unload less aggressively</strong>. It does <strong>not</strong> raise PyTorch’s hard cap.</li>
+</ul>
+<p><strong>What’s actually biting you</strong></p>
+<pre><code class="language-text">export PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.8   # in your .zshrc
+</code></pre>
+<p>That’s why the error says ~22.46 GiB max and you’re only ~288 MB short.</p>
+<p>For “a little more”, bump that first, e.g.:</p>
+<pre><code class="language-zsh">export PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.85   # or 0.9
+</code></pre>
+<p>then restart <code>comfy-music</code>. <code>0.0</code> disables the cap entirely (riskier on a Mac you still use for other things).</p>
+<p>If you still want <code>--reserve-vram</code> on the alias for consistency with the others, use something like <code>--reserve-vram 3</code> — but treat the <strong>watermark</strong> as the real fix for this OOM.</p>
+</li>
+<li><p><code>2026-08-15T11:02:29.782Z</code> · bubble <code>ee84065b-5236-45b8-af87-d639f05e92cc</code> · type <code>2</code></p>
+<p>Those collectors exited early on a race — they treated “not in history yet” as finished. Still only <strong>1/10</strong> done (<code>2072</code>); the other <strong>9 are queued and running</strong> again. Collector is back up with that race fixed.</p>
+</li>
+<li><p><code>2026-08-15T10:56:15.043Z</code> · bubble <code>f3fb067b-738f-44cb-a60d-7013583f9402</code> · type <code>2</code></p>
+<p>Yes — <strong>56 minutes</strong> for that earlier successful ~1‑minute track. Split was brutal:</p>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>That ~60s song</th>
+<th>Current ~18s jingle (in progress)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>AR sampling</strong> (text encode / structure)</td>
+<td><strong>1501 steps · 47m 50s</strong> @ ~1.9s/it</td>
+<td><strong>451 steps · ~14m</strong> (same ~1.9s/it; ~76% at last check)</td>
+</tr>
+<tr>
+<td>Diffusion (KSampler 30 steps)</td>
+<td><strong>7m 35s</strong></td>
+<td>still ahead</td>
+</tr>
+<tr>
+<td>Decode + overhead</td>
+<td>~1m</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>00:56:14</strong></td>
+<td>expect <strong>~18–22 min each</strong></td>
+</tr>
+</tbody></table>
+<p>So the “text encode” isn’t a quick CLIP pass — it’s the hierarchical AR LM walking music tokens frame-by-frame. On your Mac it’s also loading the TE on <strong>CPU</strong> (<code>CLIP/text encoder model load device: cpu</code>), which explains the ~2s/token crawl.</p>
+<p>Rough maths for the 10 queued jingles: <strong>~3–3.5 hours</strong> wall clock if nothing fails.</p>
+<p>Want me to leave them running overnight, or cancel down to 2–3 so you can A/B sooner?</p>
+</li>
+<li><p><code>2026-08-15T11:19:05.343Z</code> · bubble <code>f496afb3-d1f9-45cd-b66a-9a3e3cefad0c</code> · type <code>1</code></p>
+<p>I wanna finish this one then I&#39;ll try with the new flag.</p>
+</li>
+<li><p><code>2026-08-15T11:26:55.255Z</code> · bubble <code>fb809e18-9bb8-40d7-9607-edfebea5f212</code> · type <code>2</code></p>
+<p>All <strong>8 remaining</strong> are queued again on the fresh <code>comfy-music</code> instance.</p>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Cases</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Done (kept)</td>
+<td><code>2072</code>, <code>1971</code></td>
+</tr>
+<tr>
+<td>Running</td>
+<td><code>1967</code></td>
+</tr>
+<tr>
+<td>Pending</td>
+<td><code>1965</code>, <code>1953</code>, <code>1931</code>, <code>1925</code>, <code>1926</code>, <code>1909</code>, <code>1895</code></td>
+</tr>
+</tbody></table>
+<p><code>--gpu-only</code> is working: log shows <strong><code>CLIP/text encoder model load device: mps</code></strong> (was <code>cpu</code> before). AR for <code>1967</code> has started.</p>
+<p>Two of the first enqueue batch (<code>1965</code>, <code>1953</code>) got wiped by a clear/enqueue race; they’re re-queued now. <code>collect_jobs.py</code> / gallery refresh can wait until more finish.</p>
+</li>
+<li><p><code>2026-08-15T12:00:51.753Z</code> · bubble <code>fbecc84a-3c6c-4a4d-a9f8-14963f35b257</code> · type <code>2</code></p>
+<p>Yes — <strong><code>[Chorus]</code> is a plausible mismatch</strong> for these.</p>
+<p>Music 3’s official examples treat sections differently:</p>
+<ul>
+<li><strong><code>[Verse]</code></strong> — unique narrative lines (what your three news hooks are)</li>
+<li><strong><code>[Chorus]</code></strong> — repeated hook / catchy refrain (often shorter, sing-song, sometimes wordless)</li>
+</ul>
+<p>Your lyrics currently look like:</p>
+<pre><code class="language-text">[Intro]
+(drum hit)
+
+[Chorus]
+Trucks are rolling…
+
+[Outro]
+(hard stop)
+</code></pre>
+<p>So the model sees: instrumental-ish intro (parentheses = non-sung direction), then a “chorus” that is actually three one-shot verse lines, then another non-sung outro. For an ~18s bumper that can easily tip into “music only” or sparse vocals.</p>
+<p>Better shape for these jingles:</p>
+<pre><code class="language-text">[Verse]
+Trucks are rolling and the gold is won
+PayPal&#39;s moving while the sprint is done
+Check your iPhone lens for safety fun
+</code></pre>
+<p>Drop the parenthetical Intro/Outro; keep “hard stop / start on beat one” in the <strong>caption</strong> only.</p>
+<p>Want me to rebuild the workflows that way and re-queue the ones that came out lyric-light (or all 10)?</p>
+</li>
+<li><p><code>2026-08-15T12:01:35.659Z</code> · bubble <code>0b637906-f808-48d7-847b-d8b7c98e28fd</code> · type <code>2</code></p>
+<p>Keeping <code>1967</code>, switching the others to <code>[Verse]</code> lyrics, then clearing the queue and re-enqueueing.</p>
+</li>
+<li><p><code>2026-08-15T11:03:49.216Z</code> · bubble <code>1295dc8f-e751-4dc4-b417-e117203aab97</code> · type <code>2</code></p>
+<p>Updating the gallery for <code>2072</code>, then rebuilding the remaining nine at a longer <code>max_duration</code> so the lyrics have room — AR cost scales with length.</p>
+</li>
+<li><p><code>2026-08-15T12:28:47.899Z</code> · bubble <code>ff41e43b-d69b-4bfb-bc7a-b03f15f22031</code> · type <code>2</code></p>
+<p><strong><code>1925</code></strong> and <strong><code>1926</code></strong> are in — gallery <strong>8/10</strong>. Just <code>1909</code> and <code>1895</code> left.</p>
+</li>
+</ul>
+<h3 id="10-podcast-host-personality-update">10. Podcast host personality update</h3>
+<ul>
+<li>Composer ID: <code>906bb074-e661-437e-8dd2-aed0e8c58be4</code></li>
+<li>Created at (UTC): <code>2026-08-17T00:57:52.673000+00:00</code></li>
+<li>Last updated at (UTC): <code>2026-08-17T00:58:27.756000+00:00</code></li>
+<li>Messages with text retained: <code>3</code></li>
+</ul>
+<h4 id="message-excerpts-9">Message excerpts</h4>
+<ul>
+<li><p><code>2026-08-17T01:01:48.675Z</code> · bubble <code>7b0465f7-192e-4e4f-8599-01b3024e1e7b</code> · type <code>2</code></p>
+<p>Updated the active podcast workflow prompt.</p>
+<p>Changes:</p>
+<ul>
+<li>Selects exactly two hosts based on the day’s news.</li>
+<li>Varies the opening speaker; no Brett default.</li>
+<li>Opens with story-led banter, then host introductions and “Patch Notes”.</li>
+<li>Makes Brett and Antony rounded contributors, not recurring stereotypes.</li>
+<li>Allows concise single-host coverage to reduce crowding.</li>
+<li>Passes the prepared previous-episode context into the prompt.</li>
+</ul>
+<p>Validation passes with no errors. I didn’t execute it because that would run the live media/publishing pipeline. Note: stored previous-script data is currently empty, so callbacks still need that storage populated.</p>
+</li>
+<li><p><code>2026-08-17T00:58:27.763Z</code> · bubble <code>da3134d9-d1ec-4576-9244-1ac1f81def11</code> · type <code>1</code></p>
+<p>Check /n8n-agents-official . Look into PodCast Builder - for cursor - up to 6-frame FLF test. Help me update the workflow to have the prompt look at the personalities of the hosts, pick 2 that best fit the summary of the news that day. Have it pick a random host that&#39;s best suited to the first story with some witty banter, rather than it always being Brett. Have the two hosts introduce themselves after the witty banter, I&#39;m Brett, I&#39;m Brook, and on today&#39;s episode of Patch Notes… kinda thing. Right now I think it&#39;s a bit crowded and some people talking feels forced. While the charactatures are good, righ tnow Brett and Anthony are a bit too stereotypical. Try and update the prompt to also make sure that we use the characters to better represent that type of person, not ONLY tell dad jokes, not ONLY link to theology. But use their knowledge on being a parent empathetically too. Use his deep book and religious knowledge to give his take on the stories. Etc.</p>
+</li>
+<li><p><code>2026-08-17T00:59:40.367Z</code> · bubble <code>172cf59c-fa28-437f-9904-0aedef3b3db7</code> · type <code>2</code></p>
+<p>I found the repetition source: the script prompt explicitly treats all four as hosts, requires all hosts on headline stories, and turns Antony/Brett’s traits into mandatory recurring bits. It also prepares the previous episode but then passes “none provided”, so the anti-repetition guidance has no history to work from. I’ll correct those prompt-level constraints without changing the media pipeline.</p>
+</li>
+</ul>
+<h2 id="extraction-notes">Extraction notes</h2>
+<ul>
+<li>Composer headers came from <code>composerHeaders</code>; message text came from <code>bubbleId:&lt;composerId&gt;:&lt;bubbleId&gt;</code> rows in <code>cursorDiskKV</code>.</li>
+<li>Some Composer assistant/tool material is stored in separate Cursor blobs and is not expanded here; the packet does not invent missing text.</li>
+<li>Workflow names, execution IDs, paths, and links are only listed when present in retained message text or source metadata.</li>
+</ul>
+
+</body></html>

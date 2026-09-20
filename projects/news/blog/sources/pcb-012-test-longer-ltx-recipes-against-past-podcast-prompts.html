@@ -1,0 +1,104 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Source: longer LTX recipe contract — PodCast Builder devlog</title>
+<style>
+body{max-width:760px;margin:2.5rem auto;padding:0 1.2rem;font-family:ui-sans-serif,system-ui,sans-serif;background:#16181f;color:#dfe2ea;line-height:1.65}
+a{color:#7aa2f7} h1,h2{line-height:1.25} code{background:#262a33;padding:.1em .35em;border-radius:4px;font-size:.9em}
+pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{color:#8b90a0;font-size:.85rem}
+.back{font-size:.85rem} .backnote{background:#262a33;border:1px solid #333;border-radius:8px;padding:.8rem 1rem;font-size:.85rem;color:#aeb3c2}
+</style></head><body>
+<p class="back"><a href="../index.html">← PodCast Builder devlog</a></p>
+<p class="backnote">This is a public snapshot of a private project-tracking note, sanitised for
+publication: internal links, status metadata and personal paths are removed. The live private
+version lives in the author's Obsidian vault.</p>
+<h1>longer LTX recipe contract</h1>
+<h1 id="pcb-012-test-longer-ltx-recipes-against-past-podcast-prompts">PCB-012 Test longer LTX recipes against past podcast prompts</h1>
+<h2 id="question">Question</h2>
+<p>Can the local LTX-2.5 setup make longer podcast videos reliably when it uses prompts from real past episodes?</p>
+<h2 id="why-this-test-exists">Why this test exists</h2>
+<p>The LTX operating-envelope work found a clean single-render result at about 20 seconds and a practical ceiling near 24 seconds. It also found that the two-stage recipe is sharper and faster than the one-stage fallback, while text-only multi-shot prompts can ignore a requested cut. The podcast builder needs evidence with its own prompts and images, not another abstract benchmark.</p>
+<p>Use the fixed production preset from the selected LTX preset, the duration findings from the duration-boundary test, the two-stage recipe from the one-stage/two-stage comparison, and the transition evidence from the FLF2V test. Keep the LTX model files local as required by the local-model ticket.</p>
+<h2 id="test-matrix">Test matrix</h2>
+<p>Select five past podcast prompt/image cases. Each case must use a real motion prompt from the episode or its recorded workflow inputs, with the same start and end images for both arms.</p>
+<p>For each case, run these three renders:</p>
+<ol>
+<li><strong>Single-prompt arm:</strong> combine the motion instructions into one prompt and render one long LTX video. Target the longest duration that remains inside the measured single-render envelope, starting at 20 seconds and recording the actual result.</li>
+<li><strong>Two-part arm, part one:</strong> use the first of two prompt sections and render the first long clip.</li>
+<li><strong>Two-part arm, part two:</strong> use the second prompt section and render the second long clip, then join the two clips in post.</li>
+</ol>
+<p>The two-part arm should produce a combined video longer than the single-prompt arm. Do not ask one LTX render to perform a hard multi-shot cut. The two sections must describe a continuous visual sequence that can be joined cleanly.</p>
+<h2 id="accounting">Accounting</h2>
+<ul>
+<li>Five past-podcast cases.</li>
+<li>Three LTX renders per case: <code>1 + 1 + 1</code>.</li>
+<li>Fifteen renders total.</li>
+<li>Ten finished videos total: five single-prompt videos plus five joined two-part videos.</li>
+<li>The two source clips in each joined case remain as evidence; the joined output is the second finished-video result for that case.</li>
+</ul>
+<h2 id="recipe-controls">Recipe controls</h2>
+<ul>
+<li>Use the production two-stage recipe, Q5 quantisation and the current local Apple Silicon LTX path.</li>
+<li>Keep resolution, sampler, sigma schedule, guide strength, FPS and model revision fixed unless the test records a deliberate arm change.</li>
+<li>Use a distinct seed per case and record it. Do not retry a failed render silently.</li>
+<li>Keep the current six-frame podcast image flow as the source of the test cases, but choose cases whose prompts can support a longer continuous action.</li>
+<li>Run one ComfyUI job at a time and keep the normal-profile restore and n8n lock-release checks.</li>
+</ul>
+<h2 id="per-case-record">Per-case record</h2>
+<p>Record the episode or prompt source, case ID, start and end image identifiers, full prompts, prompt arm, seed, model and workflow revision, requested and actual duration, wall time, peak memory, local-model gate result, output path, frame count, decode result, guide-frame preservation, visual verdict and any failure reason.</p>
+<p>Review every finished video at full speed. Contact sheets alone cannot detect the temporal failures already documented in the LTX operating-envelope map.</p>
+<h2 id="acceptance-criteria">Acceptance criteria</h2>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> Five past-podcast prompt/image cases are selected and frozen before rendering.</li>
+<li><input disabled="" type="checkbox"> All fifteen renders are accounted for, including failures and retries.</li>
+<li><input disabled="" type="checkbox"> Each case produces one single-prompt video and one joined two-part video, for ten finished videos total.</li>
+<li><input disabled="" type="checkbox"> The joined video in every case is longer than its single-prompt counterpart, or the case records why it could not be.</li>
+<li><input disabled="" type="checkbox"> Every output decodes, and the record includes duration, frame count, memory, wall time, seed and visual verdict.</li>
+<li><input disabled="" type="checkbox"> The single-prompt and joined videos are reviewed at full speed for motion continuity, unwanted cuts, smear, freezing, guide preservation and prompt adherence.</li>
+<li><input disabled="" type="checkbox"> A safe duration range and a recommended recipe are recorded before any production duration change.</li>
+<li><input disabled="" type="checkbox"> No production workflow is changed by this experiment.</li>
+</ul>
+<h2 id="frozen-case-set">Frozen case set</h2>
+<p>The five real past-podcast prompt/image cases are frozen in the PCB-012 case packet. It records the source execution IDs, full image prompts, visual anchors, motion plans, source-image filename convention and motion-risk classification. Do not regenerate or substitute source images during the experiment.</p>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> Five past-podcast prompt/image cases selected and frozen before rendering.</li>
+</ul>
+<h2 id="progress-note--2026-09-19">Progress note — 2026-09-19</h2>
+<ul>
+<li><p>All ten source images verified on NAS (Ethernet route, hash-checked); case E&#39;s &quot;missing&quot; pair identified as the published <code>cover.png</code>/<code>cover-alt.png</code> in <code>v2026.38.2-08.49</code> (2506 was a retry of 2503). Frozen packet updated.</p>
+</li>
+<li><p>Duration probing spun out to PCB-013; its evidence packet is the probe packet.</p>
+</li>
+<li><p>Fog-motion artefact in FLF2V renders measured and spun out to PCB-014.</p>
+</li>
+<li><p>the LTX operating-envelope map — current preset, local hardware policy, regression state and known limits.</p>
+</li>
+<li><p>the selected production preset and its regression evidence — do not tune these settings inside the podcast experiment.</p>
+</li>
+<li><p>the duration boundary — 20 seconds is the clean control; 24 seconds is stress evidence.</p>
+</li>
+<li><p>the resolution boundary — retain the established 1024×576 output path rather than treating higher resolution as a free improvement.</p>
+</li>
+<li><p>the quantisation comparison — retain Q5 unless a deliberate comparison is recorded.</p>
+</li>
+<li><p>the two-stage comparison — use two-stage as the default and one-stage only as a named fallback.</p>
+</li>
+<li><p>the prompt-failure taxonomy — do not rely on prose for hard cuts or multi-shot structure.</p>
+</li>
+<li><p>the FLF2V conditioning test — use when a case needs a controlled start/end state.</p>
+</li>
+<li><p>the occlusion re-test and the crowd-face boundary — risk references for case selection and review.</p>
+</li>
+<li><p>the motion-viability packet — choose varied green/amber motion classes rather than five camera-only cases.</p>
+</li>
+</ul>
+<p>Use the MacBook settings packet, style-prompting packet and motion viability packet when selecting the five past-podcast cases. The motion packet&#39;s green and amber classes are preferred; crowd faces, long occlusion chains and hard multi-shot prompts are deliberate risk cases rather than default candidates.</p>
+<ul>
+<li>the podcast builder&#39;s general longer-video test</li>
+<li>the completed YuE2/LTX cutover</li>
+<li>the measured duration boundary</li>
+<li>the two-stage recipe comparison</li>
+<li>the prompt failure classes</li>
+<li>the first/last-frame conditioning test</li>
+</ul>
+
+</body></html>

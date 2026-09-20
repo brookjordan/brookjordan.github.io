@@ -1,0 +1,21 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Source: Two-host prompt iteration — PodCast Builder devlog</title>
+<style>
+body{max-width:760px;margin:2.5rem auto;padding:0 1.2rem;font-family:ui-sans-serif,system-ui,sans-serif;background:#16181f;color:#dfe2ea;line-height:1.65}
+a{color:#7aa2f7} h1,h2{line-height:1.25} code{background:#262a33;padding:.1em .35em;border-radius:4px;font-size:.9em}
+pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{color:#8b90a0;font-size:.85rem}
+.back{font-size:.85rem} .backnote{background:#262a33;border:1px solid #333;border-radius:8px;padding:.8rem 1rem;font-size:.85rem;color:#aeb3c2}
+</style></head><body>
+<p class="back"><a href="../index.html">← PodCast Builder devlog</a></p>
+<p class="backnote">This is a public snapshot of a private project-tracking note, sanitised for
+publication: internal links, status metadata and personal paths are removed. The live private
+version lives in the author's Obsidian vault.</p>
+<h1>Two-host prompt iteration</h1>
+<h2 id="fas">FAS</h2>
+<p>First proper Motional day after Kezia&#39;s visit — entirely an afternoon/evening stack, but a dense one. Rebased the semantic-map migration branch, made fixups against <a href="https://gitlab.ci.motional.com/rti/FAS/-/merge_requests/9319">!9319</a>, and pushed the Command Center inGUItiv cutover as <a href="https://gitlab.ci.motional.com/rti/FAS/-/merge_requests/9446">!9446</a> — <strong>merged on GitLab</strong> that evening. Spent a long session on <a href="https://gitlab.ci.motional.com/rti/FAS/-/merge_requests/9527">MR !9527</a> hygiene: swagger-backed types instead of hand-rolled URLs, shared map-toolbar mixins, and putting the “only show AV map when vehicle metadata exists” gate back.</p>
+<p>Review side: MAP-8318 comment pruning on <a href="https://gitlab.ci.motional.com/rti/FAS/-/merge_requests/9478">!9478</a>, then skill work so future reviews prefer a suggestion branch when the fix is multi-file or hard to explain in a comment. GitLab also shows a big review pass on Joel&#39;s bring-up MRs — threaded comments on <a href="https://gitlab.ci.motional.com/rti/FAS/-/merge_requests/9501">!9501</a> (CAS-851 bootup timeline) and the parent <a href="https://gitlab.ci.motional.com/rti/FAS/-/merge_requests/9370">!9370</a> (CAS-873 deployment progress). Reviewed <a href="https://gitlab.ci.motional.com/rti/FAS/-/merge_requests/9414">MR !9414</a> (Tianfu&#39;s CAS-991 deployable-updates work — merged) and left notes on Nicholas&#39;s <a href="https://gitlab.ci.motional.com/rti/FAS/-/merge_requests/9543">MR !9543</a> (CAS-1100 odmauth removal).</p>
+<h2 id="podcast-builder">PodCast Builder</h2>
+<p>Hermes carried the long &quot;make podcast prompts more engaging&quot; session over from Sunday. Picked option 2 for the script-prompt rewrite, reconnected after changing networks, and kept iterating until the conversational two-host style (rotating cast, Tier-1 depth rules) felt right in the HTML preview.</p>
+
+</body></html>

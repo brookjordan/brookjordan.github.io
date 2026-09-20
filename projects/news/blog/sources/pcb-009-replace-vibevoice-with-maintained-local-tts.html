@@ -1,0 +1,38 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Source: TTS replacement scope — PodCast Builder devlog</title>
+<style>
+body{max-width:760px;margin:2.5rem auto;padding:0 1.2rem;font-family:ui-sans-serif,system-ui,sans-serif;background:#16181f;color:#dfe2ea;line-height:1.65}
+a{color:#7aa2f7} h1,h2{line-height:1.25} code{background:#262a33;padding:.1em .35em;border-radius:4px;font-size:.9em}
+pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{color:#8b90a0;font-size:.85rem}
+.back{font-size:.85rem} .backnote{background:#262a33;border:1px solid #333;border-radius:8px;padding:.8rem 1rem;font-size:.85rem;color:#aeb3c2}
+</style></head><body>
+<p class="back"><a href="../index.html">← PodCast Builder devlog</a></p>
+<p class="backnote">This is a public snapshot of a private project-tracking note, sanitised for
+publication: internal links, status metadata and personal paths are removed. The live private
+version lives in the author's Obsidian vault.</p>
+<h1>TTS replacement scope</h1>
+<h1 id="pcb-009-replace-vibevoice-with-maintained-local-tts">PCB-009 Replace VibeVoice with maintained local TTS</h1>
+<h2 id="current-production-evidence">Current production evidence</h2>
+<p>As of 2026-09-19, n8n workflow <code>2k7x4U8GgLeSFpRE</code> (<strong>Podcast – latest</strong>) is active with 102 nodes and matching draft/published version IDs. Its <code>Generate audio</code> node still submits <code>VibeVoiceSingleSpeakerNode</code>, so this ticket is a real production replacement rather than a completed migration.</p>
+<h2 id="scope">Scope</h2>
+<p>Compare a small cohort from the local speech-generation project. Include a voice-cloning model and a small named-voice model. Start with Chatterbox, IndexTTS, Supertonic 3 and Kokoro. Keep VibeVoice as the baseline, not the target.</p>
+<p>The comparison must cover maintenance and licence status, Apple Silicon support, voice-cloning method, speaker consistency, long-form stability, latency, memory, audio validity, language coverage and the work needed to call the model from n8n.</p>
+<h2 id="acceptance-criteria">Acceptance criteria</h2>
+<ul>
+<li>Pin the exact upstream code and model revisions and record licence constraints.</li>
+<li>Generate the fixed podcast test corpus locally with each selected candidate.</li>
+<li>Verify every output is non-empty and decodable.</li>
+<li>Measure quality, latency, memory, long-form behaviour and speaker consistency.</li>
+<li>Select a replacement and record the reason, limitations and rollback path.</li>
+<li>Integrate the selected system in a duplicated n8n workflow before changing production.</li>
+<li>Keep VibeVoice available as rollback until a complete replacement run passes.</li>
+</ul>
+<h2 id="related-work">Related work</h2>
+<ul>
+<li>the local TTS comparison</li>
+<li>the n8n TTS audit</li>
+<li>the three-pass speaker test</li>
+</ul>
+
+</body></html>

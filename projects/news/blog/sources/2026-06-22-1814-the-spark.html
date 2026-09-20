@@ -1,0 +1,59 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Source: The spark — PodCast Builder devlog</title>
+<style>
+body{max-width:760px;margin:2.5rem auto;padding:0 1.2rem;font-family:ui-sans-serif,system-ui,sans-serif;background:#16181f;color:#dfe2ea;line-height:1.65}
+a{color:#7aa2f7} h1,h2{line-height:1.25} code{background:#262a33;padding:.1em .35em;border-radius:4px;font-size:.9em}
+pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{color:#8b90a0;font-size:.85rem}
+.back{font-size:.85rem} .backnote{background:#262a33;border:1px solid #333;border-radius:8px;padding:.8rem 1rem;font-size:.85rem;color:#aeb3c2}
+</style></head><body>
+<p class="back"><a href="../index.html">← PodCast Builder devlog</a></p>
+<p class="backnote">This is a public snapshot of a private project-tracking note, sanitised for
+publication: internal links, status metadata and personal paths are removed. The live private
+version lives in the author's Obsidian vault.</p>
+<h1>The spark</h1>
+<p>Before any of the gallery machinery, there was a much smaller goal: an <strong>n8n workflow</strong>
+(grandly named <em>&quot;PodCast Builder&quot;</em>) to auto-generate hero images for a patch-notes /
+podcast blog. The n8n logs show it grinding away from <strong>09:57 on the 22nd</strong> — including one
+heroic 1h30m run.</p>
+<p>And it wasn&#39;t only covers — <em>Patch Notes</em> is a <strong>podcast</strong>, so the day&#39;s very first AI
+experiments were a <em>voice</em>: five AI-generated intro takes (ACE-Step audio; <code>intro_302</code> → <code>intro_317</code>)
+between <strong>10:37 and 14:57</strong> that morning, hours before a single cover image existed. Here&#39;s
+<a href="audio/intro_305.mp3">take 305</a> (Jun 22, 11:28).</p>
+<blockquote>
+<p>&quot;trying to build an n8n process for my blog and realising the images weren&#39;t as good
+quality / in the right style as I wanted, and wondering how to get more out of local image
+generation.&quot;</p>
+</blockquote>
+<p>The first frames landed late that night — <strong>23:33 on the 22nd</strong> — and they were… a lot.
+Melting golden clocks, robot ants swarming a circuit-board canyon, skies full of binary.
+On-theme for &quot;patch notes&quot; (time! bugs! code!) and genuinely striking — but a touch
+generic-AI, over-saturated, and nowhere near consistent enough to be a blog&#39;s recurring
+look.</p>
+<table>
+<thead>
+<tr>
+<th><code>flux4b-fast</code> · 23:33</th>
+<th><code>flux9b-hero</code> · 23:36</th>
+<th><code>chroma-art</code> · 23:54</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><img src="img/origin_flux4b_fast.webp" alt="Melting clock and insects over circuitry, red sky"></td>
+<td><img src="img/origin_flux9b_hero.webp" alt="Robot ants on a circuit-board canyon"></td>
+<td><img src="img/origin_chroma_art.webp" alt="Moodier painterly clock over crates"></td>
+</tr>
+</tbody></table>
+<p>The <code>PN_</code> prefix is &quot;Patch Notes&quot; — the podcast&#39;s working title — and the <code>-fast</code> /
+<code>-hero</code> / <code>-art</code> suffixes were already me groping for a <em>style</em> — a fast daily look, a polished hero look, an arty look.</p>
+<p>And that&#39;s the exact moment this project was really born. Not &quot;make one image,&quot; but the
+nagging question:</p>
+<blockquote>
+<p><strong>Which local model, at what step count, actually gives the look I want — and how do I get
+the most out of this Mac?</strong></p>
+</blockquote>
+<p>You can&#39;t answer that by eyeballing one render. You answer it by rendering <em>everything</em> —
+every model, every step count, the same scenes, side by side. Which is precisely what we
+did over the next three days. Welcome to the rabbit hole.</p>
+
+</body></html>

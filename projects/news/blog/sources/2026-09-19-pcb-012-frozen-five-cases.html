@@ -1,0 +1,170 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Source: CASES evidence — PodCast Builder devlog</title>
+<style>
+body{max-width:760px;margin:2.5rem auto;padding:0 1.2rem;font-family:ui-sans-serif,system-ui,sans-serif;background:#16181f;color:#dfe2ea;line-height:1.65}
+a{color:#7aa2f7} h1,h2{line-height:1.25} code{background:#262a33;padding:.1em .35em;border-radius:4px;font-size:.9em}
+pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{color:#8b90a0;font-size:.85rem}
+.back{font-size:.85rem} .backnote{background:#262a33;border:1px solid #333;border-radius:8px;padding:.8rem 1rem;font-size:.85rem;color:#aeb3c2}
+</style></head><body>
+<p class="back"><a href="../index.html">← PodCast Builder devlog</a></p>
+<p class="backnote">This is a public snapshot of a private project-tracking note, sanitised for
+publication: internal links, status metadata and personal paths are removed. The live private
+version lives in the author's Obsidian vault.</p>
+<h1>CASES evidence</h1>
+<h1 id="pcb-012-frozen-cases--five-real-podcast-executions">PCB-012 frozen cases — five real podcast executions</h1>
+<p>Captured from successful executions of the active <strong>Podcast – latest</strong> workflow (<code>2k7x4U8GgLeSFpRE</code>, inspected 2026-09-19). These are real generated podcast cover prompts and animation plans, not invented candidates. The execution ID is the provenance key. The corresponding source image is the run&#39;s <code>cover_&lt;execution&gt;_00001_.png</code>; the planned second image is <code>cover_frame2_&lt;execution&gt;_00001_.png</code> where that run reached frame generation.</p>
+<h2 id="freeze-decision">Freeze decision</h2>
+<p>Freeze these five cases for the 15-render experiment. Keep each case&#39;s source image pair fixed. For the experiment, rewrite each recorded motion plan into two continuous prompt sections: section one reaches the midpoint; section two continues from that midpoint. The single-prompt arm combines both sections without requesting a cut. Do not regenerate the source images during the LTX comparison.</p>
+<table>
+<thead>
+<tr>
+<th>Case</th>
+<th align="right">Source execution</th>
+<th>Motion category</th>
+<th>Why it is useful</th>
+<th>Risk class</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>PCB-012-A</td>
+<td align="right">2577</td>
+<td>Atmospheric drift / locked composition</td>
+<td>Smoke and dust are already planned as continuous motion while the studio composition stays fixed.</td>
+<td>Green control</td>
+</tr>
+<tr>
+<td>PCB-012-B</td>
+<td align="right">2575</td>
+<td>Fluid surface motion plus atmosphere</td>
+<td>Mercury ripple gives a visible subject-level motion signal, with smoke as a secondary track.</td>
+<td>Amber: fluid detail</td>
+</tr>
+<tr>
+<td>PCB-012-C</td>
+<td align="right">2572</td>
+<td>Painterly environment / fog reveal</td>
+<td>Tests whether slow fog drift survives the painterly style and preserves ruins and arches.</td>
+<td>Green–amber: style and fog</td>
+</tr>
+<tr>
+<td>PCB-012-D</td>
+<td align="right">2560</td>
+<td>Mechanical subject motion</td>
+<td>Android chest and shoulder breathing tests local articulated movement while the laboratory remains fixed.</td>
+<td>Amber: anatomy/mechanical detail</td>
+</tr>
+<tr>
+<td>PCB-012-E</td>
+<td align="right">2506</td>
+<td>Localised hologram pulse plus particles</td>
+<td>Tests a static wide scene with a small emissive change and dust motion, without a camera move.</td>
+<td>Green–amber: emissive flicker</td>
+</tr>
+</tbody></table>
+<h2 id="case-a--retro-futuristic-news-studio">Case A — retro-futuristic news studio</h2>
+<p><strong>Source execution:</strong> <code>2577</code> (successful trigger run, 2026-09-18). <strong>Story beats:</strong> Apple Releases Xcode SDK; Buffett Steps Down Chairman; Watson Joins Palantir; Introducing Astra For Law; Bristol Bahá’í History; Palestine Action Protest News.</p>
+<p><strong>Recorded image prompt:</strong></p>
+<blockquote>
+<p>A wide 16:9 cinematic establishing shot of a retro-futuristic news studio. In the foreground, a heavy mahogany desk is cluttered with glowing vacuum tubes and spinning reel-to-reel tapes. A holographic projection of a sprawling city skyline flickers above the desk, showing skyscrapers made of translucent glass and copper wiring. To the left, a large analog clock face melts slightly over a wall of flickering CRT monitors displaying scrolling green code and grainy black-and-white footage of protests. To the right, a velvet curtain hangs heavy, partially obscuring a brass telescope pointed at a neon-lit ceiling. The lighting is a moody palette of deep amber, bruised violet, and oxidized copper. Dust motes dance in thick beams of volumetric light cutting through a haze of cigarette smoke.</p>
+</blockquote>
+<p><strong>Visual anchors:</strong> mahogany desk; glowing vacuum tubes; spinning reel-to-reel tapes; holographic city skyline; CRT monitors with green code; melting analogue clock; red velvet curtain; brass telescope; volumetric amber light beams; cigarette-smoke haze.</p>
+<p><strong>Recorded motion plan:</strong> smoke and dust particles drift slowly through the volumetric lighting with subtle Brownian motion. Locked camera; hold the foreground centre, left wall, centre background and far right; no change to text or object count; no cut or restart.</p>
+<p><strong>Frozen source images:</strong> <code>cover_2577_00001_.png</code> → <code>cover_frame2_2577_00001_.png</code>.</p>
+<h2 id="case-b--brutalist-mercury-studio">Case B — brutalist mercury studio</h2>
+<p><strong>Source execution:</strong> <code>2575</code> (successful manual run, 2026-09-18). <strong>Story beats:</strong> iPhone 18 Pro News; AI Safety Research; Flight chaos caused by software defect in space; British woman kidnapped in Malawi rescue.</p>
+<p><strong>Recorded image prompt:</strong></p>
+<blockquote>
+<p>A wide 16:9 cinematic shot of a brutalist concrete news studio where the floor is covered in three inches of thick, iridescent violet mercury. In the center, a massive mahogany desk is fused with glowing fiber-optic cables and organic tree roots. A news anchor with skin made of polished chrome sits behind it, holding a microphone shaped like a frozen bird wing. Above them, a holographic ticker tape displays scrolling binary code in neon orange. In the background, a large window reveals a sky filled with floating, oversized smartphones orbiting a cracked moon. Dust motes dance in heavy volumetric god-rays cutting through a haze of lavender smoke.</p>
+</blockquote>
+<p><strong>Visual anchors:</strong> iridescent violet mercury floor; chrome-skinned anchor; bird-wing microphone; orbiting smartphones; neon-orange binary ticker.</p>
+<p><strong>Recorded motion plan:</strong> a heavy ripple propagates outward from the desk&#39;s contact point in the mercury; lavender smoke drifts from right to left. Locked camera; preserve colour, viscosity, object count and text.</p>
+<p><strong>Frozen source images:</strong> <code>cover_2575_00001_.png</code> → <code>cover_frame2_2575_00001_.png</code>.</p>
+<h2 id="case-c--overgrown-mythical-ruins">Case C — overgrown mythical ruins</h2>
+<p><strong>Source execution:</strong> <code>2572</code> (successful manual run, 2026-09-17). <strong>Story beats:</strong> Hidden Syrian Library; mythical; moody_greenland; complex_scenes.</p>
+<p><strong>Recorded image prompt:</strong></p>
+<blockquote>
+<p>masterpiece, best quality, cinematic lighting, highly detailed, painterly style, moody atmosphere, dark green and grey colour palette, mythical landscape, vast scale, ancient ruins, overgrown vegetation, heavy fog, dramatic shadows, intricate textures, wide shot, 16:9 aspect ratio</p>
+</blockquote>
+<p><strong>Visual anchors:</strong> massive stone archway; overgrown desert ruins; ethereal green mist; ancient scrolls and dust motes; towering crumbling pillars.</p>
+<p><strong>Recorded motion plan:</strong> slow volumetric fog drifts towards the camera lens. Locked camera; preserve the ruins, vegetation, colour palette and composition; no cut or unplanned action.</p>
+<p><strong>Frozen source images:</strong> <code>cover_2572_00001_.png</code> → <code>cover_frame2_2572_00001_.png</code>.</p>
+<h2 id="case-d--synthetic-skin-laboratory">Case D — synthetic-skin laboratory</h2>
+<p><strong>Source execution:</strong> <code>2560</code> (successful manual run, 2026-09-16). <strong>Story beats:</strong> Synthetic Skin Launch; AI Software Trends; cinematic_effects; detailed_painterly_looks.</p>
+<p><strong>Recorded image prompt:</strong></p>
+<blockquote>
+<p>score_9, score_8_up, score_7_up, rating_safe, masterpiece, cinematic lighting, painterly style, stylized cartoon, vibrant colors, complex scene, depth of field, high contrast, futuristic laboratory, synthetic skin texture, glowing blue lights, humanoid mannequin, robotic arms, intricate machinery, soft shadows, atmospheric perspective</p>
+</blockquote>
+<p><strong>Recorded motion plan:</strong> slow rhythmic contraction of the mechanical chest and shoulders, simulating a deep breath. Motion is limited to the subject&#39;s torso and shoulder regions; hold the eyes, portal window and surrounding laboratory fixed; no camera change or cut.</p>
+<p><strong>Frozen source images:</strong> <code>cover_2560_00001_.png</code> → <code>cover_frame2_2560_00001_.png</code>.</p>
+<h2 id="case-e--cathedral-kill-switch-scene">Case E — cathedral kill-switch scene</h2>
+<p><strong>Source execution:</strong> <code>2506</code> (successful retry run, 2026-09-15; retry of <code>2503</code>). <strong>Story beats:</strong> Apple OS Updates; AI Kill Switch; Church Concert Venue; Deepfake Site Seizures; Nvidia AI Stance.</p>
+<p><strong>Recorded image prompt:</strong></p>
+<blockquote>
+<p>A wide 16:9 cinematic shot of a brutalist concrete cathedral interior where the pews are replaced by rows of glowing, liquid-mercury servers. In the center, a massive holographic projection of an apple with a cracked glass skin flickers over a crowd of faceless figures in Victorian mourning clothes. The floor is flooded with two inches of neon-blue oil reflecting flickering overhead spotlights. Dust motes dance in heavy volumetric light beams. A large mechanical kill-switch lever made of rusted iron protrudes from a marble altar, surrounded by tangled fiber-optic cables resembling vines.</p>
+</blockquote>
+<p><strong>Visual anchors:</strong> brutalist architecture; liquid-mercury servers; cracked apple hologram; neon-blue oil floor; Victorian mourning attire; fibre-optic vines; volumetric lighting.</p>
+<p><strong>Recorded motion plan:</strong> subtle pulsing of the central holographic projection and slow particulate drift. Locked camera; hold background, midground, foreground/floor and ceiling; preserve object count and composition.</p>
+<p><strong>Frozen source images:</strong> <code>cover_2506_00001_.png</code> → <code>cover_frame2_2506_00001_.png</code>.</p>
+<h2 id="experiment-guardrails">Experiment guardrails</h2>
+<ul>
+<li>These five cases deliberately avoid dense identifiable crowds, long occlusion chains and hard multi-shot prompts. Case E contains faceless figures but does not animate their faces.</li>
+<li>Use the linked LTX motion-viability, duration, two-stage, prompt-failure, style and FLF2V notes from PCB-012.</li>
+<li>Keep the current LTX recipe fixed: Q5, two-stage default, local Apple Silicon path, established output resolution and 16 fps stitch path.</li>
+<li>The source images are provenance-locked. If a filename is absent on disk, mark the case unavailable rather than silently substituting another image.</li>
+<li>No renders are included in this freeze. The next step is a preflight that verifies these ten source-image files and records their byte paths before the 15-render batch begins.</li>
+</ul>
+<h2 id="provenance-verification-2026-09-19-post-freeze">Provenance verification (2026-09-19, post-freeze)</h2>
+<p>All five source pairs verified on NAS <code>/Volumes/assets</code> (SMB <code>10.10.10.2</code>, Ethernet route; verified via <code>mount</code>, not suffix). Execution→folder mapping from workflow <code>2k7x4U8GgLeSFpRE</code> node <code>Prepare publication directory</code> per execution. SHA-256 (first 16 hex) recorded; local↔NAS hashes match for every case.</p>
+<table>
+<thead>
+<tr>
+<th>Case</th>
+<th align="right">Exec</th>
+<th>NAS folder</th>
+<th>Source files (NAS name)</th>
+<th>SHA-256/16</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A</td>
+<td align="right">2577</td>
+<td><code>v2026.38.6-05.13</code></td>
+<td><code>cover.png</code> / <code>cover-alt.png</code> (= <code>cover_2577…</code> / <code>cover_frame2_2577…</code>)</td>
+<td><code>573a37b12c7a07c8</code> / <code>82c9aeb49be74de6</code></td>
+</tr>
+<tr>
+<td>B</td>
+<td align="right">2575</td>
+<td><code>v2026.38.5-23.51</code></td>
+<td>same convention</td>
+<td><code>36444520130d5b5c</code> / <code>c128c408a0a48672</code></td>
+</tr>
+<tr>
+<td>C</td>
+<td align="right">2572</td>
+<td><code>v2026.38.4-18.29</code></td>
+<td>same convention</td>
+<td><code>3c481b2a5a1259ca</code> / <code>470fcba173560c1a</code></td>
+</tr>
+<tr>
+<td>D</td>
+<td align="right">2560</td>
+<td><code>v2026.38.4-01.01</code></td>
+<td>same convention</td>
+<td><code>d92cfde796987d56</code> / <code>45ca965d7cf3404d</code></td>
+</tr>
+<tr>
+<td>E</td>
+<td align="right">2506</td>
+<td><code>v2026.38.2-08.49</code></td>
+<td><code>cover.png</code> / <code>cover-alt.png</code> (= <code>cover_2503…</code> / <code>cover_frame2_2503…</code>)</td>
+<td><code>823d671435ca2296</code> / <code>2a39cba7521f37d0</code></td>
+</tr>
+</tbody></table>
+<p><strong>Case E correction:</strong> execution <code>2506</code> (retry of <code>2503</code>) reused <code>2503</code>&#39;s generated images; its <code>Prepare final media manifest</code> published <code>cover_2503_00001_.png</code>→<code>cover.png</code> and <code>cover_frame2_2503_00001_.png</code>→<code>cover-alt.png</code>. The original filenames do not exist anywhere; the published pair in <code>v2026.38.2-08.49</code> <strong>is</strong> case E&#39;s frozen source. Restored locally as <code>cover_2506_00001_.png</code> / <code>cover_frame2_2506_00001_.png</code> in <code>the local vault/ComfyUI-Shared/output</code> (SHA-256 verified against NAS). Public URLs: <code>https://assets.brook.dev/podcasts/v2026.38.2-08.49/cover.png</code> and <code>…/cover-alt.png</code>.</p>
+<p>Preflight gate from the freeze decision: <strong>all ten source files verified — the 15-render batch is clear to start.</strong></p>
+<p>Return to PCB-012
+Motion category guidance</p>
+
+</body></html>

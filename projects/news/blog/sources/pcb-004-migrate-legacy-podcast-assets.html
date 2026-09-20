@@ -1,0 +1,20 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Source: T04 evidence — PodCast Builder devlog</title>
+<style>
+body{max-width:760px;margin:2.5rem auto;padding:0 1.2rem;font-family:ui-sans-serif,system-ui,sans-serif;background:#16181f;color:#dfe2ea;line-height:1.65}
+a{color:#7aa2f7} h1,h2{line-height:1.25} code{background:#262a33;padding:.1em .35em;border-radius:4px;font-size:.9em}
+pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{color:#8b90a0;font-size:.85rem}
+.back{font-size:.85rem} .backnote{background:#262a33;border:1px solid #333;border-radius:8px;padding:.8rem 1rem;font-size:.85rem;color:#aeb3c2}
+</style></head><body>
+<p class="back"><a href="../index.html">← PodCast Builder devlog</a></p>
+<p class="backnote">This is a public snapshot of a private project-tracking note, sanitised for
+publication: internal links, status metadata and personal paths are removed. The live private
+version lives in the author's Obsidian vault.</p>
+<h1>T04 evidence</h1>
+<h1 id="pcb-004-·-migrate-legacy-podcast-assets">PCB-004 · Migrate legacy podcast assets</h1>
+<h2 id="scope">Scope</h2>
+<p>After a newly generated episode completes the NAS-to-browser path, backfill selected older episodes. Copy their media from the existing site checkout to <code>/volume2/assets/podcast/&lt;episode-id&gt;/</code>, verify hashes and public URLs, rewrite each page to use <code>assets.brook.dev</code>, then remove its current media copy from the live GitHub Pages tree.</p>
+<p>Do not rewrite Git history as part of this migration.</p>
+
+</body></html>

@@ -455,6 +455,11 @@ a:hover {
 .part-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.16em;color:var(--text-tertiary,#8b90a0);margin:0 0 .6rem;font-weight:700}
 .post-title{margin:0 0 .8rem;font-size:1.7rem;line-height:1.25}
 .lead{font-size:1.02rem;color:var(--text-secondary,#aeb3c2);line-height:1.55;margin:0 0 1.8rem;max-width:64ch}
+.sources{margin-top:2.5rem;padding-top:1.2rem;border-top:1px solid var(--border-primary,#333)}
+.sources h2{font-size:1.1rem;margin:0 0 .4rem}
+.sources-note{font-size:.8rem;color:var(--text-tertiary,#8b90a0);margin:0 0 .6rem}
+.sources ul{margin:0;padding-left:1.2rem}
+.sources li{margin:.25rem 0;font-size:.9rem}
 @media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
 </style></head>
   <body>
@@ -473,13 +478,7 @@ a:hover {
 <h2>Where we left it</h2>
 <p>At the historical boundary, the cause remained unresolved. The copy strategy changed anyway: resumable transfer and local model verification reduced the impact of a lost path, without pretending to repair the path. That is a reasonable mitigation for an unknown cause, provided we label it as mitigation.</p>
 <p>The lesson is small and annoyingly reusable. &quot;The service is unreachable&quot; describes a client observation. &quot;The server rebooted&quot; describes a server event. They are not interchangeable merely because the first one makes the second one feel obvious. We now have a better sentence and a less exciting incident report, which is generally how diagnosis improves. The boring wording is valuable because it tells the next investigator exactly what evidence is still missing, rather than handing them a confident theory to defend. It preserves room for the next careful independent measurement, too.</p>
-<h2>Source notes</h2>
-<ul>
-<li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FPCB-008%20Keep%20the%20LTX%20video%20stage%20off%20the%20network%20mount">LTX transfer diagnosis and open cause, 17 September</a></li>
-<li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FScratchpad%2F2026-09-15%20raw%20conversation%20NAS%20route-aware%20SMB%20preflight">Route-aware SMB preflight evidence, 15 September</a></li>
-<li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FREADME">Podcast Builder execution map, 17 September</a></li>
-</ul>
-<nav class="post-nav"><a class="post-nav-link" href="p29-model-disappeared-under-memory-map.html">← earlier: The NAS vanished mid-render and killed the video model (SIGBUS)</a><a class="post-nav-link" href="p33-copying-model-not-enough.html">later →: 26 GB copied, zero verified: why we hash-check model copies now</a></nav></main>
+<section class="sources"><h2>Source notes</h2><p class="sources-note">Each source is a sanitised public snapshot of a private project-tracking note.</p><ul><li><a href="sources/pcb-008-keep-the-ltx-video-stage-off-the-network-mount.html">LTX transfer diagnosis and open cause, 17 September</a></li><li><a href="sources/2026-09-15-raw-conversation-nas-route-aware-smb-preflight.html">Route-aware SMB preflight evidence, 15 September</a></li><li><a href="sources/readme.html">Podcast Builder execution map, 17 September</a></li></ul></section><nav class="post-nav"><a class="post-nav-link" href="p29-model-disappeared-under-memory-map.html">← earlier: The NAS vanished mid-render and killed the video model (SIGBUS)</a><a class="post-nav-link" href="p33-copying-model-not-enough.html">later →: 26 GB copied, zero verified: why we hash-check model copies now</a></nav></main>
     <footer class="site-footer">
       <p>Private review preview of the <strong>PodCast Builder</strong> devlog — built from the senior-accepted draft set, 2026-09-19.</p>
     </footer>

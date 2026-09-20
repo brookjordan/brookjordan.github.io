@@ -1,0 +1,133 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Source: Historical workflow lineage archive — PodCast Builder devlog</title>
+<style>
+body{max-width:760px;margin:2.5rem auto;padding:0 1.2rem;font-family:ui-sans-serif,system-ui,sans-serif;background:#16181f;color:#dfe2ea;line-height:1.65}
+a{color:#7aa2f7} h1,h2{line-height:1.25} code{background:#262a33;padding:.1em .35em;border-radius:4px;font-size:.9em}
+pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{color:#8b90a0;font-size:.85rem}
+.back{font-size:.85rem} .backnote{background:#262a33;border:1px solid #333;border-radius:8px;padding:.8rem 1rem;font-size:.85rem;color:#aeb3c2}
+</style></head><body>
+<p class="back"><a href="../index.html">← PodCast Builder devlog</a></p>
+<p class="backnote">This is a public snapshot of a private project-tracking note, sanitised for
+publication: internal links, status metadata and personal paths are removed. The live private
+version lives in the author's Obsidian vault.</p>
+<h1>Historical workflow lineage archive</h1>
+<h1 id="2026-09-19-n8n-historical-trace-archive-and-podcast-workflow-lineage">2026-09-19 n8n historical trace archive and podcast workflow lineage</h1>
+<p>This packet records where n8n&#39;s own historical traces live and what a read-only extraction found. It is not a blog draft and does not claim that the oldest trace in this backup is the first podcast workflow ever created.</p>
+<h2 id="direct-answer">Direct answer</h2>
+<p>Yes. n8n has substantially more history than the current workflow conversation archive exposes.</p>
+<p>The strongest additional source is a local, untracked snapshot of the NAS n8n state:</p>
+<p><code>the local vault/git/brookjordan/docker-stacks/docker-n8n/n8n_pg15_backup/</code></p>
+<p>It contains:</p>
+<ul>
+<li>a PostgreSQL 15 data directory, about <strong>1.4 GB</strong>, with the n8n database;</li>
+<li>Redis persistence, including <code>dump.rdb</code> and append-only files;</li>
+<li>n8n user data and eight event-log files;</li>
+<li>audit events for workflow creation, update, activation, deactivation, deletion, execution, queueing, node start/finish and failure;</li>
+<li>historical workflow version IDs and execution IDs that are no longer returned by the current live workflow search.</li>
+</ul>
+<p>The backup&#39;s PostgreSQL cluster reports <code>cluster state: in production</code>, with its last checkpoint at <strong>2026-08-23 13:31:31 +0800</strong>. Do not start this data directory in place or point the live stack at it. Inspect it through a disposable read-only copy or an isolated temporary PostgreSQL instance later.</p>
+<h2 id="event-log-extraction">Event-log extraction</h2>
+<p>Extraction script:</p>
+<p><code>the local vault/Documents/hermes/podcast-swarm/scripts/extract_n8n_backup_event_index_20260919.py</code></p>
+<p>Machine-readable output:</p>
+<p><code>the local vault/Documents/hermes/podcast-swarm/n8n-backup-event-index-20260919.json</code></p>
+<p>The script read only <code>data/.n8n/n8nEventLog*.log</code>. It did not open or modify the PostgreSQL relation files or Redis persistence.</p>
+<ul>
+<li>Event-log files read: <strong>8</strong></li>
+<li>Events parsed: <strong>39,116</strong></li>
+<li>Malformed lines: <strong>0</strong></li>
+<li>Event range: <strong>2026-08-08T16:14:13.961+08:00</strong> to <strong>2026-08-23T13:25:11.529+08:00</strong></li>
+<li>Workflow IDs observed in the event logs: <strong>15</strong></li>
+<li>Workflow audit events: 11 created, 249 updated, 163 activated, 128 deactivated and 4 deleted</li>
+<li>Workflow run events: 331 started, 130 failed, 177 succeeded and 73 cancelled</li>
+<li>Node-level events: 6,532 started and 6,518 finished</li>
+</ul>
+<p>The event logs also retain queue job IDs, runner events, active version IDs, failed-node names, error messages, project IDs and the source of an execution. Some audit payloads include account metadata; future extracts must redact email and identity fields.</p>
+<h2 id="podcast-workflow-lineage-visible-in-the-backup">Podcast workflow lineage visible in the backup</h2>
+<h3 id="cjimnnvediam6zsc"><code>CjiMNnVeDIam6ZsC</code></h3>
+<p>Historical names include:</p>
+<ul>
+<li><code>PodCast Builder - for cursor</code></li>
+</ul>
+<p>Observed in the snapshot:</p>
+<ul>
+<li>First event: <strong>2026-08-08T16:14:14.359+08:00</strong></li>
+<li>Last event: <strong>2026-08-10T19:05:09.610+08:00</strong></li>
+<li>Event records: <strong>936</strong></li>
+<li>Execution IDs: <strong>12</strong></li>
+<li>Active version IDs: <strong>6</strong></li>
+</ul>
+<p>This is an older workflow identity that the current live n8n search does not return.</p>
+<h3 id="s9v0upcvycrtvjh4"><code>S9v0UpCVYcrtVJH4</code></h3>
+<p>Historical names in the event log include:</p>
+<ul>
+<li><code>PodCast Builder</code></li>
+<li><code>PodCast Builder - for cursor - up to 6-frame FLF test</code></li>
+</ul>
+<p>Observed in the snapshot:</p>
+<ul>
+<li>First event: <strong>2026-08-08T16:14:14.449+08:00</strong></li>
+<li>Last event: <strong>2026-08-23T13:15:32.610+08:00</strong></li>
+<li>Event records: <strong>8,594</strong></li>
+<li>Workflow-started events: <strong>102</strong></li>
+<li>Active version IDs: <strong>64</strong></li>
+<li>The logs include execution IDs from at least <code>1910</code> through <code>2213</code>, including failures, retries and successful scheduled runs.</li>
+</ul>
+<p>This directly confirms the user&#39;s memory: one workflow ID was repeatedly edited, activated, deactivated and executed under multiple names and versions. The current live record&#39;s one-version history is not the complete lineage.</p>
+<h3 id="related-workflow-records">Related workflow records</h3>
+<p>The same snapshot contains historical traces for:</p>
+<ul>
+<li><code>170rinSw5V40O0X6</code>, <code>Plan verified animation endpoints</code></li>
+<li><code>SHDYcIsQduuw1xpi</code>, <code>Serve localimagegen notes</code></li>
+<li><code>AWw1mLt101KC02ax</code>, <code>Save localimagegen note</code></li>
+<li><code>kyZcvt1CxQq8FQ0j</code>, <code>Send n8n workflow failures to Telegram</code></li>
+<li><code>EpNC1NBG6iY8WIaR</code>, <code>Temporary diagnose ComfyUI port 8188</code></li>
+<li><code>1ZFKEfVO81BixKiw</code>, <code>Temporary image-context smoke test</code></li>
+<li><code>0Otz7LarBs5otmvT</code>, <code>Temporary worker diagnose ComfyUI port 8188</code></li>
+<li><code>oODxJDlIQwMICkJx</code>, <code>TEMPORARY Cover router storyframe test</code></li>
+</ul>
+<p>These records are useful because the podcast system was spread across the main builder, cover-art helpers, animation planning, localimagegen serving and the shared failure workflow. They should be treated as related workflow lineage, not automatically as podcast blog chapters.</p>
+<h2 id="event-log-evidence-of-iteration">Event-log evidence of iteration</h2>
+<p>The raw event log records specific historical transitions such as:</p>
+<ul>
+<li>the old <code>PodCast Builder - for cursor - up to 6-frame FLF test</code> name being active;</li>
+<li>activation with one version ID followed by workflow updates, deactivation and activation with a new version ID;</li>
+<li>retry executions <code>2138</code>, <code>2140</code> and <code>2142</code>, with failures at <code>Assert normal ComfyUI ready</code> and <code>Build podcast webpage</code>, followed by a successful retry;</li>
+<li>scheduled executions <code>2143</code>, <code>2145</code>, <code>2147</code> and <code>2149</code>, including both failures and successful runs;</li>
+<li>activation of <code>Plan verified animation endpoints</code>, <code>Serve localimagegen notes</code>, <code>Save localimagegen note</code> and the Telegram failure workflow during the same n8n startup period.</li>
+</ul>
+<p>For exact raw records, search the eight event logs rather than relying on this summary.</p>
+<h2 id="other-n8n-trace-stores">Other n8n trace stores</h2>
+<p>The stack configuration confirms that n8n runs in queue mode with Postgres and Redis:</p>
+<ul>
+<li>Compose: <code>the local vault/git/brookjordan/docker-stacks/docker-n8n/docker-compose.yaml</code></li>
+<li>Backup compose: <code>the local vault/git/brookjordan/docker-stacks/docker-n8n/n8n_pg15_backup/docker-compose.yaml</code></li>
+<li>Live database service: Postgres 15</li>
+<li>Queue store: Redis with append-only persistence</li>
+<li>n8n user folder: mounted through <code>${N8N_HOST_DIR}</code> as <code>/home/node</code></li>
+<li>Event logs: <code>n8n_pg15_backup/data/.n8n/n8nEventLog*.log</code></li>
+<li>PostgreSQL cluster: <code>n8n_pg15_backup/db/</code></li>
+<li>Redis persistence: <code>n8n_pg15_backup/redis/</code></li>
+</ul>
+<p>The PostgreSQL database is the likely source for full historical workflow JSON, <code>workflow_entity</code> rows, workflow history/version data, execution metadata and execution payloads. Redis may contain queue/job remnants, but it is a secondary source and may be incomplete or transient.</p>
+<p>The current live n8n MCP call for workflow <code>2k7x4U8GgLeSFpRE</code> returned one saved version only. A live search for <code>PodCast Builder</code> returned no results. That absence is consistent with old workflow identities having been renamed, removed or made inaccessible, not with the historical work never existing.</p>
+<h2 id="next-extraction-route">Next extraction route</h2>
+<ol>
+<li>Preserve the backup as evidence. Do not boot it in place.</li>
+<li>Make a read-only copy or filesystem snapshot of <code>n8n_pg15_backup</code>.</li>
+<li>Start an isolated PostgreSQL 15 reader only against the copy, with no connection to the live stack.</li>
+<li>Identify the n8n database name and inspect only non-secret tables and columns needed for workflow lineage:<ul>
+<li>workflow identities and names;</li>
+<li>workflow versions and active-version changes;</li>
+<li>execution metadata and status;</li>
+<li>execution-to-workflow relationships;</li>
+<li>audit/event records if stored in the database.</li>
+</ul>
+</li>
+<li>Extract workflow JSON and version IDs for <code>CjiMNnVeDIam6ZsC</code>, <code>S9v0UpCVYcrtVJH4</code>, <code>170rinSw5V40O0X6</code>, <code>SHDYcIsQduuw1xpi</code>, <code>AWw1mLt101KC02ax</code> and <code>kyZcvt1CxQq8FQ0j</code>.</li>
+<li>Join those records to Cursor conversations and the existing podcast tickets.</li>
+</ol>
+<p>No database reader was started in this pass. The event-log route already proves that the older workflow lineage exists and gives us a safe index for the next extraction.</p>
+
+</body></html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Source: 50-song plan — PodCast Builder devlog</title>
+<style>
+body{max-width:760px;margin:2.5rem auto;padding:0 1.2rem;font-family:ui-sans-serif,system-ui,sans-serif;background:#16181f;color:#dfe2ea;line-height:1.65}
+a{color:#7aa2f7} h1,h2{line-height:1.25} code{background:#262a33;padding:.1em .35em;border-radius:4px;font-size:.9em}
+pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{color:#8b90a0;font-size:.85rem}
+.back{font-size:.85rem} .backnote{background:#262a33;border:1px solid #333;border-radius:8px;padding:.8rem 1rem;font-size:.85rem;color:#aeb3c2}
+</style></head><body>
+<p class="back"><a href="../index.html">← PodCast Builder devlog</a></p>
+<p class="backnote">This is a public snapshot of a private project-tracking note, sanitised for
+publication: internal links, status metadata and personal paths are removed. The live private
+version lives in the author's Obsidian vault.</p>
+<h1>50-song plan</h1>
+<h2 id="loan">Loan</h2>
+<p>Friday’s long message got a warm reply tonight — <em>cảm ơn con</em> — then the usual chaotic mẹ stack in one breath: Hien and her husband are fine; mẹ’s hand still is not fully right, but the wrist looks less swollen in the photo and it is mostly the thumb now; and have I been well lately?</p>
+<p>Sandwiched in that: two photos of Lily on the sofa looking outrageously made up, then the confession that she had gone for lip blushing (<em>xăm môi</em>) today. Before that text landed I genuinely wondered why she had painted her face so heavily — turns out it is tattoo ink plus post-procedure swelling, not filler, which explains the bee-stung red. In both shots Lily was completely ignoring her mum, which felt quietly on-brand. Also football on the TV and a hand photo, naturally.</p>
+<p>Drafted the reply with an agent, worked through Vietnamese I cannot read myself, and sent something kinder than my first instinct — still teased that Lily’s lips looked more swollen than mẹ’s wrist, but softened the clown line before it went out. Nudged that the exercising seems to be paying off without turning into unsolicited medical advice. Caught her up briefly: work fine, the last few weeks of electronics / 3D printing / cider, and Kezia’s visit last week on her way from New Zealand back to England — Gardens by the Bay, satay, a small wine batch — then the flat going quiet again after she left. Signed off hoping she enjoyed the match.</p>
+<p>She did not push the relationship thread further tonight, which was a relief after Friday’s honesty.</p>
+<h2 id="danie--quinn">Danie / Quinn</h2>
+<p>Danie pinged <em>I’m in I’m in</em> — presumably arrived wherever she was heading. Still pushing for Quinn’s allowance early: 5k through month-end because they are “leaving early tomorrow”. Same story as Tuesday’s thread — I am pretty sure the Manila/visa travel ate the gap, not generator fuel or brownouts. Said no once already; she asked again in the Quinn group chat and separately in a DM. Not replying now.</p>
+<h2 id="smart-home">Smart home</h2>
+<p>Spent most of the afternoon sorting the four Everything Presence Lite/mmWave zone devices — bedroom, dining room, kitchen and living room — into useful signals versus their astonishing pile of configuration and debug clutter. The inventory came to 24 signals worth keeping visible and 303 entities to hide, with the complete lists saved in <code>Documents/hermes/zone_entities_keep_hide.txt</code> and <code>Documents/hermes/zone_hide_lists.json</code>. That cleanup is still only planned: hiding does not disable devices, but the live metadata changes were not applied after the original Home Assistant connection ran into authentication trouble. Kitchen has duplicate occupancy entities; living room exposes raw TEMT6000 voltage rather than a proper illuminance sensor.</p>
+<p>Also kept the battery dashboard/low-battery work moving with readable device names: normal warning/critical thresholds are 20%/10%, with higher thresholds for the Acaia scale (40%/15%) and Oral-B toothbrush (30%/15%). Removed one unsuitable sensor from that flow. Tidied Zigbee naming and areas too: the spare control became Button: ambient, and the dining-room control is now Knob: diningroom.</p>
+<p>The generic Zigbee2MQTT smart-knob blueprint is now installed as <code>brook/light-knob.yaml</code>, and the bedroom, living-room and dining-room knobs were migrated and reloaded. Double press still swaps the selected light in bedroom and living room; dining room controls its main light directly. Rotation changes brightness and press-and-rotate changes colour temperature. The old command-mode enforcement automation was disabled after its Zigbee write timeouts. Only the physical press/rotation check remains.</p>
+<p>In the evening I chased the bedroom/bathroom light oddness, restored the shower night brightness to its original gentle 10%, and finally pinned down the improvement I actually want: occupancy should increase brightness when useful, never pull an already-bright light down. That needs changing the source of <code>brook/light-zone.yaml</code>, not just twiddling an automation input.</p>
+<p>The under-bed flame had quietly reached Home Assistant’s 10,000-repeat safety limit after about 1 hour 17 minutes: still on, just no longer flickering. Added an automation to restart the flicker script whenever Flame is enabled, including after a Home Assistant restart, and verified brightness was changing again.</p>
+<h2 id="podcast-builder-project-map">PodCast Builder project map</h2>
+<p>Defined the next improvement to the six-frame workflow’s story-song section. Keep the 2–4 best stories, but stop forcing them into a rigid 18-second, slash-separated, emoji-speckled lyric template. The ticket for improving story-song format and lyric presentation owns a 50-song evaluation: five representative article sets, five lyric/prompt approaches, and two independent generations each, recording clean lyrics, audio and duration, prompt/model metadata, and the article-set and approach IDs before choosing a production format.</p>
+<h2 id="hermes">Hermes</h2>
+<p>Finished reshaping the usage-pulse plugin into the answer I actually wanted during a long chat: not made-up token/cost arithmetic, just whether I should ease off. It now uses the official Codex Session allowance and prints only the compact bar — <code>Codex Session: [███████░░░] 68% remaining; resets Sat 18:49</code> — on the first reply and then every fifth reply. <code>hermes plugins doctor … --ci</code> passed, and the behaviour was checked in a fresh session.</p>
+<p>the raw-material index for this daily</p>
+
+</body></html>

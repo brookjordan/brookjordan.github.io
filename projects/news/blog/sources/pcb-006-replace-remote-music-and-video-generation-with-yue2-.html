@@ -1,0 +1,65 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Source: TTS verification harness — PodCast Builder devlog</title>
+<style>
+body{max-width:760px;margin:2.5rem auto;padding:0 1.2rem;font-family:ui-sans-serif,system-ui,sans-serif;background:#16181f;color:#dfe2ea;line-height:1.65}
+a{color:#7aa2f7} h1,h2{line-height:1.25} code{background:#262a33;padding:.1em .35em;border-radius:4px;font-size:.9em}
+pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{color:#8b90a0;font-size:.85rem}
+.back{font-size:.85rem} .backnote{background:#262a33;border:1px solid #333;border-radius:8px;padding:.8rem 1rem;font-size:.85rem;color:#aeb3c2}
+</style></head><body>
+<p class="back"><a href="../index.html">← PodCast Builder devlog</a></p>
+<p class="backnote">This is a public snapshot of a private project-tracking note, sanitised for
+publication: internal links, status metadata and personal paths are removed. The live private
+version lives in the author's Obsidian vault.</p>
+<h1>TTS verification harness</h1>
+<h1 id="pcb-006-replace-remote-music-and-video-generation-with-yue2-and-native-ltx-25">PCB-006 Replace remote music and video generation with YuE2 and native LTX-2.5</h1>
+<h2 id="outcome">Outcome</h2>
+<p>The podcast builder now uses local YuE2 for the musical segment and native Apple Silicon LTX-2.5 for image-to-image transitions. The old remote-generation path is retained only as rollback. Local LTX model transfer and reliability hardening continue under PCB-008.</p>
+<h2 id="current-evidence">Current evidence</h2>
+<ul>
+<li>Native LTX-2.5 smoke generation completed under the isolated <code>ltx</code> profile on ComfyUI <code>0.35.0</code>.</li>
+<li>The corrected smoke output decoded as nine frames at 512 × 320 and preserved both guide endpoints.</li>
+<li><code>LTXVCropGuides</code> now sits between sampling and VAE decode, preventing guide padding from increasing a requested 49-frame transition to 65 frames.</li>
+<li>The <code>ltx</code> profile uses a separate database and loads <code>ComfyUI-GGUF</code> while excluding the incompatible <code>ComfyUI-LTXVideo-mlx</code> node.</li>
+<li>Switching from <code>ltx</code> back to <code>normal</code> was exercised successfully; <code>VHS_LoadVideoPath</code> and <code>VHS_VideoCombine</code> were registered after restoration.</li>
+<li>Inactive duplicate <code>2k7x4U8GgLeSFpRE</code> uses one execution ID throughout profile ownership, performs isolated-profile model/node preflight, restores <code>normal</code> before stitching, and remains inactive.</li>
+<li>Execution <code>2491</code> proved YuE2 generation and materialisation: <code>intro_2491_00001.wav</code> is a readable 2,303,788-byte, 11.999-second WAV. <code>Collate intro song</code> failed because it requested the obsolete <code>.mp3</code> filename.</li>
+<li><code>Collate intro song</code>, the disabled trim command, and <code>Prepare final media manifest</code> use the same <code>.wav</code> filename contract. <code>Collate intro song</code> reads YuE2 output from music port <code>8189</code>; <code>Download final media</code> reads shared output from normal port <code>8188</code>.</li>
+<li>Controlled execution <code>2497</code> fetched the corrected WAV through n8n and read all 2,303,788 binary bytes from database binary storage. It then exposed the limitation of retrying an old execution: cached pending work used the old graph, so later checks use fresh side-effect-free executions instead.</li>
+<li>Execution <code>2491</code> completed its native transition, normal-profile restoration, VHS stitch, and final video retrieval before the parallel music branch failed. Its requested transition is 49 frames at 1280 × 704 and its first and last decoded frames preserve their corresponding guide images.</li>
+<li>Side-effect-free execution <code>2502</code> exercised the saved <code>Label intro song</code>, <code>Prepare final media manifest</code>, <code>Download final media</code>, and <code>Normalise final media</code> nodes against the real <code>2491</code> artefacts. It read 30 database-backed binaries totalling 9,329,116 bytes: one WAV, 26 MP3s, two PNGs, and one MP4.</li>
+<li>Fresh full execution <code>2503</code> exposed a profile race. The video branch restored normal ComfyUI at 08:48:00, then the parallel YuE2 branch switched to music at 08:48:20. <code>Finalise podcast media</code> waited for both branches, but the old graph went directly to publication preparation, so <code>Download final media</code> reached dead port <code>8188</code> and received <code>ECONNREFUSED</code>.</li>
+<li>The duplicate now routes <code>Finalise podcast media</code> through <code>Restore normal ComfyUI before final media</code> and <code>Assert normal ComfyUI before final media</code> before publication preparation. This post-merge barrier uses the same execution lock and proves port <code>8188</code>, <code>VHS_LoadVideoPath</code>, and <code>VHS_VideoCombine</code> before any final-media request.</li>
+<li>Side-effect-free execution <code>2505</code> started with music listening on <code>8189</code> and nothing on <code>8188</code>. The new barrier started normal ComfyUI on <code>8188</code>, passed its assertion, and then downloaded and normalised all 30 binaries totalling 9,329,116 bytes.</li>
+<li>An n8n editor autosave made during execution <code>2503</code> reverted the saved duplicate to its stale <code>.mp3</code>/port configuration and removed one non-functional TODO sticky note. The functional corrections were reapplied and read back. Reload the editor before making manual changes so its cached graph cannot overwrite the saved workflow again.</li>
+<li>Production <code>S9v0UpCVYcrtVJH4</code> was not modified or manually invoked during this repair. Its execution history nevertheless records scheduled trigger execution <code>2493</code>, started at <code>2026-09-14T20:30:35.096Z</code>; do not describe production as wholly unexecuted. The duplicate is an inactive 99-node graph, passes its LTX, stitching, WAV, port, and post-merge lifecycle validator, and leaves the ComfyUI lock clear.</li>
+<li>The YuE2 synth request no longer sends the 12-second <code>duration</code> cap. The song brief still asks for roughly 20 to 40 seconds, allowing YuE2 to end naturally. Its native 9,000-token semantic ceiling remains the six-minute safety bound. The disabled <code>Trim intro silence</code> node removes trailing silence only and does not impose a fixed duration. WAV generation, <code>.wav</code> retrieval on <code>8189</code>, the final-media manifest, and retrieval on <code>8188</code> remain unchanged.</li>
+<li>The same synth request also leaves semantic classifier-free guidance at its default. In the local <code>yue2.cpp</code> port that default is <code>1.0</code>, which keeps a single branch and applies no guidance at all, so the style tags condition a render only weakly. Enabling it requires <code>cfg_scale</code> in the request JSON, because the CLI exposes no <code>--cfg-scale</code> flag; the upstream documented experiment value is <code>1.2</code>. Confirm the 9,000-token ceiling independently before changing either value. Detail: the YuE2 CFG and vocal-control findings packet.</li>
+</ul>
+<h2 id="resolution--2026-09-19">Resolution — 2026-09-19</h2>
+<p>The cutover is complete in production workflow <code>2k7x4U8GgLeSFpRE</code> (<strong>Podcast – latest</strong>). YuE2 replaces the former music generator, and native LTX-2.5 replaces the former video-generation path. The previous builder remains inactive as rollback. The first full production run completed 98/98 nodes green and published an episode.</p>
+<p>The remaining work is not part of this cutover ticket: PCB-008 owns local LTX model transfer and NAS independence; new podcast tickets own longer-video testing and replacement of VibeVoice.</p>
+<h2 id="deferred-follow-ups">Deferred follow-ups</h2>
+<p>The original cutover acceptance items below are no longer blockers for the completed generator replacement. Their remaining work is tracked separately:</p>
+<ul>
+<li>Local LTX model transfer, NAS independence and the clean publication-disabled validation run: PCB-008.</li>
+<li>Longer finished-video configurations: PCB-011.</li>
+<li>Production TTS replacement and audio verification: PCB-009 and PCB-010.</li>
+</ul>
+<h2 id="known-constraint">Known constraint</h2>
+<p>The shared Python environment still reports <code>mlx-lm 0.31.3</code> requiring <code>transformers&gt;=5.0.0</code> while <code>transformers 4.57.6</code> is installed. Do not upgrade blindly: the isolated profile avoids the incompatible MLX node, and dependency changes need profile-specific evidence.</p>
+<h2 id="tts-verification-test-workflow">TTS verification test workflow</h2>
+<ul>
+<li>Created inactive, publication-disabled n8n workflow <code>PCB-006 — TTS transcription verification harness</code>.</li>
+<li>Workflow: <a href="https://ug-nas-x4800.tail4148b0.ts.net/workflow/SqwVYuc6hgiJkwg6">https://ug-nas-x4800.tail4148b0.ts.net/workflow/SqwVYuc6hgiJkwg6</a></li>
+<li>The harness uses fixture transcripts rather than ComfyUI/OpenAI credentials. This isolates the retry and selection logic before connecting real audio binaries.</li>
+<li>It uses a configurable <code>0.97</code> threshold and a hard maximum of three candidates per segment.</li>
+<li>Manual execution <code>2528</code> succeeded. Assertions verified: one first-pass success, one failed-first-attempt item passing on attempt two, and one item remaining a <code>fallback</code> after three attempts.</li>
+<li>The harness output retains every candidate, score, selected candidate, attempt count, and <code>passed</code>/<code>fallback</code> status. Segment three&#39;s best available fixture was retained as the fallback.</li>
+</ul>
+<h2 id="next-implementation-step">Next implementation step</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Replace the fixture node with batch ComfyUI TTS generation and sequential OpenAI transcription, preserving the same result contract and keeping this harness as a regression test.</li>
+</ul>
+
+</body></html>

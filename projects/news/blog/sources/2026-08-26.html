@@ -1,0 +1,51 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Source: 26 August 2026 podcast diary — PodCast Builder devlog</title>
+<style>
+body{max-width:760px;margin:2.5rem auto;padding:0 1.2rem;font-family:ui-sans-serif,system-ui,sans-serif;background:#16181f;color:#dfe2ea;line-height:1.65}
+a{color:#7aa2f7} h1,h2{line-height:1.25} code{background:#262a33;padding:.1em .35em;border-radius:4px;font-size:.9em}
+pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{color:#8b90a0;font-size:.85rem}
+.back{font-size:.85rem} .backnote{background:#262a33;border:1px solid #333;border-radius:8px;padding:.8rem 1rem;font-size:.85rem;color:#aeb3c2}
+</style></head><body>
+<p class="back"><a href="../index.html">← PodCast Builder devlog</a></p>
+<p class="backnote">This is a public snapshot of a private project-tracking note, sanitised for
+publication: internal links, status metadata and personal paths are removed. The live private
+version lives in the author's Obsidian vault.</p>
+<h1>26 August 2026 podcast diary</h1>
+<h2 id="work-stand-up-summary">Work stand-up summary</h2>
+<p><strong>Since Wednesday 13 Aug morning</strong> <em>(full roll-up — includes work before Kezia&#39;s visit and the mostly-off stretch Mon–Sat; overlap window from Fri scheduler thread still counts)</em></p>
+<ul>
+<li>Shipped the inGUItiv component migration and kept the Command Center cutover moving.
+  - Icon and ButtonField landed mid-month; Message/toast stays on <code>refactor/move-message-to-inguitiv/bj</code>. <a href="https://gitlab.ci.motional.com/rti/FAS/-/merge_requests/9446">!9446</a> merged Monday; inGUItiv map for status.</li>
+<li>Landed and tidied the progressive semantic-map tiles stack after returning from leave.
+  - Core tile work from the 13 Aug stand-up window; Monday rebased <code>chore/tidy-up-semantic-map-migration/bj</code>, fixup&#39;d tests/swagger layer sync, cleaned <a href="https://gitlab.ci.motional.com/rti/FAS/-/merge_requests/9527">MR !9527</a>, and split the stack as !9524–!9526. The progressive tiles ticket (!9462 closed in favour of the split MRs).</li>
+<li>Unblocked Fleet/Ops scheduler testing ahead of the 28th.
+  - Friday: Tianfu and Peter agreed commercial Service Profile types are odd for Platform Performance but workable for a pre-production pilot; Tianfu owns the test plan/workflow. <code>comm-stg</code> <code>2026.30</code> has overnight scheduler fixes — fingers crossed it becomes real testing.</li>
+<li>Synced with cross-team stakeholders ahead of the scheduler pilot and release train.
+  - Tuesday: deployment/bootup surfacing with Joel; Service Profiles with Tianfu; release-bundle catch-up with Ruoning&#39;s team; audio calls with Tung. GitLab shows heavy review on Joel&#39;s <a href="https://gitlab.ci.motional.com/rti/FAS/-/merge_requests/9501">!9501</a> / <a href="https://gitlab.ci.motional.com/rti/FAS/-/merge_requests/9370">!9370</a> Monday–Tuesday.</li>
+<li>Opened and repaired the CTR-6849 security dependency MR.
+  - <a href="https://gitlab.ci.motional.com/rti/FAS/-/merge_requests/9549">!9549</a> on <code>fix/CTR-6849/upgrade-vulnerable-dependencies/after-inguitiv/bj</code>; CI failed until <code>elasticsearch7</code> 7.17.13 unblocked mandated <code>urllib3==2.6.0</code>. Pushed fix + MR description update Tuesday.</li>
+<li>Kept review hygiene and agent tooling current.
+  - <a href="https://gitlab.ci.motional.com/rti/FAS/-/merge_requests/9478">!9478</a> (MAP-8318) merged Tuesday; <code>review-mr.local</code> now prefers suggestion branches for big multi-file asks; <code>fas-skill-share</code> synced. Sunday wrote a deep !9501 vs !9370 bring-up/deployment-visibility comparison doc.</li>
+<li>Reviewed Gor&#39;s library-reuse MR chain and left critical feedback.
+  - !9448 / !9449 / !9450 pass from the 13 Aug window — detail on those MRs, not stand-up prose.</li>
+</ul>
+<p><strong>Until Thursday afternoon</strong></p>
+<ul>
+<li>Get <a href="https://gitlab.ci.motional.com/rti/FAS/-/merge_requests/9549">!9549</a> green and merged if CI agrees after the elasticsearch7 bump.
+  - Watch lint/package/user-profile-service installs; no new code behaviour, just pins.</li>
+<li>Keep semantic-map + inGUItiv MRs moving through review.
+  - <a href="https://gitlab.ci.motional.com/rti/FAS/-/merge_requests/9527">!9527</a>, backend !9524–!9526 — stay out of each other&#39;s commits; !9446 already merged.</li>
+<li>Clear the open reviewer queue where it blocks others.
+  - Still assigned on Joel&#39;s <a href="https://gitlab.ci.motional.com/rti/FAS/-/merge_requests/9501">!9501</a> / <a href="https://gitlab.ci.motional.com/rti/FAS/-/merge_requests/9370">!9370</a>, Jenny&#39;s <a href="https://gitlab.ci.motional.com/rti/FAS/-/merge_requests/9516">!9516</a>, Brandon&#39;s <a href="https://gitlab.ci.motional.com/rti/FAS/-/merge_requests/9492">!9492</a>, Tianfu&#39;s <a href="https://gitlab.ci.motional.com/rti/FAS/-/merge_requests/9409">!9409</a>.</li>
+<li>Stay available if Fleet/Ops scheduler pilot testing needs a developer before the 28th.
+  - Tianfu&#39;s test plan is the source of truth; Friday&#39;s thread on FAS scheduler testing.</li>
+<li>Resume Message/toast port once CC cutover review is unblocked.
+  - Branch <code>refactor/move-message-to-inguitiv/bj</code>.</li>
+</ul>
+<h2 id="podcast-builder-project-map">PodCast Builder project map</h2>
+<p>Last night&#39;s n8n fixes got one clean production run, but this morning the last two runs failed again — back in the workflow debugger.</p>
+<h2 id="smart-home--hermes">Smart home / Hermes</h2>
+<p>Evening: under-bed LEDs turned off the instant I switched them on. Asked Hermes — traced through automations/scripts rather than a hardware fault. Same session confirmed the deep Home Assistant MCP was working again after I&#39;d rotated the Tailscale key.</p>
+
+</body></html>

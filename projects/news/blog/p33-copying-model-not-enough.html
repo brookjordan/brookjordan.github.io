@@ -455,6 +455,11 @@ a:hover {
 .part-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.16em;color:var(--text-tertiary,#8b90a0);margin:0 0 .6rem;font-weight:700}
 .post-title{margin:0 0 .8rem;font-size:1.7rem;line-height:1.25}
 .lead{font-size:1.02rem;color:var(--text-secondary,#aeb3c2);line-height:1.55;margin:0 0 1.8rem;max-width:64ch}
+.sources{margin-top:2.5rem;padding-top:1.2rem;border-top:1px solid var(--border-primary,#333)}
+.sources h2{font-size:1.1rem;margin:0 0 .4rem}
+.sources-note{font-size:.8rem;color:var(--text-tertiary,#8b90a0);margin:0 0 .6rem}
+.sources ul{margin:0;padding-left:1.2rem}
+.sources li{margin:.25rem 0;font-size:.9rem}
 @media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
 </style></head>
   <body>
@@ -473,12 +478,7 @@ a:hover {
 <h2>Where we left it</h2>
 <p>The sync design, retries, detached supervisor, content-addressed checks and gate were implemented. The source set was recorded as four files totalling 26.762 GB, and the staged workflow connected the sync before the gate and isolated LTX profile. That demonstrated the transfer mechanism and the intended completion condition, not a clean end-to-end publication.</p>
 <p>The remaining work was explicit: finish the remaining roughly 16 GB, confirm every file verifies, run the video path without the NAS, and settle whether the observed transfer failures came from the network path or the NAS. We had built a durable refusal to pretend. The models still had to earn their passport.</p>
-<h2>Source notes</h2>
-<ul>
-<li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FPCB-008%20Keep%20the%20LTX%20video%20stage%20off%20the%20network%20mount">T08 evidence</a></li>
-<li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FREADME">MAP evidence</a></li>
-</ul>
-<nav class="post-nav"><a class="post-nav-link" href="p30-unreachable-not-rebooted.html">← earlier: The NAS wasn't dead. It was just not answering.</a><a class="post-nav-link" href="p12-speech-test-made-of-fixtures.html">later →: We tested the podcast audio on fake transcripts first</a></nav></main>
+<section class="sources"><h2>Source notes</h2><p class="sources-note">Each source is a sanitised public snapshot of a private project-tracking note.</p><ul><li><a href="sources/pcb-008-keep-the-ltx-video-stage-off-the-network-mount.html">T08 evidence</a></li><li><a href="sources/readme.html">MAP evidence</a></li></ul></section><nav class="post-nav"><a class="post-nav-link" href="p30-unreachable-not-rebooted.html">← earlier: The NAS wasn't dead. It was just not answering.</a><a class="post-nav-link" href="p12-speech-test-made-of-fixtures.html">later →: We tested the podcast audio on fake transcripts first</a></nav></main>
     <footer class="site-footer">
       <p>Private review preview of the <strong>PodCast Builder</strong> devlog — built from the senior-accepted draft set, 2026-09-19.</p>
     </footer>
