@@ -423,7 +423,36 @@ a:hover {
 }
 
 </style>
-  </head>
+  <style>
+/* --- index cards / featured / thumbnails (PodCast Builder devlog) --- */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:var(--space-5,1.5rem);margin:2rem 0}
+.card{display:flex;flex-direction:column;border:1px solid var(--border-primary,#333);border-radius:var(--radius-md,10px);overflow:hidden;background:var(--bg-secondary,#22252c);transition:transform .12s ease,border-color .12s ease}
+.card:hover{transform:translateY(-2px);border-color:var(--accent,#7aa2f7)}
+.card-body{display:flex;flex-direction:column;gap:.4rem;padding:1rem 1.1rem 1.2rem}
+.card-title{margin:0;font-size:1.02rem;line-height:1.35}
+.card-title a{color:var(--text-primary,#e8eaf0);text-decoration:none}
+.card-title a:hover{color:var(--accent,#7aa2f7)}
+.card .post-time{color:var(--text-tertiary,#8b90a0);font-size:.78rem}
+.blurb{margin:0;color:var(--text-secondary,#aeb3c2);font-size:.88rem;line-height:1.5}
+.readmore{margin:.2rem 0 0}
+.readmore a{color:var(--accent,#7aa2f7);font-size:.85rem;text-decoration:none;font-weight:600}
+.readmore a:hover{text-decoration:underline}
+.thumb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.3rem;aspect-ratio:16/9;text-decoration:none;
+  background:linear-gradient(135deg,hsl(var(--h) 45% 16%),hsl(var(--h) 55% 26%));border-bottom:1px solid var(--border-primary,#333)}
+.thumb .thumb-init{font-size:1.6rem;font-weight:800;letter-spacing:.08em;color:hsl(var(--h) 80% 78%);text-shadow:0 1px 8px hsl(var(--h) 60% 10%)}
+.thumb .thumb-topic{font-size:.7rem;text-transform:uppercase;letter-spacing:.14em;color:hsl(var(--h) 45% 72%)}
+.thumb-featured .thumb-init{font-size:2.6rem}
+.featured{display:grid;grid-template-columns:minmax(220px,380px) 1fr;gap:1.5rem;align-items:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border-primary,#333);border-radius:var(--radius-lg,14px);background:var(--bg-tertiary,#262a33)}
+.featured .thumb{aspect-ratio:auto;height:100%;min-height:180px;border:0;border-radius:var(--radius-md,10px)}
+.featured-body{display:flex;flex-direction:column;gap:.5rem}
+.kicker{margin:0;font-size:.75rem;text-transform:uppercase;letter-spacing:.16em;color:var(--accent,#7aa2f7);font-weight:700}
+.featured-title{margin:0;font-size:1.5rem;line-height:1.3}
+.featured-title a{color:var(--text-primary,#e8eaf0);text-decoration:none}
+.featured-title a:hover{color:var(--accent,#7aa2f7)}
+.all-posts-heading{margin-top:3rem}
+.intro{max-width:62ch;color:var(--text-secondary,#aeb3c2)}
+@media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
+</style></head>
   <body>
     <header class="site-header">
       <a class="brand" href="./index.html">PodCast Builder <span>· devlog</span></a>

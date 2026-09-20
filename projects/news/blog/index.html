@@ -423,61 +423,566 @@ a:hover {
 }
 
 </style>
-  </head>
+  <style>
+/* --- index cards / featured / thumbnails (PodCast Builder devlog) --- */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:var(--space-5,1.5rem);margin:2rem 0}
+.card{display:flex;flex-direction:column;border:1px solid var(--border-primary,#333);border-radius:var(--radius-md,10px);overflow:hidden;background:var(--bg-secondary,#22252c);transition:transform .12s ease,border-color .12s ease}
+.card:hover{transform:translateY(-2px);border-color:var(--accent,#7aa2f7)}
+.card-body{display:flex;flex-direction:column;gap:.4rem;padding:1rem 1.1rem 1.2rem}
+.card-title{margin:0;font-size:1.02rem;line-height:1.35}
+.card-title a{color:var(--text-primary,#e8eaf0);text-decoration:none}
+.card-title a:hover{color:var(--accent,#7aa2f7)}
+.card .post-time{color:var(--text-tertiary,#8b90a0);font-size:.78rem}
+.blurb{margin:0;color:var(--text-secondary,#aeb3c2);font-size:.88rem;line-height:1.5}
+.readmore{margin:.2rem 0 0}
+.readmore a{color:var(--accent,#7aa2f7);font-size:.85rem;text-decoration:none;font-weight:600}
+.readmore a:hover{text-decoration:underline}
+.thumb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.3rem;aspect-ratio:16/9;text-decoration:none;
+  background:linear-gradient(135deg,hsl(var(--h) 45% 16%),hsl(var(--h) 55% 26%));border-bottom:1px solid var(--border-primary,#333)}
+.thumb .thumb-init{font-size:1.6rem;font-weight:800;letter-spacing:.08em;color:hsl(var(--h) 80% 78%);text-shadow:0 1px 8px hsl(var(--h) 60% 10%)}
+.thumb .thumb-topic{font-size:.7rem;text-transform:uppercase;letter-spacing:.14em;color:hsl(var(--h) 45% 72%)}
+.thumb-featured .thumb-init{font-size:2.6rem}
+.featured{display:grid;grid-template-columns:minmax(220px,380px) 1fr;gap:1.5rem;align-items:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border-primary,#333);border-radius:var(--radius-lg,14px);background:var(--bg-tertiary,#262a33)}
+.featured .thumb{aspect-ratio:auto;height:100%;min-height:180px;border:0;border-radius:var(--radius-md,10px)}
+.featured-body{display:flex;flex-direction:column;gap:.5rem}
+.kicker{margin:0;font-size:.75rem;text-transform:uppercase;letter-spacing:.16em;color:var(--accent,#7aa2f7);font-weight:700}
+.featured-title{margin:0;font-size:1.5rem;line-height:1.3}
+.featured-title a{color:var(--text-primary,#e8eaf0);text-decoration:none}
+.featured-title a:hover{color:var(--accent,#7aa2f7)}
+.all-posts-heading{margin-top:3rem}
+.intro{max-width:62ch;color:var(--text-secondary,#aeb3c2)}
+@media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
+</style></head>
   <body>
     <header class="site-header">
       <a class="brand" href="./index.html">PodCast Builder <span>· devlog</span></a>
       <nav class="site-nav"></nav>
     </header>
     <main class="content"><h1>PodCast Builder devlog</h1>
-<p>Private review preview — 43 posts from the 2026-09-19 senior-accepted draft set.
-Five slots (P05, P07, P08, P21, P34) are held and excluded. Ordering is by post date and slot id;
-the drafts are retrospective reconstructions, not exact historical chronology.</p>
-<ol class="post-list">
-<li><a href="p01-a-podcast-before-the-picture-lab.html">A podcast before the picture lab</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p02-intro-before-cover.html">The intro had a voice before the cover had a face</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p03-working-title-not-finished-format.html">A working title is not a finished format</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p04-cover-image-became-research.html">The cover image became a research project</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p06-second-picture-not-motion-plan.html">A second picture is not a motion plan</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p09-two-hosts-need-more-than-labels.html">Two hosts need more than two labels</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p10-singer-reads-production-notes.html">When the singer reads the production notes</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p11-fifty-songs-was-a-test-plan.html">Fifty songs was a test plan</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p12-speech-test-made-of-fixtures.html">A speech test made of fixtures</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p13-song-existed-filename-did-not.html">The song existed. The filename did not.</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p14-right-file-wrong-port.html">The right file on the wrong port</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p15-let-intro-end-on-its-own.html">Let the intro end on its own</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p16-style-tags-and-guidance.html">Style tags and the guidance we had not enabled</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p17-music-and-video-onto-the-mac.html">Moving the podcast's music and video onto the Mac</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p18-branches-finished-service-moved.html">Both branches finished. The service had moved.</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p19-retrying-the-old-graph.html">Retrying the old graph</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p20-editor-saved-older-answer.html">The editor saved an older answer</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p22-lock-was-doing-its-job.html">The lock was doing its job</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p23-episode-published-cleanup-failed.html">The episode published. Cleanup failed.</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p24-august-lock-and-profile-troubles.html">August's lock and profile troubles</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p25-saved-is-not-scheduled.html">Saved is not scheduled</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p26-capability-manifest-before-run.html">A capability manifest before an expensive run</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p27-discover-laptop-not-yesterdays-address.html">Discover the laptop, not yesterday's address</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p28-readiness-check-after-merge.html">The readiness check must survive the merge</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p29-model-disappeared-under-memory-map.html">The model disappeared under the memory map</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p30-unreachable-not-rebooted.html">Unreachable is not the same as rebooted</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p31-route-matters-as-much-as-hostname.html">The route matters as much as the hostname</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p32-mount-needed-a-click.html">A mount that needed a click</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p33-copying-model-not-enough.html">Copying a model is not enough</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p35-small-pages-media-elsewhere.html">Keep the pages small and the media elsewhere</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p36-one-episode-before-archive.html">Migrate one episode before the archive</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p37-ten-seconds-different-experiment.html">Ten seconds was a different experiment</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p38-ten-second-render-made-it-through.html">The ten-second render that made it through</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p39-freeze-cases-before-limit.html">Freeze the cases before moving the limit</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p40-missing-pair-in-published-episode.html">The missing pair was in the published episode</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p41-endpoints-matched-fog-did-not.html">The endpoints matched. The fog did not behave.</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p42-valid-file-not-good-transition.html">A valid file is not a good transition</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p43-one-long-clip-two-joined-clips.html">One long clip and two joined clips are different bets</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p44-motion-control-next-question.html">Motion control was the next question</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p45-workflow-id-changing-name.html">The workflow kept its ID and changed its name</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p46-backup-remembered-more.html">The backup remembered more than the live history</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p47-first-trace-not-beginning.html">The first surviving trace was not the beginning</a> <time class="post-time">2026-09-19</time></li>
-<li><a href="p48-backfill-story-not-evidence.html">Backfilling the story without backdating the evidence</a> <time class="post-time">2026-09-19</time></li>
-</ol></main>
+<p class="intro">The build diary of a fully local podcast factory — music, voices, covers and video,
+all generated on a Mac and orchestrated by n8n. 43 posts, reconstructed honestly from
+the project's records: what we tried, what broke, and what the evidence actually supports.
+The drafts are retrospective, ordered by post date and slot id — not exact historical chronology.</p>
+
+<section class="featured">
+  <a class="thumb thumb-featured" href="p48-backfill-story-not-evidence.html" style="--h:265">
+    <span class="thumb-init">P48</span>
+    <span class="thumb-topic">Origins</span>
+  </a>
+  <div class="featured-body">
+    <p class="kicker">Latest</p>
+    <h2 class="featured-title"><a href="p48-backfill-story-not-evidence.html">Backfilling the story without backdating the evidence</a></h2>
+    <p class="blurb">Backfilling the story without backdating the evidence: the rules this whole devlog plays by.</p>
+    <p class="readmore"><a href="p48-backfill-story-not-evidence.html">Read the latest →</a></p>
+  </div>
+</section>
+<h2 class="all-posts-heading">All posts</h2>
+<div class="card-grid">
+<article class="card">
+  <a class="thumb" href="p47-first-trace-not-beginning.html" style="--h:265">
+    <span class="thumb-init">P47</span>
+    <span class="thumb-topic">Origins</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p47-first-trace-not-beginning.html">The first surviving trace was not the beginning</a></h3>
+    <p class="blurb">The first surviving trace was not the beginning, and we almost pretended it was.</p>
+    <p class="readmore"><a href="p47-first-trace-not-beginning.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p46-backup-remembered-more.html" style="--h:230">
+    <span class="thumb-init">P46</span>
+    <span class="thumb-topic">Workflow</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p46-backup-remembered-more.html">The backup remembered more than the live history</a></h3>
+    <p class="blurb">The backup remembered more than the live history — forensic gold in old runs.</p>
+    <p class="readmore"><a href="p46-backup-remembered-more.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p45-workflow-id-changing-name.html" style="--h:230">
+    <span class="thumb-init">P45</span>
+    <span class="thumb-topic">Workflow</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p45-workflow-id-changing-name.html">The workflow kept its ID and changed its name</a></h3>
+    <p class="blurb">The workflow kept its ID and changed its name: identity in n8n.</p>
+    <p class="readmore"><a href="p45-workflow-id-changing-name.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p44-motion-control-next-question.html" style="--h:95">
+    <span class="thumb-init">P44</span>
+    <span class="thumb-topic">Video probes</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p44-motion-control-next-question.html">Motion control was the next question</a></h3>
+    <p class="blurb">Motion control was the next question after the fog refused to cooperate.</p>
+    <p class="readmore"><a href="p44-motion-control-next-question.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p43-one-long-clip-two-joined-clips.html" style="--h:95">
+    <span class="thumb-init">P43</span>
+    <span class="thumb-topic">Video probes</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p43-one-long-clip-two-joined-clips.html">One long clip and two joined clips are different bets</a></h3>
+    <p class="blurb">One long clip and two joined clips are different bets on the same render.</p>
+    <p class="readmore"><a href="p43-one-long-clip-two-joined-clips.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p42-valid-file-not-good-transition.html" style="--h:95">
+    <span class="thumb-init">P42</span>
+    <span class="thumb-topic">Video probes</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p42-valid-file-not-good-transition.html">A valid file is not a good transition</a></h3>
+    <p class="blurb">A valid file is not a good transition.</p>
+    <p class="readmore"><a href="p42-valid-file-not-good-transition.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p41-endpoints-matched-fog-did-not.html" style="--h:95">
+    <span class="thumb-init">P41</span>
+    <span class="thumb-topic">Video probes</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p41-endpoints-matched-fog-did-not.html">The endpoints matched. The fog did not behave.</a></h3>
+    <p class="blurb">The endpoints matched. The fog did not behave. Motion control’s first stumble.</p>
+    <p class="readmore"><a href="p41-endpoints-matched-fog-did-not.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p40-missing-pair-in-published-episode.html" style="--h:95">
+    <span class="thumb-init">P40</span>
+    <span class="thumb-topic">Video probes</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p40-missing-pair-in-published-episode.html">The missing pair was in the published episode</a></h3>
+    <p class="blurb">The missing pair was in the published episode all along.</p>
+    <p class="readmore"><a href="p40-missing-pair-in-published-episode.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p39-freeze-cases-before-limit.html" style="--h:95">
+    <span class="thumb-init">P39</span>
+    <span class="thumb-topic">Video probes</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p39-freeze-cases-before-limit.html">Freeze the cases before moving the limit</a></h3>
+    <p class="blurb">Freeze the cases before moving the limit, or you are measuring noise.</p>
+    <p class="readmore"><a href="p39-freeze-cases-before-limit.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p38-ten-second-render-made-it-through.html" style="--h:95">
+    <span class="thumb-init">P38</span>
+    <span class="thumb-topic">Video probes</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p38-ten-second-render-made-it-through.html">The ten-second render that made it through</a></h3>
+    <p class="blurb">The ten-second render that made it through, and what it actually proved.</p>
+    <p class="readmore"><a href="p38-ten-second-render-made-it-through.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p37-ten-seconds-different-experiment.html" style="--h:95">
+    <span class="thumb-init">P37</span>
+    <span class="thumb-topic">Video probes</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p37-ten-seconds-different-experiment.html">Ten seconds was a different experiment</a></h3>
+    <p class="blurb">Ten seconds was a different experiment, not a shorter version of this one.</p>
+    <p class="readmore"><a href="p37-ten-seconds-different-experiment.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p36-one-episode-before-archive.html" style="--h:45">
+    <span class="thumb-init">P36</span>
+    <span class="thumb-topic">Migration</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p36-one-episode-before-archive.html">Migrate one episode before the archive</a></h3>
+    <p class="blurb">Migrate one episode before the archive: the pilot that earns the batch.</p>
+    <p class="readmore"><a href="p36-one-episode-before-archive.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p35-small-pages-media-elsewhere.html" style="--h:45">
+    <span class="thumb-init">P35</span>
+    <span class="thumb-topic">Migration</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p35-small-pages-media-elsewhere.html">Keep the pages small and the media elsewhere</a></h3>
+    <p class="blurb">Keep the pages small and the media elsewhere: the split-publication philosophy.</p>
+    <p class="readmore"><a href="p35-small-pages-media-elsewhere.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p33-copying-model-not-enough.html" style="--h:150">
+    <span class="thumb-init">P33</span>
+    <span class="thumb-topic">Local models</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p33-copying-model-not-enough.html">Copying a model is not enough</a></h3>
+    <p class="blurb">Copying a model is not enough — verification gates for the local model cache.</p>
+    <p class="readmore"><a href="p33-copying-model-not-enough.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p32-mount-needed-a-click.html" style="--h:150">
+    <span class="thumb-init">P32</span>
+    <span class="thumb-topic">Local models</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p32-mount-needed-a-click.html">A mount that needed a click</a></h3>
+    <p class="blurb">A mount that needed a click: the headless SMB problem, still unsolved.</p>
+    <p class="readmore"><a href="p32-mount-needed-a-click.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p31-route-matters-as-much-as-hostname.html" style="--h:150">
+    <span class="thumb-init">P31</span>
+    <span class="thumb-topic">Local models</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p31-route-matters-as-much-as-hostname.html">The route matters as much as the hostname</a></h3>
+    <p class="blurb">The route matters as much as the hostname: Ethernet, WLAN, Tailscale, in that order.</p>
+    <p class="readmore"><a href="p31-route-matters-as-much-as-hostname.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p30-unreachable-not-rebooted.html" style="--h:150">
+    <span class="thumb-init">P30</span>
+    <span class="thumb-topic">Local models</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p30-unreachable-not-rebooted.html">Unreachable is not the same as rebooted</a></h3>
+    <p class="blurb">Unreachable is not the same as rebooted: diagnosing without assuming.</p>
+    <p class="readmore"><a href="p30-unreachable-not-rebooted.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p29-model-disappeared-under-memory-map.html" style="--h:150">
+    <span class="thumb-init">P29</span>
+    <span class="thumb-topic">Local models</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p29-model-disappeared-under-memory-map.html">The model disappeared under the memory map</a></h3>
+    <p class="blurb">The NAS vanished mid-render and Python died with SIGBUS. A post-mortem.</p>
+    <p class="readmore"><a href="p29-model-disappeared-under-memory-map.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p28-readiness-check-after-merge.html" style="--h:200">
+    <span class="thumb-init">P28</span>
+    <span class="thumb-topic">Cutover</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p28-readiness-check-after-merge.html">The readiness check must survive the merge</a></h3>
+    <p class="blurb">The readiness check must survive the merge, or the merge ships untested.</p>
+    <p class="readmore"><a href="p28-readiness-check-after-merge.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p27-discover-laptop-not-yesterdays-address.html" style="--h:200">
+    <span class="thumb-init">P27</span>
+    <span class="thumb-topic">Cutover</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p27-discover-laptop-not-yesterdays-address.html">Discover the laptop, not yesterday's address</a></h3>
+    <p class="blurb">Discover the laptop, not yesterday’s address: endpoints now introduce themselves.</p>
+    <p class="readmore"><a href="p27-discover-laptop-not-yesterdays-address.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p26-capability-manifest-before-run.html" style="--h:200">
+    <span class="thumb-init">P26</span>
+    <span class="thumb-topic">Cutover</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p26-capability-manifest-before-run.html">A capability manifest before an expensive run</a></h3>
+    <p class="blurb">A capability manifest before an expensive run: ask the machine what it can do first.</p>
+    <p class="readmore"><a href="p26-capability-manifest-before-run.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p25-saved-is-not-scheduled.html" style="--h:200">
+    <span class="thumb-init">P25</span>
+    <span class="thumb-topic">Cutover</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p25-saved-is-not-scheduled.html">Saved is not scheduled</a></h3>
+    <p class="blurb">Saved is not scheduled: n8n’s draft/published split, learned expensively.</p>
+    <p class="readmore"><a href="p25-saved-is-not-scheduled.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p24-august-lock-and-profile-troubles.html" style="--h:12">
+    <span class="thumb-init">P24</span>
+    <span class="thumb-topic">Incidents</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p24-august-lock-and-profile-troubles.html">August's lock and profile troubles</a></h3>
+    <p class="blurb">August’s lock and profile troubles, collected into one confession.</p>
+    <p class="readmore"><a href="p24-august-lock-and-profile-troubles.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p23-episode-published-cleanup-failed.html" style="--h:12">
+    <span class="thumb-init">P23</span>
+    <span class="thumb-topic">Incidents</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p23-episode-published-cleanup-failed.html">The episode published. Cleanup failed.</a></h3>
+    <p class="blurb">The episode published. Cleanup failed. Nobody noticed for days.</p>
+    <p class="readmore"><a href="p23-episode-published-cleanup-failed.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p22-lock-was-doing-its-job.html" style="--h:12">
+    <span class="thumb-init">P22</span>
+    <span class="thumb-topic">Incidents</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p22-lock-was-doing-its-job.html">The lock was doing its job</a></h3>
+    <p class="blurb">The lock was doing its job: a collision we had mistaken for a bug.</p>
+    <p class="readmore"><a href="p22-lock-was-doing-its-job.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p20-editor-saved-older-answer.html" style="--h:200">
+    <span class="thumb-init">P20</span>
+    <span class="thumb-topic">Cutover</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p20-editor-saved-older-answer.html">The editor saved an older answer</a></h3>
+    <p class="blurb">The editor saved an older answer — when your autosave is a time machine.</p>
+    <p class="readmore"><a href="p20-editor-saved-older-answer.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p19-retrying-the-old-graph.html" style="--h:200">
+    <span class="thumb-init">P19</span>
+    <span class="thumb-topic">Cutover</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p19-retrying-the-old-graph.html">Retrying the old graph</a></h3>
+    <p class="blurb">Retrying the old graph, and learning what the retry button actually re-runs.</p>
+    <p class="readmore"><a href="p19-retrying-the-old-graph.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p18-branches-finished-service-moved.html" style="--h:200">
+    <span class="thumb-init">P18</span>
+    <span class="thumb-topic">Cutover</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p18-branches-finished-service-moved.html">Both branches finished. The service had moved.</a></h3>
+    <p class="blurb">Both branches finished. The service had moved. Merge does not mean ready.</p>
+    <p class="readmore"><a href="p18-branches-finished-service-moved.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p17-music-and-video-onto-the-mac.html" style="--h:200">
+    <span class="thumb-init">P17</span>
+    <span class="thumb-topic">Cutover</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p17-music-and-video-onto-the-mac.html">Moving the podcast's music and video onto the Mac</a></h3>
+    <p class="blurb">Moving the podcast’s music and video onto the Mac: the great de-clouding.</p>
+    <p class="readmore"><a href="p17-music-and-video-onto-the-mac.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p16-style-tags-and-guidance.html" style="--h:330">
+    <span class="thumb-init">P16</span>
+    <span class="thumb-topic">Music &amp; audio</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p16-style-tags-and-guidance.html">Style tags and the guidance we had not enabled</a></h3>
+    <p class="blurb">Style tags and the guidance we had not enabled: reading the manual after the gig.</p>
+    <p class="readmore"><a href="p16-style-tags-and-guidance.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p15-let-intro-end-on-its-own.html" style="--h:330">
+    <span class="thumb-init">P15</span>
+    <span class="thumb-topic">Music &amp; audio</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p15-let-intro-end-on-its-own.html">Let the intro end on its own</a></h3>
+    <p class="blurb">Let the intro end on its own — why we stopped fighting the tail silence.</p>
+    <p class="readmore"><a href="p15-let-intro-end-on-its-own.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p14-right-file-wrong-port.html" style="--h:330">
+    <span class="thumb-init">P14</span>
+    <span class="thumb-topic">Music &amp; audio</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p14-right-file-wrong-port.html">The right file on the wrong port</a></h3>
+    <p class="blurb">The right file on the wrong port: endpoint mix-ups in the audio pipeline.</p>
+    <p class="readmore"><a href="p14-right-file-wrong-port.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p13-song-existed-filename-did-not.html" style="--h:330">
+    <span class="thumb-init">P13</span>
+    <span class="thumb-topic">Music &amp; audio</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p13-song-existed-filename-did-not.html">The song existed. The filename did not.</a></h3>
+    <p class="blurb">The song existed. The filename did not. A lesson in what a save actually writes.</p>
+    <p class="readmore"><a href="p13-song-existed-filename-did-not.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p12-speech-test-made-of-fixtures.html" style="--h:330">
+    <span class="thumb-init">P12</span>
+    <span class="thumb-topic">Music &amp; audio</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p12-speech-test-made-of-fixtures.html">A speech test made of fixtures</a></h3>
+    <p class="blurb">Testing speech on fixtures, not vibes: a repeatable audio test harness.</p>
+    <p class="readmore"><a href="p12-speech-test-made-of-fixtures.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p11-fifty-songs-was-a-test-plan.html" style="--h:330">
+    <span class="thumb-init">P11</span>
+    <span class="thumb-topic">Music &amp; audio</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p11-fifty-songs-was-a-test-plan.html">Fifty songs was a test plan</a></h3>
+    <p class="blurb">Fifty songs sounded like a demo; it was really a test plan with a playlist attached.</p>
+    <p class="readmore"><a href="p11-fifty-songs-was-a-test-plan.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p10-singer-reads-production-notes.html" style="--h:330">
+    <span class="thumb-init">P10</span>
+    <span class="thumb-topic">Music &amp; audio</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p10-singer-reads-production-notes.html">When the singer reads the production notes</a></h3>
+    <p class="blurb">When the singer reads the production notes, you get stage directions sung back at you.</p>
+    <p class="readmore"><a href="p10-singer-reads-production-notes.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p09-two-hosts-need-more-than-labels.html" style="--h:330">
+    <span class="thumb-init">P09</span>
+    <span class="thumb-topic">Music &amp; audio</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p09-two-hosts-need-more-than-labels.html">Two hosts need more than two labels</a></h3>
+    <p class="blurb">Two hosts need more than two labels: giving the TTS speakers an actual dynamic.</p>
+    <p class="readmore"><a href="p09-two-hosts-need-more-than-labels.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p06-second-picture-not-motion-plan.html" style="--h:95">
+    <span class="thumb-init">P06</span>
+    <span class="thumb-topic">Video probes</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p06-second-picture-not-motion-plan.html">A second picture is not a motion plan</a></h3>
+    <p class="blurb">A second picture is not a motion plan — the first hint that video was a different discipline.</p>
+    <p class="readmore"><a href="p06-second-picture-not-motion-plan.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p04-cover-image-became-research.html" style="--h:265">
+    <span class="thumb-init">P04</span>
+    <span class="thumb-topic">Origins</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p04-cover-image-became-research.html">The cover image became a research project</a></h3>
+    <p class="blurb">One cover image turned into a model bake-off. This is how scope creeps.</p>
+    <p class="readmore"><a href="p04-cover-image-became-research.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p03-working-title-not-finished-format.html" style="--h:265">
+    <span class="thumb-init">P03</span>
+    <span class="thumb-topic">Origins</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p03-working-title-not-finished-format.html">A working title is not a finished format</a></h3>
+    <p class="blurb">Naming the podcast was the easy part; deciding what an episode even was took longer.</p>
+    <p class="readmore"><a href="p03-working-title-not-finished-format.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p02-intro-before-cover.html" style="--h:265">
+    <span class="thumb-init">P02</span>
+    <span class="thumb-topic">Origins</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p02-intro-before-cover.html">The intro had a voice before the cover had a face</a></h3>
+    <p class="blurb">The intro had a voice before the cover had a face: audio led, images followed.</p>
+    <p class="readmore"><a href="p02-intro-before-cover.html">Read more →</a></p>
+  </div>
+</article>
+<article class="card">
+  <a class="thumb" href="p01-a-podcast-before-the-picture-lab.html" style="--h:265">
+    <span class="thumb-init">P01</span>
+    <span class="thumb-topic">Origins</span>
+  </a>
+  <div class="card-body">
+    <time class="post-time">2026-09-19</time>
+    <h3 class="card-title"><a href="p01-a-podcast-before-the-picture-lab.html">A podcast before the picture lab</a></h3>
+    <p class="blurb">How a cover-image brief became a research programme — and why we refuse to call it the beginning.</p>
+    <p class="readmore"><a href="p01-a-podcast-before-the-picture-lab.html">Read more →</a></p>
+  </div>
+</article>
+</div></main>
     <footer class="site-footer">
       <p>Private review preview of the <strong>PodCast Builder</strong> devlog — built from the senior-accepted draft set, 2026-09-19.</p>
     </footer>
