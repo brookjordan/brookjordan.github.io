@@ -1,0 +1,344 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Source: Bespoke banner render pass — PodCast Builder devlog</title>
+<style>
+body{max-width:760px;margin:2.5rem auto;padding:0 1.2rem;font-family:ui-sans-serif,system-ui,sans-serif;background:#16181f;color:#dfe2ea;line-height:1.65}
+a{color:#7aa2f7} h1,h2{line-height:1.25} code{background:#262a33;padding:.1em .35em;border-radius:4px;font-size:.9em}
+pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{color:#8b90a0;font-size:.85rem}
+.back{font-size:.85rem} .backnote{background:#262a33;border:1px solid #333;border-radius:8px;padding:.8rem 1rem;font-size:.85rem;color:#aeb3c2}
+</style></head><body>
+<p class="back"><a href="../index.html">← PodCast Builder devlog</a></p>
+<p class="backnote">This is a public snapshot of a private project-tracking note, sanitised for
+publication: internal links, status metadata and personal paths are removed. The live private
+version lives in the author's Obsidian vault.</p>
+<h1>Bespoke banner render pass</h1>
+<h1>2026-09-20 bespoke banner render pass</h1>
+<p>Design and pipeline record for the bespoke banner pass on the
+PodCast Builder devlog.
+The ticket owns scope; this packet owns the <em>how</em> and the measurements. Live status lives in the
+render workspace, not here.</p>
+<h2>Why bespoke banners</h2>
+<p>Before this pass the blog carried 47 posts on colour-coded gradient tiles, because the interim
+banners (reused localimagegen masters) were stripped on 2026-09-20 in commit <code>638290c9</code> ahead of
+the bespoke renders. The topic→scene mapping and the model rotation in <code>image-plan.ts</code> are
+borrowed from the localimagegen corpus (<code>config/gallery.ts</code> scene prompts, patch motif and all),
+but no single master matches any individual post&#39;s story.</p>
+<h2>The plan</h2>
+<ul>
+<li><strong>One bespoke render per post, planned up front.</strong> Six hosts (P05 excluded, still held-evidence),
+47 entries: per-post concept derived from its <code>meta.ts</code> title and blurb, a matching cinematic
+scene prompt that always carries the house cloth-repair patch motif, and a model chosen per
+concept.</li>
+<li><strong>Scene family follows the established topic mapping:</strong> origins → <code>kingdom</code>, video/models →
+<code>spirit</code>, music/workflow → <code>signage</code>, incidents → <code>dragon</code>, cutover/migration → <code>van</code>.</li>
+<li><strong>Fixed parameters:</strong> seed <code>42</code>, 16:9 <code>1280×720</code> (the engine&#39;s own <code>W</code>/<code>H</code> default), <code>cwebp -q 82</code>
+at 1280w, matching the previous banner treatment.</li>
+<li><strong>Fastest-first queue</strong> using the engine&#39;s own measured medians, so early results land early even
+though the full pass takes hours. Ordering groups by model, which also minimises the number of
+model swaps.</li>
+<li><strong>Model choice is deliberately photoreal-only.</strong> The prompts are prose cinematic scenes written
+for long-prompt-budget models (longcat, ideogram, ovis, qwen2512, krea2, chroma, zimage, flux9b,
+wan). The booru-tag anime models were dropped from this pass so the 47 banners read as one
+coherent set; that is a change from the pre-pass <code>image-plan.ts</code> model rotation, which mixed
+anime models into the <code>spirit</code> topic.</li>
+</ul>
+<h2>Where it lives</h2>
+<ul>
+<li><strong>Plan:</strong> <code>render/render-plan.json</code> (47 entries: id, topic, scene, model, steps, concept, prompt).</li>
+<li><strong>Timings:</strong> <code>render/model-timings.json</code> — per-model medians rolled up from the ~9,880 master
+filenames in <code>the local vault/git/brookjordan/localimagegen/masters/</code> (the <code>_t&lt;n&gt;s_</code> field).</li>
+<li><strong>Controller:</strong> <code>render/tools/render-banners.mjs</code> — resumable; renders one entry at a time through
+<code>node src/cli.ts render</code>, recompresses, publishes, and records state. Never writes inside the
+localimagegen repo.</li>
+<li><strong>State / provenance:</strong> <code>render/render-state.json</code> (per-entry status, attempts, elapsed, hashes),
+<code>render/provenance.jsonl</code> (append-only manifest: model, steps, seed, prompt, prompt hash, ComfyUI
+prompt id, output hash, published path), <code>render/progress.json</code> (cheap status view).</li>
+<li><strong>Outputs:</strong> <code>/Volumes/assets/podcast/blog-banners/&lt;id&gt;-banner.webp</code>, served at
+<code>https://assets.brook.dev/podcast/blog-banners/&lt;id&gt;-banner.webp</code> (verified HTTP 200). Images are
+not committed to git.</li>
+</ul>
+<h2>Blog wiring</h2>
+<p><code>build.ts</code> now treats a banner as optional and remote: an <code>https://</code> <code>blog_img</code> is emitted directly
+on the card, featured tile and post page, with <code>onerror</code> fallbacks that remove the image so the
+existing colour-coded gradient tile shows through. <code>image-plan.ts</code> therefore points all 47 entries
+at their deterministic assets URL <em>before</em> the renders land. Consequences:</p>
+<ul>
+<li><strong>One deploy covers the whole pass.</strong> As each render lands on the share it appears on the live
+blog with no further build, commit or push; a render that never lands simply leaves its gradient
+tile in place. This is a deliberate improvement on the earlier per-render flip design.</li>
+<li>Local master staging is skipped for remote entries, so nothing is copied or committed per build.</li>
+</ul>
+<h2>Measurements (2026-09-20)</h2>
+<ul>
+<li>Cold zimage render (P47, first render of the session): <strong>14 m 39 s</strong> — dominated by a ~5-minute
+load of the 7.6 GB <code>qwen_3_4b</code> text encoder and general first-run overhead.</li>
+<li>Warm zimage render (P06, same model, immediately after): <strong>110 s</strong>, matching the corpus median
+(~95 s). The cold figure is a one-off, not the steady state.</li>
+<li>Sum of per-entry corpus medians for the 47-entry plan: <strong>≈ 3 h 26 m</strong> of sampling, plus one model
+load per model group.</li>
+</ul>
+<h2>Caveat: the image models are still on the NAS</h2>
+<p><code>extra_models_config.yaml</code> declares a <code>nas_fallback</code> at <code>/Volumes/model-store/models/comfyui</code>, and
+the image-gen checkpoints, UNets and text encoders are <em>not</em> present in the local
+<code>~/ComfyUI-Shared/models/</code> tree (which currently holds the video/LTX and music model set). The
+five-minute cold text-encoder load is the network. This is the same network-mapped-weights
+condition that produced the run-2567 SIGBUS (see PCB-008):
+if the model-store share drops mid-render the render is lost, though the controller is resumable.
+A future pass could pull the nine banner models into the local tree the way <code>ltx-models-local.py</code>
+did for the video set.</p>
+<h2>Model suitability — the gap this pass exposed</h2>
+<p>The engine&#39;s catalogue (<code>config/workflows.ts</code>) has a per-model <code>good_at</code> field, but it is <strong>seeded
+empty</strong>, so nothing in the repository records which models are good at what or which should not be
+used for stills. The first pass therefore picked models from the master-corpus timing data, which is
+how <code>wan</code> got into the plan. It should not have: the catalogue&#39;s own description calls it <em>&quot;WAN 2.1
+t2v 1.3B (fp16) coerced to a single still (length 1)&quot;</em>, and the official
+<a href="https://huggingface.co/Wan-AI/Wan2.1-T2V-1.3B">Wan2.1-T2V-1.3B card</a> ships a negative prompt built on
+<em>&quot;static, still picture, overall gray, worst quality, low quality&quot;</em> — its own guidance suppresses what a
+still banner needs. Brook flagged the result (P36) as <em>&quot;awful … bare bones&quot;</em>.</p>
+<p>A local registry now records fitness for this task: <code>render/model-suitability.json</code>, with a
+<code>preferred | usable | avoid | unavailable</code> status per model, recommended steps, and evidence.
+<code>preflight-models.mjs</code> fails the run if the plan references an <code>avoid</code> or <code>unavailable</code> model.
+The durable fix belongs upstream — filling <code>good_at</code> from this evidence — and is logged as follow-up
+rather than done here (the handoff forbids altering the localimagegen repository).</p>
+<h2>Corrections made after the first pass (2026-09-20)</h2>
+<p>Two real defects were found by inspection and fixed before the bulk of the queue ran:</p>
+<ol>
+<li><strong>Vanished checkpoints.</strong> <code>krea2</code> (<code>krea2_turbo-Q8_0.gguf</code>) and <code>flux9b</code>
+(<code>Flux-2-Klein-9B-KV-Q4_K_M.gguf</code>) are no longer in ComfyUI&#39;s model store; every graph
+referencing them was rejected with <code>/prompt -&gt; HTTP 400</code>, failing 12 posts in under a second
+each. Their posts were reassigned to <code>ovis</code> (18), <code>qwen2512</code> (8), <code>zimage</code> (14).</li>
+<li><strong>Step overshoot.</strong> The plan had been derived from the <em>highest rung present in the master
+ladder</em>, but that ladder was a research sweep deliberately run past each model&#39;s plateau.
+<code>history/2026-06-26-0825-knowing-when-to-stop.md</code> names this failure mode: distilled models
+(zimage, qwen2512, krea2, the Klein pair) are trained to land at 4–8 steps, and past that it is
+<em>&quot;minutes of compute spent rendering a slightly worse image… paying to overcook.&quot;</em> Step counts
+were reset to the documented ceilings.</li>
+</ol>
+<p><strong>One deliberate exception.</strong> <code>zimage</code> was set back to 14. Its first six banners were rendered at 14
+and validated by Brook as <em>&quot;amazing&quot;</em>, so the empirical result stands over the Turbo-target prior
+until an A/B at 8 versus 14 settles it. That A/B is recorded as an open follow-up, not a settled
+question.</p>
+<h2>Provenance on the page</h2>
+<p>Brook asked for the generation prompt as alt text and for the workflow to be stored and credited.</p>
+<ul>
+<li><strong>Alt text is the prompt.</strong> Every banner image (<code>alt</code> on the post page, the featured tile and the
+index cards) carries the exact prompt that produced it, so the image describes itself to a screen
+reader in the same terms the model was given.</li>
+<li><strong>A credit line under each banner</strong> shows the ComfyUI mark, <em>&quot;Created with &lt;model&gt; · N steps ·
+seed 42&quot;</em>, and a link to the provenance JSON. The ComfyUI mark links to the <strong>stored workflow</strong> for
+that banner (Brook&#39;s own request), so the graph is one click from the image.</li>
+<li><strong>One manifest, linked from every post:</strong> <code>banner-manifest.json</code> on the assets share
+(<code>https://assets.brook.dev/podcast/blog-banners/banner-manifest.json</code>) holds one entry per post with
+<code>model</code>, <code>steps</code>, <code>seed</code>, <code>prompt</code>, <code>image</code>, <code>workflow</code>, <code>sha256</code> and the ComfyUI prompt id. Generated
+by <code>render/tools/build-manifest.mjs</code>; the blog never invents these values.</li>
+<li><strong>Stored workflows:</strong> the ComfyUI graphs actually used are published beside it at
+<code>…/blog-banners/workflows/&lt;model&gt;.t2i.json</code>.</li>
+<li><strong>ComfyUI logo</strong> is the official <code>comfy-logo-single.svg</code> mark from <code>comfyui-frontend-package</code>,
+inlined rather than hot-linked.</li>
+</ul>
+<p><strong>Legacy renders are renamed, not deleted.</strong> Brook&#39;s convention, applied to the rejected <code>wan</code> render:
+a superseded banner stays on the share as <code>&lt;id&gt;-banner.legacy-NNN.webp</code>. So <code>P36</code>&#39;s rejected render is
+<code>p36-banner.legacy-001.webp</code>, which leaves the live page falling back to its gradient tile until the
+replacement lands, and keeps the rejected render as evidence rather than pretending it never existed.</p>
+<h2>Integrity fix: a publisher must not own lifecycle state</h2>
+<p><code>publish-staged.mjs</code> originally marked every staged file <code>done</code>/published. That overwrote the
+<code>--reconcile</code> reset of P36 — it re-published the stale staged <code>wan</code> render and resurrected its <code>done</code>
+state, so a corrected entry could silently survive. Two guards now prevent it:</p>
+<ul>
+<li><code>publish-staged.mjs</code> publishes a staged file <strong>only</strong> when its state agrees with the plan
+(model, steps <strong>and prompt hash</strong>); a mismatch is skipped with a message.</li>
+<li><code>render-banners.mjs --reconcile</code> re-renders any <code>done</code> entry whose recorded model/steps disagree with
+the plan, so the shipped image and the manifest can never describe different renders.</li>
+</ul>
+<p>The prompt hash matters as much as the model: editing a prompt after a render leaves an image that no
+longer illustrates the text the manifest publishes. Reconcile and the publisher both compare
+<code>sha256(prompt)</code> against the recorded value, so a prompt edit now forces a re-render rather than
+producing a provenance lie. A <code>done</code> entry with <strong>no</strong> recorded hash (only P47, adopted by hand from an
+interrupted run) is treated as <em>unverifiable</em> rather than stale — re-rendering is not spent to prove a
+maybe, and <code>build-manifest.mjs</code> records <code>promptHash: null</code> for it so the gap is visible.</p>
+<h2>Prompt set v2: stop borrowing the house formula</h2>
+<p>Brook reviewed the rendered banners and rejected the prompts: they <em>&quot;closely match the prompts in
+localimagegen rather than being unique to the blog posts&quot;</em>, and the patch <em>&quot;looks weird&quot;</em>. Both are
+fair. Every v1 prompt ended in the same construction — <em>&quot;Stitched onto X is a fabric repair patch that
+fully covers and conceals a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark
+thread in big uneven whip-stitches&quot;</em> — and every subject was mapped onto one of that repo&#39;s six scene
+families (kingdom / van / dragon / spirit / signage). The result was a house style with a blog post
+slotted in: a giant patch draped over filing boxes, two patches stuck on a leaf, one sewn onto a
+picture frame. Bolted on, not part of the picture.</p>
+<p><strong>What changed.</strong> The 22 un-built entries were rewritten from scratch in <code>render/prompts-v2.json</code>, with
+each image built from what its post is actually about. Concretely:</p>
+<ul>
+<li><strong>Scene families dropped.</strong> No more kingdom/van/dragon/spirit/signage mapping; no shared scene prompt.</li>
+<li><strong>No repeated patch clause.</strong> The cloth patch survives only where it <em>is</em> the story: on the little
+cover that started everything (P01) and across the replaced planks of the Ship-of-Theseus plaque (P45).</li>
+<li><strong>Style is now per-post.</strong> Darkroom film strips for the ten-vs-twenty-seconds experiment (P37); a
+server rack in near-total darkness with one breathing LED for &quot;mostly dead&quot; (P30); a monolith
+fracturing in a void for the SIGBUS crash (P29); five tagged specimen jars for freezing the test
+cases (P39); a rain-smeared blank address label for the perfect file with the missing filename (P13).</li>
+</ul>
+<p>The 25 entries already rendered keep their v1 prompts. Rewriting a rendered prompt would make the
+shipped image disagree with the manifest — the integrity guard would then either force a re-render or
+publish a lie — so <code>render/tools/apply-prompts.mjs</code> <strong>refuses to modify an entry whose state is <code>done</code></strong>
+and reports which it left alone.</p>
+<p><strong>Operational note:</strong> the controller holds the plan in memory, so a prompt change only takes effect
+after a restart. The run was stopped, the new plan applied, and the controller restarted with
+<code>--clear-queue</code> (the in-flight old-prompt render is orphaned and discarded). Remaining work is the 22
+rewritten entries: ovis 12, longcat 5, chroma 3, ideogram 2.</p>
+<h2>Ideogram&#39;s safety filter: two banners came back as placeholders</h2>
+<p>Brook spotted that <code>p02-banner.webp</code> served a flat grey image reading <em>&quot;Image blocked by safety
+filter&quot;</em>. Tracing each layer settled who was responsible:</p>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Browser / <code>assets.brook.dev</code></td>
+<td>serving correctly — HTTP 200, <code>image/webp</code>, 6,582 bytes, byte-identical to what was published</td>
+</tr>
+<tr>
+<td>Publish layer</td>
+<td>copied faithfully; not the cause</td>
+</tr>
+<tr>
+<td><code>cwebp</code> compression</td>
+<td>produced a small WebP because the <em>source</em> was flat grey</td>
+</tr>
+<tr>
+<td><code>lig render</code> (localimagegen)</td>
+<td>saved exactly what ComfyUI produced</td>
+</tr>
+<tr>
+<td>ComfyUI</td>
+<td>ran the graph locally (local <code>ideogram4-Q4_0.gguf</code> via <code>UnetLoaderGGUF</code>); no safety node in the graph</td>
+</tr>
+<tr>
+<td><strong>Ideogram 4.0</strong></td>
+<td><strong>root cause — the model&#39;s built-in safety filter</strong></td>
+</tr>
+<tr>
+<td>DeepSeek harness</td>
+<td>never touched the bytes; the placeholder is in the file on the share, independent of any image I viewed</td>
+</tr>
+</tbody></table>
+<p>ComfyUI&#39;s own Ideogram 4 template carries the warning, and the
+<a href="https://github.com/ideogram-oss/ideogram4/blob/main/docs/prompting.md">official prompting guide</a>
+is explicit:</p>
+<blockquote>
+<p>Ideogram 4 is trained exclusively on <strong>structured JSON captions</strong> … Passing in plain-text prompts
+directly to the model <strong>will not work and will likely trigger a safety warning</strong>.</p>
+</blockquote>
+<blockquote>
+<p><strong>Safety filter.</strong> NSFW prompts are blocked. Instead of an image, the model returns a gray screen
+with the text &quot;Image blocked by safety filter&quot;. <strong>False positive rates for safety is high for
+non-json prompts.</strong> We are aware that this is an issue…</p>
+</blockquote>
+<p>So both ideogram posts (P02, P09) were blocked not for their content but for their <em>dialect</em>: we sent
+prose to a model that only accepts JSON. This is the same class of mistake as the booru-tag research
+already recorded in the localimagegen history — a prompt-dialect mismatch, not a subject problem.</p>
+<p><strong>Fix applied.</strong> <code>render/prompts-v3-ideogram.json</code> rewrites both as JSON captions following the
+documented schema (<code>high_level_description</code>, <code>style_description</code> with a strict key order and uppercase
+hex <code>color_palette</code>, <code>compositional_deconstruction</code> with <code>background</code> and bbox&#39;d <code>elements</code>), minified
+as the guide specifies. <code>apply-prompts.mjs</code> gained a <code>promptJson</code> field that serialises to the minified
+form.</p>
+<p><strong>Detection added.</strong> The placeholder passes every structural check — valid WebP, correct 1280×720 — so
+the completion gate happily reported 47/47 while two images were grey. <code>verify-banners.mjs</code> now decodes
+a thumbnail with <code>dwebp</code> and flags flat, neutral, mid-grey images (<code>lib/image-stats.mjs</code>). A file-size
+heuristic was rejected: a legitimately dark banner (P30&#39;s server rack) is nearly as small.</p>
+<p><strong>Follow-up for localimagegen:</strong> its <code>ideogram</code> gallery cells are prompted in prose (the <code>scenes.*</code>
+prompts in <code>config/gallery.ts</code>), which the vendor says &quot;will not work&quot;. The corpus masters exist, so it
+sometimes succeeds — but the dialect needs fixing upstream, and a prompt-size/dialect entry belongs in
+that repo&#39;s empty <code>good_at</code> field.</p>
+<h2>State ownership: one writer per file</h2>
+<p><code>render-state.json</code> had two writers and they raced. The render controller loads it once and rewrites it
+from memory after every render; <code>publish-staged.mjs</code> also wrote <code>publishedAt</code> there. The controller&#39;s
+next write therefore erased the publisher&#39;s — observed on 2026-09-20 with <strong>10 banners live on the share
+but recorded as unpublished</strong>.</p>
+<p>Publication now has its own file, <code>publish-state.json</code>, owned solely by the publisher (and by
+<code>publish-staged.mjs --scan-only</code>, which rebuilds it by reading the share and copies nothing — so it needs
+no elevated access). The manifest reads <code>published</code> from there and <code>rendered</code> from the staging
+directory, so neither writer can undo the other. General rule for this pass: a lifecycle fact gets
+exactly one owning file, and a tool that does not own a fact must not write it.</p>
+<h2>Unattended operation and the sandbox boundary</h2>
+<p>A question from Brook — &quot;how can I run this without authorising every command?&quot; — exposed the
+structural answer, recorded in full in the workspace <code>RUNBOOK.md</code>.</p>
+<p>The DSH file sandbox in <code>workspace-write</code> mode allows writes to exactly the workspace root,
+<code>/tmp</code> and the per-user temp dir. The assets share is outside all three, so every share write
+from the agent needs a one-command escalation to <code>danger-full-access</code>, and that escalation is the
+approval prompt. There is no extra-writable-paths option and symlinks do not help (roots are
+canonicalised). Note the workspace root here is the <strong>home directory</strong>, so <code>workspace-write</code>
+protects the system but not other repos or the vault.</p>
+<p>The design that resolves it separates the privileged write from the agent:</p>
+<ol>
+<li><strong>The agent stays confined</strong> and renders only into the workspace (<code>--no-publish</code> staging).</li>
+<li><strong>A launchd agent outside DSH</strong> (<code>render/ops/banner-publish</code>,
+<code>render/ops/com.brookjordan.banner-publish.plist</code>) copies the finished artefacts to the share
+every five minutes. It is deliberately self-contained — it executes nothing from the workspace
+and copies only <code>P&lt;NN&gt;-banner.webp</code>, <code>banner-manifest.json</code> and <code>workflows/*.json</code> — so the
+agent can produce banners but cannot aim the delivery at anything else.</li>
+<li><strong>Unattended continuation</strong> comes from the goal round driver, which queues rounds while the host
+is up and the goal is armed. It never revives work on its own: after a host restart or session
+resume the goal is disarmed until one human &quot;continue&quot;. The cap is the goal&#39;s <code>maxGoalRounds</code>.</li>
+<li><strong>Recommended narrowing:</strong> launch DSH in the project directory rather than the home directory, so
+<code>workspace-write</code> means <em>this project only</em>.</li>
+</ol>
+<p><strong>Restart hygiene lesson.</strong> Killing a controller orphans the render it had already submitted to
+ComfyUI, and the next pass submits a duplicate — observed as two identical P34 zimage prompts,
+one running and one pending. The controller now takes <code>--clear-queue</code> to drop ComfyUI&#39;s pending
+queue on start, so a restart cannot stack duplicates. The duplicate&#39;s raw PNG was pruned from the
+ComfyUI output directory.</p>
+<h2>Status</h2>
+<p>Renders started 2026-09-20 ~11:22 local, detached and resumable. Authoritative live state:
+<code>render/progress.json</code> and <code>render/render-state.json</code> in
+<code>the local vault/Documents/hermes/podcast-blog-preview-20260920/</code>.</p>
+<p>After the corrections the plan is 6 model groups — <code>zimage</code> (14) ×10, <code>qwen2512</code> (8) ×14,
+<code>ovis</code> (18) ×13, <code>longcat</code> (18) ×5, <code>ideogram</code> (20) ×2, <code>chroma</code> (26) ×3 — and the run restarted on
+2026-09-20 ~11:39 local.</p>
+<p><strong>Staging pass (from ~11:53 local).</strong> The run is in <code>--no-publish</code> mode: it renders into
+<code>render/banners-out/</code> inside the workspace and does <strong>not</strong> write to the assets share. Writing there
+needs an escalated file permission, and an escalation for that bundle was declined, so publishing is a
+separate, deliberate step: <code>render/tools/build-manifest.mjs</code> followed by
+<code>render/tools/publish-staged.mjs</code> (which refuses any staged file that disagrees with the plan). Until
+that step runs, newly finished renders are staged locally and the live blog keeps its gradient tiles.
+Nothing is lost — the controller adopts an already-staged webp instead of re-rendering it.</p>
+<h2>Outcome (end of 2026-09-20)</h2>
+<p><strong>All 47 bespoke banners are rendered, published and verified.</strong> The completion gate reports:</p>
+<pre><code>rendered OK: 47 (published 47, staged 0)
+public 200: 47/47
+RESULT: all banners rendered, valid and not safety-blocked
+</code></pre>
+<p>Every post on <a href="https://brook.dev/projects/news/blog/">https://brook.dev/projects/news/blog/</a> carries its own banner, its generation prompt as
+alt text, a credit line whose ComfyUI mark links to the stored workflow, and a link to the provenance
+manifest. The two Ideogram posts were re-rendered from JSON captions after the safety-filter incident
+and are no longer placeholders. The render controller, supervisor and publish loop have all retired.</p>
+<p><strong>Model groups as finally run:</strong> zimage (14) ×10, qwen2512 (8) ×14, ovis (18) ×13, longcat (18) ×5,
+ideogram (20) ×2, chroma (26) ×3. Ideogram was the slowest per image (~20 min at 20 steps) and the
+only model with a blocking failure mode.</p>
+<p><strong>Environment trap found at hand-off — the Obsidian MCP serves a different vault.</strong> All tracking edits
+in this pass were made on the filesystem, in <code>the local vault/Documents/Obsidian Vault</code> — the only
+vault registered in <code>~/Library/Application Support/obsidian/obsidian.json</code>, and the one Obsidian has
+open. The <code>mcp__obsidian__*</code> tools talk instead to <code>obsidian-sync-mcp</code> on the NAS (CouchDB-backed,
+docker-stacks/docker-obsidian), and that copy has <strong>diverged</strong>: it lists <code>Project tracking/podcast builder</code> with PCB-001…PCB-008 only (no PCB-015), four Scratchpad notes against thirteen on disk, and
+project folders (<code>karakeep</code>, <code>localllm</code>) that do not exist locally. The local vault&#39;s <code>obsidian-livesync</code>
+has an <strong>empty remote configuration</strong> (<code>remoteType</code>, <code>couchDB_URI</code>, <code>couchDB_USER</code>, <code>couchDB_DBNAME</code> all
+blank; plugin <code>data.json</code> last written 12 Aug), so it never pushes. Until the two vaults are reconciled,
+do not read or write this project&#39;s tracking through the MCP.</p>
+<p><strong>Open at hand-off:</strong> the first 25 banners still use prompt set v1 (the localimagegen-derived house
+style) while the last 22 use the bespoke v2 set, so the visual set is mixed; the confined publisher
+and a narrowed workspace remain uninstalled decisions; the upstream Ideogram dialect fix and the empty
+<code>good_at</code> field are follow-ups for the localimagegen project. Micro-blog candidates harvested from this
+pass are in <code>render/blog-candidates.md</code> and the workspace handoff
+(<code>/tmp/podcast-blog-banner-pass-handoff-2026-09-20.md</code>).</p>
+<h2>Related</h2>
+<ul>
+<li>PCB-015
+— the blog ticket and the public-page maintenance protocol.</li>
+<li>the blog maintenance protocol
+— update cycle and vault-citation hygiene.</li>
+<li>the local image gen project (house style)
+— the engine, the scene prompts and the patch motif this pass reuses.</li>
+</ul>
+
+</body></html>
