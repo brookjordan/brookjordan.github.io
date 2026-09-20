@@ -452,6 +452,18 @@ a:hover {
 .intro{max-width:62ch;color:var(--text-secondary,#aeb3c2)}
 .evidence-window{color:var(--text-tertiary,#8b90a0);font-size:.85rem;margin:0 0 1.5rem}
 .post-banner{width:100%;max-height:340px;object-fit:cover;border-radius:var(--radius-md,10px);margin:0 0 1.2rem;border:1px solid var(--border-primary,#333)}
+/* Banner provenance: ComfyUI mark links to the stored workflow, plus the prompt. */
+.banner-credit{display:flex;flex-wrap:wrap;align-items:center;gap:.45rem;margin:-.5rem 0 1.3rem;font-size:.8rem;color:var(--text-tertiary,#8b90a0)}
+.banner-credit a{color:var(--text-tertiary,#8b90a0);text-decoration:none}
+.banner-credit a:hover{color:var(--accent,#7aa2f7);text-decoration:underline}
+.comfy-link{display:inline-flex;align-items:center;gap:.35rem;padding:.14rem .5rem .14rem .28rem;border:1px solid var(--border-primary,#333);border-radius:999px}
+.comfy-link:hover{border-color:var(--accent,#7aa2f7);text-decoration:none}
+.comfy-mark{width:15px;height:15px;flex:none;border-radius:3px}
+.credit-sep{opacity:.6}
+.banner-prompt{margin:0 0 1.6rem;font-size:.82rem;color:var(--text-tertiary,#8b90a0)}
+.banner-prompt summary{cursor:pointer;font-weight:600}
+.banner-prompt[open] summary{margin-bottom:.45rem}
+.banner-prompt p{margin:0;padding:.6rem .75rem;border-left:2px solid var(--border-primary,#333);color:var(--text-secondary,#aeb3c2);line-height:1.5}
 .part-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.16em;color:var(--text-tertiary,#8b90a0);margin:0 0 .6rem;font-weight:700}
 .post-title{margin:0 0 .8rem;font-size:1.7rem;line-height:1.25}
 .lead{font-size:1.02rem;color:var(--text-secondary,#aeb3c2);line-height:1.55;margin:0 0 1.8rem;max-width:64ch}
@@ -476,7 +488,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <section class="featured">
   <a class="thumb thumb-featured" href="p44-motion-control-next-question.html" style="--h:95">
     <span class="thumb-init">P44</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p44-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p44-banner.webp" alt="A cinematic 16:9 photorealistic rainforest clearing at dawn, where a long pale ribbon of chalk-white fog is being drawn along a clearly visible route: a taut string of guide-line pegs curving and looping through the trees, its path marked on a small waterproof chart pinned to a post. The fog obeys the curve, winding precisely between the pegs instead of drifting free, learning to follow a trajectory rather than simply arriving at two destinations. A fabric repair patch is stitched onto the canvas of a surveyor's satchel resting against the post, fully covering and concealing a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the waxed canvas. Cool dawn light, volumetric haze, photorealistic, precise detail." onerror="this.remove()">
     <span class="thumb-topic">Video probes</span>
   </a>
   <div class="featured-body">
@@ -491,7 +503,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p42-valid-file-not-good-transition.html" style="--h:95">
     <span class="thumb-init">P42</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p42-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p42-banner.webp" alt="A cinematic 16:9 photorealistic rainforest clearing with slow fog, presented as a technical viewing frame: a grid of small monitor tiles showing the same scene, every one of them decoding perfectly, clean and unbroken. Pulled back, the larger image they compose is clearly wrong — the fog is warped, the horizon bends, and something about the motion has snapped out of true. The picture passes every machine check and fails the human eye. A fabric repair patch is stitched onto a canvas equipment cover in the foreground, fully covering and concealing a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the heavy canvas. Cool monitor glow against green forest, photorealistic, precise detail." onerror="this.remove()">
     <span class="thumb-topic">Video probes</span>
   </a>
   <div class="card-body">
@@ -504,7 +516,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p41-endpoints-matched-fog-did-not.html" style="--h:95">
     <span class="thumb-init">P41</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p41-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p41-banner.webp" alt="A cinematic 16:9 photorealistic rainforest scene with two crisp overhead wires of light stretched across the frame, marking a clear start line and a clear finish line. Between them the fog does not travel straight: it coils back on itself, reverses direction, and snaps taut into place like a released rubber band, visibly fighting the path it was given. The endpoints are immaculate; the middle is chaos. A fabric repair patch is stitched onto a moss-covered fallen log that crosses beneath the fog, fully covering and concealing a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the sodden bark. Moody green and grey, volumetric light, photorealistic, dense atmospheric detail." onerror="this.remove()">
     <span class="thumb-topic">Video probes</span>
   </a>
   <div class="card-body">
@@ -517,7 +529,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p36-one-episode-before-archive.html" style="--h:45">
     <span class="thumb-init">P36</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p36-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p36-banner.webp" alt="A wide cinematic 16:9 photorealistic dusk scene on a long straight road. In the foreground a single matte-black armoured van drives carefully towards the viewer with one carefully secured crate, making exactly one trip to prove the route. Behind it, stretching to the horizon, a vast warehouse stands closed and waiting, hundreds of pale crates stacked at its doors, patient and untranslated. One uncertain route absorbed once, cheaply, before the many. Stitched onto the van's canvas load strap is a fabric repair patch that fully covers and conceals a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the webbing. Golden-hour sky, long shadows, deep perspective, photorealistic, extremely detailed." onerror="this.remove()">
     <span class="thumb-topic">Migration</span>
   </a>
   <div class="card-body">
@@ -530,7 +542,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p12-speech-test-made-of-fixtures.html" style="--h:330">
     <span class="thumb-init">P12</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p12-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p12-banner.webp" alt="A cinematic 16:9 photorealistic interior of a broadcast rehearsal room in cool daylight. A microphone stands ready in the centre, and the wall behind it is covered in printed transcript pages pinned up in ordered columns, each line carefully annotated, none of them from a real recording. The room is immaculately prepared for a conversation that has not happened yet. A fabric repair patch is stitched onto the padded acoustic wall panel beside the microphone, fully covering and concealing a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the fabric-wrapped panel. Neutral grey and warm wood, soft window light, photorealistic, fine paper and textile texture." onerror="this.remove()">
     <span class="thumb-topic">Music &amp; audio</span>
   </a>
   <div class="card-body">
@@ -543,7 +555,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p34-local-first-needed-test.html" style="--h:150">
     <span class="thumb-init">P34</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p34-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p34-banner.webp" alt="A cinematic 16:9 photorealistic rainforest macro photograph with a paper-thin focus band. In the sharp foreground a translucent tardigrade crouches on a moss frond directly beside a local, close, clearly rendered leaf; far behind it in the soft blur, an identical frond grows from a heavier, dimmer, unreachable mass of foliage that is no longer there. The creature stayed with what was close and real. A fabric repair patch is stitched onto the near frond it chose, fully covering and concealing a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the wet moss. Soft emerald and cream, creamy bokeh, photorealistic, meticulous macro detail." onerror="this.remove()">
     <span class="thumb-topic">Local models</span>
   </a>
   <div class="card-body">
@@ -556,7 +568,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p33-copying-model-not-enough.html" style="--h:150">
     <span class="thumb-init">P33</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p33-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p33-banner.webp" alt="A cinematic 16:9 photorealistic rainforest macro still-life: a long procession of identical dew droplets climbing a moss-covered log in single file towards a bright clearing, each one a perfect copy of the last. Every droplet is checked as it passes beneath a small precise beam of light that measures it, and only those that match exactly continue. Far at the back, one droplet hangs half-formed and unverified, excluded from the line. A fabric repair patch is stitched onto the log at the checkpoint, fully covering and concealing a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the moss. Precise, almost technical lighting, emerald and gold, photorealistic, extreme macro detail." onerror="this.remove()">
     <span class="thumb-topic">Local models</span>
   </a>
   <div class="card-body">
@@ -569,7 +581,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p30-unreachable-not-rebooted.html" style="--h:150">
     <span class="thumb-init">P30</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p30-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p30-banner.webp" alt="A cinematic 16:9 photorealistic rainforest macro photograph in gentle morning light, deliberately ambiguous between a living thing and a still one. A translucent tardigrade clings to a moss frond in the sharp foreground, and beside it a second identical tardigrade lies perfectly still and slightly clouded, neither clearly dead nor clearly moving. The tilted focus makes the still one look like it might simply be resting. A fabric repair patch is stitched onto the moss frond between them, fully covering and concealing a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the damp moss. Soft green and gold, creamy bokeh, photorealistic, delicate macro detail." onerror="this.remove()">
     <span class="thumb-topic">Local models</span>
   </a>
   <div class="card-body">
@@ -582,7 +594,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p29-model-disappeared-under-memory-map.html" style="--h:150">
     <span class="thumb-init">P29</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p29-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p29-banner.webp" alt="A cinematic 16:9 photorealistic rainforest scene rendered as a catastrophic moment: a huge moss-covered fallen log, half of it perfectly sharp and intact, the other half dissolving into a violent burst of rendered static and torn pixels as though the ground beneath it was yanked away. A glowing filament of light that ran along the log is severed mid-span, sparking into the mist. A fabric repair patch is stitched onto the intact half of the log, fully covering and concealing a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the mossy bark. Dramatic split lighting, cold blue rupture against warm green, volumetric haze, photorealistic, extreme detail." onerror="this.remove()">
     <span class="thumb-topic">Local models</span>
   </a>
   <div class="card-body">
@@ -595,7 +607,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p43-one-long-clip-two-joined-clips.html" style="--h:95">
     <span class="thumb-init">P43</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p43-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p43-banner.webp" alt="A cinematic 16:9 photorealistic rainforest macro scene showing two lengths of moss-covered fallen log laid end to end, meeting at one very visible, slightly misaligned seam in the middle of the frame. The two halves are rendered as continuous and plausible, but the join is unmistakable: a fabric repair patch is stitched across it, fully covering and concealing the seam where the two lengths meet, mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the bark on both sides. Slow fog moves through the scene, identical on each half. Rich emerald and brown palette, shallow depth of field, photorealistic, exceptionally detailed bark and moss." onerror="this.remove()">
     <span class="thumb-topic">Video probes</span>
   </a>
   <div class="card-body">
@@ -608,7 +620,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p25-saved-is-not-scheduled.html" style="--h:200">
     <span class="thumb-init">P25</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p25-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p25-banner.webp" alt="A wide cinematic 16:9 photorealistic 3am street scene, empty and cold, one streetlight buzzing. The matte-black armoured van is parked at the kerb with its engine running, ready to leave. The driver's window is down and a hand holds a freshly written route note that was carefully saved but never actually handed to the dispatcher, so the schedule knows nothing about it. The road ahead is dark and unwarned. Stitched onto the van's door is a fabric repair patch that fully covers and conceals a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the metal. Cold blue streetlight, deep shadow, photorealistic, crisp detail." onerror="this.remove()">
     <span class="thumb-topic">Cutover</span>
   </a>
   <div class="card-body">
@@ -621,7 +633,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p23-episode-published-cleanup-failed.html" style="--h:12">
     <span class="thumb-init">P23</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p23-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p23-banner.webp" alt="A cinematic 16:9 fantasy scene in a quiet crystal cavern after the work is done. In the foreground a carefully wrapped delivered parcel sits safely beside a dormant dragon's claw, the episode successfully published and gone. Behind it, a long-handled broom leans against the rock, mid-sweep, chasing a faintly glowing ghostly smear on the stone where a machine that no longer exists used to sit, still dutifully cleaning nothing at all. Stitched onto the folded canvas of the delivery sledge beside the parcel is a fabric repair patch that fully covers and conceals a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the sledge canvas. Cool crystal light, warm ember accent, photorealistic, rich detail." onerror="this.remove()">
     <span class="thumb-topic">Incidents</span>
   </a>
   <div class="card-body">
@@ -634,7 +646,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p17-music-and-video-onto-the-mac.html" style="--h:200">
     <span class="thumb-init">P17</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p17-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p17-banner.webp" alt="A wide cinematic 16:9 photorealistic night scene, rain sheeting down outside a warm open garage doorway. Parked inside, dry and settled, is a matte-black armoured delivery van, its engine off, its work now done at home. Around it the garage is fitted out with tidy local server racks, warm indicator lights blinking steadily. Out in the rain, the empty road leads away to a faint, dissolving cloud of vapour where the old remote services used to be. Stitched onto the van's side panel is a fabric repair patch that fully covers and conceals a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the metal all around. Rain-slick reflections, neon and amber, photorealistic, extremely detailed." onerror="this.remove()">
     <span class="thumb-topic">Cutover</span>
   </a>
   <div class="card-body">
@@ -647,7 +659,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p16-style-tags-and-guidance.html" style="--h:330">
     <span class="thumb-init">P16</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p16-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p16-banner.webp" alt="A cinematic 16:9 photorealistic close shot of the side wall of a small shop, where a detailed control panel has been painted flat onto the brickwork: rows of dials, meters and switches rendered only in paint and plaster, casting no shadow, connected to nothing. The largest dial is painted hard at its minimum with the pointer fixed at zero. The shop sign above reads &quot;PATCH NOTES&quot; in bold capitals. Stitched onto the canvas of an awning tie-back hanging beside the painted panel is a fabric repair patch that fully covers and conceals a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the canvas. Soft daylight, photorealistic, fine brick and paint texture." onerror="this.remove()">
     <span class="thumb-topic">Music &amp; audio</span>
   </a>
   <div class="card-body">
@@ -660,7 +672,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p14-right-file-wrong-port.html" style="--h:330">
     <span class="thumb-init">P14</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p14-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p14-banner.webp" alt="A cinematic 16:9 photorealistic overcast street scene showing two identical small shopfronts side by side, both bearing the same hand-painted sign reading &quot;PATCH NOTES&quot; in bold legible capitals, both brightly lit and open, both perfectly healthy. Between them, a single extension cable runs along the wet pavement, plugged into a socket on the wrong side of the wall, so the two shops can never actually speak. Nobody in either shop has noticed. Stitched onto the striped woven awning of the left shop is a fabric repair patch that fully covers and conceals a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the canvas. Soft overcast light, wet cobbles, photorealistic, extremely detailed signage and brick." onerror="this.remove()">
     <span class="thumb-topic">Music &amp; audio</span>
   </a>
   <div class="card-body">
@@ -673,7 +685,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p13-song-existed-filename-did-not.html" style="--h:330">
     <span class="thumb-init">P13</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p13-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p13-banner.webp" alt="A cinematic 16:9 photorealistic night shot of the rear service door of a small recording shop, warm light spilling out. A single perfect, beautifully wrapped parcel sits on the step, immaculate and complete, the finished work delivered exactly as asked. But the address label on it is blank, illegible and wrong, so nobody will ever find it. The van that should have collected it has already driven away. A fabric repair patch is stitched onto the canvas of a delivery satchel propped against the door, fully covering and concealing a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the waxed canvas. Warm interior glow against cold blue street, photorealistic, sharp detail." onerror="this.remove()">
     <span class="thumb-topic">Music &amp; audio</span>
   </a>
   <div class="card-body">
@@ -686,7 +698,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p40-missing-pair-in-published-episode.html" style="--h:95">
     <span class="thumb-init">P40</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p40-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p40-banner.webp" alt="A cinematic 16:9 photorealistic macro photograph of a framed published episode still hanging on a gallery wall, under glass. Inside the frame, sharp and clear, a translucent tardigrade clings to a dew-covered moss frond in a rainforest clearing. Reflected faintly in the glass beside it are the two image files that were thought to be missing, sitting exactly where the filename convention never looked. A fabric repair patch is stitched onto the linen backing visible at the frame's edge, fully covering and concealing a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the coarse linen. Soft gallery lighting, gentle reflections, photorealistic, intricate detail." onerror="this.remove()">
     <span class="thumb-topic">Video probes</span>
   </a>
   <div class="card-body">
@@ -699,7 +711,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p39-freeze-cases-before-limit.html" style="--h:95">
     <span class="thumb-init">P39</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p39-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p39-banner.webp" alt="A cinematic 16:9 photorealistic still-life on a dark lab bench: five identical moss-and-stone specimens, each sealed under its own clean glass cloche, arranged in a precise row and lit evenly. Every cloche is labelled with a crisp, identical engraved metal tag. Outside the glass, in the blurred background, thick fog drifts freely and a large brass dial on the wall sits at rest, untouched. A fabric repair patch is stitched onto the felt mat beneath the middle cloche, fully covering and concealing a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the dense felt. Cool clinical light with one warm accent, shallow depth of field, photorealistic, forensic detail." onerror="this.remove()">
     <span class="thumb-topic">Video probes</span>
   </a>
   <div class="card-body">
@@ -712,7 +724,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p38-ten-second-render-made-it-through.html" style="--h:95">
     <span class="thumb-init">P38</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p38-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p38-banner.webp" alt="A cinematic 16:9 photorealistic rainforest scene, deliberately split in treatment. In the centre, one small clearing of overgrown mossy ruins with slow low fog is rendered with absolute crystal sharpness, locked and still, every stone and frond immaculate. Everything surrounding it is stretched into heavy motion blur and streaking haze, as though the rest of the world kept moving while this one clearing held its frame. A fabric repair patch is stitched onto a broken carved stone lintel in the sharp clearing, fully covering and concealing a mended crack: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the weathered stone. Cool green mist, one shaft of warm light, photorealistic, extraordinary detail in the sharp zone." onerror="this.remove()">
     <span class="thumb-topic">Video probes</span>
   </a>
   <div class="card-body">
@@ -725,7 +737,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p37-ten-seconds-different-experiment.html" style="--h:95">
     <span class="thumb-init">P37</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p37-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p37-banner.webp" alt="A cinematic 16:9 rainforest macro photograph, tilt-shift, razor-thin band of focus. In the sharp foreground a single large dewdrop hangs from a moss frond, and inside its refraction a tiny perfect ten-second slice of rainbow and forest is visible. Immediately behind it, stretched across the blurred middle distance, a long streak of light smears sideways through the frame like a much longer exposure that never resolved. The two are clearly different experiments, not the same one shortened. A fabric repair patch is stitched onto the bark of the branch holding the droplet, fully covering and concealing a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the rough bark. Rich emerald and amber, volumetric haze, photorealistic, hyper-detailed." onerror="this.remove()">
     <span class="thumb-topic">Video probes</span>
   </a>
   <div class="card-body">
@@ -738,7 +750,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p32-mount-needed-a-click.html" style="--h:150">
     <span class="thumb-init">P32</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p32-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p32-banner.webp" alt="A cinematic 16:9 photorealistic rainforest scene at night, lit by one cold, unnatural light. A small automated survey drone sits idle and fully charged on a mossy rock, its rotors still, its camera pointed patiently at a route it is ready to fly. Directly in front of it, blocking the path entirely, hangs a single flat rectangular panel of glowing light with one large unreadable button, waiting for a human touch that is never coming. The forest carries on around it. A fabric repair patch is stitched onto the drone's canvas carry-sling, fully covering and concealing a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the strap. Nocturnal greens and cold screen-glow, volumetric mist, photorealistic, detailed." onerror="this.remove()">
     <span class="thumb-topic">Local models</span>
   </a>
   <div class="card-body">
@@ -751,7 +763,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p31-route-matters-as-much-as-hostname.html" style="--h:150">
     <span class="thumb-init">P31</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p31-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p31-banner.webp" alt="A cinematic 16:9 photorealistic rainforest macro scene showing three parallel strands of spider-silk stretched side by side across the frame, each carrying an identical dew droplet and each running at a visibly different tension and speed of travel: one taut and quick, one slack and slow, one frayed and barely holding. All three lead to the same distant glowing point of light in the blurred background, the same destination reached by three routes of different reliability. A fabric repair patch is stitched onto a leaf beneath them, fully covering and concealing a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the leaf. Rich emerald palette, macro depth of field, photorealistic, fine silk and droplet detail." onerror="this.remove()">
     <span class="thumb-topic">Local models</span>
   </a>
   <div class="card-body">
@@ -764,7 +776,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p27-discover-laptop-not-yesterdays-address.html" style="--h:200">
     <span class="thumb-init">P27</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p27-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p27-banner.webp" alt="A wide cinematic 16:9 photorealistic dusk street scene. The matte-black armoured van waits at a junction beneath three different route signs mounted on the same pole, each giving a separate way to the same destination: one fast and clean, one slower and dimmer, one barely legible and worn. The van's own headlights sweep the signs, reading them fresh rather than trusting the route in its memory. Stitched onto the van's side mirror housing canvas is a fabric repair patch that fully covers and conceals a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the canvas. Warm sodium light against blue dusk, wet road reflections, photorealistic, detailed." onerror="this.remove()">
     <span class="thumb-topic">Cutover</span>
   </a>
   <div class="card-body">
@@ -777,7 +789,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p26-capability-manifest-before-run.html" style="--h:200">
     <span class="thumb-init">P26</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p26-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p26-banner.webp" alt="A wide cinematic 16:9 photorealistic dawn scene at a mountain checkpoint where the road narrows. The matte-black armoured van has stopped before the barrier, and ranged along the verge are every service and machine it will need today: a generator, a winch, a pump, a radio mast, each one displaying a clear painted placard stating exactly what it can and cannot do. All the honesty happens before the expensive climb. Stitched onto the canvas cover of the winch is a fabric repair patch that fully covers and conceals a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the heavy canvas. Cool morning light, long shadows, photorealistic, fine mechanical detail." onerror="this.remove()">
     <span class="thumb-topic">Cutover</span>
   </a>
   <div class="card-body">
@@ -790,7 +802,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p20-editor-saved-older-answer.html" style="--h:200">
     <span class="thumb-init">P20</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p20-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p20-banner.webp" alt="A wide cinematic 16:9 photorealistic night scene on a rain-slicked street. The matte-black armoured van is moving, its indicator lights on, mid-journey on the corrected route. Along its flank, a ghostly second paint layer is visibly sliding back over the panel, restoring an older livery and older route markings on top of the fresh correction, as though the vehicle were reverting while still driving. Stitched onto the van's side panel beneath the reversion is a fabric repair patch that fully covers and conceals a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the metal. Neon magenta and cyan, wet reflections, volumetric rain, photorealistic, extremely detailed." onerror="this.remove()">
     <span class="thumb-topic">Cutover</span>
   </a>
   <div class="card-body">
@@ -803,7 +815,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p18-branches-finished-service-moved.html" style="--h:200">
     <span class="thumb-init">P18</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p18-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p18-banner.webp" alt="A wide cinematic 16:9 photorealistic night scene at a rain-slicked delivery dock. The matte-black armoured van stands at the bay with both of its deliveries complete and perfectly stacked on the wet tarmac, each one finished and ready. The dock door, however, is firmly shut, and taped to it is a small neat note giving a completely different address: the destination moved between the call and the arrival. Stitched onto the van's rear door is a fabric repair patch that fully covers and conceals a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the metal. Magenta and cyan neon reflections in puddles, volumetric rain haze, photorealistic, sharp detail." onerror="this.remove()">
     <span class="thumb-topic">Cutover</span>
   </a>
   <div class="card-body">
@@ -816,7 +828,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p28-readiness-check-after-merge.html" style="--h:200">
     <span class="thumb-init">P28</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p28-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p28-banner.webp" alt="A wide cinematic 16:9 photorealistic scene at a mountain checkpoint. The matte-black armoured van has passed inspection at the barrier, its documents stamped and perfectly in order, its lights green. But beyond the barrier the road itself has been rewritten: two separate highways have merged into one different route, and the far side of the checkpoint now looks like an entirely different city under a different sky. The check was correct; it was simply early. Stitched onto the van's bonnet is a fabric repair patch that fully covers and conceals a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the metal. Dramatic sky, volumetric light, photorealistic, wide depth and detail." onerror="this.remove()">
     <span class="thumb-topic">Cutover</span>
   </a>
   <div class="card-body">
@@ -829,7 +841,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p19-retrying-the-old-graph.html" style="--h:200">
     <span class="thumb-init">P19</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p19-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p19-banner.webp" alt="A wide cinematic 16:9 photorealistic night shot of the same rain-slicked city roundabout, with the matte-black armoured van caught in an endlessly repeating loop, its long red tail-light trails spiralling around and around the island. Both its parcels are strapped on board, identical and complete, and the same set of road signs passes again and again, exactly the same as the first time. It is not resuming; it is starting over. Stitched onto the van's roof rack canvas cover is a fabric repair patch that fully covers and conceals a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the canvas. Neon reflections, wet asphalt, long-exposure light trails, photorealistic, atmospheric detail." onerror="this.remove()">
     <span class="thumb-topic">Cutover</span>
   </a>
   <div class="card-body">
@@ -842,7 +854,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p07-six-pictures-and-clips.html" style="--h:95">
     <span class="thumb-init">P07</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p07-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p07-banner.webp" alt="A cinematic 16:9 rainforest macro photograph with strong tilt-shift and a paper-thin focus band. In a neat row across the sharp plane sit six identical glistening moss-frond tips, each holding one perfect dew droplet, evenly spaced like frames on a strip. Between the fifth and the sixth, a small fluffy golden creature is caught mid-leap as an abstract smear of blurred fur, the only thing in the image that is moving. A fabric repair patch is stitched onto the moss carpet at the base of the row, fully covering and concealing a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the damp moss. Saturated emerald and gold, volumetric light, photorealistic, extreme macro detail." onerror="this.remove()">
     <span class="thumb-topic">Video probes</span>
   </a>
   <div class="card-body">
@@ -855,7 +867,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p22-lock-was-doing-its-job.html" style="--h:12">
     <span class="thumb-init">P22</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p22-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p22-banner.webp" alt="A cinematic 16:9 fantasy scene: a colossal dragon curled protectively around an enormous ornate iron lock set into a cavern door, its tail wrapped over the mechanism, wholly at rest. On the outside, a determined would-be entrant stands with tools half-raised, blocked cleanly and completely, with no sign of damage or failure anywhere: the lock did exactly what a lock is for. The refusal is the success. Stitched onto the iron-bound oak of the door beside the lock is a fabric repair patch that fully covers and conceals a mended split in the timber: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the iron-hard oak. Warm torchlight, cold crystal glow, photorealistic, dense fantasy detail." onerror="this.remove()">
     <span class="thumb-topic">Incidents</span>
   </a>
   <div class="card-body">
@@ -868,7 +880,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p21-error-message-full-of-unknowns.html" style="--h:12">
     <span class="thumb-init">P21</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p21-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p21-banner.webp" alt="A cinematic 16:9 fantasy scene: a scorched stone watchtower at night beside a crystal cavern, smoke still rising. A small courier dragon has landed hard on the parapet, exhausted from carrying a warning, and proffers a scroll that has been unrolled to reveal completely blank fields where the incident details should be: no workflow, no execution, no node, no error, only empty ruled lines. Behind it, through the cavern mouth, the great sleeping dragon's flank glows dimly, the real cause unseen. Stitched onto the leather harness of the courier dragon is a fabric repair patch that fully covers and conceals a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the harness leather. Firelit orange against cold blue, photorealistic, dramatic detail." onerror="this.remove()">
     <span class="thumb-topic">Incidents</span>
   </a>
   <div class="card-body">
@@ -881,7 +893,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p15-let-intro-end-on-its-own.html" style="--h:330">
     <span class="thumb-init">P15</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p15-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p15-banner.webp" alt="A cinematic 16:9 photorealistic daytime shot of a small shopfront whose striped awning ends abruptly in a raw, guillotined cut across the middle of a stripe, as though something was clipped mid-phrase. In the foreground a fresh, complete, uncut awning lies rolled up on the pavement, waiting to be fitted. A fabric repair patch is stitched onto the shortened awning right at the clean cut, fully covering and concealing the raw edge: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the woven fabric all around. The shop sign reads &quot;PATCH NOTES&quot; in bold capitals. Bright even daylight, cobbles, potted plants, photorealistic, crisp textile detail." onerror="this.remove()">
     <span class="thumb-topic">Music &amp; audio</span>
   </a>
   <div class="card-body">
@@ -894,7 +906,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p10-singer-reads-production-notes.html" style="--h:330">
     <span class="thumb-init">P10</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p10-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p10-banner.webp" alt="A cinematic 16:9 photorealistic street-level shot of a small old-town shopfront in soft daylight. The hand-painted sign above the window reads &quot;PATCH NOTES&quot; in bold, crisp, fully legible capitals. Outside the window, sheet music is scattered and blowing along the pavement, and on the billboard beside the door a painted lyric sheet shows a literal stage direction in square brackets where a sung line should be, as though the singer performed the instructions. Stitched onto the striped woven awning is a fabric repair patch that fully covers and conceals a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the canvas. Overcast light, gentle reflections, photorealistic, sharp text and textile detail." onerror="this.remove()">
     <span class="thumb-topic">Music &amp; audio</span>
   </a>
   <div class="card-body">
@@ -907,7 +919,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p24-august-lock-and-profile-troubles.html" style="--h:12">
     <span class="thumb-init">P24</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p24-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p24-banner.webp" alt="A cinematic 16:9 fantasy scene showing two problems arriving at once in a crystal cavern. On the left, a great iron gate stands fast with a colossal dragon coiled behind it, the lock holding flawlessly, refusing to be interrupted. On the right, a smaller side door carries a glowing sigil lock that has just rejected its own keeper, the sigil flaring red while a would-be entrant stands shut out. Two different diagnoses, one night. Stitched onto the leather satchel of the keeper standing at the rejected door is a fabric repair patch that fully covers and conceals a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the leather. Split lighting, cold sigil glow and warm crystal, photorealistic, intricate detail." onerror="this.remove()">
     <span class="thumb-topic">Incidents</span>
   </a>
   <div class="card-body">
@@ -920,7 +932,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p09-two-hosts-need-more-than-labels.html" style="--h:330">
     <span class="thumb-init">P09</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p09-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p09-banner.webp" alt="A cinematic 16:9 photorealistic street-level shopfront in soft overcast daylight. Above the window hangs a hand-painted wooden shop sign reading &quot;PATCH NOTES&quot; in bold, evenly spaced, crisp capital letters, slightly weathered but fully legible. Through the window you can see two empty chairs facing each other across a small round table, each with its own microphone and its own name card, but the room clearly belongs to one person. Stitched onto the shop's striped canvas awning is a fabric repair patch that fully covers and conceals a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the woven stripes. Brick and painted timber, warm interior glow, cobbles in the foreground, photorealistic, highly detailed." onerror="this.remove()">
     <span class="thumb-topic">Music &amp; audio</span>
   </a>
   <div class="card-body">
@@ -933,7 +945,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p11-fifty-songs-was-a-test-plan.html" style="--h:330">
     <span class="thumb-init">P11</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p11-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p11-banner.webp" alt="A cinematic 16:9 photorealistic interior of a cramped old record shop in soft window light. A vintage jukebox stands against the wall, and beside it fifty identical blank record sleeves are stacked in a neat, obsessive grid on the counter, one held up for inspection. There is no crowd, no chart, no hit; it is unmistakably a test matrix disguised as a jukebox. A fabric repair patch is stitched onto the canvas of a shipping crate on the floor, fully covering and concealing a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the coarse canvas. Warm dust in the light, muted vinyl-and-paper palette, photorealistic, meticulous detail." onerror="this.remove()">
     <span class="thumb-topic">Music &amp; audio</span>
   </a>
   <div class="card-body">
@@ -946,7 +958,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p35-small-pages-media-elsewhere.html" style="--h:45">
     <span class="thumb-init">P35</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p35-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p35-banner.webp" alt="A wide cinematic 16:9 photorealistic dawn scene at a depot gate where two matching matte-black vans are pulling out side by side. One is light and quick, carrying only neat slim folders of paper; the other sits low on its axles under stacked heavy crates. They are taking two very different cargoes down two different roads, and each is now correctly sized for its load. Stitched onto the heavy van's canvas load cover is a fabric repair patch that fully covers and conceals a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the tarpaulin. Cold morning light, diesel haze, wet cobbles, photorealistic, rich industrial detail." onerror="this.remove()">
     <span class="thumb-topic">Migration</span>
   </a>
   <div class="card-body">
@@ -959,7 +971,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p08-planner-archived-by-mistake.html" style="--h:12">
     <span class="thumb-init">P08</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p08-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p08-banner.webp" alt="A cinematic 16:9 fantasy scene: a colossal slumbering dragon curled in a glowing crystal cavern, its huge curved flank facing the viewer, two strong chains running from its harness into the dark. One small link has been removed from a shared junction where the two chains cross, and both chains have gone slack and useless at once. The dragon sleeps on, unaware. Stitched onto the dragon's curved scales beside the junction is a fabric repair patch that fully covers and conceals a mended gash: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the scales all around. Warm crystal glow, cold blue shadow, volumetric mist, photorealistic, immense detail." onerror="this.remove()">
     <span class="thumb-topic">Incidents</span>
   </a>
   <div class="card-body">
@@ -972,7 +984,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p46-backup-remembered-more.html" style="--h:230">
     <span class="thumb-init">P46</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p46-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p46-banner.webp" alt="A cinematic 16:9 photorealistic interior of a dusty shop attic in a single shaft of light. In the foreground stands one tidy modern filing shelf holding a small neat row of identical clean ledger boxes, complete and current. Behind it, half in shadow and half under a sheet, an older, dustier shelf holds the boxes that remember the earlier identities and versions the tidy shelf has quietly stopped returning. Forensics lives where nobody tidies. A fabric repair patch is stitched onto the canvas dust sheet over the old shelf, fully covering and concealing a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the heavy canvas. Warm dust, deep shadow, photorealistic, rich texture." onerror="this.remove()">
     <span class="thumb-topic">Workflow</span>
   </a>
   <div class="card-body">
@@ -985,7 +997,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p45-workflow-id-changing-name.html" style="--h:230">
     <span class="thumb-init">P45</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p45-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p45-banner.webp" alt="A cinematic 16:9 photorealistic close shot of a weathered hand-painted shop sign reading &quot;PATCH NOTES&quot; in bold capital letters, hanging on chains above a door. Every plank of the sign has been replaced at least once, and the joins between the new planks are plainly visible; the letters are freshly repainted over older paint, and two different older name ghosts show faintly beneath the current one. The sign is the same sign, and it is not. Stitched across one of the joins is a fabric repair patch that fully covers and conceals the seam: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the raw timber on both sides. Soft overcast light, shallow depth of field, photorealistic, fine wood and paint detail." onerror="this.remove()">
     <span class="thumb-topic">Workflow</span>
   </a>
   <div class="card-body">
@@ -998,7 +1010,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p06-second-picture-not-motion-plan.html" style="--h:95">
     <span class="thumb-init">P06</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p06-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p06-banner.webp" alt="A cinematic 16:9 rainforest photograph shot with a macro lens and strong tilt-shift, an extremely narrow band of focus. Two dew droplets hang from a single strand of moss in the sharp plane, separated by a hand's width of empty air; everything between and around them is dissolved into creamy blurred bokeh, so the two crisp points look like two frames with no film between them. A fabric repair patch is stitched onto a broad mossy leaf in the sharp plane, fully covering and concealing a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the leaf's waxy surface. Steamy emerald light, volumetric god rays, paper-thin depth of field, photorealistic, hyper-detailed dew and weave." onerror="this.remove()">
     <span class="thumb-topic">Video probes</span>
   </a>
   <div class="card-body">
@@ -1011,7 +1023,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p48-backfill-story-not-evidence.html" style="--h:265">
     <span class="thumb-init">P48</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p48-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p48-banner.webp" alt="A wide cinematic 16:9 photorealistic interior of a vast stone archive hall, shafts of daylight falling through high windows onto a very long table. Hundreds of loose woven tapestries and banner fragments are being laid out end to end into one continuous ordered sequence, each pinned in place. Archivists' hands work carefully at the edges, aligning and measuring but never repainting; where two fragments are joined, a fabric repair patch stitches them together across the seam, fully covering and concealing the join: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into both woven edges. Dust in the light beams, muted ochre and slate palette, photorealistic, extraordinary textile and stone detail." onerror="this.remove()">
     <span class="thumb-topic">Origins</span>
   </a>
   <div class="card-body">
@@ -1024,7 +1036,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p47-first-trace-not-beginning.html" style="--h:265">
     <span class="thumb-init">P47</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p47-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p47-banner.webp" alt="A wide cinematic 16:9 photorealistic shot of a mossy mountain trail in soft overcast light. Halfway up the slope stands a neat, freshly painted trailhead signpost with an engraved starting line and an arrow; but the trail does not begin there. Below it, half swallowed by moss and fallen leaves, an older, unmarked path continues down out of frame, clearly trodden long before the sign existed. A fabric repair patch is stitched over a mended tear in the canvas of a small waymarker flag lashed to the post, mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the weathered canvas. Cool green and grey palette, shallow depth of field, photorealistic, fine natural detail." onerror="this.remove()">
     <span class="thumb-topic">Origins</span>
   </a>
   <div class="card-body">
@@ -1037,7 +1049,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p04-cover-image-became-research.html" style="--h:265">
     <span class="thumb-init">P04</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p04-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p04-banner.webp" alt="A wide cinematic 16:9 photorealistic interior of the citadel's great banner workshop at night, warm lamplight. Every wall is hung with magnificent finished heraldic banners, gorgeously painted, richly embroidered, each carrying a neatly stitched fabric repair patch over a mended tear: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches. In the centre of the room, on a bare wooden trestle under a single cold spotlight, lies the citadel's own gate banner — completely plain, unpainted, unmade, the one banner nobody has got around to. Rolled cloth and pots of pigment wait untouched. Warm gold and deep shadow, photorealistic, intricate textile detail." onerror="this.remove()">
     <span class="thumb-topic">Origins</span>
   </a>
   <div class="card-body">
@@ -1050,7 +1062,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p03-working-title-not-finished-format.html" style="--h:265">
     <span class="thumb-init">P03</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p03-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p03-banner.webp" alt="A wide cinematic 16:9 photorealistic shot of a monumental stone archway at the crest of a mountain pass, carved with one enormous, deeply incised word: &quot;PATCH&quot;. The arch is complete and immovable, but the road beyond it is raw unfinished ground — no paving, no markings, no signposts, just rutted earth vanishing into mist. A single traveller with a lantern stands under the arch studying a blank map. Hung from the keystone is a fabric repair patch that fully covers and conceals a mended tear in the great banner draped through the arch, mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the heavy woven fabric. Cool misty blues, warm lantern glow, dramatic scale, photorealistic, extremely detailed stonework." onerror="this.remove()">
     <span class="thumb-topic">Origins</span>
   </a>
   <div class="card-body">
@@ -1063,7 +1075,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p02-intro-before-cover.html" style="--h:265">
     <span class="thumb-init">P02</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p02-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p02-banner.webp" alt="A wide cinematic 16:9 photorealistic dawn shot of a great stone hall in a mountaintop citadel, its tall windows blazing with warm light while the rest of the citadel is still grey and cold. In the hall a choir of empty seats faces a single lit lectern, sound visibly implied by dust motes shivering in the light. Outside on the terrace, the banner-makers' scaffolding stands bare and unfinished: a huge hanging heraldic banner is only half painted, the bold word &quot;PATCH&quot; lettered crisply, the rest still blank linen. Stitched onto the hem of that half-finished banner is a fabric repair patch that fully covers and conceals a mended tear, mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the woven linen. Cold blue morning shadow against warm interior glow, photorealistic, richly detailed." onerror="this.remove()">
     <span class="thumb-topic">Origins</span>
   </a>
   <div class="card-body">
@@ -1076,7 +1088,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <article class="card">
   <a class="thumb" href="p01-a-podcast-before-the-picture-lab.html" style="--h:265">
     <span class="thumb-init">P01</span>
-    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p01-banner.webp" alt="" onerror="this.remove()">
+    <img class="thumb-img" src="https://assets.brook.dev/podcast/blog-banners/p01-banner.webp" alt="A wide cinematic 16:9 photorealistic golden-hour establishing shot of a colossal fortified mountaintop citadel, seen from a high ridge across a deep hazy valley. The citadel has grown outward in every direction: terraced districts, workshops, tower upon tower, whole new wings still under scaffolding, a city that clearly started as something much smaller. At its very gate stands one tiny, humble stone workshop with a single lit window, dwarfed by everything it spawned; pinned to that workshop's door is a fabric repair patch that fully covers and conceals a mended tear, mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the weathered oak. Warm amber and violet sky, long shadows, volumetric god rays, low cloud pooling in the valley, extreme depth and detail, sharp foreground fading into aerial haze." onerror="this.remove()">
     <span class="thumb-topic">Origins</span>
   </a>
   <div class="card-body">
