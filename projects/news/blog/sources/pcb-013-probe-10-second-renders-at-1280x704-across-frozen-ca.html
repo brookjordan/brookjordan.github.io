@@ -12,28 +12,28 @@ pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{col
 publication: internal links, status metadata and personal paths are removed. The live private
 version lives in the author's Obsidian vault.</p>
 <h1>T13 evidence</h1>
-<h1 id="pcb-013-probe-10-second-renders-at-1280x704-across-frozen-cases">PCB-013 Probe 10-second renders at 1280x704 across frozen cases</h1>
-<h2 id="question">Question</h2>
+<h1>PCB-013 Probe 10-second renders at 1280x704 across frozen cases</h1>
+<h2>Question</h2>
 <p>Can the production podcast transition graph render 10-second clips (250 frames @ 25 fps) for every frozen PCB-012 case, and what does the duration/memory curve look like on the 36 GB MPS machine?</p>
-<h2 id="why">Why</h2>
+<h2>Why</h2>
 <p>The production builder only renders 49-frame (~2 s) clips. PCB-012 wants longer recipes validated against real episode prompts before any production change. Case C (exec 2572, <code>v2026.38.4-18.29</code>) proved a 10 s render is achievable and its video is the upgrade candidate Brook requested for that episode.</p>
-<h2 id="method">Method</h2>
+<h2>Method</h2>
 <ul>
 <li>Production transition graph unchanged (one-stage Q3_K_M distilled, 1280×704, FLF2V guides at frame 0/249 strength 1.0, euler_ancestral + manual 9-sigma schedule, DualCFG 1.0, tiled VAE decode, 25 fps).</li>
 <li>Each case uses its real recorded motion prompt (from <code>Prepare video render</code> per execution) and its verified cover pair.</li>
 <li>Seeds follow the production derivation: <code>abs(exe * 2654435761) % 2^32</code>.</li>
 <li>One render at a time; results logged to <code>the local vault/tmp/pcb012/batch10s_results.jsonl</code>.</li>
 </ul>
-<h2 id="state-2026-09-19">State (2026-09-19)</h2>
+<h2>State (2026-09-19)</h2>
 <ul>
 <li>Case C (2572): ✅ 9.96 s / 249 frames, wall 2196 s, endpoints 4.2/3.3 /255. Delivered to Brook (<code>/tmp/pcb012-caseC-10s.mp4</code>).</li>
 <li>Case A (2577): rendering.</li>
 <li>Cases B (2575), D (2560), E (2506): queued behind A via sequential batch.</li>
 <li>Case E pair is the recovered 2506/2503 published pair (hash-verified against NAS <code>v2026.38.2-08.49</code>).</li>
 </ul>
-<h2 id="memory-envelope-evidence">Memory envelope evidence</h2>
+<h2>Memory envelope evidence</h2>
 <p>See the duration-curve probe packet: 250f fails under the default MPS watermark (0.8 → 22.46 GiB cap) deterministically, succeeds with <code>PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.0</code> (uncapped server, plateau 7.6–9.4 GiB server-free during sampling).</p>
-<h2 id="acceptance-criteria">Acceptance criteria</h2>
+<h2>Acceptance criteria</h2>
 <ul>
 <li><input disabled="" type="checkbox"> Five 10 s renders attempted (C done, A/B/D/E remaining), failures recorded with OOM evidence.</li>
 <li><input disabled="" type="checkbox"> Wall time, seed, frame count, endpoint fidelity and visual verdict recorded per case.</li>

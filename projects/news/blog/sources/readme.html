@@ -12,29 +12,29 @@ pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{col
 publication: internal links, status metadata and personal paths are removed. The live private
 version lives in the author's Obsidian vault.</p>
 <h1>Podcast project map and prompt symptom</h1>
-<h1 id="podcast-builder--project-map">PodCast Builder — Project Map</h1>
-<h2 id="destination">Destination</h2>
+<h1>PodCast Builder — Project Map</h1>
+<h2>Destination</h2>
 <p>A dependable local PodCast Builder produces complete daily episodes, stores durable media on the NAS HDD, publishes lightweight pages, and retains a recoverable operational record across generation, publication, and legacy migration.</p>
-<h2 id="notes">Notes</h2>
+<h2>Notes</h2>
 <p>Tracker: <code>obsidian-project-tracking</code>. This map records the production pipeline and its publishing/storage lifecycle. It is distinct from the Video Continuity benchmark project board, which owns motion-model comparisons.</p>
 <p>This map was reconstructed on 2026-08-17 from current workflow evidence and the ongoing implementation conversation. Earlier activity is recorded only where supported by that evidence.</p>
 <p>The PodCast Builder draft now draws from a curated source palette: independent British reporting (Novara Media and The Bristol Cable); Catanduanes-specific reporting plus a seven-day Catanduanes discovery feed; Singapore reporting (The Straits Times and Mothership); and frontend development updates (This Week in React and Smashing Magazine). The n8n workflow owns the exact feed URLs and priorities.</p>
-<h2 id="decisions-so-far">Decisions so far</h2>
+<h2>Decisions so far</h2>
 <ul>
 <li>the decision on public podcast asset storage: keep durable media on <code>/volume2</code>, serve it from <code>assets.brook.dev</code>, and leave only lightweight page metadata in GitHub.</li>
 <li>PCB-007: add a deterministic startup capability manifest so the workflow can distinguish local, NAS, and per-endpoint route availability before expensive generation. Route preference is wired Ethernet, then wireless LAN, then Tailscale; the handoff&#39;s original ordering (Tailscale before WAN) was superseded, and &quot;WAN&quot; in the old config meant the wireless LAN at <code>192.168.0.25</code>.</li>
 </ul>
-<h2 id="not-yet-specified">Not yet specified</h2>
+<h2>Not yet specified</h2>
 <ul>
 <li>The durable publication mechanism for small GitHub Pages metadata once NAS asset storage is live.</li>
 <li>The pace and selection criteria for migrating legacy episodes after one full end-to-end rollout succeeds.</li>
 </ul>
-<h2 id="out-of-scope">Out of scope</h2>
+<h2>Out of scope</h2>
 <ul>
 <li>Rewriting Git history to reclaim historic media blobs. Removing live copies makes future deployments lighter, but history rewriting is a separate disruptive decision.</li>
 <li>Motion-model benchmarking, which remains with the Video Continuity benchmark project board.</li>
 </ul>
-<h2 id="execution-board">Execution board</h2>
+<h2>Execution board</h2>
 <ul>
 <li>Ticket: serve public NAS podcast assets — frontier.</li>
 <li>Ticket: split publication between NAS assets and GitHub pages — blocked by the asset service.</li>
@@ -51,7 +51,7 @@ version lives in the author's Obsidian vault.</p>
 <li>Ticket: evaluate IC-LoRA control for fog and fluid motion — todo; blocked by PCB-013; targets the measured fog reversal/snap artefact in FLF2V renders.</li>
 <li>Ticket: retroactively build the podcast builder blog — in progress; the blog is live at <code>https://brook.dev/projects/news/blog/</code> with <strong>47 of 48 slots</strong> (the four quality-held posts re-drafted and accepted 2026-09-20); only P05 remains held-evidence, pending real image-inspection evidence.</li>
 </ul>
-<h2 id="current-execution">Current execution</h2>
+<h2>Current execution</h2>
 <p><strong>PCB-015 blog maintenance, 2026-09-20.</strong> The blog is live with 47 of 48 posts and is now a maintained artifact, not a one-off: the maintenance protocol lives in the blog maintenance protocol packet, routed from PCB-015. Short version: when a ticket resolves or a failure accrues a real arc, draft a new post from the vault evidence and run the build pipeline (workspace README has the details). Cited vault notes are snapshotted publicly (sanitised) on every build — keep must-stay-private material out of cited notes. Only P05 remains held-evidence.</p>
 <p><strong>The cutover happened on 2026-09-16.</strong> Workflow <code>2k7x4U8GgLeSFpRE</code>, renamed <strong>&quot;Podcast – latest&quot;</strong>, is the new production podcast builder: scheduled at 04:30, 12:10 and 18:00, with <code>kyZcvt1CxQq8FQ0j</code> as its error workflow. The previous builder <code>S9v0UpCVYcrtVJH4</code> was deactivated and kept as a rollback. The audio stage runs on YuE2 rather than MiniMax, endpoints are autodetected per endpoint from the NAS, and the first full run (<code>2560</code>) completed 98/98 nodes green and published episode <code>v2026.38.4-01.01</code>.</p>
 <p><strong>Resolved 2026-09-17.</strong> The blocker was that <code>Plan verified animation endpoints</code> (<code>170rinSw5V40O0X6</code>) had been archived during a test-workflow sweep, although it is not a test: it sits on the critical path of both builders (<code>Prepare first image for vision → Plan verified animation endpoints → Parse second image plan</code>). It was unarchived and published via the n8n public API — <code>POST /api/v1/workflows/{id}/unarchive</code>, then <code>POST …/activate</code>, which is what n8n 2.x treats as publishing (the MCP cannot do either: it has no unarchive tool, and that workflow has no MCP access). <code>Podcast – latest</code> was then published, and its <code>versionId</code> and <code>activeVersionId</code> both read <code>d07e4294…</code>, confirming the live version now carries the intro fix, the node renames and the re-enabled commit node.</p>
@@ -62,7 +62,7 @@ version lives in the author's Obsidian vault.</p>
 <p><strong>Unattended SMB mounting is still unresolved.</strong> A mount on 2026-09-17 succeeded only after the user clicked an approval button, so the headless path remains unproven. A keychain entry exists for <code>100.84.158.31</code>, and <code>mount_smbfs</code> without a password argument consults the login keychain, but the sandboxed agent process cannot exercise SMB syscalls, so the test has to come from a normal shell.</p>
 <p>Note the n8n 2.x draft/published split, which caused confusion here: a <strong>manual</strong> run executes the editor&#39;s current draft, while a <strong>scheduled</strong> run executes the <strong>published</strong> version. Edits made through the API land in the draft (<code>versionId</code>) and do nothing for the schedule until the workflow is published (<code>activeVersionId</code>). Check both IDs match before trusting a scheduled run.</p>
 <p>PCB-007 owns the preflight detail and evidence; PCB-005 owns the intro lyric work.</p>
-<h3 id="open-reminders">Open reminders</h3>
+<h3>Open reminders</h3>
 <ul>
 <li><strong>Tailscale DNS is only half-fixed.</strong> The NAS runs with <code>tailscale set --accept-dns=false</code> and MagicDNS still returns SERVFAIL for public names. The n8n containers no longer depend on it (the compose carries <code>1.1.1.1</code> as a fallback), but the clean end state is to set a tailnet global nameserver (Quad9 — <code>9.9.9.9</code>, <code>149.112.112.112</code>, Mullvad&#39;s own recommended replacement after retiring their public DNS) and then re-enable <code>accept-dns</code>.</li>
 <li><strong><code>N8N_API_KEY</code> in <code>/volume1/docker/n8n/.env</code> is stale</strong> — n8n rejects it with 401. Harmless today because the MCP used here is n8n&#39;s native server, which does not use that key; regenerate it in n8n → Settings → API if anything else needs the public API.<ul>
@@ -74,16 +74,16 @@ version lives in the author's Obsidian vault.</p>
 <li><strong>NAS port 22 is filtered from the MacBook</strong>, so <code>rsync</code>-over-SSH to the NAS is not an option and SMB remains the only bulk transfer path.</li>
 <li><strong><code>Trim intro silence</code> is disabled</strong> in both the old and new builders, so intro silence has never been trimmed. Decide whether to enable it.</li>
 </ul>
-<h2 id="conversation-capture">Conversation capture</h2>
+<h2>Conversation capture</h2>
 <p>Environment, networking, model-registration, and workflow-preflight conversations belong in the podcast project even when they happen outside Obsidian. Preserve raw verified findings in Scratchpad and link the corresponding ticket from this map. The 2026-09-15 NAS/ComfyUI preflight conversation is captured in this packet.</p>
-<h2 id="recent-diary">Recent diary</h2>
+<h2>Recent diary</h2>
 <ul>
 <li><strong>2026-08-23</strong> — Hermes: n8n MCP auth + remove dead <code>qwen3.6:27b</code> vision reviewer (#2205); evening prompt work (intro theme naming, missing intro music vs HTML).</li>
 <li><strong>2026-08-24</strong> — Hermes: option-2 script-prompt rewrite; conversational two-host default iterated in HTML preview.</li>
 <li><strong>2026-08-25</strong> — Hermes afternoon: locked conversational style as production default; evening: ComfyUI music-mode assert fail (#2240), lock cleanup, 401 autosave, audio-before-imaging wiring fix; one clean production run.</li>
 <li><strong>2026-08-26</strong> — Last two runs failed again; back in the workflow debugger.</li>
 </ul>
-<h2 id="current-reliability-and-messaging-status--2026-09-09">Current reliability and messaging status — 2026-09-09</h2>
+<h2>Current reliability and messaging status — 2026-09-09</h2>
 <ul>
 <li><strong>Done:</strong> the podcast success notification is concise: <strong>Podcast vocals done.</strong></li>
 <li><strong>Done:</strong> the shared n8n failure workflow has been updated and published to include workflow/run identifiers, failed node, and workflow/node error details where supplied by n8n.</li>
@@ -91,13 +91,13 @@ version lives in the author's Obsidian vault.</p>
 <li><strong>New/current:</strong> investigate the song-generation prompt. The model is singing <code>Intro song</code>, <code>[Intro]</code>, production directions such as <code>(Steady pulse of a filtered synth bass and a crisp, clicking beat)</code>, and the initial word intro. Research the exact model and its style/lyrics separation, then test a controlled prompt revision before production use.</li>
 </ul>
 <p>The n8n workflow sticky note <code>TODO: reliability and messaging</code> is the operational checklist; this project map and PCB-005 are the durable project-tracking record.</p>
-<h2 id="research-finding--2026-09-09">Research finding — 2026-09-09</h2>
+<h2>Research finding — 2026-09-09</h2>
 <p>The exact music stage has been identified: <strong>MiniMax Music 3</strong> via ComfyUI <code>MiniMaxMusic3TextEncode</code>, with separate <code>caption</code> and <code>lyrics</code> inputs. The caption already uses the documented three-part structure (<code>Global Metadata</code>, <code>Vocal Details</code>, <code>Arrangement</code>). The current prompt investigation is now narrowed to the lyric boundary: only intended singable words and minimal supported section tags should enter <code>lyrics</code>; intro concepts, production directions, and initial word-intro instructions belong in the caption or should be removed from the model output.</p>
-<h2 id="failure-alert-diagnosis-and-fix--2026-09-09">Failure-alert diagnosis and fix — 2026-09-09</h2>
+<h2>Failure-alert diagnosis and fix — 2026-09-09</h2>
 <p>The new alert was <strong>not</strong> caused by an unpublished workflow. Both workflows were already active. Execution <code>2415</code> confirmed a real failure at <code>Assert normal ComfyUI ready</code>: ComfyUI was locked by run <code>2414</code>.</p>
 <p>The alert formatter was receiving the SSH output from <code>Release failed ComfyUI lock</code>, which had replaced the original Error Trigger payload. That caused every diagnostic field to fall back to <code>unknown</code>. The formatter now reads <code>$(&#39;Error Trigger&#39;).first().json</code> directly, preserving the original workflow, execution, failed-node, and error fields after lock release. The error workflow was republished and read back active as version <code>347212d3-1fb0-4061-ab74-8dc0b0332b35</code>.</p>
 <p><strong>Still in progress:</strong> verify the next real production failure produces populated Telegram fields. Do not mark this item done until that read-back is observed.</p>
-<h2 id="failure-alert-verification--2026-09-09">Failure-alert verification — 2026-09-09</h2>
+<h2>Failure-alert verification — 2026-09-09</h2>
 <p>Verified against production execution <code>2417</code>: the Telegram alert now preserves the real diagnostics. It reported workflow <code>Build and publish scheduled podcast</code> (<code>S9v0UpCVYcrtVJH4</code>), run <code>2417</code>, node <code>Assert normal ComfyUI ready</code>, and the complete lock error: <code>ComfyUI is locked by run=2414; refusing to interrupt it for run=2417 [line 3]</code>.</p>
 
 </body></html>

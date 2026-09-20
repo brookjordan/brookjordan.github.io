@@ -12,13 +12,13 @@ pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{col
 publication: internal links, status metadata and personal paths are removed. The live private
 version lives in the author's Obsidian vault.</p>
 <h1>TTS replacement scope</h1>
-<h1 id="pcb-009-replace-vibevoice-with-maintained-local-tts">PCB-009 Replace VibeVoice with maintained local TTS</h1>
-<h2 id="current-production-evidence">Current production evidence</h2>
+<h1>PCB-009 Replace VibeVoice with maintained local TTS</h1>
+<h2>Current production evidence</h2>
 <p>As of 2026-09-19, n8n workflow <code>2k7x4U8GgLeSFpRE</code> (<strong>Podcast – latest</strong>) is active with 102 nodes and matching draft/published version IDs. Its <code>Generate audio</code> node still submits <code>VibeVoiceSingleSpeakerNode</code>, so this ticket is a real production replacement rather than a completed migration.</p>
-<h2 id="scope">Scope</h2>
+<h2>Scope</h2>
 <p>Compare a small cohort from the local speech-generation project. Include a voice-cloning model and a small named-voice model. Start with Chatterbox, IndexTTS, Supertonic 3 and Kokoro. Keep VibeVoice as the baseline, not the target.</p>
 <p>The comparison must cover maintenance and licence status, Apple Silicon support, voice-cloning method, speaker consistency, long-form stability, latency, memory, audio validity, language coverage and the work needed to call the model from n8n.</p>
-<h2 id="acceptance-criteria">Acceptance criteria</h2>
+<h2>Acceptance criteria</h2>
 <ul>
 <li>Pin the exact upstream code and model revisions and record licence constraints.</li>
 <li>Generate the fixed podcast test corpus locally with each selected candidate.</li>
@@ -28,7 +28,7 @@ version lives in the author's Obsidian vault.</p>
 <li>Integrate the selected system in a duplicated n8n workflow before changing production.</li>
 <li>Keep VibeVoice available as rollback until a complete replacement run passes.</li>
 </ul>
-<h2 id="related-work">Related work</h2>
+<h2>Related work</h2>
 <ul>
 <li>the local TTS comparison</li>
 <li>the n8n TTS audit</li>

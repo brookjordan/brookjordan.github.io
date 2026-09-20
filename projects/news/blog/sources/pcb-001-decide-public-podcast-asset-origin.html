@@ -12,13 +12,13 @@ pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{col
 publication: internal links, status metadata and personal paths are removed. The live private
 version lives in the author's Obsidian vault.</p>
 <h1>T01 evidence</h1>
-<h1 id="pcb-001-·-decide-public-podcast-asset-origin">PCB-001 · Decide public podcast asset origin</h1>
-<h2 id="question">Question</h2>
+<h1>PCB-001 · Decide public podcast asset origin</h1>
+<h2>Question</h2>
 <p>Where should durable podcast MP3, MP4, and PNG assets live and how should public pages reference them without growing the GitHub publication request indefinitely?</p>
-<h2 id="resolution">Resolution</h2>
+<h2>Resolution</h2>
 <p>Use the NAS HDD as the durable asset store at <code>/volume2/assets/podcast</code>, served publicly from <code>assets.brook.dev</code> through a narrowly scoped read-only service behind Nginx Proxy Manager and Cloudflare. Keep only lightweight page metadata in the GitHub Pages repository.</p>
 <p>The current GraphQL publisher failed reproducibly at an 8.8 MB base64 payload but reached GitHub normally with a single 2.05 MB asset, so this decision removes large binaries from that transport path rather than depending on batch sizing.</p>
-<h2 id="evidence">Evidence</h2>
+<h2>Evidence</h2>
 <ul>
 <li>The 2026-08-17 n8n diagnostic replay reproduced HTTP 499 for the complete GraphQL payload and received GitHub’s normal <code>STALE_DATA</code> response for the smaller control requests.</li>
 <li>the PodCast Builder project map records the approved delivery split.</li>

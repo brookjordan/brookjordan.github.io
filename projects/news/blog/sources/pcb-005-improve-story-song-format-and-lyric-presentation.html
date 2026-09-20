@@ -12,11 +12,11 @@ pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{col
 publication: internal links, status metadata and personal paths are removed. The live private
 version lives in the author's Obsidian vault.</p>
 <h1>Story-song format requirements</h1>
-<h1 id="pcb-005-·-improve-story-song-format-and-lyric-presentation">PCB-005 · Improve story-song format and lyric presentation</h1>
-<h2 id="scope">Scope</h2>
+<h1>PCB-005 · Improve story-song format and lyric presentation</h1>
+<h2>Scope</h2>
 <p>Revise the song-generation stage in the six-frame PodCast Builder workflow (<code>PodCast Builder - for cursor - up to 6-frame FLF test</code>, <code>S9v0UpCVYcrtVJH4</code>) so the musical segment better serves the episode rather than forcing stories into a rigid short-form lyric template.</p>
 <p>Keep the core concept: turn 2–4 of the episode’s top stories into a song. Relax the generation format so the model can use natural phrasing, varied line lengths, verses, refrains, or short narrative passages when that sounds better. Do not require every selected story to receive an identical fixed block of lines.</p>
-<h2 id="requirements">Requirements</h2>
+<h2>Requirements</h2>
 <ul>
 <li>Allow songs to run longer than the current roughly 18-second target when that produces a more enjoyable, coherent result.</li>
 <li>Preserve 2–4 top stories as the source material, but let the generator decide how tightly each story is represented in the lyrics.</li>
@@ -26,7 +26,7 @@ version lives in the author's Obsidian vault.</p>
 <li>Compare song-writing approaches systematically before choosing a production prompt: five representative article sets × five prompt/format ideas × two independent generations each, for 50 listenable songs.</li>
 <li>Retain any metadata needed downstream for audio generation and episode publication.</li>
 </ul>
-<h2 id="evaluation-plan">Evaluation plan</h2>
+<h2>Evaluation plan</h2>
 <p>Build a reviewable test matrix in the six-frame workflow rather than guessing from a single episode:</p>
 <ul>
 <li><strong>Five article sets:</strong> representative mixes of five selected articles, covering different story combinations and tones.</li>
@@ -35,7 +35,7 @@ version lives in the author's Obsidian vault.</p>
 <li><strong>Total:</strong> 5 × 5 × 2 = <strong>50 songs</strong> for listening review.</li>
 </ul>
 <p>For every generated song, retain the article-set ID, writing-idea ID, generation number, rendered lyrics, audio asset, duration, and any relevant prompt/model metadata. Present the corpus in a form that makes side-by-side listening and lyric comparison practical.</p>
-<h2 id="acceptance-checks">Acceptance checks</h2>
+<h2>Acceptance checks</h2>
 <ol>
 <li>Produce the complete 50-song matrix: five article sets × five writing ideas × two generations each.</li>
 <li>Every result is available for listening alongside clean lyric text and its recorded test metadata.</li>
@@ -44,11 +44,11 @@ version lives in the author's Obsidian vault.</p>
 <li>The audio duration is not artificially capped at 18 seconds; longer songs are accepted when the result warrants it.</li>
 <li>Select a preferred writing approach from the listening review, then validate the modified workflow, inspect connections, and test the six-frame workflow before any production publish.</li>
 </ol>
-<h2 id="notes">Notes</h2>
+<h2>Notes</h2>
 <p>This is a content-quality and presentation change. Keep the existing production workflow as rollback until the six-frame test workflow is validated and reviewed.</p>
-<h2 id="current-status--2026-09-09">Current status — 2026-09-09</h2>
+<h2>Current status — 2026-09-09</h2>
 <p><strong>In progress.</strong> Add a focused investigation before changing the production prompt: the music generator currently sings instruction text, including the intro concept, <code>[Intro]</code> section label, parenthesised production direction, and initial word intro. Research the exact music model and its style-versus-lyrics prompt contract, then run the smallest controlled comparison that separates style guidance from singable lyric text. Preserve the current workflow as rollback until the result is reviewed.</p>
-<h3 id="new-to-dos">New to-dos</h3>
+<h3>New to-dos</h3>
 <ul>
 <li>Identify the exact music-generation model/version and input fields used by <code>S9v0UpCVYcrtVJH4</code>.</li>
 <li>Determine which field is interpreted as style, lyrics, structure, or metadata for this model.</li>
@@ -56,14 +56,14 @@ version lives in the author's Obsidian vault.</p>
 <li>Test representative prompts containing an intro concept and initial word intro; verify those instructions are not sung.</li>
 <li>Record the tested prompt, model/version, output audio, rendered lyrics, and outcome before promoting a change.</li>
 </ul>
-<h2 id="research-finding--2026-09-09">Research finding — 2026-09-09</h2>
+<h2>Research finding — 2026-09-09</h2>
 <p>The workflow uses <strong>MiniMax Music 3</strong> through ComfyUI&#39;s <code>MiniMaxMusic3TextEncode</code> node. It supplies separate <code>caption</code> and <code>lyrics</code> inputs. The caption is already structured as the model&#39;s documented <code>Global Metadata</code>, <code>Vocal Details</code>, and <code>Arrangement</code> sections. The immediate investigation is therefore the lyric boundary: <code>lyrics</code> must contain only intended singable words plus minimal supported section tags, not the intro concept, production directions, or initial word-intro instructions. The next step is a controlled comparison using the exact local model and workflow, with the current production workflow retained as rollback.</p>
-<h2 id="failure-alert-diagnosis-and-fix--2026-09-09">Failure-alert diagnosis and fix — 2026-09-09</h2>
+<h2>Failure-alert diagnosis and fix — 2026-09-09</h2>
 <p>The published-state question is resolved: the error workflow was active before this incident, so publication was not the cause. The root cause was payload loss: the SSH lock-release node replaced the Error Trigger item, and the formatter read <code>$input.first().json</code> from that replacement output. The formatter now reads the original Error Trigger item directly via <code>$(&#39;Error Trigger&#39;).first().json</code> and has been republished.</p>
 <p>Execution <code>2415</code> provides the concrete test case: workflow <code>S9v0UpCVYcrtVJH4</code> failed at <code>Assert normal ComfyUI ready</code> because ComfyUI was locked by run <code>2414</code>. The remaining completion criterion is a subsequent real failure alert containing the actual workflow name/ID, execution ID, node name, workflow error, and node error.</p>
-<h2 id="resolution--failure-alert-payload-preservation">Resolution — failure-alert payload preservation</h2>
+<h2>Resolution — failure-alert payload preservation</h2>
 <p>Verified with production execution <code>2417</code>. The alert contained the actual workflow name and ID, run ID, failed node, and full error message. The formatter fix is therefore end-to-end verified; the previous <code>unknown</code>-field failure was resolved.</p>
-<h2 id="progress--2026-09-16-the-intro-song-had-no-vocals-at-all">Progress — 2026-09-16: the intro song had no vocals at all</h2>
+<h2>Progress — 2026-09-16: the intro song had no vocals at all</h2>
 <p>Episode <code>v2026.38.4-01.01</code> opened with a wordless intro. The cause was in the lyric channel, not the music model.</p>
 <p>YuE&#39;s documented input contract is narrow: the lyrics must contain verse and chorus sections and the tags it understands are <code>[verse]</code> and <code>[chorus]</code>. Style and lyrics otherwise reach the model verbatim, with no caption cleaning or lyric normalisation. The generated lyrics had <strong>three</strong> sections, the first being:</p>
 <pre><code>[Intro - Pulsing synth bass and a clean electric guitar hook]

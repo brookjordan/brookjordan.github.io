@@ -12,18 +12,18 @@ pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{col
 publication: internal links, status metadata and personal paths are removed. The live private
 version lives in the author's Obsidian vault.</p>
 <h1>Ethernet endpoint correction</h1>
-<h1 id="raw-conversation--ethernet-endpoint-correction">Raw conversation — Ethernet endpoint correction</h1>
+<h1>Raw conversation — Ethernet endpoint correction</h1>
 <p>Date: 2026-09-15
 Project: PodCast Builder project map
 Related ticket: PCB-007</p>
-<h2 id="user-report">User report</h2>
+<h2>User report</h2>
 <p>Execution <code>2524</code> failed after 1h 52m at <code>TEST — YuE2 synth</code>:</p>
 <pre><code class="language-text">connect ECONNREFUSED 100.84.158.31:8087
 </code></pre>
-<h2 id="verification">Verification</h2>
+<h2>Verification</h2>
 <p>The MacBook has direct Ethernet interface <code>en16</code> at <code>10.10.10.1</code>; the NAS is <code>10.10.10.2</code> on the same direct network. The old YuE2 request used the NAS <code>serviceHost</code>, which was the wrong host role for the MacBook-side YuE2 service.</p>
 <p>The MacBook&#39;s Ollama port was open on <code>192.168.0.25:11434</code> during the check. ComfyUI <code>8188</code> and YuE2 <code>8087</code> were not listening at that time, so service-start and reachability checks remain required before retrying.</p>
-<h2 id="change">Change</h2>
+<h2>Change</h2>
 <p>The workflow&#39;s <code>LLM config</code> now selects the LAN profile:</p>
 <pre><code class="language-text">networkLocation = LAN
 serviceHost = 10.10.10.2

@@ -12,10 +12,10 @@ pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{col
 publication: internal links, status metadata and personal paths are removed. The live private
 version lives in the author's Obsidian vault.</p>
 <h1>Route and capability preflight verification</h1>
-<h1 id="pcb-007-add-deterministic-environment-and-capability-preflight">PCB-007 Add deterministic environment and capability preflight</h1>
-<h2 id="question">Question</h2>
+<h1>PCB-007 Add deterministic environment and capability preflight</h1>
+<h2>Question</h2>
 <p>Can the podcast workflow determine, at the beginning of a run, which network routes, storage sources, models, custom nodes, and service endpoints are actually usable instead of relying on a fixed home-network assumption?</p>
-<h2 id="scope">Scope</h2>
+<h2>Scope</h2>
 <p>Add a preflight phase to the n8n podcast workflow that runs before expensive generation:</p>
 <ul>
 <li>identify the MacBook&#39;s usable Ethernet, Wi-Fi, and Tailscale paths;</li>
@@ -29,14 +29,14 @@ version lives in the author's Obsidian vault.</p>
 <li>fail early with checked paths and a precise reason when a required asset is unavailable.</li>
 </ul>
 <p>The manifest must distinguish a file existing on disk from a model being registered by the active ComfyUI profile. It must not silently substitute another model or profile.</p>
-<h2 id="current-evidence">Current evidence</h2>
+<h2>Current evidence</h2>
 <ul>
 <li>n8n runs on the NAS at <code>100.84.158.31</code>, in the <code>news-podcast-system</code> Docker stack on a <strong>bridge</strong> network (<code>app-network</code>), with DNS pinned to the Tailscale resolver <code>100.100.100.100</code>. Route probes therefore run from inside the container, which is the vantage point that actually makes the requests.</li>
 <li>ComfyUI and Ollama run on the MacBook at <code>100.98.203.89</code>.</li>
 <li>SSH to the NAS is refused from the MacBook, but the MacBook runs <code>sshd</code> and the workflow drives it through a &quot;MacBook SSH&quot; credential, so MacBook-side checks are reachable from n8n.</li>
 <li>The MacBook currently has no <code>10.10.10.x</code> interface: it is on wireless LAN at <code>192.168.0.25</code>, and its own <code>10/8</code> route points into a VPN, so the direct-Ethernet tier is both absent and mis-routed while unplugged.</li>
 </ul>
-<h3 id="superseded-claims-corrected-2026-09-16">Superseded claims (corrected 2026-09-16)</h3>
+<h3>Superseded claims (corrected 2026-09-16)</h3>
 <p>These earlier findings were wrong or are no longer true, and must not be relied on:</p>
 <ul>
 <li><code>/Volumes/model-store</code> <strong>is</strong> mounted. The exact <code>LTX-2.5-Distilled-Q3_K_M.gguf</code> is present at <code>.../comfyui/unet/</code>, with the matching <code>gemma4-12b-with-proj-ltx-2.5</code> text encoder and both LTX VAEs.</li>
@@ -45,7 +45,7 @@ version lives in the author's Obsidian vault.</p>
 <li>The workflow&#39;s YuE2 stage is <strong>still MiniMax</strong>: <code>TEST — YuE2 synth</code> is a ComfyUI node running <code>minimax_music3_dit_fp16</code> with the &quot;ComfyUI - music&quot; credential. The migration was never completed.</li>
 <li>The MiniMax-era lifecycle was <strong>not</strong> fully removed: the music profile switch is gone, but nine ComfyUI profile lifecycle nodes remain (normal start/assert/release, isolated LTX start/assert, and three restores).</li>
 </ul>
-<h3 id="measured-route-reachability-2026-09-16-probed-from-the-n8n-container">Measured route reachability (2026-09-16, probed from the n8n container)</h3>
+<h3>Measured route reachability (2026-09-16, probed from the n8n container)</h3>
 <table>
 <thead>
 <tr>
@@ -75,9 +75,9 @@ version lives in the author's Obsidian vault.</p>
 </tr>
 </tbody></table>
 <p>The failure <em>kind</em> separates the two problems cleanly: a timeout means the route is unusable, while <code>ECONNREFUSED</code> means the route is fine and the service is down. Wireless LAN is the best available tier and is marginally faster than Tailscale.</p>
-<h2 id="proposed-decision">Proposed decision</h2>
+<h2>Proposed decision</h2>
 <p>Use a route-and-capability manifest rather than hard-coded <code>serviceHost</code>, <code>comfyHost</code>, or <code>llmHost</code> assumptions. The preflight may use SSH to inspect the MacBook because that is where ComfyUI runs, while n8n-local checks inspect NAS-side paths separately. SMB reachability, authentication, mount visibility, and ComfyUI registration remain separate checks.</p>
-<h2 id="completion-criteria">Completion criteria</h2>
+<h2>Completion criteria</h2>
 <ul>
 <li>A run at home Ethernet, Tailscale-only, and NAS-unavailable conditions selects or rejects routes deterministically.</li>
 <li>Required assets report their source (<code>local</code>, <code>nas</code>, or unavailable) and exact checked locations.</li>
@@ -85,7 +85,7 @@ version lives in the author's Obsidian vault.</p>
 <li>The first failure message identifies whether the cause is network routing, SMB authentication, missing mount, missing file, missing custom node, or ComfyUI registration.</li>
 <li>A real manual execution records the manifest before media generation begins.</li>
 </ul>
-<h2 id="progress">Progress</h2>
+<h2>Progress</h2>
 <p>Work is in the non-live workflow <code>2k7x4U8GgLeSFpRE</code> (&quot;TEMP TEST — Podcast — YuE2 + LTX-2.5&quot;), which Brook has handed over for direct editing. The preference order is <strong>wired Ethernet, then wireless LAN, then Tailscale</strong> — note this supersedes the ordering originally recorded in the handoff, which put Tailscale before WAN.</p>
 <p>Done and verified by read-back:</p>
 <ul>
@@ -99,9 +99,9 @@ version lives in the author's Obsidian vault.</p>
 <li>Extended <code>Parse song spec</code> to emit the YuE2 request fields (<code>yue_style</code>, <code>yue_lyrics</code>, <code>yue_duration</code>, <code>yue_steps</code>, <code>yue_output_format</code>) alongside the MiniMax ones, by surgical insertion into the existing code rather than a rewrite.</li>
 <li>Added a fail-closed gate for YuE2 and one for the exact LTX GGUF, both verified to fire and to pass.</li>
 </ul>
-<h3 id="parser-trap-worth-remembering">Parser trap worth remembering</h3>
+<h3>Parser trap worth remembering</h3>
 <p><code>TEST — YuE2 materialise audio</code> never worked: it called <code>String(...)</code> at the <strong>top level</strong> of an n8n expression and aborted with <code>ExpressionExtensionError: invalid syntax</code> before running. Nodes that call <code>String(...)</code> <em>inside</em> an IIFE are fine, and <code>||</code> is fine (it is used in <code>Add iso date</code>, which earlier executions passed). The rule is that top-level function calls on non-<code>$</code> globals break the expression syntax extension. The command is now plain concatenation, proven end to end.</p>
-<h3 id="verification">Verification</h3>
+<h3>Verification</h3>
 <ul>
 <li>Route probing and both gates: executions <code>2536</code> (passes with YuE2 up) and <code>2539</code> (fails closed with &quot;YuE2 preflight failed. nothing is listening on 192.168.0.25 port 8087 via the wlan route. Run yue-server-up on the MacBook.&quot;). Gate messages deliberately contain no colon, because n8n splits an error on the first colon and otherwise tears <code>host:port</code> into message and description.</li>
 <li>Full audio path: execution <code>2541</code>, and again as a regression at <code>2542</code> — submit, SSH materialise, and ComfyUI <code>/api/view</code> fetch, producing <code>intro_&lt;runId&gt;_00001.wav</code>, <code>audio/x-wav</code>, 1.54 MB, ~31 s including first-request model load.</li>
@@ -114,9 +114,9 @@ version lives in the author's Obsidian vault.</p>
 <li>Judge the per-stage <code>/free</code> model-unloading calls on merit. They are much less aggressive than profile switching and may be genuinely useful on a 36 GB machine.</li>
 <li>Consider applying the same <code>comfyHost</code> autodetection to production <code>S9v0UpCVYcrtVJH4</code>, which still hardcodes everything to a single <code>llmServer</code> name and still fetches final media from the retired port <code>8189</code>.</li>
 </ul>
-<h3 id="decided-keep-the-comfyui-profile-lifecycle">Decided: keep the ComfyUI profile lifecycle</h3>
+<h3>Decided: keep the ComfyUI profile lifecycle</h3>
 <p>The nine residual lifecycle nodes <strong>stay</strong>. They are not MiniMax-era cruft. The isolated LTX profile is deliberate and self-verifying: <code>Assert isolated LTX ComfyUI ready</code> pins ComfyUI <code>0.35.0</code>, asserts the running argv contains <code>--disable-all-custom-nodes</code>, <code>ComfyUI-GGUF</code> and the <code>/comfyui-ltx.db</code> database, and checks that <code>UnetLoaderGGUF</code>, <code>CLIPLoader</code> and <code>VAELoader</code> advertise the exact LTX GGUF, text encoder and VAE, plus the native <code>LTXVCropGuides</code> and <code>SaveVideo</code> nodes. That is a stronger capability gate than the manifest&#39;s own LTX check, and it is the mechanism that keeps the LTX profile isolated from every other custom node. The MiniMax-era <em>music</em> profile switch, which was the aggressive behaviour Brook objected to, is already gone — as is the port <code>8189</code> it depended on.</p>
-<h2 id="blocker-found-2026-09-16-container-dns-and-it-is-breaking-production">Blocker found 2026-09-16: container DNS, and it is breaking production</h2>
+<h2>Blocker found 2026-09-16: container DNS, and it is breaking production</h2>
 <p>The test run of <code>2k7x4U8GgLeSFpRE</code> (execution <code>2543</code>) cleared ComfyUI restart, <code>Start YuE2 server</code> and the endpoint manifest, then failed at the first external call, <code>Fetch Repo Folders</code>, after 25 s with <code>The DNS server returned an error, perhaps the server is offline</code>.</p>
 <p>Diagnosis, using <code>Execute Command</code> inside the n8n container:</p>
 <ul>
@@ -131,7 +131,7 @@ version lives in the author's Obsidian vault.</p>
 <li><strong>The failure alerts are down too.</strong> The alert workflow <code>kyZcvt1CxQq8FQ0j</code> fails in <code>Send failure alert</code> with the same DNS error, because <code>api.telegram.org</code> also needs public DNS. It last succeeded at <code>2530</code> (2026-09-15T20:34); <code>2532</code> and <code>2550</code> errored. The outage is silent: broken runs and broken notifications share one cause.</li>
 </ul>
 <p>The container cannot repair itself: it runs as uid <code>1013</code>, so <code>/etc/resolv.conf</code> is not writable, and <code>NODE_FUNCTION_ALLOW_BUILTIN</code> is unset, so a Code node cannot call <code>dns.setServers</code>.</p>
-<h3 id="fix-prepared-not-yet-applied">Fix prepared, not yet applied</h3>
+<h3>Fix prepared, not yet applied</h3>
 <p><code>/Volumes/docker/n8n/docker-compose.yaml</code> now lists a public fallback second for both services (backup at <code>the local vault/tmp/docker-compose.n8n.backup.yaml</code>):</p>
 <pre><code class="language-yaml">    dns:
       - &quot;${TAILSCALE_DNS_SERVER:-100.100.100.100}&quot;
@@ -139,7 +139,7 @@ version lives in the author's Obsidian vault.</p>
 </code></pre>
 <p>The YAML parses and both services carry both resolvers, but <strong>the change needs a stack redeploy to take effect</strong>. Faster alternative: restart the NAS <code>tailscale</code> container, which should restore MagicDNS forwarding by itself and unblock everything without touching n8n.</p>
 <p>Services to restart after changing DNS: <code>n8n</code> and <code>n8n-worker</code>. Worth confirming afterwards that Docker&#39;s embedded resolver really does fall through to the second server on SERVFAIL; if it does not, swap the order so the public resolver is first.</p>
-<h3 id="root-cause-mullvad-retired-its-public-dns-and-the-nas-was-pointed-at-it">Root cause: Mullvad retired its public DNS, and the NAS was pointed at it</h3>
+<h3>Root cause: Mullvad retired its public DNS, and the NAS was pointed at it</h3>
 <p><strong>Mullvad shut down its public encrypted DNS service.</strong> Announced 3 September 2026, with manual users given until 2 November 2026 to migrate; Mullvad is redirecting those resources into sponsoring the Quad9 Foundation. Its resolvers <code>194.242.2.2</code> and <code>194.242.2.3</code> now return <strong>REFUSED</strong>.</p>
 <p>Verified from both sides:</p>
 <table>
@@ -191,7 +191,7 @@ version lives in the author's Obsidian vault.</p>
 <li><strong>Restart the NAS <code>tailscale</code> container</strong> if its daemon has stopped applying control-plane DNS updates.</li>
 </ol>
 <p>Attempting to set it via the API returned <code>HTTP 403 calling actor does not have enough permissions</code>, so the OAuth client used here is read-only; the change needs the admin console or a client with DNS write scope. The compose fallback above remains worth doing as defence in depth, so that n8n does not depend on MagicDNS health at all.</p>
-<h2 id="evidence">Evidence</h2>
+<h2>Evidence</h2>
 <ul>
 <li>2026-09-15 environment and NAS preflight conversation</li>
 </ul>

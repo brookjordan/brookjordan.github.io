@@ -12,10 +12,10 @@ pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{col
 publication: internal links, status metadata and personal paths are removed. The live private
 version lives in the author's Obsidian vault.</p>
 <h1>PCB-015 brief</h1>
-<h1 id="pcb-015-retroactively-build-the-podcast-builder-blog">PCB-015 Retroactively build the podcast builder blog</h1>
-<h2 id="question">Question</h2>
+<h1>PCB-015 Retroactively build the podcast builder blog</h1>
+<h2>Question</h2>
 <p>What does the Podcast Builder&#39;s history look like when told as a story — and can a deep dive through the vault&#39;s evidence produce the first posts of a builder blog in the same spirit as the local image gen project&#39;s blog?</p>
-<h2 id="status">Status</h2>
+<h2>Status</h2>
 <p>The blog exists and is live: <strong>47 of 48 slots published at
 <code>https://brook.dev/projects/news/blog/</code></strong> (part of the site repo as
 <code>projects/news/blog/</code>). Only <strong>P05</strong> remains held-evidence: it needs a real
@@ -23,7 +23,7 @@ generated-image artefact plus a dated vision-inspection record in the vault
 before it can be written honestly. This ticket now owns the blog&#39;s <em>ongoing
 maintenance</em>: any agent updating the blog follows the maintenance protocol
 below.</p>
-<h2 id="maintenance-protocol-overview">Maintenance protocol (overview)</h2>
+<h2>Maintenance protocol (overview)</h2>
 <p>The blog is a maintained artifact. The full operating detail — file map, update
 cycle, add-a-post steps, gates, banner workflow, vault-hygiene rules — lives in
 the blog maintenance protocol packet
@@ -35,7 +35,7 @@ build pipeline (<code>node build.ts</code> → <code>verify.py</code> → rsync 
 commit/push → curl-verify). Cited vault notes are snapshotted publicly
 (sanitised) on every build, so keep must-stay-private material out of cited
 notes. The blog follows the records; it never anticipates them.</p>
-<h2 id="evidence-trail-read-in-this-order">Evidence trail (read in this order)</h2>
+<h2>Evidence trail (read in this order)</h2>
 <ol>
 <li><strong>Map + tickets</strong> — the podcast builder map and PCB-001 through PCB-015; every ticket has a story arc (decision, failure, fix).</li>
 <li><strong>Daily diary beats</strong> — <code>Daily/2026-08-17</code> onward; the map&#39;s own &quot;Recent diary&quot; section is a curated index.</li>
@@ -44,14 +44,14 @@ notes. The blog follows the records; it never anticipates them.</p>
 <li><strong>The LTX envelope project</strong> — the LTX-2.5 operating-envelope map for the overnight-run sagas, the duration boundary, and the 2026-09-19 uncapped-watermark adventure.</li>
 <li><strong>Today&#39;s 10-second arc</strong> — PCB-013 and the probe packet: binary-searching a memory ceiling, negotiating with an OOM, and the smoke that flew up then came back down.</li>
 </ol>
-<h2 id="deliverables">Deliverables</h2>
+<h2>Deliverables</h2>
 <ul>
 <li><input checked="" disabled="" type="checkbox"> 3–5 draft blog posts covering: the YuE2/LTX cutover (PCB-006), the SIGBUS incident and the local-models fix (PCB-008), the failure-alert saga, and the 10-second duration probes.</li>
 <li><input checked="" disabled="" type="checkbox"> Each post grounded in at least two linked evidence notes; no invented timestamps or quotes.</li>
 <li><input checked="" disabled="" type="checkbox"> Blog published at <code>https://brook.dev/projects/news/blog/</code> — 47 of 48 slots (2026-09-20); P05 held-evidence pending real image-inspection evidence.</li>
 <li><input checked="" disabled="" type="checkbox"> Maintenance protocol written into this ticket and the build workspace README (2026-09-20) so future agents can update the blog.</li>
 </ul>
-<h2 id="progress-log-dated-newest-first">Progress log (dated, newest first)</h2>
+<h2>Progress log (dated, newest first)</h2>
 <p>The drafting swarm completed a 48-slot batch on 2026-09-19 (superseding the 3–5 post brief);
 the senior review accepted 43 drafts, held 5 (<code>P05</code> held-evidence; <code>P07/P08/P21/P34</code> held-quality).
 On 2026-09-20 a private, isolated preview was built from the accepted set:</p>
@@ -64,7 +64,8 @@ On 2026-09-20 a private, isolated preview was built from the accepted set:</p>
 <li>All 11 acceptance checks pass (<code>acceptance-results.json</code> in the workspace, updated for the 47-post build); branding is <code>PodCast Builder devlog</code>; original senior-accepted drafts unchanged.</li>
 <li>The blog is 47 of 48 slots (commit <code>1e62d722</code>): part numbers are &quot;Part N of 47&quot;.</li>
 </ul>
-<h2 id="out-of-scope">Out of scope</h2>
+<p><strong>Quip pass, 2026-09-20 (commit <code>eecd9d59</code>).</strong> All 47 display titles rewritten again around researched, verifiable references: Segal&#39;s law (P31), &quot;mostly dead&quot; (P30), Ship of Theseus (P45), &quot;task failed successfully&quot; (P13), the cobbler&#39;s children (P04), Groundhog Day (P19), horror-movie &quot;I&#39;ll be right back&quot; considered and rejected for fit, &quot;it&#39;s always DNS&quot; considered and rejected (no DNS in the story), Schrödinger&#39;s backup (P33 blurb), Whac-A-Mole considered and rejected. Blurbs updated to carry the same references. Build verified (47 pages, all checks PASS) and deployed after a <code>--dry-run</code> vetting of the rsync (zero deletions, in-place updates only).</p>
+<h2>Out of scope</h2>
 <ul>
 <li><p>The LTX blog itself if the image-gen-style site format needs its own ticket.</p>
 </li>

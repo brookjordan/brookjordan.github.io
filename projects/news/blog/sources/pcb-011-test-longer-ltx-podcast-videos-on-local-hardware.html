@@ -12,12 +12,12 @@ pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{col
 publication: internal links, status metadata and personal paths are removed. The live private
 version lives in the author's Obsidian vault.</p>
 <h1>longer-video test contract</h1>
-<h1 id="pcb-011-test-longer-ltx-podcast-videos-on-local-hardware">PCB-011 Test longer LTX podcast videos on local hardware</h1>
-<h2 id="question">Question</h2>
+<h1>PCB-011 Test longer LTX podcast videos on local hardware</h1>
+<h2>Question</h2>
 <p>How much longer can the native LTX-2.5 podcast video run reliably on the Apple Silicon hardware now that the video models and generation path are local?</p>
-<h2 id="scope">Scope</h2>
+<h2>Scope</h2>
 <p>The current production graph uses six still-image frames and 49 frames per LTX transition at 25 fps before stitching. The test varies transition count and, separately, transition length. The current settings remain the control. Speech still uses VibeVoice; YuE2 and native LTX-2.5 handle music and video. This ticket tests the video duration limit without changing production first.</p>
-<h2 id="acceptance-criteria">Acceptance criteria</h2>
+<h2>Acceptance criteria</h2>
 <ul>
 <li>Establish a control run with the current six-frame / 49-frame-transition configuration.</li>
 <li>Test at least two longer-duration configurations without reading LTX models from the NAS during generation.</li>
@@ -26,7 +26,7 @@ version lives in the author's Obsidian vault.</p>
 <li>Identify a safe production limit and the point where runs begin to fail.</li>
 <li>Do not increase production duration until a fresh publication-disabled run passes and someone has reviewed the output.</li>
 </ul>
-<h2 id="related-work">Related work</h2>
+<h2>Related work</h2>
 <ul>
 <li>the local LTX model and NAS-independence work</li>
 <li>the completed YuE2/LTX cutover ticket</li>

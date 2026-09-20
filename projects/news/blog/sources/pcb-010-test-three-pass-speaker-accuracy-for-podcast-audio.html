@@ -12,10 +12,10 @@ pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{col
 publication: internal links, status metadata and personal paths are removed. The live private
 version lives in the author's Obsidian vault.</p>
 <h1>Three-pass speaker test design</h1>
-<h1 id="pcb-010-test-three-pass-speaker-accuracy-for-podcast-audio">PCB-010 Test three-pass speaker accuracy for podcast audio</h1>
-<h2 id="question">Question</h2>
+<h1>PCB-010 Test three-pass speaker accuracy for podcast audio</h1>
+<h2>Question</h2>
 <p>Can a three-pass generation and verification loop reliably confirm that each podcast segment uses the requested speaker voice?</p>
-<h2 id="design">Design</h2>
+<h2>Design</h2>
 <p>For each test segment, generate audio with the requested voice, then run up to three verification attempts. Each attempt records the audio, transcript, detected speaker or similarity score, model and runtime details, seed, duration and failure reason.</p>
 <p>The three passes should verify:</p>
 <ol>
@@ -24,7 +24,7 @@ version lives in the author's Obsidian vault.</p>
 <li>the generated voice matches the requested speaker reference and is not merely intelligible speech from the wrong voice.</li>
 </ol>
 <p>The retry workflow in the completed YuE2/LTX cutover ticket tested the retry behaviour with fixture transcripts. Replace those fixtures with generated audio and a speaker-verification method.</p>
-<h2 id="acceptance-criteria">Acceptance criteria</h2>
+<h2>Acceptance criteria</h2>
 <ul>
 <li>Test the selected VibeVoice replacement and retain VibeVoice as a baseline.</li>
 <li>Use authorised reference voices and a fixed, labelled corpus covering all podcast speakers.</li>
@@ -33,7 +33,7 @@ version lives in the author's Obsidian vault.</p>
 <li>Measure first-pass success, recovery rate, false acceptance, false rejection and runtime cost.</li>
 <li>Do not connect the verifier to production publication until its output format and failure handling have been reviewed.</li>
 </ul>
-<h2 id="related-work">Related work</h2>
+<h2>Related work</h2>
 <ul>
 <li>the earlier multi-speaker TTS test</li>
 <li>the VibeVoice speaker-labelling test</li>

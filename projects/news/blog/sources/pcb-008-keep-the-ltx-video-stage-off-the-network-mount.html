@@ -12,10 +12,10 @@ pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{col
 publication: internal links, status metadata and personal paths are removed. The live private
 version lives in the author's Obsidian vault.</p>
 <h1>LTX mount incident and cleanup reference</h1>
-<h1 id="pcb-008-keep-the-ltx-video-stage-off-the-network-mount">PCB-008 Keep the LTX video stage off the network mount</h1>
-<h2 id="question">Question</h2>
+<h1>PCB-008 Keep the LTX video stage off the network mount</h1>
+<h2>Question</h2>
 <p>Can the podcast workflow make the video stage depend only on local disk, so that a 26.8 GB read over SMB/Tailscale — the condition that crashed ComfyUI with SIGBUS when the share dropped — is no longer on the critical path?</p>
-<h2 id="scope">Scope</h2>
+<h2>Scope</h2>
 <ul>
 <li>Fetch the four-file LTX model set to <code>~/ComfyUI-Shared/models</code> as a first-class workflow step, overlapping script, TTS and image generation rather than blocking on it.</li>
 <li>Make the transfer resumable, so a dropped SMB session continues instead of restarting 26.8 GB.</li>
@@ -23,12 +23,12 @@ version lives in the author's Obsidian vault.</p>
 <li>Verify the finished files against the content-addressed model store, not just against their size.</li>
 <li>Gate the video stage on that verification: fail closed with a precise reason rather than silently reading from the NAS.</li>
 </ul>
-<h2 id="design-decisions">Design decisions</h2>
+<h2>Design decisions</h2>
 <p><strong>Detached sync with a status file, not a blocking node.</strong> The handoff proposed an SSH node that starts the copy and returns. That is necessary but not sufficient: the copy must also outlive the run that started it, and be resumable across runs. <code>ltx-models-local.py start</code> launches a detached process and writes JSON status to <code>~/.local/state/ltx-models-local/status.json</code>; <code>gate</code> blocks until the set is local. This also means the gate is idempotent — a completed set makes it a no-op.</p>
 <p><strong>Verification is free, because the store is content-addressed.</strong> Every model in <code>models/comfyui/...</code> is a symlink into <code>objects/sha256/&lt;aa&gt;/&lt;sha256&gt;</code>, so the object path <em>is</em> the expected digest. The sync copies the object and names the destination after its own digest, then verifies; a half-written file can never be mistaken for a complete model. This removes the need for a separate checksum manifest.</p>
 <p><strong>Local precedence is confirmed by reading the code, not assumed.</strong> <code>folder_paths.get_full_path</code> iterates <code>folders[0]</code> in insertion order and returns the first <code>os.path.isfile</code> hit. <code>extra_models_config.yaml</code> declares <code>comfyui_desktop</code> (with <code>is_default: &quot;true&quot;</code>), then <code>nas_fallback</code>, so local is inserted first and wins. A missing <code>base_path</code> is simply not scanned. This supersedes the earlier unverified claim in the map that &quot;ComfyUI already prefers the local model directories, so no configuration change is needed&quot;.</p>
 <p><strong>NAS SSH is not an alternative.</strong> Port 22 on <code>100.84.158.31</code> is filtered from the MacBook, so <code>rsync</code>-over-SSH to the NAS is unavailable and SMB remains the only bulk path.</p>
-<h2 id="evidence">Evidence</h2>
+<h2>Evidence</h2>
 <ul>
 <li>Source set is present and resolvable through the store: 4 files, <strong>26.762 GB</strong> total (<code>unet/LTX-2.5-Distilled-Q3_K_M.gguf</code> 10.734 GB, <code>text_encoders/gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors</code> 14.317 GB, <code>vae/ltx-2.5-video-vae-bf16.safetensors</code> 1.371 GB, <code>vae/ltx-2.5-audio-vae-bf16.safetensors</code> 0.340 GB).</li>
 <li>Measured SMB read throughput on 2026-09-17: <strong>14.8 MB/s</strong>, i.e. roughly 30 minutes for the full set.</li>
@@ -36,7 +36,7 @@ version lives in the author's Obsidian vault.</p>
 <li><code>Delete MP3s via SSH</code> was enabled by the cutover while referencing the removed MiniMax node <code>Generate intro music</code>, the only dangling reference in the workflow. It threw on every run that published successfully. Its targets are <code>.mp3</code>, which YuE2 no longer produces (the old builder&#39;s <code>Trim intro silence</code> confirms the <code>.mp3</code>→<code>.wav</code> change), so it is dead code that only throws. Disabled, matching its state in the old builder; a deliberate exclusion decision is still open.</li>
 <li>Workflow change staged in draft <code>ee68b28b-3d29-4e22-8034-6c721e4c2f93</code>: <code>LLM config → Start LTX model sync → Fetch Repo Folders</code>, and <code>Get generated frame files → Gate LTX models local → Assert LTX models local → Start isolated LTX ComfyUI</code>. Three nodes added, 102 nodes / 122 edges, no new validation warnings. Published version remains <code>65b620c7-408c-43ec-b8f9-0c550dd586c8</code>.</li>
 </ul>
-<h2 id="why-the-transfer-keeps-failing--evidence-not-the-inherited-hypothesis">Why the transfer keeps failing — evidence, not the inherited hypothesis</h2>
+<h2>Why the transfer keeps failing — evidence, not the inherited hypothesis</h2>
 <p>The handoff&#39;s leading hypothesis is that a sustained multi-gigabyte read <strong>destabilises the NAS</strong>. The client-side evidence gathered on 2026-09-17 does not clearly support that, and points instead at the <strong>network path</strong> as the first thing to fail:</p>
 <ul>
 <li>The writer&#39;s errors are <code>[Errno 9] Bad file descriptor</code> followed by <code>[Errno 60] Operation timed out</code>. A NAS going away does not normally hand the client <code>EBADF</code> mid-read; that is the SMB client&#39;s socket being torn down under it.</li>
@@ -51,7 +51,7 @@ version lives in the author's Obsidian vault.</p>
 </ul>
 <p><strong>Not yet proven either way.</strong> Confirming a path failure needs the NAS reachable from <em>another</em> tailnet node at the moment the MacBook cannot reach it. <code>~/tmp/watch-nas-path.sh</code> samples <code>tailscale status</code> path type, <code>tailscale ping</code>, and TCP to 445/9443, and records whether the peer flips from <code>direct</code> to <code>relay</code> — a flip would be strong evidence for the path. NAS-side evidence (uptime, OOM, SMB daemon restarts) would settle it from the other direction, but SSH to the NAS is filtered, so it has to come from the NAS itself.</p>
 <p>This matters for the fix: if the path is the fault, throttling may not be enough and the answer is a resumable transfer plus retry (which is now built), whereas if the NAS is the fault, the answer is NAS-side.</p>
-<h2 id="resume-behaviour">Resume behaviour</h2>
+<h2>Resume behaviour</h2>
 <p>The transfer is resumable and supervised:</p>
 <ul>
 <li><code>sync</code> copies into a content-addressed object file and resumes from a <strong>16 MiB-aligned offset</strong>, re-reading a 256 KiB overlap on both sides to reject a corrupted prefix before appending.</li>
@@ -60,7 +60,7 @@ version lives in the author's Obsidian vault.</p>
 <li><code>start --supervise</code> wraps that in a supervisor that keeps re-running <code>sync</code> with exponential backoff (30 s doubling to 900 s), because one sync giving up after four attempts is not enough when the path drops every few gigabytes. A six-hour budget and 40 attempts are the defaults used by the workflow kickoff.</li>
 <li>The gate restarts an interrupted sync in supervised mode, so a run that begins while the transfer is stalled revives it rather than failing immediately.</li>
 </ul>
-<h2 id="still-open">Still open</h2>
+<h2>Still open</h2>
 <ul>
 <li>Finish the remaining ~16 GB and confirm all four files verify.</li>
 <li>End-to-end run through the LTX video, YuE2 music and final assembly stages.</li>

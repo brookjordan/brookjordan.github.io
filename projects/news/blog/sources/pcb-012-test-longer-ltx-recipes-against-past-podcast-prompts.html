@@ -12,13 +12,13 @@ pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{col
 publication: internal links, status metadata and personal paths are removed. The live private
 version lives in the author's Obsidian vault.</p>
 <h1>longer LTX recipe contract</h1>
-<h1 id="pcb-012-test-longer-ltx-recipes-against-past-podcast-prompts">PCB-012 Test longer LTX recipes against past podcast prompts</h1>
-<h2 id="question">Question</h2>
+<h1>PCB-012 Test longer LTX recipes against past podcast prompts</h1>
+<h2>Question</h2>
 <p>Can the local LTX-2.5 setup make longer podcast videos reliably when it uses prompts from real past episodes?</p>
-<h2 id="why-this-test-exists">Why this test exists</h2>
+<h2>Why this test exists</h2>
 <p>The LTX operating-envelope work found a clean single-render result at about 20 seconds and a practical ceiling near 24 seconds. It also found that the two-stage recipe is sharper and faster than the one-stage fallback, while text-only multi-shot prompts can ignore a requested cut. The podcast builder needs evidence with its own prompts and images, not another abstract benchmark.</p>
 <p>Use the fixed production preset from the selected LTX preset, the duration findings from the duration-boundary test, the two-stage recipe from the one-stage/two-stage comparison, and the transition evidence from the FLF2V test. Keep the LTX model files local as required by the local-model ticket.</p>
-<h2 id="test-matrix">Test matrix</h2>
+<h2>Test matrix</h2>
 <p>Select five past podcast prompt/image cases. Each case must use a real motion prompt from the episode or its recorded workflow inputs, with the same start and end images for both arms.</p>
 <p>For each case, run these three renders:</p>
 <ol>
@@ -27,7 +27,7 @@ version lives in the author's Obsidian vault.</p>
 <li><strong>Two-part arm, part two:</strong> use the second prompt section and render the second long clip, then join the two clips in post.</li>
 </ol>
 <p>The two-part arm should produce a combined video longer than the single-prompt arm. Do not ask one LTX render to perform a hard multi-shot cut. The two sections must describe a continuous visual sequence that can be joined cleanly.</p>
-<h2 id="accounting">Accounting</h2>
+<h2>Accounting</h2>
 <ul>
 <li>Five past-podcast cases.</li>
 <li>Three LTX renders per case: <code>1 + 1 + 1</code>.</li>
@@ -35,7 +35,7 @@ version lives in the author's Obsidian vault.</p>
 <li>Ten finished videos total: five single-prompt videos plus five joined two-part videos.</li>
 <li>The two source clips in each joined case remain as evidence; the joined output is the second finished-video result for that case.</li>
 </ul>
-<h2 id="recipe-controls">Recipe controls</h2>
+<h2>Recipe controls</h2>
 <ul>
 <li>Use the production two-stage recipe, Q5 quantisation and the current local Apple Silicon LTX path.</li>
 <li>Keep resolution, sampler, sigma schedule, guide strength, FPS and model revision fixed unless the test records a deliberate arm change.</li>
@@ -43,10 +43,10 @@ version lives in the author's Obsidian vault.</p>
 <li>Keep the current six-frame podcast image flow as the source of the test cases, but choose cases whose prompts can support a longer continuous action.</li>
 <li>Run one ComfyUI job at a time and keep the normal-profile restore and n8n lock-release checks.</li>
 </ul>
-<h2 id="per-case-record">Per-case record</h2>
+<h2>Per-case record</h2>
 <p>Record the episode or prompt source, case ID, start and end image identifiers, full prompts, prompt arm, seed, model and workflow revision, requested and actual duration, wall time, peak memory, local-model gate result, output path, frame count, decode result, guide-frame preservation, visual verdict and any failure reason.</p>
 <p>Review every finished video at full speed. Contact sheets alone cannot detect the temporal failures already documented in the LTX operating-envelope map.</p>
-<h2 id="acceptance-criteria">Acceptance criteria</h2>
+<h2>Acceptance criteria</h2>
 <ul>
 <li><input checked="" disabled="" type="checkbox"> Five past-podcast prompt/image cases are selected and frozen before rendering.</li>
 <li><input disabled="" type="checkbox"> All fifteen renders are accounted for, including failures and retries.</li>
@@ -57,12 +57,12 @@ version lives in the author's Obsidian vault.</p>
 <li><input disabled="" type="checkbox"> A safe duration range and a recommended recipe are recorded before any production duration change.</li>
 <li><input disabled="" type="checkbox"> No production workflow is changed by this experiment.</li>
 </ul>
-<h2 id="frozen-case-set">Frozen case set</h2>
+<h2>Frozen case set</h2>
 <p>The five real past-podcast prompt/image cases are frozen in the PCB-012 case packet. It records the source execution IDs, full image prompts, visual anchors, motion plans, source-image filename convention and motion-risk classification. Do not regenerate or substitute source images during the experiment.</p>
 <ul>
 <li><input checked="" disabled="" type="checkbox"> Five past-podcast prompt/image cases selected and frozen before rendering.</li>
 </ul>
-<h2 id="progress-note--2026-09-19">Progress note — 2026-09-19</h2>
+<h2>Progress note — 2026-09-19</h2>
 <ul>
 <li><p>All ten source images verified on NAS (Ethernet route, hash-checked); case E&#39;s &quot;missing&quot; pair identified as the published <code>cover.png</code>/<code>cover-alt.png</code> in <code>v2026.38.2-08.49</code> (2506 was a retry of 2503). Frozen packet updated.</p>
 </li>

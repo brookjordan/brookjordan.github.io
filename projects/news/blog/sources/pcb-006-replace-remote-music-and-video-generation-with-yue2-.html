@@ -12,10 +12,10 @@ pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{col
 publication: internal links, status metadata and personal paths are removed. The live private
 version lives in the author's Obsidian vault.</p>
 <h1>TTS verification harness</h1>
-<h1 id="pcb-006-replace-remote-music-and-video-generation-with-yue2-and-native-ltx-25">PCB-006 Replace remote music and video generation with YuE2 and native LTX-2.5</h1>
-<h2 id="outcome">Outcome</h2>
+<h1>PCB-006 Replace remote music and video generation with YuE2 and native LTX-2.5</h1>
+<h2>Outcome</h2>
 <p>The podcast builder now uses local YuE2 for the musical segment and native Apple Silicon LTX-2.5 for image-to-image transitions. The old remote-generation path is retained only as rollback. Local LTX model transfer and reliability hardening continue under PCB-008.</p>
-<h2 id="current-evidence">Current evidence</h2>
+<h2>Current evidence</h2>
 <ul>
 <li>Native LTX-2.5 smoke generation completed under the isolated <code>ltx</code> profile on ComfyUI <code>0.35.0</code>.</li>
 <li>The corrected smoke output decoded as nine frames at 512 × 320 and preserved both guide endpoints.</li>
@@ -36,19 +36,19 @@ version lives in the author's Obsidian vault.</p>
 <li>The YuE2 synth request no longer sends the 12-second <code>duration</code> cap. The song brief still asks for roughly 20 to 40 seconds, allowing YuE2 to end naturally. Its native 9,000-token semantic ceiling remains the six-minute safety bound. The disabled <code>Trim intro silence</code> node removes trailing silence only and does not impose a fixed duration. WAV generation, <code>.wav</code> retrieval on <code>8189</code>, the final-media manifest, and retrieval on <code>8188</code> remain unchanged.</li>
 <li>The same synth request also leaves semantic classifier-free guidance at its default. In the local <code>yue2.cpp</code> port that default is <code>1.0</code>, which keeps a single branch and applies no guidance at all, so the style tags condition a render only weakly. Enabling it requires <code>cfg_scale</code> in the request JSON, because the CLI exposes no <code>--cfg-scale</code> flag; the upstream documented experiment value is <code>1.2</code>. Confirm the 9,000-token ceiling independently before changing either value. Detail: the YuE2 CFG and vocal-control findings packet.</li>
 </ul>
-<h2 id="resolution--2026-09-19">Resolution — 2026-09-19</h2>
+<h2>Resolution — 2026-09-19</h2>
 <p>The cutover is complete in production workflow <code>2k7x4U8GgLeSFpRE</code> (<strong>Podcast – latest</strong>). YuE2 replaces the former music generator, and native LTX-2.5 replaces the former video-generation path. The previous builder remains inactive as rollback. The first full production run completed 98/98 nodes green and published an episode.</p>
 <p>The remaining work is not part of this cutover ticket: PCB-008 owns local LTX model transfer and NAS independence; new podcast tickets own longer-video testing and replacement of VibeVoice.</p>
-<h2 id="deferred-follow-ups">Deferred follow-ups</h2>
+<h2>Deferred follow-ups</h2>
 <p>The original cutover acceptance items below are no longer blockers for the completed generator replacement. Their remaining work is tracked separately:</p>
 <ul>
 <li>Local LTX model transfer, NAS independence and the clean publication-disabled validation run: PCB-008.</li>
 <li>Longer finished-video configurations: PCB-011.</li>
 <li>Production TTS replacement and audio verification: PCB-009 and PCB-010.</li>
 </ul>
-<h2 id="known-constraint">Known constraint</h2>
+<h2>Known constraint</h2>
 <p>The shared Python environment still reports <code>mlx-lm 0.31.3</code> requiring <code>transformers&gt;=5.0.0</code> while <code>transformers 4.57.6</code> is installed. Do not upgrade blindly: the isolated profile avoids the incompatible MLX node, and dependency changes need profile-specific evidence.</p>
-<h2 id="tts-verification-test-workflow">TTS verification test workflow</h2>
+<h2>TTS verification test workflow</h2>
 <ul>
 <li>Created inactive, publication-disabled n8n workflow <code>PCB-006 — TTS transcription verification harness</code>.</li>
 <li>Workflow: <a href="https://ug-nas-x4800.tail4148b0.ts.net/workflow/SqwVYuc6hgiJkwg6">https://ug-nas-x4800.tail4148b0.ts.net/workflow/SqwVYuc6hgiJkwg6</a></li>
@@ -57,7 +57,7 @@ version lives in the author's Obsidian vault.</p>
 <li>Manual execution <code>2528</code> succeeded. Assertions verified: one first-pass success, one failed-first-attempt item passing on attempt two, and one item remaining a <code>fallback</code> after three attempts.</li>
 <li>The harness output retains every candidate, score, selected candidate, attempt count, and <code>passed</code>/<code>fallback</code> status. Segment three&#39;s best available fixture was retained as the fallback.</li>
 </ul>
-<h2 id="next-implementation-step">Next implementation step</h2>
+<h2>Next implementation step</h2>
 <ul>
 <li><input disabled="" type="checkbox"> Replace the fixture node with batch ComfyUI TTS generation and sequential OpenAI transcription, preserving the same result contract and keeping this harness as a regression test.</li>
 </ul>

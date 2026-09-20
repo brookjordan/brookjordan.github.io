@@ -12,11 +12,11 @@ pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{col
 publication: internal links, status metadata and personal paths are removed. The live private
 version lives in the author's Obsidian vault.</p>
 <h1>Route-aware SMB preflight evidence</h1>
-<h1 id="raw-conversation--nas-route-aware-smb-preflight">Raw conversation — NAS route-aware SMB preflight</h1>
+<h1>Raw conversation — NAS route-aware SMB preflight</h1>
 <p>Date: 2026-09-15
 Project: PodCast Builder project map
 Related ticket: PCB-007</p>
-<h2 id="conversation">Conversation</h2>
+<h2>Conversation</h2>
 <p><strong>User:</strong> and put raw coverstaion into scratchpads etc. right? Like /obsidian-vault … or /obsidian-design-principles digs into</p>
 <p><strong>Assistant:</strong> Yes. The right pattern is:</p>
 <ul>
@@ -36,7 +36,7 @@ Related ticket: PCB-007</p>
 </ul>
 <p><code>smbutil view //100.84.158.31</code> succeeded and listed <code>model-store</code> and <code>model-cache</code>. That proves SMB discovery over Tailscale, not authenticated access or a mounted share usable by ComfyUI.</p>
 <p>The preflight should test each candidate address independently and record the address, selected interface, route class, TCP/445 result, SMB discovery, authentication state, mount state, and ComfyUI model registration. The test belongs on the MacBook, because ComfyUI runs there; n8n on the NAS cannot infer the MacBook&#39;s interface state without querying it.</p>
-<h2 id="preservation-note">Preservation note</h2>
+<h2>Preservation note</h2>
 <p>This is intentionally a raw conversation packet. The verified facts and implementation requirements are also summarized in the evidence packet, while the durable project work belongs in PCB-007.</p>
 
 </body></html>
