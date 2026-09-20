@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#1a1d24" />
+    <meta name="color-scheme" content="dark" />
+    <title>PodCast Builder devlog</title>
+    <style>
+/* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
+   This is the single source of truth for colour, radius, spacing and type.
+   It is inlined ahead of each page's stylesheet at build time, and linked
+   first in dev so opening the .html files directly still resolves the vars.
+
+   Theming: everything below is a semantic token mapped onto a small palette of
+   primitives. To add a theme, override the *semantic* tokens under a selector
+   (see the commented [data-theme="light"] block at the bottom) — no stylesheet
+   needs to change, only these variables. */
+:root {
+  color-scheme: dark;
+
+  /* ---- palette primitives (raw colours; reference these only via the tokens below) ---- */
+  --c-ink-900: #0f1115;
+  --c-ink-800: #1a1d24;
+  --c-ink-700: #232732;
+  --c-ink-600: #2a2f3a;
+  --c-fog-100: #e8eaed;
+  --c-fog-300: #9aa0a6;
+  --c-fog-500: #6b727d;
+  --c-accent: #7c9cff;
+
+  /* ---- semantic: background / border / text, primary > secondary > tertiary ---- */
+  --bg-primary: var(--c-ink-900);
+  --bg-secondary: var(--c-ink-800);
+  --bg-tertiary: var(--c-ink-700);
+
+  --border-primary: var(--c-ink-600);
+  --border-secondary: rgba(150, 170, 210, 0.16);
+
+  --text-primary: var(--c-fog-100);
+  --text-secondary: var(--c-fog-300);
+  --text-tertiary: var(--c-fog-500);
+
+  --accent: var(--c-accent);
+
+  /* ---- radius scale ---- */
+  --radius-sm: 5px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 9999px;
+
+  /* ---- spacing / padding scale ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 2rem;
+
+  /* ---- type ---- */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* Shared cross-nav link (gallery <-> devlog). Both app.css and blog.css inline this
+   file, so defining it once here keeps the two links visually identical. */
+.cross-link {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.cross-link:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+/* Example theme override — set <html data-theme="light"> to activate (or wire it
+   to prefers-color-scheme). Left commented so we don't ship untuned colours:
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg-primary: #fbfbfd;
+  --bg-secondary: #f1f2f5;
+  --bg-tertiary: #e7e9ee;
+  --border-primary: #d4d8e0;
+  --border-secondary: rgba(20, 30, 60, 0.12);
+  --text-primary: #1a1d24;
+  --text-secondary: #555b66;
+  --text-tertiary: #7b828d;
+}
+*/
+
+</style>
+    <style>
+:root {
+  /* Local aliases mapped onto the shared tokens in tokens.css (inlined first),
+     so the devlog and the gallery share one palette, radius and spacing scale. */
+  --bg: var(--bg-primary);
+  --bg-soft: var(--bg-secondary);
+  --panel: var(--bg-tertiary);
+  --text: var(--text-primary);
+  --muted: var(--text-secondary);
+  --border: var(--border-secondary);
+  --radius: var(--radius-md);
+  /* --accent comes straight from tokens.css */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.65 var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.site-header,
+.site-footer {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 1.25rem 1.25rem;
+}
+
+.site-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text);
+}
+
+.brand span {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.content {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+
+.site-footer {
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* ---- post typography ---- */
+.content h1 {
+  font-size: 1.9rem;
+  line-height: 1.2;
+  margin: 0 0 0.5rem;
+}
+
+.content h2 {
+  font-size: 1.35rem;
+  margin: 2rem 0 0.6rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.3rem;
+}
+
+.content h3 {
+  font-size: 1.1rem;
+  margin: 1.5rem 0 0.4rem;
+}
+
+.content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  display: block;
+  margin: 1.25rem 0;
+}
+
+.content audio {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.content blockquote {
+  margin: 1.25rem 0;
+  padding: 0.5rem 1rem;
+  border-left: 3px solid var(--accent);
+  background: var(--bg-soft);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  color: var(--muted);
+}
+
+.content pre {
+  background: #12151b;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  overflow: auto;
+  font-size: 0.88rem;
+}
+
+.content code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: rgba(150, 170, 210, 0.14);
+  padding: 0.1em 0.35em;
+  border-radius: 5px;
+}
+
+.content pre code {
+  background: none;
+  padding: 0;
+}
+
+.post-banner {
+  width: 100%;
+  max-height: 22rem;
+  object-fit: cover;
+  border-radius: var(--radius);
+  display: block;
+  margin: 0 0 1.5rem;
+}
+
+/* Click-to-cycle: slide 0 (current) sits in normal flow and sizes the box; every other
+   slide overlays it absolutely at opacity 0. web/blog.html's script sets each slide's
+   opacity directly (not CSS classes) so this scales to any number of legacy versions. */
+.banner-compare {
+  position: relative;
+  cursor: pointer;
+}
+
+.banner-compare .banner-slide {
+  margin: 0;
+  transition: opacity 0.25s ease;
+}
+
+.banner-compare .banner-slide:not([data-slide='0']) {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.banner-compare-hint {
+  position: absolute;
+  right: 0.7rem;
+  bottom: calc(1.5rem + 0.7rem);
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 0.72rem;
+  line-height: 1;
+  padding: 0.4rem 0.65rem;
+  border-radius: 999px;
+  opacity: 0.85;
+  transition: opacity 0.15s ease;
+}
+
+.banner-compare:hover .banner-compare-hint {
+  opacity: 1;
+}
+
+/* ---- per-post header (date + tags) ---- */
+.post-meta {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0 0 1.5rem;
+}
+
+.tag {
+  display: inline-block;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 0.1em 0.7em;
+  font-size: 0.78rem;
+  margin-right: 0.35rem;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+/* ---- prev/next post nav (baked at build time, see postNav in src/blog.ts) ---- */
+.post-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 2rem 0 0;
+}
+
+.post-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-soft);
+  color: var(--text);
+  min-width: 0;
+}
+
+.post-nav-link:hover {
+  border-color: var(--accent);
+  text-decoration: none;
+}
+
+.post-nav-empty {
+  border-color: transparent;
+  background: none;
+}
+
+.post-nav-next {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.post-nav-arrow {
+  color: var(--muted);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.post-nav-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.post-nav-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.post-nav-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .post-nav {
+    grid-template-columns: 1fr;
+  }
+
+  .post-nav-next {
+    justify-content: flex-start;
+    text-align: left;
+  }
+}
+
+/* ---- index listing ---- */
+.index-intro {
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+
+.post-group-date {
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 2rem 0 0.75rem;
+}
+
+.post-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.post-list li {
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.post-list a.post-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.post-list .post-row-meta {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+}
+
+.post-time {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  margin-right: 0.5rem;
+  cursor: help;
+}
+
+</style>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="./index.html">PodCast Builder <span>· devlog</span></a>
+      <nav class="site-nav"></nav>
+    </header>
+    <main class="content"><h1>PodCast Builder devlog</h1>
+<p>Private review preview — 43 posts from the 2026-09-19 senior-accepted draft set.
+Five slots (P05, P07, P08, P21, P34) are held and excluded. Ordering is by post date and slot id;
+the drafts are retrospective reconstructions, not exact historical chronology.</p>
+<ol class="post-list">
+<li><a href="p01-a-podcast-before-the-picture-lab.html">A podcast before the picture lab</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p02-intro-before-cover.html">The intro had a voice before the cover had a face</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p03-working-title-not-finished-format.html">A working title is not a finished format</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p04-cover-image-became-research.html">The cover image became a research project</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p06-second-picture-not-motion-plan.html">A second picture is not a motion plan</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p09-two-hosts-need-more-than-labels.html">Two hosts need more than two labels</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p10-singer-reads-production-notes.html">When the singer reads the production notes</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p11-fifty-songs-was-a-test-plan.html">Fifty songs was a test plan</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p12-speech-test-made-of-fixtures.html">A speech test made of fixtures</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p13-song-existed-filename-did-not.html">The song existed. The filename did not.</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p14-right-file-wrong-port.html">The right file on the wrong port</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p15-let-intro-end-on-its-own.html">Let the intro end on its own</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p16-style-tags-and-guidance.html">Style tags and the guidance we had not enabled</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p17-music-and-video-onto-the-mac.html">Moving the podcast's music and video onto the Mac</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p18-branches-finished-service-moved.html">Both branches finished. The service had moved.</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p19-retrying-the-old-graph.html">Retrying the old graph</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p20-editor-saved-older-answer.html">The editor saved an older answer</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p22-lock-was-doing-its-job.html">The lock was doing its job</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p23-episode-published-cleanup-failed.html">The episode published. Cleanup failed.</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p24-august-lock-and-profile-troubles.html">August's lock and profile troubles</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p25-saved-is-not-scheduled.html">Saved is not scheduled</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p26-capability-manifest-before-run.html">A capability manifest before an expensive run</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p27-discover-laptop-not-yesterdays-address.html">Discover the laptop, not yesterday's address</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p28-readiness-check-after-merge.html">The readiness check must survive the merge</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p29-model-disappeared-under-memory-map.html">The model disappeared under the memory map</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p30-unreachable-not-rebooted.html">Unreachable is not the same as rebooted</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p31-route-matters-as-much-as-hostname.html">The route matters as much as the hostname</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p32-mount-needed-a-click.html">A mount that needed a click</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p33-copying-model-not-enough.html">Copying a model is not enough</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p35-small-pages-media-elsewhere.html">Keep the pages small and the media elsewhere</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p36-one-episode-before-archive.html">Migrate one episode before the archive</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p37-ten-seconds-different-experiment.html">Ten seconds was a different experiment</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p38-ten-second-render-made-it-through.html">The ten-second render that made it through</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p39-freeze-cases-before-limit.html">Freeze the cases before moving the limit</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p40-missing-pair-in-published-episode.html">The missing pair was in the published episode</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p41-endpoints-matched-fog-did-not.html">The endpoints matched. The fog did not behave.</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p42-valid-file-not-good-transition.html">A valid file is not a good transition</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p43-one-long-clip-two-joined-clips.html">One long clip and two joined clips are different bets</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p44-motion-control-next-question.html">Motion control was the next question</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p45-workflow-id-changing-name.html">The workflow kept its ID and changed its name</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p46-backup-remembered-more.html">The backup remembered more than the live history</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p47-first-trace-not-beginning.html">The first surviving trace was not the beginning</a> <time class="post-time">2026-09-19</time></li>
+<li><a href="p48-backfill-story-not-evidence.html">Backfilling the story without backdating the evidence</a> <time class="post-time">2026-09-19</time></li>
+</ol></main>
+    <footer class="site-footer">
+      <p>Private review preview of the <strong>PodCast Builder</strong> devlog — built from the senior-accepted draft set, 2026-09-19.</p>
+    </footer>
+    <script>
+      // Localise all post times to the reader's timezone.
+      // Each <time class="post-time" data-ts="..."> carries a Unix epoch (ms);
+      // we replace the static server-rendered HH:MM with the local equivalent.
+      document.querySelectorAll('time.post-time[data-ts]').forEach(function (el) {
+        var d = new Date(+el.dataset.ts);
+        el.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        el.title = d.toLocaleString(); // full local datetime on hover
+      });
+
+      // Click (or Enter/Space) a .banner-compare to cycle: current -> most recent earlier
+      // version -> ... -> oldest/original -> back to current. Each click advances one slide;
+      // opacity is set directly (not via CSS classes) so this works for any slide count.
+      document.querySelectorAll('.banner-compare').forEach(function (el) {
+        var slides = el.querySelectorAll('.banner-slide');
+        var hint = el.querySelector('.banner-compare-hint');
+        var count = slides.length;
+        var active = 0;
+        function render() {
+          slides.forEach(function (s, i) {
+            s.style.opacity = i === active ? '1' : '0';
+          });
+          if (!hint) return;
+          if (active === 0) {
+            hint.textContent =
+              'click to see ' + (count === 2 ? 'the earlier version' : count - 1 + ' earlier versions');
+          } else if (active === count - 1) {
+            hint.textContent = 'original banner · click for current';
+          } else {
+            hint.textContent = 'earlier version ' + active + ' of ' + (count - 1) + ' · click to continue';
+          }
+        }
+        function advance() {
+          active = (active + 1) % count;
+          render();
+        }
+        el.addEventListener('click', advance);
+        el.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            advance();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#1a1d24" />
+    <meta name="color-scheme" content="dark" />
+    <title>Moving the podcast's music and video onto the Mac</title>
+    <style>
+/* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
+   This is the single source of truth for colour, radius, spacing and type.
+   It is inlined ahead of each page's stylesheet at build time, and linked
+   first in dev so opening the .html files directly still resolves the vars.
+
+   Theming: everything below is a semantic token mapped onto a small palette of
+   primitives. To add a theme, override the *semantic* tokens under a selector
+   (see the commented [data-theme="light"] block at the bottom) — no stylesheet
+   needs to change, only these variables. */
+:root {
+  color-scheme: dark;
+
+  /* ---- palette primitives (raw colours; reference these only via the tokens below) ---- */
+  --c-ink-900: #0f1115;
+  --c-ink-800: #1a1d24;
+  --c-ink-700: #232732;
+  --c-ink-600: #2a2f3a;
+  --c-fog-100: #e8eaed;
+  --c-fog-300: #9aa0a6;
+  --c-fog-500: #6b727d;
+  --c-accent: #7c9cff;
+
+  /* ---- semantic: background / border / text, primary > secondary > tertiary ---- */
+  --bg-primary: var(--c-ink-900);
+  --bg-secondary: var(--c-ink-800);
+  --bg-tertiary: var(--c-ink-700);
+
+  --border-primary: var(--c-ink-600);
+  --border-secondary: rgba(150, 170, 210, 0.16);
+
+  --text-primary: var(--c-fog-100);
+  --text-secondary: var(--c-fog-300);
+  --text-tertiary: var(--c-fog-500);
+
+  --accent: var(--c-accent);
+
+  /* ---- radius scale ---- */
+  --radius-sm: 5px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 9999px;
+
+  /* ---- spacing / padding scale ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 2rem;
+
+  /* ---- type ---- */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* Shared cross-nav link (gallery <-> devlog). Both app.css and blog.css inline this
+   file, so defining it once here keeps the two links visually identical. */
+.cross-link {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.cross-link:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+/* Example theme override — set <html data-theme="light"> to activate (or wire it
+   to prefers-color-scheme). Left commented so we don't ship untuned colours:
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg-primary: #fbfbfd;
+  --bg-secondary: #f1f2f5;
+  --bg-tertiary: #e7e9ee;
+  --border-primary: #d4d8e0;
+  --border-secondary: rgba(20, 30, 60, 0.12);
+  --text-primary: #1a1d24;
+  --text-secondary: #555b66;
+  --text-tertiary: #7b828d;
+}
+*/
+
+</style>
+    <style>
+:root {
+  /* Local aliases mapped onto the shared tokens in tokens.css (inlined first),
+     so the devlog and the gallery share one palette, radius and spacing scale. */
+  --bg: var(--bg-primary);
+  --bg-soft: var(--bg-secondary);
+  --panel: var(--bg-tertiary);
+  --text: var(--text-primary);
+  --muted: var(--text-secondary);
+  --border: var(--border-secondary);
+  --radius: var(--radius-md);
+  /* --accent comes straight from tokens.css */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.65 var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.site-header,
+.site-footer {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 1.25rem 1.25rem;
+}
+
+.site-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text);
+}
+
+.brand span {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.content {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+
+.site-footer {
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* ---- post typography ---- */
+.content h1 {
+  font-size: 1.9rem;
+  line-height: 1.2;
+  margin: 0 0 0.5rem;
+}
+
+.content h2 {
+  font-size: 1.35rem;
+  margin: 2rem 0 0.6rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.3rem;
+}
+
+.content h3 {
+  font-size: 1.1rem;
+  margin: 1.5rem 0 0.4rem;
+}
+
+.content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  display: block;
+  margin: 1.25rem 0;
+}
+
+.content audio {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.content blockquote {
+  margin: 1.25rem 0;
+  padding: 0.5rem 1rem;
+  border-left: 3px solid var(--accent);
+  background: var(--bg-soft);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  color: var(--muted);
+}
+
+.content pre {
+  background: #12151b;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  overflow: auto;
+  font-size: 0.88rem;
+}
+
+.content code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: rgba(150, 170, 210, 0.14);
+  padding: 0.1em 0.35em;
+  border-radius: 5px;
+}
+
+.content pre code {
+  background: none;
+  padding: 0;
+}
+
+.post-banner {
+  width: 100%;
+  max-height: 22rem;
+  object-fit: cover;
+  border-radius: var(--radius);
+  display: block;
+  margin: 0 0 1.5rem;
+}
+
+/* Click-to-cycle: slide 0 (current) sits in normal flow and sizes the box; every other
+   slide overlays it absolutely at opacity 0. web/blog.html's script sets each slide's
+   opacity directly (not CSS classes) so this scales to any number of legacy versions. */
+.banner-compare {
+  position: relative;
+  cursor: pointer;
+}
+
+.banner-compare .banner-slide {
+  margin: 0;
+  transition: opacity 0.25s ease;
+}
+
+.banner-compare .banner-slide:not([data-slide='0']) {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.banner-compare-hint {
+  position: absolute;
+  right: 0.7rem;
+  bottom: calc(1.5rem + 0.7rem);
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 0.72rem;
+  line-height: 1;
+  padding: 0.4rem 0.65rem;
+  border-radius: 999px;
+  opacity: 0.85;
+  transition: opacity 0.15s ease;
+}
+
+.banner-compare:hover .banner-compare-hint {
+  opacity: 1;
+}
+
+/* ---- per-post header (date + tags) ---- */
+.post-meta {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0 0 1.5rem;
+}
+
+.tag {
+  display: inline-block;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 0.1em 0.7em;
+  font-size: 0.78rem;
+  margin-right: 0.35rem;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+/* ---- prev/next post nav (baked at build time, see postNav in src/blog.ts) ---- */
+.post-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 2rem 0 0;
+}
+
+.post-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-soft);
+  color: var(--text);
+  min-width: 0;
+}
+
+.post-nav-link:hover {
+  border-color: var(--accent);
+  text-decoration: none;
+}
+
+.post-nav-empty {
+  border-color: transparent;
+  background: none;
+}
+
+.post-nav-next {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.post-nav-arrow {
+  color: var(--muted);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.post-nav-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.post-nav-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.post-nav-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .post-nav {
+    grid-template-columns: 1fr;
+  }
+
+  .post-nav-next {
+    justify-content: flex-start;
+    text-align: left;
+  }
+}
+
+/* ---- index listing ---- */
+.index-intro {
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+
+.post-group-date {
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 2rem 0 0.75rem;
+}
+
+.post-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.post-list li {
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.post-list a.post-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.post-list .post-row-meta {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+}
+
+.post-time {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  margin-right: 0.5rem;
+  cursor: help;
+}
+
+</style>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="./index.html">PodCast Builder <span>· devlog</span></a>
+      <nav class="site-nav"></nav>
+    </header>
+    <main class="content"><p><em>Written retrospectively from records covering 16 September 2026.</em></p>
+<p>The podcast builder was carrying two different remote-generation assumptions, and we finally stopped pretending they were one problem. Music needed a local YuE2 path that could return a WAV with a stable contract. Video needed native Apple Silicon LTX-2.5, with its own isolated ComfyUI profile, model registration and guide-frame handling. The cutover was therefore less &quot;swap a model&quot; and more &quot;make two generators agree to hand over their work without setting fire to the rest of the graph&quot;.</p>
+<h2>What happened</h2>
+<p>The old music route was replaced by YuE2, while the former remote video path gave way to native LTX-2.5. These were separate contracts. YuE2 produced <code>intro_2491_00001.wav</code>, recorded as 2,303,788 bytes and 11.999 seconds. LTX ran in an isolated profile, then restored normal ComfyUI before stitching. The video side also needed <code>LTXVCropGuides</code> between sampling and decode, because guide padding could turn a requested 49-frame transition into 65 frames. We kept the previous builder inactive rather than deleting it, which is the engineering equivalent of leaving a fire exit unobstructed.</p>
+<h2>What the evidence changed</h2>
+<p>The first useful result was not a glossy final episode. Execution <code>2491</code> demonstrated the native transition, normal-profile restoration, VHS stitching and final-video retrieval before the parallel music branch failed. That distinction mattered: one branch can produce a real artefact while the whole workflow still fails. Later, execution <code>2502</code> exercised the saved manifest and retrieval nodes against those artefacts, reading 30 database-backed binaries totalling 9,329,116 bytes. The record supports a working hand-off between stages, not a claim that every possible storage route had become independent.</p>
+<p>The project map records the dated cutover on 16 September and identifies workflow <code>2k7x4U8GgLeSFpRE</code> as the new builder, with the former workflow retained for rollback. The ticket resolution was written on 19 September, so we keep those dates distinct: the decision was recorded later than the production event it describes.</p>
+<h2>Where we left it</h2>
+<p>The first full production run, execution <code>2560</code>, completed 98/98 nodes green and published an episode. That is the recorded milestone. It does not mean spoken TTS changed too, and it does not prove that all media had become NAS-independent. Local LTX model transfer, storage reliability and a clean NAS-absent validation run remained with PCB-008. YuE2 music, spoken TTS and the earlier MiniMax lyric contract were separate stages, so the music cutover did not quietly replace the speech engine.</p>
+<p>We kept rollback in place, because architecture diagrams are optimistic and storage outages are not. The practical result was a production cutover with a recoverable old path, not a declaration that every dependency had vanished.</p>
+<p>That boundary kept the cutover honest: a measured hand-off, not a promise that the storage layer had stopped mattering.</p>
+<h2>Source notes</h2>
+<ul>
+<li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FPCB-006%20Replace%20remote%20music%20and%20video%20generation%20with%20YuE2%20and%20native%20LTX-2.5">YuE2 and native LTX cutover ticket</a></li>
+<li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FREADME">Podcast builder map and cutover chronology</a></li>
+<li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FPCB-005%20Improve%20story-song%20format%20and%20lyric%20presentation">Story-song contract and audio route</a></li>
+</ul>
+<nav class="post-nav"><a class="post-nav-link" href="p16-style-tags-and-guidance.html">← newer: Style tags and the guidance we had not enabled</a><a class="post-nav-link" href="p18-branches-finished-service-moved.html">older →: Both branches finished. The service had moved.</a></nav></main>
+    <footer class="site-footer">
+      <p>Private review preview of the <strong>PodCast Builder</strong> devlog — built from the senior-accepted draft set, 2026-09-19.</p>
+    </footer>
+    <script>
+      // Localise all post times to the reader's timezone.
+      // Each <time class="post-time" data-ts="..."> carries a Unix epoch (ms);
+      // we replace the static server-rendered HH:MM with the local equivalent.
+      document.querySelectorAll('time.post-time[data-ts]').forEach(function (el) {
+        var d = new Date(+el.dataset.ts);
+        el.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        el.title = d.toLocaleString(); // full local datetime on hover
+      });
+
+      // Click (or Enter/Space) a .banner-compare to cycle: current -> most recent earlier
+      // version -> ... -> oldest/original -> back to current. Each click advances one slide;
+      // opacity is set directly (not via CSS classes) so this works for any slide count.
+      document.querySelectorAll('.banner-compare').forEach(function (el) {
+        var slides = el.querySelectorAll('.banner-slide');
+        var hint = el.querySelector('.banner-compare-hint');
+        var count = slides.length;
+        var active = 0;
+        function render() {
+          slides.forEach(function (s, i) {
+            s.style.opacity = i === active ? '1' : '0';
+          });
+          if (!hint) return;
+          if (active === 0) {
+            hint.textContent =
+              'click to see ' + (count === 2 ? 'the earlier version' : count - 1 + ' earlier versions');
+          } else if (active === count - 1) {
+            hint.textContent = 'original banner · click for current';
+          } else {
+            hint.textContent = 'earlier version ' + active + ' of ' + (count - 1) + ' · click to continue';
+          }
+        }
+        function advance() {
+          active = (active + 1) % count;
+          render();
+        }
+        el.addEventListener('click', advance);
+        el.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            advance();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
