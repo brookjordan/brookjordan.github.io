@@ -289,20 +289,16 @@ ComfyUI, and the next pass submits a duplicate — observed as two identical P34
 one running and one pending. The controller now takes <code>--clear-queue</code> to drop ComfyUI&#39;s pending
 queue on start, so a restart cannot stack duplicates. The duplicate&#39;s raw PNG was pruned from the
 ComfyUI output directory.</p>
-<h2>Status</h2>
+<h2>Status — superseded by the Outcome below</h2>
 <p>Renders started 2026-09-20 ~11:22 local, detached and resumable. Authoritative live state:
 <code>render/progress.json</code> and <code>render/render-state.json</code> in
 <code>the local vault/Documents/hermes/podcast-blog-preview-20260920/</code>.</p>
-<p>After the corrections the plan is 6 model groups — <code>zimage</code> (14) ×10, <code>qwen2512</code> (8) ×14,
-<code>ovis</code> (18) ×13, <code>longcat</code> (18) ×5, <code>ideogram</code> (20) ×2, <code>chroma</code> (26) ×3 — and the run restarted on
-2026-09-20 ~11:39 local.</p>
-<p><strong>Staging pass (from ~11:53 local).</strong> The run is in <code>--no-publish</code> mode: it renders into
-<code>render/banners-out/</code> inside the workspace and does <strong>not</strong> write to the assets share. Writing there
-needs an escalated file permission, and an escalation for that bundle was declined, so publishing is a
-separate, deliberate step: <code>render/tools/build-manifest.mjs</code> followed by
-<code>render/tools/publish-staged.mjs</code> (which refuses any staged file that disagrees with the plan). Until
-that step runs, newly finished renders are staged locally and the live blog keeps its gradient tiles.
-Nothing is lost — the controller adopts an already-staged webp instead of re-rendering it.</p>
+<p><strong>The staging pass described here has since finished and everything was published.</strong> It ran in
+<code>--no-publish</code> mode, rendering into <code>render/banners-out/</code> without touching the assets share, because
+share writes needed an escalated permission. Publishing was done in batches afterwards with
+<code>render/tools/build-manifest.mjs</code> then <code>render/tools/publish-staged.mjs</code>. This paragraph is kept only
+to explain why the workspace ever held unpublished renders — <strong>do not read it as current state</strong>;
+see the Outcome below.</p>
 <h2>Outcome (end of 2026-09-20)</h2>
 <p><strong>All 47 bespoke banners are rendered, published and verified.</strong> The completion gate reports:</p>
 <pre><code>rendered OK: 47 (published 47, staged 0)

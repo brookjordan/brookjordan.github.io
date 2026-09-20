@@ -1,0 +1,105 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Source: Blog maintenance protocol — PodCast Builder devlog</title>
+<style>
+body{max-width:760px;margin:2.5rem auto;padding:0 1.2rem;font-family:ui-sans-serif,system-ui,sans-serif;background:#16181f;color:#dfe2ea;line-height:1.65}
+a{color:#7aa2f7} h1,h2{line-height:1.25} code{background:#262a33;padding:.1em .35em;border-radius:4px;font-size:.9em}
+pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{color:#8b90a0;font-size:.85rem}
+.back{font-size:.85rem} .backnote{background:#262a33;border:1px solid #333;border-radius:8px;padding:.8rem 1rem;font-size:.85rem;color:#aeb3c2}
+</style></head><body>
+<p class="back"><a href="../index.html">← PodCast Builder devlog</a></p>
+<p class="backnote">This is a public snapshot of a private project-tracking note, sanitised for
+publication: internal links, status metadata and personal paths are removed. The live private
+version lives in the author's Obsidian vault.</p>
+<h1>Blog maintenance protocol</h1>
+<h1>2026-09-20 blog maintenance protocol</h1>
+<p>Operating detail for maintaining the PodCast Builder devlog.
+The ticket owns the overview; this packet owns the how-to. The build workspace&#39;s
+own <code>README.md</code> (<code>the local vault/Documents/hermes/podcast-blog-preview-20260920/README.md</code>)
+mirrors this content and is the copy most agents will read first.</p>
+<h2>Where things live</h2>
+<ul>
+<li><strong>Build workspace (canonical build source):</strong> <code>the local vault/Documents/hermes/podcast-blog-preview-20260920/</code><ul>
+<li><code>build.ts</code> — the build. <code>node build.ts</code> from that directory. Reads senior-accepted
+drafts, renders posts + index, re-stages banner images, re-renders the sanitised
+<code>sources/</code> snapshots. Uses <code>marked</code>/<code>yaml</code> from the localimagegen <code>node_modules</code>
+(no local install needed).</li>
+<li><code>meta.ts</code> — editorial layer: display title, blurb, topic per post ID. Edit titles
+and blurbs here, never in the drafts.</li>
+<li><code>image-plan.ts</code> — per-post banner: localimagegen master (scene, model rotation) →
+staged <code>img/&lt;id&gt;-banner.webp</code>.</li>
+<li><code>citations.ts</code> — per-post source list → public <code>sources/*.html</code> snapshot pages.</li>
+<li><code>render-sources.py</code> — renders cited vault/repo notes into sanitised public snapshots.
+Invoked by <code>build.ts</code>; can run alone.</li>
+<li><code>verify.py</code> — acceptance checks. Must be all-PASS after every build.</li>
+</ul>
+</li>
+<li><strong>Drafts + dispositions (canonical post content):</strong>
+<code>the local vault/Documents/hermes/podcast-blog-drafts-20260919/senior/</code>
+(<code>accepted/*.md</code>, <code>dispositions.json</code>). Only <code>disposition: accepted-draft</code> rows build.</li>
+<li><strong>Deployment target:</strong> site repo <code>brookjordan.github.io</code>, path <code>projects/news/blog/</code>.
+Deployment target only — never edit posts there.</li>
+<li><strong>Banner masters (read-only):</strong> <code>the local vault/git/brookjordan/localimagegen/masters/</code>
+(recompressed 1280w q82 WebP via <code>cwebp</code>, cached in <code>/tmp/blog-img</code>).</li>
+</ul>
+<h2>Standard update cycle</h2>
+<ol>
+<li>Edit the draft <code>.md</code> in <code>senior/accepted/</code> (prose) and/or <code>meta.ts</code> (title/blurb/topic).</li>
+<li><code>node build.ts</code> in the workspace — also re-renders <code>sources/</code> snapshots from the
+vault, so vault edits flow through.</li>
+<li><code>python3 verify.py</code> — all-PASS required (post count, held-slot exclusion,
+private-path leak scan for <code>/Users/…</code> and its citation links, link resolution, branding,
+clean tree).</li>
+<li>Deploy: <code>rsync -a --delete preview/ &lt;site-repo&gt;/projects/news/blog/</code>; in the site
+repo stage <strong>only</strong> <code>projects/news/blog</code>, commit, push. The site repo usually has
+unrelated dirty files; if master moved, stash → <code>git pull --ff-only</code> → pop → deploy.</li>
+<li>After the Pages/Netlify build, curl the changed URL(s) for HTTP 200.</li>
+</ol>
+<h2>Adding a new post</h2>
+<ol>
+<li>Draft into <code>senior/accepted/</code> as <code>YYYY-MM-DD-p&lt;NN&gt;-&lt;slug&gt;.md</code>: frontmatter
+(<code>title</code>, <code>date</code>, <code>tags</code>), a <code>*Written retrospectively from records covering ….*</code>
+preamble (the build parses the evidence window from it, then strips the line),
+<code>## What happened</code> / <code>## What the evidence changed</code> / <code>## Where we left it</code> /
+<code>## Source notes</code> sections, ≥2 source notes in the established obsidian-link style.</li>
+<li>Add the <code>dispositions.json</code> row with <code>disposition: accepted-draft</code>.</li>
+<li>Add <code>meta.ts</code> (topic, display title, blurb), <code>image-plan.ts</code> (banner master),
+<code>citations.ts</code> (source links) entries. New banners need a <code>cwebp</code> pass; see the
+<code>build.ts</code> image staging loop.</li>
+<li>Rebuild citations so any newly cited note gets a public snapshot, then
+<code>node build.ts</code>, <code>verify.py</code>, deploy per the standard cycle.</li>
+</ol>
+<p>Part numbers (&quot;Part N of 47&quot;) recompute automatically: oldest evidence window = Part 1.
+The featured post on the index is always the newest evidence window.</p>
+<h2>Gates a new post must pass (inherited from the drafting swarm)</h2>
+<ul>
+<li>450–700 prose words (word floor enforced by the original intake gate; note it was
+applied inconsistently in the 2026-09-19 batch — 23 accepted drafts measure below it).</li>
+<li>≥2 source notes citing real vault/repo evidence; no invented timestamps or quotes.</li>
+<li>Prescribed headings, no placeholders, no wikilinks, unslop checker exit 0.</li>
+<li>Bounded wording: no claim the evidence does not grant.</li>
+</ul>
+<h2>Vault hygiene</h2>
+<p>Cited notes are snapshotted publicly on every build, sanitised (frontmatter stripped,
+wikilinks/obsidian links flattened, personal paths rewritten, internal plumbing
+mentions removed). Keep must-stay-private material out of cited notes, or in a
+separate uncited note. If a cited note becomes sensitive later, remove it from
+<code>citations.ts</code> and rebuild — the post just shows fewer sources.</p>
+<h2>New banners</h2>
+<p>Each post has a <strong>bespoke</strong> banner, rendered through the localimagegen engine and served from the
+assets share — not taken from the masters corpus and not committed to git. The full design and
+pipeline are in the bespoke banner render pass packet.</p>
+<p>Short version: add an entry to <code>render/render-plan.json</code> (concept from the post&#39;s title/quip, scene
+family per the topic mapping — music/workflow→<code>signage</code>, incidents→<code>dragon</code>, cutover/migration→<code>van</code>,
+models/video→<code>spirit</code>, origins→<code>kingdom</code> — a model, a step count, and a cinematic prompt carrying the
+house patch motif), point <code>image-plan.ts</code> at
+<code>https://assets.brook.dev/podcast/blog-banners/&lt;id&gt;-banner.webp</code>, then run
+<code>render/tools/run-detached.sh</code> (resumable; <code>--only &lt;id&gt;</code> for one). Seed 42, 16:9 1280×720, <code>cwebp -q 82</code>
+at 1280w. <code>build.ts</code> emits the URL with an <code>onerror</code> fallback to the gradient tile, so the image
+appears as soon as the render lands with no further deploy. Provenance is appended to
+<code>render/provenance.jsonl</code>.</p>
+<h2>Voice</h2>
+<p>Tongue-in-cheek, first-person-plural, jokes that are true. Not a white paper.
+The localimagegen blog is the house style.</p>
+
+</body></html>
