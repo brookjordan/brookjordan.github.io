@@ -437,11 +437,10 @@ a:hover {
 .readmore{margin:.2rem 0 0}
 .readmore a{color:var(--accent,#7aa2f7);font-size:.85rem;text-decoration:none;font-weight:600}
 .readmore a:hover{text-decoration:underline}
-.thumb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.3rem;aspect-ratio:16/9;text-decoration:none;
-  background:linear-gradient(135deg,hsl(var(--h) 45% 16%),hsl(var(--h) 55% 26%));border-bottom:1px solid var(--border-primary,#333)}
-.thumb .thumb-init{font-size:1.6rem;font-weight:800;letter-spacing:.08em;color:hsl(var(--h) 80% 78%);text-shadow:0 1px 8px hsl(var(--h) 60% 10%)}
-.thumb .thumb-topic{font-size:.7rem;text-transform:uppercase;letter-spacing:.14em;color:hsl(var(--h) 45% 72%)}
-.thumb-featured .thumb-init{font-size:2.6rem}
+.thumb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.3rem;aspect-ratio:16/9;text-decoration:none;overflow:hidden;
+  background:linear-gradient(135deg,hsl(var(--h) 45% 16%),hsl(var(--h) 55% 26%));border-bottom:1px solid var(--border-primary,#333);position:relative}
+.thumb .thumb-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.thumb .thumb-topic{position:absolute;left:.6rem;bottom:.45rem;font-size:.66rem;text-transform:uppercase;letter-spacing:.14em;color:#fff;background:rgba(10,12,18,.62);padding:.14rem .5rem;border-radius:999px;z-index:1}
 .featured{display:grid;grid-template-columns:minmax(220px,380px) 1fr;gap:1.5rem;align-items:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border-primary,#333);border-radius:var(--radius-lg,14px);background:var(--bg-tertiary,#262a33)}
 .featured .thumb{aspect-ratio:auto;height:100%;min-height:180px;border:0;border-radius:var(--radius-md,10px)}
 .featured-body{display:flex;flex-direction:column;gap:.5rem}
@@ -452,6 +451,7 @@ a:hover {
 .all-posts-heading{margin-top:3rem}
 .intro{max-width:62ch;color:var(--text-secondary,#aeb3c2)}
 .evidence-window{color:var(--text-tertiary,#8b90a0);font-size:.85rem;margin:0 0 1.5rem}
+.post-banner{width:100%;max-height:340px;object-fit:cover;border-radius:var(--radius-md,10px);margin:0 0 1.2rem;border:1px solid var(--border-primary,#333)}
 @media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
 </style></head>
   <body>
@@ -459,7 +459,7 @@ a:hover {
       <a class="brand" href="./index.html">PodCast Builder <span>· devlog</span></a>
       <nav class="site-nav"></nav>
     </header>
-    <main class="content"><p class="evidence-window">29 Jul 2026 – 19 Sep 2026</p><p><em>Written retrospectively from records covering 29 July to 19 September 2026.</em></p>
+    <main class="content"><img class="post-banner" src="img/p06-banner.webp" alt=""><p class="evidence-window">29 Jul 2026 – 19 Sep 2026</p><p><em>Written retrospectively from records covering 29 July to 19 September 2026.</em></p>
 <p>The first image was never supposed to carry the whole episode on its back. The recorded design generated an opening still, then asked a vision-capable Gemma model to inspect what actually appeared before choosing an omitted storyboard beat. That choice became a Qwen edit prompt for a second image. It is a sensible division of labour: one picture establishes the scene, another establishes where the scene is going, and a later video stage has something less vague than &quot;make it move&quot;.</p>
 <h2>What happened</h2>
 <p>The archive describes the contract plainly. The storyboard records which beats were used and omitted. Image one is generated. Gemma examines the result, rather than trusting the prompt as a description of reality. It selects a compatible omitted beat and writes a small-motion Qwen edit prompt. The important word is compatible. The second endpoint is constrained by what survived the first generation, not by an optimistic storyboard that the pixels have declined to read.</p>

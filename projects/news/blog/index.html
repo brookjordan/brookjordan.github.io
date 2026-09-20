@@ -437,11 +437,10 @@ a:hover {
 .readmore{margin:.2rem 0 0}
 .readmore a{color:var(--accent,#7aa2f7);font-size:.85rem;text-decoration:none;font-weight:600}
 .readmore a:hover{text-decoration:underline}
-.thumb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.3rem;aspect-ratio:16/9;text-decoration:none;
-  background:linear-gradient(135deg,hsl(var(--h) 45% 16%),hsl(var(--h) 55% 26%));border-bottom:1px solid var(--border-primary,#333)}
-.thumb .thumb-init{font-size:1.6rem;font-weight:800;letter-spacing:.08em;color:hsl(var(--h) 80% 78%);text-shadow:0 1px 8px hsl(var(--h) 60% 10%)}
-.thumb .thumb-topic{font-size:.7rem;text-transform:uppercase;letter-spacing:.14em;color:hsl(var(--h) 45% 72%)}
-.thumb-featured .thumb-init{font-size:2.6rem}
+.thumb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.3rem;aspect-ratio:16/9;text-decoration:none;overflow:hidden;
+  background:linear-gradient(135deg,hsl(var(--h) 45% 16%),hsl(var(--h) 55% 26%));border-bottom:1px solid var(--border-primary,#333);position:relative}
+.thumb .thumb-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.thumb .thumb-topic{position:absolute;left:.6rem;bottom:.45rem;font-size:.66rem;text-transform:uppercase;letter-spacing:.14em;color:#fff;background:rgba(10,12,18,.62);padding:.14rem .5rem;border-radius:999px;z-index:1}
 .featured{display:grid;grid-template-columns:minmax(220px,380px) 1fr;gap:1.5rem;align-items:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border-primary,#333);border-radius:var(--radius-lg,14px);background:var(--bg-tertiary,#262a33)}
 .featured .thumb{aspect-ratio:auto;height:100%;min-height:180px;border:0;border-radius:var(--radius-md,10px)}
 .featured-body{display:flex;flex-direction:column;gap:.5rem}
@@ -452,6 +451,7 @@ a:hover {
 .all-posts-heading{margin-top:3rem}
 .intro{max-width:62ch;color:var(--text-secondary,#aeb3c2)}
 .evidence-window{color:var(--text-tertiary,#8b90a0);font-size:.85rem;margin:0 0 1.5rem}
+.post-banner{width:100%;max-height:340px;object-fit:cover;border-radius:var(--radius-md,10px);margin:0 0 1.2rem;border:1px solid var(--border-primary,#333)}
 @media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
 </style></head>
   <body>
@@ -467,7 +467,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 
 <section class="featured">
   <a class="thumb thumb-featured" href="p44-motion-control-next-question.html" style="--h:95">
-    <span class="thumb-init">P44</span>
+    <img class="thumb-img" src="img/p44-banner.webp" alt="">
     <span class="thumb-topic">Video probes</span>
   </a>
   <div class="featured-body">
@@ -481,7 +481,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 <div class="card-grid">
 <article class="card">
   <a class="thumb" href="p42-valid-file-not-good-transition.html" style="--h:95">
-    <span class="thumb-init">P42</span>
+    <img class="thumb-img" src="img/p42-banner.webp" alt="">
     <span class="thumb-topic">Video probes</span>
   </a>
   <div class="card-body">
@@ -493,7 +493,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p41-endpoints-matched-fog-did-not.html" style="--h:95">
-    <span class="thumb-init">P41</span>
+    <img class="thumb-img" src="img/p41-banner.webp" alt="">
     <span class="thumb-topic">Video probes</span>
   </a>
   <div class="card-body">
@@ -505,7 +505,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p36-one-episode-before-archive.html" style="--h:45">
-    <span class="thumb-init">P36</span>
+    <img class="thumb-img" src="img/p36-banner.webp" alt="">
     <span class="thumb-topic">Migration</span>
   </a>
   <div class="card-body">
@@ -517,7 +517,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p12-speech-test-made-of-fixtures.html" style="--h:330">
-    <span class="thumb-init">P12</span>
+    <img class="thumb-img" src="img/p12-banner.webp" alt="">
     <span class="thumb-topic">Music &amp; audio</span>
   </a>
   <div class="card-body">
@@ -529,7 +529,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p33-copying-model-not-enough.html" style="--h:150">
-    <span class="thumb-init">P33</span>
+    <img class="thumb-img" src="img/p33-banner.webp" alt="">
     <span class="thumb-topic">Local models</span>
   </a>
   <div class="card-body">
@@ -541,7 +541,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p30-unreachable-not-rebooted.html" style="--h:150">
-    <span class="thumb-init">P30</span>
+    <img class="thumb-img" src="img/p30-banner.webp" alt="">
     <span class="thumb-topic">Local models</span>
   </a>
   <div class="card-body">
@@ -553,7 +553,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p29-model-disappeared-under-memory-map.html" style="--h:150">
-    <span class="thumb-init">P29</span>
+    <img class="thumb-img" src="img/p29-banner.webp" alt="">
     <span class="thumb-topic">Local models</span>
   </a>
   <div class="card-body">
@@ -565,7 +565,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p43-one-long-clip-two-joined-clips.html" style="--h:95">
-    <span class="thumb-init">P43</span>
+    <img class="thumb-img" src="img/p43-banner.webp" alt="">
     <span class="thumb-topic">Video probes</span>
   </a>
   <div class="card-body">
@@ -577,7 +577,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p25-saved-is-not-scheduled.html" style="--h:200">
-    <span class="thumb-init">P25</span>
+    <img class="thumb-img" src="img/p25-banner.webp" alt="">
     <span class="thumb-topic">Cutover</span>
   </a>
   <div class="card-body">
@@ -589,7 +589,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p23-episode-published-cleanup-failed.html" style="--h:12">
-    <span class="thumb-init">P23</span>
+    <img class="thumb-img" src="img/p23-banner.webp" alt="">
     <span class="thumb-topic">Incidents</span>
   </a>
   <div class="card-body">
@@ -601,7 +601,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p17-music-and-video-onto-the-mac.html" style="--h:200">
-    <span class="thumb-init">P17</span>
+    <img class="thumb-img" src="img/p17-banner.webp" alt="">
     <span class="thumb-topic">Cutover</span>
   </a>
   <div class="card-body">
@@ -613,7 +613,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p16-style-tags-and-guidance.html" style="--h:330">
-    <span class="thumb-init">P16</span>
+    <img class="thumb-img" src="img/p16-banner.webp" alt="">
     <span class="thumb-topic">Music &amp; audio</span>
   </a>
   <div class="card-body">
@@ -625,7 +625,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p14-right-file-wrong-port.html" style="--h:330">
-    <span class="thumb-init">P14</span>
+    <img class="thumb-img" src="img/p14-banner.webp" alt="">
     <span class="thumb-topic">Music &amp; audio</span>
   </a>
   <div class="card-body">
@@ -637,7 +637,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p13-song-existed-filename-did-not.html" style="--h:330">
-    <span class="thumb-init">P13</span>
+    <img class="thumb-img" src="img/p13-banner.webp" alt="">
     <span class="thumb-topic">Music &amp; audio</span>
   </a>
   <div class="card-body">
@@ -649,7 +649,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p40-missing-pair-in-published-episode.html" style="--h:95">
-    <span class="thumb-init">P40</span>
+    <img class="thumb-img" src="img/p40-banner.webp" alt="">
     <span class="thumb-topic">Video probes</span>
   </a>
   <div class="card-body">
@@ -661,7 +661,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p39-freeze-cases-before-limit.html" style="--h:95">
-    <span class="thumb-init">P39</span>
+    <img class="thumb-img" src="img/p39-banner.webp" alt="">
     <span class="thumb-topic">Video probes</span>
   </a>
   <div class="card-body">
@@ -673,7 +673,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p38-ten-second-render-made-it-through.html" style="--h:95">
-    <span class="thumb-init">P38</span>
+    <img class="thumb-img" src="img/p38-banner.webp" alt="">
     <span class="thumb-topic">Video probes</span>
   </a>
   <div class="card-body">
@@ -685,7 +685,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p37-ten-seconds-different-experiment.html" style="--h:95">
-    <span class="thumb-init">P37</span>
+    <img class="thumb-img" src="img/p37-banner.webp" alt="">
     <span class="thumb-topic">Video probes</span>
   </a>
   <div class="card-body">
@@ -697,7 +697,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p32-mount-needed-a-click.html" style="--h:150">
-    <span class="thumb-init">P32</span>
+    <img class="thumb-img" src="img/p32-banner.webp" alt="">
     <span class="thumb-topic">Local models</span>
   </a>
   <div class="card-body">
@@ -709,7 +709,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p31-route-matters-as-much-as-hostname.html" style="--h:150">
-    <span class="thumb-init">P31</span>
+    <img class="thumb-img" src="img/p31-banner.webp" alt="">
     <span class="thumb-topic">Local models</span>
   </a>
   <div class="card-body">
@@ -721,7 +721,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p27-discover-laptop-not-yesterdays-address.html" style="--h:200">
-    <span class="thumb-init">P27</span>
+    <img class="thumb-img" src="img/p27-banner.webp" alt="">
     <span class="thumb-topic">Cutover</span>
   </a>
   <div class="card-body">
@@ -733,7 +733,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p26-capability-manifest-before-run.html" style="--h:200">
-    <span class="thumb-init">P26</span>
+    <img class="thumb-img" src="img/p26-banner.webp" alt="">
     <span class="thumb-topic">Cutover</span>
   </a>
   <div class="card-body">
@@ -745,7 +745,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p20-editor-saved-older-answer.html" style="--h:200">
-    <span class="thumb-init">P20</span>
+    <img class="thumb-img" src="img/p20-banner.webp" alt="">
     <span class="thumb-topic">Cutover</span>
   </a>
   <div class="card-body">
@@ -757,7 +757,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p18-branches-finished-service-moved.html" style="--h:200">
-    <span class="thumb-init">P18</span>
+    <img class="thumb-img" src="img/p18-banner.webp" alt="">
     <span class="thumb-topic">Cutover</span>
   </a>
   <div class="card-body">
@@ -769,7 +769,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p28-readiness-check-after-merge.html" style="--h:200">
-    <span class="thumb-init">P28</span>
+    <img class="thumb-img" src="img/p28-banner.webp" alt="">
     <span class="thumb-topic">Cutover</span>
   </a>
   <div class="card-body">
@@ -781,7 +781,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p19-retrying-the-old-graph.html" style="--h:200">
-    <span class="thumb-init">P19</span>
+    <img class="thumb-img" src="img/p19-banner.webp" alt="">
     <span class="thumb-topic">Cutover</span>
   </a>
   <div class="card-body">
@@ -793,7 +793,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p22-lock-was-doing-its-job.html" style="--h:12">
-    <span class="thumb-init">P22</span>
+    <img class="thumb-img" src="img/p22-banner.webp" alt="">
     <span class="thumb-topic">Incidents</span>
   </a>
   <div class="card-body">
@@ -805,7 +805,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p15-let-intro-end-on-its-own.html" style="--h:330">
-    <span class="thumb-init">P15</span>
+    <img class="thumb-img" src="img/p15-banner.webp" alt="">
     <span class="thumb-topic">Music &amp; audio</span>
   </a>
   <div class="card-body">
@@ -817,7 +817,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p10-singer-reads-production-notes.html" style="--h:330">
-    <span class="thumb-init">P10</span>
+    <img class="thumb-img" src="img/p10-banner.webp" alt="">
     <span class="thumb-topic">Music &amp; audio</span>
   </a>
   <div class="card-body">
@@ -829,7 +829,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p24-august-lock-and-profile-troubles.html" style="--h:12">
-    <span class="thumb-init">P24</span>
+    <img class="thumb-img" src="img/p24-banner.webp" alt="">
     <span class="thumb-topic">Incidents</span>
   </a>
   <div class="card-body">
@@ -841,7 +841,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p09-two-hosts-need-more-than-labels.html" style="--h:330">
-    <span class="thumb-init">P09</span>
+    <img class="thumb-img" src="img/p09-banner.webp" alt="">
     <span class="thumb-topic">Music &amp; audio</span>
   </a>
   <div class="card-body">
@@ -853,7 +853,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p11-fifty-songs-was-a-test-plan.html" style="--h:330">
-    <span class="thumb-init">P11</span>
+    <img class="thumb-img" src="img/p11-banner.webp" alt="">
     <span class="thumb-topic">Music &amp; audio</span>
   </a>
   <div class="card-body">
@@ -865,7 +865,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p35-small-pages-media-elsewhere.html" style="--h:45">
-    <span class="thumb-init">P35</span>
+    <img class="thumb-img" src="img/p35-banner.webp" alt="">
     <span class="thumb-topic">Migration</span>
   </a>
   <div class="card-body">
@@ -877,7 +877,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p46-backup-remembered-more.html" style="--h:230">
-    <span class="thumb-init">P46</span>
+    <img class="thumb-img" src="img/p46-banner.webp" alt="">
     <span class="thumb-topic">Workflow</span>
   </a>
   <div class="card-body">
@@ -889,7 +889,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p45-workflow-id-changing-name.html" style="--h:230">
-    <span class="thumb-init">P45</span>
+    <img class="thumb-img" src="img/p45-banner.webp" alt="">
     <span class="thumb-topic">Workflow</span>
   </a>
   <div class="card-body">
@@ -901,7 +901,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p06-second-picture-not-motion-plan.html" style="--h:95">
-    <span class="thumb-init">P06</span>
+    <img class="thumb-img" src="img/p06-banner.webp" alt="">
     <span class="thumb-topic">Video probes</span>
   </a>
   <div class="card-body">
@@ -913,7 +913,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p48-backfill-story-not-evidence.html" style="--h:265">
-    <span class="thumb-init">P48</span>
+    <img class="thumb-img" src="img/p48-banner.webp" alt="">
     <span class="thumb-topic">Origins</span>
   </a>
   <div class="card-body">
@@ -925,7 +925,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p47-first-trace-not-beginning.html" style="--h:265">
-    <span class="thumb-init">P47</span>
+    <img class="thumb-img" src="img/p47-banner.webp" alt="">
     <span class="thumb-topic">Origins</span>
   </a>
   <div class="card-body">
@@ -937,7 +937,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p04-cover-image-became-research.html" style="--h:265">
-    <span class="thumb-init">P04</span>
+    <img class="thumb-img" src="img/p04-banner.webp" alt="">
     <span class="thumb-topic">Origins</span>
   </a>
   <div class="card-body">
@@ -949,7 +949,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p03-working-title-not-finished-format.html" style="--h:265">
-    <span class="thumb-init">P03</span>
+    <img class="thumb-img" src="img/p03-banner.webp" alt="">
     <span class="thumb-topic">Origins</span>
   </a>
   <div class="card-body">
@@ -961,7 +961,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p02-intro-before-cover.html" style="--h:265">
-    <span class="thumb-init">P02</span>
+    <img class="thumb-img" src="img/p02-banner.webp" alt="">
     <span class="thumb-topic">Origins</span>
   </a>
   <div class="card-body">
@@ -973,7 +973,7 @@ The drafts are retrospective, ordered by post date and slot id — not exact his
 </article>
 <article class="card">
   <a class="thumb" href="p01-a-podcast-before-the-picture-lab.html" style="--h:265">
-    <span class="thumb-init">P01</span>
+    <img class="thumb-img" src="img/p01-banner.webp" alt="">
     <span class="thumb-topic">Origins</span>
   </a>
   <div class="card-body">
