@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#1a1d24" />
     <meta name="color-scheme" content="dark" />
-    <title>A valid file is not a good transition</title>
+    <title>The file was valid. The transition was still bad.</title>
     <style>
 /* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
    This is the single source of truth for colour, radius, spacing and type.
@@ -452,6 +452,9 @@ a:hover {
 .intro{max-width:62ch;color:var(--text-secondary,#aeb3c2)}
 .evidence-window{color:var(--text-tertiary,#8b90a0);font-size:.85rem;margin:0 0 1.5rem}
 .post-banner{width:100%;max-height:340px;object-fit:cover;border-radius:var(--radius-md,10px);margin:0 0 1.2rem;border:1px solid var(--border-primary,#333)}
+.part-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.16em;color:var(--text-tertiary,#8b90a0);margin:0 0 .6rem;font-weight:700}
+.post-title{margin:0 0 .8rem;font-size:1.7rem;line-height:1.25}
+.lead{font-size:1.02rem;color:var(--text-secondary,#aeb3c2);line-height:1.55;margin:0 0 1.8rem;max-width:64ch}
 @media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
 </style></head>
   <body>
@@ -459,7 +462,7 @@ a:hover {
       <a class="brand" href="./index.html">PodCast Builder <span>· devlog</span></a>
       <nav class="site-nav"></nav>
     </header>
-    <main class="content"><img class="post-banner" src="img/p42-banner.webp" alt=""><p class="evidence-window">19 Sep 2026</p><p><em>Written retrospectively from records covering 19 September 2026.</em></p>
+    <main class="content"><p class="part-label">Part 42 of 43</p><img class="post-banner" src="img/p42-banner.webp" alt=""><p class="evidence-window">19 Sep 2026</p><h1 class="post-title">The file was valid. The transition was still bad.</h1><p class="lead">A decodable 9.96-second file with measured endpoints feels like success, right up until you watch it at full speed. Verification by decoder is not verification by eye, and we now do both.</p><p><em>Written retrospectively from records covering 19 September 2026.</em></p>
 <p>A successful render is an attractive binary. The file exists, a decoder opens it, and the temptation is to call the transition solved before watching it at full speed. Our case C probe made that shortcut inconvenient. It produced a decodable 9.96-second file with measured endpoints, while the recorded review still found a reversal and a final-frame snap in the fog. The file passed its gate. The transition did not.</p>
 <h2>What happened</h2>
 <p>The production-style probe used 250 frames at 25 frames per second, the case C cover pair, and the one-stage Q3_K_M FLF2V path. Under the capped MPS watermark, both 250-frame attempts ran into an allocation failure. The uncapped run completed after 2196 seconds and decoded to 249 frames, or 9.96 seconds. Those are separate facts: requested frames, decoded frames and wall time describe execution; they do not describe whether the scene moves well.</p>
@@ -476,7 +479,7 @@ a:hover {
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking/ltx25%20operating%20envelope/Scratchpad/2026-09-19T16-55-00%2B0800%20-%20PCB-012%20duration-curve%20probes%20-%20MPS%20memory%20envelope%20at%201280x704">Duration and memory probe</a></li>
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking/podcast%20builder/PCB-014%20Evaluate%20IC-LoRA%20control%20for%20fog%20and%20fluid%20motion">PCB-014 motion-control scope</a></li>
 </ul>
-<nav class="post-nav"><a class="post-nav-link" href="p41-endpoints-matched-fog-did-not.html">← newer: The endpoints matched. The fog did not behave.</a><a class="post-nav-link" href="p44-motion-control-next-question.html">older →: Motion control was the next question</a></nav></main>
+<nav class="post-nav"><a class="post-nav-link" href="p41-endpoints-matched-fog-did-not.html">← earlier: We told the fog where to start and end. It disagreed about the middle.</a><a class="post-nav-link" href="p44-motion-control-next-question.html">later →: Next question: can we steer the fog instead of negotiating with it?</a></nav></main>
     <footer class="site-footer">
       <p>Private review preview of the <strong>PodCast Builder</strong> devlog — built from the senior-accepted draft set, 2026-09-19.</p>
     </footer>

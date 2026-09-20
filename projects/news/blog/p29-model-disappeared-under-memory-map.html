@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#1a1d24" />
     <meta name="color-scheme" content="dark" />
-    <title>The model disappeared under the memory map</title>
+    <title>The NAS vanished mid-render and killed the video model (SIGBUS)</title>
     <style>
 /* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
    This is the single source of truth for colour, radius, spacing and type.
@@ -452,6 +452,9 @@ a:hover {
 .intro{max-width:62ch;color:var(--text-secondary,#aeb3c2)}
 .evidence-window{color:var(--text-tertiary,#8b90a0);font-size:.85rem;margin:0 0 1.5rem}
 .post-banner{width:100%;max-height:340px;object-fit:cover;border-radius:var(--radius-md,10px);margin:0 0 1.2rem;border:1px solid var(--border-primary,#333)}
+.part-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.16em;color:var(--text-tertiary,#8b90a0);margin:0 0 .6rem;font-weight:700}
+.post-title{margin:0 0 .8rem;font-size:1.7rem;line-height:1.25}
+.lead{font-size:1.02rem;color:var(--text-secondary,#aeb3c2);line-height:1.55;margin:0 0 1.8rem;max-width:64ch}
 @media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
 </style></head>
   <body>
@@ -459,7 +462,7 @@ a:hover {
       <a class="brand" href="./index.html">PodCast Builder <span>· devlog</span></a>
       <nav class="site-nav"></nav>
     </header>
-    <main class="content"><img class="post-banner" src="img/p29-banner.webp" alt=""><p class="evidence-window">17 Sep 2026</p><p><em>Written retrospectively from records covering 17 September 2026.</em></p>
+    <main class="content"><p class="part-label">Part 36 of 43</p><img class="post-banner" src="img/p29-banner.webp" alt=""><p class="evidence-window">17 Sep 2026</p><h1 class="post-title">The NAS vanished mid-render and killed the video model (SIGBUS)</h1><p class="lead">ComfyUI had memory-mapped the 14.6 GB text encoder over the network. The share disappeared underneath it, and macOS killed Python with SIGBUS rather than an error. What the records show, and the fix that followed.</p><p><em>Written retrospectively from records covering 17 September 2026.</em></p>
 <p>Run 2567 had done the reassuringly boring parts of the podcast workflow. The records say it had passed text-to-speech, cover generation, the animation planner and the profile switch before it reached the LTX video stage. Then ComfyUI tried to use the LTX text encoder from the SMB model store, and the model vanished underneath it. Python did not return a tidy application error. It died with <code>SIGBUS</code>, recorded as status 138. A file had become a geological event.</p>
 <h2>What happened</h2>
 <p>The important detail was not merely that the NAS became unreachable. The LTX profile had memory-mapped a 14.6 GB text encoder. A memory mapping is a view of a file that lets a process access file-backed pages as though they were memory. The process does not necessarily read the entire file in one polite, visible operation. It asks for pages as it needs them.</p>
@@ -475,7 +478,7 @@ a:hover {
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FPCB-008%20Keep%20the%20LTX%20video%20stage%20off%20the%20network%20mount">LTX mount incident and local-model mitigation, 17 September</a></li>
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FREADME">Podcast Builder execution map, 17 September</a></li>
 </ul>
-<nav class="post-nav"><a class="post-nav-link" href="p43-one-long-clip-two-joined-clips.html">← newer: One long clip and two joined clips are different bets</a><a class="post-nav-link" href="p30-unreachable-not-rebooted.html">older →: Unreachable is not the same as rebooted</a></nav></main>
+<nav class="post-nav"><a class="post-nav-link" href="p43-one-long-clip-two-joined-clips.html">← earlier: One long render or two glued ones? We bet on both.</a><a class="post-nav-link" href="p30-unreachable-not-rebooted.html">later →: The NAS wasn't dead. It was just not answering.</a></nav></main>
     <footer class="site-footer">
       <p>Private review preview of the <strong>PodCast Builder</strong> devlog — built from the senior-accepted draft set, 2026-09-19.</p>
     </footer>

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#1a1d24" />
     <meta name="color-scheme" content="dark" />
-    <title>A mount that needed a click</title>
+    <title>Unattended automation, defeated by one dialog box</title>
     <style>
 /* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
    This is the single source of truth for colour, radius, spacing and type.
@@ -452,6 +452,9 @@ a:hover {
 .intro{max-width:62ch;color:var(--text-secondary,#aeb3c2)}
 .evidence-window{color:var(--text-tertiary,#8b90a0);font-size:.85rem;margin:0 0 1.5rem}
 .post-banner{width:100%;max-height:340px;object-fit:cover;border-radius:var(--radius-md,10px);margin:0 0 1.2rem;border:1px solid var(--border-primary,#333)}
+.part-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.16em;color:var(--text-tertiary,#8b90a0);margin:0 0 .6rem;font-weight:700}
+.post-title{margin:0 0 .8rem;font-size:1.7rem;line-height:1.25}
+.lead{font-size:1.02rem;color:var(--text-secondary,#aeb3c2);line-height:1.55;margin:0 0 1.8rem;max-width:64ch}
 @media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
 </style></head>
   <body>
@@ -459,7 +462,7 @@ a:hover {
       <a class="brand" href="./index.html">PodCast Builder <span>· devlog</span></a>
       <nav class="site-nav"></nav>
     </header>
-    <main class="content"><img class="post-banner" src="img/p32-banner.webp" alt=""><p class="evidence-window">15–17 Sep 2026</p><p><em>Written retrospectively from records covering 15 to 17 September 2026.</em></p>
+    <main class="content"><p class="part-label">Part 24 of 43</p><img class="post-banner" src="img/p32-banner.webp" alt=""><p class="evidence-window">15–17 Sep 2026</p><h1 class="post-title">Unattended automation, defeated by one dialog box</h1><p class="lead">The workflow was designed to run with nobody watching. The NAS mount succeeded only after a human clicked an approval button. Useful evidence, and the exact opposite of unattended.</p><p><em>Written retrospectively from records covering 15 to 17 September 2026.</em></p>
 <p>The workflow was meant to run unattended, which is a polite way of saying nobody should have to stand beside the MacBook and approve its storage before breakfast. A mount succeeded only after a user clicked an approval button. That was useful evidence, and also the exact opposite of the acceptance test we wanted. The button worked. The automation remained on probation.</p>
 <h2>What happened</h2>
 <p>The preflight packet separated several states that had been collapsing into one word, &quot;&quot;&quot;available&quot;&quot;&quot;. SMB discovery succeeded against the NAS and listed shares. No share appeared mounted under <code>/Volumes</code> during that check. Opening an SMB URL returned successfully but did not produce a mounted share in the observed session. A direct <code>mount_smbfs</code> attempt without credentials failed with an authentication error.</p>
@@ -476,7 +479,7 @@ a:hover {
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FREADME">Podcast Builder execution map, 17 September</a></li>
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FScratchpad%2F2026-09-15%20n8n%20environment%20and%20NAS%20preflight%20conversation">NAS and SMB preflight evidence, 15 September</a></li>
 </ul>
-<nav class="post-nav"><a class="post-nav-link" href="p31-route-matters-as-much-as-hostname.html">← newer: The route matters as much as the hostname</a><a class="post-nav-link" href="p37-ten-seconds-different-experiment.html">older →: Ten seconds was a different experiment</a></nav></main>
+<nav class="post-nav"><a class="post-nav-link" href="p31-route-matters-as-much-as-hostname.html">← earlier: Same computer, three routes, wildly different results</a><a class="post-nav-link" href="p37-ten-seconds-different-experiment.html">later →: Ten seconds of video is a different experiment, not a short one</a></nav></main>
     <footer class="site-footer">
       <p>Private review preview of the <strong>PodCast Builder</strong> devlog — built from the senior-accepted draft set, 2026-09-19.</p>
     </footer>

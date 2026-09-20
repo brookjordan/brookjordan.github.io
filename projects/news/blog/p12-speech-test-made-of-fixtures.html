@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#1a1d24" />
     <meta name="color-scheme" content="dark" />
-    <title>A speech test made of fixtures</title>
+    <title>We tested the podcast audio on fake transcripts first</title>
     <style>
 /* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
    This is the single source of truth for colour, radius, spacing and type.
@@ -452,6 +452,9 @@ a:hover {
 .intro{max-width:62ch;color:var(--text-secondary,#aeb3c2)}
 .evidence-window{color:var(--text-tertiary,#8b90a0);font-size:.85rem;margin:0 0 1.5rem}
 .post-banner{width:100%;max-height:340px;object-fit:cover;border-radius:var(--radius-md,10px);margin:0 0 1.2rem;border:1px solid var(--border-primary,#333)}
+.part-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.16em;color:var(--text-tertiary,#8b90a0);margin:0 0 .6rem;font-weight:700}
+.post-title{margin:0 0 .8rem;font-size:1.7rem;line-height:1.25}
+.lead{font-size:1.02rem;color:var(--text-secondary,#aeb3c2);line-height:1.55;margin:0 0 1.8rem;max-width:64ch}
 @media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
 </style></head>
   <body>
@@ -459,7 +462,7 @@ a:hover {
       <a class="brand" href="./index.html">PodCast Builder <span>· devlog</span></a>
       <nav class="site-nav"></nav>
     </header>
-    <main class="content"><img class="post-banner" src="img/p12-banner.webp" alt=""><p class="evidence-window">19 Sep 2026</p><p><em>Written retrospectively from records covering 19 September 2026.</em></p>
+    <main class="content"><p class="part-label">Part 39 of 43</p><img class="post-banner" src="img/p12-banner.webp" alt=""><p class="evidence-window">19 Sep 2026</p><h1 class="post-title">We tested the podcast audio on fake transcripts first</h1><p class="lead">Building a speech-verification loop before pointing it at real speech sounds backwards. The alternative is debugging the model, transcription, speaker identity and retries in one noisy failure. Fixtures first.</p><p><em>Written retrospectively from records covering 19 September 2026.</em></p>
 <p>We built a small speech-verification loop before connecting it to real speech. That sounds backwards until the alternative is debugging model output, transcription, speaker identity and retry handling in one noisy failure. The harness used fixture transcripts, a configurable <code>0.97</code> threshold and at most three candidates per segment. Execution 2528 passed the retry scenarios, including a fallback after three attempts. It did not measure speech accuracy.</p>
 <h2>What happened</h2>
 <p>The proposed production check has three passes. First, confirm that audio exists, is non-empty and decodes without obvious clipping. Next, compare the spoken text with the requested script. Finally, check that the voice resembles the requested speaker rather than being merely intelligible speech from the wrong person.</p>
@@ -476,7 +479,7 @@ a:hover {
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FPCB-010%20Test%20three-pass%20speaker%20accuracy%20for%20podcast%20audio">Three-pass speaker test design, 2026-09-19</a></li>
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FPCB-009%20Replace%20VibeVoice%20with%20maintained%20local%20TTS">TTS replacement scope, 2026-09-19</a></li>
 </ul>
-<nav class="post-nav"><a class="post-nav-link" href="p33-copying-model-not-enough.html">← newer: Copying a model is not enough</a><a class="post-nav-link" href="p36-one-episode-before-archive.html">older →: Migrate one episode before the archive</a></nav></main>
+<nav class="post-nav"><a class="post-nav-link" href="p33-copying-model-not-enough.html">← earlier: 26 GB copied, zero verified: why we hash-check model copies now</a><a class="post-nav-link" href="p36-one-episode-before-archive.html">later →: Migrate one episode first, then trust the archive with the rest</a></nav></main>
     <footer class="site-footer">
       <p>Private review preview of the <strong>PodCast Builder</strong> devlog — built from the senior-accepted draft set, 2026-09-19.</p>
     </footer>

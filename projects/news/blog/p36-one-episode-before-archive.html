@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#1a1d24" />
     <meta name="color-scheme" content="dark" />
-    <title>Migrate one episode before the archive</title>
+    <title>Migrate one episode first, then trust the archive with the rest</title>
     <style>
 /* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
    This is the single source of truth for colour, radius, spacing and type.
@@ -452,6 +452,9 @@ a:hover {
 .intro{max-width:62ch;color:var(--text-secondary,#aeb3c2)}
 .evidence-window{color:var(--text-tertiary,#8b90a0);font-size:.85rem;margin:0 0 1.5rem}
 .post-banner{width:100%;max-height:340px;object-fit:cover;border-radius:var(--radius-md,10px);margin:0 0 1.2rem;border:1px solid var(--border-primary,#333)}
+.part-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.16em;color:var(--text-tertiary,#8b90a0);margin:0 0 .6rem;font-weight:700}
+.post-title{margin:0 0 .8rem;font-size:1.7rem;line-height:1.25}
+.lead{font-size:1.02rem;color:var(--text-secondary,#aeb3c2);line-height:1.55;margin:0 0 1.8rem;max-width:64ch}
 @media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
 </style></head>
   <body>
@@ -459,7 +462,7 @@ a:hover {
       <a class="brand" href="./index.html">PodCast Builder <span>· devlog</span></a>
       <nav class="site-nav"></nav>
     </header>
-    <main class="content"><img class="post-banner" src="img/p36-banner.webp" alt=""><p class="evidence-window">19 Sep 2026</p><p><em>Written retrospectively from records covering the recorded migration plan and publication decisions.</em></p>
+    <main class="content"><p class="part-label">Part 40 of 43</p><img class="post-banner" src="img/p36-banner.webp" alt=""><p class="evidence-window">19 Sep 2026</p><h1 class="post-title">Migrate one episode first, then trust the archive with the rest</h1><p class="lead">Moving an archive turns one uncertain route into hundreds. The pilot episode exists to absorb that uncertainty once, cheaply, before the other few hundred get their turn.</p><p><em>Written retrospectively from records covering the recorded migration plan and publication decisions.</em></p>
 <p>Moving an archive is an excellent way to turn one uncertain route into hundreds of uncertain routes. The legacy podcast assets already lived in the existing site checkout, while the selected architecture put durable media on the NAS and left page metadata in GitHub. The sensible first move was not to rewrite the whole history. It was to prove one episode through the new path, then use that result to define a safe backfill.</p>
 <h2>What happened</h2>
 <p>The migration ticket described a deliberately staged rollout. First, a newly generated episode had to complete the NAS-to-browser path. Only after that would selected older episodes be copied from the existing site checkout into <code>/volume2/assets/podcast/&lt;episode-id&gt;/</code>. Each migrated episode would need verified hashes and working public URLs, followed by a page rewrite to use <code>assets.brook.dev</code>.</p>
@@ -475,7 +478,7 @@ a:hover {
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FPCB-004%20Migrate%20legacy%20podcast%20assets">T04 evidence</a></li>
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FPCB-003%20Split%20podcast%20publication%20between%20NAS%20and%20GitHub">T03 evidence</a></li>
 </ul>
-<nav class="post-nav"><a class="post-nav-link" href="p12-speech-test-made-of-fixtures.html">← newer: A speech test made of fixtures</a><a class="post-nav-link" href="p41-endpoints-matched-fog-did-not.html">older →: The endpoints matched. The fog did not behave.</a></nav></main>
+<nav class="post-nav"><a class="post-nav-link" href="p12-speech-test-made-of-fixtures.html">← earlier: We tested the podcast audio on fake transcripts first</a><a class="post-nav-link" href="p41-endpoints-matched-fog-did-not.html">later →: We told the fog where to start and end. It disagreed about the middle.</a></nav></main>
     <footer class="site-footer">
       <p>Private review preview of the <strong>PodCast Builder</strong> devlog — built from the senior-accepted draft set, 2026-09-19.</p>
     </footer>

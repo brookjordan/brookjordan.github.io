@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#1a1d24" />
     <meta name="color-scheme" content="dark" />
-    <title>The missing pair was in the published episode</title>
+    <title>The 'missing' test images were published all along</title>
     <style>
 /* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
    This is the single source of truth for colour, radius, spacing and type.
@@ -452,6 +452,9 @@ a:hover {
 .intro{max-width:62ch;color:var(--text-secondary,#aeb3c2)}
 .evidence-window{color:var(--text-tertiary,#8b90a0);font-size:.85rem;margin:0 0 1.5rem}
 .post-banner{width:100%;max-height:340px;object-fit:cover;border-radius:var(--radius-md,10px);margin:0 0 1.2rem;border:1px solid var(--border-primary,#333)}
+.part-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.16em;color:var(--text-tertiary,#8b90a0);margin:0 0 .6rem;font-weight:700}
+.post-title{margin:0 0 .8rem;font-size:1.7rem;line-height:1.25}
+.lead{font-size:1.02rem;color:var(--text-secondary,#aeb3c2);line-height:1.55;margin:0 0 1.8rem;max-width:64ch}
 @media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
 </style></head>
   <body>
@@ -459,7 +462,7 @@ a:hover {
       <a class="brand" href="./index.html">PodCast Builder <span>· devlog</span></a>
       <nav class="site-nav"></nav>
     </header>
-    <main class="content"><img class="post-banner" src="img/p40-banner.webp" alt=""><p class="evidence-window">15–19 Sep 2026</p><p><em>Written retrospectively from records covering 15–19 September 2026.</em></p>
+    <main class="content"><p class="part-label">Part 28 of 43</p><img class="post-banner" src="img/p40-banner.webp" alt=""><p class="evidence-window">15–19 Sep 2026</p><h1 class="post-title">The 'missing' test images were published all along</h1><p class="lead">Case E looked like it had lost its inputs. The expected execution-named image pair was not where the filename convention suggested. It was in the published episode, which is a better place for it, once you know to look.</p><p><em>Written retrospectively from records covering 15–19 September 2026.</em></p>
 <p>Case E looked as though its test inputs had gone missing. The frozen list named execution 2506, but the expected execution-named image pair was not present where the filename convention suggested it should be. This was exactly the sort of small identity failure that can turn a research handoff into a confident test of the wrong scene.</p>
 <h2>What happened</h2>
 <p>The case packet identifies E as the cathedral kill-switch scene: a brutalist interior, liquid-mercury servers, a cracked apple hologram, neon-blue oil, and slow particulate drift. Its source execution was 2506, recorded as a successful retry on 15 September and explicitly linked to 2503. The missing-looking pair was not an invitation to regenerate the images or choose a nearby cover. It was a prompt to follow the publication and retry trail.</p>
@@ -474,7 +477,7 @@ a:hover {
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking/podcast%20builder/PCB-012%20Test%20longer%20LTX%20recipes%20against%20past%20podcast%20prompts">T12 evidence</a></li>
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking/podcast%20builder/Scratchpad/2026-09-19%20-%20PCB-012%20frozen%20five%20cases">CASES evidence</a></li>
 </ul>
-<nav class="post-nav"><a class="post-nav-link" href="p39-freeze-cases-before-limit.html">← newer: Freeze the cases before moving the limit</a><a class="post-nav-link" href="p13-song-existed-filename-did-not.html">older →: The song existed. The filename did not.</a></nav></main>
+<nav class="post-nav"><a class="post-nav-link" href="p39-freeze-cases-before-limit.html">← earlier: Freeze the test cases before you touch the duration knob</a><a class="post-nav-link" href="p13-song-existed-filename-did-not.html">later →: The intro song existed. The filename did not.</a></nav></main>
     <footer class="site-footer">
       <p>Private review preview of the <strong>PodCast Builder</strong> devlog — built from the senior-accepted draft set, 2026-09-19.</p>
     </footer>

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#1a1d24" />
     <meta name="color-scheme" content="dark" />
-    <title>The readiness check must survive the merge</title>
+    <title>Our readiness check passed. Then the merge changed reality.</title>
     <style>
 /* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
    This is the single source of truth for colour, radius, spacing and type.
@@ -452,6 +452,9 @@ a:hover {
 .intro{max-width:62ch;color:var(--text-secondary,#aeb3c2)}
 .evidence-window{color:var(--text-tertiary,#8b90a0);font-size:.85rem;margin:0 0 1.5rem}
 .post-banner{width:100%;max-height:340px;object-fit:cover;border-radius:var(--radius-md,10px);margin:0 0 1.2rem;border:1px solid var(--border-primary,#333)}
+.part-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.16em;color:var(--text-tertiary,#8b90a0);margin:0 0 .6rem;font-weight:700}
+.post-title{margin:0 0 .8rem;font-size:1.7rem;line-height:1.25}
+.lead{font-size:1.02rem;color:var(--text-secondary,#aeb3c2);line-height:1.55;margin:0 0 1.8rem;max-width:64ch}
 @media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
 </style></head>
   <body>
@@ -459,7 +462,7 @@ a:hover {
       <a class="brand" href="./index.html">PodCast Builder <span>· devlog</span></a>
       <nav class="site-nav"></nav>
     </header>
-    <main class="content"><img class="post-banner" src="img/p28-banner.webp" alt=""><p class="evidence-window">14–19 Sep 2026</p><p><em>Written retrospectively from records covering 14 to 19 September 2026.</em></p>
+    <main class="content"><p class="part-label">Part 18 of 43</p><img class="post-banner" src="img/p28-banner.webp" alt=""><p class="evidence-window">14–19 Sep 2026</p><h1 class="post-title">Our readiness check passed. Then the merge changed reality.</h1><p class="lead">The check was not wrong. It simply ran before the state it was protecting existed: two branches converged, one switched ComfyUI profiles, and the final step asked the wrong endpoint for the right job.</p><p><em>Written retrospectively from records covering 14 to 19 September 2026.</em></p>
 <p>We had a readiness check. It passed. Then two branches converged, one of them changed ComfyUI&#39;s profile, and the final-media step asked the wrong endpoint to do the right job. The check had not been false. It had simply happened before the state it was supposed to protect existed. A branch-local green light expired at the merge.</p>
 <h2>What happened</h2>
 <p>The cutover used separate ComfyUI profiles for different stages. The video branch restored the normal profile before stitching, while the music branch could still switch the shared service to its own profile. In the recorded execution, the branches converged and final media preparation proceeded without a post-merge restore and assertion. The final download then reached the normal endpoint while the wrong profile was listening there, producing a connection refusal.</p>
@@ -476,7 +479,7 @@ a:hover {
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FPCB-006%20Replace%20remote%20music%20and%20video%20generation%20with%20YuE2%20and%20native%20LTX-2.5">PCB-006 post-merge restore and assertion, 19 September</a></li>
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FPCB-007%20Add%20deterministic%20environment%20and%20capability%20preflight">PCB-007 capability and profile checks, 16,19 September</a></li>
 </ul>
-<nav class="post-nav"><a class="post-nav-link" href="p19-retrying-the-old-graph.html">← newer: Retrying the old graph</a><a class="post-nav-link" href="p18-branches-finished-service-moved.html">older →: Both branches finished. The service had moved.</a></nav></main>
+<nav class="post-nav"><a class="post-nav-link" href="p19-retrying-the-old-graph.html">← earlier: &quot;Retry&quot; does not mean &quot;resume&quot;: re-running an old execution the hard way</a><a class="post-nav-link" href="p18-branches-finished-service-moved.html">later →: Everything worked. Then the server moved house mid-run.</a></nav></main>
     <footer class="site-footer">
       <p>Private review preview of the <strong>PodCast Builder</strong> devlog — built from the senior-accepted draft set, 2026-09-19.</p>
     </footer>

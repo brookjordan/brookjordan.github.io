@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#1a1d24" />
     <meta name="color-scheme" content="dark" />
-    <title>Keep the pages small and the media elsewhere</title>
+    <title>GitHub carries the pages, the NAS carries the gigabytes</title>
     <style>
 /* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
    This is the single source of truth for colour, radius, spacing and type.
@@ -452,6 +452,9 @@ a:hover {
 .intro{max-width:62ch;color:var(--text-secondary,#aeb3c2)}
 .evidence-window{color:var(--text-tertiary,#8b90a0);font-size:.85rem;margin:0 0 1.5rem}
 .post-banner{width:100%;max-height:340px;object-fit:cover;border-radius:var(--radius-md,10px);margin:0 0 1.2rem;border:1px solid var(--border-primary,#333)}
+.part-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.16em;color:var(--text-tertiary,#8b90a0);margin:0 0 .6rem;font-weight:700}
+.post-title{margin:0 0 .8rem;font-size:1.7rem;line-height:1.25}
+.lead{font-size:1.02rem;color:var(--text-secondary,#aeb3c2);line-height:1.55;margin:0 0 1.8rem;max-width:64ch}
 @media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
 </style></head>
   <body>
@@ -459,7 +462,7 @@ a:hover {
       <a class="brand" href="./index.html">PodCast Builder <span>· devlog</span></a>
       <nav class="site-nav"></nav>
     </header>
-    <main class="content"><img class="post-banner" src="img/p35-banner.webp" alt=""><p class="evidence-window">17 Aug 2026</p><p><em>Written retrospectively from records covering 17 August 2026 and the captured project decisions.</em></p>
+    <main class="content"><p class="part-label">Part 10 of 43</p><img class="post-banner" src="img/p35-banner.webp" alt=""><p class="evidence-window">17 Aug 2026</p><h1 class="post-title">GitHub carries the pages, the NAS carries the gigabytes</h1><p class="lead">One publication path was carrying two very different cargoes: tiny page metadata and podcast-sized binaries. Splitting them made both sides simpler, and the git history stopped gaining weight.</p><p><em>Written retrospectively from records covering 17 August 2026 and the captured project decisions.</em></p>
 <p>We had been asking one publication path to carry two very different things: page metadata and durable media. That was an awkward arrangement because a page is small, while podcast MP3, MP4 and PNG assets are exactly the sort of binaries that make a GitHub request grow teeth. The diagnostic replay gave us a concrete symptom rather than a philosophical debate: the complete GraphQL payload reached HTTP 499 at 8.8 MB, while a single 2.05 MB asset reached GitHub and received its normal <code>STALE_DATA</code> response.</p>
 <h2>What happened</h2>
 <p>The decision was to split the responsibilities. Durable media would live on the NAS HDD at <code>/volume2/assets/podcast</code>, served through a narrowly scoped read-only service at <code>assets.brook.dev</code>, with Nginx Proxy Manager and Cloudflare in front. GitHub Pages would retain lightweight page metadata. The page would point at the durable media instead of hauling each binary through the publication request.</p>
@@ -475,7 +478,7 @@ a:hover {
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FPCB-001%20Decide%20public%20podcast%20asset%20origin">T01 evidence</a></li>
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FPCB-003%20Split%20podcast%20publication%20between%20NAS%20and%20GitHub">T03 evidence</a></li>
 </ul>
-<nav class="post-nav"><a class="post-nav-link" href="p46-backup-remembered-more.html">← newer: The backup remembered more than the live history</a><a class="post-nav-link" href="p11-fifty-songs-was-a-test-plan.html">older →: Fifty songs was a test plan</a></nav></main>
+<nav class="post-nav"><a class="post-nav-link" href="p46-backup-remembered-more.html">← earlier: The backup remembered things the live system had forgotten</a><a class="post-nav-link" href="p11-fifty-songs-was-a-test-plan.html">later →: We generated fifty songs on purpose. It was a test matrix.</a></nav></main>
     <footer class="site-footer">
       <p>Private review preview of the <strong>PodCast Builder</strong> devlog — built from the senior-accepted draft set, 2026-09-19.</p>
     </footer>

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#1a1d24" />
     <meta name="color-scheme" content="dark" />
-    <title>Unreachable is not the same as rebooted</title>
+    <title>The NAS wasn't dead. It was just not answering.</title>
     <style>
 /* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
    This is the single source of truth for colour, radius, spacing and type.
@@ -452,6 +452,9 @@ a:hover {
 .intro{max-width:62ch;color:var(--text-secondary,#aeb3c2)}
 .evidence-window{color:var(--text-tertiary,#8b90a0);font-size:.85rem;margin:0 0 1.5rem}
 .post-banner{width:100%;max-height:340px;object-fit:cover;border-radius:var(--radius-md,10px);margin:0 0 1.2rem;border:1px solid var(--border-primary,#333)}
+.part-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.16em;color:var(--text-tertiary,#8b90a0);margin:0 0 .6rem;font-weight:700}
+.post-title{margin:0 0 .8rem;font-size:1.7rem;line-height:1.25}
+.lead{font-size:1.02rem;color:var(--text-secondary,#aeb3c2);line-height:1.55;margin:0 0 1.8rem;max-width:64ch}
 @media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
 </style></head>
   <body>
@@ -459,7 +462,7 @@ a:hover {
       <a class="brand" href="./index.html">PodCast Builder <span>· devlog</span></a>
       <nav class="site-nav"></nav>
     </header>
-    <main class="content"><img class="post-banner" src="img/p30-banner.webp" alt=""><p class="evidence-window">17 Sep 2026</p><p><em>Written retrospectively from records covering 17 September 2026.</em></p>
+    <main class="content"><p class="part-label">Part 37 of 43</p><img class="post-banner" src="img/p30-banner.webp" alt=""><p class="evidence-window">17 Sep 2026</p><h1 class="post-title">The NAS wasn't dead. It was just not answering.</h1><p class="lead">When the model transfer failed, we had a satisfying theory: the machine had fallen over. The evidence was more careful than we were. Unreachable is a network statement, not a mortality verdict.</p><p><em>Written retrospectively from records covering 17 September 2026.</em></p>
 <p>When the long model transfer failed, we inherited a satisfying theory: the NAS had fallen over. It explained the missing share, the dead process and the general atmosphere of a machine that had chosen violence. The trouble was that the evidence was more careful than we were. The client saw a connection fail. It did not see the NAS reboot.</p>
 <h2>What happened</h2>
 <p>The transfer reported <code>[Errno 9] Bad file descriptor</code>, followed by <code>[Errno 60] Operation timed out</code>. During the observed failure, Tailscale still listed the NAS as active with a direct path. The records then say the NAS became reachable again within roughly two minutes, without recording a reboot cycle.</p>
@@ -476,7 +479,7 @@ a:hover {
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FScratchpad%2F2026-09-15%20raw%20conversation%20NAS%20route-aware%20SMB%20preflight">Route-aware SMB preflight evidence, 15 September</a></li>
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FREADME">Podcast Builder execution map, 17 September</a></li>
 </ul>
-<nav class="post-nav"><a class="post-nav-link" href="p29-model-disappeared-under-memory-map.html">← newer: The model disappeared under the memory map</a><a class="post-nav-link" href="p33-copying-model-not-enough.html">older →: Copying a model is not enough</a></nav></main>
+<nav class="post-nav"><a class="post-nav-link" href="p29-model-disappeared-under-memory-map.html">← earlier: The NAS vanished mid-render and killed the video model (SIGBUS)</a><a class="post-nav-link" href="p33-copying-model-not-enough.html">later →: 26 GB copied, zero verified: why we hash-check model copies now</a></nav></main>
     <footer class="site-footer">
       <p>Private review preview of the <strong>PodCast Builder</strong> devlog — built from the senior-accepted draft set, 2026-09-19.</p>
     </footer>

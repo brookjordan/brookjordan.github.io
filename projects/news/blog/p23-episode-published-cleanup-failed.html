@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#1a1d24" />
     <meta name="color-scheme" content="dark" />
-    <title>The episode published. Cleanup failed.</title>
+    <title>The episode shipped. The broom swept up a ghost node.</title>
     <style>
 /* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
    This is the single source of truth for colour, radius, spacing and type.
@@ -452,6 +452,9 @@ a:hover {
 .intro{max-width:62ch;color:var(--text-secondary,#aeb3c2)}
 .evidence-window{color:var(--text-tertiary,#8b90a0);font-size:.85rem;margin:0 0 1.5rem}
 .post-banner{width:100%;max-height:340px;object-fit:cover;border-radius:var(--radius-md,10px);margin:0 0 1.2rem;border:1px solid var(--border-primary,#333)}
+.part-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.16em;color:var(--text-tertiary,#8b90a0);margin:0 0 .6rem;font-weight:700}
+.post-title{margin:0 0 .8rem;font-size:1.7rem;line-height:1.25}
+.lead{font-size:1.02rem;color:var(--text-secondary,#aeb3c2);line-height:1.55;margin:0 0 1.8rem;max-width:64ch}
 @media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
 </style></head>
   <body>
@@ -459,7 +462,7 @@ a:hover {
       <a class="brand" href="./index.html">PodCast Builder <span>· devlog</span></a>
       <nav class="site-nav"></nav>
     </header>
-    <main class="content"><img class="post-banner" src="img/p23-banner.webp" alt=""><p class="evidence-window">16–19 Sep 2026</p><p><em>Written retrospectively from records covering 16 to 19 September 2026.</em></p>
+    <main class="content"><p class="part-label">Part 33 of 43</p><img class="post-banner" src="img/p23-banner.webp" alt=""><p class="evidence-window">16–19 Sep 2026</p><h1 class="post-title">The episode shipped. The broom swept up a ghost node.</h1><p class="lead">Publication succeeded, then cleanup threw: a cleanup node had been re-enabled by the cutover while pointing at a music node that no longer existed. Nobody noticed for days, which is the interesting part.</p><p><em>Written retrospectively from records covering 16 to 19 September 2026.</em></p>
 <p>We had an episode on the other side of publication and an error waiting behind it. The workflow had published successfully, then <code>Delete MP3s via SSH</code> tried to do housekeeping with a reference to <code>Generate intro music</code>, a MiniMax node that the cutover had removed. The episode existed. The execution did not deserve a clean green sticker.</p>
 <h2>What happened</h2>
 <p>The cutover changed the music stage. YuE2 produced WAV output, while the old cleanup node still expected the old arrangement, including the removed <code>Generate intro music</code> reference and MP3 targets. PCB-008 records that this was the only dangling workflow reference found in the staged graph. It threw after runs that had already published successfully.</p>
@@ -477,7 +480,7 @@ a:hover {
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FPCB-006%20Replace%20remote%20music%20and%20video%20generation%20with%20YuE2%20and%20native%20LTX-2.5">YuE2 and native LTX cutover evidence, PCB-006</a></li>
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FREADME">Project map cleanup status, 19 September 2026</a></li>
 </ul>
-<nav class="post-nav"><a class="post-nav-link" href="p17-music-and-video-onto-the-mac.html">← newer: Moving the podcast's music and video onto the Mac</a><a class="post-nav-link" href="p25-saved-is-not-scheduled.html">older →: Saved is not scheduled</a></nav></main>
+<nav class="post-nav"><a class="post-nav-link" href="p17-music-and-video-onto-the-mac.html">← earlier: Evicting the cloud: music and video generation moves onto the Mac</a><a class="post-nav-link" href="p25-saved-is-not-scheduled.html">later →: Saved is not scheduled: the edit that never reached the alarm clock</a></nav></main>
     <footer class="site-footer">
       <p>Private review preview of the <strong>PodCast Builder</strong> devlog — built from the senior-accepted draft set, 2026-09-19.</p>
     </footer>

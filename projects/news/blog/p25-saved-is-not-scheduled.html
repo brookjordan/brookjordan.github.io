@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#1a1d24" />
     <meta name="color-scheme" content="dark" />
-    <title>Saved is not scheduled</title>
+    <title>Saved is not scheduled: the edit that never reached the alarm clock</title>
     <style>
 /* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
    This is the single source of truth for colour, radius, spacing and type.
@@ -452,6 +452,9 @@ a:hover {
 .intro{max-width:62ch;color:var(--text-secondary,#aeb3c2)}
 .evidence-window{color:var(--text-tertiary,#8b90a0);font-size:.85rem;margin:0 0 1.5rem}
 .post-banner{width:100%;max-height:340px;object-fit:cover;border-radius:var(--radius-md,10px);margin:0 0 1.2rem;border:1px solid var(--border-primary,#333)}
+.part-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.16em;color:var(--text-tertiary,#8b90a0);margin:0 0 .6rem;font-weight:700}
+.post-title{margin:0 0 .8rem;font-size:1.7rem;line-height:1.25}
+.lead{font-size:1.02rem;color:var(--text-secondary,#aeb3c2);line-height:1.55;margin:0 0 1.8rem;max-width:64ch}
 @media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
 </style></head>
   <body>
@@ -459,7 +462,7 @@ a:hover {
       <a class="brand" href="./index.html">PodCast Builder <span>· devlog</span></a>
       <nav class="site-nav"></nav>
     </header>
-    <main class="content"><img class="post-banner" src="img/p25-banner.webp" alt=""><p class="evidence-window">16–17 Sep 2026</p><p><em>Written retrospectively from records covering 16 to 17 September 2026.</em></p>
+    <main class="content"><p class="part-label">Part 34 of 43</p><img class="post-banner" src="img/p25-banner.webp" alt=""><p class="evidence-window">16–17 Sep 2026</p><h1 class="post-title">Saved is not scheduled: the edit that never reached the alarm clock</h1><p class="lead">We edited the workflow, watched it save, and assumed the scheduler had received the news. In n8n 2.x a manual run uses the draft, a scheduled run uses the published version, and the difference stayed invisible until the 3am run failed.</p><p><em>Written retrospectively from records covering 16 to 17 September 2026.</em></p>
 <p>We edited the podcast workflow, saw the edit saved, and naturally treated that as the same thing as the scheduler receiving it. In n8n 2.x it is not. A manual run executes the editor&#39;s current draft, while a scheduled run executes the published version. The distinction remained invisible while we tested by hand, which is a wonderfully efficient way to prove the wrong thing.</p>
 <h2>What happened</h2>
 <p>The workflow had a draft version and a published version, each identified separately. The map records the confusing fields as <code>versionId</code> and <code>activeVersionId</code>. Edits made through the API landed in the draft. Manual execution therefore exercised the changed graph, including the corrections being developed for the podcast cutover. The schedule, however, continued to use the active published version until publication happened.</p>
@@ -475,7 +478,7 @@ a:hover {
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FREADME">Podcast builder map, 16,17 September</a></li>
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FPCB-008%20Keep%20the%20LTX%20video%20stage%20off%20the%20network%20mount">PCB-008 workflow evidence, 17 September</a></li>
 </ul>
-<nav class="post-nav"><a class="post-nav-link" href="p23-episode-published-cleanup-failed.html">← newer: The episode published. Cleanup failed.</a><a class="post-nav-link" href="p43-one-long-clip-two-joined-clips.html">older →: One long clip and two joined clips are different bets</a></nav></main>
+<nav class="post-nav"><a class="post-nav-link" href="p23-episode-published-cleanup-failed.html">← earlier: The episode shipped. The broom swept up a ghost node.</a><a class="post-nav-link" href="p43-one-long-clip-two-joined-clips.html">later →: One long render or two glued ones? We bet on both.</a></nav></main>
     <footer class="site-footer">
       <p>Private review preview of the <strong>PodCast Builder</strong> devlog — built from the senior-accepted draft set, 2026-09-19.</p>
     </footer>

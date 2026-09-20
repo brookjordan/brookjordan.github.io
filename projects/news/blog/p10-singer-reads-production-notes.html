@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#1a1d24" />
     <meta name="color-scheme" content="dark" />
-    <title>When the singer reads the production notes</title>
+    <title>Our AI singer performed the stage directions. Literally.</title>
     <style>
 /* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
    This is the single source of truth for colour, radius, spacing and type.
@@ -452,6 +452,9 @@ a:hover {
 .intro{max-width:62ch;color:var(--text-secondary,#aeb3c2)}
 .evidence-window{color:var(--text-tertiary,#8b90a0);font-size:.85rem;margin:0 0 1.5rem}
 .post-banner{width:100%;max-height:340px;object-fit:cover;border-radius:var(--radius-md,10px);margin:0 0 1.2rem;border:1px solid var(--border-primary,#333)}
+.part-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.16em;color:var(--text-tertiary,#8b90a0);margin:0 0 .6rem;font-weight:700}
+.post-title{margin:0 0 .8rem;font-size:1.7rem;line-height:1.25}
+.lead{font-size:1.02rem;color:var(--text-secondary,#aeb3c2);line-height:1.55;margin:0 0 1.8rem;max-width:64ch}
 @media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
 </style></head>
   <body>
@@ -459,7 +462,7 @@ a:hover {
       <a class="brand" href="./index.html">PodCast Builder <span>· devlog</span></a>
       <nav class="site-nav"></nav>
     </header>
-    <main class="content"><img class="post-banner" src="img/p10-banner.webp" alt=""><p class="evidence-window">9–16 Sep 2026</p><p><em>Written retrospectively from records covering 9 to 16 September 2026.</em></p>
+    <main class="content"><p class="part-label">Part 14 of 43</p><img class="post-banner" src="img/p10-banner.webp" alt=""><p class="evidence-window">9–16 Sep 2026</p><h1 class="post-title">Our AI singer performed the stage directions. Literally.</h1><p class="lead">The song generator read &quot;Intro song&quot;, &quot;[Intro]&quot; and a parenthesised note about filtered synth bass, and sang all of it. A full accounting of what leaked into the lyrics, and where each piece belongs.</p><p><em>Written retrospectively from records covering 9 to 16 September 2026.</em></p>
 <p>The song generator was given a job description and treated it as lyrics. The recorded symptom included <code>Intro song</code>, an <code>[Intro]</code> section, parenthesised production directions and an initial word-intro instruction appearing in the material sent towards the singer. The result was an intro with no vocals. The records point at the lyric boundary, not at a mysterious failure of musical taste.</p>
 <h2>What happened</h2>
 <p>The workflow uses MiniMax Music 3 through ComfyUI&#39;s <code>MiniMaxMusic3TextEncode</code> node. Its inputs separate <code>caption</code> from <code>lyrics</code>. The ticket records the caption as the place already carrying global metadata, vocal details and arrangement. The investigation therefore narrowed to the lyrics field. It should contain words intended to be sung, with only minimal supported section tags.</p>
@@ -476,7 +479,7 @@ a:hover {
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FREADME">Podcast project map and prompt symptom, 2026-09-19</a></li>
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Daily%2F2026-09-09">Prompt investigation, 2026-09-09</a></li>
 </ul>
-<nav class="post-nav"><a class="post-nav-link" href="p24-august-lock-and-profile-troubles.html">← newer: August's lock and profile troubles</a><a class="post-nav-link" href="p15-let-intro-end-on-its-own.html">older →: Let the intro end on its own</a></nav></main>
+<nav class="post-nav"><a class="post-nav-link" href="p24-august-lock-and-profile-troubles.html">← earlier: August's greatest hits: locks that held and logins that didn't</a><a class="post-nav-link" href="p15-let-intro-end-on-its-own.html">later →: We kept cutting our intro song mid-sentence, so we stopped</a></nav></main>
     <footer class="site-footer">
       <p>Private review preview of the <strong>PodCast Builder</strong> devlog — built from the senior-accepted draft set, 2026-09-19.</p>
     </footer>

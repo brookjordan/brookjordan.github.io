@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#1a1d24" />
     <meta name="color-scheme" content="dark" />
-    <title>Retrying the old graph</title>
+    <title>&quot;Retry&quot; does not mean &quot;resume&quot;: re-running an old execution the hard way</title>
     <style>
 /* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
    This is the single source of truth for colour, radius, spacing and type.
@@ -452,6 +452,9 @@ a:hover {
 .intro{max-width:62ch;color:var(--text-secondary,#aeb3c2)}
 .evidence-window{color:var(--text-tertiary,#8b90a0);font-size:.85rem;margin:0 0 1.5rem}
 .post-banner{width:100%;max-height:340px;object-fit:cover;border-radius:var(--radius-md,10px);margin:0 0 1.2rem;border:1px solid var(--border-primary,#333)}
+.part-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.16em;color:var(--text-tertiary,#8b90a0);margin:0 0 .6rem;font-weight:700}
+.post-title{margin:0 0 .8rem;font-size:1.7rem;line-height:1.25}
+.lead{font-size:1.02rem;color:var(--text-secondary,#aeb3c2);line-height:1.55;margin:0 0 1.8rem;max-width:64ch}
 @media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
 </style></head>
   <body>
@@ -459,7 +462,7 @@ a:hover {
       <a class="brand" href="./index.html">PodCast Builder <span>· devlog</span></a>
       <nav class="site-nav"></nav>
     </header>
-    <main class="content"><img class="post-banner" src="img/p19-banner.webp" alt=""><p class="evidence-window">14–15 Sep 2026</p><p><em>Written retrospectively from records covering 14 to 15 September 2026.</em></p>
+    <main class="content"><p class="part-label">Part 17 of 43</p><img class="post-banner" src="img/p19-banner.webp" alt=""><p class="evidence-window">14–15 Sep 2026</p><h1 class="post-title">&quot;Retry&quot; does not mean &quot;resume&quot;: re-running an old execution the hard way</h1><p class="lead">An old n8n execution had done expensive work and was missing one small step. Retry looked like the cheap option. The word carries a comforting promise that history does not keep.</p><p><em>Written retrospectively from records covering 14 to 15 September 2026.</em></p>
 <p>Retrying an old n8n execution felt like the sensible shortcut. The workflow had already done expensive work, the missing step looked small, and the word &quot;retry&quot; carries a comforting suggestion that history will resume where we left it. Execution <code>2497</code> provided the less comforting answer: cached pending work still belonged to the old graph. We were not replaying today&#39;s design. We were asking yesterday&#39;s pending work to remember a change it had never seen.</p>
 <h2>What happened</h2>
 <p>The earlier execution had exposed a music-file contract problem. YuE2 produced a WAV, while an old collate step still requested an obsolete MP3 filename. Controlled execution <code>2497</code> fetched the corrected WAV through n8n and read all 2,303,788 binary bytes from database storage, but the retry lineage also exposed retained pending work from the old graph. The result was useful precisely because it separated a real binary read from a misleading expectation that retrying would reconstruct the current topology.</p>
@@ -477,7 +480,7 @@ a:hover {
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FScratchpad%2F2026-09-19%20n8n%20historical%20trace%20archive%20and%20podcast%20workflow%20lineage">Historical workflow lineage archive</a></li>
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FScratchpad%2F2026-09-19T21-30-00%2B0800%20-%20PCB-015%20raw%20music%20and%20audio%20source%20trail">Audio route and execution index</a></li>
 </ul>
-<nav class="post-nav"><a class="post-nav-link" href="p22-lock-was-doing-its-job.html">← newer: The lock was doing its job</a><a class="post-nav-link" href="p28-readiness-check-after-merge.html">older →: The readiness check must survive the merge</a></nav></main>
+<nav class="post-nav"><a class="post-nav-link" href="p22-lock-was-doing-its-job.html">← earlier: The error was the lock working perfectly</a><a class="post-nav-link" href="p28-readiness-check-after-merge.html">later →: Our readiness check passed. Then the merge changed reality.</a></nav></main>
     <footer class="site-footer">
       <p>Private review preview of the <strong>PodCast Builder</strong> devlog — built from the senior-accepted draft set, 2026-09-19.</p>
     </footer>

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#1a1d24" />
     <meta name="color-scheme" content="dark" />
-    <title>Backfilling the story without backdating the evidence</title>
+    <title>Writing the history without forging the timestamps</title>
     <style>
 /* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
    This is the single source of truth for colour, radius, spacing and type.
@@ -452,6 +452,9 @@ a:hover {
 .intro{max-width:62ch;color:var(--text-secondary,#aeb3c2)}
 .evidence-window{color:var(--text-tertiary,#8b90a0);font-size:.85rem;margin:0 0 1.5rem}
 .post-banner{width:100%;max-height:340px;object-fit:cover;border-radius:var(--radius-md,10px);margin:0 0 1.2rem;border:1px solid var(--border-primary,#333)}
+.part-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.16em;color:var(--text-tertiary,#8b90a0);margin:0 0 .6rem;font-weight:700}
+.post-title{margin:0 0 .8rem;font-size:1.7rem;line-height:1.25}
+.lead{font-size:1.02rem;color:var(--text-secondary,#aeb3c2);line-height:1.55;margin:0 0 1.8rem;max-width:64ch}
 @media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
 </style></head>
   <body>
@@ -459,7 +462,7 @@ a:hover {
       <a class="brand" href="./index.html">PodCast Builder <span>· devlog</span></a>
       <nav class="site-nav"></nav>
     </header>
-    <main class="content"><img class="post-banner" src="img/p48-banner.webp" alt=""><p class="evidence-window">22 Jun 2026 – 19 Sep 2026</p><p><em>Written retrospectively from records covering 2026-06-22 to 2026-09-19.</em></p>
+    <main class="content"><p class="part-label">Part 6 of 43</p><img class="post-banner" src="img/p48-banner.webp" alt=""><p class="evidence-window">22 Jun 2026 – 19 Sep 2026</p><h1 class="post-title">Writing the history without forging the timestamps</h1><p class="lead">Unordered history feels like a drawer full of charging cables. Ordering it is useful; quietly promoting a convenient date into an event date is forgery. These are the rules this whole devlog plays by.</p><p><em>Written retrospectively from records covering 2026-06-22 to 2026-09-19.</em></p>
 <p>We wanted an ordered retrospective because unordered history feels like a drawer full of charging cables: technically full of information, practically hostile to the hand. The danger was using a convenient date as if it described the event. The localimagegen backfill incident gives us a useful warning, while the podcast archive gives us a second chance to avoid repeating it with a more impressive database-shaped tool.</p>
 <h2>What happened</h2>
 <p>In the localimagegen incident, a backfill used the first Git commit that added each file as a substitute for authoring time. Twenty-one posts inherited the same import timestamp, and one deliberately backdated post was moved to the import date. The later correction kept the filename date for the publication day and used birth time only for ordering within that particular filesystem history. The post&#39;s own lesson is that commit time answers when a file entered version control, not when it was written.</p>
@@ -478,7 +481,7 @@ a:hover {
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FScratchpad%2F2026-09-19T20-39-58%2B0800%20-%20PCB-015%20raw%20Cursor%20podcast%20n8n%20archive">Raw Cursor localimagegen and podcast archive, 2026-09-19</a></li>
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FPCB-015%20Retroactively%20build%20the%20podcast%20builder%20blog">PCB-015 brief, 2026-09-19</a></li>
 </ul>
-<nav class="post-nav"><a class="post-nav-link" href="p47-first-trace-not-beginning.html">← newer: The first surviving trace was not the beginning</a><a class="post-nav-link" href="p06-second-picture-not-motion-plan.html">older →: A second picture is not a motion plan</a></nav></main>
+<nav class="post-nav"><a class="post-nav-link" href="p47-first-trace-not-beginning.html">← earlier: The first record we found was not the first thing that happened</a><a class="post-nav-link" href="p06-second-picture-not-motion-plan.html">later →: Two pictures do not make a video, whatever the storyboard hopes</a></nav></main>
     <footer class="site-footer">
       <p>Private review preview of the <strong>PodCast Builder</strong> devlog — built from the senior-accepted draft set, 2026-09-19.</p>
     </footer>

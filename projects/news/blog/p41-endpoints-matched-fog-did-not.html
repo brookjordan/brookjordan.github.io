@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#1a1d24" />
     <meta name="color-scheme" content="dark" />
-    <title>The endpoints matched. The fog did not behave.</title>
+    <title>We told the fog where to start and end. It disagreed about the middle.</title>
     <style>
 /* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
    This is the single source of truth for colour, radius, spacing and type.
@@ -452,6 +452,9 @@ a:hover {
 .intro{max-width:62ch;color:var(--text-secondary,#aeb3c2)}
 .evidence-window{color:var(--text-tertiary,#8b90a0);font-size:.85rem;margin:0 0 1.5rem}
 .post-banner{width:100%;max-height:340px;object-fit:cover;border-radius:var(--radius-md,10px);margin:0 0 1.2rem;border:1px solid var(--border-primary,#333)}
+.part-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.16em;color:var(--text-tertiary,#8b90a0);margin:0 0 .6rem;font-weight:700}
+.post-title{margin:0 0 .8rem;font-size:1.7rem;line-height:1.25}
+.lead{font-size:1.02rem;color:var(--text-secondary,#aeb3c2);line-height:1.55;margin:0 0 1.8rem;max-width:64ch}
 @media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
 </style></head>
   <body>
@@ -459,7 +462,7 @@ a:hover {
       <a class="brand" href="./index.html">PodCast Builder <span>· devlog</span></a>
       <nav class="site-nav"></nav>
     </header>
-    <main class="content"><img class="post-banner" src="img/p41-banner.webp" alt=""><p class="evidence-window">19 Sep 2026</p><p><em>Written retrospectively from records covering 19 September 2026.</em></p>
+    <main class="content"><p class="part-label">Part 41 of 43</p><img class="post-banner" src="img/p41-banner.webp" alt=""><p class="evidence-window">19 Sep 2026</p><h1 class="post-title">We told the fog where to start and end. It disagreed about the middle.</h1><p class="lead">First-and-last-frame conditioning got the fog to both endpoints. The journey between them reversed direction and snapped into place like a compressed spring. The endpoints matched; the physics did not.</p><p><em>Written retrospectively from records covering 19 September 2026.</em></p>
 <p>We wanted the fog in case C to travel naturally between its two guide images. The render did something more literal and less useful: it reached the endpoints, but the path between them behaved like a compromise negotiated by a machine that had never seen weather. The case used the frozen overgrown-ruins prompt, a locked camera and matched cover images. The successful 9.96-second file preserved endpoint measurements, yet that did not make the fog motion convincing.</p>
 <h2>What happened</h2>
 <p>The duration probe recorded a ten-second run at 250 frames with the case C pair, seed 2505745537, and an uncapped MPS server. Its endpoint measurements were 4.2 and 3.3 on a 0 to 255 scale. The recorded review measured bright-pixel fog centroids at two frames per second. The fog drifted from normalised y 0.355 to 0.444, with coverage changing from 0.52 to 0.67, then snapped back to 0.392 in the final half-second. The five-second run had an additional reversal: the fog moved down, reversed upwards, and still snapped at the end.</p>
@@ -476,7 +479,7 @@ a:hover {
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking/ltx25%20operating%20envelope/Scratchpad/2026-09-19T16-55-00%2B0800%20-%20PCB-012%20duration-curve%20probes%20-%20MPS%20memory%20envelope%20at%201280x704">Duration and memory probe</a></li>
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking/podcast%20builder/PCB-014%20Evaluate%20IC-LoRA%20control%20for%20fog%20and%20fluid%20motion">PCB-014 motion-control scope</a></li>
 </ul>
-<nav class="post-nav"><a class="post-nav-link" href="p36-one-episode-before-archive.html">← newer: Migrate one episode before the archive</a><a class="post-nav-link" href="p42-valid-file-not-good-transition.html">older →: A valid file is not a good transition</a></nav></main>
+<nav class="post-nav"><a class="post-nav-link" href="p36-one-episode-before-archive.html">← earlier: Migrate one episode first, then trust the archive with the rest</a><a class="post-nav-link" href="p42-valid-file-not-good-transition.html">later →: The file was valid. The transition was still bad.</a></nav></main>
     <footer class="site-footer">
       <p>Private review preview of the <strong>PodCast Builder</strong> devlog — built from the senior-accepted draft set, 2026-09-19.</p>
     </footer>

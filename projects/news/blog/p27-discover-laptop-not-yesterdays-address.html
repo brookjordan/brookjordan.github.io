@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#1a1d24" />
     <meta name="color-scheme" content="dark" />
-    <title>Discover the laptop, not yesterday's address</title>
+    <title>Stop memorising IP addresses; make the laptop introduce itself</title>
     <style>
 /* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
    This is the single source of truth for colour, radius, spacing and type.
@@ -452,6 +452,9 @@ a:hover {
 .intro{max-width:62ch;color:var(--text-secondary,#aeb3c2)}
 .evidence-window{color:var(--text-tertiary,#8b90a0);font-size:.85rem;margin:0 0 1.5rem}
 .post-banner{width:100%;max-height:340px;object-fit:cover;border-radius:var(--radius-md,10px);margin:0 0 1.2rem;border:1px solid var(--border-primary,#333)}
+.part-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.16em;color:var(--text-tertiary,#8b90a0);margin:0 0 .6rem;font-weight:700}
+.post-title{margin:0 0 .8rem;font-size:1.7rem;line-height:1.25}
+.lead{font-size:1.02rem;color:var(--text-secondary,#aeb3c2);line-height:1.55;margin:0 0 1.8rem;max-width:64ch}
 @media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
 </style></head>
   <body>
@@ -459,7 +462,7 @@ a:hover {
       <a class="brand" href="./index.html">PodCast Builder <span>· devlog</span></a>
       <nav class="site-nav"></nav>
     </header>
-    <main class="content"><img class="post-banner" src="img/p27-banner.webp" alt=""><p class="evidence-window">15–17 Sep 2026</p><p><em>Written retrospectively from records covering 15 to 17 September 2026.</em></p>
+    <main class="content"><p class="part-label">Part 22 of 43</p><img class="post-banner" src="img/p27-banner.webp" alt=""><p class="evidence-window">15–17 Sep 2026</p><h1 class="post-title">Stop memorising IP addresses; make the laptop introduce itself</h1><p class="lead">We kept a remembered address for the MacBook and one for the NAS, and a workflow that treated the notes as law. Then a request went to the NAS and got ECONNREFUSED, because the service lived on the laptop. Discovery beat memory.</p><p><em>Written retrospectively from records covering 15 to 17 September 2026.</em></p>
 <p>We had a remembered address for the MacBook, a remembered address for the NAS, and a workflow that behaved as though networks were obliged to preserve our notes. Then the YuE2 request went to the NAS role and met <code>ECONNREFUSED</code> on port <code>8087</code>. The service belonged to the MacBook. The address was not merely stale; it described the wrong machine.</p>
 <h2>What happened</h2>
 <p>The captured failure followed a long execution and stopped at the YuE2 synthesis node. The request used <code>serviceHost</code>, which correctly represented n8n on the NAS but incorrectly represented a MacBook-side media service. A separate check found the MacBook&#39;s direct Ethernet interface and the NAS on the matching direct network, while ComfyUI and YuE2 were not listening at that moment. We therefore had two questions, not one: which machine should receive the request, and whether its service had started.</p>
@@ -476,7 +479,7 @@ a:hover {
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FPCB-007%20Add%20deterministic%20environment%20and%20capability%20preflight">PCB-007 endpoint discovery and route selection, 16,17 September</a></li>
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FScratchpad%2F2026-09-15%20raw%20conversation%20Ethernet%20endpoint%20correction">Ethernet endpoint correction, 15 September</a></li>
 </ul>
-<nav class="post-nav"><a class="post-nav-link" href="p26-capability-manifest-before-run.html">← newer: A capability manifest before an expensive run</a><a class="post-nav-link" href="p31-route-matters-as-much-as-hostname.html">older →: The route matters as much as the hostname</a></nav></main>
+<nav class="post-nav"><a class="post-nav-link" href="p26-capability-manifest-before-run.html">← earlier: Ask the machines what they can do before the expensive bit</a><a class="post-nav-link" href="p31-route-matters-as-much-as-hostname.html">later →: Same computer, three routes, wildly different results</a></nav></main>
     <footer class="site-footer">
       <p>Private review preview of the <strong>PodCast Builder</strong> devlog — built from the senior-accepted draft set, 2026-09-19.</p>
     </footer>

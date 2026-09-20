@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#1a1d24" />
     <meta name="color-scheme" content="dark" />
-    <title>The lock was doing its job</title>
+    <title>The error was the lock working perfectly</title>
     <style>
 /* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
    This is the single source of truth for colour, radius, spacing and type.
@@ -452,6 +452,9 @@ a:hover {
 .intro{max-width:62ch;color:var(--text-secondary,#aeb3c2)}
 .evidence-window{color:var(--text-tertiary,#8b90a0);font-size:.85rem;margin:0 0 1.5rem}
 .post-banner{width:100%;max-height:340px;object-fit:cover;border-radius:var(--radius-md,10px);margin:0 0 1.2rem;border:1px solid var(--border-primary,#333)}
+.part-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.16em;color:var(--text-tertiary,#8b90a0);margin:0 0 .6rem;font-weight:700}
+.post-title{margin:0 0 .8rem;font-size:1.7rem;line-height:1.25}
+.lead{font-size:1.02rem;color:var(--text-secondary,#aeb3c2);line-height:1.55;margin:0 0 1.8rem;max-width:64ch}
 @media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
 </style></head>
   <body>
@@ -459,7 +462,7 @@ a:hover {
       <a class="brand" href="./index.html">PodCast Builder <span>· devlog</span></a>
       <nav class="site-nav"></nav>
     </header>
-    <main class="content"><img class="post-banner" src="img/p22-banner.webp" alt=""><p class="evidence-window">9 Sep 2026</p><p><em>Written retrospectively from records covering 9 September 2026.</em></p>
+    <main class="content"><p class="part-label">Part 16 of 43</p><img class="post-banner" src="img/p22-banner.webp" alt=""><p class="evidence-window">9 Sep 2026</p><h1 class="post-title">The error was the lock working perfectly</h1><p class="lead">Run 2415 was refused because ComfyUI already belonged to run 2414. Read it quickly and it looks like a lock failure. It was a lock success, and we were the ones who had failed to queue politely.</p><p><em>Written retrospectively from records covering 9 September 2026.</em></p>
 <p>Run <code>2415</code> was refused because ComfyUI already belonged to run <code>2414</code>. That sounds like a lock failure if we read it quickly. It was the opposite. The lock had prevented a second workflow from interrupting the first one, which is precisely why it existed. Our mistake was treating refusal as the diagnosis rather than as the beginning of one.</p>
 <h2>What happened</h2>
 <p>The failing execution stopped at <code>Assert normal ComfyUI ready</code>. The recorded message identified the owner and the refused run: <code>ComfyUI is locked by run=2414; refusing to interrupt it for run=2415 [line 3]</code>. A later retry, <code>2417</code>, met the same kind of boundary and produced the evidence used to verify the alert path.</p>
@@ -477,7 +480,7 @@ a:hover {
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FPCB-007%20Add%20deterministic%20environment%20and%20capability%20preflight">Deterministic preflight and guarded profile ownership</a></li>
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FScratchpad%2F2026-09-19T21-30-00%2B0800%20-%20PCB-015%20raw%20music%20and%20audio%20source%20trail">Audio incident route, 25 August 2026</a></li>
 </ul>
-<nav class="post-nav"><a class="post-nav-link" href="p15-let-intro-end-on-its-own.html">← newer: Let the intro end on its own</a><a class="post-nav-link" href="p19-retrying-the-old-graph.html">older →: Retrying the old graph</a></nav></main>
+<nav class="post-nav"><a class="post-nav-link" href="p15-let-intro-end-on-its-own.html">← earlier: We kept cutting our intro song mid-sentence, so we stopped</a><a class="post-nav-link" href="p19-retrying-the-old-graph.html">later →: &quot;Retry&quot; does not mean &quot;resume&quot;: re-running an old execution the hard way</a></nav></main>
     <footer class="site-footer">
       <p>Private review preview of the <strong>PodCast Builder</strong> devlog — built from the senior-accepted draft set, 2026-09-19.</p>
     </footer>

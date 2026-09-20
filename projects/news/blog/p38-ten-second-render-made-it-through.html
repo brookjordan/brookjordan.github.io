@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#1a1d24" />
     <meta name="color-scheme" content="dark" />
-    <title>The ten-second render that made it through</title>
+    <title>One podcast scene survived the ten-second render gauntlet</title>
     <style>
 /* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
    This is the single source of truth for colour, radius, spacing and type.
@@ -452,6 +452,9 @@ a:hover {
 .intro{max-width:62ch;color:var(--text-secondary,#aeb3c2)}
 .evidence-window{color:var(--text-tertiary,#8b90a0);font-size:.85rem;margin:0 0 1.5rem}
 .post-banner{width:100%;max-height:340px;object-fit:cover;border-radius:var(--radius-md,10px);margin:0 0 1.2rem;border:1px solid var(--border-primary,#333)}
+.part-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.16em;color:var(--text-tertiary,#8b90a0);margin:0 0 .6rem;font-weight:700}
+.post-title{margin:0 0 .8rem;font-size:1.7rem;line-height:1.25}
+.lead{font-size:1.02rem;color:var(--text-secondary,#aeb3c2);line-height:1.55;margin:0 0 1.8rem;max-width:64ch}
 @media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
 </style></head>
   <body>
@@ -459,7 +462,7 @@ a:hover {
       <a class="brand" href="./index.html">PodCast Builder <span>· devlog</span></a>
       <nav class="site-nav"></nav>
     </header>
-    <main class="content"><img class="post-banner" src="img/p38-banner.webp" alt=""><p class="evidence-window">15–19 Sep 2026</p><p><em>Written retrospectively from records covering 15–19 September 2026.</em></p>
+    <main class="content"><p class="part-label">Part 26 of 43</p><img class="post-banner" src="img/p38-banner.webp" alt=""><p class="evidence-window">15–19 Sep 2026</p><h1 class="post-title">One podcast scene survived the ten-second render gauntlet</h1><p class="lead">Case C, the overgrown ruins with slow fog and a locked camera, made a 9.96-second transition end to end. What passed, what the measurement actually covered, and what it does not yet prove.</p><p><em>Written retrospectively from records covering 15–19 September 2026.</em></p>
 <p>We wanted a clean answer to an awkwardly specific question: could one of the frozen podcast cases make a ten-second transition? Case C was the overgrown mythical-ruins scene, source execution 2572, with a locked camera and slow fog drifting towards the lens. The recorded result was not a triumphal “LTX solved video”. It was one measured run under one changed memory condition, which is less cinematic and considerably more useful.</p>
 <h2>What happened</h2>
 <p>The probe used case C&#39;s verified cover pair and the motion plan recorded for execution 2572. The target was 250 frames at 25 fps, recorded as 9.96 seconds in the evidence packet. Under the normal 0.8 MPS watermark, the 250-frame render failed twice at roughly six minutes in: the record says 20.71 GiB held and another 1.83 GiB refused. The failure was repeated rather than treated as bad luck. The probe then ran with the MPS watermark disabled and completed in 2,196 seconds, with endpoint measurements recorded as 4.2 and 3.3 out of 255.</p>
@@ -474,7 +477,7 @@ a:hover {
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking/podcast%20builder/PCB-013%20Probe%2010-second%20renders%20at%201280x704%20across%20frozen%20cases">T13 evidence</a></li>
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking/ltx25%20operating%20envelope/Scratchpad/2026-09-19T16-55-00%2B0800%20-%20PCB-012%20duration-curve%20probes%20-%20MPS%20memory%20envelope%20at%201280x704">DURATION evidence</a></li>
 </ul>
-<nav class="post-nav"><a class="post-nav-link" href="p37-ten-seconds-different-experiment.html">← newer: Ten seconds was a different experiment</a><a class="post-nav-link" href="p39-freeze-cases-before-limit.html">older →: Freeze the cases before moving the limit</a></nav></main>
+<nav class="post-nav"><a class="post-nav-link" href="p37-ten-seconds-different-experiment.html">← earlier: Ten seconds of video is a different experiment, not a short one</a><a class="post-nav-link" href="p39-freeze-cases-before-limit.html">later →: Freeze the test cases before you touch the duration knob</a></nav></main>
     <footer class="site-footer">
       <p>Private review preview of the <strong>PodCast Builder</strong> devlog — built from the senior-accepted draft set, 2026-09-19.</p>
     </footer>
