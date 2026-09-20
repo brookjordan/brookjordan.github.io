@@ -451,6 +451,7 @@ a:hover {
 .featured-title a:hover{color:var(--accent,#7aa2f7)}
 .all-posts-heading{margin-top:3rem}
 .intro{max-width:62ch;color:var(--text-secondary,#aeb3c2)}
+.evidence-window{color:var(--text-tertiary,#8b90a0);font-size:.85rem;margin:0 0 1.5rem}
 @media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
 </style></head>
   <body>
@@ -458,7 +459,7 @@ a:hover {
       <a class="brand" href="./index.html">PodCast Builder <span>· devlog</span></a>
       <nav class="site-nav"></nav>
     </header>
-    <main class="content"><p><em>Written retrospectively from records covering 16 September 2026.</em></p>
+    <main class="content"><p class="evidence-window">16 Sep 2026</p><p><em>Written retrospectively from records covering 16 September 2026.</em></p>
 <p>The podcast builder was carrying two different remote-generation assumptions, and we finally stopped pretending they were one problem. Music needed a local YuE2 path that could return a WAV with a stable contract. Video needed native Apple Silicon LTX-2.5, with its own isolated ComfyUI profile, model registration and guide-frame handling. The cutover was therefore less &quot;swap a model&quot; and more &quot;make two generators agree to hand over their work without setting fire to the rest of the graph&quot;.</p>
 <h2>What happened</h2>
 <p>The old music route was replaced by YuE2, while the former remote video path gave way to native LTX-2.5. These were separate contracts. YuE2 produced <code>intro_2491_00001.wav</code>, recorded as 2,303,788 bytes and 11.999 seconds. LTX ran in an isolated profile, then restored normal ComfyUI before stitching. The video side also needed <code>LTXVCropGuides</code> between sampling and decode, because guide padding could turn a requested 49-frame transition into 65 frames. We kept the previous builder inactive rather than deleting it, which is the engineering equivalent of leaving a fire exit unobstructed.</p>
@@ -475,7 +476,7 @@ a:hover {
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FREADME">Podcast builder map and cutover chronology</a></li>
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FPCB-005%20Improve%20story-song%20format%20and%20lyric%20presentation">Story-song contract and audio route</a></li>
 </ul>
-<nav class="post-nav"><a class="post-nav-link" href="p16-style-tags-and-guidance.html">← newer: Style tags and the guidance we had not enabled</a><a class="post-nav-link" href="p18-branches-finished-service-moved.html">older →: Both branches finished. The service had moved.</a></nav></main>
+<nav class="post-nav"><a class="post-nav-link" href="p16-style-tags-and-guidance.html">← newer: Style tags and the guidance we had not enabled</a><a class="post-nav-link" href="p23-episode-published-cleanup-failed.html">older →: The episode published. Cleanup failed.</a></nav></main>
     <footer class="site-footer">
       <p>Private review preview of the <strong>PodCast Builder</strong> devlog — built from the senior-accepted draft set, 2026-09-19.</p>
     </footer>

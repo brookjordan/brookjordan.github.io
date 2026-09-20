@@ -451,6 +451,7 @@ a:hover {
 .featured-title a:hover{color:var(--accent,#7aa2f7)}
 .all-posts-heading{margin-top:3rem}
 .intro{max-width:62ch;color:var(--text-secondary,#aeb3c2)}
+.evidence-window{color:var(--text-tertiary,#8b90a0);font-size:.85rem;margin:0 0 1.5rem}
 @media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
 </style></head>
   <body>
@@ -458,7 +459,7 @@ a:hover {
       <a class="brand" href="./index.html">PodCast Builder <span>· devlog</span></a>
       <nav class="site-nav"></nav>
     </header>
-    <main class="content"><p><em>Written retrospectively from records covering 15–19 September 2026.</em></p>
+    <main class="content"><p class="evidence-window">15–19 Sep 2026</p><p><em>Written retrospectively from records covering 15–19 September 2026.</em></p>
 <p>The inherited longer-video expectation was sensible, and still insufficient. The operating-envelope notes described a clean single-render result around 20 seconds and a practical ceiling near 24 seconds. Our podcast question was different: whether real episode prompts and their paired images could survive a longer transition in the graph we intended to use. Same family of model, different recipe, different evidence.</p>
 <h2>What happened</h2>
 <p>The earlier envelope work used a two-stage recipe with Q5 quantisation at its centre. The podcast probe was deliberately narrower and more production-shaped: one-stage Q3_K_M distilled inference, 1280×704 latent resolution, first/last-frame conditioning, a manual nine-sigma schedule, tiled VAE decoding, and 25 fps. The distinction matters because a recipe is not a decorative list of knobs. It determines memory allocation, timing, and how the model treats the guide frames. The probe packet records a 49-frame control at 1.96 seconds and a 121-frame run at 4.84 seconds before the longer attempt.</p>
@@ -473,7 +474,7 @@ a:hover {
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking/podcast%20builder/PCB-012%20Test%20longer%20LTX%20recipes%20against%20past%20podcast%20prompts">T12 evidence</a></li>
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking/podcast%20builder/PCB-013%20Probe%2010-second%20renders%20at%201280x704%20across%20frozen%20cases">T13 evidence</a></li>
 </ul>
-<nav class="post-nav"><a class="post-nav-link" href="p36-one-episode-before-archive.html">← newer: Migrate one episode before the archive</a><a class="post-nav-link" href="p38-ten-second-render-made-it-through.html">older →: The ten-second render that made it through</a></nav></main>
+<nav class="post-nav"><a class="post-nav-link" href="p32-mount-needed-a-click.html">← newer: A mount that needed a click</a><a class="post-nav-link" href="p38-ten-second-render-made-it-through.html">older →: The ten-second render that made it through</a></nav></main>
     <footer class="site-footer">
       <p>Private review preview of the <strong>PodCast Builder</strong> devlog — built from the senior-accepted draft set, 2026-09-19.</p>
     </footer>

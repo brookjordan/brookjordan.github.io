@@ -451,6 +451,7 @@ a:hover {
 .featured-title a:hover{color:var(--accent,#7aa2f7)}
 .all-posts-heading{margin-top:3rem}
 .intro{max-width:62ch;color:var(--text-secondary,#aeb3c2)}
+.evidence-window{color:var(--text-tertiary,#8b90a0);font-size:.85rem;margin:0 0 1.5rem}
 @media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
 </style></head>
   <body>
@@ -458,7 +459,7 @@ a:hover {
       <a class="brand" href="./index.html">PodCast Builder <span>· devlog</span></a>
       <nav class="site-nav"></nav>
     </header>
-    <main class="content"><p><em>Written retrospectively from records covering 17 September 2026.</em></p>
+    <main class="content"><p class="evidence-window">17 Sep 2026</p><p><em>Written retrospectively from records covering 17 September 2026.</em></p>
 <p>A single long copy sounded like the obvious answer to a 26.762 GB problem. The LTX video stage was reading models from a network mount, and that arrangement had already been associated with a <code>SIGBUS</code> exit when the share disappeared. We wanted the four-file model set on local disk before video generation, not another heroic transfer that failed at the point where the coffee machine started judging us. The requirement was therefore less &quot;copy these files&quot; and more &quot;make the copy survive reality&quot;.</p>
 <h2>What happened</h2>
 <p>The first useful change was architectural. The sync became detached from the workflow run, wrote status to a local state file, and could be resumed after a dropped SMB session. Resumption was aligned to a 16 MiB offset, with a 256 KiB overlap reread on both sides. That overlap was not decorative: it let the sync reject a damaged prefix before appending new bytes. A supervisor then retried the sync with backoff instead of treating one interrupted attempt as the end of civilisation.</p>
@@ -474,7 +475,7 @@ a:hover {
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FPCB-008%20Keep%20the%20LTX%20video%20stage%20off%20the%20network%20mount">T08 evidence</a></li>
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FREADME">MAP evidence</a></li>
 </ul>
-<nav class="post-nav"><a class="post-nav-link" href="p32-mount-needed-a-click.html">← newer: A mount that needed a click</a><a class="post-nav-link" href="p35-small-pages-media-elsewhere.html">older →: Keep the pages small and the media elsewhere</a></nav></main>
+<nav class="post-nav"><a class="post-nav-link" href="p30-unreachable-not-rebooted.html">← newer: Unreachable is not the same as rebooted</a><a class="post-nav-link" href="p12-speech-test-made-of-fixtures.html">older →: A speech test made of fixtures</a></nav></main>
     <footer class="site-footer">
       <p>Private review preview of the <strong>PodCast Builder</strong> devlog — built from the senior-accepted draft set, 2026-09-19.</p>
     </footer>

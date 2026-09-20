@@ -451,6 +451,7 @@ a:hover {
 .featured-title a:hover{color:var(--accent,#7aa2f7)}
 .all-posts-heading{margin-top:3rem}
 .intro{max-width:62ch;color:var(--text-secondary,#aeb3c2)}
+.evidence-window{color:var(--text-tertiary,#8b90a0);font-size:.85rem;margin:0 0 1.5rem}
 @media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
 </style></head>
   <body>
@@ -458,7 +459,7 @@ a:hover {
       <a class="brand" href="./index.html">PodCast Builder <span>· devlog</span></a>
       <nav class="site-nav"></nav>
     </header>
-    <main class="content"><p><em>Written retrospectively from records covering 16 to 19 September 2026.</em></p>
+    <main class="content"><p class="evidence-window">16–19 Sep 2026</p><p><em>Written retrospectively from records covering 16 to 19 September 2026.</em></p>
 <p>We had a musical intro. We also had a workflow that went looking for a different file. Execution 2491 produced <code>intro_2491_00001.wav</code>: a readable 2,303,788-byte WAV lasting 11.999 seconds. The music branch had done its job within that branch. The collating node had not, because it still requested the obsolete <code>.mp3</code> name. It was a small mismatch with the emotional scale of a failed episode, which is why filenames deserve their own incident reports.</p>
 <h2>What happened</h2>
 <p>The older contract expected an MP3. The YuE2 path materialised a WAV, and the output name included the execution identifier. The collator therefore failed while the rest of the execution could still contain useful work. PCB-006 records the important separation: native transition, profile restoration, stitching and final video retrieval completed before the parallel music branch failed. We should not flatten that into &quot;the workflow succeeded&quot; or &quot;the workflow failed&quot;. The music artefact existed; its consumer asked for yesterday&#39;s spelling.</p>
@@ -475,7 +476,7 @@ a:hover {
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FPCB-006%20Replace%20remote%20music%20and%20video%20generation%20with%20YuE2%20and%20native%20LTX-2.5">YuE2 cutover and execution 2491, 2497, 2502, 2505</a></li>
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FPCB-005%20Improve%20story-song%20format%20and%20lyric%20presentation">Story-song lyric boundary and execution 2560, 16 September</a></li>
 </ul>
-<nav class="post-nav"><a class="post-nav-link" href="p12-speech-test-made-of-fixtures.html">← newer: A speech test made of fixtures</a><a class="post-nav-link" href="p14-right-file-wrong-port.html">older →: The right file on the wrong port</a></nav></main>
+<nav class="post-nav"><a class="post-nav-link" href="p40-missing-pair-in-published-episode.html">← newer: The missing pair was in the published episode</a><a class="post-nav-link" href="p14-right-file-wrong-port.html">older →: The right file on the wrong port</a></nav></main>
     <footer class="site-footer">
       <p>Private review preview of the <strong>PodCast Builder</strong> devlog — built from the senior-accepted draft set, 2026-09-19.</p>
     </footer>

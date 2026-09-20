@@ -451,6 +451,7 @@ a:hover {
 .featured-title a:hover{color:var(--accent,#7aa2f7)}
 .all-posts-heading{margin-top:3rem}
 .intro{max-width:62ch;color:var(--text-secondary,#aeb3c2)}
+.evidence-window{color:var(--text-tertiary,#8b90a0);font-size:.85rem;margin:0 0 1.5rem}
 @media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
 </style></head>
   <body>
@@ -458,7 +459,7 @@ a:hover {
       <a class="brand" href="./index.html">PodCast Builder <span>· devlog</span></a>
       <nav class="site-nav"></nav>
     </header>
-    <main class="content"><p><em>Written retrospectively from records covering 9 September 2026.</em></p>
+    <main class="content"><p class="evidence-window">9 Sep 2026</p><p><em>Written retrospectively from records covering 9 September 2026.</em></p>
 <p>Run <code>2415</code> was refused because ComfyUI already belonged to run <code>2414</code>. That sounds like a lock failure if we read it quickly. It was the opposite. The lock had prevented a second workflow from interrupting the first one, which is precisely why it existed. Our mistake was treating refusal as the diagnosis rather than as the beginning of one.</p>
 <h2>What happened</h2>
 <p>The failing execution stopped at <code>Assert normal ComfyUI ready</code>. The recorded message identified the owner and the refused run: <code>ComfyUI is locked by run=2414; refusing to interrupt it for run=2415 [line 3]</code>. A later retry, <code>2417</code>, met the same kind of boundary and produced the evidence used to verify the alert path.</p>
@@ -476,7 +477,7 @@ a:hover {
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FPCB-007%20Add%20deterministic%20environment%20and%20capability%20preflight">Deterministic preflight and guarded profile ownership</a></li>
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FScratchpad%2F2026-09-19T21-30-00%2B0800%20-%20PCB-015%20raw%20music%20and%20audio%20source%20trail">Audio incident route, 25 August 2026</a></li>
 </ul>
-<nav class="post-nav"><a class="post-nav-link" href="p20-editor-saved-older-answer.html">← newer: The editor saved an older answer</a><a class="post-nav-link" href="p23-episode-published-cleanup-failed.html">older →: The episode published. Cleanup failed.</a></nav></main>
+<nav class="post-nav"><a class="post-nav-link" href="p15-let-intro-end-on-its-own.html">← newer: Let the intro end on its own</a><a class="post-nav-link" href="p19-retrying-the-old-graph.html">older →: Retrying the old graph</a></nav></main>
     <footer class="site-footer">
       <p>Private review preview of the <strong>PodCast Builder</strong> devlog — built from the senior-accepted draft set, 2026-09-19.</p>
     </footer>

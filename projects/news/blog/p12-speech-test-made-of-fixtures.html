@@ -451,6 +451,7 @@ a:hover {
 .featured-title a:hover{color:var(--accent,#7aa2f7)}
 .all-posts-heading{margin-top:3rem}
 .intro{max-width:62ch;color:var(--text-secondary,#aeb3c2)}
+.evidence-window{color:var(--text-tertiary,#8b90a0);font-size:.85rem;margin:0 0 1.5rem}
 @media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
 </style></head>
   <body>
@@ -458,7 +459,7 @@ a:hover {
       <a class="brand" href="./index.html">PodCast Builder <span>· devlog</span></a>
       <nav class="site-nav"></nav>
     </header>
-    <main class="content"><p><em>Written retrospectively from records covering 19 September 2026.</em></p>
+    <main class="content"><p class="evidence-window">19 Sep 2026</p><p><em>Written retrospectively from records covering 19 September 2026.</em></p>
 <p>We built a small speech-verification loop before connecting it to real speech. That sounds backwards until the alternative is debugging model output, transcription, speaker identity and retry handling in one noisy failure. The harness used fixture transcripts, a configurable <code>0.97</code> threshold and at most three candidates per segment. Execution 2528 passed the retry scenarios, including a fallback after three attempts. It did not measure speech accuracy.</p>
 <h2>What happened</h2>
 <p>The proposed production check has three passes. First, confirm that audio exists, is non-empty and decodes without obvious clipping. Next, compare the spoken text with the requested script. Finally, check that the voice resembles the requested speaker rather than being merely intelligible speech from the wrong person.</p>
@@ -475,7 +476,7 @@ a:hover {
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FPCB-010%20Test%20three-pass%20speaker%20accuracy%20for%20podcast%20audio">Three-pass speaker test design, 2026-09-19</a></li>
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FPCB-009%20Replace%20VibeVoice%20with%20maintained%20local%20TTS">TTS replacement scope, 2026-09-19</a></li>
 </ul>
-<nav class="post-nav"><a class="post-nav-link" href="p11-fifty-songs-was-a-test-plan.html">← newer: Fifty songs was a test plan</a><a class="post-nav-link" href="p13-song-existed-filename-did-not.html">older →: The song existed. The filename did not.</a></nav></main>
+<nav class="post-nav"><a class="post-nav-link" href="p33-copying-model-not-enough.html">← newer: Copying a model is not enough</a><a class="post-nav-link" href="p36-one-episode-before-archive.html">older →: Migrate one episode before the archive</a></nav></main>
     <footer class="site-footer">
       <p>Private review preview of the <strong>PodCast Builder</strong> devlog — built from the senior-accepted draft set, 2026-09-19.</p>
     </footer>

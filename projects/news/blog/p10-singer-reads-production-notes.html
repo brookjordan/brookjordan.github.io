@@ -451,6 +451,7 @@ a:hover {
 .featured-title a:hover{color:var(--accent,#7aa2f7)}
 .all-posts-heading{margin-top:3rem}
 .intro{max-width:62ch;color:var(--text-secondary,#aeb3c2)}
+.evidence-window{color:var(--text-tertiary,#8b90a0);font-size:.85rem;margin:0 0 1.5rem}
 @media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
 </style></head>
   <body>
@@ -458,7 +459,7 @@ a:hover {
       <a class="brand" href="./index.html">PodCast Builder <span>· devlog</span></a>
       <nav class="site-nav"></nav>
     </header>
-    <main class="content"><p><em>Written retrospectively from records covering 9 to 16 September 2026.</em></p>
+    <main class="content"><p class="evidence-window">9–16 Sep 2026</p><p><em>Written retrospectively from records covering 9 to 16 September 2026.</em></p>
 <p>The song generator was given a job description and treated it as lyrics. The recorded symptom included <code>Intro song</code>, an <code>[Intro]</code> section, parenthesised production directions and an initial word-intro instruction appearing in the material sent towards the singer. The result was an intro with no vocals. The records point at the lyric boundary, not at a mysterious failure of musical taste.</p>
 <h2>What happened</h2>
 <p>The workflow uses MiniMax Music 3 through ComfyUI&#39;s <code>MiniMaxMusic3TextEncode</code> node. Its inputs separate <code>caption</code> from <code>lyrics</code>. The ticket records the caption as the place already carrying global metadata, vocal details and arrangement. The investigation therefore narrowed to the lyrics field. It should contain words intended to be sung, with only minimal supported section tags.</p>
@@ -475,7 +476,7 @@ a:hover {
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Project%20tracking%2Fpodcast%20builder%2FREADME">Podcast project map and prompt symptom, 2026-09-19</a></li>
 <li><a href="obsidian://open?vault=Obsidian%20Vault&file=Daily%2F2026-09-09">Prompt investigation, 2026-09-09</a></li>
 </ul>
-<nav class="post-nav"><a class="post-nav-link" href="p09-two-hosts-need-more-than-labels.html">← newer: Two hosts need more than two labels</a><a class="post-nav-link" href="p11-fifty-songs-was-a-test-plan.html">older →: Fifty songs was a test plan</a></nav></main>
+<nav class="post-nav"><a class="post-nav-link" href="p24-august-lock-and-profile-troubles.html">← newer: August's lock and profile troubles</a><a class="post-nav-link" href="p15-let-intro-end-on-its-own.html">older →: Let the intro end on its own</a></nav></main>
     <footer class="site-footer">
       <p>Private review preview of the <strong>PodCast Builder</strong> devlog — built from the senior-accepted draft set, 2026-09-19.</p>
     </footer>

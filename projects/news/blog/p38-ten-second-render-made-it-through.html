@@ -451,6 +451,7 @@ a:hover {
 .featured-title a:hover{color:var(--accent,#7aa2f7)}
 .all-posts-heading{margin-top:3rem}
 .intro{max-width:62ch;color:var(--text-secondary,#aeb3c2)}
+.evidence-window{color:var(--text-tertiary,#8b90a0);font-size:.85rem;margin:0 0 1.5rem}
 @media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
 </style></head>
   <body>
@@ -458,7 +459,7 @@ a:hover {
       <a class="brand" href="./index.html">PodCast Builder <span>· devlog</span></a>
       <nav class="site-nav"></nav>
     </header>
-    <main class="content"><p><em>Written retrospectively from records covering 15–19 September 2026.</em></p>
+    <main class="content"><p class="evidence-window">15–19 Sep 2026</p><p><em>Written retrospectively from records covering 15–19 September 2026.</em></p>
 <p>We wanted a clean answer to an awkwardly specific question: could one of the frozen podcast cases make a ten-second transition? Case C was the overgrown mythical-ruins scene, source execution 2572, with a locked camera and slow fog drifting towards the lens. The recorded result was not a triumphal “LTX solved video”. It was one measured run under one changed memory condition, which is less cinematic and considerably more useful.</p>
 <h2>What happened</h2>
 <p>The probe used case C&#39;s verified cover pair and the motion plan recorded for execution 2572. The target was 250 frames at 25 fps, recorded as 9.96 seconds in the evidence packet. Under the normal 0.8 MPS watermark, the 250-frame render failed twice at roughly six minutes in: the record says 20.71 GiB held and another 1.83 GiB refused. The failure was repeated rather than treated as bad luck. The probe then ran with the MPS watermark disabled and completed in 2,196 seconds, with endpoint measurements recorded as 4.2 and 3.3 out of 255.</p>
