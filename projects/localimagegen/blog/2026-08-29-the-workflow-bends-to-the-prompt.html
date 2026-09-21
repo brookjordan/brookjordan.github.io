@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#1a1d24" />
     <meta name="color-scheme" content="dark" />
-    <title>Eight small models, three to five gigabytes</title>
+    <title>The workflow bends to the prompt</title>
     <style>
 /* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
    This is the single source of truth for colour, radius, spacing and type.
@@ -431,122 +431,82 @@ a:hover {
     </header>
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
-<h1>Eight small models, three to five gigabytes</h1>
-<p class="post-meta">2026-08-12 <time class="post-time" data-ts="1786533900000">19:25</time> · <span class="tag">data</span> <span class="tag">memory</span> <span class="tag">tooling</span> <span class="tag">apple-silicon</span></p>
-<p>The low-memory SD1.x/SD2.x cohort finally got an intensive allocator sweep on the
-development Mac (M3 Max, 36 GB). Peaks land between <strong>3.2 GB and 4.8 GB</strong> at their
-researched landscape canvases — well under SDXL&#39;s ~11 GB, and in the ballpark an
-8 GB Mini might survive if OS + Turbo leave enough headroom.</p>
-<h2>The run</h2>
-<pre><code class="language-sh">yarn mem:sweep:intensive:quiet \
-  sd15 sd15lcm sdturbo dreamshaper8 realisticvision epicrealism dreamlike sd21
+<h1>The workflow bends to the prompt</h1>
+<p class="post-meta">2026-08-29 <time class="post-time" data-ts="1788010800000">21:40</time> · <span class="tag">architecture</span> <span class="tag">decision</span> <span class="tag">content</span> <span class="tag">lesson</span></p>
+<p>For as long as this repo has existed, the contract has been rigid: every scene
+for a given model renders through exactly the same graph. The builder in
+<code>src/graphs.ts</code> knows one shape per model, and the scene only gets to change
+the text. That kept the matrix honest — but it also meant the workflow could
+never serve the prompt. A portrait wants a face pass; a landscape doesn&#39;t.
+There will never be one size fits all, so today we let the prompt adapt the
+workflow.</p>
+<h2>Optional graph modules</h2>
+<p>A scene can now declare modules in <code>config/gallery.ts</code>:</p>
+<pre><code class="language-ts">graph: { face_detail: true }
 </code></pre>
-<p>Five rounds × eight models, full ComfyUI restart between every measurement. Rich
-readings and the reconciled report live at:</p>
+<p>At render time <code>applyGraphModules()</code> snaps the requested modules into the base
+graph. The first module is <code>face_detail</code>: it re-routes SaveImage through a
+FaceDetailer chain — the NOOB_EPSv1_1_detailer LoRA, Ultralytics
+<code>face_yolov8m</code> detection, and a SAMLoader — so faces get a dedicated upscaled
+pass. It caps at <code>max_size</code> 1024 because 2048 renders fine but macOS quietly
+drops the save on this M3 Max; we took the limit rather than debug the
+silently-vanished file.</p>
+<p>Two deliberate boundaries:</p>
 <ul>
-<li><code>renders/mem-archive/2026-08-12-small-models-intensive.json</code></li>
-<li><code>renders/mem-archive/2026-08-12-small-models-report.json</code></li>
+<li><strong>Scenes without a <code>graph</code> block are untouched.</strong> Backwards compatible by
+construction, and it makes bare-vs-detailed A/B pairs trivial — see
+<code>angels</code>/<code>angelsbare</code>, the same car-and-angel scene with and without the
+module.</li>
+<li><strong>Unsupported never means silent.</strong> If a model&#39;s builder can&#39;t supply a
+requested module, <code>applyGraphModules()</code> warns and skips it. A warning you
+can grep beats a graph that quietly isn&#39;t what the config asked for.</li>
 </ul>
-<p>(<code>build/data/mem-*.json</code> holds the same snapshot until the next intensive sweep
-overwrites it. The archive under <code>renders/</code> is the durable copy.)</p>
-<h2>Reconciled peaks (driver allocator)</h2>
-<table>
-<thead>
-<tr>
-<th>model</th>
-<th>peak</th>
-<th>weights</th>
-<th>activations</th>
-<th>confidence</th>
-<th>notes</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>sdturbo</td>
-<td><strong>3.2 GB</strong></td>
-<td>2.2</td>
-<td>1.1</td>
-<td>medium</td>
-<td>lightest peak</td>
-</tr>
-<tr>
-<td>sd15lcm</td>
-<td><strong>3.3 GB</strong></td>
-<td>2.2</td>
-<td>1.1</td>
-<td>medium</td>
-<td>LCM keeps activations small</td>
-</tr>
-<tr>
-<td>sd21</td>
-<td><strong>3.5 GB</strong></td>
-<td>2.2</td>
-<td>1.4</td>
-<td>low</td>
-<td>disk 4.9 GB ≠ loaded weights</td>
-</tr>
-<tr>
-<td>epicrealism</td>
-<td><strong>4.0 GB</strong></td>
-<td>2.2</td>
-<td>1.9</td>
-<td>high</td>
-<td>photoreal lane</td>
-</tr>
-<tr>
-<td>realisticvision</td>
-<td><strong>4.0 GB</strong></td>
-<td>2.2</td>
-<td>1.9</td>
-<td>medium</td>
-<td>photoreal lane</td>
-</tr>
-<tr>
-<td>sd15</td>
-<td><strong>4.3 GB</strong></td>
-<td>2.2</td>
-<td>2.1</td>
-<td>high</td>
-<td>baseline 704×384</td>
-</tr>
-<tr>
-<td>dreamlike</td>
-<td><strong>4.8 GB</strong></td>
-<td>2.2</td>
-<td>2.6</td>
-<td>high</td>
-<td>768×432 canvas</td>
-</tr>
-<tr>
-<td>dreamshaper8</td>
-<td><strong>4.8 GB</strong></td>
-<td>2.2</td>
-<td>2.6</td>
-<td>high</td>
-<td>768×432 canvas</td>
-</tr>
-</tbody></table>
-<p>Every reading was <strong>full-load / unimodal</strong>. No partial-load mode showed up on this
-machine with this budget.</p>
-<h2>What this does <em>not</em> mean</h2>
+<p>This isn&#39;t a return of the cosmetic-LoRA temptation —
+<a href="2026-06-23-the-lora-question.html">the LoRA question</a> still holds. The sweep&#39;s
+builders stay bare; modules are opt-in per scene, declared in config, visible
+in every cell&#39;s provenance. The matrix still measures the model. The module
+just gives a scene what it actually asked for.</p>
+<h2>Two anime models and seven scenes</h2>
+<p>New models in <code>config/gallery.ts</code>:</p>
 <ul>
-<li><strong>Not gallery footprints.</strong> The fixed page bakes <code>build/data/mem.json</code> from the
-plain <code>yarn mem:sweep</code> (legacy free-RAM delta). Intensive report → gallery is
-still a missing bridge; run the plain sweep next and compare.</li>
-<li><strong>Not Mini admission.</strong> These peaks are from a quiet 36 GB laptop. The Mini
-still has to prove complete load, no swap, recovery, and Turbo health under
-8 GB unified memory.</li>
-<li><strong>Legacy psutil still lies.</strong> On several models it over-counted by 19–61% vs
-the allocator peak — same lesson as
-<a href="2026-07-06-1700-actual-memory-numbers.html">the actual numbers</a>.</li>
+<li><strong><code>animaturbo</code></strong> — Anima Turbo v1.1, a distilled 2B with a few-step ladder
+(1/4/8).</li>
+<li><strong><code>zanime</code></strong> — SeeSee21&#39;s Z-Anime base fp8, a Z-Image architecture anime
+finetune. Because it reuses the proven zimage graph contract, it needed
+<strong>no new encoder or VAE wiring</strong> — qwen_3_4b lumina2 CLIP + <code>ae.safetensors</code>
+were already on disk. AuraFlow sampler at shift 3, <code>res_multistep</code> at cfg 4,
+ladder out to 20 steps.</li>
 </ul>
-<p>Next: plain <code>mem:sweep</code> for gallery <code>mem.json</code>, then Mini admission for whoever
-wins the quality-vs-peak trade.</p>
+<p>And seven new anime concept scenes, each with booru (<code>b</code>) and natural-language
+(<code>all</code>) prompt variants: <code>kaiju</code>, <code>mecha</code>, <code>nihonga</code>, <code>oilportrait</code>,
+<code>lineart</code>, <code>mangapanel</code>, <code>animestill</code>.</p>
+<h2>The FaceDetailer lesson (cost: an afternoon)</h2>
+<p>ComfyUI&#39;s FaceDetailer validates its <strong>entire required input list</strong> at
+execution time: <code>bbox_threshold</code>, <code>bbox_dilation</code>, <code>bbox_crop_factor</code>,
+<code>sam_threshold</code>, <code>sam_dilation</code>, <code>sam_bbox_expansion</code>,
+<code>sam_detection_hint</code>, <code>sam_mask_hint_threshold</code>,
+<code>sam_mask_hint_use_negative</code>. Miss any one and the graph is rejected. Worse,
+the SAM hook input is <code>sam_model_opt</code> (optional) — a <code>sam_detector</code> key passes
+every client-side check and then explodes at execution with &quot;unexpected
+keyword argument&quot;.</p>
+<p>The loop that worked, and is worth remembering:</p>
+<ol>
+<li>Build the graph programmatically.</li>
+<li><code>POST</code> it to ComfyUI&#39;s <code>/prompt</code>.</li>
+<li>Read the validation errors straight out of the response body.</li>
+<li>Fix, repeat, then smoke-test a full render.</li>
+</ol>
+<p>Never trust client-side checks alone. ComfyUI is the validator.</p>
+<h2>Evidence</h2>
+<p>202 vitest tests green; <code>lig doctor</code> clean — every scene resolves for every
+model, including the new pairings. Both models render end-to-end:
+<code>animaturbo</code> at 4 steps in 40s, <code>zanime</code> at 10 steps in 196s — with a
+strikingly good Nihonga watercolour to show for it.</p>
 
 </article>
 <nav class="post-nav" aria-label="Post navigation">
-<a class="post-nav-link post-nav-prev" href="2026-08-09-eight-gigabytes-no-miracles.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">Eight gigabytes, no miracles, and one useful loophole</span></span></a>
-<a class="post-nav-link post-nav-next" href="2026-08-13-non-sd-eight-gigabyte-trenches.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">Non-SD image gen in the eight-gigabyte trenches</span></span><span class="post-nav-arrow">&rarr;</span></a>
+<a class="post-nav-link post-nav-prev" href="2026-08-13-non-sd-eight-gigabyte-trenches.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">Non-SD image gen in the eight-gigabyte trenches</span></span></a>
+<a class="post-nav-link post-nav-next" href="2026-09-20-the-grey-rectangle-that-passed.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">The grey rectangle that passed every check</span></span><span class="post-nav-arrow">&rarr;</span></a>
 </nav></main>
     <footer class="site-footer">
       <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>

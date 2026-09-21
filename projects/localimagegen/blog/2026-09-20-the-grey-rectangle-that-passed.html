@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#1a1d24" />
     <meta name="color-scheme" content="dark" />
-    <title>Eight small models, three to five gigabytes</title>
+    <title>The grey rectangle that passed every check</title>
     <style>
 /* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
    This is the single source of truth for colour, radius, spacing and type.
@@ -431,122 +431,153 @@ a:hover {
     </header>
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
-<h1>Eight small models, three to five gigabytes</h1>
-<p class="post-meta">2026-08-12 <time class="post-time" data-ts="1786533900000">19:25</time> · <span class="tag">data</span> <span class="tag">memory</span> <span class="tag">tooling</span> <span class="tag">apple-silicon</span></p>
-<p>The low-memory SD1.x/SD2.x cohort finally got an intensive allocator sweep on the
-development Mac (M3 Max, 36 GB). Peaks land between <strong>3.2 GB and 4.8 GB</strong> at their
-researched landscape canvases — well under SDXL&#39;s ~11 GB, and in the ballpark an
-8 GB Mini might survive if OS + Turbo leave enough headroom.</p>
-<h2>The run</h2>
-<pre><code class="language-sh">yarn mem:sweep:intensive:quiet \
-  sd15 sd15lcm sdturbo dreamshaper8 realisticvision epicrealism dreamlike sd21
-</code></pre>
-<p>Five rounds × eight models, full ComfyUI restart between every measurement. Rich
-readings and the reconciled report live at:</p>
-<ul>
-<li><code>renders/mem-archive/2026-08-12-small-models-intensive.json</code></li>
-<li><code>renders/mem-archive/2026-08-12-small-models-report.json</code></li>
-</ul>
-<p>(<code>build/data/mem-*.json</code> holds the same snapshot until the next intensive sweep
-overwrites it. The archive under <code>renders/</code> is the durable copy.)</p>
-<h2>Reconciled peaks (driver allocator)</h2>
+<h1>The grey rectangle that passed every check</h1>
+<p class="post-meta">2026-09-20 <time class="post-time" data-ts="1789895700000">17:15</time> · <span class="tag">incident</span> <span class="tag">lesson</span> <span class="tag">architecture</span></p>
+<p>A refused prompt does not come back as an error. Ideogram 4 returns a <strong>flat grey
+1280×720 frame</strong> reading &quot;Image blocked by safety filter&quot;, as a valid WebP at exactly the
+requested size. During the 2026-09-20 podcast banner pass two of those shipped, and
+<code>verify-banners</code> reported 47/47 green, because the gate only asked whether a correctly
+sized file existed. It did.</p>
+<p>So the question for this repo: would <code>lig verify</code> have caught it?</p>
+<h2>The measurement</h2>
+<p><code>src/verify.ts</code> already had a blank gate, <code>BLANK_STDDEV = 1</code>, aimed at flux NaN-black and
+truncated files, with a comment noting legit-but-dark low-step renders sit at ~2 to 5. The
+placeholder is not black. Its channel stdev lands at <strong>10.5 to 11.0</strong>, comfortably inside
+&quot;normal&quot;, so it sails through. Confirmed by calling the engine&#39;s own <code>validate()</code> on both
+preserved frames: <code>ok: true</code>, no reason.</p>
+<p>That also kills the obvious fix. Tightening <code>BLANK_STDDEV</code> would start rejecting genuine
+dark renders long before it reached the grey card, because the two overlap on stdev: the
+darkest real ideogram master measures 4.2 and the placeholder 10.6.</p>
+<p>What <em>does</em> separate them is concentration. The placeholder is a screen-filling fill plus
+a little text, so <strong>98.2% of its pixels sit within ±2 levels of one grey value</strong>. Real
+renders spread out. Measured across every committed model family (2,150+ renders):</p>
 <table>
 <thead>
 <tr>
-<th>model</th>
-<th>peak</th>
-<th>weights</th>
-<th>activations</th>
-<th>confidence</th>
-<th>notes</th>
+<th>model family</th>
+<th>worst real render (modal share)</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>sdturbo</td>
-<td><strong>3.2 GB</strong></td>
-<td>2.2</td>
-<td>1.1</td>
-<td>medium</td>
-<td>lightest peak</td>
+<td>noobai</td>
+<td>86.3%</td>
 </tr>
 <tr>
-<td>sd15lcm</td>
-<td><strong>3.3 GB</strong></td>
-<td>2.2</td>
-<td>1.1</td>
-<td>medium</td>
-<td>LCM keeps activations small</td>
+<td>ideogram (216/216)</td>
+<td>85.1%</td>
 </tr>
 <tr>
-<td>sd21</td>
-<td><strong>3.5 GB</strong></td>
-<td>2.2</td>
-<td>1.4</td>
-<td>low</td>
-<td>disk 4.9 GB ≠ loaded weights</td>
+<td>noobaivpred</td>
+<td>81.5%</td>
 </tr>
 <tr>
-<td>epicrealism</td>
-<td><strong>4.0 GB</strong></td>
-<td>2.2</td>
-<td>1.9</td>
-<td>high</td>
-<td>photoreal lane</td>
+<td>illustrious</td>
+<td>76.8%</td>
 </tr>
 <tr>
-<td>realisticvision</td>
-<td><strong>4.0 GB</strong></td>
-<td>2.2</td>
-<td>1.9</td>
-<td>medium</td>
-<td>photoreal lane</td>
-</tr>
-<tr>
-<td>sd15</td>
-<td><strong>4.3 GB</strong></td>
-<td>2.2</td>
-<td>2.1</td>
-<td>high</td>
-<td>baseline 704×384</td>
-</tr>
-<tr>
-<td>dreamlike</td>
-<td><strong>4.8 GB</strong></td>
-<td>2.2</td>
-<td>2.6</td>
-<td>high</td>
-<td>768×432 canvas</td>
+<td>pony</td>
+<td>59.6%</td>
 </tr>
 <tr>
 <td>dreamshaper8</td>
-<td><strong>4.8 GB</strong></td>
-<td>2.2</td>
-<td>2.6</td>
-<td>high</td>
-<td>768×432 canvas</td>
+<td>58.0%</td>
+</tr>
+<tr>
+<td>chroma</td>
+<td>54.6%</td>
+</tr>
+<tr>
+<td>zimage</td>
+<td>38.1%</td>
+</tr>
+<tr>
+<td>sd15lcm</td>
+<td>32.9%</td>
+</tr>
+<tr>
+<td>realisticvision</td>
+<td>27.4%</td>
+</tr>
+<tr>
+<td>epicrealism</td>
+<td>20.9%</td>
+</tr>
+<tr>
+<td>dreamlike</td>
+<td>17.8%</td>
+</tr>
+<tr>
+<td>realvisxl</td>
+<td>17.3%</td>
+</tr>
+<tr>
+<td>sd15</td>
+<td>17.1%</td>
+</tr>
+<tr>
+<td>sdxlbase</td>
+<td>16.0%</td>
+</tr>
+<tr>
+<td><strong>placeholder</strong></td>
+<td><strong>98.2%</strong></td>
 </tr>
 </tbody></table>
-<p>Every reading was <strong>full-load / unimodal</strong>. No partial-load mode showed up on this
-machine with this budget.</p>
-<h2>What this does <em>not</em> mean</h2>
+<p>The gate is now <code>FLAT_FILL_SHARE = 0.92</code> on images of 512×512 or larger, which leaves
+~6pp of headroom on both sides. Both class leaders are very dark, very low-step frames:
+<code>noobai_dragon_s02_t5s_1670940986_</code> is a 5-step render with channel stdev 5.5.</p>
+<h2>What the first attempt got wrong</h2>
+<p>The first calibration sampled 54 ideogram masters and reported a worst case of 71.3%,
+which made a 0.85 threshold look generous. Scanning all 216 found
+<code>ideogram_van_s02_t64s_00042_</code> at <strong>85.1%</strong>, above it. That would have rejected a real
+render, and because a rejected master is re-rendered, the cost is wasted GPU time on an
+image that was already correct. The threshold is only as good as the sample behind it;
+sample by <code>--all</code> when the number matters.</p>
+<p>Two other candidate signals were measured and <strong>rejected</strong> rather than shipped:</p>
 <ul>
-<li><strong>Not gallery footprints.</strong> The fixed page bakes <code>build/data/mem.json</code> from the
-plain <code>yarn mem:sweep</code> (legacy free-RAM delta). Intensive report → gallery is
-still a missing bridge; run the plain sweep next and compare.</li>
-<li><strong>Not Mini admission.</strong> These peaks are from a quiet 36 GB laptop. The Mini
-still has to prove complete load, no swap, recovery, and Turbo health under
-8 GB unified memory.</li>
-<li><strong>Legacy psutil still lies.</strong> On several models it over-counted by 19–61% vs
-the allocator peak — same lesson as
-<a href="2026-07-06-1700-actual-memory-numbers.html">the actual numbers</a>.</li>
+<li><strong>Per-tile flatness</strong> (lowest 32px-tile mean |Laplacian|). Intuitive, and useless: real
+renders contain plenty of perfectly flat 32px tiles, so both classes score 0.000.</li>
+<li><strong>Patch-mean variation</strong> (stdev of 32px block means). Reads well on paper, but the
+placeholder scores 5.73 and the darkest real render 6.31. No separation at all.</li>
 </ul>
-<p>Next: plain <code>mem:sweep</code> for gallery <code>mem.json</code>, then Mini admission for whoever
-wins the quality-vs-peak trade.</p>
+<p>That 85.1% frame is informative in its own right: channel means of <strong>1/0/16</strong>, a
+near-black underdeveloped render. It is concentrated <em>and</em> dark, whereas the placeholder
+is concentrated <em>and</em> mid-grey (~112/112/110). Dark or grey alone tells you nothing; the
+combination of &quot;very concentrated&quot; with &quot;not dark&quot; is what identifies a notice card, and
+even then the margin is thinner than the tidy 71.3% sample suggested.</p>
+<h2>The actual fix is still upstream</h2>
+<p>Catching the grey card is a <strong>symptom</strong> check. The cause is a prompt-contract violation:
+Ideogram 4 is trained exclusively on structured JSON captions, and the vendor&#39;s guide
+states plain text &quot;will not work and will likely trigger a safety warning&quot;, with a
+safety-filter false-positive rate that &quot;is high for non-json prompts&quot;. The gallery sends
+prose to every model because <code>config/gallery.ts</code> maps one prose scene set across all of
+them.</p>
+<p>The repo already has the right shape for this. <code>prompt_sizes</code> carries a <code>b</code> bucket
+specifically because booru tag-models need a different <em>idiom</em> rather than a different
+budget. See <a href="2026-07-02-booru-bucket.html">booru, not prose</a>. A JSON caption is the same
+kind of thing: add a <code>j</code> bucket, give each scene a caption, point <code>ideogram</code> at it, and
+have the builder serialise the object compactly (<code>separators=(&quot;,&quot;, &quot;:&quot;)</code>, strict key
+order) before it reaches <code>CLIPTextEncode</code>.</p>
+<p>That work is <strong>not done here</strong>, deliberately. Authoring eight scenes&#39; worth of JSON
+captions is content, and the scenes carry the canonical cloth-patch motif whose phrasing
+is load-bearing. Writing that blind, without a renderer to check against, is how you end
+up with a caption set that is subtly wrong for all 216 ideogram cells. The mechanism is
+small; the captions deserve to be written and rendered with a working ComfyUI.</p>
+<p>Until then the gate is the safety net, and it is honest about its margin: it is tuned
+against the darkest low-step ideogram renders, and a future model producing legitimately
+near-monochrome mid-grey output would trip it. <code>scripts/measure-flat-fills.ts</code> exists to
+re-derive the number from the corpus rather than trust this table.</p>
+<h2>Files</h2>
+<ul>
+<li><code>src/verify.ts</code>: <code>FLAT_FILL_SHARE</code>, <code>flatFillShare()</code>, flat-fill branch in <code>validate()</code></li>
+<li><code>test/verify.flat-fill.test.ts</code>: synthetic notice card, notice card with text, low-contrast render, black frame, wrong dims</li>
+<li><code>scripts/measure-flat-fills.ts</code>: recalibration tool (<code>--all</code>, <code>--model</code>, <code>--known</code>)</li>
+</ul>
 
 </article>
 <nav class="post-nav" aria-label="Post navigation">
-<a class="post-nav-link post-nav-prev" href="2026-08-09-eight-gigabytes-no-miracles.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">Eight gigabytes, no miracles, and one useful loophole</span></span></a>
-<a class="post-nav-link post-nav-next" href="2026-08-13-non-sd-eight-gigabyte-trenches.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">Non-SD image gen in the eight-gigabyte trenches</span></span><span class="post-nav-arrow">&rarr;</span></a>
+<a class="post-nav-link post-nav-prev" href="2026-08-29-the-workflow-bends-to-the-prompt.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">The workflow bends to the prompt</span></span></a>
+<span class="post-nav-link post-nav-next post-nav-empty"></span>
 </nav></main>
     <footer class="site-footer">
       <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>

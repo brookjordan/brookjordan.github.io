@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#1a1d24" />
+    <meta name="color-scheme" content="dark" />
+    <title>Non-SD image gen in the eight-gigabyte trenches</title>
+    <style>
+/* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
+   This is the single source of truth for colour, radius, spacing and type.
+   It is inlined ahead of each page's stylesheet at build time, and linked
+   first in dev so opening the .html files directly still resolves the vars.
+
+   Theming: everything below is a semantic token mapped onto a small palette of
+   primitives. To add a theme, override the *semantic* tokens under a selector
+   (see the commented [data-theme="light"] block at the bottom) — no stylesheet
+   needs to change, only these variables. */
+:root {
+  color-scheme: dark;
+
+  /* ---- palette primitives (raw colours; reference these only via the tokens below) ---- */
+  --c-ink-900: #0f1115;
+  --c-ink-800: #1a1d24;
+  --c-ink-700: #232732;
+  --c-ink-600: #2a2f3a;
+  --c-fog-100: #e8eaed;
+  --c-fog-300: #9aa0a6;
+  --c-fog-500: #6b727d;
+  --c-accent: #7c9cff;
+
+  /* ---- semantic: background / border / text, primary > secondary > tertiary ---- */
+  --bg-primary: var(--c-ink-900);
+  --bg-secondary: var(--c-ink-800);
+  --bg-tertiary: var(--c-ink-700);
+
+  --border-primary: var(--c-ink-600);
+  --border-secondary: rgba(150, 170, 210, 0.16);
+
+  --text-primary: var(--c-fog-100);
+  --text-secondary: var(--c-fog-300);
+  --text-tertiary: var(--c-fog-500);
+
+  --accent: var(--c-accent);
+
+  /* ---- radius scale ---- */
+  --radius-sm: 5px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 9999px;
+
+  /* ---- spacing / padding scale ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 2rem;
+
+  /* ---- type ---- */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* Shared cross-nav link (gallery <-> devlog). Both app.css and blog.css inline this
+   file, so defining it once here keeps the two links visually identical. */
+.cross-link {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.cross-link:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+/* Example theme override — set <html data-theme="light"> to activate (or wire it
+   to prefers-color-scheme). Left commented so we don't ship untuned colours:
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg-primary: #fbfbfd;
+  --bg-secondary: #f1f2f5;
+  --bg-tertiary: #e7e9ee;
+  --border-primary: #d4d8e0;
+  --border-secondary: rgba(20, 30, 60, 0.12);
+  --text-primary: #1a1d24;
+  --text-secondary: #555b66;
+  --text-tertiary: #7b828d;
+}
+*/
+
+</style>
+    <style>
+:root {
+  /* Local aliases mapped onto the shared tokens in tokens.css (inlined first),
+     so the devlog and the gallery share one palette, radius and spacing scale. */
+  --bg: var(--bg-primary);
+  --bg-soft: var(--bg-secondary);
+  --panel: var(--bg-tertiary);
+  --text: var(--text-primary);
+  --muted: var(--text-secondary);
+  --border: var(--border-secondary);
+  --radius: var(--radius-md);
+  /* --accent comes straight from tokens.css */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.65 var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.site-header,
+.site-footer {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 1.25rem 1.25rem;
+}
+
+.site-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text);
+}
+
+.brand span {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.content {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+
+.site-footer {
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* ---- post typography ---- */
+.content h1 {
+  font-size: 1.9rem;
+  line-height: 1.2;
+  margin: 0 0 0.5rem;
+}
+
+.content h2 {
+  font-size: 1.35rem;
+  margin: 2rem 0 0.6rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.3rem;
+}
+
+.content h3 {
+  font-size: 1.1rem;
+  margin: 1.5rem 0 0.4rem;
+}
+
+.content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  display: block;
+  margin: 1.25rem 0;
+}
+
+.content audio {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.content blockquote {
+  margin: 1.25rem 0;
+  padding: 0.5rem 1rem;
+  border-left: 3px solid var(--accent);
+  background: var(--bg-soft);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  color: var(--muted);
+}
+
+.content pre {
+  background: #12151b;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  overflow: auto;
+  font-size: 0.88rem;
+}
+
+.content code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: rgba(150, 170, 210, 0.14);
+  padding: 0.1em 0.35em;
+  border-radius: 5px;
+}
+
+.content pre code {
+  background: none;
+  padding: 0;
+}
+
+.post-banner {
+  width: 100%;
+  max-height: 22rem;
+  object-fit: cover;
+  border-radius: var(--radius);
+  display: block;
+  margin: 0 0 1.5rem;
+}
+
+/* Click-to-cycle: slide 0 (current) sits in normal flow and sizes the box; every other
+   slide overlays it absolutely at opacity 0. web/blog.html's script sets each slide's
+   opacity directly (not CSS classes) so this scales to any number of legacy versions. */
+.banner-compare {
+  position: relative;
+  cursor: pointer;
+}
+
+.banner-compare .banner-slide {
+  margin: 0;
+  transition: opacity 0.25s ease;
+}
+
+.banner-compare .banner-slide:not([data-slide='0']) {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.banner-compare-hint {
+  position: absolute;
+  right: 0.7rem;
+  bottom: calc(1.5rem + 0.7rem);
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 0.72rem;
+  line-height: 1;
+  padding: 0.4rem 0.65rem;
+  border-radius: 999px;
+  opacity: 0.85;
+  transition: opacity 0.15s ease;
+}
+
+.banner-compare:hover .banner-compare-hint {
+  opacity: 1;
+}
+
+/* ---- per-post header (date + tags) ---- */
+.post-meta {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0 0 1.5rem;
+}
+
+.tag {
+  display: inline-block;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 0.1em 0.7em;
+  font-size: 0.78rem;
+  margin-right: 0.35rem;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+/* ---- prev/next post nav (baked at build time, see postNav in src/blog.ts) ---- */
+.post-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 2rem 0 0;
+}
+
+.post-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-soft);
+  color: var(--text);
+  min-width: 0;
+}
+
+.post-nav-link:hover {
+  border-color: var(--accent);
+  text-decoration: none;
+}
+
+.post-nav-empty {
+  border-color: transparent;
+  background: none;
+}
+
+.post-nav-next {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.post-nav-arrow {
+  color: var(--muted);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.post-nav-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.post-nav-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.post-nav-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .post-nav {
+    grid-template-columns: 1fr;
+  }
+
+  .post-nav-next {
+    justify-content: flex-start;
+    text-align: left;
+  }
+}
+
+/* ---- index listing ---- */
+.index-intro {
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+
+.post-group-date {
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 2rem 0 0.75rem;
+}
+
+.post-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.post-list li {
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.post-list a.post-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.post-list .post-row-meta {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+}
+
+.post-time {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  margin-right: 0.5rem;
+  cursor: help;
+}
+
+</style>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="./index.html">localimagegen <span>· devlog</span></a>
+      <nav class="site-nav"><a class="cross-link" href="../index.html">gallery →</a></nav>
+    </header>
+    <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
+<article class="post">
+<h1>Non-SD image gen in the eight-gigabyte trenches</h1>
+<p class="post-meta">2026-08-13 <time class="post-time" data-ts="1786602600000">14:30</time> · <span class="tag">research</span> <span class="tag">ops</span> <span class="tag">memory</span> <span class="tag">apple-silicon</span></p>
+<p>SD does not have a monopoly on text-to-image. It <em>does</em> have a monopoly on
+<strong>ecosystems that still fit an 8 GB M1 Mini after TurboFieldfare and macOS take
+their cut.</strong> Most “tiny” non-SD models hide a giant text encoder. This note
+mines Reddit, Draw Things trenches, HF/Diffusers docs, and GitHub READMEs for
+anything that is architecturally <em>not</em> an SD UNet and might still survive
+~4–5 GB free unified memory.</p>
+<p>Companion context: <a href="2026-08-09-eight-gigabytes-no-miracles.html">eight gigabytes, no miracles</a>
+already skipped PixArt-as-self-contained, Sana-for-humans, Cascade-as-naive-Comfy,
+and FLUX-class families. This pass asks the narrower question: <em>what non-SD
+stacks do the trenches actually claim run small?</em></p>
+<h2>The uncomfortable pattern</h2>
+<p>On discrete NVIDIA cards, “runs in 8 GB VRAM” usually means:</p>
+<ol>
+<li>put the huge text encoder on system RAM or 8-bit CUDA,</li>
+<li>encode once,</li>
+<li>free it,</li>
+<li>denoise on the GPU.</li>
+</ol>
+<p>On an M1 Mini those four steps share <strong>one</strong> pool with the OS. bitsandbytes-style
+8-bit TE recipes are CUDA-shaped. MPS tends to mean “encode on CPU, pray about
+swap.” Draw Things’ custom quants are the exception that keeps showing up in
+Mac threads.</p>
+<p>Draw Things’ own device table marks <strong>8 GB / 8-core (M1 Air class) as 🟡</strong> for
+even SDXL/Kolors/Flux with 8-bit and quant, and notes that <strong>8 GB on M1 ≈ 6–7 GB
+effective</strong> for the app
+(<a href="https://wiki.drawthings.ai/wiki/How_Powerful_Is_My_Device">How Powerful Is My Device</a>).
+Our Mini also runs Ollama/Turbo — so budget closer to <strong>4–5 GB free</strong>, not the
+wiki’s quiet-device 6–7.</p>
+<h2>Ranked for this Mini</h2>
+<table>
+<thead>
+<tr>
+<th>Verdict</th>
+<th>Candidate</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Try</strong></td>
+<td><strong>aMUSEd</strong> (Diffusers)</td>
+<td>Masked image model, <strong>CLIP-L only</strong>, openly sold as small/on-device</td>
+</tr>
+<tr>
+<td><strong>Try</strong></td>
+<td><strong>Stable Cascade via Draw Things 8-bit</strong></td>
+<td>Real Würstchen cascade; CLIP TE; Mac trench evidence</td>
+</tr>
+<tr>
+<td><strong>Try</strong></td>
+<td><strong>AuraFlow via Draw Things 5-bit</strong></td>
+<td>Huge DiT, but Liu Liu’s 4 GiB claim is Mac-specific</td>
+</tr>
+<tr>
+<td><strong>Maybe</strong></td>
+<td>PixArt-α/Σ with <strong>sequential TE</strong></td>
+<td>Real DiT, but T5-XXL is the boss fight</td>
+</tr>
+<tr>
+<td><strong>Maybe</strong></td>
+<td>Kandinsky 2.1/2.2 in Draw Things</td>
+<td>Distinct stack; stage swap; not the 5.x Qwen monster</td>
+</tr>
+<tr>
+<td><strong>Skip</strong></td>
+<td>Sana / Lumina / IF / Infinity / Kandinsky 5</td>
+<td>Encoder or stage peaks eat the box</td>
+</tr>
+<tr>
+<td><strong>Skip (as non-SD)</strong></td>
+<td>MobileDiffusion, KOALA, SSD-1B, Kolors</td>
+<td>Still SD-lineage UNets (compressed cousins)</td>
+</tr>
+</tbody></table>
+<h2>Try #1 — aMUSEd (MUSE / MaskGIT)</h2>
+<p><strong>Architecture:</strong> VQ tokens + U-ViT masked prediction. <strong>Not</strong> latent diffusion.
+Open MUSE reproduction
+(<a href="https://huggingface.co/blog/amused">HF blog</a>;
+<a href="https://arxiv.org/html/2401.01808v1">arXiv:2401.01808</a>).</p>
+<p><strong>Why it belongs on the list:</strong> text conditioning is <strong>CLIP-L/14</strong>, not T5.
+The blog calls out ~800M total including TE + VQGAN, research-preview quality,
+and on-device intent. The paper mentions <strong>~800 MB VRAM with 8-bit</strong> for the
+core path.</p>
+<p><strong>Trench vibe:</strong> almost nobody finetunes this on CivitAI. Interest is “small and
+weird,” not “beats Pony.” SD.Next once listed it beside Würstchen / PixArt /
+Kandinsky as a supported family
+(<a href="https://www.reddit.com/r/StableDiffusion/comments/18tot6o/sdnext_new_release_happy_holidays/">r/StableDiffusion SD.Next holiday release</a>).</p>
+<p><strong>Mini verdict:</strong> best <strong>scientific</strong> non-SD fit test for Comfy/Diffusers on MPS.
+Expect weaker faces than Realistic Vision. Keep Turbo quiet while measuring.</p>
+<h2>Try #2 — Würstchen / Stable Cascade (Draw Things first)</h2>
+<p><strong>Architecture:</strong> Stage C (text → tiny latent) + Stage B/A decode. Stability’s
+own write-up expected ~<strong>20 GB</strong> for the comfortable stack and offered smaller
+Stage C/B variants
+(<a href="https://stability.ai/news/introducing-stable-cascade">Introducing Stable Cascade</a>).</p>
+<p><strong>Trench on 8 GB NVIDIA:</strong> people run it by <strong>unloading stages</strong> — Stage C, free,
+Stage B — with CLIP on CPU
+(<a href="https://www.reddit.com/r/StableDiffusion/comments/1aqsn26/will_it_actually_be_possible_to_run_stable/">will it run on 8 GB?</a>).</p>
+<p><strong>Trench on Apple:</strong> Draw Things shipped custom <strong>8-bit</strong> Cascade and marketed
+it from iPhone to Mac
+(<a href="https://www.reddit.com/r/drawthingsapp/comments/1baipdr/stable_cascade/">r/drawthingsapp Stable Cascade</a>).
+Wiki bases list <code>.wurstchenStageB</code> / <code>.wurstchenStageC</code>
+(<a href="https://wiki.drawthings.ai/wiki/Supported_model_bases">Supported model bases</a>).
+PyTorch MPS reports exist; an M1 8 GB box was already called <strong>swap-bound</strong>
+without app-level quant
+(<a href="https://www.reddit.com/r/StableDiffusion/comments/1axbjrp/psa_recent_pytorch_nightlies_support_enough/">MPS PSA thread</a>).</p>
+<p><strong>Mini verdict:</strong> real non-SD architecture with a CLIP-scale TE. Prefer <strong>Draw
+Things 8-bit</strong> over Comfy-on-MPS. Do not expect a thriving LoRA scene — Cascade
+lost the ecosystem war to SDXL/Flux.</p>
+<h2>Try #3 — AuraFlow only where Draw Things quantized it</h2>
+<p>AuraFlow is a large flow/DiT with a heavy UMT5-class encoder — a Diffusers
+non-starter on this Mini. The trench exception is Draw Things’ <strong>5-bit</strong> pack:
+Liu Liu’s post claims generation with <strong>4 GiB RAM</strong>
+(<a href="https://www.reddit.com/r/StableDiffusion/comments/1eahjn4/you_can_run_auraflow_with_4gib_ram/">You can run AuraFlow with 4GiB RAM</a>).
+Wiki still lists <code>.auraflow</code>.</p>
+<p><strong>Mini verdict:</strong> try only through Draw Things. Treat Diffusers AuraFlow as
+skip.</p>
+<h2>The false friends (why “small DiT” keeps lying)</h2>
+<h3>PixArt-α / PixArt-Σ</h3>
+<p>0.6B <strong>denoiser</strong>. T5-XXL <strong>encoder</strong>. Official Diffusers recipes get under 8 GB
+on CUDA by 8-bit TE + delete-and-flush
+(<a href="https://huggingface.co/docs/diffusers/main/en/api/pipelines/pixart_sigma">PixArt-Σ docs</a>).
+Reddit loves the prompt adherence and then discovers the TE
+(<a href="https://www.reddit.com/r/StableDiffusion/comments/1dee0rw/just_a_friendly_reminder_that_pixart_and_lumina/">friendly reminder that PixArt and Lumina exist</a>;
+<a href="https://www.reddit.com/r/StableDiffusion/comments/19bge5d/pixart%CE%B1_with_less_than_8gb_vram/">PixArt with less than 8GB VRAM</a>).
+On unified 8 GB with services already loaded: <strong>maybe as a lab curiosity,
+skip as a product path</strong> — same conclusion as
+<a href="2026-08-09-eight-gigabytes-no-miracles.html">eight gigabytes, no miracles</a>.</p>
+<h3>Sana 0.6B / 1.6B</h3>
+<p>Linear DiT + deep-compression AE — genuinely clever, <strong>not</strong> SD. Official
+README: <strong>9 GB for 0.6B, 12 GB for 1.6B</strong>, later 4-bit under 8 GB
+(<a href="https://github.com/NVlabs/Sana">NVlabs/Sana</a>). Reddit unpacks the bill as
+<strong>Gemma-2B (~4 GB) + DiT + AE</strong>
+(<a href="https://www.reddit.com/r/LocalLLaMA/comments/1h5qjyp/sana_highresolution_image_generation_from_nvidia/">r/LocalLLaMA SANA</a>;
+<a href="https://www.reddit.com/r/StableDiffusion/comments/1g4cw9g/new_model_sana_16b_06b_this_is_a_reprint_post_and/">Sana reprint thread</a>).
+“Under 4 GB VRAM for 1024²” posts assume CUDA tiling optimizations, not an M1
+Mini sharing RAM with Turbo. <strong>Skip here.</strong> Quality card also admits weak hands
+/ photoreal gaps — already noted in the August 9 decision note.</p>
+<h3>Lumina-Next / Infinity / DeepFloyd IF</h3>
+<p>All variants of the same trap: market the <strong>generator</strong> size, hide <strong>Flan-T5 /
+Gemma / T5-XXL</strong>. IF Stage I-M’s “~4 GB” UNet is meaningless next to the TE and
+multi-stage peaks (<a href="https://github.com/deep-floyd/IF">deep-floyd/IF</a>). Infinity
+AR KV caches are research-hardware sized. <strong>Skip.</strong></p>
+<h3>Kandinsky 5 “Lite”</h3>
+<p>Community OOMs on <strong>16 GB</strong> from the Qwen-VL-scale TE
+(<a href="https://www.reddit.com/r/StableDiffusion/comments/1nuipsj/opensourced_kandinsky_50_t2v_lite_a_lite_2b/">Kandinsky 5 lite thread</a>).
+Older Kandinsky 2.1/2.2 in Draw Things is the only maybe.</p>
+<h3>Still-SD cousins wearing different hats</h3>
+<p>MobileDiffusion, SnapFusion, SSD-1B, KOALA, Kolors: smaller or re-encoded
+<strong>SD/SDXL UNets</strong> (Kolors adds ChatGLM). Valid low-memory engineering — out of
+scope for “non-SD monopoly” claims. KOALA’s viral “8 GB RAM” article was
+already chewed apart on Reddit for conflating offload with fit
+(<a href="https://www.reddit.com/r/StableDiffusion/comments/1b24t06/new_ai_image_generator_is_8_times_faster_than/">KOALA speed article thread</a>).</p>
+<h2>What M1 8 GB owners actually run (Draw Things trenches)</h2>
+<p>Scanning r/drawthingsapp for M1 8 GB: advice clusters on <strong>SD1.5 / quantized
+SDXL</strong>, slow Flux Schnell 8-bit experiments, and “close the browser.” Example:
+Flux Krea 1500² in <strong>~1h35</strong> on M1 8 GB
+(<a href="https://www.reddit.com/r/drawthingsapp/comments/1p8ibs4/what_is_the_best_model_to_run_on_m1_macbook_air_8/">best model on M1 Air 8 GB</a>).
+That is existence proof for <strong>extreme quant + patience</strong>, not a lunchtime
+office pipeline — and it is still Flux, not a new tiny family.</p>
+<p>CivitAI search for “low VRAM / mobile / efficient” returns almost nothing
+outside SD-family checkpoints. The trench confirms the monopoly is
+<strong>cultural/tooling</strong>, not physics: finetunes and LoRAs live where SD lives.</p>
+<h2>Suggested experiments (when SSH or Screen Sharing exists)</h2>
+<ol>
+<li><strong>Draw Things</strong> on the Mini: Cascade 8-bit smoke, then AuraFlow 5-bit if
+still in catalog. Measure wall time + whether Turbo stays responsive.</li>
+<li><strong>Diffusers aMUSEd-256/512</strong> on MPS with nothing else loaded. Allocator peak
+vs Realistic Vision baseline.</li>
+<li>Only if bored: PixArt-Σ with <strong>CPU T5 encode → unload → MPS DiT</strong>, one
+512² image, accept multi-minute runtime.</li>
+<li>Do <strong>not</strong> burn another night on Sana/IF/Lumina/Infinity for this chassis.</li>
+</ol>
+<h2>Bottom line</h2>
+<p>Non-SD generators exist. The ones that are <em>actually</em> small end-to-end use
+<strong>CLIP-scale text encoders</strong> (aMUSEd, Cascade stages) or <strong>vendor quants that
+carve AuraFlow/Flux down to phone RAM</strong> (Draw Things). Everything else that
+looks tiny on a parameter-count slide still ships a T5/Gemma-shaped piano and
+expects you to have a second memory pool. SD’s “monopoly” on an 8 GB Mini is
+really a monopoly on <strong>models whose entire stack fits in one suitcase</strong>.</p>
+
+</article>
+<nav class="post-nav" aria-label="Post navigation">
+<a class="post-nav-link post-nav-prev" href="2026-08-12-small-model-peaks.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">Eight small models, three to five gigabytes</span></span></a>
+<a class="post-nav-link post-nav-next" href="2026-08-29-the-workflow-bends-to-the-prompt.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">The workflow bends to the prompt</span></span><span class="post-nav-arrow">&rarr;</span></a>
+</nav></main>
+    <footer class="site-footer">
+      <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>
+    </footer>
+    <script>
+      // Localise all post times to the reader's timezone.
+      // Each <time class="post-time" data-ts="..."> carries a Unix epoch (ms);
+      // we replace the static server-rendered HH:MM with the local equivalent.
+      document.querySelectorAll('time.post-time[data-ts]').forEach(function (el) {
+        var d = new Date(+el.dataset.ts);
+        el.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        el.title = d.toLocaleString(); // full local datetime on hover
+      });
+
+      // Click (or Enter/Space) a .banner-compare to cycle: current -> most recent earlier
+      // version -> ... -> oldest/original -> back to current. Each click advances one slide;
+      // opacity is set directly (not via CSS classes) so this works for any slide count.
+      document.querySelectorAll('.banner-compare').forEach(function (el) {
+        var slides = el.querySelectorAll('.banner-slide');
+        var hint = el.querySelector('.banner-compare-hint');
+        var count = slides.length;
+        var active = 0;
+        function render() {
+          slides.forEach(function (s, i) {
+            s.style.opacity = i === active ? '1' : '0';
+          });
+          if (!hint) return;
+          if (active === 0) {
+            hint.textContent =
+              'click to see ' + (count === 2 ? 'the earlier version' : count - 1 + ' earlier versions');
+          } else if (active === count - 1) {
+            hint.textContent = 'original banner · click for current';
+          } else {
+            hint.textContent = 'earlier version ' + active + ' of ' + (count - 1) + ' · click to continue';
+          }
+        }
+        function advance() {
+          active = (active + 1) % count;
+          render();
+        }
+        el.addEventListener('click', advance);
+        el.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            advance();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

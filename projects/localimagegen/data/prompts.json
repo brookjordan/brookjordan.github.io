@@ -2,6 +2,9 @@
   "models": {
     "chroma": "m",
     "anima": "m",
+    "animaturbo": "m",
+    "zanime": "l",
+    "animagine": "b",
     "sd15": "s",
     "sd15lcm": "s",
     "sdturbo": "s",
@@ -22,6 +25,7 @@
     "ovis": "l",
     "pixartsigma": "m",
     "pony": "b",
+    "qwen21": "l",
     "qwen2512": "l",
     "realvisxl": "s",
     "schnell": "m",
@@ -74,11 +78,50 @@
       "s": "Photorealistic 16:9 studio photo. Exactly three glazed ceramic cats stacked vertically: a cobalt-blue cat on the bottom, a mustard-yellow cat in the middle, a crimson-red cat on top, and a single lemon balanced on the top cat's head. Stitched onto the middle cat, a fabric repair patch: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches. Plain grey background.",
       "m": "A cinematic 16:9 photorealistic studio photograph on a plain seamless grey background, evenly lit with soft front light. Exactly three glazed ceramic cat figurines are stacked in a stable vertical column, each sitting upright on the one below. From bottom to top the order is: a glossy cobalt-blue cat on the bottom, a mustard-yellow cat in the middle, and a deep crimson-red cat on top. Balanced on the very top cat's head sits a single bright yellow lemon. Stitched onto the front of the middle, mustard-yellow cat is a fabric repair patch that fully covers and conceals a mended crack: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the glaze all around the patch. No crack or gap is visible — the patch completely seals the repair and hugs the curve of the ceramic. Sharp focus, clean product-photography lighting, photorealistic, highly detailed.",
       "l": "A crisp cinematic 16:9 photorealistic product photograph, shot straight on against a plain seamless pale-grey studio background with soft, even, shadowless lighting. At the centre of the frame, exactly three glazed ceramic cat figurines are stacked in a single neat vertical column, each one sitting upright and squarely balanced on the head of the one beneath it. Reading from bottom to top, the order is strict and unambiguous: the bottom cat is glossy cobalt blue, the middle cat is warm mustard yellow, and the top cat is deep crimson red — three clearly different solid colours, each cat the same size and shape so only the colour and position change. Balanced carefully on the head of the topmost crimson cat sits a single bright yellow lemon, just one, with a faint sheen on its dimpled skin. Stitched onto the front of the middle, mustard-yellow cat is a fabric repair patch that fully covers and conceals a mended crack: mismatched muted patchwork cloth, frayed edges, coarse dark thread in big uneven whip-stitches biting into the glaze all around the patch. No crack or gap is visible — the patch completely seals the repair and conforms to the rounded curve of the ceramic body. The whole stack is sharp and in focus from top to bottom, glossy glaze catching gentle highlights, clean modern still-life product photography, photorealistic, highly detailed."
+    },
+    "angels": {
+      "b": "1girl, solo, angel, feathered wings, white wings, halo, flowing dress, flying, in sky, sunset, orange sky, glowing clouds, cumulonimbus, light rays, sports car, flying car, ioniq 5 style, sleek, oil painting texture, impasto, glorious colours, masterpiece quality, dynamic angle, wind, motion, trailing clouds",
+      "all": "A glorious anime oil-painting of an angel flying through a sunset sky beside a sleek futuristic sports car (Ioniq 5 style). She has large white feathered wings and a glowing halo, wearing a flowing dress that whips in the wind. They soar between towering golden-lit cumulonimbus clouds with god rays breaking through. Rich impasto oil-painting texture, glorious saturated colours, dramatic dynamic angle, sense of speed and motion, trailing wisps of cloud."
+    },
+    "kaiju": {
+      "b": "no humans, kaiju, giant monster, lizard, scales, spikes, glowing eyes, bioluminescent, destruction, ruined city, smoke, fire, night, rain, dramatic lighting, low angle view, epic scale, movie poster, detailed texture, cinematic",
+      "all": "A colossal kaiju monster towering over a ruined city at night in the rain — reptilian scales, dorsal spikes glowing bioluminescent blue, eyes burning. Smoke and fire rise from the shattered skyscrapers below. Dramatic low-angle movie-poster composition, epic scale, heavy atmosphere, cinematic lighting, richly detailed creature texture."
+    },
+    "mecha": {
+      "b": "no humans, mecha, giant robot, humanoid, cockpit hatch open, panelling, hydraulics, cables, hangar, maintenance crew tiny in comparison, industrial lighting, volumetric light, weathering, decals, warning stripes, detailed mechanical parts, cinematic composition",
+      "all": "A colossal humanoid mecha in a dim industrial hangar, cockpit hatch open with warm light spilling out. Hard-surface panelling, exposed hydraulics and cabling, weathered paint with decals and warning stripes; tiny maintenance crew on scaffolding emphasise its scale. Volumetric light shafts through high windows, cinematic composition, extremely detailed mechanical design."
+    },
+    "nihonga": {
+      "b": "no humans, scenery, japanese watercolour, nihonga, mount fuji, pagoda, cherry blossoms, river, wooden bridge, mist, soft gradients, paper texture, muted palette, minimalist, traditional, tranquil, wide shot",
+      "all": "A tranquil Japanese watercolour landscape in the Nihonga tradition: Mount Fuji beyond a five-storey pagoda, cherry blossoms drifting over a quiet river with a wooden arched bridge. Soft pigment gradients bleeding into paper texture, mist in the valleys, muted traditional palette with one vermilion accent, minimalist and serene wide composition."
+    },
+    "oilportrait": {
+      "b": "1girl, solo, portrait, elaborate, ornate dress, lace, embroidery, jewellery, braided hair, candlelight, chiaroscuro, rembrandt lighting, oil painting, classical, detailed face, detailed eyes, depth of field, museum quality",
+      "all": "A museum-quality painted portrait of a young woman in an ornate period dress: intricate lace, gold embroidery, pearl jewellery, braided hair. Lit by candlelight in strong chiaroscuro — Rembrandt lighting carving her face from warm shadow. Classical oil-painting technique, finely rendered face and eyes, shallow depth of field, dignified three-quarter pose."
+    },
+    "lineart": {
+      "b": "1boy, solo, bald, superhero, cape, simple background, white background, bold lineart, thick outlines, flat colours, minimal shading, manga style, dynamic pose, punch, speed lines, screentone",
+      "all": "A bold minimal manga illustration: a bald caped superhero mid-punch, drawn with thick confident outlines and flat colours, almost no shading, screentone speed lines radiating from the fist, plain white background. One Punch Man energy — clean, punchy, iconic."
+    },
+    "mangapanel": {
+      "b": "monochrome, greyscale, manga panel, 1girl, solo, school uniform, rooftop, wind, dramatic shadow, cross-hatching, ink, screentones, speed lines, dramatic angle, speech bubble border, shounen, high contrast",
+      "all": "A dramatic black-and-white manga panel: a schoolgirl on a rooftop, uniform and hair whipped by wind, drawn in ink with dense cross-hatching and screentone gradients. High-contrast shadows, a low dramatic angle, speed lines in the sky, panel border and empty speech-bubble frame. Authentic shounen jump inking style, no colour."
+    },
+    "animestill": {
+      "b": "1girl, solo, animation still, key visual, cel shading, flat colours, clean lineart, school uniform, classroom, afternoon light, window, dust motes, detailed anime background, kyoto animation style, cinematic still, 2010s anime",
+      "all": "A cinematic key-visual animation still: a schoolgirl at her classroom desk in warm afternoon light slanting through tall windows, dust motes floating. Clean lineart with flat cel shading, a lushly painted detailed background in modern Kyoto-Animation style, gentle warm palette, composed like a frame from a 2010s anime film."
+    },
+    "gamecutscene": {
+      "b": "1girl, solo, 3d, cinematic render, final fantasy style, advent children, stylised realism, detailed hair, leather outfit, sword, ruined city, overcast sky, subsurface scattering, depth of field, film grain, dramatic lighting, ultra detailed",
+      "all": "A cinematic still in modern 3D game-cutscene style — Final Fantasy VII Advent Children energy. A silver-haired warrior in a black leather outfit stands in a ruined city under an overcast sky, an enormous sword resting on her shoulder. Stylised-realistic rendering: detailed hair strands, subsurface-scattered skin, fabric weave visible, shallow depth of field and subtle film grain, dramatic cool-toned lighting with one warm accent. Polished, pre-rendered cutscene look, not cel-shaded."
     }
   },
   "ceilings": {
     "chroma": 26,
     "anima": 18,
+    "animaturbo": 8,
+    "zanime": 30,
+    "animagine": 28,
     "sd15": 30,
     "sd15lcm": 8,
     "sdturbo": 4,
@@ -99,6 +142,7 @@
     "ovis": 18,
     "pixartsigma": 20,
     "pony": 25,
+    "qwen21": 45,
     "qwen2512": 8,
     "realvisxl": 8,
     "schnell": 4,
