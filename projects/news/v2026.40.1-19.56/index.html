@@ -706,7 +706,7 @@
             return lines.join('\n');
         }
         function attemptIcons(a) {
-            // One glyph per failing (or, if none, best) criterion; joined with /
+            // Show only what the attempt failed on; clean attempts get a check mark
             const checks = [
                 ['V', a.voiceTargetScore != null && a.voiceTargetScore >= 0.35],
                 ['T', a.wer != null && a.wer === 0],
@@ -714,8 +714,7 @@
                 ['A', a.technicalSafe === true]
             ];
             const failed = checks.filter(c => !c[1]).map(c => c[0]);
-            const shown = failed.length ? failed : ['V', 'T', 'P', 'A'];
-            return shown.join('/');
+            return failed.length ? failed.join('/') : '\u2713';
         }
         function attemptButton(a, segIdx, ai) {
             const cls = a.passed === true ? ' pass' : (a.selected || a.passed === false ? ' fail' : '');
