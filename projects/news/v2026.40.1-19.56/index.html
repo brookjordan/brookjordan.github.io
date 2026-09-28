@@ -405,6 +405,8 @@
         .attempt-btn.pass[aria-pressed="true"] { background: #2e7d32; border-color: #2e7d32; color: #fff; }
         .attempt-btn.fail[aria-pressed="true"] { background: #c62828; border-color: #c62828; color: #fff; }
         .attempt-icons { opacity: .65; font-size: .62rem; margin-left: 4px; letter-spacing: 1px; }
+        .attempt-btn.fail { text-decoration: line-through; text-decoration-thickness: 1px; }
+        .attempt-btn.fail { text-decoration: line-through; text-decoration-thickness: 1px; }
         .crit-dots { display: inline-flex; gap: 5px; margin-left: 10px; vertical-align: middle; }
         .crit-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; cursor: help; }
         .crit-dot.pass { background: #fff; }
@@ -689,7 +691,10 @@
                    critDot(m, 'Voice margin', vmTxt);
         }
         function attemptScoreLabel(a) {
-            return a.voiceTargetScore == null ? '#' + a.n : String(Math.round(a.voiceTargetScore * 100));
+            if (a.voiceTargetScore == null && a.wer == null) return '#' + a.n;
+            const v = a.voiceTargetScore == null ? '?' : String(Math.round(a.voiceTargetScore * 100));
+            const t = a.wer == null ? '?' : String(Math.round(a.wer * 100));
+            return v + '/' + t;
         }
         function attemptTooltip(a) {
             const lines = ['Attempt ' + a.n + (a.selected ? ' — published selection' : (a.passed === false ? ' — rejected' : ''))];
