@@ -405,9 +405,11 @@
         .attempt-btn.pass[aria-pressed="true"] { background: #2e7d32; border-color: #2e7d32; color: #fff; }
         .attempt-btn.fail[aria-pressed="true"] { background: #c62828; border-color: #c62828; color: #fff; }
         .attempt-icons { font-size: .72rem; margin-right: 4px; }
-        .attempt-num.num-fail { color: #ff6e63; font-weight: 700; }
-        .attempt-num.num-pass { color: #7ef7b0; }
-        .attempt-slash { opacity: .5; margin: 0 2px; }
+        .attempt-num { display: inline-block; padding: 0 6px; border-radius: 8px; font-weight: 700; }
+        .attempt-num.num-fail { color: #ff6e63; background: rgba(255,110,99,.12); }
+        .attempt-num.num-pass { color: #7ef7b0; background: rgba(126,247,176,.10); }
+        .attempt-slash { opacity: .5; margin: 0 3px; }
+        .attempt-icons { margin-right: 2px; }
         .attempt-btn.fail { text-decoration: line-through; text-decoration-thickness: 1px; }
         .crit-dots { display: inline-flex; gap: 5px; margin-left: 10px; vertical-align: middle; }
         .crit-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; cursor: help; }
@@ -731,7 +733,7 @@
             const cls = a.passed === true ? ' pass' : (a.selected || a.passed === false ? ' fail' : '');
             const stateTxt = a.selected ? 'published selection' : (a.passed === false ? 'rejected — ' + (a.reasons || []).join(', ') : 'not published');
             const myFails = failedKeys.filter(k => critFailed(a, k));
-            const iconTag = myFails.length ? '<span class="attempt-icons">' + myFails.map(attemptIcon).join('') + '</span>' : '';
+            const iconTag = '<span class="attempt-icons">' + myFails.map(attemptIcon).join('') + '</span>';
             const nums = failedKeys.filter(k => k !== 'A').map(k => {
                 const v = critValue(a, k);
                 const val = v == null ? '?' : v;
