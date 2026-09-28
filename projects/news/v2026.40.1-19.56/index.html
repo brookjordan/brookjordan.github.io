@@ -404,7 +404,7 @@
         .attempt-btn.fail { border-color: #c62828; }
         .attempt-btn.pass[aria-pressed="true"] { background: #2e7d32; border-color: #2e7d32; color: #fff; }
         .attempt-btn.fail[aria-pressed="true"] { background: #c62828; border-color: #c62828; color: #fff; }
-        .attempt-icons { font-size: .72rem; margin-right: 4px; }
+        .attempt-key { font-size: .72rem; margin-right: 6px; border: none; background: none; padding: 0; }
         .attempt-num { display: inline-block; padding: 0 6px; border-radius: 8px; font-weight: 700; }
         .attempt-num.num-fail { color: #ff6e63; background: rgba(255,110,99,.12); }
         .attempt-num.num-pass { color: #7ef7b0; background: rgba(126,247,176,.10); }
@@ -732,14 +732,12 @@
         function attemptButton(a, segIdx, ai, failedKeys) {
             const cls = a.passed === true ? ' pass' : (a.selected || a.passed === false ? ' fail' : '');
             const stateTxt = a.selected ? 'published selection' : (a.passed === false ? 'rejected — ' + (a.reasons || []).join(', ') : 'not published');
-            const myFails = failedKeys.filter(k => critFailed(a, k));
-            const iconTag = '<span class="attempt-icons">' + myFails.map(attemptIcon).join('') + '</span>';
             const nums = failedKeys.filter(k => k !== 'A').map(k => {
                 const v = critValue(a, k);
                 const val = v == null ? '?' : v;
                 return '<span class="attempt-num ' + (critFailed(a, k) ? 'num-fail' : 'num-pass') + '">' + val + '</span>';
             }).join('<span class="attempt-slash">/</span>');
-            return '<button type="button" class="attempt-btn' + cls + '" data-seg="' + segIdx + '" data-ai="' + ai + '" aria-pressed="' + (a.selected ? 'true' : 'false') + '" aria-label="Audition attempt ' + a.n + ', ' + stateTxt + ' for segment ' + (segIdx + 1) + '" title="' + attemptTooltip(a).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;') + '">' + iconTag + nums + '</button>';
+            return '<button type="button" class="attempt-btn' + cls + '" data-seg="' + segIdx + '" data-ai="' + ai + '" aria-pressed="' + (a.selected ? 'true' : 'false') + '" aria-label="Audition attempt ' + a.n + ', ' + stateTxt + ' for segment ' + (segIdx + 1) + '" title="' + attemptTooltip(a).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;') + '">' + nums + '</button>';
         }
         
 function renderAttemptSwitcher(el, segIdx, compact) {
@@ -748,7 +746,10 @@ function renderAttemptSwitcher(el, segIdx, compact) {
             el.style.display = '';
             const failedKeys = segmentFailedKeys(item);
             const btns = item.attempts.map((a, ai) => attemptButton(a, segIdx, ai, failedKeys)).join('');
-            el.innerHTML = '<div class="attempt-switcher" role="group" aria-label="Alternative takes for segment ' + (segIdx + 1) + '">' + btns + '</div>';
+            const keyIcons = failedKeys.filter(k => k !== 'A').map(attemptIcon).join('');
+            el.innerHTML = '<div class="attempt-switcher" role="group" aria-label="Alternative takes for segment ' + (segIdx + 1) + '">'
+                + '<span class="attempt-key">' + keyIcons + '</span>'
+                + btns + '</div>';
         }
         function syncManualAttempts(segIdx) {
             const el = document.getElementById('manual-attempts');
