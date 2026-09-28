@@ -727,7 +727,13 @@
         }
         function segmentFailedKeys(item) {
             const keys = ['V', 'T', 'P', 'A'];
-            return keys.filter(k => (item.attempts || []).some(a => critFailed(a, k)));
+            const failed = keys.filter(k => (item.attempts || []).some(a => critFailed(a, k)));
+            // If every attempt failed something, the winner was chosen on voice — add the
+            // sounds-like key so the numbers explain what decided it.
+            if (failed.length && !(item.attempts || []).some(a => a.passed === true)) {
+                if (failed.indexOf('V') === -1) failed.push('V');
+            }
+            return failed;
         }
         function attemptButton(a, segIdx, ai, failedKeys) {
             const cls = a.passed === true ? ' pass' : (a.selected || a.passed === false ? ' fail' : '');
