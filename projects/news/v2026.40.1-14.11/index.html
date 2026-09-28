@@ -404,9 +404,6 @@
         .attempt-btn.fail { border-color: #c62828; }
         .attempt-btn.pass[aria-pressed="true"] { background: #2e7d32; border-color: #2e7d32; color: #fff; }
         .attempt-btn.fail[aria-pressed="true"] { background: #c62828; border-color: #c62828; color: #fff; }
-        .attempt-flag { font-size: .68rem; margin-left: 6px; padding: 2px 8px; border-radius: 8px; border: 1px solid; }
-        .attempt-flag.selected { color: #7ef7b0; border-color: #2e7d5b; }
-        .attempt-flag.rejected { color: #ffb4ab; border-color: #8a4440; }
         .crit-dots { display: inline-flex; gap: 5px; margin-left: 10px; vertical-align: middle; }
         .crit-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; cursor: help; }
         .crit-dot.pass { background: #fff; }
@@ -693,24 +690,31 @@
         function attemptScoreLabel(a) {
             return a.voiceTargetScore == null ? '#' + a.n : String(Math.round(a.voiceTargetScore * 100));
         }
+        function attemptTooltip(a) {
+            const lines = ['Attempt ' + a.n + (a.selected ? ' — published selection' : (a.passed === false ? ' — rejected' : ''))];
+            lines.push(a.voiceTargetScore == null ? 'Voice match unavailable' : 'Voice match ' + Math.round(a.voiceTargetScore * 100) + '% (margin ' + (a.voiceMargin == null ? 'n/a' : Math.round(a.voiceMargin * 100) + '%') + ')');
+            if (a.wer == null) lines.push('Transcript unavailable');
+            else {
+                const pct = Math.round(a.wer * 100);
+                lines.push('Transcript ' + (pct === 0 ? 'exact' : pct + '% word errors (' + (a.substitutions ?? 0) + ' wrong, ' + (a.deletions ?? 0) + ' missing, ' + (a.insertions ?? 0) + ' extra)'));
+                if (a.asrText) lines.push('Heard: "' + a.asrText + '"');
+            }
+            lines.push(a.protectedTermFailures == null ? 'Protected terms unavailable' : (a.protectedTermFailures === 0 ? 'Protected terms correct' : a.protectedTermFailures + ' protected term(s) wrong'));
+            lines.push(a.technicalSafe == null ? 'Technical check unavailable' : (a.technicalSafe ? 'Audio technically clean' : 'Audio defects'));
+            if ((a.reasons || []).length) lines.push('Rejected for: ' + a.reasons.join(', '));
+            return lines.join('\n');
+        }
         function attemptButton(a, segIdx, ai) {
             const cls = a.passed === true ? ' pass' : (a.selected || a.passed === false ? ' fail' : '');
             const stateTxt = a.selected ? 'published selection' : (a.passed === false ? 'rejected — ' + (a.reasons || []).join(', ') : 'not published');
-            const scoreTxt = a.voiceTargetScore == null ? 'score unavailable' : 'voice match ' + Math.round(a.voiceTargetScore * 100) + '%';
-            return '<button type="button" class="attempt-btn' + cls + '" data-seg="' + segIdx + '" data-ai="' + ai + '" aria-pressed="' + (a.selected ? 'true' : 'false') + '" aria-label="Audition attempt ' + a.n + ', ' + stateTxt + ' for segment ' + (segIdx + 1) + '" title="Attempt ' + a.n + ': ' + scoreTxt + ' — ' + stateTxt + '">' + attemptScoreLabel(a) + '</button>';
+            return '<button type="button" class="attempt-btn' + cls + '" data-seg="' + segIdx + '" data-ai="' + ai + '" aria-pressed="' + (a.selected ? 'true' : 'false') + '" aria-label="Audition attempt ' + a.n + ', ' + stateTxt + ' for segment ' + (segIdx + 1) + '" title="' + attemptTooltip(a).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;') + '">' + attemptScoreLabel(a) + '</button>';
         }
         function renderAttemptSwitcher(el, segIdx, compact) {
             const item = playlist[segIdx];
             if (!item.attempts || item.attempts.length <= 1) { el.innerHTML = ''; el.style.display = 'none'; return; }
             el.style.display = '';
             const btns = item.attempts.map((a, ai) => attemptButton(a, segIdx, ai)).join('');
-            const sel = item.attempts.find(a => a.selected) || item.attempts[item.attempts.length - 1];
-            el.innerHTML = '<div class="attempt-switcher" role="group" aria-label="Alternative takes for segment ' + (segIdx + 1) + '">' + btns + attemptBadge(sel) + '</div>';
-        }
-        function attemptBadge(a) {
-            return a.selected
-                ? '<span class="attempt-flag selected">Published</span>'
-                : '';
+            el.innerHTML = '<div class="attempt-switcher" role="group" aria-label="Alternative takes for segment ' + (segIdx + 1) + '">' + btns + '</div>';
         }
         function syncManualAttempts(segIdx) {
             const el = document.getElementById('manual-attempts');
