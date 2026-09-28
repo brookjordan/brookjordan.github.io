@@ -978,7 +978,7 @@
 
         function injectSidebarUI(foldersArray) {
             const style = document.createElement('style');
-            style.innerHTML = \`
+            style.innerHTML = `
                 #news-menu-btn { position: fixed; top: 20px; left: 20px; z-index: 1000; background: #1e1e1e; border: 1px solid #333; color: #fff; padding: 10px 16px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.5); transition: 0.2s; font-weight: bold; }
                 #news-menu-btn:hover { background: #2a2a2a; transform: scale(1.05); border-color: #bb86fc; }
                 #news-sidebar { position: fixed; top: 0; left: -300px; width: 280px; height: 100vh; background: #121212; z-index: 1001; transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 4px 0 25px rgba(0,0,0,0.8); overflow-y: auto; display: flex; flex-direction: column; border-right: 1px solid #333; }
@@ -992,7 +992,7 @@
                 .sidebar-list li a:hover { background: #1e1e1e; padding-left: 26px; color: #bb86fc; border-left: 4px solid #bb86fc; }
                 #sidebar-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 1000; display: none; backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); opacity: 0; transition: opacity 0.3s; }
                 #sidebar-overlay.open { display: block; opacity: 1; }
-            \`;
+            `;
             document.head.appendChild(style);
 
             const overlay = document.createElement('div');
@@ -1009,13 +1009,13 @@
             foldersArray.forEach(folderString => {
                 const li = document.createElement('li');
                 const a = document.createElement('a');
-                a.href = \`/projects/news/\${folderString}/\`;
+                a.href = `/projects/news/${folderString}/`;
                 
                 const parts = folderString.split('-');
                 if (parts.length >= 4) {
-                    const dateObj = new Date(\`\${parts[0]}-\${parts[1]}-\${parts[2]}T00:00:00\`);
-                    const suffix = parts.slice(3).join(' ').replace(/\\b\\w/g, c => c.toUpperCase());
-                    a.innerText = \`\${dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} - \${suffix}\`;
+                    const dateObj = new Date(`${parts[0]}-${parts[1]}-${parts[2]}T00:00:00`);
+                    const suffix = parts.slice(3).join(' ').replace(/\b\w/g, c => c.toUpperCase());
+                    a.innerText = `${dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} - ${suffix}`;
                 } else {
                     a.innerText = folderString;
                 }
