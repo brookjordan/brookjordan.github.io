@@ -404,6 +404,7 @@
         .attempt-btn.fail { border-color: #c62828; }
         .attempt-btn.pass[aria-pressed="true"] { background: #2e7d32; border-color: #2e7d32; color: #fff; }
         .attempt-btn.fail[aria-pressed="true"] { background: #c62828; border-color: #c62828; color: #fff; }
+        .attempt-icons { opacity: .65; font-size: .62rem; margin-left: 4px; letter-spacing: 1px; }
         .crit-dots { display: inline-flex; gap: 5px; margin-left: 10px; vertical-align: middle; }
         .crit-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; cursor: help; }
         .crit-dot.pass { background: #fff; }
@@ -704,10 +705,22 @@
             if ((a.reasons || []).length) lines.push('Rejected for: ' + a.reasons.join(', '));
             return lines.join('\n');
         }
+        function attemptIcons(a) {
+            // One glyph per failing (or, if none, best) criterion; joined with /
+            const checks = [
+                ['V', a.voiceTargetScore != null && a.voiceTargetScore >= 0.35],
+                ['T', a.wer != null && a.wer === 0],
+                ['P', a.protectedTermFailures != null && a.protectedTermFailures === 0],
+                ['A', a.technicalSafe === true]
+            ];
+            const failed = checks.filter(c => !c[1]).map(c => c[0]);
+            const shown = failed.length ? failed : ['V', 'T', 'P', 'A'];
+            return shown.join('/');
+        }
         function attemptButton(a, segIdx, ai) {
             const cls = a.passed === true ? ' pass' : (a.selected || a.passed === false ? ' fail' : '');
             const stateTxt = a.selected ? 'published selection' : (a.passed === false ? 'rejected — ' + (a.reasons || []).join(', ') : 'not published');
-            return '<button type="button" class="attempt-btn' + cls + '" data-seg="' + segIdx + '" data-ai="' + ai + '" aria-pressed="' + (a.selected ? 'true' : 'false') + '" aria-label="Audition attempt ' + a.n + ', ' + stateTxt + ' for segment ' + (segIdx + 1) + '" title="' + attemptTooltip(a).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;') + '">' + attemptScoreLabel(a) + '</button>';
+            return '<button type="button" class="attempt-btn' + cls + '" data-seg="' + segIdx + '" data-ai="' + ai + '" aria-pressed="' + (a.selected ? 'true' : 'false') + '" aria-label="Audition attempt ' + a.n + ', ' + stateTxt + ' for segment ' + (segIdx + 1) + '" title="' + attemptTooltip(a).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;') + '">' + attemptScoreLabel(a) + ' <span class="attempt-icons">' + attemptIcons(a) + '</span></button>';
         }
         function renderAttemptSwitcher(el, segIdx, compact) {
             const item = playlist[segIdx];
