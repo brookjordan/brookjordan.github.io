@@ -1100,6 +1100,7 @@ function renderAttemptSwitcher(el, segIdx, compact) {
         else { initSidebarMenu(); }
     </script>
 
+
 <!-- intro-option-tabs: old against new intro. Added by scripts/add_intro_tabs.py. -->
 <style>
   .intro-tabs { display:flex; gap:6px; flex-wrap:wrap; margin:14px 0 4px; }
@@ -1160,7 +1161,19 @@ function renderAttemptSwitcher(el, segIdx, compact) {
     }
     const note = document.getElementById('intro-note');
     if (note) note.textContent = playlist[0].speaker;
-    if (typeof cur !== 'undefined' && cur === 0) playNewTrack(0);
+    if (typeof cur !== 'undefined' && cur === 0) {
+      // The page writes the lyric into the transcript panel inside updateUI(),
+      // which only runs when the track changes. Swapping playlist[0] and
+      // restarting the audio therefore left the old words on screen, so the
+      // panel is refreshed here as well.
+      const tsText = document.getElementById('ts-text');
+      if (tsText && playlist[0].text) tsText.innerText = playlist[0].text;
+      const tsVoice = document.getElementById('ts-voice');
+      if (tsVoice) tsVoice.innerText = playlist[0].speaker;
+      const summ = document.getElementById('summ');
+      if (summ) summ.innerText = 'Intro';
+      playNewTrack(0);
+    }
   }
   window.pickIntro = function (mode, dir) {
     state.mode = mode;
