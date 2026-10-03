@@ -1099,5 +1099,80 @@ function renderAttemptSwitcher(el, segIdx, compact) {
         if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initSidebarMenu); } 
         else { initSidebarMenu(); }
     </script>
+
+<!-- intro-option-tabs: intro versions, rendered by the page's own attempt switcher. -->
+<script>
+(function () {
+  const INTRO_NEW = [
+  {
+    "label": "Extreme \u00b7 58s",
+    "speaker": "Screamo / skramz \u00b7 story-driven",
+    "file": "https://brook.dev/projects/song-matrix/audio/STORY-3784-extreme.0f16f4e8.mp3",
+    "text": "[verse]\nPrivate equity picks the cool from the dirt\nThe original community is hollowed out by price\nCommodification is the cycle of the new media\nAmazon lets the blueprints show the data hubs\nSocial licenses are bought with a shred of truth\nPrince is a pioneer in a digital western\nThe Oregon Trail is the cradle of the folklore\nA jury fails the children in the system\nTragedy is the heavy news of the month\nThe word AI is deleted by the brand\nBillionaires mirror the vocabulary of the powerful\nThe .si domain is a spike in the grid\n\n[chorus]\nSuper intelligence triggers a reaction in the code\nThe blueprints are open but the mine is deep\nThe names are gathered like stones in a pile\nThe data is sold like grain in a silo\nThe brand is the only thing that remains\nThe list grows longer as the light fades"
+  }
+];
+  const intro = playlist[0];
+  const originalFile = intro.file;
+  const originalText = intro.text;
+
+  // The intro's versions are `attempts` on the first item, so the switcher the page
+  // already uses for speech retries draws and drives them.
+  intro.introOptions = true;
+  intro.attempts = [{
+    n: 1, file: originalFile, introLabel: 'Old',
+    introTitle: 'The intro that shipped with this episode',
+    introText: originalText, introSpeaker: 'Intro Theme (original)', selected: true
+  }].concat(INTRO_NEW.map(function (o, i) {
+    return {
+      n: i + 2, file: o.file, introLabel: o.label, introTitle: o.speaker,
+      introText: o.text, introSpeaker: o.speaker, selected: false
+    };
+  }));
+
+  // No criteria icons for intro versions: those numbers describe speech attempts,
+  // and a creative choice has nothing to fail.
+  const _failedKeys = segmentFailedKeys;
+  segmentFailedKeys = function (item) {
+    return (item && item.introOptions) ? [] : _failedKeys(item);
+  };
+
+  // Label the buttons by version instead of by criteria number.
+  const _attemptButton = attemptButton;
+  attemptButton = function (a, segIdx, ai, failedKeys) {
+    if (segIdx === 0 && a && a.introLabel) {
+      const cls = a.selected ? ' pass' : '';
+      return '<button type="button" class="attempt-btn' + cls + '" data-seg="' + segIdx
+        + '" data-ai="' + ai + '" aria-pressed="' + (a.selected ? 'true' : 'false')
+        + '" title="' + (a.introTitle || '') + '">' + a.introLabel + '</button>';
+    }
+    return _attemptButton(a, segIdx, ai, failedKeys);
+  };
+
+  // Auditioning swaps the audio; the words on screen have to follow it, because the
+  // page only writes them inside updateUI on a track change.
+  const _audition = auditionAttempts;
+  auditionAttempts = function (segIdx, ai) {
+    _audition(segIdx, ai);
+    if (segIdx !== 0) return;
+    const list = playlist[0].attempts || [];
+    const chosen = list[ai];
+    list.forEach(function (a, i) { a.selected = (i === ai); });
+    if (chosen && chosen.introText) {
+      playlist[0].text = chosen.introText;
+      playlist[0].speaker = chosen.introSpeaker || 'Intro Theme';
+      const tsText = document.getElementById('ts-text');
+      if (tsText) tsText.innerText = chosen.introText;
+      const tsVoice = document.getElementById('ts-voice');
+      if (tsVoice) tsVoice.innerText = playlist[0].speaker;
+    }
+    const el = document.getElementById('manual-attempts');
+    if (el && typeof cur !== 'undefined' && cur === 0) renderAttemptSwitcher(el, 0);
+  };
+
+  // If the song is already the current segment, draw the row now.
+  const host = document.getElementById('manual-attempts');
+  if (host && typeof cur !== 'undefined' && cur === 0) renderAttemptSwitcher(host, 0);
+})();
+</script>
 </body>
 </html>

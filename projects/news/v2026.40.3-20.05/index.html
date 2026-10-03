@@ -1100,5 +1100,80 @@ function renderAttemptSwitcher(el, segIdx, compact) {
         if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initSidebarMenu); } 
         else { initSidebarMenu(); }
     </script>
+
+<!-- intro-option-tabs: intro versions, rendered by the page's own attempt switcher. -->
+<script>
+(function () {
+  const INTRO_NEW = [
+  {
+    "label": "Extreme \u00b7 56s",
+    "speaker": "Screamo / skramz \u00b7 story-driven",
+    "file": "https://brook.dev/projects/song-matrix/audio/STORY-3428-extreme.f32856c7.mp3",
+    "text": "[verse]\nDigital eccentricity vs the national security team.\nEfficiency becoming a liability for the tech-forward.\nHuman-shaped forms navigating environments designed for us.\nDefense relations celebrating fifty years of ties.\nBackward steps for rights in the eastern region.\nCampaign promises vs the needle of policy.\nHigh-pressure environments escalating into cockpit chaos.\nInfrastructure catching up to the momentum of change."
+  }
+];
+  const intro = playlist[0];
+  const originalFile = intro.file;
+  const originalText = intro.text;
+
+  // The intro's versions are `attempts` on the first item, so the switcher the page
+  // already uses for speech retries draws and drives them.
+  intro.introOptions = true;
+  intro.attempts = [{
+    n: 1, file: originalFile, introLabel: 'Old',
+    introTitle: 'The intro that shipped with this episode',
+    introText: originalText, introSpeaker: 'Intro Theme (original)', selected: true
+  }].concat(INTRO_NEW.map(function (o, i) {
+    return {
+      n: i + 2, file: o.file, introLabel: o.label, introTitle: o.speaker,
+      introText: o.text, introSpeaker: o.speaker, selected: false
+    };
+  }));
+
+  // No criteria icons for intro versions: those numbers describe speech attempts,
+  // and a creative choice has nothing to fail.
+  const _failedKeys = segmentFailedKeys;
+  segmentFailedKeys = function (item) {
+    return (item && item.introOptions) ? [] : _failedKeys(item);
+  };
+
+  // Label the buttons by version instead of by criteria number.
+  const _attemptButton = attemptButton;
+  attemptButton = function (a, segIdx, ai, failedKeys) {
+    if (segIdx === 0 && a && a.introLabel) {
+      const cls = a.selected ? ' pass' : '';
+      return '<button type="button" class="attempt-btn' + cls + '" data-seg="' + segIdx
+        + '" data-ai="' + ai + '" aria-pressed="' + (a.selected ? 'true' : 'false')
+        + '" title="' + (a.introTitle || '') + '">' + a.introLabel + '</button>';
+    }
+    return _attemptButton(a, segIdx, ai, failedKeys);
+  };
+
+  // Auditioning swaps the audio; the words on screen have to follow it, because the
+  // page only writes them inside updateUI on a track change.
+  const _audition = auditionAttempts;
+  auditionAttempts = function (segIdx, ai) {
+    _audition(segIdx, ai);
+    if (segIdx !== 0) return;
+    const list = playlist[0].attempts || [];
+    const chosen = list[ai];
+    list.forEach(function (a, i) { a.selected = (i === ai); });
+    if (chosen && chosen.introText) {
+      playlist[0].text = chosen.introText;
+      playlist[0].speaker = chosen.introSpeaker || 'Intro Theme';
+      const tsText = document.getElementById('ts-text');
+      if (tsText) tsText.innerText = chosen.introText;
+      const tsVoice = document.getElementById('ts-voice');
+      if (tsVoice) tsVoice.innerText = playlist[0].speaker;
+    }
+    const el = document.getElementById('manual-attempts');
+    if (el && typeof cur !== 'undefined' && cur === 0) renderAttemptSwitcher(el, 0);
+  };
+
+  // If the song is already the current segment, draw the row now.
+  const host = document.getElementById('manual-attempts');
+  if (host && typeof cur !== 'undefined' && cur === 0) renderAttemptSwitcher(host, 0);
+})();
+</script>
 </body>
 </html>
