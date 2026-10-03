@@ -1100,5 +1100,123 @@ function renderAttemptSwitcher(el, segIdx, compact) {
         if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initSidebarMenu); } 
         else { initSidebarMenu(); }
     </script>
+
+<!-- intro-option-tabs: old against new intro. Added by scripts/add_intro_tabs.py. -->
+<style>
+  .intro-tabs { display:flex; gap:6px; flex-wrap:wrap; margin:14px 0 4px; }
+  .intro-tab { font:inherit; font-size:.8rem; padding:5px 12px; border-radius:999px;
+    background:#1e1e1e; color:#e8e8e8; border:1px solid #3a3a3a; cursor:pointer; }
+  .intro-tab:hover { border-color:#bb86fc; }
+  .intro-tab.on { background:#bb86fc; border-color:#bb86fc; color:#121212; font-weight:700; }
+  .intro-dirs { display:flex; gap:6px; flex-wrap:wrap; margin:6px 0 0; }
+  .intro-dir { font:inherit; font-size:.72rem; padding:3px 10px; border-radius:999px;
+    background:transparent; color:#e8e8e8; opacity:.8; border:1px solid #3a3a3a; cursor:pointer; }
+  .intro-dir:hover { border-color:#bb86fc; opacity:1; }
+  .intro-dir.on { border-color:#bb86fc; color:#bb86fc; opacity:1; font-weight:700; }
+  .intro-note { font-size:.72rem; opacity:.7; margin:8px 0 10px; text-transform:uppercase;
+    letter-spacing:.5px; }
+</style>
+<script>
+(function () {
+  const INTRO_NEW = [
+  {
+    "label": "extreme \u00b7 53s",
+    "speaker": "Screamo / skramz \u00b7 story-driven",
+    "file": "https://brook.dev/projects/song-matrix/audio/STORY-3320-extreme.7e1f9689.mp3",
+    "text": "[verse]\nFighter jet fuel\nRadio static noise\nDigital chaos noise\nGovernment systems lag\nEbola fever burns\nSlider moves left\nCorrupt data bit\nWiretap signal clear\nSystemic decay feeds\nHuman error spikes\nDrone strike soot\nAlgorithm code rot"
+  },
+  {
+    "label": "brazil \u00b7 55s",
+    "speaker": "Tropic\u00e1lia \u00b7 story-driven",
+    "file": "https://brook.dev/projects/song-matrix/audio/STORY-3320-brazil.a457d663.mp3",
+    "text": "[verse]\nDigital chaos reigns\nEbola virus spreads\nGovernment systems crash\nRadio appearance fades\nFighter jets soar\nSlider moves left\nDigital chaos reigns\nEbola virus spreads\nGovernment systems crash\nRadio appearance fades\nFighter jets soar\nSlider moves left"
+  },
+  {
+    "label": "experimental \u00b7 148s",
+    "speaker": "Breakcore \u00b7 story-driven",
+    "file": "https://brook.dev/projects/song-matrix/audio/STORY-3320-experimental.1a87d4c3.mp3",
+    "text": "[verse]\nFighter jets launch\nRadio appearance ends\nDigital chaos spreads\nGovernment systems halt\nEbola counts rise\nSlider clicks forward\nFighter jets launch\nRadio appearance ends\nDigital chaos spreads\nGovernment systems halt\nEbola counts rise\nSlider clicks forward\n\n[chorus]\nFighter jets launch\nRadio appearance ends\nDigital chaos spreads\nGovernment systems halt\nEbola counts rise\nSlider clicks forward\nFighter jets launch\nRadio appearance ends\nDigital chaos spreads\nGovernment systems halt\nEbola counts rise\nSlider clicks forward"
+  }
+];
+  const originalFile = playlist[0].file;
+  const originalText = playlist[0].text;
+  const state = { mode: 'old', dir: 0 };
+
+  function applyIntro() {
+    const o = state.mode === 'old'
+      ? { file: originalFile, text: originalText, speaker: 'Intro Theme (original)' }
+      : INTRO_NEW[state.dir];
+    if (!o || !o.file) return;
+    playlist[0].file = o.file;
+    if (o.text) playlist[0].text = o.text;
+    playlist[0].speaker = o.speaker;
+    if (typeof preloadBuffer !== 'undefined' && preloadBuffer[0]) delete preloadBuffer[0];
+    document.querySelectorAll('#intro-tabs .intro-tab').forEach((b, j) =>
+      b.classList.toggle('on', (j === 0) === (state.mode === 'old')));
+    const dirs = document.getElementById('intro-dirs');
+    if (dirs) {
+      dirs.style.display = state.mode === 'new' ? 'flex' : 'none';
+      dirs.querySelectorAll('.intro-dir').forEach((b, j) =>
+        b.classList.toggle('on', j === state.dir));
+    }
+    const note = document.getElementById('intro-note');
+    if (note) note.textContent = playlist[0].speaker;
+    if (typeof cur !== 'undefined' && cur === 0) playNewTrack(0);
+  }
+  window.pickIntro = function (mode, dir) {
+    state.mode = mode;
+    if (typeof dir === 'number') state.dir = dir;
+    applyIntro();
+  };
+
+  function attach() {
+    const host = document.getElementById('player-audio') ||
+                 document.getElementById('pl1');
+    if (!host || !host.parentNode) return;
+    if (document.getElementById('intro-tabs')) return;
+
+    const row = document.createElement('div');
+    row.className = 'intro-tabs';
+    row.id = 'intro-tabs';
+    row.setAttribute('role', 'tablist');
+    row.setAttribute('aria-label', 'Intro song version');
+    [['old', 'Old'], ['new', 'New']].forEach((pair) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'intro-tab' + (pair[0] === 'old' ? ' on' : '');
+      b.textContent = pair[1];
+      b.setAttribute('role', 'tab');
+      b.addEventListener('click', (e) => { e.preventDefault(); window.pickIntro(pair[0]); });
+      row.appendChild(b);
+    });
+    host.parentNode.insertBefore(row, host);
+
+    const dirs = document.createElement('div');
+    dirs.className = 'intro-dirs';
+    dirs.id = 'intro-dirs';
+    dirs.style.display = 'none';
+    INTRO_NEW.forEach((o, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'intro-dir' + (i === 0 ? ' on' : '');
+      b.textContent = o.label;
+      b.addEventListener('click', (e) => { e.preventDefault(); window.pickIntro('new', i); });
+      dirs.appendChild(b);
+    });
+    host.parentNode.insertBefore(dirs, host);
+
+    const note = document.createElement('div');
+    note.className = 'intro-note';
+    note.id = 'intro-note';
+    note.textContent = 'Intro Theme (original)';
+    host.parentNode.insertBefore(note, host);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', attach);
+  } else {
+    attach();
+  }
+})();
+</script>
 </body>
 </html>
