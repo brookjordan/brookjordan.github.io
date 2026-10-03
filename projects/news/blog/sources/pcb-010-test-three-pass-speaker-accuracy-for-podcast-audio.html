@@ -13,31 +13,357 @@ publication: internal links, status metadata and personal paths are removed. The
 version lives in the author's Obsidian vault.</p>
 <h1>Three-pass speaker test design</h1>
 <h1>PCB-010 Test three-pass speaker accuracy for podcast audio</h1>
-<h2>Question</h2>
-<p>Can a three-pass generation and verification loop reliably confirm that each podcast segment uses the requested speaker voice?</p>
-<h2>Design</h2>
-<p>For each test segment, generate audio with the requested voice, then run up to three verification attempts. Each attempt records the audio, transcript, detected speaker or similarity score, model and runtime details, seed, duration and failure reason.</p>
-<p>The three passes should verify:</p>
+<h2>Objective</h2>
+<p>Make every generated speech segment prove that it says the intended line, uses the intended cloned voice, and is technically healthy before it enters the podcast. Generate at most three independent candidates per segment, accept the first candidate that clears all calibrated gates, and otherwise retain the best candidate with its evidence rather than silently choosing the last attempt.</p>
+<p>This turns the original three-pass idea into a production selection policy that can be reused after PCB-009 changes the TTS engine.</p>
+<h2>Reuse rather than rebuild</h2>
+<p>Use the existing local systems:</p>
+<ul>
+<li><strong>Transcript check:</strong> use <strong>Parakeet TDT 0.6B v3</strong> from the existing <code>the local vault/git/brookjordan/localtranscription</code> benchmark as the production first pass. Reuse the evaluation conventions in Transcription systems evaluation, including text normalisation and measured error rather than visual string equality.</li>
+<li><strong>Voice check:</strong> HEAR&#39;s local speaker-fingerprinting code and the selected CAM++ system from HEAR-010. Compare each candidate directly with the exact clean reference clip supplied to the TTS engine, not merely with a broad person gallery.</li>
+<li><strong>TTS:</strong> keep the generator behind an adapter so the selection loop works with the current engine and the eventual PCB-009 replacement.</li>
+</ul>
+<p>Do not run VibeVoice-ASR in the podcast workflow. On this machine it is an 8.7B model with measured RTF around <code>2.18</code>, and HEAR deliberately permits it to consume unusually high system resources for long-form transcription. The existing benchmark found Parakeet at RTF around <code>0.015</code> (about 67× realtime), 15/15 completion and a 95.0 corpus score, versus Qwen3-ASR 1.7B at RTF around <code>0.060</code> and a 96.1 corpus score. Short, single-speaker generated lines do not need VibeVoice&#39;s diarisation.</p>
+<p>Use Parakeet for every candidate. Use Whisper large-v3-turbo as the initial bounded adjudicator only when Parakeet fails to decode, reports incomplete temporal coverage, or lands near a transcript threshold. Qwen3-ASR 1.7B remains the preferred measured-quality alternative, but its current <code>.venv-asr</code> import path is broken by an incompatible <code>transformers</code> / <code>huggingface_hub</code> combination; repairing and re-verifying it is optional follow-up, not a prerequisite for this ticket. Keep HEAR only for the lightweight CAM++ fingerprint pass. This reuses measured local systems without loading the destructive VibeVoice-ASR runtime or forking model logic into n8n Code nodes.</p>
+<h2>Current incident baseline</h2>
+<p>The recovered production run <code>2659</code> published <code>v2026.39.5-22.57</code>. A local control check of the first two generated files found:</p>
+<ul>
+<li><code>audio_1.mp3</code> intended Conrad: both Parakeet TDT 0.6B v3 and Whisper large-v3-turbo produced the intended wording after punctuation normalisation; CAM++ similarity was <code>0.858130</code> to <code>conrad.wav</code> and <code>-0.022493</code> to <code>Brook 2.wav</code>, margin <code>0.880623</code>.</li>
+<li><code>audio_2.mp3</code> intended Brook: Parakeet produced “Exactly. It&#39;s like we&#39;ve glided past the point of no return and now we&#39;re just tumbling.”, agreeing with Whisper. The source line differs only by the expressive ellipsis before “tumbling”, so normalised lexical content matches. CAM++ similarity was <code>0.791612</code> to <code>Brook 2.wav</code> and <code>0.036683</code> to <code>conrad.wav</code>, margin <code>0.754929</code>.</li>
+</ul>
+<p>This says segment 2 is recognisably Brook and lexically complete according to the current automatic checks. It does <strong>not</strong> prove that it is perceptually clean: the new health gate must also catch stutters, repeated phonemes, unnatural pauses, clipping, drop-outs and synthesis artefacts that a correct transcript and speaker embedding can miss.</p>
+<h2>Per-candidate evidence</h2>
+<p>For each generated candidate, retain:</p>
+<ul>
+<li>segment ID, attempt number, TTS engine/model/version, seed and generation parameters;</li>
+<li>expected text, expected speaker and exact reference-audio hash;</li>
+<li>output path, hash, codec, sample rate, channels and duration;</li>
+<li>ASR transcript, token/word alignment where available, coverage and model version;</li>
+<li>normalised WER, CER, missing-word count, added-word count and protected-term mismatches;</li>
+<li>target-speaker similarity, strongest non-target similarity, speaker margin and fingerprinting system ID;</li>
+<li>clipping, silence/drop-out, loudness, peak, DC-offset and duration-ratio measurements;</li>
+<li>gate decisions, rejection reasons and final selection score/rank.</li>
+</ul>
+<p>Write this as a machine-readable attempt manifest next to the audio. The final media manifest should point to the selected candidate and retain the rejected candidates until publication verification succeeds.</p>
+<h2>Health gates</h2>
+<p>A candidate passes only when every gate passes.</p>
+<h3>1. Technical audio gate</h3>
+<ul>
+<li>File decodes fully and has the expected sample format.</li>
+<li>No NaN/invalid samples or truncated container.</li>
+<li>Integrated loudness and true peak lie within the podcast&#39;s calibrated range.</li>
+<li>Clipped-sample ratio, long-silence ratio and longest internal drop-out remain below measured limits.</li>
+<li>Duration is plausible for the expected word count and does not contain a suspiciously long tail.</li>
+</ul>
+<h3>2. Transcript gate</h3>
+<p>Normalise both expected and observed text by Unicode form, case, punctuation, typographic apostrophes, whitespace and explicitly approved verbal equivalents. Preserve numbers, names and other protected terms.</p>
+<p>Initial policy to validate:</p>
+<ul>
+<li>preferred pass: normalised WER <code>0</code> and no protected-term mismatch;</li>
+<li>provisional near-perfect pass: WER no greater than <code>0.02</code>, CER no greater than <code>0.01</code>, no missing content word, no added phrase and no protected-term mismatch;</li>
+<li>ASR coverage must span the usable speech duration rather than returning a plausible partial sentence.</li>
+</ul>
+<p>Punctuation and an expressive ellipsis are not spoken-word failures. A missing, repeated or hallucinated word is.</p>
+<h3>3. Voice gate</h3>
+<p>Embed the candidate and the exact TTS reference clips with HEAR&#39;s selected CAM++ system. Require:</p>
+<ul>
+<li>the intended voice to be the top match;</li>
+<li>target similarity above a calibrated floor;</li>
+<li>margin over the strongest non-target voice above a calibrated floor;</li>
+<li>no large drift between the first and second half of a longer segment.</li>
+</ul>
+<p>Do not hard-code CAM++ scores from the two baseline clips as universal thresholds. Calibrate floors from known-good and deliberately wrong-voice examples after PCB-009 selects the production TTS engine. Store the system ID with every score because values are not portable between embedding models.</p>
+<h3>4. Perceptual-defect gate</h3>
+<p>Add measurements that complement ASR and identity:</p>
+<ul>
+<li>repeated-word or repeated-phoneme detection from aligned ASR tokens;</li>
+<li>unexpected long pauses inside a clause;</li>
+<li>abrupt waveform discontinuities, bursts and drop-outs;</li>
+<li>speaking-rate outliers against the expected text;</li>
+<li>optional no-reference speech-quality score, accepted only after it separates known clean and defective samples.</li>
+</ul>
+<p>Keep a small human-labelled calibration set of clean, wrong-word, wrong-voice, stuttered, clipped and pause-corrupted candidates. No automatic quality metric becomes a production gate until it improves classification on this set.</p>
+<h2>Three-attempt algorithm</h2>
+<p>For each script segment:</p>
 <ol>
-<li>audio is present, non-empty, decodable and free of obvious clipping;</li>
-<li>the spoken text matches the requested script closely enough for the acceptance threshold;</li>
-<li>the generated voice matches the requested speaker reference and is not merely intelligible speech from the wrong voice.</li>
+<li>Generate attempt 1 with an explicit seed and write its immutable evidence record.</li>
+<li>Run all four health gates.</li>
+<li>If it passes, select it immediately; do not spend two more generations merely because three are allowed.</li>
+<li>Otherwise generate a new candidate with a different seed. Feed rejection reasons into the next attempt only when the TTS adapter supports safe corrective controls; never rewrite the intended transcript.</li>
+<li>Repeat through attempt 3.</li>
+<li>If no attempt passes, choose the best fallback deterministically and mark the segment degraded.</li>
 </ol>
-<p>The retry workflow in the completed YuE2/LTX cutover ticket tested the retry behaviour with fixture transcripts. Replace those fixtures with generated audio and a speaker-verification method.</p>
-<h2>Acceptance criteria</h2>
+<p>Generate and validate segments independently so one bad line does not force regeneration of the whole episode. After selection, concatenate only the chosen candidates, then run a whole-episode check for ordering, missing/duplicated segments, speaker alternation, loudness consistency and final duration.</p>
+<h2>Fallback ranking after three failures</h2>
+<p>Use constrained lexicographic ranking rather than an uncalibrated weighted average:</p>
+<ol>
+<li>exclude undecodable, truncated or dangerously clipped files;</li>
+<li>prefer candidates whose intended speaker is the top fingerprint match;</li>
+<li>minimise protected-term errors, missing words, added words, then normalised WER/CER;</li>
+<li>maximise target-speaker margin, then target similarity;</li>
+<li>minimise perceptual-defect severity and loudness/duration deviations;</li>
+<li>break a complete tie by the lowest attempt number.</li>
+</ol>
+<p>This makes transcript fidelity dominant without allowing a perfect transcript in the wrong voice to win. The manifest must say which gates failed and why the fallback won. Publication policy should initially require explicit review for any degraded segment; automatic publication of fallbacks is a separate decision after calibration evidence exists.</p>
+<h2>Workflow shape</h2>
+<p>Implement the loop as durable n8n state, not one long Code-node call:</p>
+<ol>
+<li><code>Prepare speech segment</code></li>
+<li><code>Generate candidate</code></li>
+<li><code>Persist candidate before evaluation</code></li>
+<li><code>Parakeet transcript evaluation</code></li>
+<li><code>HEAR voice-reference evaluation</code></li>
+<li><code>Audio signal health evaluation</code></li>
+<li><code>Collate candidate evidence</code></li>
+<li><code>Pass?</code> → select, otherwise increment attempt</li>
+<li><code>Attempts remaining?</code> → regenerate or rank fallback</li>
+<li><code>Persist selected segment</code></li>
+<li>after all segments: <code>Assemble episode</code> and <code>Verify assembled episode</code></li>
+</ol>
+<p>The persisted candidate path and manifest are the resume boundary. A retry must reuse completed candidates and evaluation records rather than synthesising them again unless an explicit regeneration flag is set.</p>
+<h2>Implementation plan against the current builder</h2>
+<p>The live workflow <code>NZ55uYGj90xC5ZFq</code> currently has one unqualified branch:</p>
+<p><code>Make text TTS compatible</code> → <code>Generate audio</code> → <code>Confirm voice generation complete</code> → <code>Telegram: voice generation completed</code></p>
+<p><code>Generate audio</code> sends each line to the ComfyUI <code>VibeVoiceSingleSpeakerNode</code>, chooses <code>Brook 2.wav</code> or <code>conrad.wav</code>, randomises seed and temperature, saves MP3, and retries transport failures. Those retries only prove that ComfyUI returned; they do not prove that the speech is correct. Replace this branch without changing the later imaging, music or publication contracts.</p>
+<h3>Agent handoff: start here</h3>
+<p>An implementing agent should claim this ticket, read the linked project map, and begin with Phase A only. Do not edit or publish the production n8n workflow until the offline evaluator and calibration report satisfy their phase criteria.</p>
+<p>Authoritative current artifacts:</p>
 <ul>
-<li>Test the selected VibeVoice replacement and retain VibeVoice as a baseline.</li>
-<li>Use authorised reference voices and a fixed, labelled corpus covering all podcast speakers.</li>
-<li>Define thresholds before reviewing results, including transcription similarity and speaker similarity.</li>
-<li>Produce a per-attempt result and a final <code>passed</code> or <code>fallback</code> decision for every segment.</li>
-<li>Measure first-pass success, recovery rate, false acceptance, false rejection and runtime cost.</li>
-<li>Do not connect the verifier to production publication until its output format and failure handling have been reviewed.</li>
+<li>production workflow: <code>NZ55uYGj90xC5ZFq</code>, active version <code>87728646-7516-46c4-b4e7-d5d525bce923</code>;</li>
+<li>current audio nodes: <code>Make text TTS compatible</code>, <code>Generate audio</code>, <code>Confirm voice generation complete</code>, <code>Telegram: voice generation completed</code>, and <code>Audio finish before imaging</code>;</li>
+<li>ASR benchmark repo: <code>the local vault/git/brookjordan/localtranscription</code>;</li>
+<li>Parakeet runner: <code>scripts/parakeet_corpus.py</code>, model <code>mlx-community/parakeet-tdt-0.6b-v3</code>, environment <code>.venv-asr</code>;</li>
+<li>working adjudicator: system <code>python3</code> with <code>mlx-community/whisper-large-v3-turbo</code> through <code>mlx_whisper</code>;</li>
+<li>HEAR repo: <code>the local vault/git/motional/brook.jordan/hear</code>;</li>
+<li>fingerprint implementation: <code>worker/recognise.py</code>, environment <code>.venv</code>, system <code>wespeaker-campplus-lm</code>;</li>
+<li>CAM++ runtime configuration: <code>.venv/hear-runtime.json</code> — 16 kHz, 512-dimensional cosine embeddings, current HEAR defaults <code>score &gt;= 0.35</code>, <code>margin &gt;= 0.15</code>, minimum sample 3 seconds;</li>
+<li>clone references: <code>the local vault/ComfyUI-Shared/input/Brook 2.wav</code> and <code>the local vault/ComfyUI-Shared/input/conrad.wav</code>;</li>
+<li>calibration episode: published folder <code>v2026.39.5-22.57</code>; user-labelled suspect is <code>audio_2.mp3</code>.</li>
 </ul>
-<h2>Related work</h2>
+<p>Current environment fact: <code>parakeet_mlx</code> is installed only in <code>localtranscription/.venv-asr</code>; <code>wespeakerruntime</code> is installed only in <code>hear/.venv</code>. Keep those environments separate. Qwen3-ASR currently fails before inference because <code>transformers</code> imports <code>is_offline_mode</code> from an incompatible <code>huggingface_hub</code>; do not turn dependency repair into a blocker for this ticket.</p>
+<p>Initial shadow-only thresholds:</p>
 <ul>
-<li>the earlier multi-speaker TTS test</li>
-<li>the VibeVoice speaker-labelling test</li>
-<li>the TTS replacement ticket</li>
+<li>transcript: normalised WER <code>0</code> passes; any lexical error invokes Whisper adjudication and remains non-passing unless the calibration policy explicitly classifies it as an approved equivalent;</li>
+<li>voice: use HEAR&#39;s current <code>0.35</code> target-score and <code>0.15</code> margin only as starting shadow thresholds, never as production truth;</li>
+<li>technical/perceptual: derive thresholds from the labelled calibration corpus rather than inventing constants.</li>
 </ul>
+<p>The first concrete deliverable is a versioned evaluator contract plus a calibration report over the complete episode. It must run without importing or spawning VibeVoice-ASR. Once that report exists, update this ticket with measured thresholds before building n8n orchestration.</p>
+<h3>Two reusable sub-workflows</h3>
+<h4>1. <code>Evaluate podcast speech candidate</code></h4>
+<p>A stateless, independently testable sub-workflow tagged <code>subworkflow</code>, <code>podcast</code>, and <code>audio</code>.</p>
+<p>Typed JSON input:</p>
+<ul>
+<li><code>candidatePath</code></li>
+<li><code>expectedText</code></li>
+<li><code>speakerId</code></li>
+<li><code>referenceAudioPath</code></li>
+<li><code>otherReferencePaths</code></li>
+<li><code>segmentId</code></li>
+<li><code>attempt</code></li>
+</ul>
+<p>It calls a narrow local evaluator service on the Mac and returns:</p>
+<ul>
+<li><code>technical</code>: decode, duration, loudness, clipping, silence and discontinuity evidence;</li>
+<li><code>transcript</code>: Parakeet text, normalised WER/CER, additions, deletions, protected-term failures and temporal coverage;</li>
+<li><code>adjudication</code>: optional Whisper large-v3-turbo result and the reason it ran;</li>
+<li><code>voice</code>: CAM++ target score, strongest non-target score, margin, system ID and reference hashes;</li>
+<li><code>defects</code>: pause, repetition, rate and waveform-anomaly evidence;</li>
+<li><code>passed</code>, <code>rejectionReasons</code>, <code>rankVector</code> and <code>evaluatorVersion</code>.</li>
+</ul>
+<p>The service should keep Parakeet and CAM++ workers warm and serialise inference. Whisper runs only for the bounded adjudication path. VibeVoice-ASR is absent from every process. n8n should orchestrate and persist results, not contain model code.</p>
+<h4>2. <code>Generate and qualify podcast speech segment</code></h4>
+<p>A stateful sub-workflow called once per script item. Its typed input is the original segment plus <code>mediaRunId</code>, <code>maxAttempts</code> (fixed to 3 in production), voice-reference paths and evaluator endpoint.</p>
+<p>Its state machine is:</p>
+<pre><code class="language-text">Load existing segment manifest
+  ├─ already selected and hashes still match → Return selected candidate
+  └─ no valid selection
+       → Generate attempt N
+       → Persist candidate and generation metadata
+       → Evaluate podcast speech candidate
+       → Append immutable attempt evidence
+       ├─ passed → mark selected → Return
+       ├─ N &lt; 3 → increment N → Generate attempt N
+       └─ N = 3 → deterministic fallback ranking
+                    → mark selected + degraded
+                    → Return
+</code></pre>
+<p>Use a bounded explicit cycle inside this sub-workflow; do not run all three candidates eagerly. <code>maxAttempts</code> is a ceiling, not a batch size. Do not dispatch attempts concurrently because early acceptance should avoid generation cost and concurrent ComfyUI audio jobs would compete for the same machine.</p>
+<p>The caller invokes this sub-workflow per segment with <code>Execute Workflow</code> in <code>mode: each</code> and waits for each result. The present workflow is sequential, so apparent fan-out does not provide concurrency anyway. Preserve segment order explicitly with <code>segmentIndex</code> and sort by it before episode assembly.</p>
+<h3>Persisted layout and idempotency</h3>
+<p>Use one stable directory per media run and segment:</p>
+<pre><code class="language-text">&lt;podcast staging&gt;/&lt;mediaRunId&gt;/speech/&lt;segmentIndex&gt;/
+  segment.json
+  attempt-1.mp3
+  attempt-1.evaluation.json
+  attempt-2.mp3
+  attempt-2.evaluation.json
+  attempt-3.mp3
+  attempt-3.evaluation.json
+  selected.json
+</code></pre>
+<p><code>segment.json</code> contains the expected-text hash, speaker ID, reference hashes, generator version and evaluator version. A retry may reuse an attempt only when these inputs still match. <code>selected.json</code> is written atomically and records whether selection passed or was degraded. Candidate filenames must not depend on <code>$position</code>; use stable <code>segmentIndex</code> and <code>attempt</code> so a retry cannot overwrite or reorder another line.</p>
+<p>Before generating, read the manifest. After a client timeout, check whether the expected candidate and evaluation record landed before issuing another generation. This mirrors the production execution-retry guard: a lost response is not proof that work did not happen.</p>
+<h3>Main-workflow replacement</h3>
+<p>Replace the current audio branch with:</p>
+<ol>
+<li><code>Prepare speech qualification inputs</code> — preserve original and TTS-normalised text, stable segment index, speaker and exact reference path.</li>
+<li><code>Generate and qualify podcast speech segment</code> — one sub-workflow execution per item, wait for result.</li>
+<li><code>Assert all speech segments selected</code> — run once across all returned items; require every source index exactly once and every selected file/hash to exist.</li>
+<li><code>Review degraded speech</code> — initial rollout fails closed and sends a compact notification listing segment, attempts and rejection reasons. It does not continue automatically.</li>
+<li><code>Confirm voice generation complete</code> — return the complete ordered selected-segment collection rather than only proving that at least one generated item exists.</li>
+<li>Continue to the existing <code>Telegram: voice generation completed</code> and <code>Audio finish before imaging</code> boundary.</li>
+</ol>
+<p>Keep the current production error workflow. Network calls to the evaluator may use transport retries, but synthesis and evaluation decisions remain manifest-aware so node-level retry cannot create untracked candidates.</p>
+<h3>Selection policy in executable form</h3>
+<p><code>passed</code> requires all of:</p>
+<pre><code class="language-text">technical.safe
+AND transcript.withinThreshold
+AND transcript.coverageComplete
+AND voice.targetIsTopMatch
+AND voice.targetAboveFloor
+AND voice.marginAboveFloor
+AND defects.withinThreshold
+</code></pre>
+<p>After attempt 3, calculate <code>rankVector</code> as an ordered tuple rather than a blended score:</p>
+<pre><code class="language-text">[
+  technicalUsable,
+  intendedVoiceIsTopMatch,
+  -protectedTermFailures,
+  -missingWords,
+  -addedWords,
+  -wer,
+  voiceMargin,
+  voiceTargetScore,
+  -defectSeverity,
+  -attempt
+]
+</code></pre>
+<p>Compare tuple fields from left to right. This prevents a very strong voice score from compensating for missing speech and prevents a perfect transcript in the wrong voice from winning. Store both the tuple and human-readable explanation in <code>selected.json</code>.</p>
+<h3>Delivery phases</h3>
+<h4>Phase A — offline evaluator</h4>
+<ul>
+<li>Add the evaluator under <code>the local vault/git/brookjordan/localtranscription</code>, which owns the existing ASR benchmark and <code>.venv-asr</code>.</li>
+<li>Keep the existing environments isolated: a persistent Parakeet/Whisper worker runs under <code>localtranscription/.venv-asr</code>; a persistent fingerprint worker runs under <code>hear/.venv</code>. Do not install each project&#39;s packages into the other environment. A small localhost-only coordinator may communicate with both workers over JSON lines and expose the versioned evaluation contract to n8n.</li>
+<li>Extract the normaliser and Parakeet runner from the existing transcription benchmark behind that contract.</li>
+<li>Wrap HEAR CAM++ against explicit reference files without invoking HEAR transcription.</li>
+<li>Add ffmpeg/signal checks and a versioned JSON result schema.</li>
+<li>Run it over every speech segment in <code>v2026.39.5-22.57</code>; label the known bad segment and the lowest-ranked controls by listening.</li>
+</ul>
+<h4>Phase B — candidate manifests and replay</h4>
+<ul>
+<li>Implement the per-segment directory and atomic manifests.</li>
+<li>Replay synthetic three-attempt sets, including wrong words, wrong voice, clipping, silence and malformed files.</li>
+<li>Prove deterministic fallback selection and resume without regeneration.</li>
+</ul>
+<h4>Phase C — n8n shadow mode</h4>
+<ul>
+<li>Add the two sub-workflows.</li>
+<li>Keep production using its current selected files, but evaluate and record them without gating publication.</li>
+<li>Verify node connections, run with pinned side-effect boundaries, and inspect one complete shadow episode.</li>
+</ul>
+<h4>Phase D — fail-closed production gate</h4>
+<ul>
+<li>Replace the current <code>Generate audio</code> branch.</li>
+<li>Stop before imaging/publication if any segment is degraded; send the review notification.</li>
+<li>Publish only after workflow validation, connection read-back and a no-publish end-to-end run.</li>
+</ul>
+<h4>Phase E — optional automatic fallback publication</h4>
+<p>Consider allowing a degraded best-of-three candidate to continue only after the calibration corpus shows no false accepts and the user explicitly chooses that policy. Until then, “fall back to best” means retain and present the best candidate for review, not silently publish it.</p>
+<h2>Validation plan</h2>
+<ol>
+<li>Freeze the current Brook and Conrad reference clips and hashes.</li>
+<li>Assemble a labelled calibration corpus from current podcast outputs plus controlled corruptions and wrong-voice swaps.</li>
+<li>Run Parakeet, bounded Whisper adjudication and HEAR CAM++ over the corpus; establish transcript, similarity and margin thresholds from observed separation.</li>
+<li>Replay the three-attempt selector offline over at least one full past script without publishing.</li>
+<li>Confirm deterministic ranking from saved manifests.</li>
+<li>Inject failures: wrong word, omitted phrase, repeated phrase, wrong voice, silence, clipping and truncated file.</li>
+<li>Run a shadow production episode, retaining all attempts and comparing automatic choices with listening judgements.</li>
+<li>Enable fail-closed production selection only after the shadow run has no false accepts.</li>
+</ol>
+<h2>Implementation evidence — 2026-09-26</h2>
+<ul>
+<li>Added <code>scripts/speech_attempt_store.py</code> in <code>localtranscription</code>. It writes candidate audio, generation metadata, evaluation evidence and <code>selected.json</code> atomically under <code>~/ComfyUI-Shared/output/pcb010-runs/&lt;mediaRunId&gt;/speech/&lt;segmentId&gt;/</code>.</li>
+<li>Attempt writes are idempotent by content hash and immutable on conflict. Selection is likewise immutable; stale identity fields are rejected rather than overwritten.</li>
+<li>Added deterministic best-of-three selection from saved <code>rankVector</code> values, with the lowest attempt number as the final tie-break. All-fail selection is explicitly marked <code>degraded: true</code>.</li>
+<li>Added seven persistence/replay unit tests. Together with the evaluator API tests, the focused suite reports <code>13</code> passing tests.</li>
+<li>Extended the evaluator bridge so <code>/evaluate</code> persists the candidate before model evaluation and persists the result afterwards. Added <code>POST /select</code> for durable passing or degraded selection. The restarted service passed <code>/healthz</code>; an incomplete <code>/select</code> request correctly returned <code>manifest_conflict</code> rather than inventing a result.</li>
+<li>Reworked inactive n8n workflow <code>b9BQXHBKBQTa2scx</code> as <code>PCB-010 three-pass speech qualification</code>. Its explicit cycle generates attempts sequentially, stops on the first pass, and invokes durable selection after a pass or after attempt three. It remains unpublished and sets <code>productionWrites: false</code>.</li>
+<li>Enabled n8n execution-progress and success/error retention for replay diagnosis. The read-back graph contains nine connected nodes with no validation warnings.</li>
+<li>Pinned first-pass and degraded-path tests completed as executions <code>2667</code> and <code>2668</code>; execution <code>2667</code> was read back and confirmed the typed request, deterministic seed <code>101001</code>, pass branch and final selection output.</li>
+</ul>
+<p>Still required before publication: a pinned retry-success test that exercises the cycle, a real no-publish three-attempt run, resume lookup before synthesis, the separately reusable evaluator sub-workflow, full calibration/perceptual and Whisper gates, and production caller integration.</p>
+<p>Live-attempt preparation: the previously saved passing branch incorrectly called <code>/select</code> (which only selects after three failed evaluations). The unpublished speech workflow now returns the evaluator&#39;s persisted passing selection directly; saved version <code>cb0aa840-183f-406f-80ea-89fb60821b46</code> was read back, but has not been exercised with real audio. The local evaluator no longer reports CER as WER or claims that a non-empty transcript proves temporal coverage; unavailable perceptual/coverage evidence is marked null. This is a truthful partial evaluator, <strong>not</strong> proof that all four qualification gates are working. The builder still uses its original <code>Generate audio</code> path, and its final media manifest hard-codes <code>podcast_&lt;runId&gt;_&lt;index&gt;_00001.mp3</code>, whereas the new generator uses <code>pcb010_&lt;runId&gt;_&lt;segmentId&gt;_attempt_&lt;N&gt;</code>; the selected output must be mapped to final media before caller integration can work. Brook permits a controlled live published attempt after these wiring blockers are resolved, rather than requiring a disconnected no-publish run.</p>
+<h2>Definition of done</h2>
+<h3>Evaluator</h3>
+<ul>
+<li><input disabled="" type="checkbox"> A documented, versioned evaluator contract accepts one candidate plus expected text and voice references and returns the complete technical, transcript, voice, defect and ranking schema described above.</li>
+<li><input disabled="" type="checkbox"> Parakeet and CAM++ stay warm in their own existing environments; the service serialises inference and a health endpoint reports each worker&#39;s readiness and model/system ID.</li>
+<li><input disabled="" type="checkbox"> No evaluator process imports, loads or spawns VibeVoice-ASR. Process inspection during a full calibration run confirms this.</li>
+<li><input disabled="" type="checkbox"> Transcript scoring uses Parakeet by default, bounded Whisper adjudication, normalised WER/CER, protected terms and temporal coverage.</li>
+<li><input disabled="" type="checkbox"> Voice scoring uses HEAR CAM++ against the exact TTS reference and records target score, strongest non-target score, margin, reference hashes and system ID.</li>
+<li><input disabled="" type="checkbox"> Technical and perceptual checks correctly reject the labelled wrong-word, omitted-phrase, repeated-phrase, wrong-voice, silence, clipping and truncation controls.</li>
+<li><input disabled="" type="checkbox"> The complete <code>v2026.39.5-22.57</code> speech set has a retained calibration report, measured resource use and human labels for the suspect and lowest-ranked controls.</li>
+<li><input disabled="" type="checkbox"> Production thresholds are written back to this ticket with evidence; provisional HEAR defaults are not promoted merely because they already exist.</li>
+</ul>
+<h3>Selection and persistence</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Every generated segment has one to three immutable candidate files and matching evaluation records under its stable <code>mediaRunId/segmentIndex</code> directory.</li>
+<li><input disabled="" type="checkbox"> Attempt one is accepted immediately when it passes; attempts two and three are not generated unnecessarily.</li>
+<li><input disabled="" type="checkbox"> Failed candidates are retained and never silently promoted as passes.</li>
+<li><input disabled="" type="checkbox"> After three failures, the documented tuple comparison selects the same fallback from the same manifests on repeated runs and records a human-readable explanation.</li>
+<li><input disabled="" type="checkbox"> <code>selected.json</code> distinguishes <code>passed</code> from <code>degraded</code>; initial production policy never publishes a degraded result automatically.</li>
+<li><input disabled="" type="checkbox"> Changing expected text, speaker, reference hash, generator version or evaluator version invalidates stale selection state.</li>
+</ul>
+<h3>n8n integration</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Both sub-workflows have typed contracts, descriptions and discovery tags and pass independent tests with pinned inputs.</li>
+<li><input disabled="" type="checkbox"> The production caller returns every original <code>segmentIndex</code> exactly once, in order, with a selected file whose hash and manifest exist.</li>
+<li><input disabled="" type="checkbox"> Whole-episode verification detects missing, duplicated or misordered segments and voice/loudness discontinuities.</li>
+<li><input disabled="" type="checkbox"> A forced evaluator failure, synthesis timeout and n8n retry each resume from persisted state without duplicate synthesis or lost candidates.</li>
+<li><input disabled="" type="checkbox"> A degraded segment stops before imaging/publication and produces one compact review notification with all three rejection summaries.</li>
+<li><input disabled="" type="checkbox"> Workflow validation passes, connection read-back matches the intended graph, and a no-publish end-to-end execution completes.</li>
+<li><input disabled="" type="checkbox"> One full shadow episode is reviewed against automatic decisions with no false accept before the gate is enabled.</li>
+<li><input disabled="" type="checkbox"> The repaired workflow is published, its active version is recorded here, and one production execution reaches exact publication verification with no degraded segments.</li>
+</ul>
+<h3>Handoff evidence</h3>
+<ul>
+<li><input disabled="" type="checkbox"> The ticket resolution links the evaluator code, calibration report, test evidence, final n8n workflow/version and successful execution ID.</li>
+<li><input disabled="" type="checkbox"> The project-map execution row reflects the final status and remaining policy decision about automatic degraded fallback publication.</li>
+</ul>
+<h2>Dependencies</h2>
+<ul>
+<li>PCB-009 selects the long-term TTS engine and provides its reproducible adapter parameters.</li>
+<li>HEAR-010 provides the fingerprinting implementation and calibration lessons.</li>
+<li>Transcription systems evaluation provides local ASR evaluation conventions.</li>
+</ul>
+<h2>Next action</h2>
+<p>Build the offline evaluator and calibration packet first: score all speech segments from <code>v2026.39.5-22.57</code> against their source lines and Brook/Conrad reference clips, then listen to the lowest-ranked and known-problem samples to label which defects the transcript and fingerprint scores miss.</p>
+<h2>PCB-022 evaluator-contract change v0.2.0 — 2026-09-28</h2>
+<p>Brook confirmed a real defect in the degraded-fallback selector, diagnosed against run <strong>3092</strong> segment 14 (&quot;Verba Legis / Ratio Legis&quot;): all three attempts failed, and the pipeline selected attempt <strong>2</strong> — by far the worst (WER 0.846, fluent nonsense) — over attempts 1 and 3 (WER 0.154 each).</p>
+<p>Root cause, in <code>localtranscription/scripts/speech_candidate_evaluator.py</code> (<code>build_rank_vector</code>, contract v0.1.5): the rank vector compared <code>missingWords</code>/<code>addedWords</code> (positions 4–5) <strong>before</strong> WER, and those fields were raw length deltas — <code>max(0, len diff)</code> — not alignment-derived S/D/I. A same-length garble (0 missing, 1 added) therefore outranked a near-correct attempt that dropped one word. <code>protectedTermFailures</code> was unimplemented (<code>None</code>), and the perceptual-defect dimension was a 0.0 placeholder.</p>
+<p>Fix, shipped as a versioned evaluator-contract change <strong><code>pcb-010-evaluator-v0.2.0</code></strong> (commit <code>2e9e7d4</code> in <code>localtranscription</code>, per PCB-022&#39;s &quot;no silent tweak&quot; rule):</p>
+<ul>
+<li>New <code>_word_confusion</code>: Levenshtein backtrace producing jiwer-compatible substitutions/deletions/insertions (Morris 2004 formulation); <code>missingWords = S + D</code>, <code>addedWords = I</code>.</li>
+<li>Rank vector rebalanced: <code>technical, voiceTop, -protectedTermFailures, -WER, -S, -D, -I, margin, targetScore, -defects, -attempt</code> — WER promoted above the counts, so the headline transcript-closeness measure can no longer be outranked by a length artefact.</li>
+<li><code>protected_terms</code> implemented per episode: <code>evaluate_candidate(..., protected_terms=[...])</code> counts protected terms absent from the observed transcript, recording both the count and the exact misses (<code>protectedTermMisses</code>); the bridge (<code>pcb010_evaluator_api.py</code>) accepts an optional <code>protectedTerms</code> list. Not yet passed by any workflow caller — wired but inert until the caller change.</li>
+</ul>
+<p>Re-selection over 3092&#39;s stored evidence (deterministic, no regeneration): segment 14 now selects attempt <strong>3</strong>; segments 0, 4, 16 and 24 select unchanged. Verified against real audio with a 10-check script: WER reproduction (0.154/0.846/0.154), S/D/I derivation (21/0/1 for attempt 2), protected-term counting, and the new selector picking attempt 3 while remaining degraded. The running evaluator service still reports v0.1.5 — it must be restarted to pick up v0.2.0 before the next live run.</p>
+<h2>Workflow wiring updated for evaluator v0.2.0 — 2026-09-28</h2>
+<p>Both drafts updated and read back (parent <code>NZ55uYGj90xC5ZFq</code>, child <code>b9BQXHBKBQTa2scx</code>; both still unpublished, node-level validation clean):</p>
+<ul>
+<li>Child trigger and the parent&#39;s <code>Qualify each speech segment</code> caller now carry an optional <code>protectedTerms</code> (array of strings) input; the child&#39;s <code>Initialise qualification state</code> normalises it and <code>Build evaluator HTTP request</code> adds it to the <code>/evaluate</code> body. The parent does not supply a term list yet, so the field stays inert (<code>|| []</code>) until a protected-terms source exists.</li>
+<li><code>Build final selections</code> in the parent now defaults its fallback <code>selectionReason</code> to the bridge&#39;s actual reason string <code>deterministic_best_after_three_failures</code> (was the stale <code>best_after_three_passes</code>), and the final map no longer reintroduces the stale string.</li>
+</ul>
+<p>Selection now flows entirely from the bridge&#39;s v0.2.0 <code>rankVector</code> — no ranking logic lives in the workflow. Remaining before a live run: restart the evaluator service (it still reports v0.1.5) and bridge-level smoke-test <code>/evaluate</code> against a real candidate.</p>
+<h2>Evaluator service live on v0.2.0 — 2026-09-28</h2>
+<ul>
+<li>Restarted the launchd job <code>com.brookjordan.podcast-evaluator</code> and found the health endpoint still reporting v0.1.5: the bridge (<code>pcb010_evaluator_api.py</code>) hardcoded the version string in three places instead of importing <code>EVALUATOR_VERSION</code>. Fixed (commit <code>892306e</code>), restarted again — <code>/healthz</code> now reports <code>pcb-010-evaluator-v0.2.0</code>.</li>
+<li>Bridge-level smoke test passed: posted 3092 segment 14 attempt 2&#39;s real audio to <code>/evaluate</code> under shadow run <code>smoke-v020</code> with <code>protectedTerms: [&quot;verba legis&quot;,&quot;ratio legis&quot;]</code>. Response carried the full v0.2.0 contract: WER 0.846, S/D/I 21/0/1, missing 21 / added 1, <code>protectedTermFailures: 2</code> with both terms listed as misses, and the 11-position rank vector with WER at position 4 and protected terms at position 3. Smoke evidence removed afterwards.</li>
+<li>Both workflows remain aligned and unpublished. The pipeline is ready for the next live test run whenever Brook schedules it.</li>
+</ul>
+<h2>Production cutover — 2026-09-28</h2>
+<p>Execution <strong>3143</strong> (first run on evaluator v0.2.0) succeeded end to end: 25 spoken segments, 6 degraded fallbacks (0, 2, 4, 5, 10, 16), publication verified — folder <code>v2026.40.1-10.28</code>, commit <code>85ccefde</code>. On-disk evaluations carry the new contract (S/D/I alignment counts, protected-term evidence, 11-position rank vector with WER at position 4). Brook then authorised production promotion.</p>
+<p>Published both workflows after the live proof: child <code>b9BQXHBKBQTa2scx</code> first (publish requires referenced sub-workflows active), then parent <code>NZ55uYGj90xC5ZFq</code>. Verified: both <code>active: true</code> with <code>activeVersionId</code> equal to the exact drafts 3143 exercised (<code>41c74790…</code> / <code>72378aa5…</code>). Schedule trigger is live at 04:30, 12:10 and 18:00 Asia/Singapore. The old scheduled builder <code>S9v0UpCVYcrtVJH4</code> remains inactive (verified before cutover).</p>
+<p>Still open, recorded deliberately: Telegram publication message does not yet list degraded segments; public stats still lack per-attempt generation time/speed ratio and rich per-criterion evidence (PCB-020 remainder); protected terms are plumbed but no workflow caller supplies a term list yet; PCB-023 (expose all attempts with per-criterion scores) unstarted.</p>
 
 </body></html>

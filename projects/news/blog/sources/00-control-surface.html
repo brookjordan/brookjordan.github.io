@@ -1,0 +1,963 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Source: Song path control surface — PodCast Builder devlog</title>
+<style>
+body{max-width:760px;margin:2.5rem auto;padding:0 1.2rem;font-family:ui-sans-serif,system-ui,sans-serif;background:#16181f;color:#dfe2ea;line-height:1.65}
+a{color:#7aa2f7} h1,h2{line-height:1.25} code{background:#262a33;padding:.1em .35em;border-radius:4px;font-size:.9em}
+pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{color:#8b90a0;font-size:.85rem}
+.back{font-size:.85rem} .backnote{background:#262a33;border:1px solid #333;border-radius:8px;padding:.8rem 1rem;font-size:.85rem;color:#aeb3c2}
+</style></head><body>
+<p class="back"><a href="../index.html">← PodCast Builder devlog</a></p>
+<p class="backnote">This is a public snapshot of a private project-tracking note, sanitised for
+publication: internal links, status metadata and personal paths are removed. The live private
+version lives in the author's Obsidian vault.</p>
+<h1>Song path control surface</h1>
+<h1>What the song path can actually control</h1>
+<p>The podcast song generator renders through a local C++ port of YuE2, a text-to-song
+model, and reaches it from an n8n workflow. Four nodes matter: <code>Generate song spec</code>
+asks a language model for a JSON brief, <code>Parse song spec</code> clamps that brief, <code>YuE2 synth</code> POSTs a request to the renderer, <code>YuE2 materialise audio</code> polls the job and
+writes a file.</p>
+<p>The headline is that the generator&#39;s control surface is far narrower than its
+vocabulary suggests, and that the error runs the opposite way from the usual
+intuition. The renderer accepts a score and honours its key, metre and tempo exactly.
+The workflow neither sends a score nor persists one. Everything the pipeline appears
+to fix about key, metre and tempo travels as prose inside a single comma-separated
+<code>style</code> string, and the renderer&#39;s own symbolic planner overwrites it.</p>
+<h2>1. The channels</h2>
+<p>Five channels exist. Naming them precisely is most of the audit, because several of
+the axes below are only distinguishable by which one carries them.</p>
+<table>
+<thead>
+<tr>
+<th>Channel</th>
+<th>What it is</th>
+<th>Field</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Style string</td>
+<td>Comma-separated descriptors under <code>[Tags]</code>, reaching the model verbatim</td>
+<td><code>style</code></td>
+</tr>
+<tr>
+<td>Lyrics string</td>
+<td>The words to sing, with structural tags, verbatim under <code>[Lyrics]</code></td>
+<td><code>lyrics</code></td>
+</tr>
+<tr>
+<td>ABC score</td>
+<td>A symbolic plan tokenized into the prompt as-is, replacing the planning stage</td>
+<td><code>abc</code></td>
+</tr>
+<tr>
+<td>Dedicated field</td>
+<td>Typed request parameters the pipeline reads directly</td>
+<td><code>duration</code>, <code>steps</code>, <code>seed</code>, <code>lm_seed</code>, <code>cot</code>, <code>cfg_scale</code>, <code>output_format</code>, <code>peak_clip</code>, <code>mp3_bitrate</code>, <code>semantic_tokens</code>, <code>lm_batch_size</code>, <code>synth_batch_size</code>, <code>abc_sampling</code>, <code>semantic_sampling</code></td>
+</tr>
+<tr>
+<td>Nothing</td>
+<td>No channel exists</td>
+<td>—</td>
+</tr>
+</tbody></table>
+<p>The renderer&#39;s request schema is authoritative in <code>src/request.h</code> and <code>src/request.cpp</code>
+of the port, and documented in its architecture document. That document states the
+whole contract plainly: &quot;Every field has a default. Omitting a field is strictly
+equivalent to sending it with its default value. Only <code>style</code> or <code>lyrics</code> is
+required&quot; — see <a href="https://github.com/ServeurpersoCom/yue2.cpp">yue2.cpp <code>docs/ARCHITECTURE.md</code></a>.</p>
+<p>Two details of prompt assembly decide which axes are hard. First, style and lyrics
+reach the model verbatim: &quot;The style and lyrics text reaches the model verbatim: the
+protocol defines no caption cleaning and no lyrics normalization.&quot; Second, the score
+slot is a real slot, and supplying it removes a whole generation stage: a non-empty
+<code>abc</code> &quot;replaces the planning stage: the score is tokenized into the prefix as is.&quot;</p>
+<h2>2. Axis by channel by strength</h2>
+<p>Strength is graded as the brief defines it. <strong>Hard</strong> means a typed field the renderer
+parses and acts on, or a score the semantic stage reads directly. <strong>Soft</strong> means
+prose the model may or may not act on. <strong>Unavailable</strong> means no channel reaches it.
+<strong>Unknown</strong> means the evidence does not settle it.</p>
+<table>
+<thead>
+<tr>
+<th>Axis</th>
+<th>Channel</th>
+<th>Field</th>
+<th>Strength</th>
+<th>Basis</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Style / sub-genre</td>
+<td>Style string</td>
+<td><code>style</code></td>
+<td>Soft</td>
+<td>Verbatim into <code>[Tags]</code>; no typed field</td>
+</tr>
+<tr>
+<td>Instrumentation</td>
+<td>Style string</td>
+<td><code>style</code></td>
+<td>Soft</td>
+<td>Same; a named instrument is a token, not a route</td>
+</tr>
+<tr>
+<td>Production texture</td>
+<td>Style string</td>
+<td><code>style</code></td>
+<td>Soft</td>
+<td>&quot;close-miked&quot;, &quot;lo-fi&quot; are adjectives to a model</td>
+</tr>
+<tr>
+<td>Mood</td>
+<td>Style string</td>
+<td><code>style</code></td>
+<td>Soft</td>
+<td>No typed field anywhere</td>
+</tr>
+<tr>
+<td>Era / period</td>
+<td>Style string</td>
+<td><code>style</code></td>
+<td>Soft</td>
+<td>No typed field</td>
+</tr>
+<tr>
+<td>Vocal type</td>
+<td>Style string</td>
+<td><code>style</code></td>
+<td>Soft</td>
+<td>Gendered or ranged descriptors only</td>
+</tr>
+<tr>
+<td>Vocal delivery</td>
+<td>Style string, lyrics</td>
+<td><code>style</code>, <code>lyrics</code></td>
+<td>Soft</td>
+<td>Punctuation and line shape nudge; nothing parses it</td>
+</tr>
+<tr>
+<td>Language</td>
+<td>Style string</td>
+<td><code>style</code></td>
+<td>Soft–hard</td>
+<td>Prompt-side only; the checkpoint is trained on certain languages</td>
+</tr>
+<tr>
+<td>Tempo (free text)</td>
+<td>Style string</td>
+<td><code>style</code></td>
+<td>Soft</td>
+<td>Planner rewrites it — see §4</td>
+</tr>
+<tr>
+<td>Tempo (score)</td>
+<td>ABC score</td>
+<td><code>abc</code> <code>Q:</code></td>
+<td><strong>Hard</strong></td>
+<td>Score is tokenized as-is; planner skipped</td>
+</tr>
+<tr>
+<td>Metre (free text)</td>
+<td>Style string</td>
+<td><code>style</code></td>
+<td>Soft</td>
+<td>Planner owns it in practice</td>
+</tr>
+<tr>
+<td>Metre (score)</td>
+<td>ABC score</td>
+<td><code>abc</code> <code>M:</code></td>
+<td><strong>Hard</strong></td>
+<td>Same</td>
+</tr>
+<tr>
+<td>Key / mode (free text)</td>
+<td>Style string</td>
+<td><code>style</code></td>
+<td>Soft</td>
+<td>Planner chooses <code>K:</code> itself</td>
+</tr>
+<tr>
+<td>Key / mode (score)</td>
+<td>ABC score</td>
+<td><code>abc</code> <code>K:</code></td>
+<td><strong>Hard</strong></td>
+<td>Same</td>
+</tr>
+<tr>
+<td>Scale (e.g. Dorian)</td>
+<td>ABC score</td>
+<td><code>abc</code> <code>K:</code></td>
+<td><strong>Hard</strong></td>
+<td>ABC <code>K:</code> carries a mode name (<code>K:DDorian</code>)</td>
+</tr>
+<tr>
+<td>Structure</td>
+<td>Lyrics string</td>
+<td><code>lyrics</code></td>
+<td>Soft</td>
+<td>Free-text tags; the workflow strips most of them</td>
+</tr>
+<tr>
+<td>Section tags</td>
+<td>Lyrics string</td>
+<td><code>lyrics</code></td>
+<td>Soft</td>
+<td>Only <code>[verse]</code>/<code>[chorus]</code> survive the clamp</td>
+</tr>
+<tr>
+<td>Line length</td>
+<td>Lyrics string</td>
+<td><code>lyrics</code></td>
+<td>Soft</td>
+<td>Newlines reach the model; nothing counts them</td>
+</tr>
+<tr>
+<td>Duration</td>
+<td>Dedicated field</td>
+<td><code>duration</code></td>
+<td><strong>Hard</strong></td>
+<td>Typed float; stage preset caps the shorter</td>
+</tr>
+<tr>
+<td>Arrangement density</td>
+<td>Style string, ABC score</td>
+<td><code>style</code>, <code>abc</code></td>
+<td>Soft / hard</td>
+<td>Density of <em>events</em> is readable from the score; timbral density is not</td>
+</tr>
+<tr>
+<td>Melody and ornament</td>
+<td>ABC score</td>
+<td><code>abc</code></td>
+<td><strong>Hard</strong></td>
+<td>The semantic stage &quot;takes its pitches from this melody&quot;</td>
+</tr>
+<tr>
+<td>Register / octave</td>
+<td>ABC score</td>
+<td><code>abc</code></td>
+<td><strong>Hard</strong></td>
+<td>Octave markers; the only hard register lever</td>
+</tr>
+<tr>
+<td>Harmony / chord symbols</td>
+<td>ABC score</td>
+<td><code>abc</code> <code>&quot;...&quot;</code></td>
+<td><strong>Hard</strong> in <code>cot: full</code></td>
+<td>Chord-annotated score is the <code>full</code> mode contract</td>
+</tr>
+<tr>
+<td>Tuning / microtonality</td>
+<td>—</td>
+<td>—</td>
+<td><strong>Unavailable</strong></td>
+<td>No field; ABC is 12-TET</td>
+</tr>
+<tr>
+<td>Sections beyond verse/chorus</td>
+<td>—</td>
+<td>—</td>
+<td><strong>Unavailable</strong> in this pipeline</td>
+<td>Clamped away, §4</td>
+</tr>
+<tr>
+<td>Guidance strength</td>
+<td>Dedicated field</td>
+<td><code>cfg_scale</code></td>
+<td>Hard but neutralised</td>
+<td>Default 1.0 keeps one branch</td>
+</tr>
+<tr>
+<td>Seed</td>
+<td>Dedicated field</td>
+<td><code>seed</code>, <code>lm_seed</code></td>
+<td><strong>Hard</strong></td>
+<td>Typed int64</td>
+</tr>
+<tr>
+<td>Steps</td>
+<td>Dedicated field</td>
+<td><code>steps</code></td>
+<td><strong>Hard</strong></td>
+<td>Typed int; flow-matching quality only</td>
+</tr>
+<tr>
+<td>Output format</td>
+<td>Dedicated field</td>
+<td><code>output_format</code></td>
+<td><strong>Hard</strong></td>
+<td>Typed; <code>wav16</code> in the workflow</td>
+</tr>
+<tr>
+<td>Loudness normalisation</td>
+<td>Dedicated field</td>
+<td><code>peak_clip</code></td>
+<td><strong>Hard</strong></td>
+<td>Not set by the workflow</td>
+</tr>
+</tbody></table>
+<p>The pattern is consistent: <strong>everything that is a name is soft, and everything that is
+a number or a score is hard.</strong> Style, mood, instrumentation and production are names.
+Key, metre, tempo and register become numbers only inside an ABC score.</p>
+<h2>3. The ABC round trip</h2>
+<p>This is the only hard channel for key, metre and tempo, so it deserves precision.</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Mechanism</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Produce</td>
+<td>The autoregressive stage writes the score when the <code>abc</code> slot is open. <code>cot: &quot;full&quot;</code> asks for a chord-annotated transcription, <code>&quot;melody&quot;</code> for melody only, <code>&quot;off&quot;</code> closes the slot immediately</td>
+<td><code>src/prompt.h</code> instruction table</td>
+</tr>
+<tr>
+<td>Obtain</td>
+<td>The score travels with the track. <code>yue-plan --out score.abc</code> writes it standalone; <code>GET /job?id=N&amp;result=1</code> returns multipart/mixed with &quot;one application/json replay request part (the request carrying the semantic stream, the score and the seeds of that track)&quot;</td>
+<td><code>docs/ARCHITECTURE.md</code>, README</td>
+</tr>
+<tr>
+<td>Edit</td>
+<td>Plain text. The port&#39;s own tooling transposes whole octaves, &quot;the only hard lever on the sung register, because the semantic stage takes its pitches from this melody&quot;</td>
+<td>port tooling header comment</td>
+</tr>
+<tr>
+<td>Send back</td>
+<td>Put the edited text in the <code>abc</code> field. A helper reads a base request, attaches the score, and reports the score&#39;s own <code>M:</code> and <code>Q:</code> — &quot;Keeps the score&#39;s tempo and meter, so only the audio stage is re-conditioned&quot;</td>
+<td>port tooling header comment</td>
+</tr>
+</tbody></table>
+<p><strong>What survives a round trip.</strong> Everything the ABC parser reads. In the observed
+scores the header is:</p>
+<pre><code>X:1
+T:
+M:2/4
+L:1/32
+Q:1/4=107
+V: Vocal clef=treble name=&quot;Vocal Melody&quot; snm=&quot;Vocal&quot;
+V: Ins clef=treble name=&quot;Ins Melody&quot; snm=&quot;Inst.&quot;
+K:D
+</code></pre>
+<p>Meter, tempo, key, note lengths, rests, ties, dotted values, octave markers and
+chord symbols all survive, because the score is tokenized into the prefix as-is and
+the model consumes it as text. The score is also the <em>only</em> place where an explicit
+mode can be written: ABC <code>K:</code> accepts a mode suffix, so <code>K:DDorian</code> names a scale
+rather than a key signature.</p>
+<p><strong>What is ignored.</strong> <code>X:</code>, <code>T:</code>, the <code>V:</code> voice declarations and <code>%</code> comments are
+decorative — they are carried but not parsed by the renderer, which has no ABC
+grammar at all. It tokenizes. The port contains no tempo, meter or key handling
+anywhere in its source; those live entirely in the model&#39;s reading of the text.</p>
+<p><strong>Which fields the score can authoritatively set.</strong> <code>M:</code> sets metre and <code>Q:</code> sets
+tempo, both hard, both confirmed by the planner-skip path. <code>K:</code> sets key and, in
+practice, mode. <code>L:</code>, note values and octave markers set the melodic rhythm and
+register. The empirical support is that a re-submitted score renders deterministically
+from its own codes, so the score&#39;s tempo is the code timing, not a request.</p>
+<h2>4. The clamps, one at a time</h2>
+<p>Each clamp lives in the <code>Parse song spec</code> Code node. The verdicts are as follows.</p>
+<table>
+<thead>
+<tr>
+<th>Clamp</th>
+<th>Value</th>
+<th>Verdict</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Two-section maximum</td>
+<td><code>MAX_SECTIONS = 2</code>, <code>.slice(0, MAX_SECTIONS)</code></td>
+<td><strong>Self-imposed</strong></td>
+<td>The renderer accepts a free-text <code>lyrics</code> string with no section limit. Upstream examples show longer forms</td>
+</tr>
+<tr>
+<td>Four lines per section</td>
+<td><code>MAX_LINES_PER_SECTION = 4</code>, <code>.slice(0, MAX_LINES_PER_SECTION)</code></td>
+<td><strong>Self-imposed</strong></td>
+<td>Same; nothing in the request schema counts lines</td>
+</tr>
+<tr>
+<td>Verse-and-chorus only</td>
+<td><code>if (name === &#39;verse&#39; || name === &#39;chorus&#39;)</code></td>
+<td><strong>Self-imposed, but built on a real narrowness</strong></td>
+<td>Upstream documents <code>[Verse]</code>/<code>[Chorus]</code> as examples and gives no closed list. The comment claims &quot;the only tags it understands are [verse] and [chorus]&quot; — a stronger claim than the upstream docs support</td>
+</tr>
+<tr>
+<td>Twelve-key list</td>
+<td>literal array of 12</td>
+<td><strong>Self-imposed</strong></td>
+<td>The renderer has no key field; any key is expressible in <code>style</code> or in <code>abc</code> <code>K:</code></td>
+</tr>
+<tr>
+<td><code>{4,3,6}</code> time signature</td>
+<td><code>[&#39;4&#39;,&#39;3&#39;,&#39;6&#39;]</code></td>
+<td><strong>Self-imposed</strong></td>
+<td>No time-signature field. A planned score wrote <code>M:2/4</code>, which the clamp can never produce</td>
+</tr>
+<tr>
+<td>90–140 BPM clamp</td>
+<td><code>bpm &lt; 90 || bpm &gt; 140 → 120</code></td>
+<td><strong>Self-imposed</strong></td>
+<td>No tempo field. Scores observed at 70, 77 and 186</td>
+</tr>
+<tr>
+<td>Lyric length limit</td>
+<td><code>.slice(0, 1600)</code></td>
+<td><strong>Self-imposed, with a real ceiling behind it</strong></td>
+<td>The 4096-token planning budget and 9000-frame (6 min) semantic budget are real; 1600 characters is far below them</td>
+</tr>
+<tr>
+<td>Duration choice</td>
+<td><code>vocals ? 360 : 12</code></td>
+<td><strong>Real field, self-imposed value</strong></td>
+<td><code>duration</code> is a typed field, but its &quot;preset of the semantic stage caps it, so the shorter of the two wins&quot;, and 9000 frames at 25 fps = 360 s</td>
+</tr>
+</tbody></table>
+<p>The <code>{4,3,6}</code> and 90–140 verdicts are not inferences. Across 95 renders spanning five
+quantisation levels, planned scores carry metres including <code>2/4</code>, <code>3/4</code> and <code>4/4</code>, and
+tempi of 70, 73, 77, 95, 107, 114, 120, 124, 128, 155, 160, 165, 170, 175, 176, 178 and
+186 BPM. A clamp to <code>{4,3,6}</code> and 90–140 cannot express the renderer&#39;s own output. The
+clamp constrains the workflow, not the model.</p>
+<h3>The comment above the section-tag code, quoted</h3>
+<blockquote>
+<p>YuE&#39;s input contract is narrow: the lyrics must contain verse and chorus
+sections and the only tags it understands are [verse] and [chorus]. Anything
+else reaches the model verbatim, so an <code>[Intro - pulsing synth bass ...]</code> tag
+makes it perform that direction and spend the song&#39;s opening on an
+instrumental intro -- which is how a 40 s cap ended up consuming itself before
+any vocal arrived. Keeping two short canonical sections is what makes the
+finished song short, so no duration cap is needed to bound it.</p>
+</blockquote>
+<p><strong>Is it still justified?</strong> Half of it is, and the half that matters is the weaker
+half. The observation is sound: a descriptive tag does reach the model verbatim and
+does steer it, which is exactly why the channel is useful rather than dangerous. The
+conclusion drawn from it — that only two tags are understood — overstates what is
+documented. Upstream says &quot;Put the words to sing in <code>lyrics</code>, with section tags such
+as <code>[Verse]</code> and <code>[Chorus]</code>.&quot; That is an example list, not a closed set, and no
+closed list is documented anywhere. The two-section rule is a self-imposed clamp
+justified by an undocumented claim about the model&#39;s tag vocabulary.</p>
+<p>The second half is obsolete on its own terms. The comment says the short lyric is
+what bounds length so &quot;no duration cap is needed&quot;, and the code below it then sets
+<code>yueDuration = 360</code> — the maximum the semantic stage will produce. The cap was not
+removed; it was moved to the model&#39;s context budget.</p>
+<h2>5. Seed, steps, cfg_scale, duration</h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Workflow sends</th>
+<th>Default</th>
+<th>What it does in practice</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>seed</code></td>
+<td>not sent</td>
+<td><code>-1</code> → random</td>
+<td>mt19937 seed for the acoustic noise. Does not affect the score or the length. Splitting it from <code>lm_seed</code> is the port&#39;s own addition; the release runs both from one</td>
+</tr>
+<tr>
+<td><code>lm_seed</code></td>
+<td>not sent</td>
+<td><code>-1</code> → random</td>
+<td>Philox key for the token draw: &quot;the score, the melody and the length come from this one.&quot; The only way to reproduce a composition</td>
+</tr>
+<tr>
+<td><code>steps</code></td>
+<td><code>32</code></td>
+<td><code>32</code></td>
+<td>Midpoint steps of the flow-matching ODE, minimum 1. Affects acoustic fidelity only. 32 is the checkpoint value</td>
+</tr>
+<tr>
+<td><code>cfg_scale</code></td>
+<td>not sent</td>
+<td><code>-1</code> → protocol</td>
+<td>Guidance on the semantic stage. Negative resolves to 1.0 in <code>full</code>/<code>melody</code> and 1.01 in <code>off</code>; &quot;Exactly 1.0 keeps a single branch and halves the decode cost.&quot; So the pipeline runs <strong>unguided</strong>: the style string is a suggestion the sampler is not pushed toward</td>
+</tr>
+<tr>
+<td><code>duration</code></td>
+<td><code>360</code> (vocals), <code>12</code> (bumper)</td>
+<td><code>360.0</code></td>
+<td>&quot;Target length. The preset of the semantic stage caps it, so the shorter of the two wins and the model can still end the song earlier on its own.&quot; 360 s matches the 9000-frame cap at 25 fps — the pipeline asks for the maximum</td>
+</tr>
+</tbody></table>
+<p>The consequence of the <code>cfg_scale</code> default is the single most important thing on this
+page. A workflow that never sets it gets no classifier-free guidance on the semantic
+stage, which means style adherence rests entirely on the model&#39;s own prior. Every soft
+channel above is softer than it looks.</p>
+<h2>6. What this means for the catalogue waves</h2>
+<p><strong>Wave A, music styles.</strong> Worth building, and the only wave that is unambiguously
+safe. Style and sub-genre ride the <code>style</code> string, which reaches the model verbatim.
+The catalogue should describe features rather than name genres: &quot;a named style alone
+is not an instruction.&quot; Expect soft adherence, because guidance is off.</p>
+<p><strong>Wave B, stanza and line structure.</strong> The most wasted wave if built against the
+current pipeline. Two sections of four lines is the whole reachable space. The
+catalogue work is still correct as research, but it cannot be <em>used</em> until the
+<code>MAX_SECTIONS</code> and <code>MAX_LINES_PER_SECTION</code> clamps are lifted, and it should be written
+against the renderer&#39;s real capacity, not the clamp.</p>
+<p><strong>Wave C, instruments and production.</strong> Build it, but grade it honestly. Instrument
+names, production adjectives and arrangement vocabulary are all soft-only, all in the
+same <code>style</code> string, competing for the model&#39;s attention with genre and mood. Density
+is the one axis with a hard back door: event density is legible in an ABC score even
+though timbral density is not.</p>
+<p><strong>Wave D, scales, melody and metre.</strong> The highest-value wave, because it is the only
+one with a hard channel. Key, mode, scale, metre, tempo and register all land hard
+through <code>abc</code>. A scale catalogue is worth much more than a tempo table, since tempo is
+already a single number.</p>
+<p><strong>Soft-only axes.</strong> Style, sub-genre, instrumentation, production texture, mood, era,
+vocal type, vocal delivery, language, structure as prose, section tags beyond
+verse/chorus, line length, and arrangement density. A catalogue of values for these
+axes reaches the model as one undifferentiated comma-separated string with no
+guidance applied. That is not a reason to skip the catalogues; it is a reason to keep
+the entries described and specific, since specificity is the only lever a soft channel
+offers.</p>
+<p><strong>Unavailable.</strong> Microtonal and non-12-TET tuning. ABC is a 12-tone notation and
+nothing in the request schema reaches pitch representation. Any catalogue of non-Western
+tuning is unusable against this renderer as it stands.</p>
+<pre><code class="language-json">[
+  {
+    &quot;id&quot;: &quot;axis.style&quot;,
+    &quot;kind&quot;: &quot;axis&quot;,
+    &quot;name&quot;: &quot;Style and sub-genre&quot;,
+    &quot;identifiers&quot;: [&quot;a genre or sub-genre named in the style string, e.g. &#39;British 2-tone ska revival pop&#39;&quot;],
+    &quot;rhythm&quot;: &quot;no dedicated channel; the model reads the descriptor list and may or may not act on it&quot;,
+    &quot;harmony&quot;: &quot;no dedicated channel&quot;,
+    &quot;instrument_refs&quot;: [],
+    &quot;scale_refs&quot;: [],
+    &quot;stanza_refs&quot;: [],
+    &quot;groove_refs&quot;: [],
+    &quot;production&quot;: [],
+    &quot;delivery&quot;: [],
+    &quot;tags&quot;: [&quot;soft-channel&quot;, &quot;style-string&quot;],
+    &quot;avoid&quot;: [&quot;a bare genre name with no described features; wave A requires features, not labels&quot;],
+    &quot;examples&quot;: [{&quot;artist&quot;: &quot;&quot;, &quot;work&quot;: &quot;&quot;, &quot;note&quot;: &quot;a 40-descriptor comma-separated style string including genre, mood, instrumentation, production and vocal character&quot;}],
+    &quot;sources&quot;: [&quot;https://github.com/ServeurpersoCom/yue2.cpp&quot;],
+    &quot;confidence&quot;: &quot;documented&quot;,
+    &quot;notes&quot;: &quot;Channel: style. Strength: soft. JSON field: style. Reaches the model verbatim under [Tags].&quot;
+  },
+  {
+    &quot;id&quot;: &quot;axis.instrumentation&quot;,
+    &quot;kind&quot;: &quot;axis&quot;,
+    &quot;name&quot;: &quot;Instrumentation&quot;,
+    &quot;identifiers&quot;: [&quot;named instruments inside the style string&quot;],
+    &quot;rhythm&quot;: &quot;no dedicated channel&quot;,
+    &quot;harmony&quot;: &quot;no dedicated channel&quot;,
+    &quot;instrument_refs&quot;: [],
+    &quot;scale_refs&quot;: [],
+    &quot;stanza_refs&quot;: [],
+    &quot;groove_refs&quot;: [],
+    &quot;production&quot;: [],
+    &quot;delivery&quot;: [],
+    &quot;tags&quot;: [&quot;soft-channel&quot;, &quot;style-string&quot;],
+    &quot;avoid&quot;: [&quot;long instrument lists that crowd out genre and mood in the same string&quot;],
+    &quot;examples&quot;: [{&quot;artist&quot;: &quot;&quot;, &quot;work&quot;: &quot;&quot;, &quot;note&quot;: &quot;an instrument named as a comma-separated descriptor&quot;}],
+    &quot;sources&quot;: [&quot;https://github.com/ServeurpersoCom/yue2.cpp&quot;],
+    &quot;confidence&quot;: &quot;documented&quot;,
+    &quot;notes&quot;: &quot;Channel: style. Strength: soft. JSON field: style. No instrument routing exists in the request schema.&quot;
+  },
+  {
+    &quot;id&quot;: &quot;axis.production-texture&quot;,
+    &quot;kind&quot;: &quot;axis&quot;,
+    &quot;name&quot;: &quot;Production texture&quot;,
+    &quot;identifiers&quot;: [&quot;production adjectives in the style string&quot;],
+    &quot;rhythm&quot;: &quot;no dedicated channel&quot;,
+    &quot;harmony&quot;: &quot;no dedicated channel&quot;,
+    &quot;instrument_refs&quot;: [],
+    &quot;scale_refs&quot;: [],
+    &quot;stanza_refs&quot;: [],
+    &quot;groove_refs&quot;: [],
+    &quot;production&quot;: [],
+    &quot;delivery&quot;: [],
+    &quot;tags&quot;: [&quot;soft-channel&quot;, &quot;style-string&quot;],
+    &quot;avoid&quot;: [&quot;vague quality words such as &#39;good production&#39; that name no technique&quot;],
+    &quot;examples&quot;: [{&quot;artist&quot;: &quot;&quot;, &quot;work&quot;: &quot;&quot;, &quot;note&quot;: &quot;a named technique or room character as a descriptor&quot;}],
+    &quot;sources&quot;: [&quot;https://github.com/ServeurpersoCom/yue2.cpp&quot;],
+    &quot;confidence&quot;: &quot;documented&quot;,
+    &quot;notes&quot;: &quot;Channel: style. Strength: soft. JSON field: style. Distinguished from the peak_clip normalisation field, which is hard but is loudness only, not texture.&quot;
+  },
+  {
+    &quot;id&quot;: &quot;axis.mood&quot;,
+    &quot;kind&quot;: &quot;axis&quot;,
+    &quot;name&quot;: &quot;Mood&quot;,
+    &quot;identifiers&quot;: [&quot;affect descriptors in the style string&quot;],
+    &quot;rhythm&quot;: &quot;no dedicated channel&quot;,
+    &quot;harmony&quot;: &quot;no dedicated channel&quot;,
+    &quot;instrument_refs&quot;: [],
+    &quot;scale_refs&quot;: [],
+    &quot;stanza_refs&quot;: [],
+    &quot;groove_refs&quot;: [],
+    &quot;production&quot;: [],
+    &quot;delivery&quot;: [],
+    &quot;tags&quot;: [&quot;soft-channel&quot;, &quot;style-string&quot;],
+    &quot;avoid&quot;: [&quot;mood words that contradict the genre in the same string&quot;],
+    &quot;examples&quot;: [{&quot;artist&quot;: &quot;&quot;, &quot;work&quot;: &quot;&quot;, &quot;note&quot;: &quot;a mood word placed inside the comma-separated style string&quot;}],
+    &quot;sources&quot;: [&quot;https://github.com/ServeurpersoCom/yue2.cpp&quot;],
+    &quot;confidence&quot;: &quot;documented&quot;,
+    &quot;notes&quot;: &quot;Channel: style. Strength: soft. JSON field: style. No mood or emotion parameter exists.&quot;
+  },
+  {
+    &quot;id&quot;: &quot;axis.tempo&quot;,
+    &quot;kind&quot;: &quot;axis&quot;,
+    &quot;name&quot;: &quot;Tempo&quot;,
+    &quot;identifiers&quot;: [&quot;Q:1/4=&lt;n&gt; in the ABC score header&quot;, &quot;an &#39;N BPM&#39; phrase in the style string&quot;],
+    &quot;rhythm&quot;: &quot;set by the score&#39;s Q: field, which the semantic stage reads directly&quot;,
+    &quot;harmony&quot;: &quot;independent of harmony&quot;,
+    &quot;instrument_refs&quot;: [],
+    &quot;scale_refs&quot;: [],
+    &quot;stanza_refs&quot;: [],
+    &quot;groove_refs&quot;: [],
+    &quot;production&quot;: [],
+    &quot;delivery&quot;: [],
+    &quot;tempo_range_bpm&quot;: [70, 190],
+    &quot;tags&quot;: [&quot;hard-channel&quot;, &quot;abc-score&quot;, &quot;soft-channel&quot;, &quot;style-string&quot;],
+    &quot;avoid&quot;: [&quot;trusting a BPM phrase in the style string; the planner overwrites it&quot;],
+    &quot;examples&quot;: [{&quot;artist&quot;: &quot;&quot;, &quot;work&quot;: &quot;&quot;, &quot;note&quot;: &quot;a score whose Q: is the authoritative tempo, versus a style string whose BPM phrase is only a request&quot;}],
+    &quot;sources&quot;: [&quot;https://github.com/ServeurpersoCom/yue2.cpp&quot;],
+    &quot;confidence&quot;: &quot;documented&quot;,
+    &quot;notes&quot;: &quot;Channel: abc score, field abc, header Q:. Strength: hard. The style-string route is soft: across 62 renders carrying both, only 16 matched exactly and the median absolute discrepancy was 3 BPM, with a maximum of 72.&quot;
+  },
+  {
+    &quot;id&quot;: &quot;axis.metre&quot;,
+    &quot;kind&quot;: &quot;axis&quot;,
+    &quot;name&quot;: &quot;Metre&quot;,
+    &quot;identifiers&quot;: [&quot;M:&lt;n&gt;/&lt;d&gt; in the ABC score header&quot;],
+    &quot;rhythm&quot;: &quot;set by the score&#39;s M: field&quot;,
+    &quot;harmony&quot;: &quot;independent of harmony&quot;,
+    &quot;instrument_refs&quot;: [],
+    &quot;scale_refs&quot;: [],
+    &quot;stanza_refs&quot;: [],
+    &quot;groove_refs&quot;: [],
+    &quot;metre&quot;: &quot;free; 2/4 3/4 4/4 and 6/8 all observed&quot;,
+    &quot;tags&quot;: [&quot;hard-channel&quot;, &quot;abc-score&quot;],
+    &quot;avoid&quot;: [&quot;assuming a four-four default; the planner writes 2/4 and 3/4 unprompted&quot;],
+    &quot;examples&quot;: [{&quot;artist&quot;: &quot;&quot;, &quot;work&quot;: &quot;&quot;, &quot;note&quot;: &quot;a score in 3/4 or 2/4 produced without any metre request&quot;}],
+    &quot;sources&quot;: [&quot;https://github.com/ServeurpersoCom/yue2.cpp&quot;],
+    &quot;confidence&quot;: &quot;documented&quot;,
+    &quot;notes&quot;: &quot;Channel: abc score, field abc, header M:. Strength: hard. The style-string route is soft. The workflow&#39;s {4,3,6} clamp cannot express M:2/4, which the renderer produced on its own.&quot;
+  },
+  {
+    &quot;id&quot;: &quot;axis.key-and-mode&quot;,
+    &quot;kind&quot;: &quot;axis&quot;,
+    &quot;name&quot;: &quot;Key and mode&quot;,
+    &quot;identifiers&quot;: [&quot;K:&lt;tonic&gt;&lt;mode&gt; in the ABC score header&quot;],
+    &quot;rhythm&quot;: &quot;no effect on rhythm&quot;,
+    &quot;harmony&quot;: &quot;the K: field fixes the pitch collection the chord symbols are drawn from&quot;,
+    &quot;instrument_refs&quot;: [],
+    &quot;scale_refs&quot;: [],
+    &quot;stanza_refs&quot;: [],
+    &quot;groove_refs&quot;: [],
+    &quot;production&quot;: [],
+    &quot;delivery&quot;: [],
+    &quot;tags&quot;: [&quot;hard-channel&quot;, &quot;abc-score&quot;],
+    &quot;avoid&quot;: [&quot;relying on a key phrase in the style string, which the planner replaces with its own choice&quot;],
+    &quot;examples&quot;: [{&quot;artist&quot;: &quot;&quot;, &quot;work&quot;: &quot;&quot;, &quot;note&quot;: &quot;a score whose K: names both tonic and mode, e.g. K:DDorian for a scale rather than a key signature&quot;}],
+    &quot;sources&quot;: [&quot;https://github.com/ServeurpersoCom/yue2.cpp&quot;],
+    &quot;confidence&quot;: &quot;documented&quot;,
+    &quot;notes&quot;: &quot;Channel: abc score, field abc, header K:. Strength: hard. The K: field accepts a mode suffix, so this is the only place an explicit scale can be demanded rather than requested.&quot;
+  },
+  {
+    &quot;id&quot;: &quot;axis.scale&quot;,
+    &quot;kind&quot;: &quot;axis&quot;,
+    &quot;name&quot;: &quot;Scale&quot;,
+    &quot;identifiers&quot;: [&quot;the mode suffix of the ABC K: field, e.g. K:DDorian, K:Amixolydian&quot;],
+    &quot;rhythm&quot;: &quot;no effect on rhythm&quot;,
+    &quot;harmony&quot;: &quot;determines which chords are diatonic to the scale&quot;,
+    &quot;instrument_refs&quot;: [],
+    &quot;scale_refs&quot;: [],
+    &quot;stanza_refs&quot;: [],
+    &quot;groove_refs&quot;: [],
+    &quot;production&quot;: [],
+    &quot;delivery&quot;: [],
+    &quot;tags&quot;: [&quot;hard-channel&quot;, &quot;abc-score&quot;],
+    &quot;avoid&quot;: [&quot;naming a scale only in the style string, where nothing parses it&quot;],
+    &quot;examples&quot;: [{&quot;artist&quot;: &quot;&quot;, &quot;work&quot;: &quot;&quot;, &quot;note&quot;: &quot;a synthetic or modal scale named through the K: mode suffix rather than through prose&quot;}],
+    &quot;sources&quot;: [&quot;https://github.com/ServeurpersoCom/yue2.cpp&quot;],
+    &quot;confidence&quot;: &quot;documented&quot;,
+    &quot;notes&quot;: &quot;Channel: abc score, field abc, K: mode suffix. Strength: hard for scales expressible in 12-tone notation. Unavailable for any scale that is not.&quot;
+  },
+  {
+    &quot;id&quot;: &quot;axis.vocal-type&quot;,
+    &quot;kind&quot;: &quot;axis&quot;,
+    &quot;name&quot;: &quot;Vocal type&quot;,
+    &quot;identifiers&quot;: [&quot;range and gender descriptors in the style string&quot;],
+    &quot;rhythm&quot;: &quot;no dedicated channel&quot;,
+    &quot;harmony&quot;: &quot;no dedicated channel&quot;,
+    &quot;instrument_refs&quot;: [],
+    &quot;scale_refs&quot;: [],
+    &quot;stanza_refs&quot;: [],
+    &quot;groove_refs&quot;: [],
+    &quot;production&quot;: [],
+    &quot;delivery&quot;: [],
+    &quot;tags&quot;: [&quot;soft-channel&quot;, &quot;style-string&quot;],
+    &quot;avoid&quot;: [&quot;naming a living singer as the target voice&quot;],
+    &quot;examples&quot;: [{&quot;artist&quot;: &quot;&quot;, &quot;work&quot;: &quot;&quot;, &quot;note&quot;: &quot;a range descriptor such as a bass-baritone lead rather than a named performer&quot;}],
+    &quot;sources&quot;: [&quot;https://github.com/ServeurpersoCom/yue2.cpp&quot;],
+    &quot;confidence&quot;: &quot;documented&quot;,
+    &quot;notes&quot;: &quot;Channel: style. Strength: soft. JSON field: style. No speaker embedding or voice field exists in the request schema.&quot;
+  },
+  {
+    &quot;id&quot;: &quot;axis.vocal-delivery&quot;,
+    &quot;kind&quot;: &quot;axis&quot;,
+    &quot;name&quot;: &quot;Vocal delivery&quot;,
+    &quot;identifiers&quot;: [&quot;delivery adjectives in the style string&quot;, &quot;punctuation and line breaks in the lyrics&quot;],
+    &quot;rhythm&quot;: &quot;the score&#39;s note values constrain where syllables can land&quot;,
+    &quot;harmony&quot;: &quot;no dedicated channel&quot;,
+    &quot;instrument_refs&quot;: [],
+    &quot;scale_refs&quot;: [],
+    &quot;stanza_refs&quot;: [],
+    &quot;groove_refs&quot;: [],
+    &quot;production&quot;: [],
+    &quot;delivery&quot;: [],
+    &quot;tags&quot;: [&quot;soft-channel&quot;, &quot;style-string&quot;, &quot;lyrics&quot;],
+    &quot;avoid&quot;: [&quot;expecting punctuation alone to produce a specific articulation&quot;],
+    &quot;examples&quot;: [{&quot;artist&quot;: &quot;&quot;, &quot;work&quot;: &quot;&quot;, &quot;note&quot;: &quot;a delivery descriptor in the style string plus line-shape cues in the lyric text&quot;}],
+    &quot;sources&quot;: [&quot;https://github.com/ServeurpersoCom/yue2.cpp&quot;],
+    &quot;confidence&quot;: &quot;documented&quot;,
+    &quot;notes&quot;: &quot;Channel: style and lyrics, JSON fields style and lyrics. Strength: soft. Nothing parses delivery; the score is the only indirect hard lever, through note values.&quot;
+  },
+  {
+    &quot;id&quot;: &quot;axis.language&quot;,
+    &quot;kind&quot;: &quot;axis&quot;,
+    &quot;name&quot;: &quot;Language&quot;,
+    &quot;identifiers&quot;: [&quot;a language name in the style string&quot;, &quot;the language the lyrics are written in&quot;],
+    &quot;rhythm&quot;: &quot;no dedicated channel&quot;,
+    &quot;harmony&quot;: &quot;no dedicated channel&quot;,
+    &quot;instrument_refs&quot;: [],
+    &quot;scale_refs&quot;: [],
+    &quot;stanza_refs&quot;: [],
+    &quot;groove_refs&quot;: [],
+    &quot;production&quot;: [],
+    &quot;delivery&quot;: [],
+    &quot;tags&quot;: [&quot;soft-channel&quot;, &quot;style-string&quot;, &quot;lyrics&quot;],
+    &quot;avoid&quot;: [&quot;assuming every language is equally supported; the checkpoint&#39;s language coverage is not uniform&quot;],
+    &quot;examples&quot;: [{&quot;artist&quot;: &quot;&quot;, &quot;work&quot;: &quot;&quot;, &quot;note&quot;: &quot;a language named in the style string with the lyric text written in that language&quot;}],
+    &quot;sources&quot;: [&quot;https://github.com/multimodal-art-projection/YuE&quot;, &quot;https://huggingface.co/m-a-p/YuE2-3B&quot;],
+    &quot;confidence&quot;: &quot;consensus&quot;,
+    &quot;notes&quot;: &quot;Channel: style and lyrics. Strength: soft to hard depending on whether the checkpoint covers the language. No language field exists. The checkpoint card&#39;s language metadata and the project README disagree on scope, so coverage for any specific language should be tested rather than assumed.&quot;
+  },
+  {
+    &quot;id&quot;: &quot;axis.structure&quot;,
+    &quot;kind&quot;: &quot;axis&quot;,
+    &quot;name&quot;: &quot;Structure&quot;,
+    &quot;identifiers&quot;: [&quot;section tags on their own lines in the lyrics string&quot;],
+    &quot;rhythm&quot;: &quot;structure emerges from the score&#39;s phrase layout&quot;,
+    &quot;harmony&quot;: &quot;no dedicated channel&quot;,
+    &quot;instrument_refs&quot;: [],
+    &quot;scale_refs&quot;: [],
+    &quot;stanza_refs&quot;: [],
+    &quot;groove_refs&quot;: [],
+    &quot;production&quot;: [],
+    &quot;delivery&quot;: [],
+    &quot;tags&quot;: [&quot;soft-channel&quot;, &quot;lyrics&quot;, &quot;clamped&quot;],
+    &quot;avoid&quot;: [&quot;writing a structure the clamp will delete before it reaches the renderer&quot;],
+    &quot;examples&quot;: [{&quot;artist&quot;: &quot;&quot;, &quot;work&quot;: &quot;&quot;, &quot;note&quot;: &quot;a multi-section structure that reaches the renderer, versus one reduced to two sections by the workflow&quot;}],
+    &quot;sources&quot;: [&quot;https://github.com/ServeurpersoCom/yue2.cpp&quot;],
+    &quot;confidence&quot;: &quot;documented&quot;,
+    &quot;notes&quot;: &quot;Channel: lyrics. Strength: soft at the renderer, and in the current pipeline effectively fixed at two sections because the workflow slices to MAX_SECTIONS = 2.&quot;
+  },
+  {
+    &quot;id&quot;: &quot;axis.section-tags&quot;,
+    &quot;kind&quot;: &quot;axis&quot;,
+    &quot;name&quot;: &quot;Section tags&quot;,
+    &quot;identifiers&quot;: [&quot;a bracketed tag alone on a line, e.g. [Verse] or [Chorus]&quot;],
+    &quot;rhythm&quot;: &quot;no dedicated channel&quot;,
+    &quot;harmony&quot;: &quot;no dedicated channel&quot;,
+    &quot;instrument_refs&quot;: [],
+    &quot;scale_refs&quot;: [],
+    &quot;stanza_refs&quot;: [],
+    &quot;groove_refs&quot;: [],
+    &quot;production&quot;: [],
+    &quot;delivery&quot;: [],
+    &quot;tags&quot;: [&quot;soft-channel&quot;, &quot;lyrics&quot;],
+    &quot;avoid&quot;: [&quot;a descriptive tag used as a section name, which the model performs as a direction and which can consume the opening&quot;],
+    &quot;examples&quot;: [{&quot;artist&quot;: &quot;&quot;, &quot;work&quot;: &quot;&quot;, &quot;note&quot;: &quot;a bare canonical tag that survives, versus a descriptive tag that steers the model or is discarded by the workflow&quot;}],
+    &quot;sources&quot;: [&quot;https://github.com/multimodal-art-projection/YuE&quot;, &quot;https://github.com/ServeurpersoCom/yue2.cpp&quot;],
+    &quot;confidence&quot;: &quot;consensus&quot;,
+    &quot;notes&quot;: &quot;Channel: lyrics. Strength: soft. Upstream documents [Verse] and [Chorus] as examples and states no closed list, so the workflow&#39;s claim that only those two are understood is not corroborated by the documentation.&quot;
+  },
+  {
+    &quot;id&quot;: &quot;axis.line-length&quot;,
+    &quot;kind&quot;: &quot;axis&quot;,
+    &quot;name&quot;: &quot;Line length&quot;,
+    &quot;identifiers&quot;: [&quot;newline-separated lyric lines reaching the model&quot;],
+    &quot;rhythm&quot;: &quot;line shape interacts with note values in the score&quot;,
+    &quot;harmony&quot;: &quot;no dedicated channel&quot;,
+    &quot;instrument_refs&quot;: [],
+    &quot;scale_refs&quot;: [],
+    &quot;stanza_refs&quot;: [],
+    &quot;groove_refs&quot;: [],
+    &quot;production&quot;: [],
+    &quot;delivery&quot;: [],
+    &quot;tags&quot;: [&quot;soft-channel&quot;, &quot;lyrics&quot;],
+    &quot;avoid&quot;: [&quot;assuming the renderer counts syllables; nothing parses line length&quot;],
+    &quot;examples&quot;: [{&quot;artist&quot;: &quot;&quot;, &quot;work&quot;: &quot;&quot;, &quot;note&quot;: &quot;a lyric with deliberate line-length variance, which reaches the model as text&quot;}],
+    &quot;sources&quot;: [&quot;https://github.com/ServeurpersoCom/yue2.cpp&quot;],
+    &quot;confidence&quot;: &quot;documented&quot;,
+    &quot;notes&quot;: &quot;Channel: lyrics. Strength: soft. The workflow&#39;s four-lines-per-section slice is the binding constraint, not the renderer.&quot;
+  },
+  {
+    &quot;id&quot;: &quot;axis.duration&quot;,
+    &quot;kind&quot;: &quot;axis&quot;,
+    &quot;name&quot;: &quot;Duration&quot;,
+    &quot;identifiers&quot;: [&quot;the duration request field in seconds&quot;],
+    &quot;rhythm&quot;: &quot;no effect on rhythm&quot;,
+    &quot;harmony&quot;: &quot;no effect on harmony&quot;,
+    &quot;instrument_refs&quot;: [],
+    &quot;scale_refs&quot;: [],
+    &quot;stanza_refs&quot;: [],
+    &quot;groove_refs&quot;: [],
+    &quot;production&quot;: [],
+    &quot;delivery&quot;: [],
+    &quot;tags&quot;: [&quot;hard-channel&quot;, &quot;dedicated-field&quot;],
+    &quot;avoid&quot;: [&quot;treating duration as a guarantee; it is a target the model may end early&quot;],
+    &quot;examples&quot;: [{&quot;artist&quot;: &quot;&quot;, &quot;work&quot;: &quot;&quot;, &quot;note&quot;: &quot;a request with an explicit duration, capped by the semantic stage preset so the shorter wins&quot;}],
+    &quot;sources&quot;: [&quot;https://github.com/ServeurpersoCom/yue2.cpp&quot;],
+    &quot;confidence&quot;: &quot;documented&quot;,
+    &quot;notes&quot;: &quot;Channel: dedicated field, JSON field duration. Strength: hard as a target, not as a guarantee. Default 360.0, which is also the maximum the 9000-frame semantic budget produces at 25 frames per second.&quot;
+  },
+  {
+    &quot;id&quot;: &quot;axis.arrangement-density&quot;,
+    &quot;kind&quot;: &quot;axis&quot;,
+    &quot;name&quot;: &quot;Arrangement density&quot;,
+    &quot;identifiers&quot;: [&quot;density adjectives in the style string&quot;, &quot;the number of simultaneous voices and events written into the ABC score&quot;],
+    &quot;rhythm&quot;: &quot;event density is directly readable from the score&#39;s note values and rest counts&quot;,
+    &quot;harmony&quot;: &quot;chord-symbol frequency in the score indicates harmonic rhythm&quot;,
+    &quot;instrument_refs&quot;: [],
+    &quot;scale_refs&quot;: [],
+    &quot;stanza_refs&quot;: [],
+    &quot;groove_refs&quot;: [],
+    &quot;production&quot;: [],
+    &quot;delivery&quot;: [],
+    &quot;tags&quot;: [&quot;soft-channel&quot;, &quot;hard-channel&quot;, &quot;abc-score&quot;, &quot;style-string&quot;],
+    &quot;avoid&quot;: [&quot;promising timbral density that only the style string can request&quot;],
+    &quot;examples&quot;: [{&quot;artist&quot;: &quot;&quot;, &quot;work&quot;: &quot;&quot;, &quot;note&quot;: &quot;a score whose voice count and note density set the arrangement, versus a density adjective in the style string&quot;}],
+    &quot;sources&quot;: [&quot;https://github.com/ServeurpersoCom/yue2.cpp&quot;],
+    &quot;confidence&quot;: &quot;documented&quot;,
+    &quot;notes&quot;: &quot;Channel: style (soft) and abc score (hard for event density only). Timbral density has no hard channel.&quot;
+  },
+  {
+    &quot;id&quot;: &quot;axis.register&quot;,
+    &quot;kind&quot;: &quot;axis&quot;,
+    &quot;name&quot;: &quot;Register and octave&quot;,
+    &quot;identifiers&quot;: [&quot;uppercase and lowercase note letters plus comma and apostrophe octave markers in the ABC score&quot;],
+    &quot;rhythm&quot;: &quot;no effect on rhythm&quot;,
+    &quot;harmony&quot;: &quot;no effect on harmony&quot;,
+    &quot;instrument_refs&quot;: [],
+    &quot;scale_refs&quot;: [],
+    &quot;stanza_refs&quot;: [],
+    &quot;groove_refs&quot;: [],
+    &quot;production&quot;: [],
+    &quot;delivery&quot;: [],
+    &quot;tags&quot;: [&quot;hard-channel&quot;, &quot;abc-score&quot;],
+    &quot;avoid&quot;: [&quot;requesting a register in the style string and expecting the octave to move&quot;],
+    &quot;examples&quot;: [{&quot;artist&quot;: &quot;&quot;, &quot;work&quot;: &quot;&quot;, &quot;note&quot;: &quot;a score transposed by whole octaves, which is the only hard lever on the sung register&quot;}],
+    &quot;sources&quot;: [&quot;https://github.com/ServeurpersoCom/yue2.cpp&quot;],
+    &quot;confidence&quot;: &quot;documented&quot;,
+    &quot;notes&quot;: &quot;Channel: abc score, field abc, octave markers. Strength: hard. The semantic stage takes its pitches from the melody, so moving the melody moves the voice.&quot;
+  },
+  {
+    &quot;id&quot;: &quot;axis.melody&quot;,
+    &quot;kind&quot;: &quot;axis&quot;,
+    &quot;name&quot;: &quot;Melody and ornament&quot;,
+    &quot;identifiers&quot;: [&quot;note letters, durations, ties and dotted values in the ABC score body&quot;],
+    &quot;rhythm&quot;: &quot;the score fixes the melodic rhythm directly&quot;,
+    &quot;harmony&quot;: &quot;chord symbols in quotes annotate the harmony in the full chain-of-thought mode&quot;,
+    &quot;instrument_refs&quot;: [],
+    &quot;scale_refs&quot;: [],
+    &quot;stanza_refs&quot;: [],
+    &quot;groove_refs&quot;: [],
+    &quot;production&quot;: [],
+    &quot;delivery&quot;: [],
+    &quot;tags&quot;: [&quot;hard-channel&quot;, &quot;abc-score&quot;],
+    &quot;avoid&quot;: [&quot;writing a melody the clamp cannot carry; the score bypasses the lyric clamps entirely&quot;],
+    &quot;examples&quot;: [{&quot;artist&quot;: &quot;&quot;, &quot;work&quot;: &quot;&quot;, &quot;note&quot;: &quot;an edited melody resubmitted in the abc field, with tempo and meter preserved from the score&quot;}],
+    &quot;sources&quot;: [&quot;https://github.com/ServeurpersoCom/yue2.cpp&quot;],
+    &quot;confidence&quot;: &quot;documented&quot;,
+    &quot;notes&quot;: &quot;Channel: abc score, field abc. Strength: hard. A non-empty abc replaces the planning stage entirely, so these are the pitches the semantic stage sings.&quot;
+  },
+  {
+    &quot;id&quot;: &quot;axis.tuning&quot;,
+    &quot;kind&quot;: &quot;axis&quot;,
+    &quot;name&quot;: &quot;Tuning and microtonality&quot;,
+    &quot;identifiers&quot;: [],
+    &quot;rhythm&quot;: &quot;not applicable&quot;,
+    &quot;harmony&quot;: &quot;not applicable&quot;,
+    &quot;instrument_refs&quot;: [],
+    &quot;scale_refs&quot;: [],
+    &quot;stanza_refs&quot;: [],
+    &quot;groove_refs&quot;: [],
+    &quot;production&quot;: [],
+    &quot;delivery&quot;: [],
+    &quot;tags&quot;: [&quot;unavailable&quot;],
+    &quot;avoid&quot;: [&quot;building a catalogue of non-12-tone tuning systems against this renderer&quot;],
+    &quot;examples&quot;: [],
+    &quot;sources&quot;: [&quot;https://github.com/ServeurpersoCom/yue2.cpp&quot;],
+    &quot;confidence&quot;: &quot;documented&quot;,
+    &quot;notes&quot;: &quot;Channel: none. Strength: unavailable. ABC notation is 12-tone and the request schema exposes no pitch representation, so no channel reaches tuning at all.&quot;
+  },
+  {
+    &quot;id&quot;: &quot;axis.guidance&quot;,
+    &quot;kind&quot;: &quot;axis&quot;,
+    &quot;name&quot;: &quot;Guidance strength&quot;,
+    &quot;identifiers&quot;: [&quot;the cfg_scale request field on the semantic stage&quot;],
+    &quot;rhythm&quot;: &quot;no effect on rhythm&quot;,
+    &quot;harmony&quot;: &quot;no effect on harmony&quot;,
+    &quot;instrument_refs&quot;: [],
+    &quot;scale_refs&quot;: [],
+    &quot;stanza_refs&quot;: [],
+    &quot;groove_refs&quot;: [],
+    &quot;production&quot;: [],
+    &quot;delivery&quot;: [],
+    &quot;tags&quot;: [&quot;hard-channel&quot;, &quot;dedicated-field&quot;, &quot;unused&quot;],
+    &quot;avoid&quot;: [&quot;assuming a descriptive style string is being enforced; at the default it is not&quot;],
+    &quot;examples&quot;: [{&quot;artist&quot;: &quot;&quot;, &quot;work&quot;: &quot;&quot;, &quot;note&quot;: &quot;a request at the default scale, where one branch is kept and no guidance is applied&quot;}],
+    &quot;sources&quot;: [&quot;https://github.com/ServeurpersoCom/yue2.cpp&quot;],
+    &quot;confidence&quot;: &quot;documented&quot;,
+    &quot;notes&quot;: &quot;Channel: dedicated field, JSON field cfg_scale. Strength: hard but neutralised at the default. Negative resolves to 1.0 outside off mode, and exactly 1.0 keeps a single branch, so the pipeline runs unguided and every soft channel is softer than it appears.&quot;
+  },
+  {
+    &quot;id&quot;: &quot;axis.seed&quot;,
+    &quot;kind&quot;: &quot;axis&quot;,
+    &quot;name&quot;: &quot;Seed and reproducibility&quot;,
+    &quot;identifiers&quot;: [&quot;the lm_seed and seed request fields&quot;],
+    &quot;rhythm&quot;: &quot;lm_seed determines the score, and therefore its tempo and metre&quot;,
+    &quot;harmony&quot;: &quot;lm_seed determines the score&#39;s chord annotations&quot;,
+    &quot;instrument_refs&quot;: [],
+    &quot;scale_refs&quot;: [],
+    &quot;stanza_refs&quot;: [],
+    &quot;groove_refs&quot;: [],
+    &quot;production&quot;: [],
+    &quot;delivery&quot;: [],
+    &quot;tags&quot;: [&quot;hard-channel&quot;, &quot;dedicated-field&quot;],
+    &quot;avoid&quot;: [&quot;leaving both seeds unset and then trying to reproduce a take&quot;],
+    &quot;examples&quot;: [{&quot;artist&quot;: &quot;&quot;, &quot;work&quot;: &quot;&quot;, &quot;note&quot;: &quot;a replayed take whose returned request carries the exact seeds it consumed&quot;}],
+    &quot;sources&quot;: [&quot;https://github.com/ServeurpersoCom/yue2.cpp&quot;],
+    &quot;confidence&quot;: &quot;documented&quot;,
+    &quot;notes&quot;: &quot;Channel: dedicated fields lm_seed and seed. Strength: hard. lm_seed is the Philox key for the token draw and owns the score, the melody and the length; seed is the mt19937 seed for the acoustic noise. Both default to -1, meaning random.&quot;
+  },
+  {
+    &quot;id&quot;: &quot;axis.steps&quot;,
+    &quot;kind&quot;: &quot;axis&quot;,
+    &quot;name&quot;: &quot;Flow-matching steps&quot;,
+    &quot;identifiers&quot;: [&quot;the steps request field&quot;],
+    &quot;rhythm&quot;: &quot;no effect on rhythm&quot;,
+    &quot;harmony&quot;: &quot;no effect on harmony&quot;,
+    &quot;instrument_refs&quot;: [],
+    &quot;scale_refs&quot;: [],
+    &quot;stanza_refs&quot;: [],
+    &quot;groove_refs&quot;: [],
+    &quot;production&quot;: [],
+    &quot;delivery&quot;: [],
+    &quot;tags&quot;: [&quot;hard-channel&quot;, &quot;dedicated-field&quot;],
+    &quot;avoid&quot;: [&quot;using steps as a musical control; it is an acoustic fidelity dial&quot;],
+    &quot;examples&quot;: [{&quot;artist&quot;: &quot;&quot;, &quot;work&quot;: &quot;&quot;, &quot;note&quot;: &quot;a request at the checkpoint default of 32 midpoint steps&quot;}],
+    &quot;sources&quot;: [&quot;https://github.com/ServeurpersoCom/yue2.cpp&quot;],
+    &quot;confidence&quot;: &quot;documented&quot;,
+    &quot;notes&quot;: &quot;Channel: dedicated field, JSON field steps. Strength: hard but musically neutral. Minimum 1, default 32, the checkpoint value. Affects only how well the flow-matching ODE is solved.&quot;
+  }
+]
+</code></pre>
+
+</body></html>

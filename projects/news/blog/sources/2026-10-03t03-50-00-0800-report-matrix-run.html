@@ -1,0 +1,193 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Source: Song engine matrix run — PodCast Builder devlog</title>
+<style>
+body{max-width:760px;margin:2.5rem auto;padding:0 1.2rem;font-family:ui-sans-serif,system-ui,sans-serif;background:#16181f;color:#dfe2ea;line-height:1.65}
+a{color:#7aa2f7} h1,h2{line-height:1.25} code{background:#262a33;padding:.1em .35em;border-radius:4px;font-size:.9em}
+pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{color:#8b90a0;font-size:.85rem}
+.back{font-size:.85rem} .backnote{background:#262a33;border:1px solid #333;border-radius:8px;padding:.8rem 1rem;font-size:.85rem;color:#aeb3c2}
+</style></head><body>
+<p class="back"><a href="../index.html">← PodCast Builder devlog</a></p>
+<p class="backnote">This is a public snapshot of a private project-tracking note, sanitised for
+publication: internal links, status metadata and personal paths are removed. The live private
+version lives in the author's Obsidian vault.</p>
+<h1>Song engine matrix run</h1>
+<h1>Matrix run: 55 songs</h1>
+<p><strong>Run 2026-10-03, 02:24 to 03:42.</strong> Everything below is measured from the run records and reproducible from them.</p>
+<h2>What was built</h2>
+<p>A working engine at <code>~/git/brookjordan/song-engine/</code>, built from nothing in one session: a replay dataset, a deterministic library sampler, a coupling policy, a brief composer, a lyric writer with candidate selection, an ABC score composer, a validator, a renderer client and telemetry. Fifty-five cells rendered, no failures.</p>
+<p>A page to review it: <code>~/git/brookjordan/song-engine/matrix/matrix.html</code>, with every song playable, the old song beside it, the sampled values, the brief, the lyric, the score, the timing and a scoring widget.</p>
+<h2>The headline result</h2>
+<p><strong>Richer input does not fix the formula. The architecture does.</strong></p>
+<p>Fifty-five cells across twelve recipes. The table that decides it is what the sampler chose per recipe:</p>
+<table>
+<thead>
+<tr>
+<th>Recipe</th>
+<th>What it produced</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>R01, richer input, one call</td>
+<td>indie-folk, chamber-pop, acoustic, tense, cinematic, staccato-strings</td>
+</tr>
+<tr>
+<td>R02, decoupled</td>
+<td>Isicathamiya and mbube, Sanjo, Ceremonial final-boss theme, Tamborazo, Teutonic thrash metal</td>
+</tr>
+<tr>
+<td>R03</td>
+<td>Gabber, Bebop, Photoplay and silent-film piano, Brill Building pop, Dub poetry</td>
+</tr>
+<tr>
+<td>R04</td>
+<td>Desert blues, Son cubano, Taiko ensemble, Yoruba bata, Balinese kecak</td>
+</tr>
+<tr>
+<td>R07, everything opposed</td>
+<td>Sakara, Orchestral-hybrid game score, Silent Hill industrial-ambient, Reggaeton, German heavy metal</td>
+</tr>
+<tr>
+<td>R10, rap and spoken</td>
+<td>Bebop, Assyrian chant, Guzheng, Isicathamiya, Plena</td>
+</tr>
+</tbody></table>
+<p>R01 is the one that matters. It got the full story text and still produced <strong>indie-folk, chamber-pop, acoustic</strong>. Its style-descriptor overlap with other episodes was 0.36, against 0.02 to 0.04 for every decoupled recipe. Handing the model more information without separating its thought process leaves the output where it was.</p>
+<h2>The score channel is real, and it was verified rather than assumed</h2>
+<p>Ten cells carried an authored ABC score. The renderer returned the submitted header unchanged in <strong>ten of ten</strong>, and the note count was preserved:</p>
+<table>
+<thead>
+<tr>
+<th>Submitted</th>
+<th>Returned</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>M:5/4 Q:1/4=294 K:C</code></td>
+<td>identical</td>
+</tr>
+<tr>
+<td><code>M:11/8 Q:1/4=99 K:Amin</code></td>
+<td>identical</td>
+</tr>
+<tr>
+<td><code>M:9/8 Q:1/4=112 K:Ephr</code></td>
+<td>identical</td>
+</tr>
+<tr>
+<td><code>M:8/8 Q:1/4=137 K:Flyd</code></td>
+<td>identical</td>
+</tr>
+</tbody></table>
+<p>Metres of 5/4, 7/8, 9/8 and 11/8. Tempos of 77, 201 and 294 BPM. Modes Dorian, Phrygian and Lydian by suffix. None of that is expressible through the old workflow, which clamps to three metres, twelve keys and 90 to 140 BPM. <strong>Every one of those clamps was self-imposed in application code.</strong> The audit said so; this run proves it.</p>
+<h2>Range, measured</h2>
+<table>
+<thead>
+<tr>
+<th>Measure</th>
+<th>Old system</th>
+<th>This run</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Episodes or cells</td>
+<td>13</td>
+<td>55</td>
+</tr>
+<tr>
+<td>Distinct styles</td>
+<td>5, all &quot;Indie something&quot;</td>
+<td>46</td>
+</tr>
+<tr>
+<td>Distinct scales or keys</td>
+<td>3</td>
+<td>45</td>
+</tr>
+<tr>
+<td>Distinct stanza forms</td>
+<td>1</td>
+<td>20</td>
+</tr>
+<tr>
+<td>Tempo window</td>
+<td>32 BPM (92 to 124)</td>
+<td>238 BPM (56 to 294)</td>
+</tr>
+<tr>
+<td>Tempo outside the old 90 to 140 clamp</td>
+<td>0 of 13</td>
+<td>21 of 55</td>
+</tr>
+</tbody></table>
+<p>All thirteen archived episodes opened with Indie Pop or Indie Folk. Three distinct keys across all of them.</p>
+<h2>Cost, which answers the question that prompted the telemetry</h2>
+<table>
+<thead>
+<tr>
+<th>Recipe</th>
+<th>Median total</th>
+<th>of which language model</th>
+<th>of which render</th>
+<th>Median audio</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>R01</td>
+<td>91s</td>
+<td>11s</td>
+<td>80s</td>
+<td>50s</td>
+</tr>
+<tr>
+<td>R02</td>
+<td>104s</td>
+<td>15s</td>
+<td>88s</td>
+<td>50s</td>
+</tr>
+<tr>
+<td>R04, full engine</td>
+<td>106s</td>
+<td>33s</td>
+<td>72s</td>
+<td>50s</td>
+</tr>
+<tr>
+<td>R07</td>
+<td>78s</td>
+<td>28s</td>
+<td>56s</td>
+<td>38s</td>
+</tr>
+</tbody></table>
+<p>Across all cells: 22.6 minutes of language model time against 56.6 minutes of render. <strong>The render is 71 percent of the machine time.</strong></p>
+<p>So the answer is no, a richer recipe does not cost two hours where a lean one costs twenty minutes. Going from the leanest architecture to the fullest added about 22 seconds of language-model time to a hundred-second song. <strong>Information and reasoning are cheap here. The render is the cost.</strong> That inverts the framing: the lever is not &quot;feed it less&quot;, it is the renderer&#39;s own efficiency.</p>
+<h2>What the writing recipes actually did</h2>
+<ul>
+<li><strong>R09, the sentence that never closes.</strong> The model wrote: <code>[Spoken] Moving from the boardroom to the dust where the local residents are reporting a complete breakdown of the</code> — it trailed off on the word &quot;the&quot;, exactly as briefed.</li>
+<li><strong>R08, the withheld rhyme.</strong> <code>From the White House to the goldmining pit / Baboons move in the shadow of the rig / Signs are posted for the people who stay</code> — the third line ends on a word that does not rhyme.</li>
+<li><strong>R10, rap and spoken.</strong> Produced a patter section with rapid syllabic alliteration, and a Spanish chorus, because the Plena style is Puerto Rican. That was emergent, not asked for.</li>
+<li><strong>R02, the boss theme.</strong> A Spenserian sonnet with ABABBCBCC rhyme, built from the digest&#39;s own keywords, set as a ceremonial final-boss theme.</li>
+<li><strong>Coupling.</strong> Where a recipe intended a break, the record shows it in five cells of five. Where it intended none, none. The policy did what it said.</li>
+</ul>
+<h2>Defects found, and their honest scope</h2>
+<ol>
+<li><strong>Descriptive section tags reached the renderer in 12 of 55 cells</strong>, for example <code>[instrumental - sanjo janggu buchla dub delay]</code>. The renderer performs tags verbatim, so those cells may contain unasked-for instrumental passages. This is the same defect class the old workflow fixed for colons; the canonicaliser now handles hyphens and commas too, but the cells predate the fix. It is spread across recipes rather than concentrated, so comparisons hold.</li>
+<li><strong>R02 against R03 is confounded.</strong> They differ by whether a score is supplied at all, which includes both the header fields and an authored melody. It cannot separate the two.</li>
+<li><strong>The affect lexicon is crude.</strong> It places entries on a brightness axis well enough to pick a contrast and no better.</li>
+<li><strong>The metre pool contains prosody entries</strong> such as &quot;Sprung rhythm&quot;, which is genuinely useful for line structure but is not a metre the notation can express. The composer falls back to a valid metre, so the score is sound, but the brief and the score disagree about that one field.</li>
+</ol>
+<h2>What is not yet known</h2>
+<p>The listening pass has not happened. Everything above is mechanical. Whether any of these fifty-five songs is <em>good</em>, whether a mismatch reads as intentional or as a mistake, and which of the twelve recipes is worth keeping, all require ears. The page has a scoring widget for exactly that, and exports to JSON.</p>
+<p>The mismatch ladder, R05 to R07, is the part worth listening to first. It is a direct test of the tension budget, and the research behind that budget is an inference nobody has measured.</p>
+<h2>Reproducing it</h2>
+<pre><code>cd ~/git/brookjordan/song-engine
+python3 scripts/build_dataset.py --auto 22
+python3 scripts/run_matrix.py --tiers 1,2,3,4
+python3 scripts/build_matrix_html.py
+open matrix/matrix.html
+</code></pre>
+<p>Every cell is reproducible from its recorded seeds and the request as sent, both of which are in its <code>record.json</code>.</p>
+
+</body></html>

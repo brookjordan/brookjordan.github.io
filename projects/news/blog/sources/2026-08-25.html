@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Source: Two-host production default — PodCast Builder devlog</title>
+<title>Source: 25 August 2026 podcast diary — PodCast Builder devlog</title>
 <style>
 body{max-width:760px;margin:2.5rem auto;padding:0 1.2rem;font-family:ui-sans-serif,system-ui,sans-serif;background:#16181f;color:#dfe2ea;line-height:1.65}
 a{color:#7aa2f7} h1,h2{line-height:1.25} code{background:#262a33;padding:.1em .35em;border-radius:4px;font-size:.9em}
@@ -11,7 +11,7 @@ pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{col
 <p class="backnote">This is a public snapshot of a private project-tracking note, sanitised for
 publication: internal links, status metadata and personal paths are removed. The live private
 version lives in the author's Obsidian vault.</p>
-<h1>Two-host production default</h1>
+<h1>25 August 2026 podcast diary</h1>
 <h2>FAS</h2>
 <p>Morning was mostly untangling git state — an in-progress semantic-tiles rebase blocked branching until I stashed and switched to fresh <code>develop</code>. Cut <code>fix/CTR-6849/upgrade-vulnerable-dependencies/after-inguitiv/bj</code> for <a href="https://jira.ci.motional.com/atljira/browse/CTR-6849">CTR-6849</a>, ran organize-commits + fill-mr, and opened <a href="https://gitlab.ci.motional.com/rti/FAS/-/merge_requests/9549">!9549</a> for the cybersecurity minimum Python dependency floors (after closing the earlier !9547/!9550 attempts). CI promptly exploded on an impossible resolve: CVE-mandated <code>urllib3==2.6.0</code> vs <code>elasticsearch7==7.17.12</code> still declaring <code>urllib3&lt;2</code>. Fixed by bumping <code>elasticsearch7</code> to 7.17.13 (off-list but required to make the mandated pins installable), pushed, and updated the MR description to say so plainly. Also kept fogg-manager map-patch forwarding moving on the runner MR thread and refreshed the open tile-stack MRs (!9524–!9527); closed the umbrella <a href="https://gitlab.ci.motional.com/rti/FAS/-/merge_requests/9462">!9462</a> now the split stack exists.</p>
 <p>GitLab review queue: <a href="https://gitlab.ci.motional.com/rti/FAS/-/merge_requests/9478">!9478</a> (MAP-8318) <strong>merged</strong>; approved Tung&#39;s <a href="https://gitlab.ci.motional.com/rti/FAS/-/merge_requests/9529">!9529</a> (RVA toggle removal, merged). Still listed as reviewer on Joel&#39;s <a href="https://gitlab.ci.motional.com/rti/FAS/-/merge_requests/9501">!9501</a> / <a href="https://gitlab.ci.motional.com/rti/FAS/-/merge_requests/9370">!9370</a>, Jenny&#39;s <a href="https://gitlab.ci.motional.com/rti/FAS/-/merge_requests/9516">!9516</a>, Brandon&#39;s <a href="https://gitlab.ci.motional.com/rti/FAS/-/merge_requests/9492">!9492</a>, and Tianfu&#39;s <a href="https://gitlab.ci.motional.com/rti/FAS/-/merge_requests/9409">!9409</a>.</p>

@@ -1224,7 +1224,7 @@ output_path: the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan
 </ul>
 <pre><code class="language-text">Steady progress: executions `384–388` are now around audio segments 7, 6, 3, 2, and 2 respectively. Queue remains healthy.
 </code></pre>
-<h3>Raw excerpt 98 — user</h3>
+<h3>Raw excerpt 98 ��� user</h3>
 <ul>
 <li>bubbleId: <code>cc5379cb-5cfb-49c8-9642-94a3907a3cf9</code></li>
 <li>createdAt: <code>2026-07-29T15:26:44.619Z</code></li>
@@ -3486,7 +3486,7 @@ output_path: the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan
 </ul>
 <pre><code class="language-text">Video generation has begun: execution `388` is rendering its first Wan clip. The other runs are finishing their final audio segments (`384:56`, `385:55`, `386:52`, `387:51`). No stall—the longer runtime is expected for Wan.
 </code></pre>
-<h3>Raw excerpt 254 — user</h3>
+<h3>Raw excerpt 254 �� user</h3>
 <ul>
 <li>bubbleId: <code>f4405be0-9376-43da-9d38-32384e8bb3ee</code></li>
 <li>createdAt: <code>2026-07-29T18:02:46.909Z</code></li>
@@ -11263,7 +11263,7 @@ It supports scoring, notes, shortlisting, side-by-side comparison, filtering, an
 - Preservation: 2
 - Clears the far-left edge somewhat, but leaves dense smoke over the throne and creates a separate right-side cloud. Throne details suffer.
 
-**S42 ��� Labeled fields — 1.8/4**
+**S42 — Labeled fields — 1.8/4**
 - Clearance: 1
 - Displacement: 3
 - Correspondence: 2
@@ -13923,7 +13923,7 @@ The keyframes progress, but Wan still animates each segment independently rather
 
 ![Boundary inspection](/tmp/news-valid-boundary-two.png)
 </code></pre>
-<h3>Raw excerpt 899 ��� assistant</h3>
+<h3>Raw excerpt 899 — assistant</h3>
 <ul>
 <li>bubbleId: <code>457da9a1-57e6-4e7f-bb69-c1ed5bbc7848</code></li>
 <li>createdAt: <code>2026-08-01T07:08:36.549Z</code></li>
@@ -18956,7 +18956,7 @@ Verified:
 <pre><code class="language-text">The report is being written at `docs/research/video-motion-continuation-m3-36gb.md`. It will include exact install requirements, a hardware viability ranking, and benchmark plans for both Wan SVI2Pro-FLF and single-pass LTX multi-keyframe generation.
 Research is underway; I’ll return with the completed Markdown report.
 </code></pre>
-<h3>Raw excerpt 1183 — assistant</h3>
+<h3>Raw excerpt 1183 ��� assistant</h3>
 <ul>
 <li>bubbleId: <code>5fafab5c-c879-4d20-931b-b6aa3afbd20b</code></li>
 <li>createdAt: <code>2026-08-01T08:42:54.927Z</code></li>
@@ -20025,7 +20025,7 @@ output_path: the local vault/.cursor/projects/Users-brook-jordan-git-brookjordan
 
 - Qwen-Image-Edit-2511 officially accepts multiple images as an ordered list. Its example passes `[image1, image2]` with: “The magician bear is on the left, the alchemist bear is on the right…” [2511 model card](https://huggingface.co/Qwen/Qwen-Image-Edit-2511/blob/main/README.md#quick-start).
 - The Diffusers implementation prefixes references in order as `Picture 1`, `Picture 2`, etc., and concatenates every image’s VAE latent. It defines no intrinsic roles such as “canvas,” “master,” or “identity reference”: [prompt construction](https://github.com/huggingface/diffusers/blob/7685bffe89041496c2c0ae07ea933df1c80d1f43/src/diffusers/pipelines/qwenimage/pipeline_qwenimage_edit_plus.py#L228-L252), [latent concatenation](https://github.com/huggingface/diffusers/blob/7685bffe89041496c2c0ae07ea933df1c80d1f43/src/diffusers/pipelines/qwenimage/pipeline_qwenimage_edit_plus.py#L445-L491).
-- Qwen’s official prompt enhancer says prompts should be “direct and specific” and add only “minimal but sufficient details.” Clear instructions should retain their intent rather than be elaborated unnecessarily: [prompt_utils.py lines 181–198](https://github.com/QwenLM/Qwen-Image/blob/6b5e1f5cec987d404be5ac6657db3b9aacb56a89/src/examples/tools/prompt_utils.py#L181-L198). Qwen recommends this enhancer “for enhanced stability”: [README lines 324–330](https://github.com/QwenLM/Qwen-Image/blob/6b5e1f5cec987d404be5ac6657db3b9aacb56a89/README.md#L324-L330).
+- Qwen’s official prompt enhancer says prompts should be “direct and specific” and add only ���minimal but sufficient details.” Clear instructions should retain their intent rather than be elaborated unnecessarily: [prompt_utils.py lines 181–198](https://github.com/QwenLM/Qwen-Image/blob/6b5e1f5cec987d404be5ac6657db3b9aacb56a89/src/examples/tools/prompt_utils.py#L181-L198). Qwen recommends this enhancer “for enhanced stability”: [README lines 324–330](https://github.com/QwenLM/Qwen-Image/blob/6b5e1f5cec987d404be5ac6657db3b9aacb56a89/README.md#L324-L330).
 - For multi-image prompts, Qwen explicitly says to identify which picture supplies each element. Examples include “Change the girl in Picture 1 to the ink-wash style of Picture 2” and “Replace the girl of picture 1 with the boy of picture 2…”: [lines 218–232](https://github.com/QwenLM/Qwen-Image/blob/6b5e1f5cec987d404be5ac6657db3b9aacb56a89/src/examples/tools/prompt_utils.py#L218-L232). The latter’s “keeping picture 2’s background unchanged” is surprising if Picture 1 is intended as the canvas; use it as evidence for explicit role naming, not as a universally correct target/background recipe.
 - Preservation should be scoped to the edit type. Qwen distinguishes:
   - low-level edits, where “all other regions…remain completely unchanged”;

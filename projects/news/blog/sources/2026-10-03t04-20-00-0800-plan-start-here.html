@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Source: Start here — PodCast Builder devlog</title>
+<style>
+body{max-width:760px;margin:2.5rem auto;padding:0 1.2rem;font-family:ui-sans-serif,system-ui,sans-serif;background:#16181f;color:#dfe2ea;line-height:1.65}
+a{color:#7aa2f7} h1,h2{line-height:1.25} code{background:#262a33;padding:.1em .35em;border-radius:4px;font-size:.9em}
+pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{color:#8b90a0;font-size:.85rem}
+.back{font-size:.85rem} .backnote{background:#262a33;border:1px solid #333;border-radius:8px;padding:.8rem 1rem;font-size:.85rem;color:#aeb3c2}
+</style></head><body>
+<p class="back"><a href="../index.html">← PodCast Builder devlog</a></p>
+<p class="backnote">This is a public snapshot of a private project-tracking note, sanitised for
+publication: internal links, status metadata and personal paths are removed. The live private
+version lives in the author's Obsidian vault.</p>
+<h1>Start here</h1>
+<h1>Start here</h1>
+<p><strong>Written 2026-10-03 overnight, while you slept.</strong> Everything is built, the first run is done, and more is queued. This is where to begin.</p>
+<h2>1. Open the page</h2>
+<pre><code>cd ~/git/brookjordan/song-engine
+open matrix/matrix.html
+</code></pre>
+<p>It is self-contained. Every song plays, every old song plays beside it, and it needs no server.</p>
+<p><strong>It keeps itself current.</strong> Leave it open and it reloads when new results land, pausing while audio is playing so it never interrupts you. The header shows what it last checked. Audio is transcoded into <code>matrix/audio/</code> as each cell finishes, and a re-rendered cell replaces its own file rather than keeping a stale one. Your scores survive a reload, and the song you had open reopens itself.</p>
+<h2>1b. They are also on your phone</h2>
+<p>Every song is being sent to Telegram as it completes, with the recipe, the episode, the style, the tempo and the stanza in the caption. The ten control songs went first so you have the old versions alongside. More arrive as waves 2 and 3 land.</p>
+<p><strong>Notifications are silenced overnight</strong>, because you were asleep and a hundred alerts at 04:00 serves nobody. They are all waiting in the chat. Say the word and I will turn notifications back on.</p>
+<p>A re-rendered song is sent again rather than skipped, because the notifier tracks each file&#39;s modification time rather than just its name. Twelve cells were re-rendered in wave 2 and you will get the corrected versions.</p>
+<h2>2. What to listen to, in order</h2>
+<p><strong>Start with one episode&#39;s ladder.</strong> Pick episode 3270, the heavy political day, and press <strong>Play the ladder</strong>. You will hear the old song followed by each rung: richer input, then separated thought, then the score, then the full engine. The comparison builds in your ear rather than across sessions.</p>
+<p><strong>Then the mismatch ladder.</strong> R05, R06, R07 on the same episode. One broken coupling, two, then everything opposed. This is a direct test of the tension budget, and the research behind that budget was an inference nobody had measured. Either R07 holds together, in which case the budget is wrong and the research needs re-reading, or it falls apart, in which case the inference was right.</p>
+<p><strong>Blind mode is on by default.</strong> Recipe names and sampled values are hidden until you score a cell. That is deliberate: knowing you are hearing &quot;All Pulls&quot; changes what you hear. The results table fills in as you go, so the answer to which recipe wins appears while you are listening. Turn blind mode off when you want to see what you were rating.</p>
+<p><strong>Roughly:</strong> <code>space</code> plays the focused song, <code>1</code> to <code>5</code> scores it, <code>o</code> marks it as reading on purpose, <code>m</code> as a mistake, <code>n</code> moves to the next.</p>
+<h2>3. What the first run already showed</h2>
+<p>Fifty-five songs, twelve recipes, five episodes, no failures, seventy-eight minutes.</p>
+<p><strong>Richer input does not fix the formula. The architecture does.</strong> R01 received the full story text and still produced <em>indie-folk, chamber-pop, acoustic</em>. Its style overlap with other episodes was 0.36, against 0.02 to 0.04 for every decoupled recipe. Handing the model more information without separating its thought process leaves the output exactly where it was.</p>
+<table>
+<thead>
+<tr>
+<th>Measure</th>
+<th>Old, 13 episodes</th>
+<th>This run, 55 cells</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Distinct styles</td>
+<td>5, all &quot;Indie something&quot;</td>
+<td>46</td>
+</tr>
+<tr>
+<td>Distinct scales or keys</td>
+<td>3</td>
+<td>45</td>
+</tr>
+<tr>
+<td>Distinct stanza forms</td>
+<td>1</td>
+<td>20</td>
+</tr>
+<tr>
+<td>Tempo window</td>
+<td>32 BPM</td>
+<td>238 BPM, 56 to 294</td>
+</tr>
+<tr>
+<td>Outside the old 90 to 140 clamp</td>
+<td>0</td>
+<td>21 of 55</td>
+</tr>
+</tbody></table>
+<p><strong>The score channel is verified, not assumed.</strong> Ten of ten score-bearing renders came back with the submitted metre, tempo and mode unchanged: 11/8 at 99 BPM, 5/4 at 294, modes Dorian, Phrygian and Lydian by suffix. Every clamp in the old workflow was self-imposed.</p>
+<p><strong>Cost.</strong> The render is 71 percent of machine time. Going from the leanest architecture to the fullest added about 22 seconds of language-model time to a hundred-second song. Information is cheap here.</p>
+<p><strong>The writing recipes did what they were asked.</strong> R09 trailed off mid-sentence on the word &quot;the&quot;. R08 ended a line on a word that does not rhyme. R02 wrote a Spenserian sonnet in ABABBCBCC from the digest&#39;s own keywords. R10 produced a Spanish chorus because the Plena style is Puerto Rican.</p>
+<h2>4. What is running while you read</h2>
+<p><strong>Wave 2</strong>, queued and self-pausing around the live podcast at 04:30, 12:10 and 18:00.</p>
+<ul>
+<li>Twelve cells sent a descriptive section tag to the renderer, which performs tags verbatim. Those twelve are being re-rendered, so the corpus becomes consistent.</li>
+<li><strong>R12, header only</strong>, on five episodes. This resolves a confound: R02 and R03 differ by whether a score is supplied at all, which bundles the header together with an authored melody. R12 supplies the header alone, so R02 against R12 measures the header and R12 against R03 measures the melody.</li>
+<li>Five more episodes through the ladder and the mismatch ladder, which doubles the episode pool for the comparisons that matter most.</li>
+</ul>
+<p><strong>Wave 3</strong>, chained to follow it.</p>
+<ul>
+<li>Activates the repaired library: <strong>32 new entries</strong>, chiefly the ordinary Western instrument set that was never catalogued. That gap is why the sampler could not choose a piano and reached for a guzheng instead, in every song. The repair also rewrites 101 cross-references and cuts unresolved ones from 855 to 543.</li>
+<li>Probes <strong>length control</strong> at a 25 second target, because a podcast intro wants that and the matrix rendered at 50 to give more to judge. Whether the duration field bounds a song or the lyric still decides is an open production question.</li>
+</ul>
+<p>The page rebuilds itself every two minutes as cells land, so just reload it.</p>
+<h2>5. What I would do after you have listened</h2>
+<ol>
+<li><strong>Pick a winner from the ladder.</strong> The results table gives you mean quality and the proportion reading as intentional, per recipe. If R02 gets you most of the way to R04, the expensive parts are not earning their place.</li>
+<li><strong>Decide the mistmatch ceiling</strong> from R05 to R07. Whatever you conclude becomes the tension budget in the coupling policy, which is the last design ticket and is still open.</li>
+<li><strong>Then the implementation spec</strong>, SGE-031, which ports the winning recipe into the actual workflow. That is the point at which this starts affecting the real podcast.</li>
+<li><strong>Then the test workflow</strong>, publishing nothing, on a real episode.</li>
+</ol>
+<h2>6. Things worth knowing before you judge it</h2>
+<ul>
+<li><strong>The songs are 50 seconds</strong>, twice what an intro wants. Wave 3 probes the shorter target.</li>
+<li><strong>Two known defects</strong> are on the page&#39;s reading notes. Neither breaks a comparison, and both are stated rather than hidden.</li>
+<li><strong>Nobody has heard any of this yet</strong>, including me. Every number above is mechanical. Whether a single one of these fifty-five songs is any good is exactly what the listening pass is for.</li>
+<li><strong>The samplers are seeded</strong>, so any song you like is reproducible from its record. If something is great, we can make it again on purpose.</li>
+</ul>
+<h2>7. The one judgement I made for you</h2>
+<p>I put <strong>blind mode on by default</strong>. It is more annoying to use and it will occasionally make you score something before you know what it is. I judged that worth it, because the whole question is whether a human reads these combinations as intentional, and that judgement is easy to contaminate. Turn it off whenever you like.</p>
+
+</body></html>
