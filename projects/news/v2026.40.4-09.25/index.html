@@ -1101,133 +1101,91 @@ function renderAttemptSwitcher(el, segIdx, compact) {
     </script>
 
 
-<!-- intro-option-tabs: old against new intro. Added by scripts/add_intro_tabs.py. -->
-<style>
-  .intro-tabs { display:flex; gap:6px; flex-wrap:wrap; margin:14px 0 4px; }
-  .intro-tab { font:inherit; font-size:.8rem; padding:5px 12px; border-radius:999px;
-    background:#1e1e1e; color:#e8e8e8; border:1px solid #3a3a3a; cursor:pointer; }
-  .intro-tab:hover { border-color:#bb86fc; }
-  .intro-tab.on { background:#bb86fc; border-color:#bb86fc; color:#121212; font-weight:700; }
-  .intro-dirs { display:flex; gap:6px; flex-wrap:wrap; margin:6px 0 0; }
-  .intro-dir { font:inherit; font-size:.72rem; padding:3px 10px; border-radius:999px;
-    background:transparent; color:#e8e8e8; opacity:.8; border:1px solid #3a3a3a; cursor:pointer; }
-  .intro-dir:hover { border-color:#bb86fc; opacity:1; }
-  .intro-dir.on { border-color:#bb86fc; color:#bb86fc; opacity:1; font-weight:700; }
-  .intro-note { font-size:.72rem; opacity:.7; margin:8px 0 10px; text-transform:uppercase;
-    letter-spacing:.5px; }
-</style>
+
+<!-- intro-option-tabs: intro versions, rendered by the page's own attempt switcher. -->
 <script>
 (function () {
   const INTRO_NEW = [
   {
-    "label": "brazil \u00b7 46s",
+    "label": "Brazil \u00b7 46s",
     "speaker": "Bossa nova \u00b7 story-driven",
     "file": "https://brook.dev/projects/song-matrix/audio/STORY-3553-brazil.fb0dfd8b.mp3",
     "text": "[verse]\nChips for the city\nFunding for the fleet\nAccord for the trade\nBroadcast for the mass\nBattlefield in the screen\nRocket for the orbit\nWire in the water\nSignal in the park\nSensor in the hive\nData in the dust\nPulse in the center\nUpdate in the ghost\n\n[chorus]\nLogic in the reach"
   },
   {
-    "label": "extreme \u00b7 57s",
+    "label": "Extreme \u00b7 57s",
     "speaker": "Screamo / skramz \u00b7 story-driven",
     "file": "https://brook.dev/projects/song-matrix/audio/STORY-3553-extreme.772e4feb.mp3",
     "text": "[verse]\nBroadcast signals hum\nFunding for the ghost\nChips in the wall\nRockets on the horizon\nThe battlefield moves\nAccord of secret math\nSmart nodes syncing\nNeural paths in asphalt\nData streams in public\nSensors in the marrow\nAutomated civic pulse\nHardwired safety mesh\n\n[chorus]\nDigital gates clicking\nThe system pulses\nThe system bleeds\nThe system bleeds\nThe system bleeds"
   },
   {
-    "label": "americas \u00b7 46s",
+    "label": "Americas \u00b7 46s",
     "speaker": "Calypso \u00b7 story-driven",
     "file": "https://brook.dev/projects/song-matrix/audio/STORY-3553-americas.a2dfea04.mp3",
     "text": "[verse]\nrockets rise in arc\nchips hum in frames\nfunding feeds the flow\naccord stays in sight\nThe system recalibrates\nbattlefield streams are live\nbroadcast reach is deep\nhigh-tech nodes in soil\npublic safety in nodes\nThe system recalibrates\nfunding feeds the core\nchips in every wall\n\n[chorus]\nrockets launch in peace\naccord holds the ground\nThe system recalibrates"
   }
 ];
-  const originalFile = playlist[0].file;
-  const originalText = playlist[0].text;
-  const state = { mode: 'old', dir: 0 };
+  const intro = playlist[0];
+  const originalFile = intro.file;
+  const originalText = intro.text;
 
-  function applyIntro() {
-    const o = state.mode === 'old'
-      ? { file: originalFile, text: originalText, speaker: 'Intro Theme (original)' }
-      : INTRO_NEW[state.dir];
-    if (!o || !o.file) return;
-    playlist[0].file = o.file;
-    if (o.text) playlist[0].text = o.text;
-    playlist[0].speaker = o.speaker;
-    if (typeof preloadBuffer !== 'undefined' && preloadBuffer[0]) delete preloadBuffer[0];
-    document.querySelectorAll('#intro-tabs .intro-tab').forEach((b, j) =>
-      b.classList.toggle('on', (j === 0) === (state.mode === 'old')));
-    const dirs = document.getElementById('intro-dirs');
-    if (dirs) {
-      dirs.style.display = state.mode === 'new' ? 'flex' : 'none';
-      dirs.querySelectorAll('.intro-dir').forEach((b, j) =>
-        b.classList.toggle('on', j === state.dir));
-    }
-    const note = document.getElementById('intro-note');
-    if (note) note.textContent = playlist[0].speaker;
-    if (typeof cur !== 'undefined' && cur === 0) {
-      // The page writes the lyric into the transcript panel inside updateUI(),
-      // which only runs when the track changes. Swapping playlist[0] and
-      // restarting the audio therefore left the old words on screen, so the
-      // panel is refreshed here as well.
-      const tsText = document.getElementById('ts-text');
-      if (tsText && playlist[0].text) tsText.innerText = playlist[0].text;
-      const tsVoice = document.getElementById('ts-voice');
-      if (tsVoice) tsVoice.innerText = playlist[0].speaker;
-      const summ = document.getElementById('summ');
-      if (summ) summ.innerText = 'Intro';
-      playNewTrack(0);
-    }
-  }
-  window.pickIntro = function (mode, dir) {
-    state.mode = mode;
-    if (typeof dir === 'number') state.dir = dir;
-    applyIntro();
+  // The intro's versions are `attempts` on the first item, so the switcher the page
+  // already uses for speech retries draws and drives them.
+  intro.introOptions = true;
+  intro.attempts = [{
+    n: 1, file: originalFile, introLabel: 'Old',
+    introTitle: 'The intro that shipped with this episode',
+    introText: originalText, introSpeaker: 'Intro Theme (original)', selected: true
+  }].concat(INTRO_NEW.map(function (o, i) {
+    return {
+      n: i + 2, file: o.file, introLabel: o.label, introTitle: o.speaker,
+      introText: o.text, introSpeaker: o.speaker, selected: false
+    };
+  }));
+
+  // No criteria icons for intro versions: those numbers describe speech attempts,
+  // and a creative choice has nothing to fail.
+  const _failedKeys = segmentFailedKeys;
+  segmentFailedKeys = function (item) {
+    return (item && item.introOptions) ? [] : _failedKeys(item);
   };
 
-  function attach() {
-    const host = document.getElementById('player-audio') ||
-                 document.getElementById('pl1');
-    if (!host || !host.parentNode) return;
-    if (document.getElementById('intro-tabs')) return;
+  // Label the buttons by version instead of by criteria number.
+  const _attemptButton = attemptButton;
+  attemptButton = function (a, segIdx, ai, failedKeys) {
+    if (segIdx === 0 && a && a.introLabel) {
+      const cls = a.selected ? ' pass' : '';
+      return '<button type="button" class="attempt-btn' + cls + '" data-seg="' + segIdx
+        + '" data-ai="' + ai + '" aria-pressed="' + (a.selected ? 'true' : 'false')
+        + '" title="' + (a.introTitle || '') + '">' + a.introLabel + '</button>';
+    }
+    return _attemptButton(a, segIdx, ai, failedKeys);
+  };
 
-    const row = document.createElement('div');
-    row.className = 'intro-tabs';
-    row.id = 'intro-tabs';
-    row.setAttribute('role', 'tablist');
-    row.setAttribute('aria-label', 'Intro song version');
-    [['old', 'Old'], ['new', 'New']].forEach((pair) => {
-      const b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'intro-tab' + (pair[0] === 'old' ? ' on' : '');
-      b.textContent = pair[1];
-      b.setAttribute('role', 'tab');
-      b.addEventListener('click', (e) => { e.preventDefault(); window.pickIntro(pair[0]); });
-      row.appendChild(b);
-    });
-    host.parentNode.insertBefore(row, host);
+  // Auditioning swaps the audio; the words on screen have to follow it, because the
+  // page only writes them inside updateUI on a track change.
+  const _audition = auditionAttempts;
+  auditionAttempts = function (segIdx, ai) {
+    _audition(segIdx, ai);
+    if (segIdx !== 0) return;
+    const list = playlist[0].attempts || [];
+    const chosen = list[ai];
+    list.forEach(function (a, i) { a.selected = (i === ai); });
+    if (chosen && chosen.introText) {
+      playlist[0].text = chosen.introText;
+      playlist[0].speaker = chosen.introSpeaker || 'Intro Theme';
+      const tsText = document.getElementById('ts-text');
+      if (tsText) tsText.innerText = chosen.introText;
+      const tsVoice = document.getElementById('ts-voice');
+      if (tsVoice) tsVoice.innerText = playlist[0].speaker;
+    }
+    const el = document.getElementById('manual-attempts');
+    if (el && typeof cur !== 'undefined' && cur === 0) renderAttemptSwitcher(el, 0);
+  };
 
-    const dirs = document.createElement('div');
-    dirs.className = 'intro-dirs';
-    dirs.id = 'intro-dirs';
-    dirs.style.display = 'none';
-    INTRO_NEW.forEach((o, i) => {
-      const b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'intro-dir' + (i === 0 ? ' on' : '');
-      b.textContent = o.label;
-      b.addEventListener('click', (e) => { e.preventDefault(); window.pickIntro('new', i); });
-      dirs.appendChild(b);
-    });
-    host.parentNode.insertBefore(dirs, host);
-
-    const note = document.createElement('div');
-    note.className = 'intro-note';
-    note.id = 'intro-note';
-    note.textContent = 'Intro Theme (original)';
-    host.parentNode.insertBefore(note, host);
-  }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', attach);
-  } else {
-    attach();
-  }
+  // If the song is already the current segment, draw the row now.
+  const host = document.getElementById('manual-attempts');
+  if (host && typeof cur !== 'undefined' && cur === 0) renderAttemptSwitcher(host, 0);
 })();
 </script>
 </body>
