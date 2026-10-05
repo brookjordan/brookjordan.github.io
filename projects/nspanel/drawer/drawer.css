@@ -1,0 +1,53 @@
+.drawer {
+  --gap: var(--s-bevel);
+
+  --c-shadow: 0 0 0;
+  --o-shadow: 0.5;
+  --s-shadow: 40px;
+
+  position: relative;
+  height: calc(var(--opening-height) - var(--gap));
+  width: calc(var(--opening-width) - var(--gap) - var(--gap));
+  margin: 0 var(--gap);
+  border-radius: var(--gap);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  background: rgb(var(--c-background));
+  box-shadow:
+    0 var(--s-shadow)
+    var(--s-shadow) var(--s-shadow)
+    rgb(var(--c-shadow) / var(--o-shadow))
+  ;
+  transform: translateY(0px);
+  transition-property: transform, box-shadow;
+  transition-duration: 0.2s, 0.2s;
+  transition-timing-function: ease-in;
+  
+  &.drawer--open {
+    transition-duration: 0.2s, 0.3s;
+    transition-timing-function: ease-out;
+    transform: translateY(calc(0px - var(--opening-height) + var(--gap) + var(--gap)));
+    transition-timing-function: ease-out;
+    box-shadow:
+      0 var(--s-shadow)
+      var(--s-shadow) calc(var(--s-shadow) * 4)
+      rgb(var(--c-shadow) / calc(var(--o-shadow) * 1.6))
+    ;
+  }
+
+  &:active {
+    transition-duration: 0.2s, 0s;
+    box-shadow:
+      0 calc(var(--s-shadow) / 2)
+      calc(var(--s-shadow) / 2) calc(var(--s-shadow) / 2)
+      rgb(var(--c-shadow) / calc(var(--o-shadow) / 2))
+    ;
+  }
+
+  h3 {
+    margin-top: calc(var(--gap) - var(--header-size));
+    line-height: var(--header-size);
+    color: white;
+    text-align: center;
+  }
+}

@@ -1,0 +1,27 @@
+.screen-value {
+  display: grid;
+  place-content: center;
+  place-items: center;
+  box-sizing: border-box;
+  padding: calc(var(--s-bevel) / 2);
+  box-shadow:
+    inset 0 10px 0px rgb(255 202 175 / 0),
+    inset 0 5px 20px rgb(0 0 0 / 0.4),
+    0 0 0px rgb(255 255 255 / 0);
+  border-radius: var(--s-bevel);
+  text-align: center;
+  color: #999;
+  transition-property: background-color, box-shadow;
+  transition-duration: 1s;
+  transition-timing-function: ease-in-out;
+
+  &.screen-value--is-on {
+    background-color: white;
+    box-shadow:
+      inset 0 0 30px rgb(255 202 175 / 1),
+      inset 0 5px 10px rgb(0 0 0 / 0.2),
+      0 0 10px rgb(255 255 255 / 0.4);
+    color: black;
+    font-weight: 600;
+  }
+}

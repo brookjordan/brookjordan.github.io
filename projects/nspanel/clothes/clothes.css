@@ -1,0 +1,39 @@
+.clothes {
+  display: grid;
+  grid-template:
+    "title title" auto
+    "washer alert" 1fr
+    "drier alert" 1fr
+  / 1fr 2fr;
+  position: relative;
+  gap: calc(var(--s-bevel) / 2);
+  padding: calc(var(--s-bevel) / 2);
+  padding-left: calc(var(--s-bevel) / 4);
+  overflow: hidden;
+
+  h3 {
+    grid-area: title;
+    line-height: var(--header-size);
+    color: white;
+    text-align: center;
+  }
+
+  .clothes__button--alert {
+    grid-area: alert;
+
+    &::after {
+      content: "Off";
+      font-size: 24px;
+      font-weight: 600;
+    }
+    &.clothes__button--is-on::after {
+      content: "On";
+    }
+  }
+  .clothes__button--washer {
+    grid-area: washer;
+  }
+  .clothes__button--drier {
+    grid-area: drier;
+  }
+}
