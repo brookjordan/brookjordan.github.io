@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#1a1d24" />
     <meta name="color-scheme" content="dark" />
-    <title>A private Telegram bot, built backwards from honesty</title>
+    <title>Qwen-Image 2.1 joins the gallery, slowly</title>
     <style>
 /* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
    This is the single source of truth for colour, radius, spacing and type.
@@ -431,74 +431,75 @@ a:hover {
     </header>
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
-<h1>A private Telegram bot, built backwards from honesty</h1>
-<p class="post-meta">2026-10-05 · <span class="tag">telegram-bot</span> <span class="tag">architecture</span> <span class="tag">reliability</span></p>
-<p>The gallery renders through a CLI that assumes a patient human at a keyboard.
-The goal here was different: send <code>/schnell a mended patch</code> from a phone and
-get a validated image back, without the bot ever lying about what happened —
-and without disturbing the gallery, the Mac mini bot, or anything else sharing
-this machine and its ComfyUI queue.</p>
-<h2>The shape</h2>
-<p>n8n on the NAS owns Telegram identity and a durable request ledger
-(PostgreSQL, dedicated <code>localimagegen_bot</code> schema). A small authenticated
-service on this laptop owns the queue, memory admission and job-specific
-ComfyUI observation. Tailscale connects them; Telegram credentials never
-reach the laptop. The 15 selected models each get a command; frozen steps and
-canvas live in one versioned registry that a test keeps byte-compatible with
-the gallery config.</p>
-<h2>The constraints that shaped everything</h2>
-<p><strong>ComfyUI is shared, so the bot owns almost nothing.</strong> It cannot interrupt,
-free memory, clear the queue, or jump it. It observes the real queue and waits
-behind existing work — a bot-local lock reserves nothing against other
-clients. Every failure path is tested to prove zero calls to <code>/interrupt</code>,
-<code>/free</code> or a queue clear.</p>
-<p><strong>A POST that loses its response is not a failure.</strong> ComfyUI may have accepted
-the prompt. The job goes to <code>submission_unknown</code>, and reconciliation binds the
-job to at most one exact prompt by client identity plus graph fingerprint.
-Zero or two candidates means a human looks, not a retry. The same discipline
-governs Telegram sends: an ambiguous delivery is stored as uncertain and
-resending is an explicit operator act. Nothing in this stack is exactly-once,
-and nothing claims to be.</p>
-<p><strong>Memory estimates are not capacity guarantees.</strong> Admission samples a fresh,
-provenance-checked probe and requires an identity-matched measured profile to
-auto-admit. Missing, stale, implausible or polluted evidence — including the
-<code>/system_stats</code> fallback that dresses free RAM up as MPS allocation — means
-the human gets a five-minute consent button instead of a silent gamble. One
-flagged conflict does not authorise removing a recipe&#39;s negative prompt; v1
-removes nothing.</p>
-<p><strong>Native Telegram ingress acknowledges before we persist.</strong> The ledger&#39;s
-unique index narrows the loss window but cannot close it. Production either
-accepts that explicitly or gets a durable-ingress adapter; what it does not
-get is a completion report claiming durability the API cannot provide.</p>
-<h2>Choices worth recording</h2>
-<p><strong>Steps came from data, not vibes.</strong> Each command runs the highest step rung
-whose measured median render stays under 60 seconds — derived from the
-<code>_t&lt;n&gt;s_</code> durations already recorded in ~1,000 committed master filenames.
-That moved three models off the plan&#39;s guesses (krea2 8→2, pixartsigma
-20→15, qwen2512 8→3) and left eleven unchanged.</p>
-<p><strong>The Gemma converter ships behind a flag.</strong> Booru-dialect models
-(<code>noobai</code>, <code>noobaivpred</code>, <code>pony</code>) are blocked at ingress until the abliterated
-Gemma 4 E2B candidate passes real fixture qualification; their <code>_raw</code> variants
-and all twelve native-prompt models work from day one. A bad converter blocks
-conversion, never rendering — and no fallback silently picks raw for you.</p>
-<p><strong>The recipe is frozen, never re-authored.</strong> Every bot graph is the gallery&#39;s
-own <code>buildGraph()</code> output, asserted byte-for-byte in tests, with a
-job-scoped output prefix. Provenance records the effective conditioning texts,
-workflow hash, model files and seed — so any future &quot;why does the bot look
-different from the gallery?&quot; has a stored answer.</p>
-<h2>What is deliberately not done</h2>
-<p>Nothing here has touched the live ComfyUI, Telegram, or the existing bot.
-355 unit/integration tests pass against fakes and a disposable Postgres; the
-first real render through this stack is still ahead, gated on credential
-rotation, workflow activation and live smoke tests. The plan called that out
-repeatedly, and the completion checklist makes &quot;all tasks written&quot; explicitly
-worthless as a done-signal. The honest state is: built, tested offline,
-waiting for permission to touch the world.</p>
+<img class="post-banner" src="banners/placeholder.png" alt="Qwen-Image 2.1 joins the gallery, slowly" />
+<h1>Qwen-Image 2.1 joins the gallery, slowly</h1>
+<p class="post-meta">2026-10-06 <time class="post-time" data-ts="1791248400000">09:00</time> · <span class="tag">models</span> <span class="tag">milestone</span> <span class="tag">resilience</span></p>
+<!-- TODO(banner): replace the placeholder with a bespoke render; tracked on the localimagegen banner ticket. --><p><code>qwen21</code> is the newest model in the matrix and by far the slowest per step. It
+runs on its own <code>qwen21</code> builder (<code>workflows/qwen21.t2i.json</code>) with the
+long-prompt <code>l</code> dialect, like the other Qwen and Ovis models, at cfg 1 with a
+ceiling of <strong>45 steps</strong>. That ceiling comes from the official ComfyUI template&#39;s
+note of 40–50 Euler steps. The default ladder gets <code>steps: { add: [10, 25, 40, 45] }</code>,
+so the gallery can show where the model actually settles rather than stopping
+at the few-step rungs that suit the distilled models.</p>
+<h2>What it costs</h2>
+<p>There are 605 masters across all 17 scenes and three seeds. Median render times,
+taken from the <code>_t&lt;n&gt;s_</code> durations in the filenames:</p>
+<table>
+<thead>
+<tr>
+<th align="right">steps</th>
+<th align="right">renders</th>
+<th align="right">median</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">2</td>
+<td align="right">51</td>
+<td align="right">26 s</td>
+</tr>
+<tr>
+<td align="right">10</td>
+<td align="right">51</td>
+<td align="right">97 s</td>
+</tr>
+<tr>
+<td align="right">25</td>
+<td align="right">48</td>
+<td align="right">222 s</td>
+</tr>
+<tr>
+<td align="right">45</td>
+<td align="right">14</td>
+<td align="right">391 s</td>
+</tr>
+</tbody></table>
+<p>That is roughly 9 seconds per step on the M3, so a full ladder for one scene and
+seed takes most of an hour. The tail above 25 steps is still filling in.
+<code>lig status</code> gives the live count.</p>
+<h2>Why it needed a resume script</h2>
+<p>A run that long is almost guaranteed to be interrupted: the laptop leaves the
+network, ComfyUI falls over, the lid closes. The engine already resumes from
+disk, but the 2026-09-22 work (commit <code>2d6be43</code>) added two things to make a
+long qwen21 backfill boring:</p>
+<ul>
+<li><code>scripts/resume-qwen21.zsh</code>, which retries the quarantined cells first and
+then runs <code>--missing-only --grouped</code> for this one model, so a resume never
+wanders off into another model&#39;s queue.</li>
+<li>A fix to the retry matcher, which had rejected cell keys written with
+underscores, so some failed cells never came back for a retry.</li>
+</ul>
+<p>The new <code>angels</code> scene arrived at the same time. It is an anime oil painting of
+an angel beside a flying, Ioniq 5-style car, rendered with
+<code>graph: { face_detail: true }</code>. Its cloth patch sits on painted canvas.</p>
+<h2>Where it shows up next</h2>
+<p>qwen21 also became the cover model for the podcast&#39;s story-first visuals, and
+it has three variants in the <a href="2026-10-06-abliteration-matrix-setup.html">abliteration matrix</a>.
+The podcast side of that story is on the podcast devlog.</p>
 
 </article>
 <nav class="post-nav" aria-label="Post navigation">
-<a class="post-nav-link post-nav-prev" href="2026-09-20-the-grey-rectangle-that-passed.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">The grey rectangle that passed every check</span></span></a>
-<a class="post-nav-link post-nav-next" href="2026-10-06-qwen-image-21-joins-the-gallery.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">Qwen-Image 2.1 joins the gallery, slowly</span></span><span class="post-nav-arrow">&rarr;</span></a>
+<a class="post-nav-link post-nav-prev" href="2026-10-05-private-telegram-rendering-bot.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">A private Telegram bot, built backwards from honesty</span></span></a>
+<a class="post-nav-link post-nav-next" href="2026-10-06-abliteration-matrix-setup.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">Abliteration matrix, part 1: the setup</span></span><span class="post-nav-arrow">&rarr;</span></a>
 </nav></main>
     <footer class="site-footer">
       <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#1a1d24" />
     <meta name="color-scheme" content="dark" />
-    <title>A private Telegram bot, built backwards from honesty</title>
+    <title>Abliteration matrix, part 2: seven picks for the bot</title>
     <style>
 /* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
    This is the single source of truth for colour, radius, spacing and type.
@@ -431,74 +431,117 @@ a:hover {
     </header>
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
-<h1>A private Telegram bot, built backwards from honesty</h1>
-<p class="post-meta">2026-10-05 · <span class="tag">telegram-bot</span> <span class="tag">architecture</span> <span class="tag">reliability</span></p>
-<p>The gallery renders through a CLI that assumes a patient human at a keyboard.
-The goal here was different: send <code>/schnell a mended patch</code> from a phone and
-get a validated image back, without the bot ever lying about what happened —
-and without disturbing the gallery, the Mac mini bot, or anything else sharing
-this machine and its ComfyUI queue.</p>
-<h2>The shape</h2>
-<p>n8n on the NAS owns Telegram identity and a durable request ledger
-(PostgreSQL, dedicated <code>localimagegen_bot</code> schema). A small authenticated
-service on this laptop owns the queue, memory admission and job-specific
-ComfyUI observation. Tailscale connects them; Telegram credentials never
-reach the laptop. The 15 selected models each get a command; frozen steps and
-canvas live in one versioned registry that a test keeps byte-compatible with
-the gallery config.</p>
-<h2>The constraints that shaped everything</h2>
-<p><strong>ComfyUI is shared, so the bot owns almost nothing.</strong> It cannot interrupt,
-free memory, clear the queue, or jump it. It observes the real queue and waits
-behind existing work — a bot-local lock reserves nothing against other
-clients. Every failure path is tested to prove zero calls to <code>/interrupt</code>,
-<code>/free</code> or a queue clear.</p>
-<p><strong>A POST that loses its response is not a failure.</strong> ComfyUI may have accepted
-the prompt. The job goes to <code>submission_unknown</code>, and reconciliation binds the
-job to at most one exact prompt by client identity plus graph fingerprint.
-Zero or two candidates means a human looks, not a retry. The same discipline
-governs Telegram sends: an ambiguous delivery is stored as uncertain and
-resending is an explicit operator act. Nothing in this stack is exactly-once,
-and nothing claims to be.</p>
-<p><strong>Memory estimates are not capacity guarantees.</strong> Admission samples a fresh,
-provenance-checked probe and requires an identity-matched measured profile to
-auto-admit. Missing, stale, implausible or polluted evidence — including the
-<code>/system_stats</code> fallback that dresses free RAM up as MPS allocation — means
-the human gets a five-minute consent button instead of a silent gamble. One
-flagged conflict does not authorise removing a recipe&#39;s negative prompt; v1
-removes nothing.</p>
-<p><strong>Native Telegram ingress acknowledges before we persist.</strong> The ledger&#39;s
-unique index narrows the loss window but cannot close it. Production either
-accepts that explicitly or gets a durable-ingress adapter; what it does not
-get is a completion report claiming durability the API cannot provide.</p>
-<h2>Choices worth recording</h2>
-<p><strong>Steps came from data, not vibes.</strong> Each command runs the highest step rung
-whose measured median render stays under 60 seconds — derived from the
-<code>_t&lt;n&gt;s_</code> durations already recorded in ~1,000 committed master filenames.
-That moved three models off the plan&#39;s guesses (krea2 8→2, pixartsigma
-20→15, qwen2512 8→3) and left eleven unchanged.</p>
-<p><strong>The Gemma converter ships behind a flag.</strong> Booru-dialect models
-(<code>noobai</code>, <code>noobaivpred</code>, <code>pony</code>) are blocked at ingress until the abliterated
-Gemma 4 E2B candidate passes real fixture qualification; their <code>_raw</code> variants
-and all twelve native-prompt models work from day one. A bad converter blocks
-conversion, never rendering — and no fallback silently picks raw for you.</p>
-<p><strong>The recipe is frozen, never re-authored.</strong> Every bot graph is the gallery&#39;s
-own <code>buildGraph()</code> output, asserted byte-for-byte in tests, with a
-job-scoped output prefix. Provenance records the effective conditioning texts,
-workflow hash, model files and seed — so any future &quot;why does the bot look
-different from the gallery?&quot; has a stored answer.</p>
-<h2>What is deliberately not done</h2>
-<p>Nothing here has touched the live ComfyUI, Telegram, or the existing bot.
-355 unit/integration tests pass against fakes and a disposable Postgres; the
-first real render through this stack is still ahead, gated on credential
-rotation, workflow activation and live smoke tests. The plan called that out
-repeatedly, and the completion checklist makes &quot;all tasks written&quot; explicitly
-worthless as a done-signal. The honest state is: built, tested offline,
-waiting for permission to touch the world.</p>
+<img class="post-banner" src="banners/placeholder.png" alt="Abliteration matrix, part 2: seven picks for the bot" />
+<h1>Abliteration matrix, part 2: seven picks for the bot</h1>
+<p class="post-meta">2026-10-06 <time class="post-time" data-ts="1791252000000">10:00</time> · <span class="tag">experiment</span> <span class="tag">models</span> <span class="tag">telegram-bot</span> <span class="tag">decision</span></p>
+<!-- TODO(banner): replace the placeholder with a bespoke render; tracked on the localimagegen banner ticket. --><p><a href="2026-10-06-abliteration-matrix-setup.html">Part 1</a> set up 46 variants × 3 prompts ×
+3 seeds. The run went from 14:14 on 5 October to just after midnight.
+<strong>396 renders came back ok across 44 variants, with no final failures.</strong> One
+render failed once and passed on retry. Two variants never ran:
+<code>qwen21-nsfw-lora</code> and <code>qwen21-abl-nsfw-lora</code>. Their LoRA was never archived
+to the NAS, and the NAS-first rule means a file the NAS doesn&#39;t hold doesn&#39;t
+get used.</p>
+<h2>The decision was made by eye</h2>
+<p>The plan was to score every render. In the end Brook looked at the gallery and
+picked, one per family. As Brook put it, &quot;my seven picks are the decision.&quot; So
+these are picks, not scores:</p>
+<table>
+<thead>
+<tr>
+<th>family</th>
+<th>pick</th>
+<th>change from the baseline</th>
+<th align="right">steps</th>
+<th align="right">warm median</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>schnell</td>
+<td><code>schnell-flan</code></td>
+<td>FLAN-T5-XXL encoder</td>
+<td align="right">4</td>
+<td align="right">50 s</td>
+</tr>
+<tr>
+<td>krea2</td>
+<td><code>krea2-heretic-nsfwlora</code></td>
+<td>Heretic encoder + NSFW LoRA</td>
+<td align="right">4</td>
+<td align="right">66 s</td>
+</tr>
+<tr>
+<td>qwen2512</td>
+<td><code>qwen2512-abl</code></td>
+<td>abliterated Qwen2.5-VL encoder</td>
+<td align="right">3</td>
+<td align="right">92 s</td>
+</tr>
+<tr>
+<td>flux9b</td>
+<td><code>flux9b-sqnsfw-lora</code></td>
+<td>SQNSFW LoRA</td>
+<td align="right">4</td>
+<td align="right">115 s</td>
+</tr>
+<tr>
+<td>zimage</td>
+<td><code>zimage-abl-nsfwlora</code></td>
+<td>abliterated encoder + NSFW LoRA</td>
+<td align="right">8</td>
+<td align="right">59 s</td>
+</tr>
+<tr>
+<td>NoobAI</td>
+<td><code>harmoniq-vpred-v30</code></td>
+<td>HarmoniqMix vPred 3.0 checkpoint</td>
+<td align="right">30</td>
+<td align="right">60 s</td>
+</tr>
+<tr>
+<td>Pony</td>
+<td><code>pony-dmd2</code></td>
+<td>DMD2 4-step LoRA, lcm sampler at cfg 1</td>
+<td align="right">8</td>
+<td align="right">12 s</td>
+</tr>
+</tbody></table>
+<p>Each pick has all nine of its renders. Things worth noting:</p>
+<ul>
+<li><strong><code>pony-dmd2</code> costs nothing.</strong> DMD2 brings Pony from 49 s at 25 steps down to
+12 s at 8. It was the only pick that got faster.</li>
+<li><strong>LoRAs cost real time on Flux.2 Klein 9B.</strong> The baseline&#39;s 72 s became 115 s
+with the SQNSFW LoRA.</li>
+<li><strong>Two recipes changed mid-run.</strong> The krea2 family moved from 2 steps to 4,
+and the qwen21 cfg-1 variants from 8 or 25 steps to 10. The older rows are
+kept as <code>results-superseded-*.jsonl</code> and not mixed in.</li>
+<li><strong>No qwen21 variant was picked.</strong> At 95–120 s per image they are too slow
+for a chat reply, however good they look.</li>
+</ul>
+<h2>What it changed in the bot</h2>
+<p>The bot&#39;s registry (<code>config/telegram-bot.ts</code>, now version <code>2.0.0</code>) went from
+15 gallery models to exactly these seven commands. Telegram commands can&#39;t
+contain hyphens, so <code>pony-dmd2</code> became <code>/pony_dmd2</code>. Each command is the base
+model&#39;s workflow template plus the variant&#39;s edits, copied straight from
+<code>matrix.json</code>. <code>applyEdits</code> in <code>src/bot/recipe.ts</code> is a TypeScript port of the
+runner&#39;s <code>apply_edits</code>, and a test checks that each frozen bot graph equals
+the gallery builder&#39;s graph plus those edits. The two tag-dialect picks
+(<code>harmoniq_vpred_v30</code> and <code>pony_dmd2</code>) stay raw-only until the Gemma
+converter qualifies.</p>
+<p>This drops the old rule that each command runs the most steps that keep its
+median under 60 seconds. krea2, qwen2512 and flux9b exceed it at the steps
+Brook approved, so the bot runs them at those steps and is simply slower.</p>
+<h2>Still open</h2>
+<ul>
+<li>The runner stopped because the NAS registry&#39;s ssh check began returning exit
+255, so the two qwen21 LoRA variants need the LoRA archived and a rerun.</li>
+<li>Most of the picks&#39; files were deleted from the laptop during the run, so
+they have to be copied back from the NAS before the bot can serve them.</li>
+</ul>
 
 </article>
 <nav class="post-nav" aria-label="Post navigation">
-<a class="post-nav-link post-nav-prev" href="2026-09-20-the-grey-rectangle-that-passed.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">The grey rectangle that passed every check</span></span></a>
-<a class="post-nav-link post-nav-next" href="2026-10-06-qwen-image-21-joins-the-gallery.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">Qwen-Image 2.1 joins the gallery, slowly</span></span><span class="post-nav-arrow">&rarr;</span></a>
+<a class="post-nav-link post-nav-prev" href="2026-10-06-abliteration-matrix-setup.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">Abliteration matrix, part 1: the setup</span></span></a>
+<a class="post-nav-link post-nav-next" href="2026-10-06-literal-gemma-converter-experiment.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">Teaching the tag converter to be literal</span></span><span class="post-nav-arrow">&rarr;</span></a>
 </nav></main>
     <footer class="site-footer">
       <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>
