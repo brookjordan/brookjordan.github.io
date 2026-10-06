@@ -1,0 +1,17 @@
+:root {
+  --c-background: 0 0 0;
+
+  --c-bevel: 0 0 0;
+  --s-bevel: 40px;
+  --o-bevel: 0.5;
+
+  --screen-width: 480px;
+  --screen-height: 320px;
+  --mask-right: 30px;
+  --mask-left: 0px;
+  --mask-top: 0px;
+  --mask-bottom: 0px;
+
+  --opening-width: calc(var(--screen-width) - var(--mask-right) - var(--mask-left));
+  --opening-height: calc(var(--screen-height) - var(--mask-top) - var(--mask-bottom));
+}

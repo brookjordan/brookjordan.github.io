@@ -1,0 +1,26 @@
+.lights {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  position: relative;
+  gap: calc(var(--s-bevel) / 2);
+  padding: calc(var(--s-bevel) / 2);
+  padding-right: calc(var(--s-bevel) / 4);
+
+  h3 {
+    line-height: var(--header-size);
+    color: white;
+    text-align: center;
+  }
+
+  .lights__button--ceiling {
+    &::after {
+      content: "Off";
+      font-size: 24px;
+      font-weight: 600;;
+    }
+
+    &.lights__button--is-on::after {
+      content: "On";
+    }
+  }
+}

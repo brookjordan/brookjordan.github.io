@@ -1,0 +1,70 @@
+.nspanel {
+    position: relative;
+    background: rgb(var(--c-background));
+    width: calc(var(--screen-width) + var(--s-bevel) * 2 - var(--mask-left) - var(--mask-right));
+    height: calc(var(--screen-height) + var(--s-bevel) * 2 - var(--mask-top) - var(--mask-bottom));
+    
+    .nspanel__bevel {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+    
+        &::before {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                linear-gradient(
+                        to right,
+                    rgb(var(--c-bevel) / var(--o-bevel)) 0,
+                    rgb(var(--c-bevel) / var(--o-bevel)) var(--s-bevel),
+                    rgb(var(--c-bevel) / 0)              var(--s-bevel),
+                    rgb(var(--c-bevel) / 0)              calc(var(--s-bevel) + var(--opening-width)),
+                    rgb(var(--c-bevel) / var(--o-bevel)) calc(var(--s-bevel) + var(--opening-width)),
+                    rgb(var(--c-bevel) / var(--o-bevel)) calc(var(--s-bevel) + var(--opening-width) + var(--s-bevel))
+                )
+            ;
+        }
+    
+        &::after {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 0;
+            left: var(--s-bevel);
+            width: calc(100% - var(--s-bevel) - var(--s-bevel));
+            height: 100%;
+            background:
+                linear-gradient(
+                        to bottom,
+                    rgb(var(--c-bevel) / var(--o-bevel)) 0,
+                    rgb(var(--c-bevel) / var(--o-bevel)) var(--s-bevel),
+                    rgb(var(--c-bevel) / 0)              var(--s-bevel),
+                    rgb(var(--c-bevel) / 0)              calc(var(--s-bevel) + var(--opening-height)),
+                    rgb(var(--c-bevel) / var(--o-bevel)) calc(var(--s-bevel) + var(--opening-height)),
+                    rgb(var(--c-bevel) / var(--o-bevel)) calc(var(--s-bevel) + var(--opening-height) + var(--s-bevel))
+                )
+            ;
+        }
+    }
+
+    .nspanel__screen {
+        position: absolute;
+        top: calc(var(--s-bevel) - var(--mask-top));
+        left: calc(var(--s-bevel) - var(--mask-left));
+        width: var(--screen-width);
+        height: var(--screen-height);
+        box-shadow:
+            inset 0 0 90px rgb(255 255 255 / 0.2);
+        overflow: hidden;
+    }
+}
+
+
