@@ -1,0 +1,867 @@
+{
+  "schemaVersion": "podcast-stats-v0.2.0",
+  "runId": "268579",
+  "generatedAt": "2026-10-10T05:29:56.153731Z",
+  "summary": {
+    "startedAt": "2026-10-10T04:10:57.793028Z",
+    "endedAt": null,
+    "wallClockMs": null,
+    "stageCount": 4,
+    "peakHostUsedBytes": 18281857024
+  },
+  "speech": {
+    "segmentCount": 8,
+    "totalAttempts": 13,
+    "retries": 5,
+    "degradedSegments": 2,
+    "segments": [
+      {
+        "attempts": 1,
+        "selectedAttempt": 1,
+        "degraded": false,
+        "rejectionReasons": [],
+        "segmentId": "0"
+      },
+      {
+        "attempts": 1,
+        "selectedAttempt": 1,
+        "degraded": false,
+        "rejectionReasons": [],
+        "segmentId": "2"
+      },
+      {
+        "attempts": 3,
+        "selectedAttempt": 1,
+        "degraded": true,
+        "rejectionReasons": [
+          "transcript_gate"
+        ],
+        "segmentId": "1"
+      },
+      {
+        "attempts": 3,
+        "selectedAttempt": 3,
+        "degraded": true,
+        "rejectionReasons": [
+          "transcript_gate",
+          "voice_gate"
+        ],
+        "segmentId": "3"
+      },
+      {
+        "attempts": 1,
+        "selectedAttempt": 1,
+        "degraded": false,
+        "rejectionReasons": [],
+        "segmentId": "4"
+      },
+      {
+        "attempts": 1,
+        "selectedAttempt": 1,
+        "degraded": false,
+        "rejectionReasons": [],
+        "segmentId": "7"
+      },
+      {
+        "attempts": 1,
+        "selectedAttempt": 1,
+        "degraded": false,
+        "rejectionReasons": [],
+        "segmentId": "6"
+      },
+      {
+        "attempts": 2,
+        "selectedAttempt": 2,
+        "degraded": false,
+        "rejectionReasons": [],
+        "segmentId": "5"
+      }
+    ],
+    "attempts": [
+      {
+        "attempt": 1,
+        "evaluationMs": 5841,
+        "rejectionReasons": [],
+        "passed": true,
+        "segmentId": "0"
+      },
+      {
+        "attempt": 1,
+        "evaluationMs": 5877,
+        "rejectionReasons": [
+          "transcript_gate"
+        ],
+        "passed": false,
+        "segmentId": "1"
+      },
+      {
+        "attempt": 1,
+        "evaluationMs": 5335,
+        "rejectionReasons": [],
+        "passed": true,
+        "segmentId": "2"
+      },
+      {
+        "attempt": 1,
+        "evaluationMs": 5041,
+        "rejectionReasons": [
+          "transcript_gate",
+          "voice_gate"
+        ],
+        "passed": false,
+        "segmentId": "3"
+      },
+      {
+        "attempt": 1,
+        "evaluationMs": 5522,
+        "rejectionReasons": [],
+        "passed": true,
+        "segmentId": "4"
+      },
+      {
+        "attempt": 1,
+        "evaluationMs": 5366,
+        "rejectionReasons": [
+          "transcript_gate"
+        ],
+        "passed": false,
+        "segmentId": "5"
+      },
+      {
+        "attempt": 1,
+        "evaluationMs": 5565,
+        "rejectionReasons": [],
+        "passed": true,
+        "segmentId": "6"
+      },
+      {
+        "attempt": 1,
+        "evaluationMs": 5672,
+        "rejectionReasons": [],
+        "passed": true,
+        "segmentId": "7"
+      },
+      {
+        "attempt": 2,
+        "evaluationMs": 5744,
+        "rejectionReasons": [
+          "transcript_gate"
+        ],
+        "passed": false,
+        "segmentId": "1"
+      },
+      {
+        "attempt": 2,
+        "evaluationMs": 5129,
+        "rejectionReasons": [
+          "transcript_gate",
+          "voice_gate"
+        ],
+        "passed": false,
+        "segmentId": "3"
+      },
+      {
+        "attempt": 2,
+        "evaluationMs": 5383,
+        "rejectionReasons": [],
+        "passed": true,
+        "segmentId": "5"
+      },
+      {
+        "attempt": 3,
+        "evaluationMs": 5592,
+        "rejectionReasons": [
+          "transcript_gate"
+        ],
+        "passed": false,
+        "segmentId": "1"
+      },
+      {
+        "attempt": 3,
+        "evaluationMs": 5374,
+        "rejectionReasons": [
+          "transcript_gate",
+          "voice_gate"
+        ],
+        "passed": false,
+        "segmentId": "3"
+      }
+    ]
+  },
+  "stages": [
+    {
+      "stage": "pipeline",
+      "status": "in_progress",
+      "startedAt": "2026-10-10T04:10:57.793028Z",
+      "endedAt": null,
+      "durationMs": null,
+      "memory": [
+        {
+          "comfySystemRamFreeBytes": 37842124800,
+          "comfySystemRamTotalBytes": 51539607552,
+          "hostAvailableBytes": 37950799872,
+          "hostTotalBytes": 51539607552,
+          "hostUsedBytes": 13588807680
+        }
+      ],
+      "details": [
+        {
+          "imageCount": 3,
+          "route": "ethernet"
+        }
+      ]
+    },
+    {
+      "stage": "speech.attempt",
+      "status": "complete",
+      "startedAt": null,
+      "endedAt": "2026-10-10T04:17:40.254527Z",
+      "durationMs": null,
+      "memory": [
+        {
+          "comfySystemRamFreeBytes": 32863420416,
+          "comfySystemRamTotalBytes": 51539607552,
+          "hostAvailableBytes": 33257750528,
+          "hostTotalBytes": 51539607552,
+          "hostUsedBytes": 18281857024
+        },
+        {
+          "comfySystemRamFreeBytes": 36053499904,
+          "comfySystemRamTotalBytes": 51539607552,
+          "hostAvailableBytes": 36181540864,
+          "hostTotalBytes": 51539607552,
+          "hostUsedBytes": 15358066688
+        },
+        {
+          "comfySystemRamFreeBytes": 36064493568,
+          "comfySystemRamTotalBytes": 51539607552,
+          "hostAvailableBytes": 36225466368,
+          "hostTotalBytes": 51539607552,
+          "hostUsedBytes": 15314141184
+        },
+        {
+          "comfySystemRamFreeBytes": 36067147776,
+          "comfySystemRamTotalBytes": 51539607552,
+          "hostAvailableBytes": 36228939776,
+          "hostTotalBytes": 51539607552,
+          "hostUsedBytes": 15310667776
+        },
+        {
+          "comfySystemRamFreeBytes": 36045291520,
+          "comfySystemRamTotalBytes": 51539607552,
+          "hostAvailableBytes": 36195893248,
+          "hostTotalBytes": 51539607552,
+          "hostUsedBytes": 15343714304
+        },
+        {
+          "comfySystemRamFreeBytes": 36033888256,
+          "comfySystemRamTotalBytes": 51539607552,
+          "hostAvailableBytes": 36112285696,
+          "hostTotalBytes": 51539607552,
+          "hostUsedBytes": 15427321856
+        },
+        {
+          "comfySystemRamFreeBytes": 35873964032,
+          "comfySystemRamTotalBytes": 51539607552,
+          "hostAvailableBytes": 36010049536,
+          "hostTotalBytes": 51539607552,
+          "hostUsedBytes": 15529558016
+        },
+        {
+          "comfySystemRamFreeBytes": 35869769728,
+          "comfySystemRamTotalBytes": 51539607552,
+          "hostAvailableBytes": 35946577920,
+          "hostTotalBytes": 51539607552,
+          "hostUsedBytes": 15593029632
+        },
+        {
+          "comfySystemRamFreeBytes": 35736895488,
+          "comfySystemRamTotalBytes": 51539607552,
+          "hostAvailableBytes": 35876012032,
+          "hostTotalBytes": 51539607552,
+          "hostUsedBytes": 15663595520
+        },
+        {
+          "comfySystemRamFreeBytes": 35570647040,
+          "comfySystemRamTotalBytes": 51539607552,
+          "hostAvailableBytes": 35822370816,
+          "hostTotalBytes": 51539607552,
+          "hostUsedBytes": 15717236736
+        },
+        {
+          "comfySystemRamFreeBytes": 35739910144,
+          "comfySystemRamTotalBytes": 51539607552,
+          "hostAvailableBytes": 35813851136,
+          "hostTotalBytes": 51539607552,
+          "hostUsedBytes": 15725756416
+        },
+        {
+          "comfySystemRamFreeBytes": 35332653056,
+          "comfySystemRamTotalBytes": 51539607552,
+          "hostAvailableBytes": 35731619840,
+          "hostTotalBytes": 51539607552,
+          "hostUsedBytes": 15807987712
+        },
+        {
+          "comfySystemRamFreeBytes": 35263676416,
+          "comfySystemRamTotalBytes": 51539607552,
+          "hostAvailableBytes": 35437133824,
+          "hostTotalBytes": 51539607552,
+          "hostUsedBytes": 16102473728
+        }
+      ],
+      "details": [
+        {
+          "attempt": 1,
+          "evaluationMs": 5841,
+          "rejectionReasons": [],
+          "passed": true,
+          "segmentId": "0"
+        },
+        {
+          "attempt": 1,
+          "evaluationMs": 5877,
+          "rejectionReasons": [
+            "transcript_gate"
+          ],
+          "passed": false,
+          "segmentId": "1"
+        },
+        {
+          "attempt": 1,
+          "evaluationMs": 5335,
+          "rejectionReasons": [],
+          "passed": true,
+          "segmentId": "2"
+        },
+        {
+          "attempt": 1,
+          "evaluationMs": 5041,
+          "rejectionReasons": [
+            "transcript_gate",
+            "voice_gate"
+          ],
+          "passed": false,
+          "segmentId": "3"
+        },
+        {
+          "attempt": 1,
+          "evaluationMs": 5522,
+          "rejectionReasons": [],
+          "passed": true,
+          "segmentId": "4"
+        },
+        {
+          "attempt": 1,
+          "evaluationMs": 5366,
+          "rejectionReasons": [
+            "transcript_gate"
+          ],
+          "passed": false,
+          "segmentId": "5"
+        },
+        {
+          "attempt": 1,
+          "evaluationMs": 5565,
+          "rejectionReasons": [],
+          "passed": true,
+          "segmentId": "6"
+        },
+        {
+          "attempt": 1,
+          "evaluationMs": 5672,
+          "rejectionReasons": [],
+          "passed": true,
+          "segmentId": "7"
+        },
+        {
+          "attempt": 2,
+          "evaluationMs": 5744,
+          "rejectionReasons": [
+            "transcript_gate"
+          ],
+          "passed": false,
+          "segmentId": "1"
+        },
+        {
+          "attempt": 2,
+          "evaluationMs": 5129,
+          "rejectionReasons": [
+            "transcript_gate",
+            "voice_gate"
+          ],
+          "passed": false,
+          "segmentId": "3"
+        },
+        {
+          "attempt": 2,
+          "evaluationMs": 5383,
+          "rejectionReasons": [],
+          "passed": true,
+          "segmentId": "5"
+        },
+        {
+          "attempt": 3,
+          "evaluationMs": 5592,
+          "rejectionReasons": [
+            "transcript_gate"
+          ],
+          "passed": false,
+          "segmentId": "1"
+        },
+        {
+          "attempt": 3,
+          "evaluationMs": 5374,
+          "rejectionReasons": [
+            "transcript_gate",
+            "voice_gate"
+          ],
+          "passed": false,
+          "segmentId": "3"
+        }
+      ]
+    },
+    {
+      "stage": "speech.segment",
+      "status": "complete",
+      "startedAt": null,
+      "endedAt": "2026-10-10T04:17:42.648066Z",
+      "durationMs": null,
+      "memory": [
+        {
+          "comfySystemRamFreeBytes": 35274702848,
+          "comfySystemRamTotalBytes": 51539607552,
+          "hostAvailableBytes": 35722461184,
+          "hostTotalBytes": 51539607552,
+          "hostUsedBytes": 15817146368
+        },
+        {
+          "comfySystemRamFreeBytes": 35274031104,
+          "comfySystemRamTotalBytes": 51539607552,
+          "hostAvailableBytes": 35724656640,
+          "hostTotalBytes": 51539607552,
+          "hostUsedBytes": 15814950912
+        },
+        {
+          "comfySystemRamFreeBytes": 35274031104,
+          "comfySystemRamTotalBytes": 51539607552,
+          "hostAvailableBytes": 35721494528,
+          "hostTotalBytes": 51539607552,
+          "hostUsedBytes": 15818113024
+        },
+        {
+          "comfySystemRamFreeBytes": 35274031104,
+          "comfySystemRamTotalBytes": 51539607552,
+          "hostAvailableBytes": 35723018240,
+          "hostTotalBytes": 51539607552,
+          "hostUsedBytes": 15816589312
+        },
+        {
+          "comfySystemRamFreeBytes": 35274031104,
+          "comfySystemRamTotalBytes": 51539607552,
+          "hostAvailableBytes": 35722510336,
+          "hostTotalBytes": 51539607552,
+          "hostUsedBytes": 15817097216
+        },
+        {
+          "comfySystemRamFreeBytes": 35401957376,
+          "comfySystemRamTotalBytes": 51539607552,
+          "hostAvailableBytes": 35779706880,
+          "hostTotalBytes": 51539607552,
+          "hostUsedBytes": 15759900672
+        },
+        {
+          "comfySystemRamFreeBytes": 35403284480,
+          "comfySystemRamTotalBytes": 51539607552,
+          "hostAvailableBytes": 35780313088,
+          "hostTotalBytes": 51539607552,
+          "hostUsedBytes": 15759294464
+        },
+        {
+          "comfySystemRamFreeBytes": 35403284480,
+          "comfySystemRamTotalBytes": 51539607552,
+          "hostAvailableBytes": 35781672960,
+          "hostTotalBytes": 51539607552,
+          "hostUsedBytes": 15757934592
+        }
+      ],
+      "details": [
+        {
+          "attempts": 1,
+          "selectedAttempt": 1,
+          "degraded": false,
+          "rejectionReasons": [],
+          "segmentId": "0"
+        },
+        {
+          "attempts": 1,
+          "selectedAttempt": 1,
+          "degraded": false,
+          "rejectionReasons": [],
+          "segmentId": "2"
+        },
+        {
+          "attempts": 3,
+          "selectedAttempt": 1,
+          "degraded": true,
+          "rejectionReasons": [
+            "transcript_gate"
+          ],
+          "segmentId": "1"
+        },
+        {
+          "attempts": 3,
+          "selectedAttempt": 3,
+          "degraded": true,
+          "rejectionReasons": [
+            "transcript_gate",
+            "voice_gate"
+          ],
+          "segmentId": "3"
+        },
+        {
+          "attempts": 1,
+          "selectedAttempt": 1,
+          "degraded": false,
+          "rejectionReasons": [],
+          "segmentId": "4"
+        },
+        {
+          "attempts": 1,
+          "selectedAttempt": 1,
+          "degraded": false,
+          "rejectionReasons": [],
+          "segmentId": "7"
+        },
+        {
+          "attempts": 1,
+          "selectedAttempt": 1,
+          "degraded": false,
+          "rejectionReasons": [],
+          "segmentId": "6"
+        },
+        {
+          "attempts": 2,
+          "selectedAttempt": 2,
+          "degraded": false,
+          "rejectionReasons": [],
+          "segmentId": "5"
+        }
+      ]
+    },
+    {
+      "stage": "publication.assets",
+      "status": "complete",
+      "startedAt": null,
+      "endedAt": "2026-10-10T05:29:55.419411Z",
+      "durationMs": null,
+      "memory": [
+        {
+          "comfySystemRamFreeBytes": 39465517056,
+          "comfySystemRamTotalBytes": 51539607552,
+          "hostAvailableBytes": 39480475648,
+          "hostTotalBytes": 51539607552,
+          "hostUsedBytes": 12059131904
+        }
+      ],
+      "details": [
+        {
+          "assetCount": 18
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "stage": "pipeline",
+      "event": "start",
+      "timestamp": "2026-10-10T04:10:57.793028Z",
+      "details": {
+        "imageCount": 3,
+        "route": "ethernet"
+      }
+    },
+    {
+      "stage": "speech.attempt",
+      "event": "end",
+      "timestamp": "2026-10-10T04:12:36.849379Z",
+      "details": {
+        "attempt": 1,
+        "evaluationMs": 5841,
+        "rejectionReasons": [],
+        "passed": true,
+        "segmentId": "0"
+      }
+    },
+    {
+      "stage": "speech.attempt",
+      "event": "end",
+      "timestamp": "2026-10-10T04:13:08.865447Z",
+      "details": {
+        "attempt": 1,
+        "evaluationMs": 5877,
+        "rejectionReasons": [
+          "transcript_gate"
+        ],
+        "passed": false,
+        "segmentId": "1"
+      }
+    },
+    {
+      "stage": "speech.attempt",
+      "event": "end",
+      "timestamp": "2026-10-10T04:13:33.220011Z",
+      "details": {
+        "attempt": 1,
+        "evaluationMs": 5335,
+        "rejectionReasons": [],
+        "passed": true,
+        "segmentId": "2"
+      }
+    },
+    {
+      "stage": "speech.attempt",
+      "event": "end",
+      "timestamp": "2026-10-10T04:13:45.746259Z",
+      "details": {
+        "attempt": 1,
+        "evaluationMs": 5041,
+        "rejectionReasons": [
+          "transcript_gate",
+          "voice_gate"
+        ],
+        "passed": false,
+        "segmentId": "3"
+      }
+    },
+    {
+      "stage": "speech.attempt",
+      "event": "end",
+      "timestamp": "2026-10-10T04:14:18.424270Z",
+      "details": {
+        "attempt": 1,
+        "evaluationMs": 5522,
+        "rejectionReasons": [],
+        "passed": true,
+        "segmentId": "4"
+      }
+    },
+    {
+      "stage": "speech.attempt",
+      "event": "end",
+      "timestamp": "2026-10-10T04:14:41.906839Z",
+      "details": {
+        "attempt": 1,
+        "evaluationMs": 5366,
+        "rejectionReasons": [
+          "transcript_gate"
+        ],
+        "passed": false,
+        "segmentId": "5"
+      }
+    },
+    {
+      "stage": "speech.attempt",
+      "event": "end",
+      "timestamp": "2026-10-10T04:15:13.629956Z",
+      "details": {
+        "attempt": 1,
+        "evaluationMs": 5565,
+        "rejectionReasons": [],
+        "passed": true,
+        "segmentId": "6"
+      }
+    },
+    {
+      "stage": "speech.attempt",
+      "event": "end",
+      "timestamp": "2026-10-10T04:15:46.475324Z",
+      "details": {
+        "attempt": 1,
+        "evaluationMs": 5672,
+        "rejectionReasons": [],
+        "passed": true,
+        "segmentId": "7"
+      }
+    },
+    {
+      "stage": "speech.attempt",
+      "event": "end",
+      "timestamp": "2026-10-10T04:16:18.712715Z",
+      "details": {
+        "attempt": 2,
+        "evaluationMs": 5744,
+        "rejectionReasons": [
+          "transcript_gate"
+        ],
+        "passed": false,
+        "segmentId": "1"
+      }
+    },
+    {
+      "stage": "speech.attempt",
+      "event": "end",
+      "timestamp": "2026-10-10T04:16:32.269238Z",
+      "details": {
+        "attempt": 2,
+        "evaluationMs": 5129,
+        "rejectionReasons": [
+          "transcript_gate",
+          "voice_gate"
+        ],
+        "passed": false,
+        "segmentId": "3"
+      }
+    },
+    {
+      "stage": "speech.attempt",
+      "event": "end",
+      "timestamp": "2026-10-10T04:16:55.965326Z",
+      "details": {
+        "attempt": 2,
+        "evaluationMs": 5383,
+        "rejectionReasons": [],
+        "passed": true,
+        "segmentId": "5"
+      }
+    },
+    {
+      "stage": "speech.attempt",
+      "event": "end",
+      "timestamp": "2026-10-10T04:17:26.587998Z",
+      "details": {
+        "attempt": 3,
+        "evaluationMs": 5592,
+        "rejectionReasons": [
+          "transcript_gate"
+        ],
+        "passed": false,
+        "segmentId": "1"
+      }
+    },
+    {
+      "stage": "speech.attempt",
+      "event": "end",
+      "timestamp": "2026-10-10T04:17:40.254527Z",
+      "details": {
+        "attempt": 3,
+        "evaluationMs": 5374,
+        "rejectionReasons": [
+          "transcript_gate",
+          "voice_gate"
+        ],
+        "passed": false,
+        "segmentId": "3"
+      }
+    },
+    {
+      "stage": "speech.segment",
+      "event": "end",
+      "timestamp": "2026-10-10T04:17:41.638970Z",
+      "details": {
+        "attempts": 1,
+        "selectedAttempt": 1,
+        "degraded": false,
+        "rejectionReasons": [],
+        "segmentId": "0"
+      }
+    },
+    {
+      "stage": "speech.segment",
+      "event": "end",
+      "timestamp": "2026-10-10T04:17:41.640933Z",
+      "details": {
+        "attempts": 1,
+        "selectedAttempt": 1,
+        "degraded": false,
+        "rejectionReasons": [],
+        "segmentId": "2"
+      }
+    },
+    {
+      "stage": "speech.segment",
+      "event": "end",
+      "timestamp": "2026-10-10T04:17:41.642479Z",
+      "details": {
+        "attempts": 3,
+        "selectedAttempt": 1,
+        "degraded": true,
+        "rejectionReasons": [
+          "transcript_gate"
+        ],
+        "segmentId": "1"
+      }
+    },
+    {
+      "stage": "speech.segment",
+      "event": "end",
+      "timestamp": "2026-10-10T04:17:41.644282Z",
+      "details": {
+        "attempts": 3,
+        "selectedAttempt": 3,
+        "degraded": true,
+        "rejectionReasons": [
+          "transcript_gate",
+          "voice_gate"
+        ],
+        "segmentId": "3"
+      }
+    },
+    {
+      "stage": "speech.segment",
+      "event": "end",
+      "timestamp": "2026-10-10T04:17:41.646118Z",
+      "details": {
+        "attempts": 1,
+        "selectedAttempt": 1,
+        "degraded": false,
+        "rejectionReasons": [],
+        "segmentId": "4"
+      }
+    },
+    {
+      "stage": "speech.segment",
+      "event": "end",
+      "timestamp": "2026-10-10T04:17:42.643392Z",
+      "details": {
+        "attempts": 1,
+        "selectedAttempt": 1,
+        "degraded": false,
+        "rejectionReasons": [],
+        "segmentId": "7"
+      }
+    },
+    {
+      "stage": "speech.segment",
+      "event": "end",
+      "timestamp": "2026-10-10T04:17:42.645483Z",
+      "details": {
+        "attempts": 1,
+        "selectedAttempt": 1,
+        "degraded": false,
+        "rejectionReasons": [],
+        "segmentId": "6"
+      }
+    },
+    {
+      "stage": "speech.segment",
+      "event": "end",
+      "timestamp": "2026-10-10T04:17:42.648066Z",
+      "details": {
+        "attempts": 2,
+        "selectedAttempt": 2,
+        "degraded": false,
+        "rejectionReasons": [],
+        "segmentId": "5"
+      }
+    },
+    {
+      "stage": "publication.assets",
+      "event": "end",
+      "timestamp": "2026-10-10T05:29:55.419411Z",
+      "details": {
+        "assetCount": 18
+      }
+    }
+  ]
+}
