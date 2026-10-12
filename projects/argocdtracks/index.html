@@ -445,7 +445,7 @@ function cover(song) {
    browser fetches a new take instead of replaying a cached older one. */
 function player(take, title) {
   return `<audio controls preload="metadata" ` +
-         `src="${encodeURIComponent(take.file)}?v=${encodeURIComponent(take.mtime || take.at || "")}" ` +
+         `src="${esc(take.file)}?v=${encodeURIComponent(take.mtime || take.at || "")}" ` +
          `title="${esc(title)}"></audio>`;
 }
 
