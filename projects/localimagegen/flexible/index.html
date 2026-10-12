@@ -1276,6 +1276,7 @@
   var compareMode = "models";
   var showOvershoots = false;
   var IMG_BASE = "";
+  var ASSET_BASE = "";
   var BAKED_FILES = null;
   var BAKED_META = null;
   var BAKED_PROMPTS = null;
@@ -1284,6 +1285,7 @@
   /*!__BAKED_DATA__*/
   var NOTES_API_URL = "";
   NOTES_API_URL = "https://ug-nas-x4800.tail4148b0.ts.net/webhook/localimagegen-notes";
+    ASSET_BASE = "https://assets.brook.dev/localimagegen/img/";
   var notesEndpoint = selectNotesEndpoint(NOTES_API_URL, !!BAKED_FILES);
   var notesBackendReady = notesEndpoint?.kind === "local";
   var notesLoadError = null;
@@ -1933,7 +1935,7 @@
     fileMap = /* @__PURE__ */ new Map();
     dirHandle = null;
     loadSource = "baked";
-    IMG_BASE = "./img/";
+    IMG_BASE = ASSET_BASE || "./img/";
     droppedFolderName = "";
     for (const name of BAKED_FILES) ingestFilename(name);
   }
@@ -1970,7 +1972,7 @@
       dirHandle = null;
       loadSource = "served";
       droppedFolderName = "";
-      IMG_BASE = "./img/";
+      IMG_BASE = ASSET_BASE || "./img/";
       for (const name of files) ingestFilename(name);
       return true;
     } catch {
