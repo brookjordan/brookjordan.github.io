@@ -445,6 +445,9 @@ including every one of the 8,974 the live gallery references.</p>
 asset service, and the pages load them from <code>https://assets.brook.dev/localimagegen/…</code>. The site repo
 keeps the HTML, the baked data and the manifest, and <code>lig deploy</code> now prunes any <code>img/</code> it finds
 rather than writing one.</p>
+<p>Every published path carries a content version, so a re-render lands on a new URL rather than
+overwriting an old one. <code>lig version-assets</code> was the one-time move of the 8,974 already-published
+files into that layout; it took three seconds and is idempotent.</p>
 <p>The two halves are independent commands on purpose. <code>deploy</code> mirrors HTML and data into the
 Netlify-served folder; <code>publish-assets</code> sends media to the NAS. Publication is idempotent — a file
 goes only when the remote copy is missing or a different size — so an interrupted run resumes by
@@ -484,12 +487,25 @@ same number of seconds again. That is much more likely than it sounds at the sho
 <code>t36s</code> file was rewritten too, so a re-encode of an unchanged master (mtime skew after a restore, or a
 changed SSIM target) also reuses a name — but the pipeline reuses filenames far more often than
 &quot;we don&#39;t re-render the same cell&quot; implies.</p>
-<p><strong>Decision:</strong> keep the filenames, and give the <code>/localimagegen/</code> subtree a one-day cache instead of
-the host&#39;s one-year immutable. A rewrite self-heals within a day, and unchanged images keep their
-URLs. Content-addressed paths would be more correct and were the alternative considered; they are a
-contained change to the publisher and the manifest if this ever bites.</p>
-<p>The nginx rule lives in the <code>docker-assets</code> stack (<code>config/default.conf</code>). The <code>^~</code> prefix matters:
-without it the host&#39;s media regex would hand this subtree the year-long immutable cache.</p>
+<p><strong>First decision, since reversed:</strong> keep the filenames and give the <code>/localimagegen/</code> subtree a
+one-day cache instead of the host&#39;s one-year immutable. That was a compromise, and Brook called it:
+a day of caching gives up most of what a static asset host is for.</p>
+<p><strong>Decision:</strong> version the published path instead. Every file lands at
+<code>&lt;dir&gt;/&lt;version&gt;/&lt;name&gt;</code>, where <code>&lt;version&gt;</code> is a hash of the bytes, and the subtree takes the same
+one-year immutable cache as the rest of the host. A re-render publishes a new URL; an unchanged file
+keeps its URL, so caches still stay warm across re-publishes. The table above is exactly the case
+that forced it.</p>
+<p>Why hash the bytes rather than count renders: the master&#39;s filename <em>is</em> the cell identity, so the
+engine cannot distinguish a re-render from the same render, and a version counter would need new
+per-cell state while invalidating URLs even when nothing changed. Hashing costs nothing, and 15 of
+the 8,974 images turned out to share a version with another file, which means those two images now
+share one cached URL rather than two.</p>
+<p>The version goes in a directory rather than into the filename so the grammar in <code>src/naming.ts</code>
+stays untouched. The engine and the gallery both parse that grammar, and it is what the whole matrix
+is keyed on, so it is the last thing to bend.</p>
+<p>The nginx rule lives in the <code>docker-assets</code> stack (<code>config/default.conf</code>). <code>^~</code> lets one block cover
+the whole subtree: without it, <code>.webp</code> would match the host&#39;s media regex while <code>.avif</code> fell through
+to the bare <code>location /</code> and served with no cache header at all.</p>
 <h2>Two things that were not working</h2>
 <p><strong>SMB was read-only.</strong> Every write to <code>/Volumes/assets</code> and <code>/Volumes/docker</code> was denied, and fresh
 <code>mount_smbfs</code> attempts failed outright, while SSH to the same account wrote to the same paths
@@ -513,10 +529,12 @@ incomplete masters set and quietly shrink the published gallery from 8,974 image
 plain <code>lig build</code> in this checkout.</p>
 <h2>Files</h2>
 <ul>
+<li><code>src/assets.ts</code> — the content version, the versioned-path contract, and the migration</li>
 <li><code>src/publish-assets.ts</code> — publication and read-back verification</li>
 <li><code>src/deploy.ts</code> — mirrors HTML and data only</li>
-<li><code>src/build.ts</code>, <code>web/app.ts</code> — the <code>ASSET_BASE</code> seam, injected via <code>__GALLERY_CONFIG__</code></li>
-<li><code>src/blog.ts</code> — blog media references rewritten to absolute URLs</li>
+<li><code>src/build.ts</code>, <code>web/app.ts</code> — the <code>ASSET_BASE</code> seam, and basename-to-versioned-path resolution</li>
+<li><code>src/blog.ts</code> — blog media references rewritten to versioned absolute URLs</li>
+<li><code>src/compress.ts</code> — outputs written at their versioned paths</li>
 <li><code>config/gallery.ts</code> — the <code>assets</code> block</li>
 </ul>
 
