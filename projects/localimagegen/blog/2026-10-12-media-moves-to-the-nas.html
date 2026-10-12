@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#1a1d24" />
+    <meta name="color-scheme" content="dark" />
+    <title>The gallery's images move to the NAS</title>
+    <style>
+/* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
+   This is the single source of truth for colour, radius, spacing and type.
+   It is inlined ahead of each page's stylesheet at build time, and linked
+   first in dev so opening the .html files directly still resolves the vars.
+
+   Theming: everything below is a semantic token mapped onto a small palette of
+   primitives. To add a theme, override the *semantic* tokens under a selector
+   (see the commented [data-theme="light"] block at the bottom) — no stylesheet
+   needs to change, only these variables. */
+:root {
+  color-scheme: dark;
+
+  /* ---- palette primitives (raw colours; reference these only via the tokens below) ---- */
+  --c-ink-900: #0f1115;
+  --c-ink-800: #1a1d24;
+  --c-ink-700: #232732;
+  --c-ink-600: #2a2f3a;
+  --c-fog-100: #e8eaed;
+  --c-fog-300: #9aa0a6;
+  --c-fog-500: #6b727d;
+  --c-accent: #7c9cff;
+
+  /* ---- semantic: background / border / text, primary > secondary > tertiary ---- */
+  --bg-primary: var(--c-ink-900);
+  --bg-secondary: var(--c-ink-800);
+  --bg-tertiary: var(--c-ink-700);
+
+  --border-primary: var(--c-ink-600);
+  --border-secondary: rgba(150, 170, 210, 0.16);
+
+  --text-primary: var(--c-fog-100);
+  --text-secondary: var(--c-fog-300);
+  --text-tertiary: var(--c-fog-500);
+
+  --accent: var(--c-accent);
+
+  /* ---- radius scale ---- */
+  --radius-sm: 5px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 9999px;
+
+  /* ---- spacing / padding scale ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 2rem;
+
+  /* ---- type ---- */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* Shared cross-nav link (gallery <-> devlog). Both app.css and blog.css inline this
+   file, so defining it once here keeps the two links visually identical. */
+.cross-link {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.cross-link:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+/* Example theme override — set <html data-theme="light"> to activate (or wire it
+   to prefers-color-scheme). Left commented so we don't ship untuned colours:
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg-primary: #fbfbfd;
+  --bg-secondary: #f1f2f5;
+  --bg-tertiary: #e7e9ee;
+  --border-primary: #d4d8e0;
+  --border-secondary: rgba(20, 30, 60, 0.12);
+  --text-primary: #1a1d24;
+  --text-secondary: #555b66;
+  --text-tertiary: #7b828d;
+}
+*/
+
+</style>
+    <style>
+:root {
+  /* Local aliases mapped onto the shared tokens in tokens.css (inlined first),
+     so the devlog and the gallery share one palette, radius and spacing scale. */
+  --bg: var(--bg-primary);
+  --bg-soft: var(--bg-secondary);
+  --panel: var(--bg-tertiary);
+  --text: var(--text-primary);
+  --muted: var(--text-secondary);
+  --border: var(--border-secondary);
+  --radius: var(--radius-md);
+  /* --accent comes straight from tokens.css */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.65 var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.site-header,
+.site-footer {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 1.25rem 1.25rem;
+}
+
+.site-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text);
+}
+
+.brand span {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.content {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+
+.site-footer {
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* ---- post typography ---- */
+.content h1 {
+  font-size: 1.9rem;
+  line-height: 1.2;
+  margin: 0 0 0.5rem;
+}
+
+.content h2 {
+  font-size: 1.35rem;
+  margin: 2rem 0 0.6rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.3rem;
+}
+
+.content h3 {
+  font-size: 1.1rem;
+  margin: 1.5rem 0 0.4rem;
+}
+
+.content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  display: block;
+  margin: 1.25rem 0;
+}
+
+.content audio {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.content blockquote {
+  margin: 1.25rem 0;
+  padding: 0.5rem 1rem;
+  border-left: 3px solid var(--accent);
+  background: var(--bg-soft);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  color: var(--muted);
+}
+
+.content pre {
+  background: #12151b;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  overflow: auto;
+  font-size: 0.88rem;
+}
+
+.content code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: rgba(150, 170, 210, 0.14);
+  padding: 0.1em 0.35em;
+  border-radius: 5px;
+}
+
+.content pre code {
+  background: none;
+  padding: 0;
+}
+
+.post-banner {
+  width: 100%;
+  max-height: 22rem;
+  object-fit: cover;
+  border-radius: var(--radius);
+  display: block;
+  margin: 0 0 1.5rem;
+}
+
+/* Click-to-cycle: slide 0 (current) sits in normal flow and sizes the box; every other
+   slide overlays it absolutely at opacity 0. web/blog.html's script sets each slide's
+   opacity directly (not CSS classes) so this scales to any number of legacy versions. */
+.banner-compare {
+  position: relative;
+  cursor: pointer;
+}
+
+.banner-compare .banner-slide {
+  margin: 0;
+  transition: opacity 0.25s ease;
+}
+
+.banner-compare .banner-slide:not([data-slide='0']) {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.banner-compare-hint {
+  position: absolute;
+  right: 0.7rem;
+  bottom: calc(1.5rem + 0.7rem);
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 0.72rem;
+  line-height: 1;
+  padding: 0.4rem 0.65rem;
+  border-radius: 999px;
+  opacity: 0.85;
+  transition: opacity 0.15s ease;
+}
+
+.banner-compare:hover .banner-compare-hint {
+  opacity: 1;
+}
+
+/* ---- per-post header (date + tags) ---- */
+.post-meta {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0 0 1.5rem;
+}
+
+.tag {
+  display: inline-block;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 0.1em 0.7em;
+  font-size: 0.78rem;
+  margin-right: 0.35rem;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+/* ---- prev/next post nav (baked at build time, see postNav in src/blog.ts) ---- */
+.post-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 2rem 0 0;
+}
+
+.post-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-soft);
+  color: var(--text);
+  min-width: 0;
+}
+
+.post-nav-link:hover {
+  border-color: var(--accent);
+  text-decoration: none;
+}
+
+.post-nav-empty {
+  border-color: transparent;
+  background: none;
+}
+
+.post-nav-next {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.post-nav-arrow {
+  color: var(--muted);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.post-nav-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.post-nav-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.post-nav-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .post-nav {
+    grid-template-columns: 1fr;
+  }
+
+  .post-nav-next {
+    justify-content: flex-start;
+    text-align: left;
+  }
+}
+
+/* ---- index listing ---- */
+.index-intro {
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+
+.post-group-date {
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 2rem 0 0.75rem;
+}
+
+.post-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.post-list li {
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.post-list a.post-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.post-list .post-row-meta {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+}
+
+.post-time {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  margin-right: 0.5rem;
+  cursor: help;
+}
+
+</style>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="./index.html">localimagegen <span>· devlog</span></a>
+      <nav class="site-nav"><a class="cross-link" href="../index.html">gallery →</a></nav>
+    </header>
+    <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
+<article class="post">
+<h1>The gallery's images move to the NAS</h1>
+<p class="post-meta">2026-10-12 · <span class="tag">architecture</span> <span class="tag">decision</span> <span class="tag">ops</span></p>
+<p>Every deploy of this gallery was shipping 8,974 image files. <code>projects/localimagegen</code> in the site
+repo was 550 MB, of which <code>img/</code> was 445 MB, and Netlify served those images with
+<code>cache-control: public, max-age=0, must-revalidate</code> — so each one revalidated against the origin on
+every visit. The repo and the CDN were both carrying weight that neither needed to.</p>
+<p>Meanwhile <code>/Volumes/assets/localimagegen/masters</code> on the NAS already held all 10,591 masters,
+including every one of the 8,974 the live gallery references.</p>
+<p>So the media left git.</p>
+<h2>What moved, and what did not</h2>
+<p><code>lig publish-assets</code> sends <code>build/img</code> and the devlog&#39;s <code>img</code>, <code>banners</code> and <code>audio</code> to the NAS
+asset service, and the pages load them from <code>https://assets.brook.dev/localimagegen/…</code>. The site repo
+keeps the HTML, the baked data and the manifest, and <code>lig deploy</code> now prunes any <code>img/</code> it finds
+rather than writing one.</p>
+<p>The two halves are independent commands on purpose. <code>deploy</code> mirrors HTML and data into the
+Netlify-served folder; <code>publish-assets</code> sends media to the NAS. Publication is idempotent — a file
+goes only when the remote copy is missing or a different size — so an interrupted run resumes by
+re-running it, the same convergent model as everything else here. <code>verify-assets</code> reads the remote
+tree back and checks every file, because a successful copy is not proof of publication.</p>
+<p>Result: 8,974 images (474 MB) and 184 blog media files (88 MB) published in about fifty seconds, and
+the site repo project folder went from 550 MB to 11 MB.</p>
+<h2>The cache question, which turned out to be measurable</h2>
+<p>The assets host serves media with <code>Cache-Control: public, max-age=31536000, immutable</code>, and its own
+guidance is never to overwrite a published media filename. That is awkward here, because
+<code>lig compress</code> deliberately re-encodes over an output older than its master.</p>
+<p>The obvious question is whether the same filename ever really comes back. The site repo&#39;s history
+answers it: <strong>361 image files were rewritten under the same filename</strong> across four commits.</p>
+<p>The reason is in the naming. A master is <code>&lt;model&gt;_&lt;scene&gt;_s&lt;NN&gt;_t&lt;dur&gt;s_&lt;seed&gt;_</code>, and <code>dur</code> is the
+render duration in whole seconds, so a re-render collides with the old name whenever it takes the
+same number of seconds again. That is much more likely than it sounds at the short end:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>files at <code>t≤3s</code></th>
+<th>share</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>all deployed images (8,974)</td>
+<td>857</td>
+<td>9.6%</td>
+</tr>
+<tr>
+<td>rewritten in place (361)</td>
+<td>211</td>
+<td>58.4%</td>
+</tr>
+</tbody></table>
+<p>A six-fold over-representation, with 127 of them at <code>t1s</code>. Collision is not the only cause — one
+<code>t36s</code> file was rewritten too, so a re-encode of an unchanged master (mtime skew after a restore, or a
+changed SSIM target) also reuses a name — but the pipeline reuses filenames far more often than
+&quot;we don&#39;t re-render the same cell&quot; implies.</p>
+<p><strong>Decision:</strong> keep the filenames, and give the <code>/localimagegen/</code> subtree a one-day cache instead of
+the host&#39;s one-year immutable. A rewrite self-heals within a day, and unchanged images keep their
+URLs. Content-addressed paths would be more correct and were the alternative considered; they are a
+contained change to the publisher and the manifest if this ever bites.</p>
+<p>The nginx rule lives in the <code>docker-assets</code> stack (<code>config/default.conf</code>). The <code>^~</code> prefix matters:
+without it the host&#39;s media regex would hand this subtree the year-long immutable cache.</p>
+<h2>Two things that were not working</h2>
+<p><strong>SMB was read-only.</strong> Every write to <code>/Volumes/assets</code> and <code>/Volumes/docker</code> was denied, and fresh
+<code>mount_smbfs</code> attempts failed outright, while SSH to the same account wrote to the same paths
+happily. Publication therefore goes over SSH, which is also what the migration report recommended
+after SMB&#39;s hard-link, <code>Aux</code>-renaming and <code>0700</code> defects. It is faster here too, by an order of
+magnitude. The read-only mount is still unexplained and is worth a look separately.</p>
+<p><strong>rsync does not work against this NAS.</strong> Every path — absolute, relative, home, <code>/tmp</code> — came back
+<code>invalid path</code> from the remote <code>rsync 3.4.1</code>, with both Homebrew&#39;s <code>rsync 3.5.1</code> and macOS&#39;s
+<code>openrsync</code>. Forcing <code>--protocol=32</code> and <code>--old-args</code> changed nothing. The publisher streams a <code>tar</code>
+of each batch over <code>ssh</code> instead, which works and gives the same resumability at batch granularity.</p>
+<h2>A migration gap this surfaced</h2>
+<p>The working copy had <strong>no <code>.git</code></strong>: the machine-swap backup archived the worktree as a tar that
+deliberately excluded it, on the reasoning that git was &quot;already bundled and pushed&quot; — but no bundle
+for this repo exists in <code>payload/git/bundles/</code>, so GitHub was the only copy of the history.</p>
+<p>The same tar excluded <code>masters/</code>, which means the local folder holds only the 711 untracked renders.
+8,266 masters the live gallery references were missing locally, though the NAS has all of them. That
+is why <code>lig build --bake-only</code> exists: re-bake the HTML from the <code>build/data</code> and <code>build/img</code> already
+on disk without recompressing, because a full <code>compress</code> would rewrite the manifest from an
+incomplete masters set and quietly shrink the published gallery from 8,974 images to about 700.</p>
+<p>Restoring <code>.git</code> is in progress and will bring the committed masters back. Until then, do not run a
+plain <code>lig build</code> in this checkout.</p>
+<h2>Files</h2>
+<ul>
+<li><code>src/publish-assets.ts</code> — publication and read-back verification</li>
+<li><code>src/deploy.ts</code> — mirrors HTML and data only</li>
+<li><code>src/build.ts</code>, <code>web/app.ts</code> — the <code>ASSET_BASE</code> seam, injected via <code>__GALLERY_CONFIG__</code></li>
+<li><code>src/blog.ts</code> — blog media references rewritten to absolute URLs</li>
+<li><code>config/gallery.ts</code> — the <code>assets</code> block</li>
+</ul>
+
+</article>
+<nav class="post-nav" aria-label="Post navigation">
+<a class="post-nav-link post-nav-prev" href="2026-10-07-stale-registry-stopped-six-jobs.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">A stale version number stopped six image jobs</span></span></a>
+<span class="post-nav-link post-nav-next post-nav-empty"></span>
+</nav></main>
+    <footer class="site-footer">
+      <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>
+    </footer>
+    <script>
+      // Localise all post times to the reader's timezone.
+      // Each <time class="post-time" data-ts="..."> carries a Unix epoch (ms);
+      // we replace the static server-rendered HH:MM with the local equivalent.
+      document.querySelectorAll('time.post-time[data-ts]').forEach(function (el) {
+        var d = new Date(+el.dataset.ts);
+        el.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        el.title = d.toLocaleString(); // full local datetime on hover
+      });
+
+      // Click (or Enter/Space) a .banner-compare to cycle: current -> most recent earlier
+      // version -> ... -> oldest/original -> back to current. Each click advances one slide;
+      // opacity is set directly (not via CSS classes) so this works for any slide count.
+      document.querySelectorAll('.banner-compare').forEach(function (el) {
+        var slides = el.querySelectorAll('.banner-slide');
+        var hint = el.querySelector('.banner-compare-hint');
+        var count = slides.length;
+        var active = 0;
+        function render() {
+          slides.forEach(function (s, i) {
+            s.style.opacity = i === active ? '1' : '0';
+          });
+          if (!hint) return;
+          if (active === 0) {
+            hint.textContent =
+              'click to see ' + (count === 2 ? 'the earlier version' : count - 1 + ' earlier versions');
+          } else if (active === count - 1) {
+            hint.textContent = 'original banner · click for current';
+          } else {
+            hint.textContent = 'earlier version ' + active + ' of ' + (count - 1) + ' · click to continue';
+          }
+        }
+        function advance() {
+          active = (active + 1) % count;
+          render();
+        }
+        el.addEventListener('click', advance);
+        el.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            advance();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
