@@ -161,6 +161,32 @@
   .variant-set img.on { display: block; }
   .variant-meta { color: var(--muted); font-size: .8rem; margin-top: .4rem; }
 
+
+  /* Play-the-section control, sat on the banner it belongs to. */
+  .banner-wrap { position: relative; }
+  .play-all {
+    position: absolute; left: 1rem; bottom: 1rem; z-index: 3;
+    display: inline-flex; align-items: center; gap: .55rem;
+    padding: .6rem 1.05rem .6rem .8rem; border-radius: 999px; cursor: pointer;
+    background: rgba(12, 10, 9, .72); color: #f4ece1;
+    border: 1px solid rgba(244, 236, 225, .35);
+    backdrop-filter: blur(6px);
+    font: 600 .92rem/1 var(--font-body, system-ui), system-ui, sans-serif;
+    letter-spacing: .01em; text-align: left;
+  }
+  .play-all:hover { background: rgba(12, 10, 9, .88); }
+  .play-all .glyph {
+    width: 2.1rem; height: 2.1rem; border-radius: 999px; flex: 0 0 auto;
+    display: grid; place-items: center; background: var(--accent, #c8a15a); color: #14100d;
+    font-size: 1rem;
+  }
+  .play-all.playing .glyph { background: #f4ece1; }
+  .play-all .sub { display: block; font-weight: 400; opacity: .72; font-size: .78rem; }
+  @media (max-width: 640px) {
+    .play-all { left: .6rem; bottom: .6rem; font-size: .82rem; padding: .5rem .8rem .5rem .6rem; }
+    .play-all .glyph { width: 1.7rem; height: 1.7rem; }
+  }
+
   /* the other takes. Nothing here is ever removed: a rejected take keeps its
      place, its note and its player for as long as its file is on disk. */
   .versions {
@@ -441,6 +467,102 @@ function cover(song) {
     `${art}<figcaption class="cover-type">${lines}</figcaption></figure>`;
 }
 
+
+/* ---------------------------------------------------------------------------
+   Play a whole section in order.
+
+   One hidden element walks the queue, so only one song is ever playing and the
+   page cannot end up with two overlapping. The queue is built from the data
+   already rendered on the page, which means it cannot drift from what is shown.
+   --------------------------------------------------------------------------- */
+
+const serenade = (() => {
+  const audio = new Audio();
+  audio.preload = "none";
+  let queue = [];
+  let index = 0;
+  let button = null;
+
+  function label() {
+    if (!button) return;
+    const glyph = button.querySelector(".glyph");
+    const sub = button.querySelector(".sub");
+    if (!queue.length) return;
+    if (audio.paused) {
+      glyph.textContent = "\u25B6";
+      button.classList.remove("playing");
+      sub.textContent = `Play all ${queue.length}`;
+    } else {
+      glyph.textContent = "\u25A0";
+      button.classList.add("playing");
+      sub.textContent = `Playing ${index + 1} of ${queue.length}`;
+    }
+  }
+
+  function next() {
+    index += 1;
+    if (index >= queue.length) { stop(); return; }
+    play();
+  }
+
+  /* A take can be listed but missing from disk, so a failure skips rather than
+     stalling the whole queue. */
+  function play() {
+    audio.src = queue[index];
+    label();
+    audio.play().catch(() => next());
+  }
+
+  function stop() {
+    audio.pause();
+    audio.removeAttribute("src");
+    queue = [];
+    index = 0;
+    label();
+  }
+
+  audio.addEventListener("ended", next);
+  audio.addEventListener("error", next);
+
+  return {
+    start(sources, element) {
+      const wasPlaying = !audio.paused && button === element;
+      stop();
+      if (wasPlaying) { label(); return; }
+      button = element;
+      queue = sources.slice();
+      index = 0;
+      if (!queue.length) { label(); return; }
+      play();
+    },
+  };
+})();
+
+/* Every entry the page knows how to play for one song, preferred first. */
+function setlist(song) {
+  const preferred = (song.takes || []).find((take) => take.preferred);
+  const main = preferred || (song.takes || [])[0];
+  if (!main || !main.file) return null;
+  return main.file;
+}
+
+function playAllButton(id, sources, what) {
+  if (!sources.length) return "";
+  const encoded = JSON.stringify(sources).replace(/"/g, "&quot;");
+  return `<button type="button" class="play-all" data-setlist="${encoded}" ` +
+    `aria-label="Play every song on ${esc(what)} in order">` +
+    `<span class="glyph">\u25B6</span>` +
+    `<span>Play all<span class="sub">${sources.length} songs</span></span>` +
+    `</button>`;
+}
+
+/* One delegated listener covers every banner on the page. */
+document.addEventListener("click", (event) => {
+  const button = event.target.closest(".play-all");
+  if (!button) return;
+  serenade.start(JSON.parse(button.dataset.setlist), button);
+});
+
 /* One player. The version string is the file's own modification time, so the
    browser fetches a new take instead of replaying a cached older one. */
 function player(take, title) {
@@ -596,7 +718,12 @@ function side(section, byNumber) {
   return `
   <section class="side">
     <div class="side-head">
-      ${image(section.cover_banner, "side-banner", altFor(section.cover_banner, "Side " + section.letter + " banner"))}
+      <div class="banner-wrap">` +
+        image(section.cover_banner, "side-banner", altFor(section.cover_banner, "Side " + section.letter + " banner")) +
+        playAllButton("side-" + section.letter,
+                      (section.numbers || []).map((n) => byNumber[n]).filter(Boolean)
+                        .map(setlist).filter(Boolean), "Side " + section.letter) +
+      `</div>
       ${image(section.cover_cd, "side-sleeve", altFor(section.cover_cd, "Side " + section.letter + " cover"))}
       <div class="side-title">
         <span>Side ${esc(section.letter)}</span>
@@ -617,8 +744,15 @@ async function load() {
     const byNumber = {};
     data.songs.forEach((song) => { byNumber[song.number] = song; });
 
+    /* The hero banner plays the whole record, the side banners play their own side.
+       The queue is built from the songs already on the page, so it cannot disagree
+       with what is listed. */
+    const wholeRecord = data.songs.map(setlist).filter(Boolean);
     document.getElementById("hero-media").innerHTML =
+      `<div class="banner-wrap">` +
       image(data.album_cover_banner, "hero-banner", altFor(data.album_cover_banner, "Desired State banner")) +
+      playAllButton("record", wholeRecord, "the record") +
+      `</div>` +
       image(data.album_cover_cd, "hero-sleeve", altFor(data.album_cover_cd, "Desired State cover"));
     document.getElementById("sub").textContent = data.subtitle;
     /* A half-written manifest, of which this directory has one, carries songs
