@@ -21,13 +21,17 @@
   .cand { border-top:1px solid rgba(255,255,255,.09); padding-top:2rem; margin-top:2.5rem; }
   .cand h2 { font-size:1.25rem; margin:0 0 .3rem; }
   .cand p { color:#8494ab; margin:0 0 1.4rem; font-size:.92rem; }
-  .cand__grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  .cand__grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));
                  gap:1.2rem; }
   figure { margin:0; }
   figure img { width:100%; border-radius:12px; border:1px solid rgba(255,255,255,.12);
                 display:block; background:
                   repeating-conic-gradient(#1a2130 0% 25%, #131a26 0% 50%) 50%/24px 24px; }
   figcaption { margin-top:.55rem; font-size:.85rem; color:#8494ab; }
+  @media (max-width:720px) {
+    .wrap { width:min(100% - 1.9rem,1500px); padding:2rem 0 4rem; }
+    .cand h2 { font-size:1.1rem; }
+  }
   .badge { background:#3fe0ff; color:#04121a; border-radius:999px;
             padding:.08em .55em; font-size:.72rem; font-weight:600; }
 </style>
