@@ -1277,6 +1277,7 @@
   var showOvershoots = false;
   var IMG_BASE = "";
   var ASSET_BASE = "";
+  var assetPathByFile = /* @__PURE__ */ new Map();
   var BAKED_FILES = null;
   var BAKED_META = null;
   var BAKED_PROMPTS = null;
@@ -1309,12 +1310,14 @@
   function resetCatalog() {
     catalog = {};
     preloadedFiles.clear();
+    assetPathByFile = /* @__PURE__ */ new Map();
   }
   function ingestFilename(filename) {
-    const parsed = parseFilename(filename);
-    if (!parsed) return;
-    const { model, subject, sample, dur: duration, seed } = parsed;
     const base = filename.split("/").at(-1) ?? "";
+    const parsed = parseFilename(base);
+    if (!parsed) return;
+    if (filename !== base) assetPathByFile.set(base, filename);
+    const { model, subject, sample, dur: duration, seed } = parsed;
     const sampleKey = String(sample);
     const seedKey = String(seed);
     if (!catalog[model]) catalog[model] = {};
@@ -2128,7 +2131,7 @@
         return null;
       }
     }
-    const url = encodeURI((IMG_BASE || "") + filename);
+    const url = encodeURI((IMG_BASE || "") + (assetPathByFile.get(filename) ?? filename));
     imageUrlCache.set(filename, url);
     return url;
   }

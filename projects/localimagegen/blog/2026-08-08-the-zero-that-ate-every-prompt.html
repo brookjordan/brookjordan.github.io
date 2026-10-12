@@ -431,7 +431,7 @@ a:hover {
     </header>
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
-<img class="post-banner" src="https://assets.brook.dev/localimagegen/blog/banners/zero-ate-every-prompt.png" alt="The zero that ate every prompt" />
+<img class="post-banner" src="https://assets.brook.dev/localimagegen/blog/banners/25046211d7/zero-ate-every-prompt.png" alt="The zero that ate every prompt" />
 <h1>The zero that ate every prompt</h1>
 <p class="post-meta">2026-08-08 <time class="post-time" data-ts="1786198980000">22:23</time> · <span class="tag">incident</span> <span class="tag">lesson</span></p>
 <p>SD-Turbo was fast. Suspiciously fast. It could paint the van, the dragon, the
@@ -447,7 +447,7 @@ recipe:</p>
 </code></pre>
 <p>That looked like a faithful translation. It was actually a tiny bilingual
 disaster.</p>
-<p><img src="https://assets.brook.dev/localimagegen/blog/img/sdturbo-cfg-zero-repeat.webp" alt="Six different scene prompts producing the same SD-Turbo image"></p>
+<p><img src="https://assets.brook.dev/localimagegen/blog/img/a9cbad7481/sdturbo-cfg-zero-repeat.webp" alt="Six different scene prompts producing the same SD-Turbo image"></p>
 <p>Diffusers disables classifier-free guidance when <code>guidance_scale &lt;= 1</code>, but it
 still evaluates the <strong>positive</strong> prompt. ComfyUI&#39;s ordinary CFG equation is
 <code>uncond + (cond - uncond) * cfg</code>; at zero it selects the <strong>unconditional</strong>
@@ -478,7 +478,7 @@ old SD-Turbo cells were deprecated rather than deleted.</p>
 prompt for a red fire engine in snow and another for a blue whale over a neon
 city. The resulting WebPs had different SHA-256 hashes and, more importantly,
 contained a fire engine and a whale.</p>
-<p><img src="https://assets.brook.dev/localimagegen/blog/img/sdturbo-cfg-one-prompts.webp" alt="Two corrected CFG-1 prompts producing visibly different SD-Turbo images"></p>
+<p><img src="https://assets.brook.dev/localimagegen/blog/img/bbb5daf59d/sdturbo-cfg-one-prompts.webp" alt="Two corrected CFG-1 prompts producing visibly different SD-Turbo images"></p>
 <h2>The sampler reached customs</h2>
 <p>The corrected graph exposed a second assumption. Our importer knew how to read
 seeds from <code>KSampler</code> and <code>RandomNoise</code>; SD-Turbo&#39;s <code>SamplerCustom</code> carries

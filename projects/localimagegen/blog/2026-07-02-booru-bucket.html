@@ -432,8 +432,8 @@ a:hover {
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
 <div class="banner-compare" data-count="2" role="button" tabindex="0" aria-label="Cycle through 1 earlier banner version">
-<img class="post-banner banner-slide" data-slide="0" src="https://assets.brook.dev/localimagegen/blog/banners/booru-bucket.png" alt="Booru, not prose: the `b` prompt bucket (and why the anime models looked bad)" />
-<img class="post-banner banner-slide" data-slide="1" src="https://assets.brook.dev/localimagegen/blog/banners/booru-bucket.legacy-1.png" alt="Original banner for Booru, not prose: the `b` prompt bucket (and why the anime models looked bad)" />
+<img class="post-banner banner-slide" data-slide="0" src="https://assets.brook.dev/localimagegen/blog/banners/8fdaac57c2/booru-bucket.png" alt="Booru, not prose: the `b` prompt bucket (and why the anime models looked bad)" />
+<img class="post-banner banner-slide" data-slide="1" src="https://assets.brook.dev/localimagegen/blog/banners/970e667864/booru-bucket.legacy-1.png" alt="Original banner for Booru, not prose: the `b` prompt bucket (and why the anime models looked bad)" />
 <span class="banner-compare-hint">click to see the earlier version</span>
 </div>
 <h1>Booru, not prose: the `b` prompt bucket (and why the anime models looked bad)</h1>
@@ -452,7 +452,7 @@ set is lovingly-written <em>prose</em> (&quot;a cheerful short red-haired sorcer
 bright sparkling spell…&quot;) — which is exactly right for the LLM/T5-encoder models (Qwen, Flux,
 Chroma) and exactly wrong for a booru CLIP model. Same seed, same scene, left = our prose, right =
 the same idea as comma-separated booru tags with each model&#39;s documented quality prefix:</p>
-<p><img src="https://assets.brook.dev/localimagegen/blog/img/booru_prose_vs_tags.webp" alt="Prose vs booru tags across NoobAI eps, Illustrious, and NoobAI v-pred — the tag column is dramatically sharper and better composed"></p>
+<p><img src="https://assets.brook.dev/localimagegen/blog/img/6397737376/booru_prose_vs_tags.webp" alt="Prose vs booru tags across NoobAI eps, Illustrious, and NoobAI v-pred — the tag column is dramatically sharper and better composed"></p>
 <p>That&#39;s not a subtle win. The prompt <em>idiom</em> was the single biggest lever, and no amount of extra
 steps would have fixed it.</p>
 <h2>Root cause 2 — the generic Lightning LoRA crystallises them</h2>
@@ -524,7 +524,7 @@ been wrong for at least one of them. Each got its own native builder (none on th
 <p>Three cells that would have been wrong under one shared recipe: Illustrious wants CLIP-skip 2 and
 NoobAI doesn&#39;t; v-pred forbids the Karras schedulers the others tolerate; the quality prefixes and
 negatives differ per author. Same booru-tag scene prompt through each model&#39;s own native builder:</p>
-<p><img src="https://assets.brook.dev/localimagegen/blog/img/booru_native_trio.webp" alt="NoobAI eps, Illustrious, and NoobAI v-pred each rendering the doll scene natively at their ceiling — clean, detailed anime"></p>
+<p><img src="https://assets.brook.dev/localimagegen/blog/img/2010a9dc6d/booru_native_trio.webp" alt="NoobAI eps, Illustrious, and NoobAI v-pred each rendering the doll scene natively at their ceiling — clean, detailed anime"></p>
 <h2>The cost: the anime rows re-render</h2>
 <p>Moving off Lightning bumped these ceilings from 8 to ~26–30, so the ladder planner now climbs a long
 native tail for each — a few hundred fresh cells. <a href="2026-06-25-deprecate-dont-delete.html">Deprecate-don&#39;t-delete</a>
