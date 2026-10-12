@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FAQ — Shokz Auto-Fill</title>
+<meta name="description" content="What a .command file is, why you should trust this, where your password goes, why it needs Homebrew bash, which players work, and what happens while your Mac is asleep.">
+<meta name="color-scheme" content="dark">
+<meta property="og:title" content="FAQ — Shokz Auto-Fill">
+<meta property="og:description" content="Trust, privacy, Homebrew bash, other players, and sleeping Macs.">
+<meta property="og:image" content="assets/img/hero.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site.css">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav__inner">
+    <a class="nav__brand" href="index.html">
+      <svg class="nav__mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <path d="M6 22c0-7 4.5-12 10-12s10 5 10 12" stroke="url(#ng)" stroke-width="2.4" stroke-linecap="round"/>
+        <circle cx="6" cy="24" r="3.1" fill="url(#ng)"/>
+        <circle cx="26" cy="24" r="3.1" fill="url(#ng)"/>
+        <defs><linearGradient id="ng" x1="3" y1="10" x2="29" y2="27" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#3fe0ff"/><stop offset="1" stop-color="#ffb454"/>
+        </linearGradient></defs>
+      </svg>
+      <span>Shokz Auto-Fill</span>
+    </a>
+    <div class="nav__links">
+      <a class="nav__link" href="index.html#how">How it works</a>
+      <a class="nav__link" href="install.html">Install</a>
+      <a class="nav__link" href="walkthrough.html">Walkthrough</a>
+      <a class="nav__link" href="edge-cases.html">When it goes sideways</a>
+      <a class="nav__link" href="faq.html" aria-current="page">FAQ</a>
+      <a class="btn btn--ghost" href="https://github.com/brookjordan/shokz-auto-fill" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </div>
+</nav>
+
+<header class="page-head">
+  <div class="page-head__bg" aria-hidden="true"><img src="assets/img/hero.jpg" alt=""></div>
+  <div class="wrap">
+    <p class="crumbs"><a href="index.html">Shokz Auto-Fill</a><span>/</span>FAQ</p>
+    <h1>Questions</h1>
+    <p class="lede">Including the ones you are right to ask before typing your password into
+    a script somebody put on the internet.</p>
+  </div>
+</header>
+
+<main class="band">
+  <div class="wrap--narrow prose">
+
+    <h2 id="basics">The basics</h2>
+
+    <details class="qa" id="command-file" open>
+      <summary>What is a <code>.command</code> file, really?</summary>
+      <div class="qa__body">
+        <p>A plain text file full of shell commands that macOS runs in Terminal when you
+        double-click it. That is the entire meaning of the extension: <code>.command</code> is what
+        tells Finder "hand this to Terminal" instead of "open this in a text editor".</p>
+        <p>It is not an app bundle, not a package, not a compiled binary, and not an installer
+        framework. Right-click <code>install.command</code>, choose <em>Open With → TextEdit</em>,
+        and you can read every line that is about to execute. It is about 700 lines with comments,
+        including the one you are reading about.</p>
+        <p>It is also why macOS is suspicious. A <code>.command</code> file has no developer
+        certificate to check against, so Gatekeeper falls back to "I have not seen this before,
+        ask the human." Hence the right-click-and-Open dance on the first run, which is you
+        answering that question. See <a href="install.html#quick">the install page</a>.</p>
+      </div>
+    </details>
+
+    <details class="qa" id="navidrome">
+      <summary>Do I need Navidrome? What even is it?</summary>
+      <div class="qa__body">
+        <p>Yes. <a href="https://www.navidrome.org/" target="_blank" rel="noopener">Navidrome</a> is
+        a free, open-source music server: you point it at a folder of your own music files and it
+        serves them over HTTP with a Subsonic-compatible API. It runs happily on a Mac, a NAS, a
+        Raspberry Pi or a small VPS.</p>
+        <p>This tool is a client for that API. It asks Navidrome for random songs and downloads
+        them. It does not do any music management of its own — no library scanning, no metadata, no
+        playlists. If you already have Navidrome, this fits straight on top. If you do not, setting
+        it up is a separate job and probably the bigger half of the work.</p>
+      </div>
+    </details>
+
+    <details class="qa" id="players">
+      <summary>Which players does it work with?</summary>
+      <div class="qa__body">
+        <p>Any player that mounts as a USB mass-storage volume under <code>/Volumes</code> and is
+        formatted FAT32 or exFAT. It was written for a Shokz OpenSwim, and it works with the
+        OpenSwim Pro, older Aftershokz players, most clip-on MP3 players, and anything else that
+        shows up in Finder as a removable drive with a name.</p>
+        <p>It does <strong>not</strong> work with phones, with iPods stuck in their default
+        iTunes-managed mode, or with anything that needs a proprietary app to transfer music. The
+        test is simple: if you can drag an MP3 onto it in Finder and have the player see it, this
+        tool can fill it.</p>
+      </div>
+    </details>
+
+    <details class="qa" id="spotify">
+      <summary>Will it work with Spotify, Apple Music or YouTube Music?</summary>
+      <div class="qa__body">
+        <p>No. Those are streaming services with DRM and no download-to-a-folder API, and this tool
+        has nothing to say about them. It moves files from a server <em>you</em> run, containing
+        music <em>you</em> own or have the right to keep, onto a drive <em>you</em> own.</p>
+        <p>If your library lives in one of those services, this is not the tool for you — and the
+        Subsonic API gives no legitimate route around that.</p>
+      </div>
+    </details>
+
+    <details class="qa" id="platforms">
+      <summary>Windows? Linux? iOS?</summary>
+      <div class="qa__body">
+        <p>macOS only, and genuinely so — not "not ported yet". The reason the project exists is a
+        macOS-specific privacy mechanism (<a href="#platform-binary">see below</a>) and the
+        <code>launchd</code> agent that watches <code>/Volumes</code>. On Linux, the equivalent is
+        a udev rule and a five-line shell script; on Windows it would be a different program. Run it
+        on the Mac you actually plug the player into.</p>
+      </div>
+    </details>
+
+    <details class="qa" id="homebrew">
+      <summary>Do I have to install Homebrew?</summary>
+      <div class="qa__body">
+        <p>Only if you do not already have <code>jq</code> and a non-Apple <code>bash</code>. The
+        installer checks both and will not touch Homebrew if they are present.</p>
+        <p>If they are missing it runs <code>brew install jq</code> and <code>brew install
+        bash</code> — two ordinary packages, no taps, no third-party formulae. If Homebrew itself is
+        missing, the installer stops and tells you to install it first from
+        <a href="https://brew.sh" target="_blank" rel="noopener">brew.sh</a> rather than installing
+        a package manager for you.</p>
+        <p><a href="#platform-binary">Why it needs a non-Apple bash at all →</a></p>
+      </div>
+    </details>
+
+    <h2 id="trust-section">Trust and privacy</h2>
+
+    <details class="qa" id="trust">
+      <summary>Why should I trust you with my password?</summary>
+      <div class="qa__body">
+        <p>You should not, on the strength of a web page — mine or anyone's. You should trust it
+        because you read it, and here is what you will find when you do.</p>
+        <p><strong>It is small.</strong> Four files do all the work:
+        <code>install.command</code>, <code>uninstall.command</code>,
+        <code>lib/common.sh</code> and <code>bin/auto_fill_shokz.sh</code>. Together, about 1,500
+        lines of commented shell. There is no compiled code, nothing minified, no vendored
+        dependency, and no download step during install.</p>
+        <p><strong>You can see every network call.</strong> Search the repository for
+        <code>curl</code> and you will find calls to exactly two kinds of destination: the
+        Navidrome URL you typed yourself, and nothing else. There is no analytics endpoint, no
+        crash reporter, no update check, no paste service, no IP echo.</p>
+        <p><strong>It only ever writes to paths it names.</strong> Your home folder, two files under
+        <code>/tmp</code>, and the volume you chose. No <code>sudo</code> anywhere. Nothing
+        system-wide, no kernel extension, no daemon.</p>
+        <p><strong>You do not have to give it your real password.</strong> Navidrome supports
+        multiple accounts, so make a second one for this tool and use that. It only ever needs to
+        read your library. That is a genuinely good idea and it costs nothing.</p>
+        <p>If after reading it you find something wrong, <a href="https://github.com/brookjordan/shokz-auto-fill/issues" target="_blank" rel="noopener">open an issue</a>
+        — that is what the repository is for.</p>
+      </div>
+    </details>
+
+    <details class="qa" id="privacy">
+      <summary>Does anything leave my computer?</summary>
+      <div class="qa__body">
+        <p>Two things are contacted during normal operation:</p>
+        <ul>
+          <li><strong>Your Navidrome server.</strong> To check it is alive, to ask for random song
+          IDs, and to download those songs. You configured the address yourself.</li>
+          <li><strong>The USB volume in front of you.</strong> To write the files.</li>
+        </ul>
+        <p>That is the complete list. There is no telemetry, no analytics, no usage reporting, no
+        crash reporting, no update check, no license server, and no third party anywhere in the
+        path. The tool has never had a network destination other than the server you name.</p>
+        <p>The one external thing that happens at any point is during install: <code>brew install
+        bash</code> or <code>brew install jq</code>, if you are missing them. That is Homebrew
+        talking to Homebrew, before any of your credentials have been asked for.</p>
+      </div>
+    </details>
+
+    <details class="qa" id="password-storage">
+      <summary>Where exactly does my password end up?</summary>
+      <div class="qa__body">
+        <p>One file: <code>~/.config/shokz-auto-fill/config</code>, written with mode
+        <code>600</code> — readable only by your user account, not by other accounts on the Mac.</p>
+        <p>It is a plain shell file, so you can read it yourself. It looks like this:</p>
+        <pre class="term__body" style="background:#060a12;border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-4);white-space:pre-wrap">DEVICE_NAME="MY_PLAYER"
+ND_URLS="http://navidrome.local:4533"
+ND_USER="youruser"
+ND_PASS="••••••••••"
+SONG_COUNT=50
+CONNECT_TIMEOUT=8</pre>
+        <p>It is not in the repository, and <code>config/config</code> is git-ignored as a backstop
+        in case anyone ever puts a config in the wrong place. It is never printed, never logged, and
+        never included in the Done summary.</p>
+        <p>If you are migrating from an older setup that kept the password in plain text inside a
+        script that got committed to git, treat it as exposed: rotate it on the server, then re-run
+        the installer to store the new one.</p>
+      </div>
+    </details>
+
+    <details class="qa" id="password-network">
+      <summary>Is my password sent over the network?</summary>
+      <div class="qa__body">
+        <p>Not as such. The Subsonic API this tool speaks uses a token scheme: each request sends
+        <code>md5(password + salt)</code> with a fresh random salt, and never the password itself.
+        Navidrome accepts that in place of the plaintext.</p>
+        <p>Which is worth understanding precisely, because it is a real improvement and not a
+        magic trick: a token with its salt <em>is</em> a working credential for that request. It
+        cannot be replayed without the salt, and the salt is new every time, so it is much better
+        than sending the password over plain HTTP. It is not a substitute for HTTPS, though. If
+        your server is reachable over the open internet, put it behind TLS.</p>
+        <p>This is also why the installer's log redacts tokens and salts as well as passwords. A
+        log file full of replayable tokens would be a credential store with extra steps.</p>
+      </div>
+    </details>
+
+    <details class="qa" id="platform-binary">
+      <summary>Why does it need Homebrew <code>bash</code>? That seems excessive.</summary>
+      <div class="qa__body">
+        <p>It does seem excessive, right up until you have spent an evening on the alternative.
+        Here is the whole mechanism.</p>
+        <p>macOS gates removable volumes behind a privacy service called
+        <code>kTCCServiceSystemPolicyRemovableVolumes</code>. When a background job tries to write
+        to a USB drive, macOS asks one process in that job for permission — the <em>responsible
+        process</em>.</p>
+        <p>Run the job under <code>/bin/bash</code> and bash is the responsible process. But
+        <code>/bin/bash</code> is an Apple <strong>platform binary</strong>:</p>
+        <pre class="term__body" style="background:#060a12;border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-4)"><span class="c-dim">$</span> codesign -dvvv /bin/bash | grep Platform
+Platform identifier=26</pre>
+        <p>macOS refuses to grant TCC permissions to a platform binary, and it cannot even raise the
+        prompt to ask:</p>
+        <pre class="term__body" style="background:#060a12;border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-4)">Platform binary prompting is <span class="c-bad">'Deny'</span> because: is Platform Binary</pre>
+        <p>So the answer is no — permanently, silently, with no dialog and no error of its own. All
+        you see, much later, is this, once per file, with no explanation:</p>
+        <pre class="term__body" style="background:#060a12;border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-4)">mkdir: /Volumes/MY_PLAYER/auto-list/1: <span class="c-bad">Operation not permitted</span></pre>
+        <p>And here is the part that makes it maddening: run the identical commands by hand in
+        Terminal and they work perfectly. Because then the responsible process is Terminal, which
+        macOS is perfectly willing to ask. The same script, the same files, the same drive — works
+        interactively, fails from the agent, with no difference you can see.</p>
+        <p>Running the job under a non-Apple bash changes the responsible process to something
+        macOS <em>can</em> prompt for. That is why the installer goes to the trouble, and why the
+        shebang must stay pointed at <code>/opt/homebrew/bin/bash</code> rather than
+        <code>/bin/bash</code>. <a href="walkthrough.html#step-permission">The full trace is in the
+        walkthrough.</a></p>
+      </div>
+    </details>
+
+    <details class="qa" id="full-disk-access">
+      <summary>What is this "Full Disk Access" thing the warning mentions?</summary>
+      <div class="qa__body">
+        <p>A fallback, not the normal path. The normal path is the <em>Allow</em> dialog during
+        install, which grants access to removable volumes as a category.</p>
+        <p>If that dialog was missed, denied, or never appeared, the alternative is to add the
+        Homebrew <code>bash</code> to Full Disk Access in System Settings → Privacy &amp; Security.
+        It is broader than the tool needs — but it is the permission macOS reliably honours for a
+        background job, and the installer prints the exact path to use:</p>
+        <pre class="term__body" style="background:#060a12;border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-4)">/opt/homebrew/bin/bash          <span class="c-dim"># Apple Silicon</span>
+/usr/local/bin/bash             <span class="c-dim"># Intel</span></pre>
+        <p>Not <code>/bin/bash</code>. Adding the Apple one will do nothing at all, for the reason
+        immediately above.</p>
+      </div>
+    </details>
+
+    <details class="qa" id="signed">
+      <summary>Is it signed or notarised?</summary>
+      <div class="qa__body">
+        <p>No. Signing and notarising require a paid Apple Developer account, and this is a personal
+        open-source tool. That is the entire reason you meet Gatekeeper on the first run.</p>
+        <p>Which is a fair reason to be more careful, not less. Read the file before you run it.
+        Everything it does is in the repository, in shell, in plain text.</p>
+      </div>
+    </details>
+
+    <h2 id="setup">Setting it up</h2>
+
+    <details class="qa" id="bash-upgrade">
+      <summary>I upgraded bash with Homebrew and now it has stopped working.</summary>
+      <div class="qa__body">
+        <p>Expected, and annoying, and fixable in ten seconds. The permission grant is keyed by
+        <em>path</em> — and because Homebrew bash is unsigned, macOS resolves symlinks and records
+        the versioned Cellar path, <code>/opt/homebrew/Cellar/bash/5.3.20/bin/bash</code>. Upgrade
+        bash and the path becomes <code>5.3.21</code>. The grant does not follow it.</p>
+        <p><strong>Fix:</strong> re-run <code>install.command</code>. It repeats the permission
+        probe, so the dialog comes back and the grant is re-created against the new path. Ten
+        seconds, and you keep receiving bash updates.</p>
+        <p><strong>Or prevent it:</strong> <code>brew pin bash</code> stops its path ever moving
+        again. Durable, at the cost of no further bash security updates — a real trade-off, and
+        yours to make.</p>
+        <p>The symptom to recognise: the job stops filling for no visible reason, and the log is
+        full of <code>Operation not permitted</code>.</p>
+      </div>
+    </details>
+
+    <details class="qa" id="no-player">
+      <summary>Can I install without the player plugged in?</summary>
+      <div class="qa__body">
+        <p>Yes, but plug it in if you can. Two reasons, and the second one matters more.</p>
+        <p>The installer lists what is currently mounted so you can pick your player by number
+        rather than typing its volume name from memory — which is not as easy as it sounds when
+        macOS decides to call it <code>MY PLAYER 1</code> because an old mount never cleared.</p>
+        <p>More importantly, it can only test the removable-volume permission against a drive that
+        is actually there. Install without the player and the test is skipped, so you meet the
+        <em>Allow</em> dialog for the first time on a future plug-in, with a job running in the
+        background that you cannot see. It works; it is just a worse first experience.
+        <a href="edge-cases.html#no-device">What the installer says when it skips it →</a></p>
+      </div>
+    </details>
+
+    <details class="qa" id="second-account">
+      <summary>Can I use a separate Navidrome account for this?</summary>
+      <div class="qa__body">
+        <p>Please do. Create a second Navidrome user, give it a different password, and enter that
+        in the installer. The tool only ever needs to read your library — it makes no changes to
+        the server at all.</p>
+        <p>The benefit is that the credential sitting in a file on your Mac is not the same
+        credential you use everywhere else, so losing it costs you nothing. This is the single
+        cheapest security improvement available here, and it takes about a minute.</p>
+      </div>
+    </details>
+
+    <details class="qa" id="two-devices">
+      <summary>Can I use it with more than one player?</summary>
+      <div class="qa__body">
+        <p>Not with a single installation — the config holds one device name. There is one
+        LaunchAgent watching <code>/Volumes</code>, and when anything mounts it looks for
+        <code>/Volumes/&lt;the name in the config&gt;</code>. If that is not what just appeared, it
+        does nothing.</p>
+        <p>Two players is genuinely a different feature (which drive, which settings, what if both
+        are plugged in at once), and it is not built. If you want it,
+        <a href="https://github.com/brookjordan/shokz-auto-fill/issues" target="_blank" rel="noopener">an issue describing your setup</a>
+        is the right way to ask.</p>
+      </div>
+    </details>
+
+    <details class="qa" id="spaces">
+      <summary>My player's name has a space in it. Is that a problem?</summary>
+      <div class="qa__body">
+        <p>No, and it is specifically handled. An earlier version word-split the volume list, which
+        turned one player called <code>MY PLAYER</code> into two menu entries — <code>MY</code> and
+        <code>PLAYER</code> — neither of which existed. The current code reads the list line by
+        line, and the device name is quoted everywhere it is used.</p>
+        <p>It is one of the defects the installer test suite covers, so it cannot come back
+        unnoticed.</p>
+      </div>
+    </details>
+
+    <h2 id="using">Using it</h2>
+
+    <details class="qa" id="space">
+      <summary>How much space does it use on the player?</summary>
+      <div class="qa__body">
+        <p>Fifty songs is roughly 200&nbsp;MB at typical bitrates, and two lists are kept, so budget
+        about half a gigabyte. The old lists beyond the newest two are deleted on each fill, so that
+        figure does not grow over time.</p>
+        <p>If your player is small, drop the song count — that is installer option <strong>1</strong>
+        on a re-run, and it takes effect on the very next fill.</p>
+      </div>
+    </details>
+
+    <details class="qa" id="change-count">
+      <summary>How do I change the number of songs?</summary>
+      <div class="qa__body">
+        <p>Run <code>install.command</code> again, choose option <strong>1</strong>, enter the new
+        number. Done — no reload, no restart, no need to touch the drive. The script and the agent
+        read the config at run time, so the next fill uses the new value.</p>
+        <p>You could also edit <code>SONG_COUNT</code> in
+        <code>~/.config/shokz-auto-fill/config</code> by hand. The installer route is better,
+        because it validates the number and leaves the file with the right permissions.</p>
+      </div>
+    </details>
+
+    <details class="qa" id="deletes">
+      <summary>Will it delete my music?</summary>
+      <div class="qa__body">
+        <p>It will delete the numbered folders it created itself, inside
+        <code>auto-list/</code>, and only the ones older than the newest two. That is the whole of
+        its deletion behaviour.</p>
+        <p>Everything else on the player is untouched — other folders, files you put there
+        yourself, anything at all outside <code>auto-list/</code>. And a fill that cannot download
+        anything aborts <em>before</em> the cleanup step, so a failed run never removes a list.</p>
+        <p>The uninstaller does not delete anything from the player either. If you want the
+        <code>auto-list</code> folders gone, remove them yourself.</p>
+      </div>
+    </details>
+
+    <details class="qa" id="order">
+      <summary>What order do the songs play in?</summary>
+      <div class="qa__body">
+        <p>The order they were downloaded in. Every file is prefixed with a four-digit number —
+        <code>0001 - Artist - Title.mp3</code> — so a player that sorts by filename plays the list
+        in the sequence it was built rather than alphabetically by artist.</p>
+        <p>Which means: shuffle on the player is still worth using, and the list is a genuinely
+        random draw from your library rather than a curated sequence. That is the point — plug in
+        tomorrow and you get a different fifty.</p>
+      </div>
+    </details>
+
+    <details class="qa" id="asleep">
+      <summary>Does it work while my Mac is asleep?</summary>
+      <div class="qa__body">
+        <p>No — and it does not need to. The job fires when a volume appears under
+        <code>/Volumes</code>, which requires the Mac to be awake and for you to have physically
+        plugged the player in.</p>
+        <p>So the realistic pattern is: you plug the player into the Mac, the fill runs in under a
+        minute, the drive ejects itself, and you unplug it. If the Mac is shut, nothing happens
+        until you open it and the volume mounts — at which point the job fires as normal.</p>
+        <p>If the Mac goes to sleep <em>during</em> a fill, the run is interrupted and may leave a
+        partial list. <a href="edge-cases.html#partial-folder">Cleaning that up is easy</a>, and the
+        next fill is unaffected.</p>
+      </div>
+    </details>
+
+    <details class="qa" id="manual">
+      <summary>Can I just run it by hand when I feel like it?</summary>
+      <div class="qa__body">
+        <p>Yes. With the player already mounted:</p>
+        <pre class="term__body" style="background:#060a12;border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-4)"><span class="c-dim">$</span> launchctl kickstart -k gui/$(id -u)/local.shokz-auto-fill
+<span class="c-dim">$</span> tail -f /tmp/shokz-auto-fill.log</pre>
+        <p>Useful for testing after a settings change, and it is exactly what the agent runs — so
+        if this works, plug-in will too.</p>
+      </div>
+    </details>
+
+    <details class="qa" id="already-running">
+      <summary>What if two fills try to run at once?</summary>
+      <div class="qa__body">
+        <p>Only one can. A lock file is taken atomically — with <code>set -o noclobber</code>, so
+        the test and the create are a single step — before the log is even trimmed. A second run
+        finds the lock, logs that another fill is in progress with the pid holding it, and exits
+        without touching anything.</p>
+        <p>Without that, two <code>/Volumes</code> events arriving together could both number a
+        folder and each delete the other's work. It is a defect that shipped once and is now
+        covered by a test that extracts the lock code straight out of the shipping script, so the
+        test cannot drift from what actually runs.</p>
+        <p>If a run is killed hard, the lock is left behind —
+        <a href="edge-cases.html#lock">here is the one-line fix</a>.</p>
+      </div>
+    </details>
+
+    <details class="qa" id="duplicates">
+      <summary>Will I get the same song twice?</summary>
+      <div class="qa__body">
+        <p>Not within one list — Navidrome returns a set of distinct random songs for each request.
+        Across lists, entirely possible, and expected: the lists are independent random draws from
+        the same library. With a small library you will notice repeats; with a large one you will
+        not.</p>
+      </div>
+    </details>
+
+    <details class="qa" id="playlists">
+      <summary>Can I use a playlist, or a genre, instead of random songs?</summary>
+      <div class="qa__body">
+        <p>Not currently. It asks for <code>getRandomSongs</code> and nothing else. The Subsonic API
+        supports plenty of alternatives — <code>getStarred</code>, <code>getPlaylist</code>,
+        <code>getSongsByGenre</code> — so this is a genuinely small change to the script, but it is
+        not built and not configurable today.</p>
+        <p><a href="https://github.com/brookjordan/shokz-auto-fill/issues" target="_blank" rel="noopener">An issue saying which one you want</a>
+        is the way to get it considered.</p>
+      </div>
+    </details>
+
+    <details class="qa" id="log-size">
+      <summary>Won't the log file grow forever?</summary>
+      <div class="qa__body">
+        <p>No. <code>/tmp/shokz-auto-fill.log</code> is trimmed to its last 1000 lines at the start
+        of every run, so it stays small by construction. Being under <code>/tmp</code> also means
+        macOS clears it periodically on its own.</p>
+        <p>The install logs are a separate thing: one file per install run, under
+        <code>~/Library/Application Support/ShokzAutoFill/logs/</code>. They are small and they
+        accumulate only as often as you run the installer.</p>
+      </div>
+    </details>
+
+    <hr>
+
+    <div class="note note--good">
+      <span class="note__label">Not answered here?</span>
+      <p>The <a href="edge-cases.html">edge-case page</a> covers things going wrong, and the
+      <a href="walkthrough.html">walkthrough</a> covers things going right. If neither has it,
+      <a href="https://github.com/brookjordan/shokz-auto-fill/issues" target="_blank" rel="noopener">open an issue</a>
+      — and include the <code>conclusion</code> lines from
+      <code>~/Library/Application Support/ShokzAutoFill/logs/latest.log</code>, which will usually
+      answer it before anyone has to ask.</p>
+    </div>
+
+    <div class="grid grid--2" style="margin-top:var(--space-7)">
+      <a class="card" href="install.html" style="display:block;color:inherit">
+        <span class="eyebrow">Ready</span>
+        <h3>Install it</h3>
+        <p class="muted">Two minutes, five questions, one dialog.</p>
+      </a>
+      <a class="card" href="https://github.com/brookjordan/shokz-auto-fill" target="_blank" rel="noopener" style="display:block;color:inherit">
+        <span class="eyebrow">Read it first</span>
+        <h3>The source</h3>
+        <p class="muted">Every line, in the open, on GitHub.</p>
+      </a>
+    </div>
+
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div>
+        <a class="nav__brand" href="index.html" style="margin-bottom:var(--space-3)">
+          <svg class="nav__mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <path d="M6 22c0-7 4.5-12 10-12s10 5 10 12" stroke="url(#fg)" stroke-width="2.4" stroke-linecap="round"/>
+            <circle cx="6" cy="24" r="3.1" fill="url(#fg)"/>
+            <circle cx="26" cy="24" r="3.1" fill="url(#fg)"/>
+            <defs><linearGradient id="fg" x1="3" y1="10" x2="29" y2="27" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#3fe0ff"/><stop offset="1" stop-color="#ffb454"/>
+            </linearGradient></defs>
+          </svg>
+          <span>Shokz Auto-Fill</span>
+        </a>
+        <p class="footer__tagline">A small macOS background job that keeps a USB music player
+        stocked from your own Navidrome library.</p>
+      </div>
+      <div>
+        <h4>This project</h4>
+        <ul>
+          <li><a href="install.html">Install</a></li>
+          <li><a href="walkthrough.html">Walkthrough</a></li>
+          <li><a href="edge-cases.html">When it goes sideways</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Code</h4>
+        <ul>
+          <li><a href="https://github.com/brookjordan/shokz-auto-fill" target="_blank" rel="noopener">Repository</a></li>
+          <li><a href="https://github.com/brookjordan/shokz-auto-fill/blob/master/README.md" target="_blank" rel="noopener">README</a></li>
+          <li><a href="https://github.com/brookjordan/shokz-auto-fill/blob/master/docs.html" target="_blank" rel="noopener">Reference docs</a></li>
+          <li><a href="https://github.com/brookjordan/shokz-auto-fill/issues" target="_blank" rel="noopener">Issues</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Brook Jordan</h4>
+        <ul>
+          <li><a href="https://github.com/brookjordan" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="https://brookjordan.github.io/" target="_blank" rel="noopener">brookjordan.github.io</a></li>
+          <li><a href="https://brookjordan.github.io/projects/localimagegen/" target="_blank" rel="noopener">localimagegen</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© <span data-year>2026</span> Brook Jordan · built on a Mac, for a Mac</span>
+      <span>Navidrome is a separate project · <a href="https://www.navidrome.org/" target="_blank" rel="noopener">navidrome.org</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/site.js"></script>
+</body>
+</html>

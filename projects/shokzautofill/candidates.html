@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Image candidates — Shokz Auto-Fill</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:#070b14; color:#e9eef7;
+         font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+  .wrap { width:min(100% - 3rem, 1500px); margin-inline:auto; padding:3rem 0 6rem; }
+  h1 { font-size:2rem; margin:0 0 .5rem; letter-spacing:-.02em; }
+  .lede { color:#b6c2d4; max-width:70ch; margin:0 0 1rem; }
+  .note { border-left:3px solid #3fe0ff; background:rgba(63,224,255,.06);
+           padding:.9rem 1.2rem; border-radius:10px; margin:1.5rem 0 3rem;
+           color:#b6c2d4; font-size:.94rem; }
+  code { background:rgba(63,224,255,.1); padding:.1em .4em; border-radius:4px;
+          font-size:.9em; color:#cdf3ff; }
+  .cand { border-top:1px solid rgba(255,255,255,.09); padding-top:2rem; margin-top:2.5rem; }
+  .cand h2 { font-size:1.25rem; margin:0 0 .3rem; }
+  .cand p { color:#8494ab; margin:0 0 1.4rem; font-size:.92rem; }
+  .cand__grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+                 gap:1.2rem; }
+  figure { margin:0; }
+  figure img { width:100%; border-radius:12px; border:1px solid rgba(255,255,255,.12);
+                display:block; background:
+                  repeating-conic-gradient(#1a2130 0% 25%, #131a26 0% 50%) 50%/24px 24px; }
+  figcaption { margin-top:.55rem; font-size:.85rem; color:#8494ab; }
+  .badge { background:#3fe0ff; color:#04121a; border-radius:999px;
+            padding:.08em .55em; font-size:.72rem; font-weight:600; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Image candidates</h1>
+  <p class="lede">Three renders of every image on the Shokz Auto-Fill site, generated
+  locally with Qwen Image 2.1 (different seeds and lightly different prompts for each
+  variant). Click any image to open it full size.</p>
+  <p class="note">The site currently uses the variant marked <span class="badge">in use</span>.
+  To switch, copy the chosen file over the slot filename — for example
+  <code>cp assets/img/candidates/hero-c.jpg assets/img/hero.jpg</code> —
+  or re-run the image step with <code>--pick hero=c</code>.
+  Cut-outs are PNG because they carry transparency.</p>
+    <section class="cand">
+      <h2>Hero banner <code>hero</code></h2>
+      <p>The full-bleed banner behind the front page headline. <strong>Default in use: variant B.</strong></p>
+      <div class="cand__grid">
+        <figure>
+          <a href="assets/img/candidates/hero-a.jpg" target="_blank" rel="noopener">
+            <img src="assets/img/candidates/hero-a.jpg" alt="Hero banner variant A" loading="lazy">
+          </a>
+          <figcaption>Variant A</figcaption>
+        </figure>
+        <figure>
+          <a href="assets/img/candidates/hero-b.jpg" target="_blank" rel="noopener">
+            <img src="assets/img/candidates/hero-b.jpg" alt="Hero banner variant B" loading="lazy">
+          </a>
+          <figcaption>Variant B <span class="badge">in use</span></figcaption>
+        </figure>
+        <figure>
+          <a href="assets/img/candidates/hero-c.jpg" target="_blank" rel="noopener">
+            <img src="assets/img/candidates/hero-c.jpg" alt="Hero banner variant C" loading="lazy">
+          </a>
+          <figcaption>Variant C</figcaption>
+        </figure>
+      </div>
+    </section>
+    <section class="cand">
+      <h2>Plug it in <code>plugin</code></h2>
+      <p>Front page, step 1 — and the install page header. <strong>Default in use: variant A.</strong></p>
+      <div class="cand__grid">
+        <figure>
+          <a href="assets/img/candidates/plugin-a.jpg" target="_blank" rel="noopener">
+            <img src="assets/img/candidates/plugin-a.jpg" alt="Plug it in variant A" loading="lazy">
+          </a>
+          <figcaption>Variant A <span class="badge">in use</span></figcaption>
+        </figure>
+        <figure>
+          <a href="assets/img/candidates/plugin-b.jpg" target="_blank" rel="noopener">
+            <img src="assets/img/candidates/plugin-b.jpg" alt="Plug it in variant B" loading="lazy">
+          </a>
+          <figcaption>Variant B</figcaption>
+        </figure>
+        <figure>
+          <a href="assets/img/candidates/plugin-c.jpg" target="_blank" rel="noopener">
+            <img src="assets/img/candidates/plugin-c.jpg" alt="Plug it in variant C" loading="lazy">
+          </a>
+          <figcaption>Variant C</figcaption>
+        </figure>
+      </div>
+    </section>
+    <section class="cand">
+      <h2>Fresh music <code>music</code></h2>
+      <p>Front page, step 2 — and the walkthrough header. <strong>Default in use: variant A.</strong></p>
+      <div class="cand__grid">
+        <figure>
+          <a href="assets/img/candidates/music-a.jpg" target="_blank" rel="noopener">
+            <img src="assets/img/candidates/music-a.jpg" alt="Fresh music variant A" loading="lazy">
+          </a>
+          <figcaption>Variant A <span class="badge">in use</span></figcaption>
+        </figure>
+        <figure>
+          <a href="assets/img/candidates/music-b.jpg" target="_blank" rel="noopener">
+            <img src="assets/img/candidates/music-b.jpg" alt="Fresh music variant B" loading="lazy">
+          </a>
+          <figcaption>Variant B</figcaption>
+        </figure>
+        <figure>
+          <a href="assets/img/candidates/music-c.jpg" target="_blank" rel="noopener">
+            <img src="assets/img/candidates/music-c.jpg" alt="Fresh music variant C" loading="lazy">
+          </a>
+          <figcaption>Variant C</figcaption>
+        </figure>
+      </div>
+    </section>
+    <section class="cand">
+      <h2>Unplug and go <code>swim</code></h2>
+      <p>Front page, step 3 and the closing call to action. <strong>Default in use: variant A.</strong></p>
+      <div class="cand__grid">
+        <figure>
+          <a href="assets/img/candidates/swim-a.jpg" target="_blank" rel="noopener">
+            <img src="assets/img/candidates/swim-a.jpg" alt="Unplug and go variant A" loading="lazy">
+          </a>
+          <figcaption>Variant A <span class="badge">in use</span></figcaption>
+        </figure>
+        <figure>
+          <a href="assets/img/candidates/swim-b.jpg" target="_blank" rel="noopener">
+            <img src="assets/img/candidates/swim-b.jpg" alt="Unplug and go variant B" loading="lazy">
+          </a>
+          <figcaption>Variant B</figcaption>
+        </figure>
+        <figure>
+          <a href="assets/img/candidates/swim-c.jpg" target="_blank" rel="noopener">
+            <img src="assets/img/candidates/swim-c.jpg" alt="Unplug and go variant C" loading="lazy">
+          </a>
+          <figcaption>Variant C</figcaption>
+        </figure>
+      </div>
+    </section>
+    <section class="cand">
+      <h2>Headset cut-out <code>headset</code></h2>
+      <p>Front page hero art, floating over the banner. <strong>Default in use: variant C.</strong></p>
+      <div class="cand__grid">
+        <figure>
+          <a href="assets/img/candidates/headset-a.png" target="_blank" rel="noopener">
+            <img src="assets/img/candidates/headset-a.png" alt="Headset cut-out variant A" loading="lazy">
+          </a>
+          <figcaption>Variant A</figcaption>
+        </figure>
+        <figure>
+          <a href="assets/img/candidates/headset-b.png" target="_blank" rel="noopener">
+            <img src="assets/img/candidates/headset-b.png" alt="Headset cut-out variant B" loading="lazy">
+          </a>
+          <figcaption>Variant B</figcaption>
+        </figure>
+        <figure>
+          <a href="assets/img/candidates/headset-c.png" target="_blank" rel="noopener">
+            <img src="assets/img/candidates/headset-c.png" alt="Headset cut-out variant C" loading="lazy">
+          </a>
+          <figcaption>Variant C <span class="badge">in use</span></figcaption>
+        </figure>
+      </div>
+    </section>
+    <section class="cand">
+      <h2>Player cut-out <code>player</code></h2>
+      <p>Spare transparent product shot. <strong>Default in use: variant C.</strong></p>
+      <div class="cand__grid">
+        <figure>
+          <a href="assets/img/candidates/player-a.png" target="_blank" rel="noopener">
+            <img src="assets/img/candidates/player-a.png" alt="Player cut-out variant A" loading="lazy">
+          </a>
+          <figcaption>Variant A</figcaption>
+        </figure>
+        <figure>
+          <a href="assets/img/candidates/player-b.png" target="_blank" rel="noopener">
+            <img src="assets/img/candidates/player-b.png" alt="Player cut-out variant B" loading="lazy">
+          </a>
+          <figcaption>Variant B</figcaption>
+        </figure>
+        <figure>
+          <a href="assets/img/candidates/player-c.png" target="_blank" rel="noopener">
+            <img src="assets/img/candidates/player-c.png" alt="Player cut-out variant C" loading="lazy">
+          </a>
+          <figcaption>Variant C <span class="badge">in use</span></figcaption>
+        </figure>
+      </div>
+    </section>
+</div>
+</body>
+</html>

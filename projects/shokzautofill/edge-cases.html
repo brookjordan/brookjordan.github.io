@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>When it goes sideways — Shokz Auto-Fill</title>
+<meta name="description" content="Every unhappy path through the Shokz Auto-Fill installer: going back a step, the password prompt on a re-run, rejected logins, retrying, cancelling, stale locks and permission loss.">
+<meta name="color-scheme" content="dark">
+<meta property="og:title" content="When it goes sideways — Shokz Auto-Fill">
+<meta property="og:description" content="Every unhappy path, and how to get out of it.">
+<meta property="og:image" content="assets/img/hero.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site.css">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav__inner">
+    <a class="nav__brand" href="index.html">
+      <svg class="nav__mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <path d="M6 22c0-7 4.5-12 10-12s10 5 10 12" stroke="url(#ng)" stroke-width="2.4" stroke-linecap="round"/>
+        <circle cx="6" cy="24" r="3.1" fill="url(#ng)"/>
+        <circle cx="26" cy="24" r="3.1" fill="url(#ng)"/>
+        <defs><linearGradient id="ng" x1="3" y1="10" x2="29" y2="27" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#3fe0ff"/><stop offset="1" stop-color="#ffb454"/>
+        </linearGradient></defs>
+      </svg>
+      <span>Shokz Auto-Fill</span>
+    </a>
+    <div class="nav__links">
+      <a class="nav__link" href="index.html#how">How it works</a>
+      <a class="nav__link" href="install.html">Install</a>
+      <a class="nav__link" href="walkthrough.html">Walkthrough</a>
+      <a class="nav__link" href="edge-cases.html" aria-current="page">When it goes sideways</a>
+      <a class="nav__link" href="faq.html">FAQ</a>
+      <a class="btn btn--ghost" href="https://github.com/brookjordan/shokz-auto-fill" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </div>
+</nav>
+
+<header class="page-head">
+  <div class="page-head__bg" aria-hidden="true"><img src="assets/img/swim.jpg" alt=""></div>
+  <div class="wrap">
+    <p class="crumbs"><a href="index.html">Shokz Auto-Fill</a><span>/</span><a href="install.html">Install</a><span>/</span>When it goes sideways</p>
+    <h1>When it goes sideways</h1>
+    <p class="lede">Mistyped a URL, want to change your mind, or the server said no.
+    Every path through the installer that is not the happy one — and the promise that
+    holds on all of them: <strong>nothing is written until the last step</strong>.</p>
+  </div>
+</header>
+
+<main class="band">
+  <div class="wrap">
+    <div class="layout-doc">
+
+      <aside class="toc" aria-label="Sections">
+        <p class="toc__title">Sections</p>
+        <ol>
+          <li><a href="#keys">The keys, in full</a></li>
+          <li><a href="#going-back">Going back a question</a></li>
+          <li><a href="#answers-kept">What going back does to your answers</a></li>
+          <li><a href="#going-forward">Going forward again</a></li>
+          <li><a href="#password-again">The password prompt on a re-run</a></li>
+          <li><a href="#paste">Pasting a URL</a></li>
+          <li><a href="#rejected">The login was rejected</a></li>
+          <li><a href="#partial">Some URLs answered, some did not</a></li>
+          <li><a href="#dead">No URL answered at all</a></li>
+          <li><a href="#rounds">The twenty-round guard</a></li>
+          <li><a href="#cancel">Cancelling</a></li>
+          <li><a href="#rerun">Re-running the installer</a></li>
+          <li><a href="#no-device">The player was not mounted</a></li>
+          <li><a href="#denied">Permission denied</a></li>
+          <li><a href="#bash-upgrade">After a Homebrew bash upgrade</a></li>
+          <li><a href="#lock">A stale lock file</a></li>
+          <li><a href="#server-down">The server is down at fill time</a></li>
+          <li><a href="#nothing">Nothing happens when I plug in</a></li>
+          <li><a href="#partial-folder">A half-written folder</a></li>
+          <li><a href="#logs">Reading the logs</a></li>
+          <li><a href="#uninstall">Uninstalling</a></li>
+        </ol>
+      </aside>
+
+      <div class="prose">
+
+        <div class="note note--good">
+          <span class="note__label">The rule that covers everything on this page</span>
+          <p>The installer collects every answer into a variable and writes <strong>nothing</strong>
+          — no config, no script, no LaunchAgent, nothing on your player — until all the questions
+          are done and the URL check has passed. Back out at any point, by any means, and your
+          machine is exactly as it was.</p>
+        </div>
+
+        <!-- ---------------------------------------------------------- keys -->
+        <h2 id="keys">The keys, in full</h2>
+
+        <p>The installer does not use the normal terminal line editor. It reads your keystrokes
+        itself, for a specific reason: bash's own editor treats a bare <kbd>Esc</kbd> as the start
+        of an escape sequence and swallows it, which is exactly how "Escape goes back a step" got
+        lost in an earlier version. Reading the bytes directly is what makes the navigation work —
+        and it is also what keeps an arrow key from landing in your URL as literal
+        <code>^[[A</code> characters.</p>
+
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Key</th><th>What it does</th><th>At the password prompt?</th></tr></thead>
+            <tbody>
+              <tr><td><kbd>Esc</kbd> or <kbd>↑</kbd> or <code>back</code> or <code>&lt;</code></td>
+                  <td>Go back one question</td><td>Yes — <kbd>Esc</kbd> and <code>&lt;</code> only</td></tr>
+              <tr><td><kbd>↓</kbd> or <code>next</code> or <code>&gt;</code></td>
+                  <td>Move forward to a question you have already answered</td><td><code>&gt;</code> only</td></tr>
+              <tr><td><kbd>Return</kbd></td><td>Accept the answer, or keep the default in <code>[brackets]</code></td><td>Submits the password</td></tr>
+              <tr><td><kbd>Backspace</kbd></td><td>Delete one character</td><td>Yes, invisibly</td></tr>
+              <tr><td><kbd>Ctrl</kbd>+<kbd>U</kbd></td><td>Clear the whole line and start again</td><td>Yes, invisibly</td></tr>
+              <tr><td><kbd>←</kbd> <kbd>→</kbd></td><td>Ignored. Answers are typed at the end.</td><td>Ignored</td></tr>
+              <tr><td><kbd>Ctrl</kbd>+<kbd>C</kbd> or <kbd>Ctrl</kbd>+<kbd>D</kbd></td><td>Cancel the whole install</td><td>Cancels</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="small muted">Two files define all of this and they are short:
+        <code>lib/common.sh</code> holds the reader, <code>install.command</code> holds the
+        questions. Both are in the <a href="https://github.com/brookjordan/shokz-auto-fill" target="_blank" rel="noopener">repository</a>.</p>
+
+        <!-- ---------------------------------------------------- going back -->
+        <h2 id="going-back">Going back a question</h2>
+
+        <p>Press <kbd>Esc</kbd>. The line you are on is abandoned, the previous question is asked
+        again with your earlier answer already in the brackets, and you can edit it:</p>
+
+        <div class="term">
+          <div class="term__bar">
+            <span class="term__dot term__dot--r"></span><span class="term__dot term__dot--y"></span><span class="term__dot term__dot--g"></span>
+            <span class="term__title">install.command</span>
+          </div>
+<pre class="term__body">
+--- Navidrome username ---
+Your Navidrome account, which need not match your macOS account.
+Username: youruser
+<span class="c-dim">                        ← press Escape here</span>
+
+--- Navidrome URL(s) ---
+Space-separated, tried in order. Put the fastest first, then a remote one.
+URL(s) [http://navidrome.local:4533 https://music.example.com]: <span class="cursor"></span></pre>
+        </div>
+
+        <p>Your previous answer is shown in square brackets and is the default — press return to
+        keep it unchanged, or type over it. A bare prompt with no brackets means you have not
+        answered that question yet.</p>
+
+        <h3>At the very first question</h3>
+        <p>There is nowhere to go, and it says so rather than doing something odd:</p>
+        <pre class="term__body" style="background:#060a12;border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-3) var(--space-4)">  this is the first question, so there is nothing to go back to</pre>
+
+        <h3>Escape at the password prompt goes to the username</h3>
+        <p>Not back to some earlier question, and not out. <kbd>Esc</kbd> at
+        <code>Password for youruser</code> returns you to the <em>username</em> line, because that
+        is the most likely thing you got wrong. Fix it, press return, and you are at the password
+        prompt again.</p>
+
+        <!-- ------------------------------------------------- answers kept -->
+        <h2 id="answers-kept">What going back does to your answers</h2>
+
+        <p>Nothing. This is worth stating plainly because it is the thing that most often goes wrong
+        in installers: <strong>every answer is held in its own variable, and stepping backwards
+        never discards an answer you gave later.</strong></p>
+
+        <p>Concretely — imagine you have answered all five questions and are looking at the URL
+        report, when you realise the username is wrong. Press <kbd>Esc</kbd> through the
+        intervening questions and back to <code>Username</code>, fix it, and then answer forward.
+        Your device, your song count and your URL list are all still there. You re-answer only the
+        username and the password.</p>
+
+        <p>The same holds for the URL prompt itself: the previous list appears in brackets, so
+        correcting one entry in a list of three is an edit, not a retype.</p>
+
+        <!-- --------------------------------------------------- going fwd -->
+        <h2 id="going-forward">Going forward again</h2>
+
+        <p><kbd>↓</kbd> moves forward — but only over questions you have <em>already answered</em>.
+        It will not skip a question that still needs an answer, and it will not jump you past the
+        password prompt into an empty config.</p>
+
+        <p>If there is nothing ahead of you yet, it says so:</p>
+        <pre class="term__body" style="background:#060a12;border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-3) var(--space-4)">  no later question has been answered yet</pre>
+
+        <p>Once you <em>have</em> answered forward, <kbd>↓</kbd> becomes a fast way back to where you
+        were. Practically: <kbd>Esc</kbd> back to fix something, then <kbd>↓</kbd> forward through
+        the questions you already answered until you reach the one you were on.</p>
+
+        <p>You can also type the words <code>back</code> and <code>next</code>, or <code>&lt;</code>
+        and <code>&gt;</code>. Those exist so a script can drive the installer — the test suite uses
+        them — but they work identically by hand.</p>
+
+        <!-- ------------------------------------------------ password again -->
+        <h2 id="password-again">The password prompt on a re-run</h2>
+
+        <p>This is the one prompt whose behaviour changes between a first install and a re-run,
+        and it catches people out. On a re-run, where a password is already stored,
+        <strong>you do not get the hidden prompt at all</strong> — you get a question about the
+        stored one:</p>
+
+        <div class="term">
+          <div class="term__bar">
+            <span class="term__dot term__dot--r"></span><span class="term__dot term__dot--y"></span><span class="term__dot term__dot--g"></span>
+            <span class="term__title">install.command — a re-run</span>
+          </div>
+<pre class="term__body">
+--- Navidrome password ---
+Keep the password already set? [Y/n]: <span class="cursor"></span></pre>
+        </div>
+
+        <p><strong>Press return</strong> and the stored password is kept, unchanged and never shown.
+        <strong>Type <code>n</code></strong> and it is cleared, after which you get the usual hidden
+        <code>Password for youruser (not echoed, will be checked):</code> prompt to enter a new one.</p>
+
+        <p class="small muted">A password is never displayed back to you, not even partially — not
+        on a re-run, not in the summary, not in any log. If you are not sure whether the stored one
+        is right, choose <code>n</code> and retype it; that is the only way to be certain, and it
+        costs ten seconds.</p>
+
+        <div class="note">
+          <span class="note__label">Why this exists</span>
+          <p>Because re-running the installer to change one setting — the song count, say — should not
+          make you dig out a password you stored six months ago. Keeping it is the default, and the
+          config is untouched unless you say otherwise.</p>
+        </div>
+
+        <!-- -------------------------------------------------------- paste -->
+        <h2 id="paste">Pasting a URL</h2>
+
+        <p>Pasting works, and it is safe. This sounds like a trivial thing to promise, and it is not:
+        a pasted URL used to be able to cancel the whole install.</p>
+
+        <p>Terminals wrap a paste in invisible marker sequences, and those markers arrive as
+        keystrokes exactly like an arrow key does. An earlier version read the marker as "back" and
+        threw away the run. The current reader tracks escape-sequence state as it goes, steps over
+        bracketed-paste markers, and reads the pasted text between them as ordinary characters.</p>
+
+        <p>Belt and braces: every answer is also stripped of terminal escape sequences and control
+        characters before it is stored, so even a sequence that arrives in pieces cannot end up as
+        invisible bytes inside a URL or a volume name. If something did get through, the
+        <code>-&gt; will try:</code> line after the prompt would show it, and <kbd>Esc</kbd> takes
+        you back.</p>
+
+        <!-- ----------------------------------------------------- rejected -->
+        <h2 id="rejected">The login was rejected</h2>
+
+        <p>The most common real failure, and the installer distinguishes it from the confusing ones.
+        A <em>server</em> answered at the address you gave, speaking Subsonic — so the address is
+        right — but it refused those credentials:</p>
+
+        <div class="term">
+          <div class="term__bar">
+            <span class="term__dot term__dot--r"></span><span class="term__dot term__dot--y"></span><span class="term__dot term__dot--g"></span>
+            <span class="term__title">install.command</span>
+          </div>
+<pre class="term__body">
+--- Checking every configured URL ---
+  rejected  : https://music.example.com (Subsonic status='40')
+  0 of 1 authenticated.
+<span class="c-bad">WARNING: a server answered, so the addresses are right, but it rejected that login.</span>
+Go back and fix the login? [Y/n]: <span class="cursor"></span></pre>
+        </div>
+
+        <p><strong>Press return</strong> (or <kbd>↑</kbd>) to accept — you go back and fix it.
+        Type <code>n</code> (or press <kbd>↓</kbd>) to carry on regardless.</p>
+
+        <p>Note which keys do what here, because it is a deliberate touch: <kbd>↑</kbd> means
+        "yes, go back" and <kbd>↓</kbd> means "no, carry on", which is what those keys do at every
+        other prompt.</p>
+
+        <h3>What happens when you say yes</h3>
+        <p>The installer walks back to the <strong>username</strong>, then the password, and then
+        jumps straight back to the check. It does <em>not</em> ask for the URL list, the device or
+        the song count again — you already answered those, and re-asking would just be an
+        opportunity to break something that works.</p>
+
+        <div class="term">
+          <div class="term__bar">
+            <span class="term__dot term__dot--r"></span><span class="term__dot term__dot--y"></span><span class="term__dot term__dot--g"></span>
+            <span class="term__title">install.command — after fixing the login</span>
+          </div>
+<pre class="term__body">
+--- Navidrome username ---
+Your Navidrome account, which need not match your macOS account.
+Username [youruser]: <span class="cursor"></span>
+
+--- Navidrome password ---
+Keep the password already set? [Y/n]: <span class="cursor"></span>
+
+<span class="c-dim">… straight back to the check, no other questions …</span>
+
+--- Checking every configured URL ---
+  ok        : https://music.example.com (authenticated)
+  1 of 1 authenticated.</pre>
+        </div>
+
+        <p>If you answer <code>n</code> instead — carry on with a login that does not work — the
+        install completes and the tool is installed, but every fill will fail until you fix the
+        credentials. Re-running <code>install.command</code> and choosing option <strong>4</strong>
+        is the repair.</p>
+
+        <!-- ------------------------------------------------------ partial -->
+        <h2 id="partial">Some URLs answered, some did not</h2>
+
+        <p>You configured a LAN address and a remote fallback. The LAN one works; the remote one is
+        dead. The installer will not let that pass quietly, because <strong>a fallback you have
+        never tested is not a fallback</strong> — you would find out it was broken on the day the
+        working one went away.</p>
+
+        <div class="term">
+          <div class="term__bar">
+            <span class="term__dot term__dot--r"></span><span class="term__dot term__dot--y"></span><span class="term__dot term__dot--g"></span>
+            <span class="term__title">install.command</span>
+          </div>
+<pre class="term__body">
+--- Checking every configured URL ---
+  ok        : http://navidrome.local:4533 (authenticated)
+  no answer : https://music.example.com
+  1 of 2 authenticated.
+<span class="c-amber">WARNING: these URLs did not answer: https://music.example.com</span>
+Go back and edit the URL list? [Y/n]: <span class="cursor"></span></pre>
+        </div>
+
+        <p>Press return to go back and edit the list; type <code>n</code> to keep the working URL
+        and move on. Saying yes takes you to the URL prompt with the list already filled in, and
+        then — because the credentials did not change — it goes back to the check rather than
+        re-asking for the username and password.</p>
+
+        <p>Fixing a URL does not repeat the login. Fixing the login does not repeat the URL list.
+        Neither repeats the device or the song count.</p>
+
+        <!-- --------------------------------------------------------- dead -->
+        <h2 id="dead">No URL answered at all</h2>
+
+        <p>Nothing replied. This is almost always a typo in the host or port, a server that is not
+        running, or a firewall — and the installer offers the URL list first, because that is the
+        usual culprit:</p>
+
+        <div class="term">
+          <div class="term__bar">
+            <span class="term__dot term__dot--r"></span><span class="term__dot term__dot--y"></span><span class="term__dot term__dot--g"></span>
+            <span class="term__title">install.command</span>
+          </div>
+<pre class="term__body">
+--- Checking every configured URL ---
+  no answer : http://navidrome.local:4533
+  0 of 1 authenticated.
+<span class="c-bad">WARNING: no configured URL answered: http://navidrome.local:4533</span>
+Go back and edit the URL list? [Y/n]: n
+
+Install anyway, to fix it later? [y/N]: <span class="cursor"></span></pre>
+        </div>
+
+        <p>If you decline to go back, you get a second, blunter question. The default is
+        <strong>N</strong> — press return and the install is abandoned cleanly.</p>
+
+        <p>Answer <code>y</code> and you get a working installation pointed at a server that does
+        not answer. That is sometimes what you want: you are setting this up before the server
+        exists, or you are on a different network today and know the address is right. The fill
+        will simply abort each time until a server replies, leaving the music already on the player
+        in place.</p>
+
+        <!-- ------------------------------------------------------- rounds -->
+        <h2 id="rounds">The twenty-round guard</h2>
+
+        <p>There is a hard limit on the fix-and-retry loop. After twenty rounds of edits without a
+        single working URL, the installer stops:</p>
+
+        <pre class="term__body" style="background:#060a12;border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-4)"><span class="c-amber">WARNING: 20 rounds without a working URL. Stopping so this cannot loop forever.</span>
+
+Aborted at your request. Nothing was changed.</pre>
+
+        <p class="small muted">The wording says "at your request" because that is the same exit path
+        as a deliberate abandon — a small inaccuracy in the message, kept rather than papered over,
+        since the alternative is a second exit path to maintain. <a href="https://github.com/brookjordan/shokz-auto-fill/issues" target="_blank" rel="noopener">An issue is welcome.</a></p>
+
+        <p>In practice you will never see it. It exists so that an unattended or mis-scripted run
+        cannot spin forever, and it is the reason the installer suite can be run under a timeout: a
+        prompt loop fails the test instead of hanging it.</p>
+
+        <!-- ------------------------------------------------------- cancel -->
+        <h2 id="cancel">Cancelling</h2>
+
+        <p><kbd>Ctrl</kbd>+<kbd>C</kbd> at any prompt, or <kbd>Ctrl</kbd>+<kbd>D</kbd>:</p>
+
+        <pre class="term__body" style="background:#060a12;border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-4)">
+Cancelled. Nothing was changed.
+
+Press return to close this window...</pre>
+
+        <p>Nothing has been written at this point — that is the design — so there is nothing to
+        undo. The installer also restores the terminal on the way out: it explicitly puts the
+        terminal back into normal echo mode, so a run you cancelled at the password prompt cannot
+        leave your shell with invisible typing. That cleanup also runs if you close the window
+        mid-prompt.</p>
+
+        <p class="small muted">Cancelling from a plain terminal — not a double-clicked window —
+        exits with status 130, the conventional code for an interrupted program.</p>
+
+        <!-- -------------------------------------------------------- rerun -->
+        <h2 id="rerun">Re-running the installer</h2>
+
+        <p>Running <code>install.command</code> again when something is already installed gives you
+        a menu instead of the questions. This is also how you change any setting later.</p>
+
+        <div class="term">
+          <div class="term__bar">
+            <span class="term__dot term__dot--r"></span><span class="term__dot term__dot--y"></span><span class="term__dot term__dot--g"></span>
+            <span class="term__title">install.command — second run</span>
+          </div>
+<pre class="term__body">An existing installation was found.
+  config : /Users/you/.config/shokz-auto-fill/config
+  script : present  (/Users/you/Library/Application Support/ShokzAutoFill/bin/auto_fill_shokz.sh)
+  agent  : loaded  (local.shokz-auto-fill)
+
+Current settings:
+  device     : MY_PLAYER
+  url(s)     : http://navidrome.local:4533 https://music.example.com
+  login      : youruser   password: stored
+  songs/fill : 50
+
+What would you like to update?  (one number, several separated by spaces, or 'a')
+  1) song count          (now 50)
+  2) Navidrome URL(s)
+  3) device              (now MY_PLAYER)
+  4) login               (now youruser)
+  5) reinstall script + LaunchAgent, and re-request volume permission
+  a) all of the above
+  q) quit without changing anything
+Choice [a]: <span class="cursor"></span></pre>
+        </div>
+
+        <p>Enter one number, or several separated by spaces — <code>1 3</code> — or <code>a</code>
+        for everything, or <code>q</code> to leave it all alone. Press return and you get
+        <code>a</code>, the everything option.</p>
+
+        <p><strong>Only what you pick is asked.</strong> Choose <code>1</code> and you get one
+        question, about the song count. The config, the script and the agent are left alone, and
+        because the script and the agent read the config at run time, the change takes effect on the
+        very next fill with no reload.</p>
+
+        <h3>The odds and ends of this menu</h3>
+        <ul>
+          <li><strong>An unrecognised entry</strong> is reported and skipped:
+          <code>WARNING: ignoring unrecognised choice: 'x'</code>. The rest of your selection still
+          applies.</li>
+          <li><strong>Nothing selected</strong> — because every entry was unrecognised — gives
+          <code>Nothing selected - no changes made.</code> and exits.</li>
+          <li><strong>A missing stored password</strong> forces the login questions back in:
+          <code>WARNING: no stored password found, so the login will be asked for as well</code>.
+          This happens if the config was edited by hand or the password line was blanked.</li>
+          <li><strong>Changing only the device or the song count</strong> prints
+          <code>Settings changed only - no server check needed (credentials unchanged).</code> and
+          skips the URL check entirely. There is no point testing a login you did not change.</li>
+          <li><strong>Option 5</strong> is the one that reinstalls the script and the agent and
+          repeats the permission probe. That is the repair for
+          <a href="#bash-upgrade">a lost permission grant</a>.</li>
+        </ul>
+
+        <!-- ---------------------------------------------------- no device -->
+        <h2 id="no-device">The player was not mounted</h2>
+
+        <p>Perfectly fine, and the installer says exactly what it is skipping:</p>
+
+        <pre class="term__body" style="background:#060a12;border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-4)">  device not mounted, so permission cannot be probed now.
+  It will be requested the first time the device is plugged in - allow it.</pre>
+
+        <p>The consequence is deferred, not avoided: the first time you plug the player in, macOS
+        will put up the removable-volume dialog, and it will be the job asking rather than the
+        installer. Click <strong>Allow</strong> then, and everything proceeds normally. If you
+        miss it, the fill fails with <code>Operation not permitted</code> and
+        <a href="#denied">the fix below</a> applies.</p>
+
+        <p>The device question also behaves differently without a player attached — there is no
+        list of mounted volumes to show, so you type the volume name from memory. If you are not
+        certain how macOS spells it, plug the player in first; it is worth the extra ten
+        seconds.</p>
+
+        <!-- ------------------------------------------------------- denied -->
+        <h2 id="denied">Permission denied</h2>
+
+        <p>You clicked <em>Don't Allow</em>, or the dialog timed out. The installer says so and
+        tells you the exact path it needs:</p>
+
+        <pre class="term__body" style="background:#060a12;border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-4)"><span class="c-bad">WARNING: permission DENIED. Allow the dialog, or add to System Settings &gt;</span>
+<span class="c-bad">Privacy &amp; Security &gt; Full Disk Access:  /opt/homebrew/bin/bash</span>
+<span class="c-bad">then re-run this installer.</span></pre>
+
+        <p>Three ways forward, in order of preference:</p>
+        <ol>
+          <li><strong>Re-run <code>install.command</code> and watch for the dialog.</strong> It often
+          appears behind the Terminal window, or on another Space. This is the normal fix.</li>
+          <li><strong>Add <code>bash</code> to Full Disk Access</strong> yourself, at System Settings
+          → Privacy &amp; Security → Full Disk Access, using the <kbd>+</kbd> button and
+          <kbd>⌘</kbd>+<kbd>⇧</kbd>+<kbd>G</kbd> to type the path. Note it is the Homebrew bash —
+          <code>/opt/homebrew/bin/bash</code> on Apple Silicon, <code>/usr/local/bin/bash</code> on
+          Intel — <em>not</em> <code>/bin/bash</code>.</li>
+          <li><strong>If it still fails, check the log</strong> for the exact interpreter and whether
+          macOS considers it a platform binary. The install log records both:</li>
+        </ol>
+        <pre class="term__body" style="background:#060a12;border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-4)">interpreter     : /opt/homebrew/bin/bash
+  platform binary: <span class="c-good">no, so macOS can prompt for it</span></pre>
+        <p>If that line ever reads <code>yes</code>, something has pointed the job at
+        <code>/bin/bash</code>, and no amount of clicking Allow will help —
+        <a href="faq.html#platform-binary">which is the whole story here</a>.</p>
+
+        <!-- ------------------------------------------------- bash upgrade -->
+        <h2 id="bash-upgrade">After a Homebrew bash upgrade</h2>
+
+        <p>This is the one failure that appears out of nowhere, weeks later, with nothing having
+        changed on your side. The job simply stops filling, and the log fills with
+        <code>Operation not permitted</code>.</p>
+
+        <p>The cause is in how macOS records the grant. For an unsigned binary it keys the
+        permission by <em>path</em>, and it resolves symlinks — so the grant is bound to a
+        versioned Cellar path like <code>/opt/homebrew/Cellar/bash/5.3.20/bin/bash</code>. Run
+        <code>brew upgrade bash</code> and that path moves to <code>5.3.21</code>. macOS does not
+        follow it, and the permission is silently gone.</p>
+
+        <div class="grid grid--2" style="margin:var(--space-5) 0">
+          <div class="card card--flat">
+            <h3>Re-run the installer</h3>
+            <p class="muted">The default. It repeats the permission probe, so the dialog comes back
+            and the grant is re-created against the new path. Ten seconds, and you keep receiving
+            bash updates.</p>
+          </div>
+          <div class="card card--flat">
+            <h3>Or pin bash</h3>
+            <p class="muted"><code>brew pin bash</code> stops its path ever moving, so the grant
+            survives forever. Durable, at the cost of no more bash security updates.</p>
+          </div>
+        </div>
+
+        <p class="small muted">The rule to remember: <strong>if the job stops filling for no visible
+        reason, look for <code>Operation not permitted</code> in the log and re-run the
+        installer.</strong> It is almost always this.</p>
+
+        <!-- --------------------------------------------------------- lock -->
+        <h2 id="lock">A stale lock file</h2>
+
+        <p>Only one fill runs at a time. A lock file at <code>/tmp/shokz-auto-fill.state</code> is
+        taken atomically before anything on the device is touched — <code>set -o noclobber</code>
+        makes the test and the create a single step, so two <code>/Volumes</code> events arriving
+        together cannot both get through and start deleting each other's work.</p>
+
+        <p>The lock records the pid that owns it, and only that run clears it. If a run is killed
+        hard — a force-quit, a power cut, a kernel panic — the lock is left behind. The next
+        plug-in says so, and names the culprit:</p>
+
+        <pre class="term__body" style="background:#060a12;border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-4)">--- Tue Oct 14 07:44:10 BST 2026 --- another fill is running; skipping. The lock records pid 48213.
+That process is gone, so the lock is stale: delete /tmp/shokz-auto-fill.state and replug.</pre>
+
+        <p><strong>The fix is one line:</strong></p>
+        <pre class="term__body" style="background:#060a12;border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-4)"><span class="c-dim">$</span> rm /tmp/shokz-auto-fill.state</pre>
+
+        <p>…then unplug and replug the player.</p>
+
+        <div class="note">
+          <span class="note__label">Why it is not automatic</span>
+          <p>Deciding that a lock is stale means reading it, checking whether the pid is alive, and
+          then deleting it — and another run can take the lock between that read and that deletion,
+          which is precisely the race the lock exists to prevent. So it reports instead of guessing,
+          and leaves the judgement with you. If the pid it names <em>is</em> still alive, a fill
+          genuinely is running; wait for it.</p>
+        </div>
+
+        <!-- -------------------------------------------------- server down -->
+        <h2 id="server-down">The server is down at fill time</h2>
+
+        <p>You plug in, and nothing seems to happen. The log tells the story, and — importantly —
+        tells you that nothing was damaged:</p>
+
+        <pre class="term__body" style="background:#060a12;border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-4)">Probing http://navidrome.local:4533...
+FAILED http://navidrome.local:4533: curl error 7 (unreachable / timed out).
+Probing https://music.example.com...
+FAILED https://music.example.com: curl error 28 (unreachable / timed out).
+<span class="c-bad">ABORT: None of the configured Navidrome URLs answered: http://navidrome.local:4533 https://music.example.com. Leaving existing music on MY_PLAYER untouched.</span>
+Short-circuiting: no new auto-list folder, no cleanup, no eject.</pre>
+
+        <p>Two things to note about that:</p>
+        <ul>
+          <li><strong>"No cleanup"</strong> is deliberate. The old-list pruning happens after a
+          successful download, so a failed run cannot delete your existing music. The player is
+          left exactly as it was.</li>
+          <li><strong>"No eject"</strong> means the drive stays mounted. That is your signal
+          something went wrong — on a successful fill the volume disappears on its own.</li>
+        </ul>
+
+        <p>The same short-circuit applies if the server answers but returns nothing usable.
+        Zero songs is treated as failure, not as an empty playlist:</p>
+        <pre class="term__body" style="background:#060a12;border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-4)"><span class="c-bad">ABORT: getRandomSongs returned zero songs from http://navidrome.local:4533. Refusing to create an empty auto-list folder.</span></pre>
+        <p>And if every individual download fails partway through, the half-built folder is removed
+        and the run aborts, leaving the older lists intact:</p>
+        <pre class="term__body" style="background:#060a12;border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-4)">Removing empty folder /Volumes/MY_PLAYER/auto-list/7
+<span class="c-bad">ABORT: All downloads failed against http://navidrome.local:4533. Existing auto-list folders left intact.</span></pre>
+
+        <!-- ------------------------------------------------------ nothing -->
+        <h2 id="nothing">Nothing happens when I plug in</h2>
+
+        <p>Three checks, in order. The first one answers the question ninety per cent of the
+        time.</p>
+
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Check</th><th>Command</th><th>If it looks wrong</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>Is the agent loaded?</td>
+                <td><code>launchctl list | grep shokz</code></td>
+                <td>No output means it is not loaded. Re-run <code>install.command</code> and choose
+                option <strong>5</strong>.</td>
+              </tr>
+              <tr>
+                <td>Does the volume name match?</td>
+                <td><code>ls /Volumes</code></td>
+                <td>Compare against <code>DEVICE_NAME</code> in
+                <code>~/.config/shokz-auto-fill/config</code>. A player that mounted as
+                <code>MY_PLAYER 1</code> because an older mount never cleared will not match
+                <code>MY_PLAYER</code>. Eject, unplug, replug, and re-run the installer if the name
+                has genuinely changed.</td>
+              </tr>
+              <tr>
+                <td>What does the job say?</td>
+                <td><code>tail -30 /tmp/shokz-auto-fill.log</code></td>
+                <td>The log names the failure. <code>Operation not permitted</code> is
+                <a href="#denied">permission</a>; <code>ABORT</code> is
+                <a href="#server-down">the server</a>.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="small muted">A related trap: <code>launchctl list local.shokz-auto-fill</code>
+        saying <em>"could not find service"</em> is not a fault. The correct label is
+        <code>local.shokz-auto-fill</code>, and it must be passed to
+        <code>launchctl list</code> exactly — no domain prefix. If it is genuinely missing from
+        <code>launchctl list</code> with no argument, the agent is not loaded.</p>
+
+        <!-- ------------------------------------------------ partial folder -->
+        <h2 id="partial-folder">A half-written folder</h2>
+
+        <p>If a fill is interrupted — you unplug mid-download, the Mac sleeps, the server drops —
+        you can be left with a numbered folder holding fewer tracks than it should.
+        <code>auto-list/7</code> with nineteen songs in it, say.</p>
+
+        <p>Nothing breaks. The next fill takes the next number and works normally, and the partial
+        folder is just an unusually short playlist until the pruning catches up with it. If it
+        bothers you:</p>
+
+        <pre class="term__body" style="background:#060a12;border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-4)"><span class="c-dim"># with the player mounted — delete only the numbered folder you want gone</span>
+<span class="c-dim">$</span> rm -rf "/Volumes/MY_PLAYER/auto-list/7"</pre>
+
+        <div class="note note--warn">
+          <span class="note__label">Be precise with that path</span>
+          <p>That command deletes a folder. Check the number against what is actually on the
+          player first — <code>ls /Volumes/MY_PLAYER/auto-list</code> — and delete exactly one
+          numbered folder. Do not run it against <code>auto-list</code> itself, and do not run it
+          when the drive is not mounted: without the volume, the path resolves to a folder on your
+          own disk, or to nothing at all.</p>
+        </div>
+
+        <p>There is no need to clean up before the next fill. The script numbers folders by looking
+        at what is already there, so gaps and partials do not confuse it.</p>
+
+        <!-- --------------------------------------------------------- logs -->
+        <h2 id="logs">Reading the logs</h2>
+
+        <p>When something is wrong, these two files answer almost every question.</p>
+
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>File</th><th>Read it when</th></tr></thead>
+            <tbody>
+              <tr><td><code>/tmp/shokz-auto-fill.log</code></td>
+                  <td>The fills themselves. One block per plug-in, newest at the bottom. Trimmed to
+                  the last 1000 lines automatically.</td></tr>
+              <tr><td><code>…/ShokzAutoFill/logs/latest.log</code></td>
+                  <td>The installer. Full network diagnosis for every URL, the config it wrote, the
+                  plist it generated, the script hash, and the permission probe.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>The thing to look for first is the <code>conclusion</code> line, because it is written
+        to tell apart the failures that look identical from outside:</p>
+
+        <pre class="term__body" style="background:#060a12;border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-4)">  conclusion       : authenticated
+  conclusion       : reachable, and it rejected the credentials
+  conclusion       : the TCP connection opened and the server never replied
+  conclusion       : TLS completed and then nothing came back. A proxy is waiting on an upstream that never answers
+  conclusion       : headers arrived but the body never finished, so the upstream stalled mid-response
+  conclusion       : no reply before the deadline. The port is filtered, or the host is down
+  conclusion       : nothing is listening on that port
+  conclusion       : the hostname did not resolve
+  conclusion       : the TLS handshake or the certificate failed</pre>
+
+        <p>“The connection opened and nobody answered” and “the port is filtered” are the same
+        experience and completely different problems — a hung Navidrome versus a firewall rule.
+        Everything else in the log, the timings and headers and body excerpt, is there to settle
+        that question.</p>
+
+        <p>The log is written for the question you ask <em>after</em> something breaks, so it
+        records the reasoning rather than just the outcome. It is also mode 600, and it contains no
+        credential: the password is substituted out, and so is any Subsonic token or salt, because
+        a token with its salt is a working credential.</p>
+
+        <!-- ---------------------------------------------------- uninstall -->
+        <h2 id="uninstall">Uninstalling</h2>
+
+        <p>Double-click <code>uninstall.command</code>. It unloads and removes the LaunchAgent and
+        the installed script, and then asks <strong>separately</strong> about the config — because
+        that file holds your password, and you might be about to reinstall.</p>
+
+        <p>Say no to the config question and the credentials survive for a future reinstall. Say
+        yes and everything is gone.</p>
+
+        <p><strong>Music already on the player is never touched</strong>, by the uninstaller or by
+        anything else here. If you want the <code>auto-list</code> folders off the player, delete
+        them yourself — the tool will not do it for you, on the principle that a cleanup routine
+        that can be pointed at your files is a cleanup routine that can be pointed at the wrong
+        ones.</p>
+
+        <hr>
+
+        <div class="grid grid--2">
+          <a class="card" href="walkthrough.html" style="display:block;color:inherit">
+            <span class="eyebrow">The other half</span>
+            <h3>The walkthrough</h3>
+            <p class="muted">What the happy path looks like, prompt by prompt, so you have something
+            to compare this against.</p>
+          </a>
+          <a class="card" href="faq.html" style="display:block;color:inherit">
+            <span class="eyebrow">Questions</span>
+            <h3>The FAQ</h3>
+            <p class="muted">Trust, privacy, Homebrew bash, other players, other servers, and
+            whether it works while your Mac is asleep.</p>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div>
+        <a class="nav__brand" href="index.html" style="margin-bottom:var(--space-3)">
+          <svg class="nav__mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <path d="M6 22c0-7 4.5-12 10-12s10 5 10 12" stroke="url(#fg)" stroke-width="2.4" stroke-linecap="round"/>
+            <circle cx="6" cy="24" r="3.1" fill="url(#fg)"/>
+            <circle cx="26" cy="24" r="3.1" fill="url(#fg)"/>
+            <defs><linearGradient id="fg" x1="3" y1="10" x2="29" y2="27" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#3fe0ff"/><stop offset="1" stop-color="#ffb454"/>
+            </linearGradient></defs>
+          </svg>
+          <span>Shokz Auto-Fill</span>
+        </a>
+        <p class="footer__tagline">A small macOS background job that keeps a USB music player
+        stocked from your own Navidrome library.</p>
+      </div>
+      <div>
+        <h4>This project</h4>
+        <ul>
+          <li><a href="install.html">Install</a></li>
+          <li><a href="walkthrough.html">Walkthrough</a></li>
+          <li><a href="edge-cases.html">When it goes sideways</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Code</h4>
+        <ul>
+          <li><a href="https://github.com/brookjordan/shokz-auto-fill" target="_blank" rel="noopener">Repository</a></li>
+          <li><a href="https://github.com/brookjordan/shokz-auto-fill/blob/master/README.md" target="_blank" rel="noopener">README</a></li>
+          <li><a href="https://github.com/brookjordan/shokz-auto-fill/blob/master/docs.html" target="_blank" rel="noopener">Reference docs</a></li>
+          <li><a href="https://github.com/brookjordan/shokz-auto-fill/issues" target="_blank" rel="noopener">Issues</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Brook Jordan</h4>
+        <ul>
+          <li><a href="https://github.com/brookjordan" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="https://brookjordan.github.io/" target="_blank" rel="noopener">brookjordan.github.io</a></li>
+          <li><a href="https://brookjordan.github.io/projects/localimagegen/" target="_blank" rel="noopener">localimagegen</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© <span data-year>2026</span> Brook Jordan · built on a Mac, for a Mac</span>
+      <span>Navidrome is a separate project · <a href="https://www.navidrome.org/" target="_blank" rel="noopener">navidrome.org</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/site.js"></script>
+</body>
+</html>

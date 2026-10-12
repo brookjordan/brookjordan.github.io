@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The walkthrough — Shokz Auto-Fill</title>
+<meta name="description" content="Step by step through the Shokz Auto-Fill installer: every prompt, the exact text you will see, what to type, and what happens next — including the moments where it goes quiet on purpose.">
+<meta name="color-scheme" content="dark">
+<meta property="og:title" content="The walkthrough — Shokz Auto-Fill">
+<meta property="og:description" content="Every prompt, in order, with the exact text you will see.">
+<meta property="og:image" content="assets/img/hero.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site.css">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav__inner">
+    <a class="nav__brand" href="index.html">
+      <svg class="nav__mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <path d="M6 22c0-7 4.5-12 10-12s10 5 10 12" stroke="url(#ng)" stroke-width="2.4" stroke-linecap="round"/>
+        <circle cx="6" cy="24" r="3.1" fill="url(#ng)"/>
+        <circle cx="26" cy="24" r="3.1" fill="url(#ng)"/>
+        <defs><linearGradient id="ng" x1="3" y1="10" x2="29" y2="27" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#3fe0ff"/><stop offset="1" stop-color="#ffb454"/>
+        </linearGradient></defs>
+      </svg>
+      <span>Shokz Auto-Fill</span>
+    </a>
+    <div class="nav__links">
+      <a class="nav__link" href="index.html#how">How it works</a>
+      <a class="nav__link" href="install.html">Install</a>
+      <a class="nav__link" href="walkthrough.html" aria-current="page">Walkthrough</a>
+      <a class="nav__link" href="edge-cases.html">When it goes sideways</a>
+      <a class="nav__link" href="faq.html">FAQ</a>
+      <a class="btn btn--ghost" href="https://github.com/brookjordan/shokz-auto-fill" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </div>
+</nav>
+
+<header class="page-head">
+  <div class="page-head__bg" aria-hidden="true"><img src="assets/img/music.jpg" alt=""></div>
+  <div class="wrap">
+    <p class="crumbs"><a href="index.html">Shokz Auto-Fill</a><span>/</span><a href="install.html">Install</a><span>/</span>Walkthrough</p>
+    <h1>The walkthrough</h1>
+    <p class="lede">The happy path, in full. Every prompt in the order you will meet it,
+    the exact text on screen, what to type, and — just as usefully — the two moments where
+    the installer goes quiet on purpose and you should sit on your hands.</p>
+  </div>
+</header>
+
+<main class="band">
+  <div class="wrap">
+    <div class="layout-doc">
+
+      <aside class="toc" aria-label="Steps">
+        <p class="toc__title">Steps</p>
+        <ol>
+          <li><a href="#before">Before you double-click</a></li>
+          <li><a href="#open">The window opens</a></li>
+          <li><a href="#urls">Navidrome URL(s)</a></li>
+          <li><a href="#username">Username</a></li>
+          <li><a href="#password">Password</a></li>
+          <li><a href="#quiet">Two questions while it works</a></li>
+          <li><a href="#report">The URL report</a></li>
+          <li><a href="#config">The config is written</a></li>
+          <li><a href="#step-permission">The <em>Allow</em> dialog</a></li>
+          <li><a href="#done">Done</a></li>
+          <li><a href="#first-fill">Your first fill</a></li>
+          <li><a href="#confirm">Confirming it worked</a></li>
+          <li><a href="#logs">The logs</a></li>
+        </ol>
+      </aside>
+
+      <div class="prose">
+
+        <div class="note">
+          <span class="note__label">Read this first</span>
+          <p>Nothing in the installer is written until the very end. No config, no script, no
+          LaunchAgent, and nothing at all on your player. You can press <kbd>Ctrl</kbd>+<kbd>C</kbd>
+          at any prompt and the answer is always the same: <em>“Cancelled. Nothing was
+          changed.”</em> That means you can walk through the whole thing just to see it, and back
+          out at the last question, without a trace.</p>
+        </div>
+
+        <!-- ------------------------------------------------------- before -->
+        <div class="deepstep" id="before">
+          <div class="deepstep__head">
+            <span class="deepstep__num">Step 0</span>
+            <h3>Before you double-click</h3>
+          </div>
+          <p>Have three things to hand, because they are all asked in the first ninety seconds:</p>
+          <ul>
+            <li>The <strong>URL of your Navidrome server</strong> — including the port. It looks like
+            <code>http://navidrome.local:4533</code> or <code>https://music.example.com</code>.
+            No trailing path, no <code>/app</code>, no <code>/rest</code> — just the base.</li>
+            <li>Your <strong>Navidrome username and password</strong>, not your macOS ones.</li>
+            <li>The <strong>player, already plugged in.</strong> Not strictly required, but it turns
+            the device question into a menu and lets the installer test the permission now rather
+            than at 6am tomorrow.</li>
+          </ul>
+          <p>Then, in Finder: double-click <code>install.command</code>.</p>
+          <div class="note note--warn">
+            <span class="note__label">The one Gatekeeper interruption</span>
+            <p>First run only, if the file was downloaded rather than cloned:
+            <strong>right-click → Open → Open.</strong> A plain double-click gives you
+            <em>“cannot be opened because it is from an unidentified developer”</em> and no way
+            forward. See <a href="install.html#command-file">what a <code>.command</code> file
+            is</a> for why.</p>
+          </div>
+        </div>
+
+        <!-- --------------------------------------------------------- open -->
+        <div class="deepstep" id="open">
+          <div class="deepstep__head">
+            <span class="deepstep__num">Step 1</span>
+            <h3>The window opens</h3>
+          </div>
+          <p>A Terminal window appears and prints this. It is the same for a first install and a
+          re-run; everything below happens inside this one window.</p>
+          <div class="term">
+            <div class="term__bar">
+              <span class="term__dot term__dot--r"></span><span class="term__dot term__dot--y"></span><span class="term__dot term__dot--g"></span>
+              <span class="term__title">install.command — bash — 80×24</span>
+            </div>
+<pre class="term__body">=== Shokz Auto-Fill installer ===
+
+Escape or Up goes back a question, Down moves forward to one you have already
+answered, and Ctrl-C cancels. Backspace works, and a URL can be pasted.
+
+The Navidrome server and login come first, so the connection can be checked
+while the remaining questions are asked.
+</pre>
+          </div>
+          <div class="what-you-see">
+            <p><strong>What to do:</strong> nothing yet. This paragraph is the whole keyboard
+            contract, and it is worth the ten seconds it takes to read — the arrow keys do
+            something specific here, and it is not what you might guess.
+            <a href="edge-cases.html#keys">The full key reference is here.</a></p>
+          </div>
+        </div>
+
+        <!-- --------------------------------------------------------- urls -->
+        <div class="deepstep" id="urls">
+          <div class="deepstep__head">
+            <span class="deepstep__num">Step 2</span>
+            <h3>Navidrome URL(s)</h3>
+          </div>
+          <div class="term">
+            <div class="term__bar">
+              <span class="term__dot term__dot--r"></span><span class="term__dot term__dot--y"></span><span class="term__dot term__dot--g"></span>
+              <span class="term__title">install.command</span>
+            </div>
+<pre class="term__body">
+--- Navidrome URL(s) ---
+Space-separated, tried in order. Put the fastest first, then a remote one.
+URL(s): <span class="cursor"></span></pre>
+          </div>
+          <div class="what-you-see">
+            <p><strong>Type:</strong> one or more URLs, separated by spaces or commas. Press return.
+            For example:</p>
+            <pre class="term__body" style="background:#060a12;border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-3) var(--space-4);white-space:pre-wrap">http://navidrome.local:4533, https://music.example.com</pre>
+            <p>Commas are converted to spaces for you, so pasting a comma-separated list from
+            your notes works fine.</p>
+            <p><strong>Then you will see:</strong></p>
+            <pre class="term__body" style="background:#060a12;border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-3) var(--space-4)">  -&gt; will try: http://navidrome.local:4533 https://music.example.com</pre>
+            <p>That is your confirmation the list parsed the way you meant it. If a URL has been
+            mangled — split in the wrong place, or trailing punctuation absorbed into it — this is
+            where you find out, and <kbd>Esc</kbd> takes you straight back to fix it.</p>
+          </div>
+          <div class="note">
+            <span class="note__label">Order matters, here and later</span>
+            <p>First URL that answers wins, at every fill, forever. LAN address first, remote
+            second — <a href="install.html#fastest-first">the reasoning is on the install
+            page</a>.</p>
+          </div>
+        </div>
+
+        <!-- ----------------------------------------------------- username -->
+        <div class="deepstep" id="username">
+          <div class="deepstep__head">
+            <span class="deepstep__num">Step 3</span>
+            <h3>Username</h3>
+          </div>
+          <div class="term">
+            <div class="term__bar">
+              <span class="term__dot term__dot--r"></span><span class="term__dot term__dot--y"></span><span class="term__dot term__dot--g"></span>
+              <span class="term__title">install.command</span>
+            </div>
+<pre class="term__body">
+--- Navidrome username ---
+Your Navidrome account, which need not match your macOS account.
+Username: <span class="cursor"></span></pre>
+          </div>
+          <div class="what-you-see">
+            <p><strong>Type:</strong> your Navidrome account name. It is echoed as you type, which
+            is deliberate — a typo here would otherwise only surface as “rejected” two questions
+            later, with no way to see what you actually sent. You will see no <code>-&gt;</code>
+            confirmation line here; the value is shown back to you in the Done summary instead.</p>
+            <p>This is separated from the password on purpose. If you notice at the password prompt
+            that the username was wrong, one <kbd>Esc</kbd> puts you back on this line.</p>
+          </div>
+        </div>
+
+        <!-- ----------------------------------------------------- password -->
+        <div class="deepstep" id="password">
+          <div class="deepstep__head">
+            <span class="deepstep__num">Step 4</span>
+            <h3>Password — and why nothing appears</h3>
+          </div>
+          <div class="term">
+            <div class="term__bar">
+              <span class="term__dot term__dot--r"></span><span class="term__dot term__dot--y"></span><span class="term__dot term__dot--g"></span>
+              <span class="term__title">install.command</span>
+            </div>
+<pre class="term__body">
+--- Navidrome password ---
+Password for youruser (not echoed, will be checked): <span class="cursor"></span></pre>
+          </div>
+          <div class="what-you-see">
+            <p><strong>Type your password and press return.</strong> You will see absolutely nothing
+            — no characters, no dots, no asterisks, and the cursor will not move. This is the single
+            most alarming part of the install and it is entirely intentional.</p>
+            <p>The installer takes the terminal out of its normal line-editing mode and reads your
+            keystrokes itself. That is what stops the password reaching the screen, the scrollback
+            buffer, or a screen recording. <kbd>Backspace</kbd> still deletes, the same as anywhere
+            else — you just cannot see it happen. If you lose track, press
+            <kbd>Ctrl</kbd>+<kbd>U</kbd> to clear the line and start again.</p>
+            <div class="note note--warn">
+              <span class="note__label">A word of caution that only applies here</span>
+              <p>Everywhere else in the installer, typing <code>back</code> goes to the previous
+              question. <strong>Not at this prompt.</strong> A password can be any string at all,
+              so reserving a word here would make that password untypeable. Only <kbd>Esc</kbd>,
+              <code>&lt;</code> and <code>&gt;</code> navigate from the password prompt.</p>
+            </div>
+            <p><strong>The moment you press return</strong>, the connection check starts in the
+            background. It runs while you answer the next two questions, which is the reason the
+            server and login were asked for first.</p>
+          </div>
+        </div>
+
+        <!-- -------------------------------------------------------- quiet -->
+        <div class="deepstep" id="quiet">
+          <div class="deepstep__head">
+            <span class="deepstep__num">Step 5</span>
+            <h3>Two more questions, while the check runs behind you</h3>
+          </div>
+          <p>These two appear immediately. Meanwhile, in the background, the installer is already
+          talking to your Navidrome server. On a slow or remote server it may still be going when
+          you finish — that is fine, and it will say so in the next step.</p>
+
+          <h4 style="margin-top:var(--space-5)">Device</h4>
+          <div class="term">
+            <div class="term__bar">
+              <span class="term__dot term__dot--r"></span><span class="term__dot term__dot--y"></span><span class="term__dot term__dot--g"></span>
+              <span class="term__title">install.command</span>
+            </div>
+<pre class="term__body">
+--- Which device should be filled? ---
+The name the player mounts as, the folder under /Volumes.
+Currently mounted volumes:
+  1) MY_PLAYER  (MS-DOS FAT32, 27.9 GB free)
+  2) Backup  (Mac OS Extended (Journaled), 412 GB free)
+
+Volume name (or a number from the list): <span class="cursor"></span></pre>
+          </div>
+          <div class="what-you-see">
+            <p><strong>Type:</strong> the number next to your player — <code>1</code> — or the volume
+            name itself, <code>MY_PLAYER</code>. Both work. The list is built live from
+            <code>/Volumes</code> at the moment the question is asked, so it reflects what is
+            actually plugged in right now.</p>
+            <p>Each entry carries a hint: the filesystem and the free space. That is there to tell
+            a real player from a mounted disk image, which macOS also reports as removable. If your
+            player is not in the list, it is not mounted — check the cable, and check the player is
+            not sitting in a charging-only state.</p>
+            <p><strong>Then you will see:</strong></p>
+            <pre class="term__body" style="background:#060a12;border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-3) var(--space-4)">  -&gt; /Volumes/MY_PLAYER</pre>
+            <p>If you typed a number that is not in the list, you get
+            <code>WARNING: there is no volume numbered 9</code> and the question is asked again
+            rather than accepting something that does not exist.</p>
+          </div>
+
+          <h4 style="margin-top:var(--space-6)">Songs per fill</h4>
+          <div class="term">
+            <div class="term__bar">
+              <span class="term__dot term__dot--r"></span><span class="term__dot term__dot--y"></span><span class="term__dot term__dot--g"></span>
+              <span class="term__title">install.command</span>
+            </div>
+<pre class="term__body">
+--- Songs per fill ---
+How many songs per fill [50]: <span class="cursor"></span></pre>
+          </div>
+          <div class="what-you-see">
+            <p><strong>Type:</strong> a whole number, or just press return for <code>50</code>. The
+            value in square brackets is the default, and on a first run that is always 50.</p>
+            <p><strong>Then you will see:</strong></p>
+            <pre class="term__body" style="background:#060a12;border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-3) var(--space-4)">  -&gt; 50 songs per fill</pre>
+            <p>Anything that is not a positive whole number gets <code>WARNING: enter a whole
+            number.</code> or <code>WARNING: enter a number greater than zero.</code> and the
+            question comes back. Nothing is accepted silently.</p>
+            <p class="small muted">Fifty songs at roughly 4&nbsp;MB each is about 200&nbsp;MB per list,
+            and you keep two — so budget around half a gigabyte of the player. On a 32&nbsp;GB
+            OpenSwim that is comfortably nothing; on a small clip-on player, check the free space in
+            the device list above.</p>
+          </div>
+        </div>
+
+        <!-- ------------------------------------------------------- report -->
+        <div class="deepstep" id="report">
+          <div class="deepstep__head">
+            <span class="deepstep__num">Step 6</span>
+            <h3>The URL report</h3>
+          </div>
+          <p>Now the background check is collected and reported. Every URL you gave gets one line.</p>
+          <div class="term">
+            <div class="term__bar">
+              <span class="term__dot term__dot--r"></span><span class="term__dot term__dot--y"></span><span class="term__dot term__dot--g"></span>
+              <span class="term__title">install.command</span>
+            </div>
+<pre class="term__body">
+--- Checking every configured URL ---
+  ok        : http://navidrome.local:4533 (authenticated)
+  ok        : https://music.example.com (authenticated)
+  2 of 2 authenticated.
+</pre>
+          </div>
+          <div class="what-you-see">
+            <p><strong>This is the good outcome and it needs nothing from you.</strong> Both URLs
+            answered and both accepted the login, so the installer carries straight on to writing
+            the config.</p>
+            <p>Three verdicts are possible, and only the first one is silent about it:</p>
+            <div class="table-scroll">
+              <table>
+                <thead><tr><th>Line</th><th>Meaning</th></tr></thead>
+                <tbody>
+                  <tr><td><code>ok : … (authenticated)</code></td>
+                      <td>The server answered and accepted your login. This is the one you want.</td></tr>
+                  <tr><td><code>rejected : … (Subsonic status='40')</code></td>
+                      <td>A server answered, at the right address, speaking Subsonic — but it refused
+                      those credentials. The host is right; the login is wrong.</td></tr>
+                  <tr><td><code>no answer : …</code></td>
+                      <td>Nothing replied at all: wrong host, wrong port, a firewall, or the server
+                      is down.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p>If everything is green there is nothing to do. If it is not,
+            <a href="edge-cases.html#rejected">the edge-case page walks through exactly what the
+            installer offers you and how to retry</a> — including the fact that fixing a URL does
+            <em>not</em> make you re-answer the login, the device or the song count.</p>
+            <div class="note">
+              <span class="note__label">If it says it is still waiting</span>
+              <p>On a slow server you may see
+              <code>the background check has not finished; waiting for it</code> instead. That is
+              the installer telling you why the window has paused rather than sitting there looking
+              frozen. Let it finish — it is bounded, and it will not hang indefinitely. The timeout
+              is eight seconds to connect and sixteen seconds in total, per URL.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ------------------------------------------------------- config -->
+        <div class="deepstep" id="config">
+          <div class="deepstep__head">
+            <span class="deepstep__num">Step 7</span>
+            <h3>The config is written, then the script and agent</h3>
+          </div>
+          <div class="term">
+            <div class="term__bar">
+              <span class="term__dot term__dot--r"></span><span class="term__dot term__dot--y"></span><span class="term__dot term__dot--g"></span>
+              <span class="term__title">install.command</span>
+            </div>
+<pre class="term__body">config written: /Users/you/.config/shokz-auto-fill/config (mode 600)
+
+--- Shell for the background job ---
+  using /opt/homebrew/bin/bash (not a platform binary, so macOS can grant it access)
+  installed script: /Users/you/Library/Application Support/ShokzAutoFill/bin/auto_fill_shokz.sh
+  wrote /Users/you/Library/LaunchAgents/local.shokz-auto-fill.plist
+  agent loaded: local.shokz-auto-fill
+</pre>
+          </div>
+          <div class="what-you-see">
+            <p><strong>Four things just happened.</strong> The config was written with your
+            credentials at mode <code>600</code>. The fill script was copied into
+            <code>~/Library/Application Support/ShokzAutoFill/</code> with its shebang pointed at
+            the Homebrew bash resolved on <em>this</em> machine. The LaunchAgent was written and
+            checked with <code>plutil</code>. And the agent was loaded into launchd.</p>
+            <p>If you see <code>Installing bash via Homebrew</code> above the first line, that is
+            expected on a Mac without Homebrew bash — it is a normal <code>brew install</code>, and
+            the only package this tool ever installs. <a href="faq.html#platform-binary">Here is
+            the long answer for why it is necessary.</a></p>
+          </div>
+        </div>
+
+        <!-- --------------------------------------------------- permission -->
+        <div class="deepstep" id="step-permission">
+          <div class="deepstep__head">
+            <span class="deepstep__num">Step 8</span>
+            <h3>The <em>Allow</em> dialog — the important one</h3>
+          </div>
+          <p>This is the moment the whole project exists to get right.</p>
+          <div class="term">
+            <div class="term__bar">
+              <span class="term__dot term__dot--r"></span><span class="term__dot term__dot--y"></span><span class="term__dot term__dot--g"></span>
+              <span class="term__title">install.command</span>
+            </div>
+<pre class="term__body">
+--- Removable-volume permission ---
+macOS may ask once to allow access to removable volumes; click Allow.
+  permission OK - the job can write to the device
+</pre>
+          </div>
+          <div class="what-you-see">
+            <p><strong>Look away from Terminal.</strong> A macOS dialog appears — usually behind the
+            Terminal window, or as a notification in the top-right — naming
+            <code>bash</code> and asking whether it may access files on a removable volume. Click
+            <strong>Allow</strong>.</p>
+            <p>The installer waits for that answer, up to sixty seconds, then prints one of three
+            lines:</p>
+            <div class="table-scroll">
+              <table>
+                <thead><tr><th>Line</th><th>What it means</th></tr></thead>
+                <tbody>
+                  <tr><td><code>permission OK - the job can write to the device</code></td>
+                      <td>Done. Everything works from here.</td></tr>
+                  <tr><td><code>WARNING: permission DENIED…</code></td>
+                      <td>The dialog was declined. It tells you the exact path to add under
+                      System Settings → Privacy &amp; Security → Full Disk Access, and asks you to
+                      re-run. Nothing is broken.</td></tr>
+                  <tr><td><code>WARNING: no answer within 60s…</code></td>
+                      <td>Most likely the dialog is still sitting there unanswered, possibly on
+                      another Space or behind a full-screen window.</td></tr>
+                  <tr><td><code>device not mounted, so permission cannot be probed now.</code></td>
+                      <td>You installed without the player attached. The permission is requested the
+                      first time you plug it in — allow it then.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <h4 style="margin-top:var(--space-6)">Why a permission dialog at all</h4>
+          <p>Because macOS will not let a background job write to a removable volume without one,
+          and the refusal is otherwise <em>silent</em>. The mechanics are worth knowing, because
+          they explain the strangest requirement of this whole project — the Homebrew
+          <code>bash</code>.</p>
+          <p>macOS gates removable volumes behind a privacy service called
+          <code>kTCCServiceSystemPolicyRemovableVolumes</code>. When a LaunchAgent runs a job, one
+          process in that job is designated the <em>responsible process</em>, and that is who macOS
+          asks. Run <code>/bin/bash</code> and bash is the responsible process — but
+          <code>/bin/bash</code> is an Apple <strong>platform binary</strong>:</p>
+          <pre class="term__body" style="background:#060a12;border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-4)"><span class="c-dim">$</span> codesign -dvvv /bin/bash | grep Platform
+<span class="c-amber">Platform identifier=26</span></pre>
+          <p>macOS refuses to grant TCC permissions to a platform binary and cannot even raise the
+          prompt:</p>
+          <pre class="term__body" style="background:#060a12;border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-4)">Platform binary prompting is <span class="c-bad">'Deny'</span> because: is Platform Binary</pre>
+          <p>The denial is permanent and it produces no dialog, no error and no log entry of its
+          own. What you get, eventually, is this in the job log — once per file, with no
+          explanation of the cause:</p>
+          <pre class="term__body" style="background:#060a12;border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-4)">mkdir: /Volumes/MY_PLAYER/auto-list/1: <span class="c-bad">Operation not permitted</span></pre>
+          <p>Run the same commands in an interactive shell and they work perfectly, because there the
+          responsible process is Terminal rather than bash. That discrepancy — works by hand, fails
+          from the job — is the entire bug this project was built around.</p>
+          <p>So the job runs under a Homebrew <code>bash</code>, which is not a platform binary.
+          macOS can then ask, and you can then answer:</p>
+          <pre class="term__body" style="background:#060a12;border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-4)">AUTHREQ_PROMPTING: service=kTCCServiceSystemPolicyRemovableVolumes
+                   subject=Sub:{<span class="c-cyan">/opt/homebrew/Cellar/bash/5.3.20/bin/bash</span>}
+...
+Publishing &lt;TCCDEvent: type=Create, service=kTCCServiceSystemPolicyRemovableVolumes,
+            identifier_type=Path, identifier=<span class="c-cyan">/opt/homebrew/Cellar/bash/5.3.20/bin/bash</span>&gt;</pre>
+          <div class="note note--warn">
+            <span class="note__label">The catch: the grant is keyed by path</span>
+            <p>Read that second block again — the grant is recorded against a <em>versioned</em>
+            Homebrew path, <code>…/Cellar/bash/5.3.20/bin/bash</code>. Run
+            <code>brew upgrade bash</code> and that path moves. The grant does not follow it.</p>
+            <p>Two ways to live with it: re-run <code>install.command</code> after a bash upgrade
+            (it repeats the probe, so the dialog comes back and the grant is re-created), or
+            <code>brew pin bash</code> to stop its path ever moving. The full comparison is in the
+            <a href="faq.html#bash-upgrade">FAQ</a>.</p>
+          </div>
+        </div>
+
+        <!-- --------------------------------------------------------- done -->
+        <div class="deepstep" id="done">
+          <div class="deepstep__head">
+            <span class="deepstep__num">Step 9</span>
+            <h3>Done</h3>
+          </div>
+          <div class="term">
+            <div class="term__bar">
+              <span class="term__dot term__dot--r"></span><span class="term__dot term__dot--y"></span><span class="term__dot term__dot--g"></span>
+              <span class="term__title">install.command</span>
+            </div>
+<pre class="term__body">
+=== Done ===
+Config   : /Users/you/.config/shokz-auto-fill/config
+  device     : MY_PLAYER
+  url(s)     : http://navidrome.local:4533 https://music.example.com
+  login      : youruser
+  songs/fill : 50
+Agent    : local.shokz-auto-fill
+Log      : /Users/you/Library/Application Support/ShokzAutoFill/logs/install-20261014T071203.log
+Job log  : /tmp/shokz-auto-fill.log
+
+To test now:  launchctl kickstart -k gui/501/local.shokz-auto-fill
+
+Press return to close this window...
+</pre>
+          </div>
+          <div class="what-you-see">
+            <p><strong>Read the summary back.</strong> That is your chance to catch a wrong device
+            name or a mistyped login while it is still cheap to fix — re-running the installer
+            takes ten seconds and changes only what you pick.</p>
+            <p>Note the password is not in that summary. It never appears anywhere on screen.</p>
+            <p><strong>Then press return</strong> to close the window. That pause only exists
+            because a double-clicked <code>.command</code> would otherwise close its own Terminal
+            window the instant it finished, taking the summary with it.</p>
+          </div>
+        </div>
+
+        <!-- --------------------------------------------------- first fill -->
+        <div class="deepstep" id="first-fill">
+          <div class="deepstep__head">
+            <span class="deepstep__num">Step 10</span>
+            <h3>Your first fill</h3>
+          </div>
+          <p>If the player is still plugged in, nothing has been written to it yet — the installer
+          does not fill anything. The job fires when <code>/Volumes</code> <em>changes</em>, so
+          either unplug and replug the player, or kick it off by hand to watch it work:</p>
+          <pre class="term__body" style="background:#060a12;border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-4)"><span class="c-dim">$</span> launchctl kickstart -k gui/$(id -u)/local.shokz-auto-fill
+<span class="c-dim">$</span> tail -f /tmp/shokz-auto-fill.log</pre>
+          <p>This is what scrolls past. A full fifty-song fill is typically twenty seconds to a
+          couple of minutes, depending on how far away the server is.</p>
+          <div class="term">
+            <div class="term__bar">
+              <span class="term__dot term__dot--r"></span><span class="term__dot term__dot--y"></span><span class="term__dot term__dot--g"></span>
+              <span class="term__title">/tmp/shokz-auto-fill.log</span>
+            </div>
+<pre class="term__body">--- Script started at Tue 14 Oct 07:31:52 BST 2026 ---
+Probing http://navidrome.local:4533...
+OK http://navidrome.local:4533: reachable and authenticated.
+Using Navidrome via http://navidrome.local:4533
+Fetching 50 random songs from Navidrome...
+Got 50 song id(s).
+Downloading to /Volumes/MY_PLAYER/auto-list/1...
+Downloaded file count in /Volumes/MY_PLAYER/auto-list/1: <span class="c-good">50</span>
+Cleaning up old lists (keeping 2 newest)...
+Syncing and ejecting...
+<span class="c-good">"MY_PLAYER" ejected.</span></pre>
+          </div>
+          <div class="what-you-see">
+            <p><strong>What to do:</strong> nothing. The drive is ejected when it finishes, which is
+            your cue — the volume disappears from Finder, and the player is safe to unplug and put
+            on.</p>
+            <p>On the player you will find the tracks inside <code>auto-list/1/</code>, numbered
+            <code>0001 - …</code>, <code>0002 - …</code> and so on, so the player plays them in the
+            order they were fetched rather than alphabetically. Replace one list with a fresh one
+            next time you plug in; the list before that stays until the fill after.</p>
+          </div>
+        </div>
+
+        <!-- ------------------------------------------------------- confirm -->
+        <div class="deepstep" id="confirm">
+          <div class="deepstep__head">
+            <span class="deepstep__num">Step 11</span>
+            <h3>Confirming it worked</h3>
+          </div>
+          <p>Three quick checks, in increasing order of effort:</p>
+          <ul>
+            <li><strong>The player was ejected.</strong> If its volume vanished from Finder on its
+            own, the run completed — that is the last thing the script does.</li>
+            <li><strong>The folder is there.</strong> Plug it back in and look for
+            <code>auto-list/1</code> with fifty tracks in it.</li>
+            <li><strong>The agent is loaded.</strong> This should print a line with a PID:</li>
+          </ul>
+          <pre class="term__body" style="background:#060a12;border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-4)"><span class="c-dim">$</span> launchctl list | grep shokz
+-   0   local.shokz-auto-fill</pre>
+          <p class="small muted">A leading <code>-</code> means it is loaded and idle, which is
+          exactly right — the agent only runs when <code>/Volumes</code> changes. A number there
+          means it is running at this moment. If the command prints nothing at all, the agent is not
+          loaded; re-run <code>install.command</code> and choose option 5.</p>
+        </div>
+
+        <!-- ---------------------------------------------------------- logs -->
+        <div class="deepstep" id="logs">
+          <div class="deepstep__head">
+            <span class="deepstep__num">Step 12</span>
+            <h3>The logs, and why they are worth knowing about now</h3>
+          </div>
+          <p>Two logs, for two different questions.</p>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>File</th><th>Answers</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><code>/tmp/shokz-auto-fill.log</code></td>
+                  <td><em>“What has the job been doing?”</em> One entry per fill. Auto-trimmed to
+                  the last 1000 lines so it can never grow without bound.</td>
+                </tr>
+                <tr>
+                  <td><code>~/Library/Application Support/ShokzAutoFill/logs/latest.log</code></td>
+                  <td><em>“Why did the installer decide that?”</em> One file per install run, with
+                  <code>latest.log</code> always pointing at the newest. Mode 600.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>The install log is unusually thorough on purpose. Every URL gets a full trace — DNS,
+          whether the TCP port was open, the curl exit code and what it means in English, timings
+          for DNS, connect, TLS and first byte, the response headers, an excerpt of the body, the
+          Subsonic status, and a plain conclusion:</p>
+          <pre class="term__body" style="background:#060a12;border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-4)">  url              : http://navidrome.local:4533
+  DNS              : address literal, no lookup needed
+  TCP 4533         : open
+  curl exit        : 28, timed out: no reply before the deadline
+  timings          : code=000 connect=0.000232s tls=0.000000s total=16.006105s bytes=0
+  conclusion       : the TCP connection opened and the server never replied</pre>
+          <p>That last line is the whole point of the exercise. “The connection opened and nobody
+          answered” and “the port is filtered” look identical from the outside and have completely
+          different fixes — a hung Navidrome versus a firewall. The log tells them apart.</p>
+          <p>Tokens, salts and your password never appear in it. A Subsonic token with its salt is a
+          working credential, so anything replayable is redacted before it reaches the file.</p>
+        </div>
+
+        <hr>
+
+        <h2 id="next">Where next</h2>
+        <div class="grid grid--2">
+          <a class="card" href="edge-cases.html" style="display:block;color:inherit">
+            <span class="eyebrow">The other half</span>
+            <h3>When it goes sideways</h3>
+            <p class="muted">Going back, fixing a rejected login, retrying, cancelling, stale locks,
+            and everything else that is not this page.</p>
+          </a>
+          <a class="card" href="faq.html" style="display:block;color:inherit">
+            <span class="eyebrow">Questions</span>
+            <h3>The FAQ</h3>
+            <p class="muted">Trust, privacy, Homebrew bash, other players, other servers, and what
+            happens when your Mac is asleep.</p>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div>
+        <a class="nav__brand" href="index.html" style="margin-bottom:var(--space-3)">
+          <svg class="nav__mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <path d="M6 22c0-7 4.5-12 10-12s10 5 10 12" stroke="url(#fg)" stroke-width="2.4" stroke-linecap="round"/>
+            <circle cx="6" cy="24" r="3.1" fill="url(#fg)"/>
+            <circle cx="26" cy="24" r="3.1" fill="url(#fg)"/>
+            <defs><linearGradient id="fg" x1="3" y1="10" x2="29" y2="27" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#3fe0ff"/><stop offset="1" stop-color="#ffb454"/>
+            </linearGradient></defs>
+          </svg>
+          <span>Shokz Auto-Fill</span>
+        </a>
+        <p class="footer__tagline">A small macOS background job that keeps a USB music player
+        stocked from your own Navidrome library.</p>
+      </div>
+      <div>
+        <h4>This project</h4>
+        <ul>
+          <li><a href="install.html">Install</a></li>
+          <li><a href="walkthrough.html">Walkthrough</a></li>
+          <li><a href="edge-cases.html">When it goes sideways</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Code</h4>
+        <ul>
+          <li><a href="https://github.com/brookjordan/shokz-auto-fill" target="_blank" rel="noopener">Repository</a></li>
+          <li><a href="https://github.com/brookjordan/shokz-auto-fill/blob/master/README.md" target="_blank" rel="noopener">README</a></li>
+          <li><a href="https://github.com/brookjordan/shokz-auto-fill/blob/master/docs.html" target="_blank" rel="noopener">Reference docs</a></li>
+          <li><a href="https://github.com/brookjordan/shokz-auto-fill/issues" target="_blank" rel="noopener">Issues</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Brook Jordan</h4>
+        <ul>
+          <li><a href="https://github.com/brookjordan" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="https://brookjordan.github.io/" target="_blank" rel="noopener">brookjordan.github.io</a></li>
+          <li><a href="https://brookjordan.github.io/projects/localimagegen/" target="_blank" rel="noopener">localimagegen</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© <span data-year>2026</span> Brook Jordan · built on a Mac, for a Mac</span>
+      <span>Navidrome is a separate project · <a href="https://www.navidrome.org/" target="_blank" rel="noopener">navidrome.org</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/site.js"></script>
+</body>
+</html>

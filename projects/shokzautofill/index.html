@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shokz Auto-Fill — fresh music every time you plug in</title>
+<meta name="description" content="A macOS background job that notices your Shokz (or any USB music player), downloads a fresh random set of songs from your own Navidrome server, keeps the two newest lists, and ejects the drive. Nothing leaves your Mac.">
+<meta name="color-scheme" content="dark">
+<meta property="og:title" content="Shokz Auto-Fill — fresh music every time you plug in">
+<meta property="og:description" content="Plug in your player. Walk away. Come back to a brand-new set of songs from your own Navidrome server.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="assets/img/hero.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site.css">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav__inner">
+    <a class="nav__brand" href="index.html">
+      <svg class="nav__mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <path d="M6 22c0-7 4.5-12 10-12s10 5 10 12" stroke="url(#ng)" stroke-width="2.4" stroke-linecap="round"/>
+        <circle cx="6" cy="24" r="3.1" fill="url(#ng)"/>
+        <circle cx="26" cy="24" r="3.1" fill="url(#ng)"/>
+        <defs><linearGradient id="ng" x1="3" y1="10" x2="29" y2="27" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#3fe0ff"/><stop offset="1" stop-color="#ffb454"/>
+        </linearGradient></defs>
+      </svg>
+      <span>Shokz Auto-Fill</span>
+    </a>
+    <div class="nav__links">
+      <a class="nav__link" href="index.html#how">How it works</a>
+      <a class="nav__link" href="install.html">Install</a>
+      <a class="nav__link" href="walkthrough.html">Walkthrough</a>
+      <a class="nav__link" href="edge-cases.html">When it goes sideways</a>
+      <a class="nav__link" href="faq.html">FAQ</a>
+      <a class="btn btn--ghost" href="https://github.com/brookjordan/shokz-auto-fill" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero__bg" aria-hidden="true">
+    <img src="assets/img/hero.jpg" alt="">
+  </div>
+  <div class="wrap">
+    <div class="hero__grid">
+      <div class="hero__copy">
+        <span class="eyebrow">macOS · Navidrome · open source</span>
+        <h1 class="hero__title">Plug it in.<br>Walk away.<br><span class="grad">Fresh music.</span></h1>
+        <p class="hero__sub">
+          Shokz Auto-Fill watches for your player. The moment it appears, it pulls a
+          brand-new random set of songs from <em>your own</em> Navidrome server, keeps the
+          two newest lists, and ejects the drive for you.
+        </p>
+        <div class="btn-row">
+          <a class="btn btn--primary" href="install.html">
+            Install it
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10m-4-4 4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a class="btn btn--ghost" href="index.html#how">See how it works</a>
+        </div>
+        <div class="hero__chips">
+          <span>No app to open</span>
+          <span>Nothing to sync</span>
+          <span>Nothing leaves your Mac</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ------------------------------------------------------------- the idea -->
+<section class="band band--tight">
+  <div class="wrap">
+    <div class="grid grid--3 reveal">
+      <article class="card">
+        <div class="card__icon" aria-hidden="true">
+          <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 25V15a4 4 0 0 1 4-4h9l6-5v28l-6-5h-9a4 4 0 0 1-4-4Z"/>
+            <path d="M30 14a9 9 0 0 1 0 12" opacity=".6"/>
+          </svg>
+        </div>
+        <h3>It hears the drive arrive</h3>
+        <p class="muted">A LaunchAgent watches <code>/Volumes</code>. Plug the player in and the job
+        starts on its own — no menu bar app, no window, no clicking.</p>
+      </article>
+      <article class="card">
+        <div class="card__icon" aria-hidden="true">
+          <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 6v18m0 0-6-6m6 6 6-6"/>
+            <path d="M7 27v4a3 3 0 0 0 3 3h20a3 3 0 0 0 3-3v-4" opacity=".6"/>
+          </svg>
+        </div>
+        <h3>It fetches a fresh set</h3>
+        <p class="muted">Fifty songs by default, chosen at random from everything on your
+        server, written into a new numbered folder on the player.</p>
+      </article>
+      <article class="card">
+        <div class="card__icon" aria-hidden="true">
+          <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 20a12 12 0 0 1 20.5-8.5M32 20a12 12 0 0 1-20.5 8.5"/>
+            <path d="M28 4v8h-8M12 36v-8h8" opacity=".6"/>
+          </svg>
+        </div>
+        <h3>It tidies up and ejects</h3>
+        <p class="muted">The two newest lists stay; older ones are cleared out. Then the drive is
+        ejected, so you can unplug it and go.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- --------------------------------------------------------------- how it works -->
+<section class="band band--divider" id="how">
+  <div class="wrap">
+    <div class="reveal" style="max-width:64ch;margin-bottom:var(--space-7)">
+      <span class="eyebrow">The whole loop</span>
+      <h2>Three moves, none of them yours</h2>
+      <p class="lede">This is the entire user experience. There is no fourth step, and no
+      interface to learn.</p>
+    </div>
+
+    <div class="reveal" style="display:grid;gap:var(--space-5)">
+
+      <div class="split">
+        <div class="split__media">
+          <img src="assets/img/plugin.jpg" alt="A USB-C cable being plugged into a small black portable music player">
+        </div>
+        <div>
+          <div class="step">
+            <div class="step__num">1</div>
+            <div class="step__body">
+              <h3>You plug the player in</h3>
+              <p class="muted">Any player that mounts as a USB drive under <code>/Volumes</code> —
+              a Shokz OpenSwim, an old iPod in disk mode, a cheap clip-on MP3 player. The job
+              waits two seconds for macOS to finish mounting, then looks for the volume by name.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="split split--flip">
+        <div class="split__media">
+          <img src="assets/img/music.jpg" alt="Streams of light pouring into a small black music player">
+        </div>
+        <div>
+          <div class="step">
+            <div class="step__num">2</div>
+            <div class="step__body">
+              <h3>It fills the drive</h3>
+              <p class="muted">It asks your Navidrome server for random songs, downloads them
+              into a new folder (<code>auto-list/1</code>, <code>auto-list/2</code>, …), and numbers
+              every track so the player plays them in the order you got them.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="split">
+        <div class="split__media">
+          <img src="assets/img/swim.jpg" alt="A swimmer at dawn in open water wearing a bone-conduction headband">
+        </div>
+        <div>
+          <div class="step">
+            <div class="step__num">3</div>
+            <div class="step__body">
+              <h3>It ejects and you go</h3>
+              <p class="muted">Old lists beyond the two newest are removed, the filesystem is
+              synced, and the volume is ejected with <code>diskutil</code>. Unplug it and put it
+              on. Tomorrow's plug-in is a different fifty songs.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- -------------------------------------------------------------- the gear -->
+<section class="band band--divider">
+  <div class="wrap">
+    <div class="gear reveal">
+      <div class="gear__stage">
+        <img src="assets/img/headset.png" alt="A bone-conduction headset" width="1024" height="1024" loading="lazy">
+        <img src="assets/img/player.png" alt="A small clip-on portable music player with a USB-C cable" width="1024" height="1024" loading="lazy">
+      </div>
+      <div>
+        <span class="eyebrow">The gear</span>
+        <h2>Any player that mounts as a drive</h2>
+        <p class="lede">It was written for a Shokz OpenSwim, and it works with the OpenSwim Pro,
+        older Aftershokz players, most clip-on MP3 players, and anything else Finder shows you as
+        a removable volume.</p>
+        <p class="muted">The only requirement is that the player appears as a folder under
+        <code>/Volumes</code> and is formatted FAT32 or exFAT. If you can drag an MP3 onto it in
+        Finder and the player plays it, this tool can fill it.</p>
+        <p class="muted">No phone, no companion app, no account, no proprietary transfer software.
+        The player just has to look like a USB stick — which, to your Mac, is exactly what it
+        is.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------- the twist -->
+<section class="band band--divider">
+  <div class="wrap">
+    <div class="split">
+      <div>
+        <span class="eyebrow">Why this is a project and not a one-liner</span>
+        <h2>The interesting part is the permission</h2>
+        <p class="lede">
+          Copying files onto a USB stick is trivial. Doing it from a background job on modern
+          macOS is not.
+        </p>
+        <p class="muted">
+          macOS gates removable volumes behind a privacy service. When a background job runs
+          <code>/bin/bash</code>, bash <em>is</em> the responsible process — and <code>/bin/bash</code>
+          is an Apple <strong>platform binary</strong>. macOS will not grant those a permission,
+          and cannot even ask. The refusal is permanent and completely silent: every
+          <code>mkdir</code> on the drive fails with <code>Operation not permitted</code>, and nothing
+          tells you why.
+        </p>
+        <p class="muted">
+          The fix is to run the job under a shell that is <em>not</em> a platform binary, so macOS
+          will put up a dialog and then grant it. That is the entire reason
+          <code>install.command</code> installs a Homebrew <code>bash</code>, and the reason it walks
+          you through one <em>Allow</em> prompt.
+        </p>
+        <div class="btn-row">
+          <a class="btn btn--ghost" href="walkthrough.html#step-permission">Read the full story</a>
+          <a class="btn btn--quiet" href="faq.html#platform-binary">Why Homebrew bash?</a>
+        </div>
+      </div>
+      <div class="split__media">
+        <div class="term">
+          <div class="term__bar">
+            <span class="term__dot term__dot--r"></span>
+            <span class="term__dot term__dot--y"></span>
+            <span class="term__dot term__dot--g"></span>
+            <span class="term__title">/tmp/shokz-auto-fill.log</span>
+          </div>
+<pre class="term__body"><span class="c-dim">--- Script started at Tue 14 Oct 07:12:04 BST ---</span>
+Using Navidrome via <span class="c-cyan">http://navidrome.local:4533</span>
+Fetching <span class="c-amber">50</span> random songs from Navidrome...
+Got <span class="c-amber">50</span> song id(s).
+Downloading to <span class="c-cyan">/Volumes/MY_PLAYER/auto-list/7</span>...
+Downloaded file count in /Volumes/MY_PLAYER/auto-list/7: <span class="c-good">50</span>
+Cleaning up old lists (keeping 2 newest)...
+Removing <span class="c-dim">5</span>
+Syncing and ejecting...
+<span class="c-good">"MY_PLAYER" ejected.</span></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- --------------------------------------------------------------- trust -->
+<section class="band band--divider">
+  <div class="wrap">
+    <div class="reveal" style="max-width:60ch;margin-bottom:var(--space-6)">
+      <span class="eyebrow">The awkward questions</span>
+      <h2>Where your password goes, and where it doesn't</h2>
+    </div>
+    <div class="grid grid--2 reveal">
+      <article class="card card--flat">
+        <h3>Nothing leaves your Mac</h3>
+        <p class="muted">Your music lives on your Navidrome server. This tool talks to that server
+        and to the drive in front of you. There is no account, no telemetry, no analytics, no
+        update check, and no third party anywhere in the path. The whole thing is a shell script
+        you can read in one sitting.</p>
+      </article>
+      <article class="card card--flat">
+        <h3>Your password is never typed on screen</h3>
+        <p class="muted">The password prompt does not echo — not even dots. It is stored in
+        <code>~/.config/shokz-auto-fill/config</code> at mode <code>600</code> (only your user can
+        read it), and it is never printed, never logged, and never written into the installer's log
+        file. Requests to Navidrome use a salted token instead.</p>
+      </article>
+      <article class="card card--flat">
+        <h3>It never deletes your music</h3>
+        <p class="muted">Clean-up only touches the numbered folders this tool created inside
+        <code>auto-list/</code>, and only the ones past the newest two. If it cannot download
+        anything at all, it aborts and leaves the drive exactly as it found it.</p>
+      </article>
+      <article class="card card--flat">
+        <h3>You can read every line first</h3>
+        <p class="muted">The installer, the fill script and the test suite are all in the
+        <a href="https://github.com/brookjordan/shokz-auto-fill" target="_blank" rel="noopener">public repository</a>.
+        Nothing is downloaded at install time, and nothing in the repo is obfuscated or minified.</p>
+      </article>
+    </div>
+    <div class="btn-row reveal" style="margin-top:var(--space-5)">
+      <a class="btn btn--ghost" href="faq.html#trust">Read the longer answer</a>
+    </div>
+  </div>
+</section>
+
+<!-- ----------------------------------------------------------- faq teaser -->
+<section class="band band--divider">
+  <div class="wrap">
+    <div class="layout-doc">
+      <div>
+        <span class="eyebrow">Before you start</span>
+        <h2 style="font-size:clamp(1.5rem,2.6vw,2rem)">The four things everyone asks</h2>
+        <p class="muted small">There is a much longer list on the FAQ page.</p>
+        <a class="btn btn--ghost" href="faq.html">All questions</a>
+      </div>
+      <div>
+        <details class="qa">
+          <summary>What even is a <code>.command</code> file?</summary>
+          <div class="qa__body">
+            <p>It is a plain text file full of shell commands that macOS opens in Terminal when you
+            double-click it. The <code>.command</code> extension is the only thing that makes Finder
+            run it instead of showing it to you in a text editor. You can open
+            <code>install.command</code> in TextEdit and read every line before you run it — and you
+            probably should.</p>
+            <p><a href="faq.html#command-file">More on <code>.command</code> files →</a></p>
+          </div>
+        </details>
+        <details class="qa">
+          <summary>Why should I trust a script from the internet with my password?</summary>
+          <div class="qa__body">
+            <p>You shouldn't, on the strength of a web page. You should trust it because you read
+            it. It is about 700 lines of commented shell across four files, it is not minified, it
+            has no network calls except to the Navidrome server you name yourself, and it installs
+            nothing except a Homebrew <code>bash</code> and <code>jq</code>.</p>
+            <p>If you would rather not hand over your real password, make a second Navidrome account
+            for this and use that. It only ever needs permission to read your library.</p>
+            <p><a href="faq.html#trust">The full trust answer →</a></p>
+          </div>
+        </details>
+        <details class="qa">
+          <summary>Does anything get sent anywhere?</summary>
+          <div class="qa__body">
+            <p>No. Two things are contacted: your Navidrome server, to fetch songs, and the USB
+            drive in front of you, to write them. There is no phone-home, no crash reporting, no
+            usage analytics and no auto-update.</p>
+            <p><a href="faq.html#privacy">Privacy in detail →</a></p>
+          </div>
+        </details>
+        <details class="qa">
+          <summary>What happens if my server is down when I plug in?</summary>
+          <div class="qa__body">
+            <p>It tries each URL you configured, in order. If none of them answer it aborts, writes
+            the reason to its log, and leaves the existing music on the player untouched. It will
+            not create an empty folder and it will not clear out your old lists.</p>
+            <p><a href="edge-cases.html#server-down">What that looks like →</a></p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ---------------------------------------------------------------- close -->
+<section class="band">
+  <div class="wrap">
+    <div class="bleed reveal">
+      <img src="assets/img/swim.jpg" alt="A swimmer at dawn in open dark water">
+    </div>
+    <div class="center reveal" style="margin-top:var(--space-7);max-width:60ch;margin-inline:auto">
+      <h2>Fifty new songs, every time you plug in</h2>
+      <p class="lede" style="margin-inline:auto">
+        Two minutes to install, one <em>Allow</em> dialog, and then you never think about it again.
+      </p>
+      <div class="btn-row" style="justify-content:center">
+        <a class="btn btn--primary" href="install.html">Install Shokz Auto-Fill</a>
+        <a class="btn btn--ghost" href="walkthrough.html">Walk through it first</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div>
+        <a class="nav__brand" href="index.html" style="margin-bottom:var(--space-3)">
+          <svg class="nav__mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <path d="M6 22c0-7 4.5-12 10-12s10 5 10 12" stroke="url(#fg)" stroke-width="2.4" stroke-linecap="round"/>
+            <circle cx="6" cy="24" r="3.1" fill="url(#fg)"/>
+            <circle cx="26" cy="24" r="3.1" fill="url(#fg)"/>
+            <defs><linearGradient id="fg" x1="3" y1="10" x2="29" y2="27" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#3fe0ff"/><stop offset="1" stop-color="#ffb454"/>
+            </linearGradient></defs>
+          </svg>
+          <span>Shokz Auto-Fill</span>
+        </a>
+        <p class="footer__tagline">A small macOS background job that keeps a USB music player
+        stocked from your own Navidrome library.</p>
+      </div>
+      <div>
+        <h4>This project</h4>
+        <ul>
+          <li><a href="install.html">Install</a></li>
+          <li><a href="walkthrough.html">Walkthrough</a></li>
+          <li><a href="edge-cases.html">When it goes sideways</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Code</h4>
+        <ul>
+          <li><a href="https://github.com/brookjordan/shokz-auto-fill" target="_blank" rel="noopener">Repository</a></li>
+          <li><a href="https://github.com/brookjordan/shokz-auto-fill/blob/master/README.md" target="_blank" rel="noopener">README</a></li>
+          <li><a href="https://github.com/brookjordan/shokz-auto-fill/blob/master/docs.html" target="_blank" rel="noopener">Reference docs</a></li>
+          <li><a href="https://github.com/brookjordan/shokz-auto-fill/issues" target="_blank" rel="noopener">Issues</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Brook Jordan</h4>
+        <ul>
+          <li><a href="https://github.com/brookjordan" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="https://brookjordan.github.io/" target="_blank" rel="noopener">brookjordan.github.io</a></li>
+          <li><a href="https://brookjordan.github.io/projects/localimagegen/" target="_blank" rel="noopener">localimagegen</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© <span data-year>2026</span> Brook Jordan · built on a Mac, for a Mac</span>
+      <span>Navidrome is a separate project · <a href="https://www.navidrome.org/" target="_blank" rel="noopener">navidrome.org</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/site.js"></script>
+</body>
+</html>

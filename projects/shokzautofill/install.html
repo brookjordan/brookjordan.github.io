@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Install — Shokz Auto-Fill</title>
+<meta name="description" content="Install Shokz Auto-Fill on macOS: the two-minute version, plus the things nobody tells you about .command files, the password prompt, URL ordering and the removable-volume permission dialog.">
+<meta name="color-scheme" content="dark">
+<meta property="og:title" content="Install — Shokz Auto-Fill">
+<meta property="og:description" content="The two-minute version, plus the things nobody tells you.">
+<meta property="og:image" content="assets/img/hero.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site.css">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav__inner">
+    <a class="nav__brand" href="index.html">
+      <svg class="nav__mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <path d="M6 22c0-7 4.5-12 10-12s10 5 10 12" stroke="url(#ng)" stroke-width="2.4" stroke-linecap="round"/>
+        <circle cx="6" cy="24" r="3.1" fill="url(#ng)"/>
+        <circle cx="26" cy="24" r="3.1" fill="url(#ng)"/>
+        <defs><linearGradient id="ng" x1="3" y1="10" x2="29" y2="27" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#3fe0ff"/><stop offset="1" stop-color="#ffb454"/>
+        </linearGradient></defs>
+      </svg>
+      <span>Shokz Auto-Fill</span>
+    </a>
+    <div class="nav__links">
+      <a class="nav__link" href="index.html#how">How it works</a>
+      <a class="nav__link" href="install.html" aria-current="page">Install</a>
+      <a class="nav__link" href="walkthrough.html">Walkthrough</a>
+      <a class="nav__link" href="edge-cases.html">When it goes sideways</a>
+      <a class="nav__link" href="faq.html">FAQ</a>
+      <a class="btn btn--ghost" href="https://github.com/brookjordan/shokz-auto-fill" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </div>
+</nav>
+
+<header class="page-head">
+  <div class="page-head__bg" aria-hidden="true"><img src="assets/img/plugin.jpg" alt=""></div>
+  <div class="wrap">
+    <p class="crumbs"><a href="index.html">Shokz Auto-Fill</a><span>/</span>Install</p>
+    <h1>Install</h1>
+    <p class="lede">About two minutes, five questions, and exactly one dialog from macOS.
+    Part one is the whole procedure. Part two is everything you would rather know
+    <em>before</em> you type your password into a script you just downloaded.</p>
+  </div>
+</header>
+
+<main class="band">
+  <div class="wrap">
+    <div class="layout-doc">
+
+      <aside class="toc" aria-label="On this page">
+        <p class="toc__title">On this page</p>
+        <ol>
+          <li><a href="#before">Before you start</a></li>
+          <li><a href="#quick">The short version</a></li>
+          <li><a href="#answers">The five answers</a></li>
+          <li><a href="#obvious">The bits nobody tells you</a></li>
+          <li><a href="#where">What lands where</a></li>
+          <li><a href="#after">After the install</a></li>
+          <li><a href="#deep">The deep dives</a></li>
+        </ol>
+      </aside>
+
+      <div class="prose">
+
+        <!-- ------------------------------------------------------- before -->
+        <h2 id="before">Before you start</h2>
+
+        <p>You need four things:</p>
+
+        <ul class="list-check">
+          <li><strong>A Mac.</strong> This is macOS-only. It relies on <code>launchd</code> and on a
+          quirk of macOS privacy that has no equivalent elsewhere.</li>
+          <li><strong>A Navidrome server</strong> — <a href="https://www.navidrome.org/" target="_blank" rel="noopener">navidrome.org</a> —
+          with your music on it, and an account on that server. This can be on the same Mac, on a
+          NAS in the house, or on a VPS somewhere. It just has to answer HTTP.</li>
+          <li><strong>The player,</strong> formatted as FAT32 or exFAT, so that it mounts as a
+          folder under <code>/Volumes</code>.</li>
+          <li><strong>Homebrew</strong> — <a href="https://brew.sh" target="_blank" rel="noopener">brew.sh</a> —
+          but only if you don't already have <code>jq</code> and a non-Apple <code>bash</code>.
+          The installer checks first and will not touch Homebrew if it doesn't need to.</li>
+        </ul>
+
+        <div class="note">
+          <span class="note__label">Plug the player in first</span>
+          <p>You <em>can</em> install without the player attached, and the installer will still set
+          everything up — but it will not be able to run its permission test, and you will meet the
+          <em>Allow</em> dialog for the first time on your next plug-in instead, with no context for
+          what just asked you for access to your drive. It is a much calmer experience to have the
+          player mounted while you install. It also gives the device question a menu to show you
+          rather than a blank line.</p>
+        </div>
+
+        <!-- -------------------------------------------------------- quick -->
+        <h2 id="quick">The short version</h2>
+
+        <p>If you read nothing else, this is the whole thing.</p>
+
+        <div style="display:grid;gap:var(--space-4);margin:var(--space-6) 0">
+          <div class="step">
+            <div class="step__num">1</div>
+            <div class="step__body">
+              <h3>Get the files</h3>
+              <p class="muted">Clone the repository, or download the ZIP from GitHub and unpack it.
+              Anywhere is fine — your home folder, your Desktop, a projects directory. The installer
+              copies what it needs into place; the folder you run it from is not where it lives
+              afterwards.</p>
+<pre class="term__body" style="background:#060a12;border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-4);margin:0"><span class="c-dim">$</span> git clone https://github.com/brookjordan/shokz-auto-fill.git
+<span class="c-dim">$</span> cd shokz-auto-fill</pre>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step__num">2</div>
+            <div class="step__body">
+              <h3>Plug your player in, then double-click <code>install.command</code></h3>
+              <p class="muted">In Finder, that is two clicks. From a terminal, it is
+              <code>./install.command</code>. Either way you get the same thing: a Terminal window
+              opens and starts asking questions.</p>
+              <div class="note note--warn">
+                <span class="note__label">macOS will probably block it once</span>
+                <p>The first time, you may get <em>"install.command cannot be opened because it is
+                from an unidentified developer"</em>, or a dialog offering to move it to the Bin.
+                That is Gatekeeper doing its job on an unsigned script. Do not double-click again —
+                <strong>right-click the file, choose <em>Open</em>, then click <em>Open</em> in the
+                dialog.</strong> macOS remembers, and every later run is a normal double-click.</p>
+                <p>If there is no <em>Open</em> option, the file has lost its execute permission —
+                usually because it came out of a ZIP. Fix it once with
+                <code>chmod +x install.command</code>.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step__num">3</div>
+            <div class="step__body">
+              <h3>Answer five questions</h3>
+              <p class="muted">They are asked in a deliberate order, and you can go back and change
+              any answer before anything is written. Full detail on
+              <a href="#answers">the five answers</a> below.</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step__num">4</div>
+            <div class="step__body">
+              <h3>Click <em>Allow</em> when macOS asks</h3>
+              <p class="muted">Once, near the end. The dialog is macOS asking whether the job may
+              write to removable volumes. Click <strong>Allow</strong>. If you click Don't Allow, the
+              installer tells you and you can re-run it — nothing is broken, and nothing is
+              written to the drive until this is granted.</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step__num">5</div>
+            <div class="step__body">
+              <h3>Done</h3>
+              <p class="muted">The installer prints a summary and waits for you to press return
+              before closing the window. That is the whole installation. To test it right away:</p>
+<pre class="term__body" style="background:#060a12;border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-4);margin:0"><span class="c-dim">$</span> launchctl kickstart -k gui/$(id -u)/local.shokz-auto-fill
+<span class="c-dim">$</span> tail -f /tmp/shokz-auto-fill.log</pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- ------------------------------------------------------ answers -->
+        <h2 id="answers">The five answers</h2>
+
+        <p>Asked in this order, on purpose. The server and the login come first so that the
+        connection check they make possible can run in the <em>background</em> while you answer the
+        remaining questions. By the time you finish, the answer is usually already waiting.</p>
+
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr><th>Question</th><th>What to put</th><th>Why it is asked this way</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Navidrome URL(s)</strong></td>
+                <td>One or more base URLs, separated by spaces or commas. e.g.
+                <code>http://navidrome.local:4533 https://music.example.com</code></td>
+                <td>Every URL is checked during install. A dead fallback is worth discovering now,
+                rather than on the day the working one goes away.</td>
+              </tr>
+              <tr>
+                <td><strong>Username</strong></td>
+                <td>Your Navidrome account name. It does not have to match your macOS account.</td>
+                <td>Asked separately from the password so that a typo you notice at the password
+                prompt is one <kbd>Esc</kbd> away from being fixed.</td>
+              </tr>
+              <tr>
+                <td><strong>Password</strong></td>
+                <td>Your Navidrome password. Nothing appears as you type.</td>
+                <td>Not echoed. Pressing return keeps a password already stored from a previous
+                install.</td>
+              </tr>
+              <tr>
+                <td><strong>Device</strong></td>
+                <td>The volume name — the folder name under <code>/Volumes</code>. You can type it,
+                or type the number from the list the installer prints.</td>
+                <td>Currently mounted volumes are listed with a filesystem and free-space hint, so
+                you can tell your player from a mounted disk image.</td>
+              </tr>
+              <tr>
+                <td><strong>Songs per fill</strong></td>
+                <td>A whole number. Default <code>50</code>.</td>
+                <td>You can change it later without reinstalling.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ------------------------------------------------------- obvious -->
+        <h2 id="obvious">The bits nobody tells you</h2>
+
+        <h3 id="command-file">A <code>.command</code> file is just a text file</h3>
+        <p>It is not an app, not a package, and not a binary. It is a shell script with a
+        <code>.command</code> extension, which is the one thing that makes Finder hand it to
+        Terminal instead of opening it in TextEdit. Right-click it and choose <em>Open With →
+        TextEdit</em> and you will read exactly what is about to run — no compiled code, no
+        installer payload, no hidden download step.</p>
+        <p>That is also why Gatekeeper complains. There is no developer certificate to check, so
+        macOS falls back to "I have never seen this, ask a human." The right-click-and-Open dance
+        is you answering that question once.</p>
+
+        <h3 id="password">Don't worry — your password will not appear on screen</h3>
+        <p>When you reach the password prompt, typing produces <strong>nothing at all</strong>. No
+        characters, no asterisks, no dots, no cursor movement. That is not a broken prompt; it is
+        the point. The installer puts the terminal into no-echo mode itself and reads your
+        keystrokes one at a time, precisely so the password cannot be shoulder-surfed or caught by
+        a screen recording.</p>
+        <p>From there the password goes to exactly one place:
+        <code>~/.config/shokz-auto-fill/config</code>, written with mode <code>600</code> — readable
+        only by your user account. It is never printed, never written to the installer's log
+        (which redacts it even if it somehow appeared), and never sent anywhere except your own
+        Navidrome server.</p>
+        <div class="note note--good">
+          <span class="note__label">What actually goes over the wire</span>
+          <p>Not the password. Every request to Navidrome uses a Subsonic token:
+          <code>md5(password + salt)</code>, with a fresh random salt each time. Even on the wire,
+          your password itself never travels.</p>
+        </div>
+        <p>If you would still rather not, make a second Navidrome account for this tool and use
+        that. It only ever needs to read your library.</p>
+
+        <h3 id="fastest-first">Why we ask for the fastest server first</h3>
+        <p>You can give it several URLs, and they are tried <strong>in the order you write
+        them</strong>, with the first one that answers winning. The order matters more than it
+        looks:</p>
+        <ul>
+          <li><strong>Put your LAN address first.</strong> If your Navidrome is on the same network,
+          <code>http://navidrome.local:4533</code> will beat a remote URL every time — often by two
+          orders of magnitude. Fifty songs off a local server is seconds; fifty songs over the
+          internet from a coffee shop is minutes, and every one of those minutes is a drive sitting
+          there half-written.</li>
+          <li><strong>Put a remote URL second.</strong> That is the fallback for when you are away
+          from home. This is exactly the entry that rots quietly — a dynamic DNS name that stopped
+          updating, a certificate that expired, a port forward someone closed. Which is why the
+          installer <em>checks every URL</em>, not just the first one. A fallback you have never
+          tested is not a fallback.</li>
+        </ul>
+        <p>At fill time, "reachable" is enough to win. A URL that answers but rejects the login is
+        still the right service on the right host, so the job stays with it rather than skipping
+        ahead to a URL that might do the same thing more slowly.</p>
+
+        <h3 id="drive">Have the drive attached so we can find it</h3>
+        <p>Two reasons, and the second is the one that bites.</p>
+        <p><strong>One:</strong> the installer lists what is currently mounted under
+        <code>/Volumes</code> — with the filesystem and free space next to each entry — so the device
+        question becomes "type <code>2</code>" instead of "remember exactly how macOS spelled your
+        player's volume name." A player named <code>MY PLAYER</code> with a space in it is a
+        perfectly normal thing to get wrong.</p>
+        <p><strong>Two:</strong> the removable-volume permission can only be tested against a drive
+        that is actually there. macOS grants access to <em>removable volumes</em> as a category, so
+        in principle one grant covers everything — but the installer would rather prove it now, on a
+        drive it can write to and clean up after, than leave you to discover a denial at 6am on your
+        way out of the door.</p>
+
+        <h3 id="homebrew-bash">Why it installs Homebrew <code>bash</code></h3>
+        <p>This is the one genuinely surprising requirement, and it has a real reason. macOS will not
+        grant removable-volume access to an Apple <em>platform binary</em>, and <code>/bin/bash</code>
+        is one. The refusal is silent and permanent, and it arrives as
+        <code>Operation not permitted</code> on every write — the single most confusing failure this
+        project has. The long version, with the actual log lines, is in the
+        <a href="walkthrough.html#step-permission">walkthrough</a> and the
+        <a href="faq.html#platform-binary">FAQ</a>.</p>
+
+        <!-- --------------------------------------------------------- where -->
+        <h2 id="where">What lands where</h2>
+
+        <p>Six things, all of them listed here so there are no surprises later.</p>
+
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Path</th><th>What it is</th></tr></thead>
+            <tbody>
+              <tr><td><code>~/Library/Application Support/ShokzAutoFill/bin/auto_fill_shokz.sh</code></td>
+                  <td>The fill script itself.</td></tr>
+              <tr><td><code>~/.config/shokz-auto-fill/config</code></td>
+                  <td>Device, URLs and credentials. <strong>Mode 600.</strong> This is the only file with your password in it.</td></tr>
+              <tr><td><code>~/Library/LaunchAgents/local.shokz-auto-fill.plist</code></td>
+                  <td>The LaunchAgent that runs the script whenever <code>/Volumes</code> changes.</td></tr>
+              <tr><td><code>/tmp/shokz-auto-fill.log</code></td>
+                  <td>The job's own log. Trimmed to the last 1000 lines on every run.</td></tr>
+              <tr><td><code>~/Library/Application Support/ShokzAutoFill/logs/</code></td>
+                  <td>One install log per run, mode 600, credentials redacted, with <code>latest.log</code> pointing at the newest.</td></tr>
+              <tr><td><code>/Volumes/&lt;PLAYER&gt;/auto-list/&lt;n&gt;/</code></td>
+                  <td>The music. Numbered folders, two newest kept.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>Nothing is installed system-wide. There is no <code>sudo</code> anywhere in the
+        installer, no daemon, no kernel extension, and nothing written outside your home folder
+        except the two logs under <code>/tmp</code>.</p>
+
+        <!-- --------------------------------------------------------- after -->
+        <h2 id="after">After the install</h2>
+
+        <h3>Changing a setting later</h3>
+        <p>Just run <code>install.command</code> again. It notices the existing installation, shows
+        you what is configured, and asks what to change. Enter one number, or several like
+        <code>1 3</code>, or <code>a</code> for everything, or <code>q</code> to leave it alone.
+        Because the script and the agent read the config at run time, a settings change takes effect
+        on the very next fill — no reload, no restart.</p>
+        <p>Choose <strong>5</strong> when you want to reinstall the script and agent themselves —
+        for example to re-request the removable-volume permission after a Homebrew
+        <code>bash</code> upgrade, which the <a href="faq.html#bash-upgrade">FAQ covers</a>.</p>
+
+        <h3>Removing it</h3>
+        <p>Double-click <code>uninstall.command</code>. It unloads and deletes the LaunchAgent and
+        the installed script, then asks <em>separately</em> before deleting the config — because
+        that file holds your password, and you might be reinstalling in a minute. Music already on
+        the player is never touched.</p>
+
+        <!-- ---------------------------------------------------------- deep -->
+        <h2 id="deep">The deep dives</h2>
+
+        <p>Everything above is the summary. When you actually run it, two pages go line by line
+        through what you will see.</p>
+
+        <div class="grid grid--2" style="margin-top:var(--space-5)">
+          <a class="card" href="walkthrough.html" style="display:block;color:inherit">
+            <span class="eyebrow">Happy path</span>
+            <h3>The walkthrough</h3>
+            <p class="muted">Every prompt, in order, with the exact text you will see, what to
+            type, and what happens next — including the two moments where the installer goes quiet
+            on purpose and you should <em>not</em> press anything.</p>
+            <p style="margin:0;color:var(--cyan)">Read the walkthrough →</p>
+          </a>
+          <a class="card" href="edge-cases.html" style="display:block;color:inherit">
+            <span class="eyebrow">Everything else</span>
+            <h3>When it goes sideways</h3>
+            <p class="muted">Going back a step, what Escape really does, why the password prompt
+            looks different on a re-run, what happens when a URL rejects your login, how to retry,
+            and every way out that leaves your machine untouched.</p>
+            <p style="margin:0;color:var(--cyan)">Read the edge cases →</p>
+          </a>
+        </div>
+
+        <div class="note" style="margin-top:var(--space-7)">
+          <span class="note__label">Stuck?</span>
+          <p>The installer writes an unusually detailed log on purpose — every URL it tried, the DNS
+          answer, whether the port was open, the TLS timing, the Subsonic status, and a plain-English
+          conclusion. Open
+          <code>~/Library/Application Support/ShokzAutoFill/logs/latest.log</code> before assuming
+          anything. The <a href="edge-cases.html#logs">log section</a> shows you what to look for.</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div>
+        <a class="nav__brand" href="index.html" style="margin-bottom:var(--space-3)">
+          <svg class="nav__mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <path d="M6 22c0-7 4.5-12 10-12s10 5 10 12" stroke="url(#fg)" stroke-width="2.4" stroke-linecap="round"/>
+            <circle cx="6" cy="24" r="3.1" fill="url(#fg)"/>
+            <circle cx="26" cy="24" r="3.1" fill="url(#fg)"/>
+            <defs><linearGradient id="fg" x1="3" y1="10" x2="29" y2="27" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#3fe0ff"/><stop offset="1" stop-color="#ffb454"/>
+            </linearGradient></defs>
+          </svg>
+          <span>Shokz Auto-Fill</span>
+        </a>
+        <p class="footer__tagline">A small macOS background job that keeps a USB music player
+        stocked from your own Navidrome library.</p>
+      </div>
+      <div>
+        <h4>This project</h4>
+        <ul>
+          <li><a href="install.html">Install</a></li>
+          <li><a href="walkthrough.html">Walkthrough</a></li>
+          <li><a href="edge-cases.html">When it goes sideways</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Code</h4>
+        <ul>
+          <li><a href="https://github.com/brookjordan/shokz-auto-fill" target="_blank" rel="noopener">Repository</a></li>
+          <li><a href="https://github.com/brookjordan/shokz-auto-fill/blob/master/README.md" target="_blank" rel="noopener">README</a></li>
+          <li><a href="https://github.com/brookjordan/shokz-auto-fill/blob/master/docs.html" target="_blank" rel="noopener">Reference docs</a></li>
+          <li><a href="https://github.com/brookjordan/shokz-auto-fill/issues" target="_blank" rel="noopener">Issues</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Brook Jordan</h4>
+        <ul>
+          <li><a href="https://github.com/brookjordan" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="https://brookjordan.github.io/" target="_blank" rel="noopener">brookjordan.github.io</a></li>
+          <li><a href="https://brookjordan.github.io/projects/localimagegen/" target="_blank" rel="noopener">localimagegen</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© <span data-year>2026</span> Brook Jordan · built on a Mac, for a Mac</span>
+      <span>Navidrome is a separate project · <a href="https://www.navidrome.org/" target="_blank" rel="noopener">navidrome.org</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/site.js"></script>
+</body>
+</html>
