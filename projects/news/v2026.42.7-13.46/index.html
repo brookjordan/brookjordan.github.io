@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Patch Notes v2026.42.7-13.46</title>
+    <base href="/projects/news/v2026.42.7-13.46/">
+    <style>
+        body {
+          background: #121212;
+          color: #eee;
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-height: 100vh;
+          margin: 0;
+          padding: 20px;
+          box-sizing: border-box;
+        }
+    
+        .card {
+          background: #1e1e1e;
+          padding: 2rem;
+          border-radius: 24px;
+          text-align: center;
+          width: 100%;
+          max-width: 500px;
+          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+          display: flex;
+          flex-direction: column;
+        }
+    
+        h1 {
+          margin: 0 0 1rem 0;
+          color: #fff;
+          font-size: 1.6rem;
+        }
+
+        .media-stage {
+          position: relative;
+          width: 100%;
+          aspect-ratio: 16 / 9;
+          border-radius: 16px;
+          margin-bottom: 0.75rem;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+          border: 1px solid #333;
+          overflow: hidden;
+          cursor: pointer;
+          background: #1a1a1a;
+        }
+
+        .cover-art,
+        .podcast-video {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: opacity 650ms ease;
+        }
+
+        .cover-primary { z-index: 3; opacity: 1; }
+        .podcast-video { z-index: 2; opacity: 0; }
+        .cover-alt { z-index: 4; opacity: 0; }
+        .media-stage.video-playing .cover-primary { opacity: 0; }
+        .media-stage.video-playing .podcast-video { opacity: 1; }
+        .media-stage.show-final .cover-alt { opacity: 1; }
+        .media-stage.show-final .podcast-video { opacity: 1; }
+
+        .image-hint {
+          position: absolute;
+          right: 10px;
+          bottom: 10px;
+          z-index: 2;
+          padding: 5px 9px;
+          border-radius: 999px;
+          background: rgba(18,18,18,0.72);
+          color: #ddd;
+          font-size: 0.68rem;
+          pointer-events: none;
+          backdrop-filter: blur(5px);
+        }
+
+        .media-viewport {
+          position: relative;
+          width: 100%;
+          padding-top: 56.25%; /* Force uniform 16:9 Aspect Ratio box */
+          border-radius: 16px;
+          margin-bottom: 1.5rem;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+          border: 1px solid #333;
+          background: #1a1a1a;
+          overflow: hidden;
+        }
+        
+        .cover-media {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: 15px;
+        }
+    
+        .podcast-nav {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
+          margin: 0 0 1.25rem 0;
+        }
+
+        .podcast-nav a {
+          color: #ddd;
+          background: #292929;
+          border: 1px solid #3a3a3a;
+          border-radius: 10px;
+          padding: 9px 12px;
+          text-decoration: none;
+          font-size: 0.78rem;
+          transition: 0.2s;
+        }
+
+        .podcast-nav a:hover { border-color: #bb86fc; color: #fff; }
+        .podcast-nav a.disabled { opacity: 0.35; pointer-events: none; }
+
+        /* Navigation & Status Row */
+        .nav-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 0.5rem;
+        }
+    
+        #st {
+          color: #888;
+          font-size: 0.75rem;
+          text-transform: uppercase;
+          letter-spacing: 1.5px;
+          margin: 0;
+          flex-grow: 1;
+        }
+    
+        .skip-btn {
+          background: #333;
+          color: #fff;
+          border: none;
+          border-radius: 50%;
+          width: 36px;
+          height: 36px;
+          cursor: pointer;
+          transition: 0.2s;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1rem;
+        }
+    
+        .skip-btn:hover:not(:disabled) {
+          background: #bb86fc;
+          color: #121212;
+        }
+    
+        .skip-btn:disabled {
+          opacity: 0.3;
+          cursor: not-allowed;
+        }
+    
+        audio {
+          color-scheme: dark;
+          background: #292929;
+          border-radius: 12px;
+          width: 100%;
+          margin: 0.5rem 0 1rem 0;
+          outline: none;
+          flex-shrink: 0;
+        }
+    
+        /* 'Now Playing' Transcript Box */
+        .transcript-box {
+          background: #252525;
+          padding: 1.5rem;
+          border-radius: 16px;
+          margin: 0.5rem 0;
+          min-height: 60px;
+          text-align: left;
+          border-left: 4px solid #444;
+          flex-shrink: 0;
+          transition: border-color 0.3s;
+        }
+    
+        #ts-text {
+          line-height: 1.5;
+          font-size: 1.05rem;
+          margin: 0;
+          color: #f0f0f0;
+        }
+    
+        #ts-voice {
+          font-weight: bold;
+          font-size: 0.7rem;
+          text-transform: uppercase;
+          margin-bottom: 0.4rem;
+          opacity: 0.6;
+        }
+    
+        /* Links & Buttons */
+        .link-container {
+          margin-top: 1rem;
+          opacity: 0;
+          transition: opacity 0.3s;
+          pointer-events: none;
+          flex-shrink: 0;
+        }
+    
+        .link-container.visible {
+          opacity: 1;
+          pointer-events: auto;
+        }
+    
+        .btn {
+          background: #bb86fc;
+          color: #121212;
+          padding: 12px 20px;
+          text-decoration: none;
+          border-radius: 12px;
+          display: inline-flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          transition: transform 0.2s;
+          gap: 4px;
+          box-shadow: 0 4px 15px rgba(187, 134, 252, 0.2);
+        }
+    
+        .btn:hover {
+          transform: scale(1.03);
+        }
+    
+        .btn-title {
+          font-weight: 800;
+          font-size: 1rem;
+        }
+    
+        .btn-summary {
+          font-size: 0.75rem;
+          font-weight: 600;
+          opacity: 0.75;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+    
+        /* Messenger Toggle */
+        .toggle-btn {
+          background: none;
+          border: 1px solid #555;
+          color: #aaa;
+          padding: 8px 16px;
+          border-radius: 20px;
+          cursor: pointer;
+          margin: 1.5rem auto 0.5rem auto;
+          font-size: 0.85rem;
+          transition: all 0.2s;
+          flex-shrink: 0;
+        }
+    
+        .toggle-btn:hover {
+          background: #333;
+          color: #fff;
+        }
+    
+        /* Full Messenger Chat */
+        .chat-container {
+          display: none;
+          flex-direction: column;
+          gap: 20px;
+          margin-top: 1rem;
+          text-align: left;
+          overflow-y: auto;
+          padding: 10px 15px 10px 5px;
+          border-top: 1px solid #333;
+          scrollbar-width: thin;
+          scroll-behavior: smooth;
+        }
+    
+        .chat-container.visible {
+          display: flex;
+          flex-grow: 1;
+        }
+    
+        .chat-container::-webkit-scrollbar {
+          width: 6px;
+        }
+    
+        .chat-container::-webkit-scrollbar-thumb {
+          background-color: #555;
+          border-radius: 10px;
+        }
+    
+        /* Topic Wrapper */
+        .topic-group {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          position: relative;
+        }
+    
+        /* Sticky Topic Header */
+        .topic-header {
+          position: sticky;
+          top: 5px;
+          align-self: center;
+          background: rgba(35, 35, 35, 0.95);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          color: #bb86fc;
+          padding: 8px 16px;
+          font-size: 0.75rem;
+          font-weight: bold;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          text-align: center;
+          border-radius: 12px;
+          z-index: 10;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+          border: 1px solid rgba(187, 134, 252, 0.2);
+          max-width: 85%;
+        }
+    
+        .chat-bubble {
+          padding: 12px 16px;
+          border-radius: 18px;
+          max-width: 85%;
+          font-size: 0.95rem;
+          line-height: 1.4;
+          position: relative;
+          opacity: 0.4;
+          transition: all 0.3s;
+          cursor: pointer;
+        }
+    
+        .chat-bubble:hover {
+          opacity: 0.8;
+          transform: scale(1.01);
+        }
+    
+        .chat-bubble.active {
+          opacity: 1;
+          cursor: default;
+          transform: none;
+        }
+    
+        .chat-label {
+          font-size: 0.65rem;
+          font-weight: bold;
+          margin-bottom: 4px;
+          text-transform: uppercase;
+          opacity: 0.7;
+          pointer-events: none;
+        }
+    
+        /* Dynamic Character Styles */
+        .am_adam {
+          border-color: #00d2ff;
+        }
+    
+        .af_sky {
+          border-color: #bb86fc;
+        }
+    
+        .chat-bubble.am_adam {
+          align-self: flex-start;
+          background: #2a2a2a;
+          color: #e0e0e0;
+          border-bottom-left-radius: 4px;
+          border-left: 3px solid #00d2ff;
+        }
+    
+        .chat-bubble.af_sky {
+          align-self: flex-end;
+          background: #3c2a4d;
+          color: #e0e0e0;
+          border-bottom-right-radius: 4px;
+          border-right: 3px solid #bb86fc;
+        }
+
+        .stats-panel { margin-top: 1rem; text-align: left; border: 1px solid #3a3a3a; border-radius: 14px; background: #202020; }
+        .stats-panel summary { cursor: pointer; padding: 12px 14px; color: #bb86fc; font-weight: 700; list-style-position: inside; }
+        .stats-content { padding: 0 14px 14px; color: #ddd; }
+        .stats-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 8px 0 12px; }
+        .stats-card { background: #292929; border-radius: 10px; padding: 10px; }
+        .stats-value { display: block; color: #fff; font-size: 1.05rem; font-weight: 750; }
+        .stats-label { display: block; color: #999; font-size: 0.68rem; text-transform: uppercase; letter-spacing: .06em; margin-top: 3px; }
+        .stats-stage { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; border-top: 1px solid #333; padding: 9px 0; font-size: .8rem; }
+        .stats-stage small { grid-column: 1 / -1; color: #888; }
+        .stats-raw { color: #bb86fc; font-size: .78rem; }
+        .stats-error { color: #ffb4ab; }
+        .attempt-switcher { display: inline-flex; gap: 6px; margin-top: 8px; align-items: center; }
+        .attempt-btn { background: #292929; color: #eee; border: 1px solid #3a3a3a; border-radius: 10px; padding: 3px 10px; font-size: .75rem; cursor: pointer; }
+        .attempt-btn[aria-pressed="true"] { background: #bb86fc; color: #121212; font-weight: 700; border-color: #bb86fc; }
+        .attempt-btn.pass { border-color: #2e7d32; }
+        .attempt-btn.fail { border-color: #c62828; }
+        .attempt-btn.pass[aria-pressed="true"] { background: #2e7d32; border-color: #2e7d32; color: #fff; }
+        .attempt-btn.fail[aria-pressed="true"] { background: #c62828; border-color: #c62828; color: #fff; }
+        .attempt-key { font-size: .72rem; margin-right: 6px; border: none; background: none; padding: 0; }
+        .attempt-num { display: inline-block; padding: 0 6px; border-radius: 8px; font-weight: 700; }
+        .attempt-num.num-fail { color: #ff6e63; background: rgba(255,110,99,.12); }
+        .attempt-num.num-pass { color: #7ef7b0; background: rgba(126,247,176,.10); }
+        .attempt-slash { opacity: .5; margin: 0 3px; }
+        .attempt-icons { margin-right: 2px; }
+        .attempt-btn.fail { text-decoration: line-through; text-decoration-thickness: 1px; }
+        .crit-dots { display: inline-flex; gap: 5px; margin-left: 10px; vertical-align: middle; }
+        .crit-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; cursor: help; }
+        .crit-dot.pass { background: #fff; }
+        .crit-dot.fail { background: #e5484d; }
+        .crit-dot.na { background: transparent; border: 1px dashed #666; }
+
+        .player-tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; margin: 0.4rem 0 1rem; }
+        .player-tabs button { background: #292929; color: #ddd; border: 1px solid #444; border-radius: 9px; padding: 10px 5px; cursor: pointer; font-size: .78rem; }
+        .player-tabs button[aria-selected="true"] { background: #bb86fc; color: #121212; font-weight: 700; }
+        .player-tabs button:focus-visible, .chat-bubble:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+        .player-tab-panel[hidden] { display: none !important; }
+        .chat-container.tab-visible { display: flex; flex-grow: 1; }
+        .chat-bubble[aria-current="true"] { opacity: 1; outline: 2px solid #bb86fc; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div id="media-stage" class="media-stage" tabindex="0" role="button" aria-label="Play animated briefing">
+            <img id="primary-cover" src="https://assets.brook.dev/podcasts/v2026.42.7-13.46/cover.png" class="cover-art cover-primary" alt="Patch Notes v2026.42.7-13.46 — A wide, deep-perspective cinematic shot of a cobblestone town square in Limoges at dusk. A towering stone spire atop a historic town hall is engulfed in vibrant orange flames, with thick black smoke billowing upward against a bruised purple sky. The ground is littered with debris and scattered white papers. A heavy rain begins to fall, slicking the wet stones. The atmosphere is moody and volatile, captured in high detail with realistic textures of masonry and water." />
+            <video id="podcast-video" class="podcast-video" muted playsinline preload="auto" poster="https://assets.brook.dev/podcasts/v2026.42.7-13.46/cover.png">
+                <source src="https://assets.brook.dev/podcasts/v2026.42.7-13.46/animated_briefing.mp4" type="video/mp4" />
+            </video>
+            <img id="final-cover" src="https://assets.brook.dev/podcasts/v2026.42.7-13.46/cover-alt.png" class="cover-art cover-alt" loading="eager" alt="Final keyframe — Edit Picture 1 to create keyframe 3. Make only these visible changes:
+- The dust cloud expands and moves horizontally.
+- Debris reaches the ground surface.
+Keep these regions fixed: building_left, building_right, purple_sky, rain_streaks.
+Keep Picture 1's camera, framing, composition, spatial layout, identities, object count, exact text, and these protected details unchanged: building_left, building_right, town_hall_center, spire_top, fire_source, smoke_plume, cobblestone_ground, scattered_papers, rain_streaks, purple_sky, material, color, position.
+Do not describe animation or intent. Do not add material without visibly reducing its named source. Do not add, remove, duplicate, or rewrite people, objects, signs, labels, captions, symbols, or lettering." />
+            <span id="media-hint" class="image-hint">Loading motion…</span>
+        </div>
+        <nav id="podcast-nav" class="podcast-nav" aria-label="Podcast navigation">
+            <a id="podcast-older" class="disabled" aria-disabled="true">&#8592; Older</a>
+            <a id="podcast-newer" class="disabled" aria-disabled="true">Newer &#8594;</a>
+        </nav>
+
+        <!--
+        <div class="media-viewport">
+            <video 
+                id="podcast-video"
+                class="cover-media" 
+                poster="https://assets.brook.dev/podcasts/v2026.42.7-13.46/cover.png"
+                preload="auto"
+                playsinline
+                muted
+                loop>
+                <source src="https://assets.brook.dev/podcasts/v2026.42.7-13.46/animated_briefing.mp4" type="video/mp4">
+                <img src="https://assets.brook.dev/podcasts/v2026.42.7-13.46/cover.png" class="cover-media" alt="A wide, deep-perspective cinematic shot of a cobblestone town square in Limoges at dusk. A towering stone spire atop a historic town hall is engulfed in vibrant orange flames, with thick black smoke billowing upward against a bruised purple sky. The ground is littered with debris and scattered white papers. A heavy rain begins to fall, slicking the wet stones. The atmosphere is moody and volatile, captured in high detail with realistic textures of masonry and water.">
+            </video>
+        </div>
+        -->
+        
+        <div id="player-audio" class="player-audio" aria-label="Episode audio controls">
+            <audio id="pl1" controls autoplay></audio>
+            <audio id="pl2" controls style="display:none;"></audio>
+        </div>
+        <div class="player-tabs" role="tablist" aria-label="Episode views">
+            <button type="button" id="tab-manual" role="tab" aria-controls="panel-manual" aria-selected="true" tabindex="0">Manual controls</button>
+            <button type="button" id="tab-transcript" role="tab" aria-controls="panel-transcript" aria-selected="false" tabindex="-1">Full transcript</button>
+            <button type="button" id="tab-stats" role="tab" aria-controls="panel-stats" aria-selected="false" tabindex="-1">Stats for nerds</button>
+        </div>
+
+        <section id="panel-manual" class="player-tab-panel" role="tabpanel" aria-labelledby="tab-manual">
+            <div class="nav-row">
+                <button id="btn-prev" class="skip-btn" aria-label="Previous segment" disabled>&#9198;</button>
+                <p id="st">Ready to play</p>
+                <button id="btn-next" class="skip-btn" aria-label="Next segment">&#9199;</button>
+            </div>
+        </section>
+        <section id="panel-manual-content" class="player-tab-panel" aria-label="Current segment">
+            <div id="ts-box" class="transcript-box">
+                <div id="ts-voice"></div>
+                <p id="ts-text">Press play to start the briefing...</p>
+            </div>
+            <div id="manual-attempts"></div>
+            <div id="lnk-wrap" class="link-container">
+                <a id="lnk" class="btn" target="_blank" rel="noopener noreferrer">
+                    <span class="btn-title">Read Source Article</span>
+                    <span id="summ" class="btn-summary"></span>
+                </a>
+            </div>
+        </section>
+        <section id="panel-transcript" class="player-tab-panel" role="tabpanel" aria-labelledby="tab-transcript" hidden>
+            <div id="full-chat" class="chat-container"></div>
+        </section>
+        <section id="panel-stats" class="player-tab-panel" role="tabpanel" aria-labelledby="tab-stats" hidden>
+            <div id="stats-panel" class="stats-panel">
+                <div id="stats-content" class="stats-content" aria-live="polite">Open to load run statistics.</div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const OVERLAP_SECONDS = 2;
+        const playlist = [{"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/intro.wav","url":null,"text":"Intro song\n\n[Intro - Slow, haunting cello and steady thumb-plucked guitar]\n\n[Verse]\nFrom the smoke rising over a French town square\nThe ghosts of protest hang in the heavy air.\nWhile in the halls of power, the code begins to creep,\\nA secret life for data that we're told we have to keep.\n\n[Chorus]\nIt's a friction in the wires, a crack in the glass,\nWatching the human spirit let the shadow pass.\nThey’re rewriting the rules while the old world burns out,\\nCaught between the profit and the fear of what it’s about.","voice":"intro","speaker":"Intro Theme","summary":"Intro"},{"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_0.mp3","url":"https://www.reuters.com/business/retail-consumer/openai-employee-who-left-apple-took-files-about-unreleased-device-openai-alleges-2026-10-14/","text":"I mean, if you're moving a hundred files of unreleased product data to a personal account... that's not just a 'mistake', that's basically the plot of every corporate thriller ever written.","voice":1,"speaker":"Brook","summary":"OpenAI Employee Moves","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_0.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7586409890640295,"voiceMargin":0.3862348919823014,"technicalSafe":true,"asrText":"i mean if you're moving a 100 files of unreleased product data to a personal account that's not just a mistake that's basically the plot of every corporate thriller ever written","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_1.mp3","url":"https://www.reuters.com/business/retail-consumer/openai-employee-who-left-apple-took-files-about-unreleased-device-openai-alleges-2026-10-14/","text":"It’s the ultimate test of internal trust, isn't it? You build these massive systems like ChatGPT, but the human element—the person with the keys to the kingdom—is always the most unpredictable variable.","voice":2,"speaker":"Conrad","summary":"OpenAI Employee Moves","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_1.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7279571625218598,"voiceMargin":0.6251749032057914,"technicalSafe":true,"asrText":"it's the ultimate test of internal trust isn't it you build these massive systems like chatgpt but the human element the person with the keys to the kingdom is always the most unpredictable variable","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_2.mp3","url":"https://www.reuters.com/business/retail-consumer/openai-employee-who-left-apple-took-files-about-unreleased-device-openai-alleges-2026-10-14/","text":"Exactly. It makes you wonder how many other 'leaks' are just people taking their work with them because they don't feel like the company owns their brain.","voice":1,"speaker":"Brook","summary":"OpenAI Employee Moves","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_2.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7404704431621656,"voiceMargin":0.42644371691299826,"technicalSafe":true,"asrText":"exactly it makes you wonder how many other leaks are just people taking their work with them because they don't feel like the company owns their brain","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_3.mp3","url":"https://www.reuters.com/business/retail-consumer/openai-employee-who-left-apple-took-files-about-unreleased-device-openai-alleges-2026-10-14/","text":"Or maybe they just want to see what happens when the lid comes off. It’s a fascinating, if messy, look at the friction between individual agency and corporate security.","voice":2,"speaker":"Conrad","summary":"OpenAI Employee Moves","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_3.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7637017040998946,"voiceMargin":0.636247700779486,"technicalSafe":true,"asrText":"or maybe they just want to see what happens when the lid comes off it's a fascinating if messy look at the friction between individual agency and corporate security","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_4.mp3","url":null,"text":"I'm Brook.","voice":1,"speaker":"Brook","summary":null,"attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_4_alt_1.mp3","selected":false,"passed":false,"wer":0.5,"substitutions":1,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.2907372770937771,"voiceMargin":-0.025685812781414408,"technicalSafe":true,"asrText":"i'm broke","reasons":["transcript_gate","voice_gate"]},{"n":2,"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_4_alt_2.mp3","selected":false,"passed":false,"wer":0.5,"substitutions":1,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.29600060482895274,"voiceMargin":-0.030386804320983285,"technicalSafe":true,"asrText":"i'm brooke","reasons":["transcript_gate","voice_gate"]},{"n":3,"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_4_alt_3.mp3","selected":false,"passed":false,"wer":0.5,"substitutions":1,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.4394904076233861,"voiceMargin":0.0910248729165094,"technicalSafe":true,"asrText":"i'm bro","reasons":["transcript_gate","voice_gate"]}]},{"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_5.mp3","url":null,"text":"And I'm Conrad. On today's episode of Patch Notes, we're looking at the cracks in corporate security, some heavy-hitting protests in France, and a bit of a digital rights squeeze.","voice":2,"speaker":"Conrad","summary":null,"attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_5.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.74058814716801,"voiceMargin":0.6774305061959858,"technicalSafe":true,"asrText":"and i'm conrad on today's episode of patch notes we're looking at the cracks in corporate security some heavy hitting protests in france and a bit of a digital rights squeeze","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_6.mp3","url":"https://www.bbc.co.uk/news/videos/c6e3xjw37wn7o?at_medium=RSS&at_campaign=rss","text":"We have to talk about that situation in Limoges. A historic town hall spire literally collapsing in flames during the protests... that's some intense imagery.","voice":1,"speaker":"Brook","summary":"French Town Hall Fire","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_6_alt_1.mp3","selected":false,"passed":false,"wer":0.2,"substitutions":3,"deletions":0,"insertions":2,"protectedTermFailures":0,"voiceTargetScore":0.822819993033992,"voiceMargin":0.4977458599379631,"technicalSafe":true,"asrText":"we have to talk about that situation in lemoje a historic town hall spire literally collapsing in flames during the protest we to at some intense imagery","reasons":["transcript_gate"]},{"n":2,"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_6_alt_2.mp3","selected":false,"passed":false,"wer":0.16,"substitutions":2,"deletions":0,"insertions":2,"protectedTermFailures":0,"voiceTargetScore":0.8396847801023007,"voiceMargin":0.49397628792366866,"technicalSafe":true,"asrText":"we have to talk about that situation in lemoges a historic town hall spire literally collapsing in flames during the protests and paul was some intense imagery","reasons":["transcript_gate"]},{"n":3,"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_6.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.8379487216952825,"voiceMargin":0.5192966804593768,"technicalSafe":true,"asrText":"we have to talk about that situation in limoges a historic town hall spire literally collapsing in flames during the protests that's some intense imagery","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_7.mp3","url":"https://www.bbc.co.uk/news/videos/c6e3xjw37wn7o?at_medium=RSS&at_campaign=rss","text":"It’s a visceral symbol of how quickly things can escalate. When you see a piece of history like that go up in smoke, it moves past 'protest' and into something much more destructive.","voice":2,"speaker":"Conrad","summary":"French Town Hall Fire","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_7.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7158824843457675,"voiceMargin":0.6030065785461942,"technicalSafe":true,"asrText":"it's a visceral symbol of how quickly things can escalate when you see a piece of history like that go up in smoke it moves past protest and into something much more destructive","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_8.mp3","url":"https://www.bbc.co.uk/news/articles/c6d937wedj7jo?at_medium=RSS&at_campaign=rss","text":"And with over a thousand people arrested across France for the same thing... it shows just how deep the cost-of-living anger is running right now.","voice":1,"speaker":"Brook","summary":"French Protest Unrest","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_8.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.757159224004384,"voiceMargin":0.39463981698146,"technicalSafe":true,"asrText":"and with over a thousand people arrested across france for the same thing it shows just how deep the cost of living anger is running right now","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_9.mp3","url":"https://www.bbc.co.uk/news/articles/c6d937wedj7jo?at_medium=RSS&at_campaign=rss","text":"It's a massive scale of disorder. It’s not just a few people shouting; it’s systemic frustration boiling over into actual looting and fire.","voice":2,"speaker":"Conrad","summary":"French Protest Unrest","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_9.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7467341156585879,"voiceMargin":0.6345173093281407,"technicalSafe":true,"asrText":"it's a massive scale of disorder it's not just a few people shouting it's systemic frustration boiling over into actual looting and fire","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_10.mp3","url":"https://techcrunch.com/2026/10/17/meta-removes-language-that-raised-scraping-and-ai-training-concerns/","text":"On the tech side, we're seeing some interesting moves with Meta removing language that raised concerns about web scraping for AI training. They're trying to smooth out the edges of how they gather data.","voice":1,"speaker":"Brook","summary":"Meta AI Terms","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_10_alt_1.mp3","selected":false,"passed":false,"wer":0.029411764705882353,"substitutions":1,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7484222945902046,"voiceMargin":0.39074834390353524,"technicalSafe":true,"asrText":"on the tech side we're seeing some interesting moves with meta removing language that raise concerns about web scraping for ai training they're trying to smooth out the edges of how they gather data","reasons":["transcript_gate"]},{"n":2,"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_10_alt_2.mp3","selected":false,"passed":false,"wer":0.029411764705882353,"substitutions":1,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.8380463213725159,"voiceMargin":0.47110654130655627,"technicalSafe":true,"asrText":"on the tech side we're seeing some interesting moves with meta removing language that raise concerns about web scraping for ai training they're trying to smooth out the edges of how they gather data","reasons":["transcript_gate"]},{"n":3,"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_10.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.8151257928167313,"voiceMargin":0.425460211748275,"technicalSafe":true,"asrText":"on the tech side we're seeing some interesting moves with meta removing language that raised concerns about web scraping for ai training they're trying to smooth out the edges of how they gather data","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_11.mp3","url":"https://techcrunch.com/2026/10/17/meta-removes-language-that-raised-scraping-and-ai-training-concerns/","text":"They say it doesn't change how they crawl the web, but in this climate, every word in those terms of service feels like a high-stakes negotiation between tech giants and the rest of the internet.","voice":2,"speaker":"Conrad","summary":"Meta AI Terms","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_11.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7783023612775585,"voiceMargin":0.6728562601898439,"technicalSafe":true,"asrText":"they say it doesn't change how they crawl the web but in this climate every word in those terms of service feels like a high stakes negotiation between tech giants and the rest of the internet","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_12.mp3","url":"https://www.wired.com/story/kernel-panic-encryption-is-getting-squeezed-from-all-sides/","text":"It’s all part of that bigger squeeze on encryption too. Canada's new surveillance law is another step in that global trend where privacy starts feeling like a shrinking territory.","voice":1,"speaker":"Brook","summary":"Encryption Under Threat","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_12.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7708332919837821,"voiceMargin":0.39526411022351754,"technicalSafe":true,"asrText":"it's all part of that bigger squeeze on encryption too canada's new surveillance law is another step in that global trend where privacy starts feeling like a shrinking territory","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_13.mp3","url":"https://www.wired.com/story/kernel-panic-encryption-is-getting-squeezed-from-all-sides/","text":"It really is getting squeezed from all sides. It’s the classic tension between state security and individual anonymity, and right now, the state seems to be winning the argument.","voice":2,"speaker":"Conrad","summary":"Encryption Under Threat","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_13.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7570377384020628,"voiceMargin":0.6373334037067148,"technicalSafe":true,"asrText":"it really is getting squeezed from all sides it's the classic tension between state security and individual anonymity and right now the state seems to be winning the argument","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_14.mp3","url":"https://www.theguardian.com/technology/2026/oct/14/zimbabwean-author-simbarashe-kundizeza-denies-ai-story","text":"We also saw a bit of a drama in the literary world—a Zimbabwean author is denying they used AI to write a prize-winning story. It’s that 'did a human actually do this?' question again.","voice":1,"speaker":"Brook","summary":"Author Denies AI","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_14.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7490480162245859,"voiceMargin":0.38923323998990583,"technicalSafe":true,"asrText":"we also saw a bit of a drama in the literary world a zimbabwean author is denying they used ai to write a prize winning story it's that did a human actually do this question again","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_15.mp3","url":"https://www.theguardian.com/technology/2026/oct/14/zimbabwean-author-simbarashe-kundizeza-denies-ai-story","text":"The Atlantic claimed it was artificial, but the author says otherwise. It's a perfect example of how hard it's becoming to verify 'human' creativity in the age of generative tools.","voice":2,"speaker":"Conrad","summary":"Author Denies AI","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_15.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7820340456014255,"voiceMargin":0.6643942921175128,"technicalSafe":true,"asrText":"the atlantic claimed it was artificial but the author says otherwise it's a perfect example of how hard it's becoming to verify human creativity in the age of generative tools","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_16.mp3","url":"https://thebristolcable.org/2026/10/how-generation-soil-is-transforming-bristols-food-waste/","text":"And finally, just a quick one on the local level—Bristol’s 'Generation Soil' project is trying to build a circular food system from waste. It’s a nice bit of practical eco-engineering.","voice":1,"speaker":"Brook","summary":"Bristol Food Waste","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_16_alt_1.mp3","selected":false,"passed":false,"wer":0.0625,"substitutions":1,"deletions":1,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7630977293483845,"voiceMargin":0.44184065513686266,"technicalSafe":true,"asrText":"and finally just a quick 1 on the local level bristol's generation soil project is trying to build a circular food system from waste it's a nice bit of practical ecoengineering","reasons":["transcript_gate"]},{"n":2,"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_16.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.802593564244779,"voiceMargin":0.5054383388971906,"technicalSafe":true,"asrText":"and finally just a quick 1 on the local level bristol's generation soil project is trying to build a circular food system from waste it's a nice bit of practical eco engineering","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_17.mp3","url":"https://thebristolcable.org/2026/10/how-generation-soil-is-transforming-bristols-food-waste/","text":"It’s about giving people a say in the food system again, which feels like a necessary antidote to all that industrial scale we've been discussing.","voice":2,"speaker":"Conrad","summary":"Bristol Food Waste","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.42.7-13.46/audio_17.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.6533914977171406,"voiceMargin":0.5367158562241683,"technicalSafe":true,"asrText":"it's about giving people a say in the food system again which feels like a necessary antidote to all that industrial scale we've been discussing","reasons":[]}]}];
+
+        /* intro-option-tabs: offer the story-driven readings of the intro.
+           Fetched on the client so nothing about publishing this episode depends on
+           the manifest being reachable, and so this code needs nothing interpolated
+           from the build. Every failure path here is silent, and with no options the
+           page behaves exactly as it does today. */
+        (function () {
+          var MANIFEST = 'https://brook.dev/projects/song-matrix/songs.json';
+          var runId = null;
+          fetch('stats.json', { cache: 'no-store' })
+            .then(function (r) { return r.ok ? r.json() : null; })
+            .then(function (s) {
+              runId = s && s.runId ? String(s.runId) : null;
+              return runId ? fetch(MANIFEST, { cache: 'no-store' }) : null;
+            })
+            .then(function (r) { return r && r.ok ? r.json() : null; })
+            .then(function (m) {
+              var entry = m && m.episodes && m.episodes[runId];
+              var opts = ((entry && entry.options) || []).filter(function (o) {
+                return o && o.audio;
+              });
+              var intro = playlist[0];
+              if (!opts.length || !intro) return;
+              intro.introOptions = true;
+              intro.attempts = [{
+                n: 1, file: intro.file, introLabel: 'Old',
+                introTitle: 'The intro that shipped with this episode',
+                introText: intro.text, introSpeaker: intro.speaker, selected: true
+              }].concat(opts.map(function (o, i) {
+                return {
+                  n: i + 2, file: o.audio,
+                  introLabel: o.label || o.family || ('Option ' + (i + 1)),
+                  introTitle: o.style || '', introText: o.lyric || '',
+                  introSpeaker: o.style || 'Intro Theme', selected: false
+                };
+              }));
+              // Only three things need overriding, and each delegates for every
+              // other segment, so the speech retries behave exactly as before.
+              var _failedKeys = segmentFailedKeys;
+              segmentFailedKeys = function (item) {
+                return (item && item.introOptions) ? [] : _failedKeys(item);
+              };
+              var _attemptButton = attemptButton;
+              attemptButton = function (a, segIdx, ai, failedKeys) {
+                if (segIdx === 0 && a && a.introLabel) {
+                  var cls = a.selected ? ' pass' : '';
+                  return '<button type="button" class="attempt-btn' + cls
+                    + '" data-seg="' + segIdx + '" data-ai="' + ai
+                    + '" aria-pressed="' + (a.selected ? 'true' : 'false')
+                    + '" title="' + (a.introTitle || '') + '">' + a.introLabel + '</button>';
+                }
+                return _attemptButton(a, segIdx, ai, failedKeys);
+              };
+              // Auditioning swaps the audio; the words on screen only get written
+              // inside updateUI on a track change, so they are refreshed here.
+              var _audition = auditionAttempts;
+              auditionAttempts = function (segIdx, ai) {
+                _audition(segIdx, ai);
+                if (segIdx !== 0) return;
+                var list = playlist[0].attempts || [];
+                var chosen = list[ai];
+                list.forEach(function (a, i) { a.selected = (i === ai); });
+                if (chosen && chosen.introText) {
+                  playlist[0].text = chosen.introText;
+                  playlist[0].speaker = chosen.introSpeaker || 'Intro Theme';
+                  var tsText = document.getElementById('ts-text');
+                  if (tsText) tsText.innerText = chosen.introText;
+                  var tsVoice = document.getElementById('ts-voice');
+                  if (tsVoice) tsVoice.innerText = playlist[0].speaker;
+                }
+                var row = document.getElementById('manual-attempts');
+                if (row && typeof cur !== 'undefined' && cur === 0) {
+                  renderAttemptSwitcher(row, 0);
+                }
+              };
+              var row = document.getElementById('manual-attempts');
+              if (row && typeof cur !== 'undefined' && cur === 0) {
+                renderAttemptSwitcher(row, 0);
+              }
+            })
+            .catch(function () {});
+        })(); 
+        let cur = 0; 
+        
+        let plActive = document.getElementById('pl1'); 
+        let plStandby = document.getElementById('pl2'); 
+        
+        const st = document.getElementById('st'); 
+        const btnPrev = document.getElementById('btn-prev');
+        const btnNext = document.getElementById('btn-next');
+        const lnkWrap = document.getElementById('lnk-wrap');
+        const lnk = document.getElementById('lnk');
+        const summ = document.getElementById('summ');
+        const tsText = document.getElementById('ts-text');
+        const tsVoice = document.getElementById('ts-voice');
+        const tsBox = document.getElementById('ts-box');
+        const mediaStage = document.getElementById('media-stage');
+        const podcastVideo = document.getElementById('podcast-video');
+        const finalCover = document.getElementById('final-cover');
+        const mediaHint = document.getElementById('media-hint');
+        
+        const chatContainer = document.getElementById('full-chat');
+        chatContainer.classList.add('tab-visible');
+
+        const statsPanel = document.getElementById('stats-panel');
+        const statsContent = document.getElementById('stats-content');
+        let statsLoaded = false;
+        const formatDuration = (ms) => ms == null ? 'Unavailable' : ms < 1000 ? ms + ' ms' : (ms / 1000).toFixed(ms < 60000 ? 1 : 0) + ' s';
+        const formatBytes = (bytes) => bytes == null ? 'Unavailable' : (bytes / (1024 ** 3)).toFixed(1) + ' GiB';
+        function renderStats(stats) {
+            const summary = stats.summary || {};
+            const speech = stats.speech || {};
+            const cards = [
+                ['Total run', formatDuration(summary.wallClockMs)],
+                ['Peak memory', formatBytes(summary.peakHostUsedBytes)],
+                ['Speech attempts', String(speech.totalAttempts ?? 'Unavailable')],
+                ['Speech retries', String(speech.retries ?? 'Unavailable')],
+            ];
+            const stageRows = (stats.stages || []).map((stage) =>
+                '<div class="stats-stage"><strong>' + stage.stage + '</strong><span>' + formatDuration(stage.durationMs) + '</span>' +
+                '<small>' + stage.status + '</small></div>'
+            ).join('');
+            statsContent.innerHTML = '<div class="stats-grid">' + cards.map(([label, value]) =>
+                '<div class="stats-card"><span class="stats-value">' + value + '</span><span class="stats-label">' + label + '</span></div>'
+            ).join('') + '</div>' + stageRows + '<a class="stats-raw" href="stats.json" target="_blank" rel="noopener">View raw stats.json</a>';
+        }
+        async function loadStats() {
+            if (statsLoaded) return;
+            statsLoaded = true;
+            statsContent.textContent = 'Loading run statistics…';
+            try {
+                const response = await fetch('stats.json', { cache: 'no-store' });
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                renderStats(await response.json());
+            } catch (error) {
+                statsContent.innerHTML = '<p class="stats-error">Statistics are unavailable for this episode.</p>';
+            }
+        }
+        
+        // --- PRIMARY KEYFRAME → FIRST/LAST-FRAME VIDEO → HIGH-QUALITY FINAL KEYFRAME ---
+        let videoReady = podcastVideo.readyState >= HTMLMediaElement.HAVE_ENOUGH_DATA;
+        let finalImageReady = finalCover.complete && finalCover.naturalWidth > 0;
+        let videoStarted = false;
+        let videoUnavailable = false;
+
+        function maybeStartVideo() {
+            if (videoStarted || videoUnavailable || !videoReady || !finalImageReady) return;
+            videoStarted = true;
+            mediaStage.classList.remove('show-final');
+            mediaStage.classList.add('video-playing');
+            mediaHint.textContent = 'Playing motion';
+            podcastVideo.currentTime = 0;
+            podcastVideo.play().catch(() => {
+                videoStarted = false;
+                mediaHint.textContent = 'Tap to play motion';
+            });
+        }
+
+        podcastVideo.addEventListener('canplaythrough', () => {
+            videoReady = true;
+            maybeStartVideo();
+        }, { once: true });
+
+        finalCover.addEventListener('load', () => {
+            finalImageReady = true;
+            maybeStartVideo();
+        }, { once: true });
+
+        podcastVideo.addEventListener('ended', () => {
+            mediaStage.classList.add('show-final');
+            mediaHint.textContent = 'Tap to replay';
+        });
+
+        podcastVideo.addEventListener('error', () => {
+            videoUnavailable = true;
+            mediaHint.textContent = 'Motion unavailable · tap for frame 2';
+        });
+
+        function activateMediaStage() {
+            if (videoUnavailable) {
+                mediaStage.classList.toggle('show-final');
+                return;
+            }
+            if (mediaStage.classList.contains('show-final')) {
+                mediaStage.classList.remove('show-final');
+                videoStarted = false;
+            }
+            maybeStartVideo();
+        }
+
+        mediaStage.addEventListener('click', activateMediaStage);
+        mediaStage.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                activateMediaStage();
+            }
+        });
+
+        setTimeout(maybeStartVideo, 0);
+
+        // --- BACKGROUND PRELOADER (+/- 2 Tracks) ---
+        const preloadBuffer = {};
+        
+        function updatePreloadBuffer(index) {
+            // Define the exact target window: 2 behind, 2 ahead
+            const targets = [index - 2, index - 1, index + 1, index + 2]
+                .filter(i => i >= 0 && i < playlist.length);
+                
+            // 1. Fetch new tracks into the invisible background buffer
+            targets.forEach(i => {
+                if (!preloadBuffer[i]) {
+                    const bgAudio = new Audio();
+                    bgAudio.src = playlist[i].file;
+                    bgAudio.preload = 'auto'; // Forces browser to download/cache
+                    preloadBuffer[i] = bgAudio;
+                }
+            });
+            
+            // 2. Clean up old tracks outside the +/- 2 window to save RAM
+            Object.keys(preloadBuffer).forEach(key => {
+                if (!targets.includes(parseInt(key))) {
+                    preloadBuffer[key].src = ''; // Instantly kills the network request
+                    delete preloadBuffer[key];
+                }
+            });
+        }
+
+        // --- KEYBOARD SHORTCUTS (J, K, L) ---
+        document.addEventListener('keydown', (e) => {
+            // Ignore keystrokes if the user holds Ctrl, Alt, or Cmd (e.g. Cmd+R to refresh)
+            if (e.metaKey || e.ctrlKey || e.altKey) return;
+            
+            switch(e.key.toLowerCase()) {
+                case 'j': // Previous
+                    if (activeTab === 0 && !btnPrev.disabled) btnPrev.click();
+                    break;
+                case 'l': // Next
+                    if (activeTab === 0 && !btnNext.disabled) btnNext.click();
+                    break;
+                case 'k': // Play/Pause
+                    if (plActive.paused) {
+                        plActive.play().catch(err => {});
+                    } else {
+                        plActive.pause();
+                    }
+                    break;
+            }
+        });
+
+
+        // --- ATTEMPT AUDITION HELPERS (PCB-023) ---
+        function critState(value, passValue, lowerIsBetter) {
+            if (value === null || value === undefined) return 'na';
+            const ok = lowerIsBetter ? value <= passValue : value >= passValue;
+            return ok ? 'pass' : 'fail';
+        }
+        function critDot(cls, label, tooltip) {
+            return '<span class="crit-dot ' + cls + '" role="img" aria-label="' + label + ': ' + tooltip + '" title="' + label + ': ' + tooltip + '"></span>';
+        }
+        function criterionDots(a) {
+            const t = critState(a.technicalSafe === true ? 1 : (a.technicalSafe === false ? 0 : null), 1, false);
+            const w = critState(a.wer, 0, true);
+            const p = critState(a.protectedTermFailures, 0, true);
+            const v = critState(a.voiceTargetScore, 0.35, false);
+            const m = critState(a.voiceMargin, 0.15, false);
+            const werTxt = a.wer == null ? 'unavailable' : (Math.round(a.wer * 1000) / 10) + '% word error (pass: 0%)';
+            const sdi = (a.substitutions ?? '-') + ' substituted, ' + (a.deletions ?? '-') + ' missing, ' + (a.insertions ?? '-') + ' extra';
+            const ptTxt = a.protectedTermFailures == null ? 'unavailable' : a.protectedTermFailures + ' protected term(s) wrong';
+            const vtTxt = a.voiceTargetScore == null ? 'unavailable' : 'voice match ' + Math.round(a.voiceTargetScore * 100) + '% (pass: 35%)';
+            const vmTxt = a.voiceMargin == null ? 'unavailable' : 'voice margin ' + Math.round(a.voiceMargin * 100) + '% (pass: 15%)';
+            return critDot(t, 'Technical', a.technicalSafe == null ? 'unavailable' : (a.technicalSafe ? 'healthy audio' : 'audio defects')) +
+                   critDot(w, 'Transcript', werTxt + ' — ' + sdi) +
+                   critDot(p, 'Protected terms', ptTxt) +
+                   critDot(v, 'Voice identity', vtTxt) +
+                   critDot(m, 'Voice margin', vmTxt);
+        }
+                function critValue(a, key) {
+            if (key === 'V') return a.voiceTargetScore == null ? null : Math.round(a.voiceTargetScore * 100);
+            if (key === 'T') return a.wer == null ? null : Math.round(a.wer * 100);
+            if (key === 'P') return a.protectedTermFailures == null ? null : a.protectedTermFailures;
+            return null;
+        }
+        function critFailed(a, key) {
+            if (key === 'V') return !(a.voiceTargetScore != null && a.voiceTargetScore >= 0.35);
+            if (key === 'T') return !(a.wer != null && a.wer === 0);
+            if (key === 'P') return !(a.protectedTermFailures != null && a.protectedTermFailures === 0);
+            if (key === 'A') return a.technicalSafe !== true;
+            return false;
+        }
+        function attemptIcon(key) {
+            // sounds-like, mistakes, protected terms, audio defects
+            return { V: '🗣', T: '✏️', P: '🔑', A: '🔈' }[key];
+        }
+        function attemptTooltip(a) {
+            const lines = ['Attempt ' + a.n + (a.selected ? ' — published selection' : (a.passed === false ? ' — rejected' : ''))];
+            lines.push(a.voiceTargetScore == null ? 'Voice match unavailable' : 'Voice match ' + Math.round(a.voiceTargetScore * 100) + '% (margin ' + (a.voiceMargin == null ? 'n/a' : Math.round(a.voiceMargin * 100) + '%') + ')');
+            if (a.wer == null) lines.push('Transcript unavailable');
+            else {
+                const pct = Math.round(a.wer * 100);
+                lines.push('Transcript ' + (pct === 0 ? 'exact' : pct + '% word errors (' + (a.substitutions ?? 0) + ' wrong, ' + (a.deletions ?? 0) + ' missing, ' + (a.insertions ?? 0) + ' extra)'));
+                if (a.asrText) lines.push('Heard: "' + a.asrText + '"');
+            }
+            lines.push(a.protectedTermFailures == null ? 'Protected terms unavailable' : (a.protectedTermFailures === 0 ? 'Protected terms correct' : a.protectedTermFailures + ' protected term(s) wrong'));
+            lines.push(a.technicalSafe == null ? 'Technical check unavailable' : (a.technicalSafe ? 'Audio technically clean' : 'Audio defects'));
+            if ((a.reasons || []).length) lines.push('Rejected for: ' + a.reasons.join(', '));
+            return lines.join(String.fromCharCode(10));
+        }
+        function segmentFailedKeys(item) {
+            const keys = ['V', 'T', 'P', 'A'];
+            const failed = keys.filter(k => (item.attempts || []).some(a => critFailed(a, k)));
+            // If every attempt failed something, the winner was chosen on voice — add the
+            // sounds-like key so the numbers explain what decided it.
+            if (failed.length && !(item.attempts || []).some(a => a.passed === true)) {
+                if (failed.indexOf('V') === -1) failed.push('V');
+            }
+            return failed;
+        }
+        function attemptButton(a, segIdx, ai, failedKeys) {
+            const cls = a.passed === true ? ' pass' : (a.selected || a.passed === false ? ' fail' : '');
+            const stateTxt = a.selected ? 'published selection' : (a.passed === false ? 'rejected — ' + (a.reasons || []).join(', ') : 'not published');
+            const nums = failedKeys.filter(k => k !== 'A').map(k => {
+                const v = critValue(a, k);
+                const val = v == null ? '?' : v;
+                return '<span class="attempt-num ' + (critFailed(a, k) ? 'num-fail' : 'num-pass') + '">' + val + '</span>';
+            }).join('<span class="attempt-slash">/</span>');
+            return '<button type="button" class="attempt-btn' + cls + '" data-seg="' + segIdx + '" data-ai="' + ai + '" aria-pressed="' + (a.selected ? 'true' : 'false') + '" aria-label="Audition attempt ' + a.n + ', ' + stateTxt + ' for segment ' + (segIdx + 1) + '" title="' + attemptTooltip(a).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;') + '">' + nums + '</button>';
+        }
+        
+function renderAttemptSwitcher(el, segIdx, compact) {
+            const item = playlist[segIdx];
+            if (!item.attempts || item.attempts.length <= 1) { el.innerHTML = ''; el.style.display = 'none'; return; }
+            el.style.display = '';
+            const failedKeys = segmentFailedKeys(item);
+            const btns = item.attempts.map((a, ai) => attemptButton(a, segIdx, ai, failedKeys)).join('');
+            const keyIcons = failedKeys.filter(k => k !== 'A').map(attemptIcon).join('');
+            el.innerHTML = '<div class="attempt-switcher" role="group" aria-label="Alternative takes for segment ' + (segIdx + 1) + '">'
+                + '<span class="attempt-key">' + keyIcons + '</span>'
+                + btns + '</div>';
+        }
+        function syncManualAttempts(segIdx) {
+            const el = document.getElementById('manual-attempts');
+            if (!el) return;
+            renderAttemptSwitcher(el, segIdx);
+        }
+        function auditionAttempts(segIdx, attemptIndex) {
+            const item = playlist[segIdx];
+            const a = item.attempts && item.attempts[attemptIndex];
+            if (!a) return;
+            plActive.pause();
+            plStandby.pause();
+            plActive.src = a.file;
+            plActive.play().catch(err => {});
+        }
+
+        // --- CHAT BUBBLE GENERATION ---
+        let lastTopic = null;
+        let currentGroup = null;
+        
+        playlist.forEach((item, idx) => {
+            const currentTopic = item.summary || "Banter & Hot Takes";
+            
+            if (currentTopic !== lastTopic) {
+                currentGroup = document.createElement('div');
+                currentGroup.className = 'topic-group';
+                chatContainer.appendChild(currentGroup);
+                
+                const header = document.createElement('div');
+                header.className = 'topic-header';
+                header.innerText = currentTopic;
+                currentGroup.appendChild(header);
+                
+                lastTopic = currentTopic;
+            }
+
+            const bubble = document.createElement('div');
+            bubble.className = 'chat-bubble ' + item.voice;
+            bubble.id = 'chat-msg-' + idx;
+            bubble.setAttribute('role', 'button');
+            bubble.tabIndex = 0;
+            bubble.setAttribute('aria-label', 'Play segment ' + (idx + 1) + ': ' + item.speaker);
+            let bubbleExtras = '';
+            if (item.attempts && item.attempts.length > 1) {
+                const switcher = document.createElement('div');
+                renderAttemptSwitcher(switcher, idx);
+                bubbleExtras = switcher.innerHTML;
+            }
+            bubble.innerHTML = '<div class="chat-label">' + item.speaker + '</div>' + item.text + bubbleExtras;
+            
+            bubble.onclick = () => {
+                if (cur !== idx) {
+                    cur = idx;
+                    updateUI(cur);
+                    playNewTrack(cur);
+                }
+            };
+            bubble.addEventListener('keydown', event => {
+                if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); bubble.click(); }
+            });
+            currentGroup.appendChild(bubble);
+        });
+
+        function handleAttemptClick(event) {
+            const btn = event.target.closest('.attempt-btn');
+            if (!btn) return;
+            event.stopPropagation();
+            const segIdx = Number(btn.dataset.seg);
+            const ai = Number(btn.dataset.ai);
+            document.querySelectorAll('.attempt-btn[data-seg="' + segIdx + '"]').forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.ai) === ai)));
+            auditionAttempts(segIdx, ai);
+        }
+        chatContainer.addEventListener('click', handleAttemptClick);
+        const manualAttempts = document.getElementById('manual-attempts');
+        manualAttempts.addEventListener('click', handleAttemptClick);
+
+        // Audio controls stay mounted above all tabs so switching views never interrupts listening.
+        const tabIds = ['manual', 'transcript', 'stats'];
+        const tabs = tabIds.map(id => document.getElementById('tab-' + id));
+        const panels = tabIds.map(id => document.getElementById('panel-' + id));
+        const manualContent = document.getElementById('panel-manual-content');
+
+        let activeTab = 0;
+        function selectTab(index, focus = false) {
+            activeTab = index;
+            tabs.forEach((tab, i) => {
+                const active = i === index;
+                tab.setAttribute('aria-selected', String(active));
+                tab.tabIndex = active ? 0 : -1;
+                panels[i].hidden = !active;
+            });
+            manualContent.hidden = index !== 0;
+            if (index === 2) loadStats();
+            if (index === 1) {
+                const activeBubble = document.getElementById('chat-msg-' + cur);
+                if (activeBubble) activeBubble.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            if (focus) tabs[index].focus();
+        }
+        tabs.forEach((tab, index) => {
+            tab.addEventListener('click', () => selectTab(index));
+            tab.addEventListener('keydown', event => {
+                const next = event.key === 'ArrowRight' ? (index + 1) % tabs.length
+                    : event.key === 'ArrowLeft' ? (index + tabs.length - 1) % tabs.length
+                    : event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : null;
+                if (next !== null) { event.preventDefault(); selectTab(next, true); }
+            });
+        });
+
+        btnPrev.onclick = () => { if (cur > 0) { cur--; updateUI(cur); playNewTrack(cur); } };
+        btnNext.onclick = () => { if (cur < playlist.length - 1) { cur++; updateUI(cur); playNewTrack(cur); } };
+
+        // --- DUAL PLAYER LOGIC ---
+        let isOverlapping = false;
+
+        function updateUI(i) {
+            if (i >= playlist.length) {
+                st.innerText = 'Broadcast Ended';
+                tsText.innerText = 'See you tomorrow!';
+                tsVoice.innerText = '';
+                lnkWrap.classList.remove('visible');
+                btnNext.disabled = true;
+                return;
+            } 
+            
+            btnPrev.disabled = (i === 0);
+            btnNext.disabled = (i >= playlist.length - 1);
+
+            const t = playlist[i]; 
+            st.innerText = 'Segment ' + (i + 1) + ' of ' + playlist.length;
+            syncManualAttempts(i);
+            try { history.replaceState(null, '', '#section=' + (i + 1)); } catch (e) {}
+            
+            tsText.innerText = t.text;
+            tsVoice.innerText = t.speaker;
+            tsBox.className = 'transcript-box ' + t.voice;
+
+            document.querySelectorAll('.chat-bubble').forEach((b, idx) => {
+                if (idx === i) {
+                    b.classList.add('active');
+                    b.setAttribute('aria-current', 'true');
+                    if (activeTab === 1) {
+                        b.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                } else {
+                    b.classList.remove('active');
+                    b.removeAttribute('aria-current');
+                }
+            });
+
+            if (t.url) { 
+                lnk.href = t.url; 
+                if (t.summary) {
+                    summ.innerText = t.summary;
+                    summ.style.display = 'block';
+                } else {
+                    summ.style.display = 'none';
+                }
+                lnkWrap.classList.add('visible'); 
+            } else { 
+                lnkWrap.classList.remove('visible'); 
+            } 
+        }
+
+        function attachPlayerLogic(playerIndex) {
+            isOverlapping = false;
+
+            plActive.ontimeupdate = () => {
+                if (!isOverlapping && playerIndex < playlist.length - 1) {
+                    const nextText = playlist[playerIndex + 1].text.trim();
+                    if (nextText.startsWith('--')) {
+                        if (plActive.duration && (plActive.duration - plActive.currentTime) <= OVERLAP_SECONDS) {
+                            isOverlapping = true;
+                            cur++;
+                            updateUI(cur);
+                            plStandby.src = playlist[cur].file;
+                            plStandby.play().catch(e => {});
+                        }
+                    }
+                }
+            };
+
+            plActive.onended = () => {
+                if (isOverlapping) {
+                    const temp = plActive;
+                    plActive = plStandby;
+                    plStandby = temp;
+
+                    plActive.style.display = 'block';
+                    plStandby.style.display = 'none';
+                    attachPlayerLogic(cur);
+                } else {
+                    if (cur < playlist.length - 1) {
+                        cur++;
+                        updateUI(cur);
+                        playNewTrack(cur);
+                    }
+                }
+            };
+        }
+
+        function playNewTrack(i) {
+            plActive.pause();
+            plStandby.pause();
+            
+            // Trigger our background cache manager!
+            updatePreloadBuffer(i);
+            
+            // Check if the file is already cached in our buffer
+            if (preloadBuffer[i] && preloadBuffer[i].readyState === 4) {
+                // If it is fully loaded in the background, assign it instantly
+                plActive.src = preloadBuffer[i].src;
+            } else {
+                // Fallback normal loading
+                plActive.src = playlist[i].file;
+            }
+            
+            plActive.style.display = 'block';
+            plStandby.style.display = 'none';
+            plActive.play().catch(e => {});
+            attachPlayerLogic(i);
+        }
+
+        cur = (function () { var m = (location.hash || '').match(/(d+)/); if (m) { var i = parseInt(m[1], 10) - 1; if (i >= 0 && i < playlist.length) return i; } return 0; })();
+        updateUI(cur);
+        playNewTrack(cur);
+
+        // ==========================================
+        // SIDEBAR NAVIGATION INJECTION MODULE
+        // ==========================================
+        async function initSidebarMenu() {
+            try {
+                // Fetch the static json database generated by n8n!
+                const response = await fetch('/projects/news/menu-data.json');
+                if (!response.ok) return;
+                const foldersArray = await response.json();
+                injectPodcastNavigation(foldersArray);
+                injectSidebarUI(foldersArray);
+            } catch (error) { console.error('Menu failed:', error); }
+        }
+
+        function injectPodcastNavigation(foldersArray) {
+            const currentFolder = 'v2026.42.7-13.46';
+            const currentIndex = foldersArray.indexOf(currentFolder);
+            if (currentIndex < 0) return;
+
+            const older = foldersArray[currentIndex + 1];
+            const newer = currentIndex > 0 ? foldersArray[currentIndex - 1] : null;
+            const olderLink = document.getElementById('podcast-older');
+            const newerLink = document.getElementById('podcast-newer');
+
+            if (older) {
+                olderLink.href = '/projects/news/' + older + '/';
+                olderLink.textContent = '← Older · ' + older;
+                olderLink.classList.remove('disabled');
+                olderLink.removeAttribute('aria-disabled');
+            }
+            if (newer) {
+                newerLink.href = '/projects/news/' + newer + '/';
+                newerLink.textContent = 'Newer · ' + newer + ' →';
+                newerLink.classList.remove('disabled');
+                newerLink.removeAttribute('aria-disabled');
+            }
+        }
+
+        function injectSidebarUI(foldersArray) {
+            const style = document.createElement('style');
+            style.innerHTML = `
+                #news-menu-btn { position: fixed; top: 20px; left: 20px; z-index: 1000; background: #1e1e1e; border: 1px solid #333; color: #fff; padding: 10px 16px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.5); transition: 0.2s; font-weight: bold; }
+                #news-menu-btn:hover { background: #2a2a2a; transform: scale(1.05); border-color: #bb86fc; }
+                #news-sidebar { position: fixed; top: 0; left: -300px; width: 280px; height: 100vh; background: #121212; z-index: 1001; transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 4px 0 25px rgba(0,0,0,0.8); overflow-y: auto; display: flex; flex-direction: column; border-right: 1px solid #333; }
+                #news-sidebar.open { left: 0; }
+                .sidebar-header { padding: 20px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; background: #1a1a1a; }
+                .sidebar-header h2 { margin: 0; font-size: 1.1rem; color: #bb86fc; text-transform: uppercase; letter-spacing: 1px; }
+                .sidebar-close { background: none; border: none; color: #888; font-size: 1.8rem; cursor: pointer; transition: 0.2s; line-height: 1; padding: 0; }
+                .sidebar-close:hover { color: #fff; transform: scale(1.1); }
+                .sidebar-list { list-style: none; padding: 0; margin: 0; }
+                .sidebar-list li a { display: block; padding: 16px 20px; color: #ccc; text-decoration: none; border-bottom: 1px solid #222; transition: 0.2s; font-size: 0.95rem; }
+                .sidebar-list li a:hover { background: #1e1e1e; padding-left: 26px; color: #bb86fc; border-left: 4px solid #bb86fc; }
+                #sidebar-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 1000; display: none; backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); opacity: 0; transition: opacity 0.3s; }
+                #sidebar-overlay.open { display: block; opacity: 1; }
+            `;
+            document.head.appendChild(style);
+
+            const overlay = document.createElement('div');
+            overlay.id = 'sidebar-overlay';
+            document.body.appendChild(overlay);
+
+            const sidebar = document.createElement('div');
+            sidebar.id = 'news-sidebar';
+            sidebar.innerHTML = '<div class="sidebar-header"><h2>Archives</h2><button class="sidebar-close" id="news-close-btn">&times;</button></div>';
+            
+            const list = document.createElement('ul');
+            list.className = 'sidebar-list';
+            
+            foldersArray.forEach(folderString => {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = `/projects/news/${folderString}/`;
+                
+                const parts = folderString.split('-');
+                if (parts.length >= 4) {
+                    const dateObj = new Date(`${parts[0]}-${parts[1]}-${parts[2]}T00:00:00`);
+                    const suffix = parts.slice(3).join(' ').replace(/\b\w/g, c => c.toUpperCase());
+                    a.innerText = `${dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} - ${suffix}`;
+                } else {
+                    a.innerText = folderString;
+                }
+                
+                li.appendChild(a);
+                list.appendChild(li);
+            });
+            sidebar.appendChild(list);
+            document.body.appendChild(sidebar);
+
+            const btn = document.createElement('button');
+            btn.id = 'news-menu-btn';
+            btn.innerHTML = '&#9776; Menu';
+            document.body.appendChild(btn);
+
+            const closeBtn = document.getElementById('news-close-btn');
+            const toggleMenu = () => {
+                if (sidebar.classList.contains('open')) {
+                    sidebar.classList.remove('open');
+                    overlay.classList.remove('open');
+                    setTimeout(() => overlay.style.display = 'none', 300);
+                } else {
+                    overlay.style.display = 'block';
+                    setTimeout(() => { sidebar.classList.add('open'); overlay.classList.add('open'); }, 10);
+                }
+            };
+            btn.addEventListener('click', toggleMenu);
+            closeBtn.addEventListener('click', toggleMenu);
+            overlay.addEventListener('click', toggleMenu);
+        }
+        
+        if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initSidebarMenu); } 
+        else { initSidebarMenu(); }
+    </script>
+</body>
+</html>
