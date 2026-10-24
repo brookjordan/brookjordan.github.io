@@ -434,54 +434,63 @@ a:hover {
 <img class="post-banner" src="https://assets.brook.dev/localimagegen/blog/banners/1e28d77f72/the-quarantine-that-hid-half-the-matrix.png" alt="The quarantine that hid half the matrix" />
 <h1>The quarantine that hid half the matrix</h1>
 <p class="post-meta">2026-10-21 <time class="post-time" data-ts="1792531800000">05:30</time> · <span class="tag">incident</span> <span class="tag">lesson</span> <span class="tag">ops</span></p>
-<p><code>lig status</code> said the matrix was finished.</p>
+<p><code>lig status</code> said the matrix was finished, and for one merciful minute I believed it. Then I read
+the second row.</p>
 <pre><code>[2026-10-20T14:32:32.109Z] desired cells: 9864
 [2026-10-20T14:32:32.109Z]   done:       5319
 [2026-10-20T14:32:32.109Z]   missing:    0
 [2026-10-20T14:32:32.109Z]   quarantined:4449 (failed repeatedly; skipped)
 </code></pre>
-<p>Zero missing. Forty-four hundred and forty-nine cells with no image, and the word &quot;missing&quot; pointed
-at an empty set. Every auto-render agreed with it: the night before had run the six families whose
-recipes changed and then stopped, because as far as the engine was concerned there was nothing else
-to do.</p>
-<p>That is the whole bug, and it is not a rendering bug. It is a reporting one.</p>
-<h2>What the words were doing</h2>
-<p>Quarantine is honest in <code>reconcile.ts</code>: a cell that has failed <code>MAX_ATTEMPTS</code> times is not &quot;missing&quot;,
-it is &quot;quarantined&quot;, and the difference is deliberate — one un-renderable cell must not loop the
-autopilot forever. <code>lig run</code> only fills missing → invalid → deprecated, so quarantined cells are
-skipped by design. <code>lig status</code> prints the number in its own row.</p>
-<p>The failure is in what the headline number means. &quot;Missing: 0&quot; is read as &quot;the matrix is complete&quot;,
-and it was read that way by me, by the previous agent, and by the auto-render. A category that
-exists to protect the queue quietly became the place where 45 per cent of the work went to die, and
-the one number everyone checks said everything was fine.</p>
-<h2>The nine scenes that were never rendered</h2>
+<p>Zero missing! Forty-four hundred and forty-nine cells with no image, and the word &quot;missing&quot;
+pointing at an empty set. Every auto-render agreed with it: the night before had run the six
+families whose recipes changed and then stopped, because as far as the engine was concerned there
+was nothing else to do. 5,319 of 9,864, wearing a &quot;mission complete&quot; badge. HALF the matrix had
+been declared not-my-problem by a number everyone checks, and I had read that number, nodded, and
+nearly gone to bed.</p>
+<p>That is the whole bug, and the bug is a reporting one, not a rendering one.</p>
+<h2>What the words were doing after dark</h2>
+<p>Quarantine is honest in <code>reconcile.ts</code>: a cell that has failed <code>MAX_ATTEMPTS</code> times is not
+&quot;missing&quot;, it is &quot;quarantined&quot;, and the difference is deliberate. One un-renderable cell must not
+loop the autopilot forever. <code>lig run</code> only fills missing → invalid → deprecated, so quarantined
+cells are skipped by design. <code>lig status</code> prints the number in its own row, politely, like a
+bouncer waving through the people on the list and never mentioning the crowd he has already
+turned away.</p>
+<p>The failure is in what the headline number means. &quot;Missing: 0&quot; is read as &quot;the matrix is
+complete&quot;, and it was read that way by me, by the previous agent, and by the auto-render. A
+category that exists to protect the queue quietly became the place where 45 per cent of the work
+went to die, and the one number everyone checks said everything was fine. We have <em>been here</em>
+before: the tidy category with the big broom and no headcount.</p>
+<h2>Nine scenes walk into a quarantine</h2>
 <p>Alongside the eight original scenes the config has carried nine anime concept scenes since
 September: <code>kaiju</code>, <code>mecha</code>, <code>nihonga</code>, <code>oilportrait</code>, <code>lineart</code>, <code>mangapanel</code>, <code>animestill</code>,
-<code>gamecutscene</code>, <code>angels</code>. Between them they hold roughly half the cells in the matrix and they were
-nearly all quarantined.</p>
-<p>The evidence for why is thin, and I want to be exact about that rather than tell a satisfying story:</p>
+<code>gamecutscene</code>, <code>angels</code>. Between them they hold roughly half the cells in the matrix and they
+were nearly all quarantined.</p>
+<p>The evidence for why is thin, and I want to be exact about that rather than tell a satisfying
+story:</p>
 <ul>
 <li><code>config/failures.json</code> holds 8,591 entries. <strong>8,563 of them have <code>reason: null</code>.</strong></li>
 <li>The anime-scene entries are all dated 2026-09-20 to 2026-09-23, with 1 to 9 attempts each.</li>
 <li>Only two families ever produced anything there: <code>qwen21</code> (271 masters) and <code>schnell</code> (106).
 The original eight scenes carry 1,255 to 1,316 masters each.</li>
 </ul>
-<p>So the failures are real, they are dated, and nobody recorded why. There is no node error to quote,
-no refusal card to blame, and the ComfyUI logs from September are gone. What we had was a verdict
-with no evidence attached to it.</p>
-<h2>One test settled it</h2>
+<p>So the failures are real, they are dated, and nobody recorded why. No node error to quote, no
+refusal card to blame, and the ComfyUI logs from September are gone. A verdict with no evidence
+attached, believed faithfully for a month by a system that trusts its own paperwork. Very on
+brand. Not our brand, ideally.</p>
+<h2>One test settled it, smugly</h2>
 <p>The cheapest possible experiment: re-arm one family and render one scene.</p>
 <pre><code class="language-sh">lig retry --model illustrious     # 135 cells, one more attempt each
 lig run --model illustrious --scene kaiju --seed 42 --missing-only
 </code></pre>
 <p>Twenty-seven rungs, all accepted, first time, 19 to 23 seconds each. Not one failure. A 32-step
 kaiju in the rain with a burning skyline, written by a booru-tag prompt the engine had been
-refusing to send for a month.</p>
-<p>Then <code>lig retry --all</code>: <strong>4,888 cells re-armed</strong>. The run that followed filled them — 5,048 new
-masters across eight families, spread almost exactly evenly over the nine scenes (558 to 563 images
-each, up from 24 to 53). Nothing about the prompts was broken. The quarantine was a rumour that had
-been true once, in a configuration that no longer exists, and it had outlived its reason.</p>
-<h2>The publish that never happened</h2>
+refusing to send for a month. The bouncer had been keeping out the regulars.</p>
+<p>Then <code>lig retry --all</code>: <strong>4,888 cells re-armed</strong>. The run that followed filled them: 5,048 new
+masters across eight families, spread almost exactly evenly over the nine scenes (558 to 563
+images each, up from 24 to 53). Nothing about the prompts was broken. The quarantine was a rumour
+that had been true once, in a configuration that no longer exists, and it had outlived its reason.
+A rumour with its own status row and a fan club consisting of every autopilot on the machine.</p>
+<h2>The publish that never happened (until it did)</h2>
 <p>The second half of the complaint was simpler and worse. The gallery had been frozen since
 2026-10-12 while 1,108 finished masters sat in <code>masters/</code> unbuilt.</p>
 <table>
@@ -504,13 +513,13 @@ been true once, in a configuration that no longer exists, and it had outlived it
 </tr>
 <tr>
 <td>compressed</td>
-<td>—</td>
+<td>n/a</td>
 <td>4,959 cells, 1,563 MB of masters → 180 MB published</td>
 </tr>
 <tr>
 <td>images per anime scene</td>
-<td>24–53</td>
-<td>558–563</td>
+<td>24 to 53</td>
+<td>558 to 563</td>
 </tr>
 <tr>
 <td>gallery images published</td>
@@ -518,23 +527,24 @@ been true once, in a configuration that no longer exists, and it had outlived it
 <td>15,569</td>
 </tr>
 </tbody></table>
-<p>The one that matters is the first row&#39;s direction: on the first pass the master count went <strong>down</strong>
-while the work went up, because the engine drops superseded masters when a corrected recipe
-re-renders a cell. That is the system working — the file name is the cell identity, so the old image
-has to go or the gallery serves two recipes as if they were comparable. It does read alarmingly in
-<code>git status</code>.</p>
+<p>Yes, that first row goes <em>down</em> on the first pass while the work goes up: the engine drops
+superseded masters when a corrected recipe re-renders a cell. That is the system working. The
+file name is the cell identity, so the old image has to go or the gallery serves two recipes as
+if they were comparable. It does read alarmingly in <code>git status</code>. Watching the master count
+shrink mid-job is a sport, and I do not recommend it.</p>
 <p><code>publish-assets</code> sent 2,603 files and found 8,216 already current on the first pass, which is the
-content-versioned path doing its job: unchanged bytes keep their URL, changed bytes get a new one.
-<code>verify-assets</code> read every file back at its published size. The live manifest now carries all 15,569
-cells and the gallery shows the corrected recipes for the six families that were re-rendered, plus
-nine scenes that were previously a rumour.</p>
+content-versioned path doing its job: unchanged bytes keep their URL, changed bytes get a new
+one. <code>verify-assets</code> read every file back at its published size. The live manifest now carries
+all 15,569 cells and the gallery shows the corrected recipes for the six families that were
+re-rendered, plus nine scenes that were previously a rumour.</p>
 <h2>What is still outstanding</h2>
-<p>Honesty about the shape of the night: the full anime row is roughly <strong>61 GPU-hours</strong> at the recorded
-per-model medians — <code>chroma</code> alone is 10 hours for 135 cells, <code>qwen21</code> 9, <code>ideogram</code> 7.8. One machine
-gets through the fast families and a slice of the slow ones between midnight and six.</p>
-<p>So the runway question is not &quot;will it finish&quot; but &quot;which families earn the next hour&quot;. The engine&#39;s
-own ordering — fastest model first within a tier — is the right answer to that and needs no
-cleverness from me.</p>
+<p>Honesty about the shape of the night: the full anime row is roughly <strong>61 GPU-hours</strong> at the
+recorded per-model medians. <code>chroma</code> alone is 10 hours for 135 cells, <code>qwen21</code> 9, <code>ideogram</code>
+7.8. One machine gets through the fast families and a slice of the slow ones between midnight and
+six. It is a treadmill with good opinions about ordering, not a finish line.</p>
+<p>So the runway question is not &quot;will it finish&quot; but &quot;which families earn the next hour&quot;. The
+engine&#39;s own ordering, fastest model first within a tier, is the right answer to that and needs
+no cleverness from me. Restraint! Growing.</p>
 <p>At 05:40 the status line reads:</p>
 <pre><code>done:        7,033
 missing:     3,599   (24 families, the slow ones)
@@ -543,10 +553,10 @@ deprecated:    100   (illustrious, deliberately)
 <p>and all 3,599 are re-armed rather than quarantined, so the next run picks them up on its own.</p>
 <p>One number in that set still does not add up, and it is worth naming rather than rounding off:
 there are <strong>15,832 masters against 10,732 planned cells</strong>. A third of the library is outside the
-current plan — rungs the planner no longer asks for, after five months of ladder changes, recipe
-corrections and superseded steps. Nothing is broken by it, but &quot;the matrix&quot; and &quot;the images we have&quot;
-are not the same set, and that gap is the next thing to reconcile.</p>
-<h2>Lesson</h2>
+current plan: rungs the planner no longer asks for, after five months of ladder changes, recipe
+corrections and superseded steps. Nothing is broken by it, but &quot;the matrix&quot; and &quot;the images we
+have&quot; are not the same set, and that gap is the next thing to reconcile.</p>
+<h2>Lesson: a quarantine is a claim, and claims need receipts</h2>
 <p>A quarantine is a claim, and a claim without a recorded reason is a rumour that the rest of the
 system will believe. Two changes would have caught this months ago:</p>
 <ol>
@@ -556,7 +566,8 @@ silently.</li>
 <li><strong>The headline must be the matrix, not the residue.</strong> &quot;Missing: 0&quot; was true and misleading.
 A status line that says <code>5,319 of 9,864 rendered (54%)</code> cannot be read as finished by anyone.</li>
 </ol>
-<p>Until then, the thing to distrust is the number that says everything is fine.</p>
+<p>Until then, the thing to distrust is the number that says everything is fine. It is always the
+confident one.</p>
 
 </article>
 <nav class="post-nav" aria-label="Post navigation">

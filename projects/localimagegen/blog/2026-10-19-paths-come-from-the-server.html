@@ -434,58 +434,76 @@ a:hover {
 <img class="post-banner" src="https://assets.brook.dev/localimagegen/blog/banners/06a8aa6f3e/the-paths-come-from-the-server.png" alt="The paths come from the server now" />
 <h1>The paths come from the server now</h1>
 <p class="post-meta">2026-10-19 <time class="post-time" data-ts="1792424700000">23:45</time> · <span class="tag">incident</span> <span class="tag">lesson</span> <span class="tag">tooling</span></p>
-<p>A run rendered 96 images and saved none of them. Nothing printed an error. The same afternoon,
-<code>lig doctor</code> reported that <strong>0 of 32 models were installed</strong>, on a machine with 150 GB of them.</p>
-<p>Both were one stale path.</p>
-<h2>What happened</h2>
-<p>ComfyUI moved on 2026-10-15, from <code>~/ComfyUI-Installs</code> + <code>~/ComfyUI-Shared</code> to
-<code>~/Documents/Comfy_Installs/ComfyUI</code> + <code>~/Documents/ComfyUI-Shared</code>. <code>config/gallery.ts</code> still
-described the old world, because it had not changed since the commit called &quot;WIP snapshot before
-machine migration&quot;.</p>
-<p>The old tree still exists. That is the trap: <code>~/ComfyUI-Shared/output/localimagegen</code> is a real
-directory, empty, sitting where the config pointed. So:</p>
+<p>Brook, at some ungodly hour, staring at a run that had just &quot;finished&quot;: 96 images rendered,
+zero images saved. No error. No warning. Not so much as a raised eyebrow from the machine.
+And then, the same afternoon, <code>lig doctor</code> cheerfully reported that <strong>0 of 32 models were
+installed</strong>, on a machine with 150 GB of models installed. The computer was not lying. It was
+answering a question nobody meant to ask.</p>
+<p>Both failures were one stale path. One. Wrong. String.</p>
+<h2>Two crimes, one culprit</h2>
+<p>ComfyUI moved house on 2026-10-15, from <code>~/ComfyUI-Installs</code> + <code>~/ComfyUI-Shared</code> to
+<code>~/Documents/Comfy_Installs/ComfyUI</code> + <code>~/Documents/ComfyUI-Shared</code>. <code>config/gallery.ts</code>
+still described the old world, because it had not changed since the commit called &quot;WIP
+snapshot before machine migration&quot;. A snapshot, frozen in amber, quietly running the country.</p>
+<p>And here is the trap, and it is a beautiful trap: the old tree still exists.
+<code>~/ComfyUI-Shared/output/localimagegen</code> is a <em>real directory</em>, empty, sitting exactly where
+the config pointed. Not a 404. Not a stack trace. An empty room with the lights on. Every
+check that looked in it found a directory, found it writable, found nothing wrong.</p>
+<p>So:</p>
 <ul>
-<li><strong>Stamping found nothing.</strong> <code>run</code> builds a graph, ComfyUI writes the PNG into the <em>live</em> inbox,
-and <code>stampItem</code> looks for it under <code>paths.comfy_output</code> — the empty legacy directory. <code>fs.existsSync</code>
-says no, <code>continue</code>, and the render is dropped without a word. 96 times.</li>
-<li><strong>doctor looked in the wrong tree.</strong> It derived the models root as <code>&lt;output&gt;/../models</code>, which is
-correct only if the output dir sits beside the shared tree. Pointed at the legacy root, it checked
-an empty directory and reported every model missing.</li>
+<li><strong>Stamping found nothing.</strong> <code>run</code> builds a graph, ComfyUI writes the PNG into the <em>live</em>
+inbox, and <code>stampItem</code> looks for it under <code>paths.comfy_output</code>, the empty legacy directory.
+<code>fs.existsSync</code> says no, <code>continue</code>, and the render is dropped without a word. 96 times.
+Ninety. Six. Times.</li>
+<li><strong>doctor looked in the wrong tree.</strong> It derived the models root as <code>&lt;output&gt;/../models</code>,
+which is correct only if the output dir sits beside the shared tree. Pointed at the legacy
+root, it checked an empty directory and reported every model missing. The machine then
+spent a session re-downloading things the NAS already had. Half a re-fetch, all waste.</li>
 </ul>
-<p>One wrong string, two failures that looked unrelated, and a session&#39;s worth of downloading that
-mostly re-fetched files the NAS already had.</p>
+<p>One wrong string, two failures that looked completely unrelated, like identical twins
+committing crimes in different postcodes.</p>
 <h2>The fix: ask the process that is writing the files</h2>
-<p>Hardcoding the new location would only move the bug to the next migration. The running server
-already knows its own layout — it advertises <code>--base-directory</code> and <code>--output-directory</code> in
-<code>/system_stats</code> — so that is now the source of truth.</p>
+<p>Hardcoding the new location would only move the bug to the next migration. We have <em>been
+here</em> before, and the whole lesson is that some other human will move this tree again,
+because that is what humans do to directories. The running server already knows its own
+layout: it advertises <code>--base-directory</code> and <code>--output-directory</code> in <code>/system_stats</code>. So the
+process writing the files is now the source of truth, and the config file has been demoted.</p>
 <ul>
-<li><code>src/comfypaths.ts</code> reads the argv, and <code>loadConfig</code> rebases <code>comfy_output</code> onto the server&#39;s real
-output directory. <code>config/gallery.ts</code> is now the <strong>offline fallback</strong>, not the authority.</li>
-<li><code>scripts/lib/comfy-paths.zsh</code> does the same for shell scripts, which resolve the tree from disk.</li>
-<li><code>~/.zshrc</code> autodetects <code>DIR_COMFY_INSTALL</code> / <code>DIR_COMFY_SHARED</code> instead of naming the old location.
-It had been feeding wrong paths to <code>comfy-start</code> <em>and</em> to <code>~/.local/bin/comfy-profile</code>, which was
-already correct — so relaunching ComfyUI after a crash would have failed.</li>
-<li><code>yarn preflight</code> compares config against the live server and exits non-zero on a mismatch. It was
-tested by putting the old path back: it fails, and says why.</li>
+<li><code>src/comfypaths.ts</code> reads the argv, and <code>loadConfig</code> rebases <code>comfy_output</code> onto the
+server&#39;s real output directory. <code>config/gallery.ts</code> is now the <strong>offline fallback</strong>, not
+the authority. It gets a vote only when the server is not speaking.</li>
+<li><code>scripts/lib/comfy-paths.zsh</code> does the same for shell scripts, which resolve the tree from
+disk rather than trusting anyone&#39;s memory of it.</li>
+<li><code>~/.zshrc</code> autodetects <code>DIR_COMFY_INSTALL</code> / <code>DIR_COMFY_SHARED</code> instead of naming the old
+location. It had been feeding wrong paths to <code>comfy-start</code> <em>and</em> to
+<code>~/.local/bin/comfy-profile</code>, which was already correct. So the next time ComfyUI crashed
+and got relaunched, the relaunch would have failed while the profiler sat there smug.</li>
+<li><code>yarn preflight</code> compares config against the live server and exits non-zero on a mismatch.
+Tested the honest way: we put the old path back on purpose, and it failed, and it said why.</li>
 </ul>
-<h2>What we kept</h2>
-<p>The 96 renders were not wasted. <code>lig refresh-data</code> stamped them into <code>masters/</code> once the inbox
-resolved. Two notes on reading the evidence afterwards:</p>
+<h2>What we kept: the renders were not wasted</h2>
+<p><code>lig refresh-data</code> stamped all 96 into <code>masters/</code> once the inbox resolved. But reading the
+evidence afterwards nearly made the diagnosis <em>wronger</em>, and that deserves its own paragraph
+of shame:</p>
 <ul>
-<li>Their mtimes look like the <em>render</em> time, hours earlier. <code>importAsWebp</code> deliberately copies the
-source PNG&#39;s mtime onto the WebP (<code>src/stamp.ts</code>), so a file written at 23:21 can claim 23:07.
-That nearly turned a correct diagnosis into a wrong one.</li>
-<li>The run&#39;s own log said <code>stamped 0 straggler(s)</code>. That counts only stragglers; the normal path is
-<code>refreshData</code>, so it reads as success while moving nothing.</li>
+<li>Their mtimes look like the <em>render</em> time, hours earlier. <code>importAsWebp</code> deliberately copies
+the source PNG&#39;s mtime onto the WebP (<code>src/stamp.ts</code>), so a file written at 23:21 can claim
+23:07. A correct diagnosis was nearly strangled by a timestamp with a fake alibi.</li>
+<li>The run&#39;s own log said <code>stamped 0 straggler(s)</code>. That counts only stragglers; the normal
+path is <code>refreshData</code>. So the log reads as success while moving nothing. A very confident
+green tick attached to zero work.</li>
 </ul>
-<h2>The second bug</h2>
-<p><code>krea2</code> asked for <code>krea2_turbo-Q8_0.gguf</code> (underscore); upstream ships <code>krea2-turbo-Q8_0.gguf</code>
-(hyphen). A family would have failed forever, quietly. The fetch script now renames on purpose, and
-says so in a comment.</p>
-<h2>Lesson</h2>
-<p><strong>A wrong absolute path is a silent failure, not a loud one.</strong> The absence of an error message is
-not evidence that a step worked. <code>run</code> should have noticed that it rendered 96 images and moved
-zero — that check is the obvious next one to add.</p>
+<h2>The second bug, smaller and sneakier</h2>
+<p><code>krea2</code> asked for <code>krea2_turbo-Q8_0.gguf</code>, where the upstream file
+<code>krea2-turbo-Q8_0.gguf</code> joins the halves the other way. One character, the entire family, failed forever,
+quietly. The fetch script now renames on purpose and says so in a comment, because future
+us deserves an explanation, not a mystery.</p>
+<h2>What still hurts</h2>
+<p><code>run</code> should have noticed that it rendered 96 images and moved zero. That check does not
+exist yet; it is the obvious next one, and until it exists the absence of an error message
+remains what it has always been: not evidence that a step worked. A wrong absolute path is
+a <em>silent</em> failure, not a loud one, and silence in this codebase has a track record of
+lying through its teeth.</p>
 
 </article>
 <nav class="post-nav" aria-label="Post navigation">

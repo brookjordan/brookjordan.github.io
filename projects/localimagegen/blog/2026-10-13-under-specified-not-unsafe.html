@@ -431,25 +431,31 @@ a:hover {
     </header>
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
+<img class="post-banner" src="https://assets.brook.dev/localimagegen/blog/banners/37cdfc59b3/under-specified-not-unsafe.png" alt="Under-specified, not unsafe: density is the way out of the grey rectangle" />
 <h1>Under-specified, not unsafe: density is the way out of the grey rectangle</h1>
 <p class="post-meta">2026-10-13 <time class="post-time" data-ts="1791853800000">09:10</time> · <span class="tag">incident</span> <span class="tag">lesson</span> <span class="tag">prompting</span></p>
 <p><a href="2026-09-20-the-grey-rectangle-that-passed.html">The grey rectangle post</a> answered how to <em>catch</em>
 an Ideogram refusal. This one answers why it happens and what actually clears it, from a run
-where we produced three of them on purpose.</p>
-<p>During the 2026-10-12 album cover pass an innocuous prompt was refused twice: no people, no
-text, no violence, no branding. Just a wet terrace at night with a phone on a windowsill. The
-refusal was a flat grey card reading &quot;Image blocked by safety filter&quot;, as ever a valid file at
-exactly the requested size.</p>
+where we produced three of them on purpose. Yes, on purpose. We fed the censor a wet terrace
+until it blinked.</p>
+<p>Because that&#39;s the scene that started it: during the 2026-10-12 album cover pass an innocuous
+prompt was refused twice. No people, no text, no violence, no branding. Just a wet terrace at
+night with a phone on a windowsill. The refusal was a flat grey card reading &quot;Image blocked by
+safety filter&quot;, as ever a valid file at exactly the requested size. A pickpocket leaving a
+receipt.</p>
 <h2>What it is not</h2>
 <p><strong>It is not our pipeline.</strong> The graph carries 13 stock ComfyUI nodes and no custom node packs.
 There is no safety filter in the path, ours or anybody&#39;s. The card is <em>generated content</em>: the
-model, given a prompt it will not work with, draws a refusal notice. That is why nothing in the
-stack logs an error and why <code>lig verify</code> needs a separate gate for it at all.</p>
+model, given a prompt it will not work with, politely draws a refusal notice instead of a
+picture. That is why nothing in the stack logs an error, and why <code>lig verify</code> needs a separate
+gate for it at all. The culprit signs its own refusal and files it with the artwork.</p>
 <p><strong>It is not the content.</strong> Two refusals and two passes came from prompts describing the same
-scene. Nothing about the subject changed between the ones that failed and the ones that did.</p>
+scene. Nothing about the subject changed between the ones that failed and the ones that did.
+The terrace didn&#39;t get naughtier between renders.</p>
 <h2>What it is</h2>
 <p><strong>Under-specification.</strong> The prompt described three subjects and left the rest of the frame to
-the model. Community prior art on Ideogram refusals points the same way, and the tell is that
+the model&#39;s imagination, and apparently the imagination it reaches for when confused is a grey
+card. Community prior art on Ideogram refusals points the same way, and the tell is delicious:
 the fix is <em>more</em> prompt, not less.</p>
 <h2>The measurement</h2>
 <p>The same scene, rendered repeatedly with one variable changed: how much the prompt specified.</p>
@@ -495,28 +501,31 @@ the fix is <em>more</em> prompt, not less.</p>
 <p>Two independent routes out: add <em>regions</em> until the frame is fully accounted for, or add
 <em>prose</em> until nothing is left unspecified. Nine boxes worked. Six did not. A dense single
 paragraph worked with only three boxes, which says the axis is coverage rather than the box
-count itself — boxes are simply a convenient way to be complete.</p>
+count itself. Boxes are simply a convenient way to be complete; the model wasn&#39;t counting, it
+was starving.</p>
 <h2>The rule</h2>
 <p><strong>When you get the grey card, add detail. Do not simplify the prompt.</strong></p>
 <p>That is the opposite of the instinct, and it cost this project two renders and an hour, because
 the first two attempts both tried to say the same thing more carefully rather than more fully.
-A refusal reads like &quot;your content is unacceptable&quot; and is in fact closer to &quot;I cannot tell what
-you want&quot;.</p>
+A refusal reads like &quot;your content is unacceptable&quot; and is in fact closer to &quot;I cannot tell
+what you want&quot;. A bouncer throws you out; this thing is a lost tourist asking for directions it
+can&#39;t follow.</p>
 <p>Corollaries worth keeping:</p>
 <ul>
-<li>The card is a <em>render</em>, so it costs the same as a real one. It is not free to be refused.</li>
+<li>The card is a <em>render</em>, so it costs the same as a real one. It is not free to be refused.
+The grey rectangle bills at full price.</li>
 <li>Detection still matters: <code>verify</code> cannot see it by darkness or by stdev, only by how
 concentrated the pixels are. See the earlier post for the gate.</li>
-<li>The refused frames are worth keeping as evidence. The album run kept all three.</li>
+<li>The refused frames are worth keeping as evidence. The album run kept all three. Mugshots,
+basically.</li>
 </ul>
-<h2>Sources</h2>
-<ul>
-<li><a href="2026-09-20-the-grey-rectangle-that-passed.html">The grey rectangle that passed every check</a> —
-the detection gate and the pixel-concentration measurement.</li>
-<li>The album run&#39;s own record: <code>~/Documents/ai-runtime/argo-album/</code>, where the three refused
-frames, the nine-box prompt and the dense prompt are all preserved beside the renders that
-worked.</li>
-</ul>
+<h2>What still hurts</h2>
+<p>Every future refusal will look exactly like a content problem again, and the instinct to
+simplify will return, because simplifying feels like cooperating. The evidence in
+<code>~/Documents/ai-runtime/argo-album/</code>, all three refused frames beside the nine-box and dense
+prompts that worked, is the antidote. Sources: <a href="2026-09-20-the-grey-rectangle-that-passed.html">The grey rectangle that passed every
+check</a> for the detection gate and the
+pixel-concentration measurement, and the album run&#39;s own record for the prompts themselves.</p>
 
 </article>
 <nav class="post-nav" aria-label="Post navigation">

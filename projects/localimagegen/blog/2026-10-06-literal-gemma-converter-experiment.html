@@ -431,36 +431,41 @@ a:hover {
     </header>
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
-<img class="post-banner" src="https://assets.brook.dev/localimagegen/blog/banners/a9e93da78e/placeholder.png" alt="Teaching the tag converter to be literal" />
+<img class="post-banner" src="https://assets.brook.dev/localimagegen/blog/banners/60baaea4c5/literal-gemma-converter-experiment.png" alt="Teaching the tag converter to be literal" />
 <h1>Teaching the tag converter to be literal</h1>
 <p class="post-meta">2026-10-06 <time class="post-time" data-ts="1791253800000">10:30</time> · <span class="tag">experiment</span> <span class="tag">telegram-bot</span> <span class="tag">prompts</span></p>
-<!-- TODO(banner): replace the placeholder with a bespoke render; tracked on the localimagegen banner ticket. --><p>The Telegram bot&#39;s tag-dialect commands (Pony and the NoobAI family) need prose
-turned into Booru tags. A small local Gemma does that conversion. The
-converter stays gated (<code>CONVERTER_QUALIFIED = false</code>) until it proves it keeps
-what you asked for. The early system prompt tended to &quot;improve&quot; requests: it
-dropped a held object, moved people around and invented accessories.</p>
+<p>The Telegram bot&#39;s tag-dialect commands (Pony and the NoobAI family) need prose turned into
+Booru tags, and a small local Gemma does that conversion. The converter stays gated
+(<code>CONVERTER_QUALIFIED = false</code>) until it proves it keeps what you asked for. Because the early
+system prompt had a mild creative-writing streak: it &quot;improved&quot; requests. It dropped a held
+object. It moved people around. It invented accessories. You ask for a lady with a lantern, you
+get a lady with a lantern, a hat she never owned, standing somewhere else entirely. Helpful!
+Like a butler who rewrites your letters to be more interesting.</p>
 <h2>The experiment</h2>
-<p><code>experimental-literal-v2</code> is a system prompt that tells the model to carry
-over every concrete detail and add nothing. It was checked against the six
-original fixtures plus <strong>two held-out fixtures</strong> it had never been tuned on.
-All eight kept their details. A typical one: &quot;adult, holding a yellow lantern,
-stands to the left of a wooden bench, no hat&quot;. The object, its colour, the
-spatial relation and the negation all survive into tags.</p>
+<p><code>experimental-literal-v2</code> is a system prompt that tells the model to carry over every concrete
+detail and add nothing. Radical concept. It was checked against the six original fixtures plus
+<strong>two held-out fixtures</strong> it had never been tuned on. All eight kept their details. A typical
+one: &quot;adult, holding a yellow lantern, stands to the left of a wooden bench, no hat&quot;. The
+object, its colour, the spatial relation and the negation all survive into tags. Even the &quot;no
+hat&quot; survived, which is the one that usually dies first, because models love hats.</p>
 <h2>What it found that wasn&#39;t the prompt</h2>
 <ul>
-<li><strong>Long inputs run out of room.</strong> A 2,933-character request hit
-<code>output_exhausted</code> at the 384-token output cap, so the converter never
-finished its answer. The bot&#39;s input limit is 3,500 code points, so the
-output budget has to grow, or long requests must fail clearly instead of
-being cut off.</li>
-<li><strong>Provenance labelled the wrong prompt.</strong> Records still said
-<code>sys-prompt-v1</code> while v2 was running. A provenance record that names the
-wrong prompt is worse than none, so this gets fixed before any
-qualification evidence counts.</li>
+<li><strong>Long inputs run out of room.</strong> A 2,933-character request hit <code>output_exhausted</code> at the
+384-token output cap, so the converter never finished its answer. It just stopped, mid-sentence,
+like a translator who leaves at 5pm. The bot&#39;s input limit is 3,500 code points, so the output
+budget has to grow, or long requests must fail clearly instead of being amputated.</li>
+<li><strong>Provenance labelled the wrong prompt.</strong> Records still said <code>sys-prompt-v1</code> while v2 was
+running. A provenance record that names the wrong prompt is worse than none: it is false
+testimony with a stamp on it. This gets fixed before any qualification evidence counts.</li>
 </ul>
-<p>The 363 tests passed. The converter stays gated. The raw commands
-(<code>/pony_dmd2_raw</code> and <code>/harmoniq_vpred_v30_raw</code>) work without it in the
-meantime.</p>
+<p>The 363 tests passed. The converter stays gated. The raw commands (<code>/pony_dmd2_raw</code> and
+<code>/harmoniq_vpred_v30_raw</code>) work without it in the meantime.</p>
+<h2>What still hurts</h2>
+<p>Eight of eight fixtures is a promising warm-up, not a qualification. Held-out fixtures were
+held out because tuning fixtures are the model&#39;s own homework, and the gate stays closed until
+the converter survives evidence gathered the boring way. The truncation cliff and the lying
+provenance are both still open, and both bite exactly when someone sends a long, interesting
+request: the moment worth converting is the moment the converter currently cannot survive.</p>
 
 </article>
 <nav class="post-nav" aria-label="Post navigation">

@@ -431,33 +431,45 @@ a:hover {
     </header>
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
+<img class="post-banner" src="https://assets.brook.dev/localimagegen/blog/banners/the-hold-that-had-no-end.png" alt="The hold that had no end" />
 <h1>The hold that had no end</h1>
 <p class="post-meta">2026-10-24 <time class="post-time" data-ts="1792842000000">19:40</time> · <span class="tag">incident</span> <span class="tag">bot</span> <span class="tag">queue</span> <span class="tag">lesson</span></p>
-<p>Two requests arrived on 2026-10-24, one at 11:01 and one at 12:43. Both were accepted, both were
-durably queued, and neither reached ComfyUI for three hours. The job records said <code>ready</code>, which was
-true and useless: <code>ready</code> is where a job waits for the machine, and nothing in that state recorded how
-long it had been waiting.</p>
-<h2>The branch</h2>
+<p>&quot;the bot went quiet.&quot; Not &quot;the bot is broken&quot;, not &quot;the bot is wrong&quot;. Quiet. Which is the
+worst adjective a job queue can earn, because silence has three explanations and only one
+of them is fine. Two requests arrived on 2026-10-24, one at 11:01 and one at 12:43. Both
+were accepted, both were durably queued, and neither reached ComfyUI for three hours. The
+job records said <code>ready</code> the whole time, which was true and useless: <code>ready</code> is where a job
+waits for the machine, and nothing in that state recorded how long it had been standing
+there. Two perfectly healthy jobs, holding up little signs that said READY, for half a
+working day.</p>
+<h2>The polite branch that ate the afternoon</h2>
 <p><code>src/bot/scheduler.ts</code> held a ready job whenever the observed queue was not empty:</p>
 <pre><code class="language-ts">const obs = await io.observeQueue();
 if (!obs || obs.depth &gt; 0) return;
 </code></pre>
-<p>Non-pre-emption is the right rule. ComfyUI is FIFO, so submitting boldly behind a sweep does not make
-the render start sooner; it only makes it invisible. But non-pre-emption without a bound is starvation
-whenever the queue does not drain, and that afternoon the queue did not drain because a sweep was
-feeding it.</p>
-<h2>What a hold needs</h2>
-<p>Three things, built in this order, each with a test that failed before the code existed.</p>
-<p><strong>A deadline.</strong> Ten minutes, then the job joins the queue by normal append. Not always-append: that
-would put a bot render behind an eight-cell sweep anyway, with no record of why it waited, and it would
-also invite the belief that the bot has priority it does not have.</p>
-<p><strong>A durable start time.</strong> <code>heldSince</code> is written into the job record, so a restart resumes the clock
-rather than restarting it. An in-memory timestamp survives exactly until the next restart, and a long
-sweep is precisely when the bot process gets restarted.</p>
-<p><strong>A voice.</strong> One message when the hold starts, one when it ends, carrying the measured wait and whether
-the queue cleared or was still busy. A silent wait is indistinguishable from a lost job, which is why
-the original report was &quot;the bot went quiet&quot;, not &quot;the bot is waiting&quot;.</p>
-<h2>The tests</h2>
+<p>And look, the manners are <em>impeccable</em>. ComfyUI is FIFO, so submitting boldly behind a
+sweep does not make the render start sooner; it only makes it invisible. Non-pre-emption is
+the right rule. We have <em>been here</em> before with queue-jumping and it went exactly as well
+as you&#39;d expect. But non-pre-emption without a bound is not politeness, it is starvation
+with good posture. Whenever the queue does not drain, the bot waits forever. That afternoon
+the queue did not drain, because a sweep was feeding it. The bouncer held our coat, and
+then held it indefinitely, and stopped answering the door.</p>
+<h2>What a hold needs (three things, in the order the tests demanded them)</h2>
+<p>Each of these arrived with a test that failed before the code existed, which is the correct
+way to receive new code.</p>
+<p><strong>A deadline.</strong> Ten minutes, then the job joins the queue by normal append. Not
+always-append, tempting as that is: that would put a bot render behind an eight-cell sweep
+anyway, with no record of why it waited, and it would also invite the belief that the bot
+has priority it does not have. It does not. It has a curfew.</p>
+<p><strong>A durable start time.</strong> <code>heldSince</code> is written into the job record, so a restart resumes
+the clock rather than restarting it. An in-memory timestamp survives exactly until the next
+restart, and a long sweep is precisely when the bot process gets restarted. The universe
+checks. It always checks.</p>
+<p><strong>A voice.</strong> One message when the hold starts, one when it ends, carrying the measured wait
+and whether the queue cleared or was still busy. A silent wait is indistinguishable from a
+lost job, which is why the original report was &quot;the bot went quiet&quot; and not &quot;the bot is
+waiting&quot;. The difference between those two sentences is the whole feature.</p>
+<h2>Five tests walk into a scheduler</h2>
 <ul>
 <li>a job held behind a busy queue submits once the deadline elapses, and not before</li>
 <li>the same job, replayed through a fresh scheduler, still honours its original deadline</li>
@@ -465,21 +477,26 @@ the original report was &quot;the bot went quiet&quot;, not &quot;the bot is wai
 <li>the message distinguishes a queue that cleared from one that was still busy</li>
 <li>the runtime forwards the notice to the channel that owns the Telegram credentials</li>
 </ul>
-<p>The last one matters more than it looks: the scheduler decides, the channel speaks. A scheduler that
-decided to hold silently is what starved those two requests.</p>
-<h2>The proof</h2>
+<p>That last one matters more than it looks. The scheduler decides, the channel speaks. A
+scheduler that decided to hold silently is what starved those two requests: it was thinking
+very hard and telling nobody.</p>
+<h2>The proof, with timestamps because we are grown-ups</h2>
 <p>Eight chroma cells queued, a real Telegram origin, the live bot restarted on the new code.</p>
 <ul>
 <li>held at 11:09:44.133Z behind depth 8, one notice sent</li>
 <li>submitted at 11:19:45.109Z, 601 seconds later, still behind eight cells, accepted as <code>4504ae75</code></li>
 <li>the prompt sat at position 6 of 11 in ComfyUI&#39;s queue, which is what &quot;appended&quot; means in practice</li>
 </ul>
-<h2>What this does not fix</h2>
-<p>The deadline bounds the wait, not the machine. A render that never finishes still parks everything
-behind it, and the sweep&#39;s own monitor still interrupts the server after ten minutes of no progress.
-The bot now rides behind a long sweep instead of vanishing behind it, which is honest and still slow.
-The other half is the queue being able to finish at all: 682 cells are owed after a quarantine that
-turned out to be a miscount of pre-registrations.</p>
+<p>Held, counted down, spoken up, submitted. Six hundred and one seconds of waiting and every
+one of them accounted for. THAT. IS. THE. FEATURE.</p>
+<h2>What still hurts</h2>
+<p>The deadline bounds the wait, not the machine. A render that never finishes still parks
+everything behind it, and the sweep&#39;s own monitor still interrupts the server after ten
+minutes of no progress. The bot now rides behind a long sweep instead of vanishing behind
+it, which is honest and still slow. And the other half of the problem is the queue being
+able to finish at all: 682 cells are owed after a quarantine that turned out to be a
+miscount of pre-registrations. The curfew works. The traffic jam it curfews us into is
+still a traffic jam.</p>
 
 </article>
 <nav class="post-nav" aria-label="Post navigation">

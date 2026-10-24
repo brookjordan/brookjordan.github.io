@@ -434,44 +434,52 @@ a:hover {
 <img class="post-banner" src="https://assets.brook.dev/localimagegen/blog/banners/63105c1185/the-run-that-could-never-finish.png" alt="The run that could never finish" />
 <h1>The run that could never finish</h1>
 <p class="post-meta">2026-10-20 <time class="post-time" data-ts="1792437900000">03:25</time> · <span class="tag">incident</span> <span class="tag">lesson</span></p>
-<p>Tonight&#39;s run rendered 1,081 cells. Then <code>status</code> said 1,080 were <em>still</em> deprecated, and the next
-run started at the top of the same list. Nothing was wrong with the images. The bookkeeping could
-not converge.</p>
-<p>Two causes, stacked.</p>
+<p>Tonight&#39;s run rendered 1,081 cells. Then <code>status</code> said 1,080 were <em>still</em> deprecated, and the
+next run started at the top of the same list. Read that again: 1,081 rendered, 1,080 still
+condemned. Nothing was wrong with the images! The pictures were lovely, the logs were cheerful,
+and the bookkeeping could not converge. We had built a Sisyphean boulder with a progress bar.</p>
+<p>Two causes, stacked, which is how the best hair-pullers ship.</p>
 <h2>Cause one: a fingerprint of the wrong string</h2>
-<p>A cell is deprecated when its recorded <code>promptHash</code> differs from the hash the planner computes for
-that cell. Auto-deprecation therefore depends on both sides hashing <strong>the same text</strong>.</p>
-<p>They didn&#39;t. Stamping hashed the prompt embedded in the ComfyUI graph; planning hashed the config&#39;s
-prompt for the scene. Builders <em>decorate</em> the prompt — Pony and Illustrious get quality prefixes — so
-for those families the two strings could never match. Every cell read as permanently stale:</p>
+<p>A cell is deprecated when its recorded <code>promptHash</code> differs from the hash the planner computes
+for that cell. Auto-deprecation therefore depends on both sides hashing <strong>the same text</strong>.</p>
+<p>They didn&#39;t! Stamping hashed the prompt embedded in the ComfyUI graph; planning hashed the
+config&#39;s prompt for the scene. Builders <em>decorate</em> the prompt, Pony and Illustrious get quality
+prefixes, so for those families the two strings could never match. Not &quot;rarely&quot;. Never. Every
+cell read as permanently stale, forever, by construction:</p>
 <pre><code>pony_van_s02_00042   recorded 4d8842916079   planned 1bd61a7481d6
 illustrious_doll...  recorded 45e507c799b7   planned fe961769fa9d
 </code></pre>
 <p>The fix is one function: record the hash of what the planner hashes.</p>
 <pre><code class="language-ts">promptHash: plannedPromptHash(cfg, model, scene, gm.prompt)
 </code></pre>
-<p><code>promptFor()</code> throws when a scene has no prompt for that model, so the helper falls back to the graph
-text rather than crashing a stamp.</p>
+<p><code>promptFor()</code> throws when a scene has no prompt for that model, so the helper falls back to the
+graph text rather than crashing a stamp. Small fix, enormous consequences, the best kind.</p>
 <p>Result: <code>deprecated</code> went from <strong>456 to 96</strong> the moment <code>refresh-data</code> re-read history.</p>
 <h2>Cause two: manual deprecations never clear themselves</h2>
-<p>The other 384 were not drift at all. Five families carried <strong>model-wide</strong> manual deprecations from
-recipe corrections in August — <code>step: ALL</code> entries with no step, so every cell of that model was
-flagged. Manual deprecations are deliberately sticky: <code>run</code> will re-render the cells, but only
-<code>lig undeprecate</code> clears the flag. So each run rendered them again and left them deprecated.</p>
-<p>Clearing four families plus Pony took <code>deprecated</code> from 1,080 to 96. The lesson is operational, not
-code: <strong>re-rendering a manually deprecated family is half a job.</strong> The other half is the command that
-says &quot;I have seen the new renders and they are what I want.&quot;</p>
+<p>The other 384 were not drift at all. Five families carried <strong>model-wide</strong> manual deprecations
+from recipe corrections in August, <code>step: ALL</code> entries with no step, so every cell of that model
+was flagged. Manual deprecations are deliberately sticky: <code>run</code> will re-render the cells, but
+only <code>lig undeprecate</code> clears the flag. So each run rendered them again and left them
+deprecated. The system was diligently re-convicting prisoners the warden had already pardoned,
+nightly, without complaint.</p>
+<p>Clearing four families plus Pony took <code>deprecated</code> from 1,080 to 96. The lesson is operational,
+not code: <strong>re-rendering a manually deprecated family is half a job.</strong> The other half is the
+command that says &quot;I have seen the new renders and they are what I want.&quot;</p>
 <h2>The 96 that remain</h2>
 <p>Those are intentional: Illustrious below 21 steps renders incoherently, and
-<a href="2026-07-06-2210-incident-the-illustrious-preset-drift.html">the July incident</a> deprecated steps 1–20
-on purpose. But the engine treats &quot;deprecated&quot; as a tier to <em>fill</em>, so those cells re-render every
-run, forever, producing images we have already decided not to use.</p>
-<p>The fix is not another flag. If steps 1–20 are architecturally bad for that model, they should not be
-in the ladder. Either raise the floor to 21, or point the low steps at the recipe that works.</p>
-<h2>Lesson</h2>
-<p><strong>A render that never converges is a bookkeeping bug, not a model problem.</strong> Both causes here were
-invisible in the output — the images were fine, the logs said &quot;1,081 rendered&quot;, and only the
-difference between two hashes revealed that the next run would do it all again.</p>
+<a href="2026-07-06-2210-incident-the-illustrious-preset-drift.html">the July incident</a> deprecated steps
+1 to 20 on purpose. But the engine treats &quot;deprecated&quot; as a tier to <em>fill</em>, so those cells
+re-render every run, forever, producing images we have already decided not to use. Spending
+GPU time manufacturing souvenirs of a decision.</p>
+<p>The fix is not another flag. If steps 1 to 20 are architecturally bad for that model, they
+should not be in the ladder. Either raise the floor to 21, or point the low steps at the recipe
+that works.</p>
+<h2>What still hurts</h2>
+<p><strong>A render that never converges is a bookkeeping bug, not a model problem.</strong> Both causes here
+were invisible in the output. The images were fine, the logs said &quot;1,081 rendered&quot;, and only
+the difference between two hashes revealed that the next run would do it all again. A system
+can be perfectly healthy in every frame and completely broken in its ledger, and the ledger is
+the part that decides what tomorrow looks like.</p>
 
 </article>
 <nav class="post-nav" aria-label="Post navigation">

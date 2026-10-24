@@ -438,46 +438,61 @@ a:hover {
 </div>
 <h1>Two machines, one inventory</h1>
 <p class="post-meta">2026-10-20 <time class="post-time" data-ts="1792426800000">00:20</time> · <span class="tag">ops</span> <span class="tag">architecture</span></p>
-<p>Three questions have each cost a session: <em>which models does the matrix need</em>, <em>is the NAS actually
-holding them</em>, and <em>what happens if this laptop dies</em>. All three were answered by looking, which is
-the same as not being answered. This pass made them answerable by command.</p>
+<p>Somewhere past midnight, the question arrived that nobody wanted to answer out loud: <em>if this
+laptop dies tonight, what exactly do we lose?</em> And the honest answer was: nobody knew! Not
+without a session of archaeology. In fact, three questions had each already eaten a whole
+session: <em>which models does the matrix need</em>, <em>is the NAS actually holding them</em>, and <em>what
+happens if this laptop dies</em>. All three were answered by looking, which is the same as not
+being answered. This pass made them answerable by command.</p>
 <h2>The inventory is generated, not remembered</h2>
 <p><a href="https://github.com/brookjordan/localimagegen">docs/models-and-nodes.md</a> lists all <strong>51 model files</strong>
 the workflows reference and all <strong>3 custom node packs</strong> they require, with a laptop column and a NAS
-column. It&#39;s produced by <code>scripts/generate-model-manifest.ts</code>, which asks three things and argues
-with none of them:</p>
+column. It&#39;s produced by <code>scripts/generate-model-manifest.ts</code>, which asks three witnesses and
+interrogates none of them:</p>
 <ul>
 <li>the workflows, for what is needed (<code>check-model-inventory.ts</code>, reading the live server&#39;s loader
 enums rather than a guessed directory);</li>
 <li>the filesystem, for what the laptop has;</li>
 <li>one ssh listing, for what the store has.</li>
 </ul>
-<p>A hand-written table of 51 rows is wrong within a week. This one is wrong only until you re-run it.</p>
+<p>A hand-written table of 51 rows is wrong within a week. This one is wrong only until you re-run it,
+which is the closest thing to honesty a table can offer.</p>
 <h2>The NAS was missing 13 files and every node pack</h2>
-<p>The store held most weights but had <strong>no copy of <code>custom_nodes</code> at all</strong>, and 13 files lived only on
-the laptop: the SD1.5 and SD2.1 vintage, the Flux 2 weights, Krea 2, PixArt Sigma, SDXL base and
-RealVis. That&#39;s the failure mode where a rebuilt machine has every weight and still cannot load a
-single workflow.</p>
+<p>The audit came back with its collar unbuttoned. The store held most weights but had <strong>no copy of
+<code>custom_nodes</code> at all</strong>, and 13 files lived only on the laptop: the SD1.5 and SD2.1 vintage, the
+Flux 2 weights, Krea 2, PixArt Sigma, SDXL base and RealVis. That&#39;s the failure mode where a
+rebuilt machine has every weight and still cannot load a single workflow: a pantry full of
+ingredients and no plates.</p>
 <p>Two scripts close it. <code>upload-models-to-nas.py</code> streams each file as <code>file.part</code> and renames only
-after the byte count checks out — a dropped connection must never leave a truncated model sitting
-under a real name. <code>publish-nodes-to-nas.py</code> tars the packs (source only: no <code>.git</code>, no
+after the byte count checks out, because a dropped connection must never leave a truncated model sitting
+under a real name, wearing its good clothes. <code>publish-nodes-to-nas.py</code> tars the packs (source only:
+no <code>.git</code>, no
 <code>__pycache__</code>), uploads them beside the model categories, and writes a <code>MANIFEST.md</code> carrying each
 archive&#39;s SHA-256.</p>
 <p>The store now holds 18 checkpoints, 24 diffusion models, 16 text encoders, 11 VAEs, 21 LoRAs and 3
-node packs. Laptop and NAS both report 51/51.</p>
+node packs. Laptop and NAS both report 51/51. That number used to be a guess. Now it&#39;s a receipt.</p>
 <h2>The audit nearly lied to us</h2>
-<p>Finding which packs are required meant mapping every <code>class_type</code> in 32 workflows to the pack that
-registers it. The first version searched pack sources for the class name and reported <strong>six</strong> packs,
-including ones for <code>KSampler</code> and <code>VAELoader</code> — both core. Packs mention core classes constantly;
-mentioning is not providing.</p>
+<p>The tool built to catch lies nearly told one itself. Finding which packs are
+required meant mapping every <code>class_type</code> in 32 workflows to the pack that registers it. The first
+version searched pack sources for the class name and reported <strong>six</strong> packs,
+including ones for <code>KSampler</code> and <code>VAELoader</code>, both core. Packs mention core classes constantly;
+mentioning is not providing. Six suspects, four of them invented by gossip.</p>
 <p>Matching only real registrations (the class name used as a dict key) gave <strong>two</strong>: <code>ComfyUI-GGUF</code> for
 <code>UnetLoaderGGUF</code>, and <code>ComfyUI_ExtraModels</code> for <code>PixArtCheckpointLoader</code>. A third had to be added by
-hand, because <code>krea2</code> doesn&#39;t need a <em>node</em> from a pack — it needs a CLIP <strong>type</strong>, an enum value,
+hand, because <code>krea2</code> doesn&#39;t need a <em>node</em> from a pack; it needs a CLIP <strong>type</strong>, an enum value,
 which no class scan can see. That distinction is now written into the script rather than into
-somebody&#39;s head.</p>
+somebody&#39;s head, where distinctions go to die.</p>
 <h2>Why bother</h2>
 <p>Because the alternative is what just happened: six days of a project quietly producing nothing, and
-nobody able to say which machine was short of what without a session of archaeology.</p>
+nobody able to say which machine was short of what without a session of archaeology. The next
+laptop to die gets a shrug and a re-provision, not a séance.</p>
+<h2>What still hurts</h2>
+<p>The CLIP-type gap means the pack list is not fully derivable: one dependency lives in a hand edit,
+and if a new model needs an enum from a pack, the script will stay serenely silent about it. The
+audit trusts the <em>live server&#39;s</em> enums too, so a workflow added but never loaded anywhere is
+invisible to the whole apparatus. And those 13 missing files sat there for as long as they did
+because nothing ever compared the two columns until tonight. The checker exists now, but it only
+helps if somebody actually runs it, which is the oldest catch in the book.</p>
 
 </article>
 <nav class="post-nav" aria-label="Post navigation">

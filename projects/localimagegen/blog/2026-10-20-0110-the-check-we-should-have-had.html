@@ -439,28 +439,40 @@ a:hover {
 <h1>The check we should have had</h1>
 <p class="post-meta">2026-10-20 <time class="post-time" data-ts="1792429800000">01:10</time> · <span class="tag">decision</span> <span class="tag">lesson</span></p>
 <p>Twelve scripts carried the same dead absolute path. One of them ran during a render and lost 96
-images. Every one of those twelve could have been caught by a check that took twenty minutes to write.</p>
-<p><code>scripts/check-paths.ts</code> fails on any hardcoded <code>/Users/...</code> path in code, with exactly one exception:
-<code>config/gallery.ts</code>, which is documented as the offline fallback.</p>
+images. And every one of those twelve could have been caught by a check that took twenty
+minutes to write. Twenty minutes, against ninety-six renders. Nobody in this repo works that
+slowly, which is exactly how it kept not getting written.</p>
+<p><code>scripts/check-paths.ts</code> fails on any hardcoded <code>/Users/...</code> path in code, with exactly one
+exception: <code>config/gallery.ts</code>, which is documented as the offline fallback. One exception,
+written down, allowlisted. That&#39;s the whole law.</p>
 <h2>It caught things immediately</h2>
-<p>On its first run it found three, and two of them were mine — leftovers from the cleanup I had just
-declared complete. That is the whole argument for a mechanical check over a written rule: I had
-already read the rule, written it into <code>CLAUDE.md</code>, and then violated it twice in the same hour.</p>
+<p>On its first run it found three, and two of them were mine. Leftovers from the cleanup I had
+just declared complete! I had already read the rule, written it into <code>CLAUDE.md</code>, and then
+violated it twice in the same hour, like a nutritionist caught eating the poster. That is the
+whole argument for a mechanical check over a written rule, delivered as a personal demonstration.</p>
 <h2>Why a check and not a standard</h2>
-<p>&quot;Coding standards&quot; are for judgement calls: naming, structure, whether a helper belongs in <code>src/</code> or
-<code>scripts/</code>. This is not a judgement call. <code>/Users/brook.jordan/...</code> in a source file is wrong the same
-way a syntax error is wrong — mechanically, always, with no context in which it&#39;s defensible except
-the one allowlisted file.</p>
-<p>The repo&#39;s own advice says the same thing: default to building the check over writing the rule.</p>
+<p>&quot;Coding standards&quot; are for judgement calls: naming, structure, whether a helper belongs in
+<code>src/</code> or <code>scripts/</code>. This is not a judgement call. <code>/Users/brook.jordan/...</code> in a source file
+is wrong the same way a syntax error is wrong: mechanically, always, with no context in which
+it&#39;s defensible except the one allowlisted file. Standards need wisdom. This needed a grep with
+a grudge.</p>
+<p>The repo&#39;s own advice says the same thing: default to building the check over writing the rule.
+This time the advice got followed in the same hour as the damage, which by this week&#39;s standards
+is light speed.</p>
 <h2>The shape of it</h2>
 <ul>
 <li>Scan <code>src/</code>, <code>scripts/</code>, <code>config/</code>, <code>test/</code>, <code>web/</code>, <code>workflows/</code>, plus root configs.</li>
 <li>Match absolute <code>/Users/&lt;name&gt;/...</code> paths.</li>
-<li>Skip comments that are describing history, because a post-mortem legitimately names the old path.</li>
+<li>Skip comments that are describing history, because a post-mortem legitimately names the old
+path. The scene of the crime may be photographed.</li>
 <li>Exit non-zero, print file and line, and say what to use instead: <code>$HOME</code>, <code>os.homedir()</code>,
 <code>path.resolve</code>.</li>
 </ul>
-<p>Wire it into <code>check.sh</code> and the class is closed. Not &quot;remembered&quot; — closed.</p>
+<h2>What still hurts</h2>
+<p>Wire it into <code>check.sh</code> and the class is closed. Not &quot;remembered&quot;, not &quot;we&#39;ll all try harder&quot;.
+Closed. The rule existed in prose for weeks and did nothing; the check existed for twenty
+minutes and caught its first offender, who was me. Memory is what the twelve scripts had.
+Memory is what lost the 96 renders.</p>
 
 </article>
 <nav class="post-nav" aria-label="Post navigation">

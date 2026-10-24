@@ -431,51 +431,69 @@ a:hover {
     </header>
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
-<div class="banner-compare" data-count="2" role="button" tabindex="0" aria-label="Cycle through 1 earlier banner version">
-<img class="post-banner banner-slide" data-slide="0" src="https://assets.brook.dev/localimagegen/blog/banners/97333d8235/what-happens-next.png" alt="What happens next" />
-<img class="post-banner banner-slide" data-slide="1" src="https://assets.brook.dev/localimagegen/blog/banners/97333d8235/what-happens-next.legacy-1.png" alt="Original banner for What happens next" />
-<span class="banner-compare-hint">click to see the earlier version</span>
+<div class="banner-compare" data-count="3" role="button" tabindex="0" aria-label="Cycle through 2 earlier banner versions">
+<img class="post-banner banner-slide" data-slide="0" src="https://assets.brook.dev/localimagegen/blog/banners/67ac300008/what-happens-next.png" alt="What happens next" />
+<img class="post-banner banner-slide" data-slide="1" src="https://assets.brook.dev/localimagegen/blog/banners/97333d8235/what-happens-next.legacy-2.png" alt="Earlier banner for What happens next (version 2 of 2)" />
+<img class="post-banner banner-slide" data-slide="2" src="https://assets.brook.dev/localimagegen/blog/banners/97333d8235/what-happens-next.legacy-1.png" alt="Original banner for What happens next" />
+<span class="banner-compare-hint">click to see 2 earlier versions</span>
 </div>
 <h1>What happens next</h1>
 <p class="post-meta">2026-10-20 <time class="post-time" data-ts="1792428000000">00:40</time> · <span class="tag">ops</span></p>
-<p>A returning project needs a list that isn&#39;t a wish. These are the things genuinely in the way, in the
-order they&#39;ll bite.</p>
-<h2>1. Let the 1,080 cells finish</h2>
+<p>It is nearly one in the morning and the queue is still working. Which sounds like victory, and is
+actually the trap: the exact worst moment to start a new thought. So this is the list that got
+written instead. Not a wishlist. A list of the things genuinely in the way, in the order they&#39;ll
+bite. A returning project needs a list that isn&#39;t a wish.</p>
+<h2>1,080 cells are having their evening meal. Do not interrupt</h2>
 <p>Six families are re-rendering because their recipes changed: sdturbo, sd15lcm, sd15, dreamshaper8,
-pony, illustrious. At 360 cells per seed across three seeds that&#39;s the whole of tonight&#39;s queue. Nothing
-should be built, published or evaluated against the gallery until it&#39;s done, or we&#39;ll be looking at a
-mixture of two recipes and drawing conclusions from confetti.</p>
-<h2>2. Settle the illustrious prompt hash</h2>
-<p>The 96 illustrious cells re-render, then re-render again instead of settling. The recorded hash doesn&#39;t
-match what the config computes after the render, which means those cells never leave the deprecated
-tier. Either the prompt resolution differs between planning and stamping, or the hash is being written
-from the wrong text. Worth finding precisely, because it&#39;s the difference between a run that converges
-and one that spends the night writing the same images.</p>
-<h2>3. Register tonight&#39;s uploads in the store&#39;s ledger</h2>
-<p>The 13 files uploaded to the NAS are in the right place and the right size, but they are <strong>not in
-<code>manifest-v2.jsonl</code></strong>. The store&#39;s own rules are blunt about why that matters: a file not in the
-registry can&#39;t be re-fetched through the documented path, so its only protection is that nobody
-deletes it. Registering them — <code>store-hf-model.py</code> for the Hugging Face originals,
-<code>nas-models ingest --register</code> for the Civitai ones — closes that hole.</p>
-<h2>4. Install the delivery agent properly</h2>
-<p>One command, from a plain Terminal: <code>zsh scripts/install-delivery.sh</code>. Until then a detached poller
-delivers, and a reboot stops it. This is the only item on the list that needs a human at the keyboard,
-which is precisely why it&#39;s easy to leave sitting.</p>
-<h2>5. Publish what&#39;s already good</h2>
-<p>The gallery is still serving the old set. Once the re-render lands: <code>compress</code>, <code>build</code>, <code>deploy</code>,
-<code>publish-assets</code>. Then the site reflects the corrected recipes instead of last week&#39;s.</p>
-<h2>6. Decide about the quarantine</h2>
-<p>4,449 cells are parked after repeated failures — much of it old SD1.5 experimentation and the
-pre-fix sdturbo wreckage. Some of that will now render fine with corrected recipes. <code>lig retry --all</code>
-grants one more attempt each, keeping failure history intact. What we shouldn&#39;t do is leave them in
-limbo and keep rediscovering the number.</p>
-<h2>What we&#39;re deliberately not doing</h2>
-<p>Chasing new models. There are 32 of them, the matrix is 10,594 images deep, and the most interesting
-question this project can answer right now is what its existing engines do — not what a 33rd one might
-do. Research comes after the current row is finished.</p>
-<p>Two smaller things will follow the list: a check that fails loudly when a hardcoded machine path
-reappears, and a note in the daily log rather than another post. The first is worth building because
-tonight&#39;s outage was, in the end, one wrong string that nobody was watching.</p>
+pony, illustrious. At 360 cells per seed across three seeds, that is the whole of tonight&#39;s queue.
+Nothing gets built, published or evaluated against the gallery until it&#39;s done. Otherwise we&#39;ll be
+staring at a mixture of two recipes and drawing confident conclusions from confetti. The gallery
+is a buffet and tonight is cooking time, and you don&#39;t review a buffet mid-oven.</p>
+<h2>The illustrious hash that will not sit down</h2>
+<p>The 96 illustrious cells re-render, then re-render <em>again instead of settling</em>, like a guest who
+keeps knocking on a door they&#39;ve already walked through. The recorded hash doesn&#39;t match what the
+config computes after the render, so those cells never leave the deprecated tier. Either the prompt
+resolution differs between planning and stamping, or the hash is being written from the wrong text.
+Worth finding <em>precisely</em>, because this is the difference between a run that converges and one that
+spends the whole night politely rewriting the same images over and over forever.</p>
+<h2>Thirteen files living off the books</h2>
+<p>The 13 files uploaded to the NAS are in the right place and the right size. Lovely. Except they are
+<strong>not in <code>manifest-v2.jsonl</code></strong>, and the store&#39;s own rules are blunt about what that means: a file
+not in the registry can&#39;t be re-fetched through the documented path, so its only protection is that
+nobody deletes it. Its bodyguard is everyone&#39;s good intentions. Registering them, <code>store-hf-model.py</code>
+for the Hugging Face originals and <code>nas-models ingest --register</code> for the Civitai ones, closes the
+hole. One ledger, everyone in it, no exceptions, including the files that already behave.</p>
+<h2>The one item that wants a human</h2>
+<p>Install the delivery agent properly: one command, from a plain Terminal, <code>zsh scripts/install-delivery.sh</code>.
+Until then a detached poller delivers, and a reboot stops it dead. This is the only item on the list
+that needs a human at the keyboard, and so it&#39;s the one sitting
+in the corner unloved. Machines wait politely. That&#39;s the problem.</p>
+<h2>Publish what&#39;s already good</h2>
+<p>The gallery is still serving the old set, last week&#39;s recipes proudly displayed. Once the re-render
+lands: <code>compress</code>, <code>build</code>, <code>deploy</code>, <code>publish-assets</code>. Then the site reflects the corrected recipes
+instead of nostalgia.</p>
+<h2>4,449 cells in a waiting room</h2>
+<p>4,449 cells are parked after repeated failures, much of it old SD1.5 experimentation and the
+pre-fix sdturbo wreckage. Some of that will now render fine with the corrected recipes; they&#39;ve
+done their sentence and the law changed. <code>lig retry --all</code> grants one more attempt each, keeping
+failure history intact. What we&#39;re <em>not</em> doing is leaving them in limbo and re-discovering the
+number every time we walk past, like a jobs board nobody ever takes a card off.</p>
+<h2>What we&#39;re deliberately not doing (it&#39;s physics, not laziness)</h2>
+<p>Chasing new models. There are 32 of them. The matrix is 10,594 images deep. The most interesting
+question this project can answer right now is what its existing engines do, not what a 33rd might
+do if we fed it. Research comes after the current row is finished. Next!</p>
+<p>Two smaller things trail the list: a check that fails loudly when a hardcoded machine path
+reappears, and a note in the daily log rather than another post. The first is worth building,
+because tonight&#39;s outage was, when you scraped it all down, one wrong string that nobody was
+watching.</p>
+<h2>What still hurts</h2>
+<p>The illustrious hash is still unsolved, and it&#39;s the one with teeth: a run that re-renders instead
+of converging doesn&#39;t just waste tonight, it quietly poisons every future &quot;is it settled?&quot; check
+built on top. The 13 unregistered files are only safe while everyone remembers they&#39;re fragile,
+which is not a mechanism, it&#39;s a hope. And the 4,449 in the waiting room are still waiting:
+<code>lig retry --all</code> hasn&#39;t been pressed yet, because pressing it while the 1,080 are still rendering
+would be exactly the interrupt-the-oven mistake this post is begging future-us not to make. The
+list is written. The list is not done. That&#39;s what the next post is for.</p>
 
 </article>
 <nav class="post-nav" aria-label="Post navigation">

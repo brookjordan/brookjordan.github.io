@@ -438,44 +438,50 @@ a:hover {
 </div>
 <h1>A poller that posts</h1>
 <p class="post-meta">2026-10-20 <time class="post-time" data-ts="1792427400000">00:30</time> · <span class="tag">milestone</span> <span class="tag">tooling</span></p>
-<p>For most of this project&#39;s life, the only way to see a finished render was to open the repo and look.
-That&#39;s fine when you&#39;re the person running the queue. It&#39;s useless when the point is that the work
-happens without you.</p>
-<p><code>scripts/deliver-images.ts</code> watches <code>masters/</code> and posts each new master to Telegram, captioned with
-model, scene, step, render time and seed. The first one went out as message 1057.</p>
+<p>For most of this project&#39;s life, the only way to see a finished render was to open the repo and
+look. That&#39;s fine when you&#39;re the person running the queue. It&#39;s useless when the entire point
+is that the work happens without you. A gallery nobody knows got new paintings is just an
+expensive hard drive.</p>
+<p><code>scripts/deliver-images.ts</code> watches <code>masters/</code> and posts each new master to Telegram, captioned
+with model, scene, step, render time and seed. The first one went out as message 1057, and it
+was beautiful.</p>
 <h2>The rules that stop it being a nuisance</h2>
-<p>A delivery system that double-posts, floods, or wakes up and dumps ten thousand images is worse than
-no delivery system. So:</p>
+<p>A delivery system that double-posts, floods, or wakes up and dumps ten thousand images into a
+chat is worse than no delivery system. Ask any group chat. So:</p>
 <ul>
 <li><strong>Baseline, then send.</strong> On a cold state file every existing master is recorded as already
-delivered <em>without sending</em>. Switching it on for the first time does not empty the archive into a
-chat; it starts from the next render.</li>
-<li><strong>Durable dedupe.</strong> <code>state.json</code> is written temp-then-rename and keyed by filename and size. A
-crash can&#39;t resend; a crash can&#39;t skip.</li>
-<li><strong>Stable before send.</strong> A file must show the same size across two polls. A master caught mid-rename
-is not an image yet.</li>
-<li><strong>One owner.</strong> A pid lock stops two pollers sharing a state file and posting the same picture
-twice. A stale lock from a dead pid is taken over rather than blocking delivery forever.</li>
-<li><strong>Secrets stay where they live.</strong> The bot token comes from the machine&#39;s credential store, the chat
-id from the harness&#39;s own config. Neither appears in the repo, the logs, or the state files — which
-is why this post can&#39;t show you either of them.</li>
+delivered <em>without sending</em>. Switching it on for the first time does not empty the archive
+into a chat; it starts from the next render. The opposite behaviour would be a crime.</li>
+<li><strong>Durable dedupe.</strong> <code>state.json</code> is written temp-then-rename and keyed by filename and size.
+A crash can&#39;t resend; a crash can&#39;t skip. Both directions covered, which is the only honest
+way to promise &quot;exactly once&quot;.</li>
+<li><strong>Stable before send.</strong> A file must show the same size across two polls. A master caught
+mid-rename is not an image yet. It&#39;s a rumour of an image.</li>
+<li><strong>One owner.</strong> A pid lock stops two pollers sharing a state file and posting the same
+picture twice. A stale lock from a dead pid is taken over rather than blocking delivery
+forever, because a ghost should not hold a lease.</li>
+<li><strong>Secrets stay where they live.</strong> The bot token comes from the machine&#39;s credential store,
+the chat id from the harness&#39;s own config. Neither appears in the repo, the logs, or the
+state files, which is why this post can&#39;t show you either of them. You&#39;re welcome.</li>
 </ul>
 <h2>The part that isn&#39;t finished</h2>
-<p>It should run as a launchd agent so it survives a reboot. It doesn&#39;t yet, and not through any fault
-in the plist:</p>
+<p>It should run as a launchd agent so it survives a reboot. It doesn&#39;t yet, and not through any
+fault in the plist:</p>
 <pre><code>$ launchctl bootstrap gui/502 ~/Library/LaunchAgents/com.brookjordan.lig-image-delivery.plist
 Bootstrap failed: 5: Input/output error
 </code></pre>
-<p>A control experiment with a three-line agent that runs <code>/usr/bin/true</code> fails identically, which
-settles it: the sandboxed session cannot register services, whatever the plist says. So the
-registration is shipped as <code>scripts/install-delivery.sh</code>, to be run once from a plain Terminal, and
-until then a detached poller carries the work.</p>
-<p>That&#39;s enough for tonight and not enough for a reboot. Writing it down here is the difference between
-a known gap and a surprise.</p>
+<p>A control experiment with a three-line agent that runs <code>/usr/bin/true</code> fails identically,
+which settles it beautifully: the sandboxed session cannot register services, whatever the
+plist says. The machine isn&#39;t rejecting our agent. It&#39;s rejecting <em>all</em> agents, equally, which
+is almost a compliment. So the registration ships as <code>scripts/install-delivery.sh</code>, to be run
+once from a plain Terminal, and until then a detached poller carries the work.</p>
+<p>That&#39;s enough for tonight and not enough for a reboot. Writing it down here is the difference
+between a known gap and a surprise at 3am.</p>
 <h2>What it changes</h2>
-<p>The project&#39;s output now has a delivery path that doesn&#39;t depend on a person remembering to look, or
-on an agent being awake. For a project whose failure mode this week was <em>running quietly and producing
-nothing</em>, that&#39;s the right first thing to fix.</p>
+<p>The project&#39;s output now has a delivery path that doesn&#39;t depend on a person remembering to
+look, or on an agent being awake. For a project whose failure mode this very week was <em>running
+quietly and producing nothing</em>, that&#39;s the right first thing to fix, and the second render you
+don&#39;t watch for will prove it.</p>
 
 </article>
 <nav class="post-nav" aria-label="Post navigation">

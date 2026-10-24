@@ -431,19 +431,25 @@ a:hover {
     </header>
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
-<img class="post-banner" src="https://assets.brook.dev/localimagegen/blog/banners/a9e93da78e/placeholder.png" alt="Qwen-Image 2.1 joins the gallery, slowly" />
+<img class="post-banner" src="https://assets.brook.dev/localimagegen/blog/banners/e21dabfed0/qwen-image-21-joins-the-gallery.png" alt="Qwen-Image 2.1 joins the gallery, slowly" />
 <h1>Qwen-Image 2.1 joins the gallery, slowly</h1>
 <p class="post-meta">2026-10-06 <time class="post-time" data-ts="1791248400000">09:00</time> · <span class="tag">models</span> <span class="tag">milestone</span> <span class="tag">resilience</span></p>
-<!-- TODO(banner): replace the placeholder with a bespoke render; tracked on the localimagegen banner ticket. --><p><code>qwen21</code> is the newest model in the matrix and by far the slowest per step. It
-runs on its own <code>qwen21</code> builder (<code>workflows/qwen21.t2i.json</code>) with the
-long-prompt <code>l</code> dialect, like the other Qwen and Ovis models, at cfg 1 with a
-ceiling of <strong>45 steps</strong>. That ceiling comes from the official ComfyUI template&#39;s
-note of 40–50 Euler steps. The default ladder gets <code>steps: { add: [10, 25, 40, 45] }</code>,
-so the gallery can show where the model actually settles rather than stopping
-at the few-step rungs that suit the distilled models.</p>
-<h2>What it costs</h2>
-<p>There are 605 masters across all 17 scenes and three seeds. Median render times,
-taken from the <code>_t&lt;n&gt;s_</code> durations in the filenames:</p>
+<p>Somewhere around minute six of a single render, a human looked at the progress
+bar and asked the question every slow model eventually earns: &quot;is it supposed
+to be doing <em>that</em>?&quot; It is! That is just qwen21 now. Meet the newest model in
+the matrix and by far the slowest per step, a model that treats each step as a
+small personal ceremony. It runs on its own <code>qwen21</code> builder
+(<code>workflows/qwen21.t2i.json</code>) with the long-prompt <code>l</code> dialect, like the other
+Qwen and Ovis models, at cfg 1 with a ceiling of <strong>45 steps</strong>. That ceiling
+comes from the official ComfyUI template&#39;s note of 40 to 50 Euler steps, which is
+the closest thing the model has to an opinion about when to stop.</p>
+<p>The default ladder gets <code>steps: { add: [10, 25, 40, 45] }</code>, so the gallery can
+show where the model actually settles rather than stopping at the few-step
+rungs that suit the distilled models. Those distillations sprint. qwen21
+strolls, and the strolling is the data.</p>
+<h2>The receipt, with a table on it</h2>
+<p>There are 605 masters across all 17 scenes and three seeds. Median render
+times, taken from the <code>_t&lt;n&gt;s_</code> durations in the filenames:</p>
 <table>
 <thead>
 <tr>
@@ -473,28 +479,48 @@ taken from the <code>_t&lt;n&gt;s_</code> durations in the filenames:</p>
 <td align="right">391 s</td>
 </tr>
 </tbody></table>
-<p>That is roughly 9 seconds per step on the M3, so a full ladder for one scene and
-seed takes most of an hour. The tail above 25 steps is still filling in.
-<code>lig status</code> gives the live count.</p>
-<h2>Why it needed a resume script</h2>
+<p>Roughly 9 seconds per step on the M3, so a full ladder for one scene and seed
+takes most of an hour. Most! Of an hour! For one picture, times three seeds,
+times seventeen scenes. The tail above 25 steps is still filling in, because
+the tail is where qwen21 goes to think. <code>lig status</code> gives the live count, for
+those who enjoy watching paint dry in numerical form.</p>
+<h2>Why it needed a resume script (see: most of an hour)</h2>
 <p>A run that long is almost guaranteed to be interrupted: the laptop leaves the
-network, ComfyUI falls over, the lid closes. The engine already resumes from
-disk, but the 2026-09-22 work (commit <code>2d6be43</code>) added two things to make a
-long qwen21 backfill boring:</p>
+network, ComfyUI falls over, the lid closes. At nine seconds a step, the
+lifecycle of this backfill is: start run, life happens, run is now
+archaeology. The engine already resumes from disk, but the 2026-09-22 work
+(commit <code>2d6be43</code>) added two things to make a long qwen21 backfill boring,
+which at this duration is the highest possible compliment:</p>
 <ul>
 <li><code>scripts/resume-qwen21.zsh</code>, which retries the quarantined cells first and
 then runs <code>--missing-only --grouped</code> for this one model, so a resume never
-wanders off into another model&#39;s queue.</li>
+wanders off into another model&#39;s queue. A one-model bouncer. Everyone else,
+out.</li>
 <li>A fix to the retry matcher, which had rejected cell keys written with
-underscores, so some failed cells never came back for a retry.</li>
+underscores, so some failed cells never came back for a retry. The matcher
+had been quietly refusing to recognise its own children. Underscores,
+people. They&#39;re legal.</li>
 </ul>
-<p>The new <code>angels</code> scene arrived at the same time. It is an anime oil painting of
-an angel beside a flying, Ioniq 5-style car, rendered with
-<code>graph: { face_detail: true }</code>. Its cloth patch sits on painted canvas.</p>
+<h2>An angel walks into a matrix</h2>
+<p>The new <code>angels</code> scene arrived at the same time. It is an anime oil painting
+of an angel beside a flying, Ioniq 5-style car, rendered with
+<code>graph: { face_detail: true }</code>. Its cloth patch sits on painted canvas. Yes,
+an angel hitching a lift off an electric crossover is now a permanent
+benchmark in this repository, and no, we are not taking questions.</p>
 <h2>Where it shows up next</h2>
 <p>qwen21 also became the cover model for the podcast&#39;s story-first visuals, and
-it has three variants in the <a href="2026-10-06-abliteration-matrix-setup.html">abliteration matrix</a>.
-The podcast side of that story is on the podcast devlog.</p>
+it has three variants in the
+<a href="2026-10-06-abliteration-matrix-setup.html">abliteration matrix</a>. Three! For a
+model this slow, that is either dedication or a hostage situation, and the
+podcast side of that story lives on the podcast devlog.</p>
+<h2>What still hurts</h2>
+<p>The 45-step tail is thin: 14 renders against 51 at every other rung, so the
+391 s median is a first draft, not a finding. Until it fills in, the top of
+the ladder is folklore with a confidence interval the width of a corridor. And
+the fundamental grievance stands unaddressed: nine seconds a step is nine
+seconds a step. The resume script makes the slowness <em>survivable</em>. It does not
+make it fast. qwen21 will keep taking its time, and the gallery will keep
+paying for the privilege, one lid-close at a time.</p>
 
 </article>
 <nav class="post-nav" aria-label="Post navigation">

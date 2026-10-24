@@ -438,33 +438,39 @@ a:hover {
 </div>
 <h1>The move that broke everything</h1>
 <p class="post-meta">2026-10-20 <time class="post-time" data-ts="1792428600000">00:50</time> · <span class="tag">incident</span> <span class="tag">ops</span></p>
-<p>A handoff document written on 6 October describes the machine transfer in careful detail. It names
-<code>~/ComfyUI-Shared</code> as the ComfyUI install, with models hardlinked out of <code>~/models/ai-store</code>, and says
-to copy the whole working tree and re-fetch the models from the NAS.</p>
-<p>The transfer happened. The install landed somewhere else: <code>~/Documents/Comfy_Installs/ComfyUI</code>, with
-its shared tree at <code>~/Documents/ComfyUI-Shared</code>. Nobody was wrong. Documents drift during a migration —
-you write the map, then you find a better place to park the van.</p>
+<p>A handoff document written on 6 October describes the machine transfer in careful, confident
+detail. It names <code>~/ComfyUI-Shared</code> as the ComfyUI install, with models hardlinked out of
+<code>~/models/ai-store</code>, and says to copy the whole working tree and re-fetch the models from the
+NAS. Impeccable. Authoritative. And on the new machine, wrong in every path it names.</p>
+<p>The transfer happened. The install landed somewhere else: <code>~/Documents/Comfy_Installs/ComfyUI</code>,
+with its shared tree at <code>~/Documents/ComfyUI-Shared</code>. Nobody was wrong! Documents drift during
+a migration. You write the map, then you find a better place to park the van, and the map keeps
+pointing at the empty street with total confidence.</p>
 <h2>What that cost</h2>
-<p>Three separate failures, all of them silent:</p>
+<p>Three separate failures, all of them silent, which is the truly elegant part:</p>
 <ol>
 <li><strong>The engine pointed at the old tree.</strong> Renders landed in an inbox nothing read. This is
 <a href="2026-10-19-paths-come-from-the-server.html">its own post</a>.</li>
-<li><strong><code>doctor</code> looked in a tree with no models</strong>, so it reported 0 of 32 installed. A session went
-looking for downloads that were already on disk, and found 26 of them on the NAS.</li>
-<li><strong>The NAS had no node packs at all</strong>, and was missing 13 weight files. A rebuild would have had
-every weight and still failed to load a workflow.</li>
+<li><strong><code>doctor</code> looked in a tree with no models</strong>, so it reported 0 of 32 installed. A session
+went hunting for downloads that were already on disk, and found 26 of them on the NAS. The
+doctor examined the wrong patient and prescribed refills.</li>
+<li><strong>The NAS had no node packs at all</strong>, and was missing 13 weight files. A rebuild would have
+had every weight and still failed to load a workflow. A perfect replica, missing the muscles.</li>
 </ol>
-<p>The pattern is the same in all three: a <em>path</em> was treated as knowledge, when it was only ever a
-memory.</p>
+<p>The pattern is the same in all three: a <em>path</em> was treated as knowledge, when it was only ever
+a memory.</p>
 <h2>What we changed</h2>
-<p>The engine now asks the running server where it writes (<code>src/comfypaths.ts</code>), shell scripts resolve
-the tree from disk (<code>scripts/lib/comfy-paths.zsh</code>), and <code>~/.zshrc</code> autodetects the install. The
-inventory is generated (<code>docs/models-and-nodes.md</code>) rather than remembered. Node packs are archived
-next to the weights, with a <code>MANIFEST.md</code>.</p>
-<h2>The lesson, stated plainly</h2>
-<p><strong>A migration is not finished when the machine boots.</strong> It&#39;s finished when the project&#39;s own tooling
-can prove where everything is. A handoff document is a snapshot of intent; the only durable record is
-a check that fails when reality disagrees.</p>
+<p>The engine now asks the running server where it writes (<code>src/comfypaths.ts</code>), shell scripts
+resolve the tree from disk (<code>scripts/lib/comfy-paths.zsh</code>), and <code>~/.zshrc</code> autodetects the
+install. The inventory is generated (<code>docs/models-and-nodes.md</code>) rather than remembered. Node
+packs are archived next to the weights, with a <code>MANIFEST.md</code>. Nothing important takes some
+other file&#39;s word for where things are anymore.</p>
+<h2>What still hurts</h2>
+<p><strong>A migration is not finished when the machine boots.</strong> It&#39;s finished when the project&#39;s own
+tooling can prove where everything is. A handoff document is a snapshot of intent, and intent
+does not survive contact with a better parking spot. The only durable record is a check that
+fails when reality disagrees, and this one failed silently in three places for two weeks before
+anyone heard it.</p>
 
 </article>
 <nav class="post-nav" aria-label="Post navigation">

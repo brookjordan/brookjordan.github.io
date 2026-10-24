@@ -438,30 +438,40 @@ a:hover {
 </div>
 <h1>The gate that could not run</h1>
 <p class="post-meta">2026-10-20 <time class="post-time" data-ts="1792429200000">01:00</time> · <span class="tag">incident</span> <span class="tag">ops</span></p>
-<p>The repo has a careful definition of done: <code>yarn lint</code>, four checks in order, plus a rule that a green
-lint is the bar before any commit. It is written in the steering file in bold. Agents quote it to each
-other.</p>
-<p>It has not run on this machine for an unknown length of time.</p>
+<p>The repo has a careful definition of done: <code>yarn lint</code>, four checks in order, plus a rule that a
+green lint is the bar before any commit. It is written in the steering file <strong>in bold</strong>. Agents
+quote it to each other. It is the most respected sentence in the repository.</p>
+<p>It has not run on this machine for an unknown length of time. Not &quot;flaked&quot;. Not &quot;been skipped
+once or twice&quot;. Not run. At all.</p>
 <pre><code>$ yarn lint:tsc
 yarn run v1.22.22
 error Error: Failed to replace env in config: ${GITLAB_NPM_AUTH_TOKEN}
 </code></pre>
 <p><code>~/.npmrc</code> interpolates a token that isn&#39;t exported. Yarn resolves that config before it reads
-<code>package.json</code>, so <em>every</em> <code>yarn</code> script dies: <code>lint</code>, <code>build:*</code>, <code>doctor</code>, <code>models:fetch</code>. Not one of
-them reports a problem with the repo; they report a problem with the environment and exit.</p>
+<code>package.json</code>, so <em>every</em> <code>yarn</code> script dies at birth: <code>lint</code>, <code>build:*</code>, <code>doctor</code>,
+<code>models:fetch</code>. Not one of them reports a problem with the repo; they report a problem with the
+environment and exit. The mighty gate wasn&#39;t guarding the door. The gate was a painted backdrop,
+and everyone kept walking through the doorway beside it.</p>
 <h2>Why nobody noticed</h2>
-<p>Because the work still got done. Agents ran <code>npx tsc --noEmit</code> by hand, or <code>node src/cli.ts build</code>,
-and those work. The gate&#39;s <em>absence</em> looks exactly like a gate that passed, as long as you never check
-that it printed anything.</p>
+<p>Because the work still got done! Agents ran <code>npx tsc --noEmit</code> by hand, or
+<code>node src/cli.ts build</code>, and those work. The repo stayed green-ish, the commits flowed, and the
+gate&#39;s <em>absence</em> looks exactly like a gate that passed, as long as you never check that it
+printed anything. It was a smoke detector with a &quot;do not disturb&quot; sign on it, silently doing
+nothing, perfectly.</p>
 <h2>The fix</h2>
-<p><code>scripts/check.sh</code> runs the same four scopes directly through <code>npx</code>, no yarn involved, plus two guards
-the old gate lacked. It exits non-zero, so it can be wired into whatever comes next.</p>
-<p>The deeper fix is one line in <code>~/.npmrc</code> — either export the token or drop the reference. That&#39;s a
-machine change, not a repo change, which is precisely why it went unnoticed for so long: it lives
-outside every tool that would have complained.</p>
-<h2>Lesson</h2>
-<p><strong>A guardrail you never see fail is indistinguishable from a guardrail that is broken.</strong> The first
-question about any check is not &quot;does it pass?&quot; but &quot;does it print?&quot;</p>
+<p><code>scripts/check.sh</code> runs the same four scopes directly through <code>npx</code>, no yarn involved, plus two
+guards the old gate lacked. It exits non-zero, so it can be wired into whatever comes next. The
+bypass no longer needs a bypass; the road is the road.</p>
+<p>The deeper fix is one line in <code>~/.npmrc</code>: either export the token or drop the reference. That&#39;s
+a machine change, not a repo change, which is precisely why it went unnoticed for so long. It
+lives outside every tool that would have complained. The failure was domiciled abroad, in a
+config file no linter visits, like a villain with a passport.</p>
+<h2>What still hurts</h2>
+<p><strong>A guardrail you never see fail is indistinguishable from a guardrail that is broken.</strong> The
+first question about any check is not &quot;does it pass?&quot; but &quot;does it print?&quot;. Every repo has one
+of these somewhere: a check so trusted that nobody remembers the last time they watched it run.
+Ours wore bold text and got quoted reverently for weeks while doing absolutely nothing. Find
+yours. Run it. Watch it print.</p>
 
 </article>
 <nav class="post-nav" aria-label="Post navigation">

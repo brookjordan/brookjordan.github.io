@@ -435,8 +435,13 @@ a:hover {
 <p class="post-meta">2026-10-12 · <span class="tag">architecture</span> <span class="tag">decision</span> <span class="tag">ops</span></p>
 <p>Every deploy of this gallery was shipping 8,974 image files. <code>projects/localimagegen</code> in the site
 repo was 550 MB, of which <code>img/</code> was 445 MB, and Netlify served those images with
-<code>cache-control: public, max-age=0, must-revalidate</code> — so each one revalidated against the origin on
-every visit. The repo and the CDN were both carrying weight that neither needed to.</p>
+Every deploy of this gallery was shipping 8,974 image files. <code>projects/localimagegen</code> in the site
+repo was 550 MB, of which <code>img/</code> was 445 MB, and Netlify served those images with
+<code>cache-control: public, max-age=0, must-revalidate</code>, so each one revalidated against the origin on
+every visit. A git repo doubling as a CDN origin, carrying half a gigabyte of pictures that a NAS
+ten metres away already had: <code>/Volumes/assets/localimagegen/masters</code> held all 10,591 masters,
+including every one of the 8,974 the live gallery references. Both halves were carrying weight the
+other had already lifted.</p>
 <p>Meanwhile <code>/Volumes/assets/localimagegen/masters</code> on the NAS already held all 10,591 masters,
 including every one of the 8,974 the live gallery references.</p>
 <p>So the media left git.</p>
@@ -446,16 +451,16 @@ asset service, and the pages load them from <code>https://assets.brook.dev/local
 keeps the HTML, the baked data and the manifest, and <code>lig deploy</code> now prunes any <code>img/</code> it finds
 rather than writing one.</p>
 <p>Every published path carries a content version, so a re-render lands on a new URL rather than
-overwriting an old one. <code>lig version-assets</code> was the one-time move of the 8,974 already-published
+overwriting an old one. <code>lig version-assets</code> made the one-time move of the 8,974 already-published
 files into that layout; it took three seconds and is idempotent.</p>
 <p>The two halves are independent commands on purpose. <code>deploy</code> mirrors HTML and data into the
-Netlify-served folder; <code>publish-assets</code> sends media to the NAS. Publication is idempotent — a file
-goes only when the remote copy is missing or a different size — so an interrupted run resumes by
+Netlify-served folder; <code>publish-assets</code> sends media to the NAS. Publication is idempotent: a file
+goes only when the remote copy is missing or a different size, so an interrupted run resumes by
 re-running it, the same convergent model as everything else here. <code>verify-assets</code> reads the remote
 tree back and checks every file, because a successful copy is not proof of publication.</p>
 <p>Result: 8,974 images (474 MB) and 184 blog media files (88 MB) published in about fifty seconds, and
 the site repo project folder went from 550 MB to 11 MB.</p>
-<h2>The cache question, which turned out to be measurable</h2>
+<h2>The cache question, which turned out to be measurable (and a bit embarrassing)</h2>
 <p>The assets host serves media with <code>Cache-Control: public, max-age=31536000, immutable</code>, and its own
 guidance is never to overwrite a published media filename. That is awkward here, because
 <code>lig compress</code> deliberately re-encodes over an output older than its master.</p>
@@ -463,7 +468,7 @@ guidance is never to overwrite a published media filename. That is awkward here,
 answers it: <strong>361 image files were rewritten under the same filename</strong> across four commits.</p>
 <p>The reason is in the naming. A master is <code>&lt;model&gt;_&lt;scene&gt;_s&lt;NN&gt;_t&lt;dur&gt;s_&lt;seed&gt;_</code>, and <code>dur</code> is the
 render duration in whole seconds, so a re-render collides with the old name whenever it takes the
-same number of seconds again. That is much more likely than it sounds at the short end:</p>
+same number of seconds again. That is much more likely than it sounds at the short end, and the numbers are a confession:</p>
 <table>
 <thead>
 <tr>
@@ -483,13 +488,14 @@ same number of seconds again. That is much more likely than it sounds at the sho
 <td>58.4%</td>
 </tr>
 </tbody></table>
-<p>A six-fold over-representation, with 127 of them at <code>t1s</code>. Collision is not the only cause — one
+<p>A six-fold over-representation, with 127 of them at <code>t1s</code>. Collision is not the only cause, one
 <code>t36s</code> file was rewritten too, so a re-encode of an unchanged master (mtime skew after a restore, or a
-changed SSIM target) also reuses a name — but the pipeline reuses filenames far more often than
-&quot;we don&#39;t re-render the same cell&quot; implies.</p>
+changed SSIM target) also reuses a name. But the pipeline reuses filenames far more often than
+&quot;we don&#39;t re-render the same cell&quot; implies. The immutable cache met its first immovable object,
+and it was our own naming scheme.</p>
 <p><strong>First decision, since reversed:</strong> keep the filenames and give the <code>/localimagegen/</code> subtree a
 one-day cache instead of the host&#39;s one-year immutable. That was a compromise, and Brook called it:
-a day of caching gives up most of what a static asset host is for.</p>
+a day of caching gives up most of what a static asset host is for. He was right. It was a horse drawn carriage with a racing stripe.</p>
 <p><strong>Decision:</strong> version the published path instead. Every file lands at
 <code>&lt;dir&gt;/&lt;version&gt;/&lt;name&gt;</code>, where <code>&lt;version&gt;</code> is a hash of the bytes, and the subtree takes the same
 one-year immutable cache as the rest of the host. A re-render publishes a new URL; an unchanged file
@@ -507,18 +513,18 @@ is keyed on, so it is the last thing to bend.</p>
 the whole subtree: without it, <code>.webp</code> would match the host&#39;s media regex while <code>.avif</code> fell through
 to the bare <code>location /</code> and served with no cache header at all.</p>
 <h2>Two things that were not working</h2>
-<p><strong>SMB was read-only.</strong> Every write to <code>/Volumes/assets</code> and <code>/Volumes/docker</code> was denied, and fresh
+<p><strong>SMB was read-only.</strong> Naturally! Every write to <code>/Volumes/assets</code> and <code>/Volumes/docker</code> was denied, and fresh
 <code>mount_smbfs</code> attempts failed outright, while SSH to the same account wrote to the same paths
 happily. Publication therefore goes over SSH, which is also what the migration report recommended
-after SMB&#39;s hard-link, <code>Aux</code>-renaming and <code>0700</code> defects. It is faster here too, by an order of
-magnitude. The read-only mount is still unexplained and is worth a look separately.</p>
-<p><strong>rsync does not work against this NAS.</strong> Every path — absolute, relative, home, <code>/tmp</code> — came back
+after SMB&#39;s hard-link, <code>Aux</code> renaming and <code>0700</code> defects. It is faster here too, by an order of
+magnitude. The read-only mount is still unexplained and is worth a look separately. Somewhere, a Mac is smug about it.</p>
+<p><strong>rsync does not work against this NAS at all.</strong> Every path, absolute, relative, home, <code>/tmp</code>, came back
 <code>invalid path</code> from the remote <code>rsync 3.4.1</code>, with both Homebrew&#39;s <code>rsync 3.5.1</code> and macOS&#39;s
 <code>openrsync</code>. Forcing <code>--protocol=32</code> and <code>--old-args</code> changed nothing. The publisher streams a <code>tar</code>
 of each batch over <code>ssh</code> instead, which works and gives the same resumability at batch granularity.</p>
-<h2>A migration gap this surfaced</h2>
+<h2>What still hurts: a migration gap this surfaced</h2>
 <p>The working copy had <strong>no <code>.git</code></strong>: the machine-swap backup archived the worktree as a tar that
-deliberately excluded it, on the reasoning that git was &quot;already bundled and pushed&quot; — but no bundle
+deliberately excluded it, on the reasoning that git was &quot;already bundled and pushed&quot;, but no bundle
 for this repo exists in <code>payload/git/bundles/</code>, so GitHub was the only copy of the history.</p>
 <p>The same tar excluded <code>masters/</code>, which means the local folder holds only the 711 untracked renders.
 8,266 masters the live gallery references were missing locally, though the NAS has all of them. That
@@ -526,16 +532,17 @@ is why <code>lig build --bake-only</code> exists: re-bake the HTML from the <cod
 on disk without recompressing, because a full <code>compress</code> would rewrite the manifest from an
 incomplete masters set and quietly shrink the published gallery from 8,974 images to about 700.</p>
 <p>Restoring <code>.git</code> is in progress and will bring the committed masters back. Until then, do not run a
-plain <code>lig build</code> in this checkout.</p>
+plain <code>lig build</code> in this checkout. The gap is still open, and the command that would shrink the
+published gallery from 8,974 images to about 700 is sitting right there in everyone&#39;s muscle memory.</p>
 <h2>Files</h2>
 <ul>
-<li><code>src/assets.ts</code> — the content version, the versioned-path contract, and the migration</li>
-<li><code>src/publish-assets.ts</code> — publication and read-back verification</li>
-<li><code>src/deploy.ts</code> — mirrors HTML and data only</li>
-<li><code>src/build.ts</code>, <code>web/app.ts</code> — the <code>ASSET_BASE</code> seam, and basename-to-versioned-path resolution</li>
-<li><code>src/blog.ts</code> — blog media references rewritten to versioned absolute URLs</li>
-<li><code>src/compress.ts</code> — outputs written at their versioned paths</li>
-<li><code>config/gallery.ts</code> — the <code>assets</code> block</li>
+<li><code>src/assets.ts</code>, the content version, the versioned-path contract, and the migration</li>
+<li><code>src/publish-assets.ts</code>, publication and read-back verification</li>
+<li><code>src/deploy.ts</code>, mirrors HTML and data only</li>
+<li><code>src/build.ts</code>, <code>web/app.ts</code>, the <code>ASSET_BASE</code> seam, and basename-to-versioned-path resolution</li>
+<li><code>src/blog.ts</code>, blog media references rewritten to versioned absolute URLs</li>
+<li><code>src/compress.ts</code>, outputs written at their versioned paths</li>
+<li><code>config/gallery.ts</code>, the <code>assets</code> block</li>
 </ul>
 
 </article>

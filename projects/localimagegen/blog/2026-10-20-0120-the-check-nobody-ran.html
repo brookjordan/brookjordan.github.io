@@ -438,25 +438,45 @@ a:hover {
 </div>
 <h1>The check nobody ran</h1>
 <p class="post-meta">2026-10-20 <time class="post-time" data-ts="1792430400000">01:20</time> · <span class="tag">lesson</span> <span class="tag">ops</span></p>
-<p>The devlog index at <code>history/README.md</code> is generated, and there is a <code>--check</code> flag that exits non-zero
-when it drifts out of date. Someone thought about this problem and solved it.</p>
-<p>I added three posts and never ran it. The index was stale for an hour, and I only found out because
-the retro asked what automated checks exist and whether they&#39;re wired to anything.</p>
-<h2>The distinction that matters</h2>
-<p>A check that exists is not a check that runs. This one was:</p>
+<p>The retro got to the question &quot;what automated checks exist, and are they wired to
+anything?&quot;, and that is when the room went quiet in the specific way a room goes quiet
+when someone already knows the answer. Because I had added three posts to the devlog that
+evening, and the index at <code>history/README.md</code> was stale for an hour, and the tool that
+exists <em>precisely</em> to catch that had been sitting there the whole time, arms folded,
+utterly uninvoked.</p>
+<p><code>node scripts/gen-history-index.ts --check</code>. Exits non-zero on drift. Someone thought
+about this problem, solved it, documented it, and then nobody (meaning me) ever called
+it. A guardrail with no car on the road.</p>
+<h2>A check that exists is not a check that runs</h2>
+<p>This one was:</p>
 <ul>
 <li>written,</li>
-<li>documented in <code>history/README.md</code> (&quot;cannot drift again&quot;),</li>
+<li>documented in <code>history/README.md</code> (which says the index &quot;cannot drift again&quot;. The confidence! The
+audacity!),</li>
 <li>and invoked by nothing.</li>
 </ul>
-<p>That&#39;s a note to self wearing the costume of a guardrail. The difference shows up in exactly one place:
-whether anything <em>fails</em> when you forget.</p>
-<h2>Now</h2>
-<p><code>check.sh</code> runs it, so adding a post and forgetting the index breaks the gate. Same for the path check
-next to it. Two of the repo&#39;s three known failure modes are now mechanical.</p>
-<h2>The general rule</h2>
-<p>Every check needs an owner script that calls it, and that owner script needs to be the thing a human or
-agent actually runs. A check with no caller is documentation, and documentation is what we had before.</p>
+<p>That is a note to self wearing the costume of a guardrail. It looks like safety. It
+points at safety. And it catches exactly nothing, because the difference between a check
+and a wish shows up in precisely one place: whether anything <em>fails</em> when you forget.
+The index drifted for an hour and <code>--check</code> would have failed loudly the whole time, like
+a smoke alarm still in the box.</p>
+<h2>Now: the check has an owner with a pulse</h2>
+<p><code>check.sh</code> runs it, so adding a post and forgetting the index now breaks the gate. Same
+for the path check that lives next to it. The trick is embarrassingly small: every check
+needs an owner script that calls it, and that owner script needs to be the thing a human
+or agent actually runs. Not &quot;a thing that could be run&quot;. The thing that <em>is</em> run, as a
+step someone&#39;s muscle memory already passes through.</p>
+<p>Two of the repo&#39;s three known failure modes are now mechanical. Which is a lovely
+sentence to be able to type, and also a sentence with a number in it that should worry
+us, because it means the third one is still out there running on vibes.</p>
+<h2>What still hurts</h2>
+<p>The stale window was an hour, which sounds harmless until you notice what closed it: a
+human asking a question in a retro, not a machine failing a gate. Every other stale index
+that ever drifts will drift for exactly as long as it takes someone to <em>notice by
+accident</em>, unless the owner-script rule above is applied to the next check and the one
+after that. The check was never the missing piece. The caller was. And the general
+lesson: a check with no caller is documentation, and documentation is what we had before.
+It is one this repo has now paid for twice, which is twice more than it should have taken.</p>
 
 </article>
 <nav class="post-nav" aria-label="Post navigation">

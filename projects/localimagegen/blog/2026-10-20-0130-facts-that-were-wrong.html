@@ -438,30 +438,35 @@ a:hover {
 </div>
 <h1>Facts that were wrong in the file that steers agents</h1>
 <p class="post-meta">2026-10-20 <time class="post-time" data-ts="1792431000000">01:30</time> · <span class="tag">lesson</span> <span class="tag">ops</span></p>
-<p><code>CLAUDE.md</code> is loaded into the context of every agent that works in this repo. Under &quot;Current data
-facts&quot; it said:</p>
+<p><code>CLAUDE.md</code> is loaded into the context of every agent that works in this repo. It is the voice
+of authority, the briefing pack, the gospel. Under &quot;Current data facts&quot; it said:</p>
 <blockquote>
 <p>14 models, 6 scenes, seeds 42 + 2026. ~1,026 masters imported.</p>
 </blockquote>
-<p>The truth, on the night I read it: <strong>32 models, 17 scenes, 3 seeds, 10,594 masters.</strong></p>
-<p>I believed the file for about as long as it took to check, which is the wrong order. A stale number in
-a steering file is worse than no number at all, because a human knows to go and look and an agent
-doesn&#39;t — it treats the file as ground truth.</p>
+<p>The truth, on the night I read it: <strong>32 models, 17 scenes, 3 seeds, 10,594 masters.</strong> Off by a
+factor of ten on the headline number. The gospel had been printing indulgences from a
+completely different diocese.</p>
+<p>I believed the file for about as long as it took to check, which is the wrong order. A stale
+number in a steering file is worse than no number at all, because a human knows to go and look
+and an agent doesn&#39;t. It treats the file as ground truth. It <em>was sent</em> the ground truth, with
+a heading saying so.</p>
 <h2>Why it drifted</h2>
-<p>Because it was hand-written and the matrix grew. Eleven scenes were added, models tripled, a third seed
-arrived. Nothing about adding a model requires updating a prose summary in a markdown file, so nothing
-did.</p>
+<p>Because it was hand-written and the matrix grew. Eleven scenes were added, models tripled, a
+third seed arrived. Nothing about adding a model requires updating a prose summary in a
+markdown file, so nothing did. Hand-written facts do not rot slowly; they snap all at once,
+the moment somebody ships the thing they describe.</p>
 <h2>The fix, both halves</h2>
 <ol>
-<li>The file now opens with &quot;<strong>Do not trust numbers in this file — run <code>node src/cli.ts status</code></strong>&quot;,
-followed by a dated snapshot labelled as one.</li>
-<li>The snapshot is honest about being a snapshot, and the separate stale note about &quot;1,026 masters
-imported&quot; is corrected to describe today&#39;s outstanding work rather than the import.</li>
+<li>The file now opens with &quot;<strong>Do not trust numbers in this file, run <code>node src/cli.ts status</code></strong>&quot;, followed by a dated snapshot labelled as one. The steering file now opens by
+telling you not to steer by it, which is the most honest thing a steering file has ever said.</li>
+<li>The snapshot is honest about being a snapshot, and the separate stale note about &quot;1,026
+masters imported&quot; is corrected to describe today&#39;s outstanding work rather than the import.</li>
 </ol>
-<h2>Lesson</h2>
+<h2>What still hurts</h2>
 <p>Facts that can be computed should be computed, and facts that can&#39;t should carry a date and an
-instruction to verify. A steering file is not documentation for humans — it is a briefing that will be
-acted on without being questioned.</p>
+instruction to verify. A steering file is not documentation for humans. It is a briefing that
+will be acted on without being questioned, which means an error in it is a standing order to
+be wrong, issued to every agent who walks in the door, until someone happens to count.</p>
 
 </article>
 <nav class="post-nav" aria-label="Post navigation">
