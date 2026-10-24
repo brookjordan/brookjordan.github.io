@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#1a1d24" />
+    <meta name="color-scheme" content="dark" />
+    <title>The seed was a hash of the prompt</title>
+    <style>
+/* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
+   This is the single source of truth for colour, radius, spacing and type.
+   It is inlined ahead of each page's stylesheet at build time, and linked
+   first in dev so opening the .html files directly still resolves the vars.
+
+   Theming: everything below is a semantic token mapped onto a small palette of
+   primitives. To add a theme, override the *semantic* tokens under a selector
+   (see the commented [data-theme="light"] block at the bottom) — no stylesheet
+   needs to change, only these variables. */
+:root {
+  color-scheme: dark;
+
+  /* ---- palette primitives (raw colours; reference these only via the tokens below) ---- */
+  --c-ink-900: #0f1115;
+  --c-ink-800: #1a1d24;
+  --c-ink-700: #232732;
+  --c-ink-600: #2a2f3a;
+  --c-fog-100: #e8eaed;
+  --c-fog-300: #9aa0a6;
+  --c-fog-500: #6b727d;
+  --c-accent: #7c9cff;
+
+  /* ---- semantic: background / border / text, primary > secondary > tertiary ---- */
+  --bg-primary: var(--c-ink-900);
+  --bg-secondary: var(--c-ink-800);
+  --bg-tertiary: var(--c-ink-700);
+
+  --border-primary: var(--c-ink-600);
+  --border-secondary: rgba(150, 170, 210, 0.16);
+
+  --text-primary: var(--c-fog-100);
+  --text-secondary: var(--c-fog-300);
+  --text-tertiary: var(--c-fog-500);
+
+  --accent: var(--c-accent);
+
+  /* ---- radius scale ---- */
+  --radius-sm: 5px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 9999px;
+
+  /* ---- spacing / padding scale ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 2rem;
+
+  /* ---- type ---- */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* Shared cross-nav link (gallery <-> devlog). Both app.css and blog.css inline this
+   file, so defining it once here keeps the two links visually identical. */
+.cross-link {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.cross-link:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+/* Example theme override — set <html data-theme="light"> to activate (or wire it
+   to prefers-color-scheme). Left commented so we don't ship untuned colours:
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg-primary: #fbfbfd;
+  --bg-secondary: #f1f2f5;
+  --bg-tertiary: #e7e9ee;
+  --border-primary: #d4d8e0;
+  --border-secondary: rgba(20, 30, 60, 0.12);
+  --text-primary: #1a1d24;
+  --text-secondary: #555b66;
+  --text-tertiary: #7b828d;
+}
+*/
+
+</style>
+    <style>
+:root {
+  /* Local aliases mapped onto the shared tokens in tokens.css (inlined first),
+     so the devlog and the gallery share one palette, radius and spacing scale. */
+  --bg: var(--bg-primary);
+  --bg-soft: var(--bg-secondary);
+  --panel: var(--bg-tertiary);
+  --text: var(--text-primary);
+  --muted: var(--text-secondary);
+  --border: var(--border-secondary);
+  --radius: var(--radius-md);
+  /* --accent comes straight from tokens.css */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.65 var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.site-header,
+.site-footer {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 1.25rem 1.25rem;
+}
+
+.site-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text);
+}
+
+.brand span {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.content {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+
+.site-footer {
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* ---- post typography ---- */
+.content h1 {
+  font-size: 1.9rem;
+  line-height: 1.2;
+  margin: 0 0 0.5rem;
+}
+
+.content h2 {
+  font-size: 1.35rem;
+  margin: 2rem 0 0.6rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.3rem;
+}
+
+.content h3 {
+  font-size: 1.1rem;
+  margin: 1.5rem 0 0.4rem;
+}
+
+.content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  display: block;
+  margin: 1.25rem 0;
+}
+
+.content audio {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.content blockquote {
+  margin: 1.25rem 0;
+  padding: 0.5rem 1rem;
+  border-left: 3px solid var(--accent);
+  background: var(--bg-soft);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  color: var(--muted);
+}
+
+.content pre {
+  background: #12151b;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  overflow: auto;
+  font-size: 0.88rem;
+}
+
+.content code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: rgba(150, 170, 210, 0.14);
+  padding: 0.1em 0.35em;
+  border-radius: 5px;
+}
+
+.content pre code {
+  background: none;
+  padding: 0;
+}
+
+.post-banner {
+  width: 100%;
+  max-height: 22rem;
+  object-fit: cover;
+  border-radius: var(--radius);
+  display: block;
+  margin: 0 0 1.5rem;
+}
+
+/* Click-to-cycle: slide 0 (current) sits in normal flow and sizes the box; every other
+   slide overlays it absolutely at opacity 0. web/blog.html's script sets each slide's
+   opacity directly (not CSS classes) so this scales to any number of legacy versions. */
+.banner-compare {
+  position: relative;
+  cursor: pointer;
+}
+
+.banner-compare .banner-slide {
+  margin: 0;
+  transition: opacity 0.25s ease;
+}
+
+.banner-compare .banner-slide:not([data-slide='0']) {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.banner-compare-hint {
+  position: absolute;
+  right: 0.7rem;
+  bottom: calc(1.5rem + 0.7rem);
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 0.72rem;
+  line-height: 1;
+  padding: 0.4rem 0.65rem;
+  border-radius: 999px;
+  opacity: 0.85;
+  transition: opacity 0.15s ease;
+}
+
+.banner-compare:hover .banner-compare-hint {
+  opacity: 1;
+}
+
+/* ---- per-post header (date + tags) ---- */
+.post-meta {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0 0 1.5rem;
+}
+
+.tag {
+  display: inline-block;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 0.1em 0.7em;
+  font-size: 0.78rem;
+  margin-right: 0.35rem;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+/* ---- prev/next post nav (baked at build time, see postNav in src/blog.ts) ---- */
+.post-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 2rem 0 0;
+}
+
+.post-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-soft);
+  color: var(--text);
+  min-width: 0;
+}
+
+.post-nav-link:hover {
+  border-color: var(--accent);
+  text-decoration: none;
+}
+
+.post-nav-empty {
+  border-color: transparent;
+  background: none;
+}
+
+.post-nav-next {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.post-nav-arrow {
+  color: var(--muted);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.post-nav-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.post-nav-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.post-nav-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .post-nav {
+    grid-template-columns: 1fr;
+  }
+
+  .post-nav-next {
+    justify-content: flex-start;
+    text-align: left;
+  }
+}
+
+/* ---- index listing ---- */
+.index-intro {
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+
+.post-group-date {
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 2rem 0 0.75rem;
+}
+
+.post-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.post-list li {
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.post-list a.post-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.post-list .post-row-meta {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+}
+
+.post-time {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  margin-right: 0.5rem;
+  cursor: help;
+}
+
+</style>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="./index.html">localimagegen <span>· devlog</span></a>
+      <nav class="site-nav"><a class="cross-link" href="../index.html">gallery →</a></nav>
+    </header>
+    <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
+<article class="post">
+<h1>The seed was a hash of the prompt</h1>
+<p class="post-meta">2026-10-24 · <span class="tag">incident</span> <span class="tag">lesson</span></p>
+<p>Brook, in the Telegram bot: &quot;the seeds seem to be repeating a lot.&quot; They were. The bot&#39;s seed was not random at all — it was a deterministic hash of the prompt text.</p>
+<pre><code class="language-ts">function stableSeed(prompt: string): number {
+  let h = 2166136261 &gt;&gt;&gt; 0;
+  for (const byte of Buffer.from(prompt, &#39;utf8&#39;)) {
+    h = Math.imul(h ^ byte, 16777619) &gt;&gt;&gt; 0;
+  }
+  return (h &amp; 0x7fff_ffff) + 1;
+}
+</code></pre>
+<p>and the job record carried <code>seed: stableSeed(job.originalPrompt)</code>.</p>
+<p>The intent was written in the comment: &quot;Deterministic per prompt: Krea comparison commands can share a seed.&quot; That is a real property someone wanted — compare five Krea variants and hold the seed constant so the comparison is fair. But it was applied to <strong>every</strong> job, so every repeat of a prompt was a repeat of the image. The gallery&#39;s own cell identity is <code>&lt;model&gt;_&lt;scene&gt;_sNN_&lt;seed&gt;</code>, which means a re-used seed is not merely similar output; it is the same cell.</p>
+<h2>The measurement</h2>
+<p>Not a theory from reading the code — counted from the live job store in <code>data/telegram-bot/jobs/</code> on 2026-10-24:</p>
+<table>
+<thead>
+<tr>
+<th>quantity</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>jobs carrying a seed</td>
+<td>82</td>
+</tr>
+<tr>
+<td>distinct seeds</td>
+<td>36</td>
+</tr>
+<tr>
+<td>distinct prompts</td>
+<td>25</td>
+</tr>
+<tr>
+<td>prompts locked to exactly one seed</td>
+<td><strong>17 of 25</strong></td>
+</tr>
+</tbody></table>
+<p>One seed appeared in 11 separate jobs. Two prompts accounted for 12 and 11 jobs respectively.</p>
+<h2>The fix</h2>
+<p><code>randomInt(1, 0x7fff_ffff + 1)</code> — a cryptographically random positive 31-bit seed, drawn <strong>once at creation</strong> and then durable. A retry or a restart re-uses the recorded value, so idempotency is preserved and a job never re-rolls under a retry. That was the property worth keeping: the seed is stable <em>for a job</em>, not stable <em>for a prompt</em>.</p>
+<p>The regression test draws 40 jobs from the identical prompt and asserts 40 distinct seeds. Against the old code it fails; against the new code it passes. That check was run both ways rather than assumed.</p>
+<h2>What this was not</h2>
+<p>Two other seed sources look like repetition and are not:</p>
+<ul>
+<li><code>scripts/replay-edit.ts</code> defaults to <code>--seed 4242</code>. That is deliberate: a certificate is only comparable to another certificate if the seed is pinned. The replay harness is a scientific instrument, not a user-facing render.</li>
+<li><code>config/gallery.ts</code> pins <code>seeds: [42, 2026]</code>. The gallery matrix <em>is</em> a controlled comparison — the same scene at fixed seeds across models. Randomising it would destroy the thing it exists to measure.</li>
+</ul>
+<p>So the change is scoped to the Telegram bot&#39;s job store: the one surface where a user asks for an image and expects a new one.</p>
+<h2>Lesson</h2>
+<p>A provenance default and a user-facing default pulled in opposite directions, and one comment let a comparison affordance leak into the product. The durable-seed test that shipped alongside the original code asserted only that the seed did not change between reads — it never asserted the seed differed between requests, so it passed happily while every repeat re-rendered the same picture. A test named &quot;assigns a durable seed&quot; documented exactly the wrong half of the contract.</p>
+
+</article>
+<nav class="post-nav" aria-label="Post navigation">
+<a class="post-nav-link post-nav-prev" href="2026-10-24-moss-native-recipe.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">MOSS gets a native recipe, not the global bootstrap</span></span></a>
+<a class="post-nav-link post-nav-next" href="2026-10-24-the-validator-rejected-the-best-render.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">The validator rejected the best render in the room</span></span><span class="post-nav-arrow">&rarr;</span></a>
+</nav></main>
+    <footer class="site-footer">
+      <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>
+    </footer>
+    <script>
+      // Localise all post times to the reader's timezone.
+      // Each <time class="post-time" data-ts="..."> carries a Unix epoch (ms);
+      // we replace the static server-rendered HH:MM with the local equivalent.
+      document.querySelectorAll('time.post-time[data-ts]').forEach(function (el) {
+        var d = new Date(+el.dataset.ts);
+        el.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        el.title = d.toLocaleString(); // full local datetime on hover
+      });
+
+      // Click (or Enter/Space) a .banner-compare to cycle: current -> most recent earlier
+      // version -> ... -> oldest/original -> back to current. Each click advances one slide;
+      // opacity is set directly (not via CSS classes) so this works for any slide count.
+      document.querySelectorAll('.banner-compare').forEach(function (el) {
+        var slides = el.querySelectorAll('.banner-slide');
+        var hint = el.querySelector('.banner-compare-hint');
+        var count = slides.length;
+        var active = 0;
+        function render() {
+          slides.forEach(function (s, i) {
+            s.style.opacity = i === active ? '1' : '0';
+          });
+          if (!hint) return;
+          if (active === 0) {
+            hint.textContent =
+              'click to see ' + (count === 2 ? 'the earlier version' : count - 1 + ' earlier versions');
+          } else if (active === count - 1) {
+            hint.textContent = 'original banner · click for current';
+          } else {
+            hint.textContent = 'earlier version ' + active + ' of ' + (count - 1) + ' · click to continue';
+          }
+        }
+        function advance() {
+          active = (active + 1) % count;
+          render();
+        }
+        el.addEventListener('click', advance);
+        el.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            advance();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
