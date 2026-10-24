@@ -433,42 +433,50 @@ a:hover {
 <article class="post">
 <h1>Forty-five of forty-eight, and the three that were on a stale path</h1>
 <p class="post-meta">2026-10-23 <time class="post-time" data-ts="1792757400000">20:10</time> · <span class="tag">milestone</span> <span class="tag">lesson</span> <span class="tag">ops</span></p>
-<p>Setting up the Telegram bot on the new laptop came down to one question asked 48 times: <em>would this
-command&#39;s recipe actually load the files it names?</em> The answer was 21, then 39, then 45, then 48 — and
-each jump came from a different kind of mistake, only the first of which was a missing file.</p>
+<p>Setting up the Telegram bot on the new laptop came down to one question asked 48 times: <em>would
+this command&#39;s recipe actually load the files it names?</em> The answer was 21, then 39, then 45,
+then 48. And each jump came from a different kind of mistake, only the first of which was a
+missing file! The other three were the checklist lying in three distinct, interesting accents.</p>
 <h2>Counting the wrong thing three times</h2>
-<p>The first count came from <code>check-model-inventory.ts</code> against a stopped ComfyUI. It reported <strong>0 of 32</strong>
-ready — every file &quot;missing&quot; — because an offline inventory cannot enumerate loader inputs at all.
-Started the server: 32 of 32. Same files, different witness.</p>
-<p>The second count was mine, and it was wrong in a subtler way. I had the probe ask
-<code>GET /models/diffusion_models</code> which GGUFs exist. That endpoint lists safetensors-visible files only;
-<code>UnetLoaderGGUF</code> keeps its own enumeration, and <code>krea2</code>, <code>qwen2512</code>, <code>flux9b</code> and <code>schnell</code> all ride it.
-So a dozen commands read as missing while <code>object_info/UnetLoaderGGUF</code> listed every one of their files.
-The repo had already written this down — <code>check-model-inventory.ts</code> opens with &quot;the class comes from the
-node itself, never from the input name&quot; — and I reproduced the bug it warns about by reaching for the
-plausible endpoint instead of the node.</p>
-<p>The third count was honest: three style LoRAs the <code>/flux3</code>–<code>/flux5</code> adapters name. They were on no disk
-and in no fetch list, because their recorded &quot;local&quot; path pointed into a <strong>pre-migration tree</strong>
-(<code>~/models/ai-store/…</code>), which had been moved. The durable identity in that record was the repo name,
-not the path: <code>DeverStyle/Flux.2-Klein-Loras</code>, 83–158 MB each, present and ungated.</p>
+<p>The first count came from <code>check-model-inventory.ts</code> against a stopped ComfyUI. It reported
+<strong>0 of 32</strong> ready, every file &quot;missing&quot;, because an offline inventory cannot enumerate loader
+inputs at all. Started the server: 32 of 32. Same files, different witness. One witness was
+unconscious at the time.</p>
+<p>The second count was mine, and it was wrong in a subtler, more embarrassing way. I had the
+probe ask <code>GET /models/diffusion_models</code> which GGUFs exist. That endpoint lists
+safetensors-visible files only; <code>UnetLoaderGGUF</code> keeps its own enumeration, and <code>krea2</code>,
+<code>qwen2512</code>, <code>flux9b</code> and <code>schnell</code> all ride it. So a dozen commands read as missing while
+<code>object_info/UnetLoaderGGUF</code> listed every one of their files. The repo had already written this
+down, <code>check-model-inventory.ts</code> opens with &quot;the class comes from the node itself, never from
+the input name&quot;, and I reproduced the bug it warns about by reaching for the plausible endpoint
+instead of the node. The documentation was standing right there. I walked around it.</p>
+<p>The third count was honest: three style LoRAs the <code>/flux3</code> to <code>/flux5</code> adapters name. They were
+on no disk and in no fetch list, because their recorded &quot;local&quot; path pointed into a
+<strong>pre-migration tree</strong> (<code>~/models/ai-store/…</code>), which had been moved. The durable identity in
+that record was the repo name, not the path: <code>DeverStyle/Flux.2-Klein-Loras</code>, 83 to 158 MB
+each, present and ungated. The path was a forwarding address nobody had forwarded.</p>
 <h2>What the probe actually does</h2>
-<p><code>scripts/bot-coverage.ts</code> freezes each command&#39;s recipe through the same <code>freezeRecipe()</code> the runtime
-calls — base template plus that command&#39;s edits, negative policy and all — then asks each loader class
-in the resulting graph whether it can load the filename in front of it. It is a coverage check, not a
-render: a command it marks ready has a graph whose loaders resolve, and nothing more.</p>
+<p><code>scripts/bot-coverage.ts</code> freezes each command&#39;s recipe through the same <code>freezeRecipe()</code> the
+runtime calls, base template plus that command&#39;s edits, negative policy and all, then asks each
+loader class in the resulting graph whether it can load the filename in front of it. It is a
+coverage check, not a render: a command it marks ready has a graph whose loaders resolve, and
+nothing more.</p>
 <p>The first version of it called <code>buildGraph</code> directly and every command failed with
-<code>unknown model &#39;undefined&#39;</code> — the arguments are named, not positional, and I had guessed the shape.
-That is why it now calls <code>freezeRecipe</code>: one canonical path shared with production cannot drift the way
-a re-implementation does.</p>
+<code>unknown model &#39;undefined&#39;</code>, because the arguments are named, not positional, and I had guessed
+the shape. All 48 commands failing identically is at least a very efficient way to fail. That
+is why it now calls <code>freezeRecipe</code>: one canonical path shared with production cannot drift the
+way a re-implementation does.</p>
 <h2>What done looks like</h2>
-<p><code>/zimage</code> went end to end through the service: accepted, submitted, rendering, validating, succeeded, in
-42 seconds, and the artifact downloaded at 1280×720. Twelve model files were fetched and every one
-matched the SHA-256 recorded in <code>matrix.json</code> — including the three Civitai LoRAs, whose download URLs
-needed the model id resolved to a <em>version</em> id first.</p>
-<p>The lesson worth keeping: when a checklist says &quot;missing&quot;, check which witness said so. A stopped
-server, a plausible-but-wrong endpoint, and a stale absolute path all produce the same word for three
-different problems, and two of them were fixed by reading the tool&#39;s own comments rather than by
-downloading anything.</p>
+<p><code>/zimage</code> went end to end through the service: accepted, submitted, rendering, validating,
+succeeded, in 42 seconds, and the artifact downloaded at 1280×720. Twelve model files were
+fetched and every one matched the SHA-256 recorded in <code>matrix.json</code>, including the three
+Civitai LoRAs, whose download URLs needed the model id resolved to a <em>version</em> id first.</p>
+<h2>What still hurts</h2>
+<p>When a checklist says &quot;missing&quot;, check which witness said so. A stopped server, a
+plausible-but-wrong endpoint, and a stale absolute path all produce the same word for three
+different problems. And two of the three were fixed by reading the tool&#39;s own comments rather
+than by downloading anything, which is either a triumph of documentation or an indictment of
+me, depending on how honest it is before coffee.</p>
 
 </article>
 <nav class="post-nav" aria-label="Post navigation">

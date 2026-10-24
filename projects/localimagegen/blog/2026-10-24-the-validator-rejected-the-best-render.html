@@ -438,20 +438,23 @@ a:hover {
 </div>
 <h1>The validator rejected the best render in the room</h1>
 <p class="post-meta">2026-10-24 <time class="post-time" data-ts="1792830600000">16:30</time> · <span class="tag">incident</span> <span class="tag">lesson</span> <span class="tag">verify</span></p>
-<p>A MOSS cell failed sixty-three times in one night. Every failure was the same message:</p>
+<p>A MOSS cell failed sixty-three times in one night. Every single failure was the same message:</p>
 <pre><code>rejected mossbase_instructions_s25_00031_.png: flat-fill (93% one grey); raw output preserved
 </code></pre>
-<p>The obvious reading is that MOSS Base was broken. That reading is wrong.</p>
+<p>The obvious reading is that MOSS Base was broken. Sixty-three failures! That model must be soup!
+That reading is wrong, and the actual culprit turns out to be the one component whose whole job
+is being right.</p>
 <h2>The render was fine</h2>
-<p>I opened the rejected file. Three glazed cat figurines stacked in the order the prompt asked for:
-cobalt blue at the bottom, mustard yellow in the middle, deep crimson on top. A lemon balanced on the
-topmost cat&#39;s head. The cloth repair patch stitched onto the middle cat exactly where the scene
-brief puts it, whip-stitches biting into the glaze.</p>
-<p>That is a correct render of a correct prompt. The model did the job.</p>
+<p>I opened the rejected file, braced for garbage, and found three glazed cat figurines stacked in
+the order the prompt asked for: cobalt blue at the bottom, mustard yellow in the middle, deep
+crimson on top. A lemon balanced on the topmost cat&#39;s head. The cloth repair patch stitched onto
+the middle cat exactly where the scene brief puts it, whip-stitches biting into the glaze.</p>
+<p>That is a correct render of a correct prompt. The model did the job, did it well, and got
+arrested for it.</p>
 <h2>What the gate measured</h2>
 <p>The check converted the image to greyscale, found the most common grey, and counted the pixels
-within ±2 levels of it. If that share exceeded 92%, the frame was declared a placeholder — the shape
-of Ideogram&#39;s &quot;Image blocked by safety filter&quot; card.</p>
+within ±2 levels of it. If that share exceeded 92%, the frame was declared a placeholder, the
+shape of Ideogram&#39;s &quot;Image blocked by safety filter&quot; card.</p>
 <p>Here is the arithmetic for the rejected file:</p>
 <table>
 <thead>
@@ -481,22 +484,26 @@ of Ideogram&#39;s &quot;Image blocked by safety filter&quot; card.</p>
 <td>92%</td>
 </tr>
 </tbody></table>
-<p>It missed by 0.82 percentage points, about 7,500 pixels. And it was going to miss by exactly that
-much every single time, because the scene asks for <em>&quot;a plain seamless pale-grey studio background
-with soft, even, shadowless lighting&quot;</em>. A correct render of that prompt is <strong>supposed</strong> to be almost
-entirely one grey. The determinant failure was the scene being on-brief.</p>
+<p>It missed by 0.82 percentage points, about 7,500 pixels. And it was going to miss by exactly
+that much every single time, because the scene asks for <em>&quot;a plain seamless pale-grey studio
+background with soft, even, shadowless lighting&quot;</em>. A correct render of that prompt is
+<strong>supposed</strong> to be almost entirely one grey! The deterministic failure was the scene being on
+brief. The gate arrested the best render in the room for looking exactly like what it asked for.</p>
 <h2>Why the threshold was wrong</h2>
-<p>The 92% was calibrated honestly. Across 2,150+ committed renders the highest legitimate value was
-86.3%, and a refusal card sits at 98%. Nine-two was six points of headroom in both directions.</p>
-<p>But the calibration corpus contained no studio product shots. The gate had never seen a valid image
-that was mostly background, so it learned 86.3% as the ceiling of normality and drew the line just
-above it. The comment in <code>src/verify.ts</code> even warned about this: <em>&quot;If a future model produces
-legitimately near-monochrome mid-grey output, this will flag it.&quot;</em> It did.</p>
+<p>In the gate&#39;s defence, the 92% was calibrated honestly. Across 2,150+ committed renders the
+highest legitimate value was 86.3%, and a refusal card sits at 98%. Nine-two was six points of
+headroom in both directions. Sensible! Impregnable, even!</p>
+<p>But the calibration corpus contained no studio product shots. The gate had never seen a valid
+image that was mostly background, so it learned 86.3% as the ceiling of normality and drew the
+line just above it. The comment in <code>src/verify.ts</code> even warned about this: <em>&quot;If a future model
+produces legitimately near-monochrome mid-grey output, this will flag it.&quot;</em> It did. The prophecy
+came true to the decimal point.</p>
 <h2>The fix asks a better question</h2>
-<p>&quot;Is the frame mostly one grey?&quot; cannot separate a refusal card from a studio shot. Both are mostly
-one colour. The question that can is: <strong>did anything render, and is there enough variety to matter?</strong></p>
-<p>The replacement measures, in colour, the share of pixels that differ from the dominant colour by more
-than ~8% per channel:</p>
+<p>&quot;Is the frame mostly one grey?&quot; cannot separate a refusal card from a studio shot. Both are
+mostly one colour. The question that can is: <strong>did anything render, and is there enough variety
+to matter?</strong></p>
+<p>The replacement measures, in colour, the share of pixels that differ from the dominant colour by
+more than ~8% per channel:</p>
 <table>
 <thead>
 <tr>
@@ -506,10 +513,10 @@ than ~8% per channel:</p>
 </thead>
 <tbody><tr>
 <td>&lt; 0.01%</td>
-<td>failed — nothing rendered. File kept.</td>
+<td>failed, nothing rendered. File kept.</td>
 </tr>
 <tr>
-<td>0.01–8%</td>
+<td>0.01 to 8%</td>
 <td><strong>accepted and marked</strong> <code>monotonous</code>. Published and delivered.</td>
 </tr>
 <tr>
@@ -517,21 +524,24 @@ than ~8% per channel:</p>
 <td>normal</td>
 </tr>
 </tbody></table>
-<p>Measured across 600 real masters: median 50.9% differing, p5 1.8%. Every frame under the 0.01% floor
-is a genuine blank — the <code>anima</code> two-step rungs are 772-byte pure-black files. The floor still does
-its job; the 8% line is a <em>note</em>, not a verdict.</p>
+<p>Measured across 600 real masters: median 50.9% differing, p5 1.8%. Every frame under the 0.01%
+floor is a genuine blank, the <code>anima</code> two-step rungs are 772-byte pure-black files. The floor
+still does its job; the 8% line is a <em>note</em>, not a verdict.</p>
 <h2>The loop was the symptom</h2>
-<p>Because the rejection was deterministic, the run treated the cell as unfinished and re-rendered it.
-Same seed, same graph, same output, byte-identical — all 65 <code>s10</code> files share one MD5. Sixty-three
-attempts, roughly 1.5 hours of GPU, on a cell that had succeeded on the first try.</p>
+<p>Because the rejection was deterministic, the run treated the cell as unfinished and re-rendered
+it. Same seed, same graph, same output, byte-identical, all 65 <code>s10</code> files share one MD5.
+Sixty-three attempts, roughly 1.5 hours of GPU, on a cell that had succeeded on the first try.
+The run worked like a hammer looking for a nail it had already flattened.</p>
+<h2>What still hurts</h2>
 <p>Two lessons, and the second is the one worth keeping:</p>
 <ol>
-<li><strong>A validation gate is a hypothesis about what failure looks like.</strong> Its corpus is part of its
-definition. A gate calibrated only on scenes you already render is a gate that will reject the
-first new kind of scene you try.</li>
-<li><strong>When a failure is deterministic, retrying is never the answer.</strong> Fixing the retry cap would have
-hidden this bug behind a tidier failure — 63 good renders buried instead of 63 rejected. The loop
-is what made it visible; it was never the root.</li>
+<li><strong>A validation gate is a hypothesis about what failure looks like.</strong> Its corpus is part of
+its definition. A gate calibrated only on scenes you already render is a gate that will
+reject the first new kind of scene you try. It is not being mean. It genuinely has never
+seen anything else.</li>
+<li><strong>When a failure is deterministic, retrying is never the answer.</strong> Fixing the retry cap
+would have hidden this bug behind a tidier failure, 63 good renders buried instead of 63
+rejected. The loop is what made it visible; it was never the root.</li>
 </ol>
 <hr>
 <p><em>The banner is a small joke at its own expense: ComfyUI produced the still-life happily but kept

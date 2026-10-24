@@ -439,44 +439,55 @@ a:hover {
 <p>Accepted: krea_snofs_rebalanced, 12 steps at 1280×720, generating, seed 1907313812. Acceptance, not
 completion.</p>
 </blockquote>
-<p>At 12:43 a second arrived. Same reply. Three hours later neither image existed, and nothing in the
-chat said why.</p>
+<p>At 12:43 a second arrived. Same reply. Three hours later neither image existed, and nothing in
+the chat said why. The bot had not crashed. It had not errored. It had said one true word and
+then gone as silent as a teenager asked to empty the dishwasher.</p>
 <h2>Two correct decisions that combined badly</h2>
 <p>The bot&#39;s scheduler holds a ready job while ComfyUI has <em>any</em> work:</p>
 <pre><code class="language-ts">const obs = await io.observeQueue();
 if (!obs || obs.depth &gt; 0) return;
 </code></pre>
-<p>That is right. The design says never pre-empt existing work, never clear the queue, never interrupt a
-photo someone else is making. And ComfyUI&#39;s queue is FIFO, so appending behind forty prompts means
-waiting for forty prompts anyway, only without knowing that you are.</p>
+<p>That is right! The design says never pre-empt existing work, never clear the queue, never
+interrupt a photo someone else is making. And ComfyUI&#39;s queue is FIFO, so appending behind
+forty prompts means waiting for forty prompts anyway, only without knowing that you are.</p>
 <p>The second decision is also right: a <code>getUpdates</code> offset is the only ingress cursor, so the bot
 acknowledges once, durably, and then trusts the job record.</p>
-<p>Put together: <strong>the bot promised work it had not yet queued, and had no way to say &quot;still waiting&quot;.</strong>
-&quot;Accepted&quot; was true. It was also the last thing the chat heard.</p>
+<p>Put together: <strong>the bot promised work it had not yet queued, and had no way to say &quot;still
+waiting&quot;.</strong> &quot;Accepted&quot; was true. It was also the last thing the chat heard for three hours,
+which makes it less a status update and more a hostage video.</p>
 <h2>What was actually in the queue</h2>
-<p>Not the bot&#39;s work. A MOSS inclusion sweep, started at 01:52, that had got stuck re-rendering the same
-rejected cell — the incident in
+<p>Not the bot&#39;s work! A MOSS inclusion sweep, started at 01:52, that had got stuck re-rendering
+the same rejected cell, the incident in
 <a href="2026-10-24-the-validator-rejected-the-best-render.html">The validator rejected the best render in the room</a>.
-The queue was permanently full, so <code>depth &gt; 0</code> was permanently true, and the hold had no deadline. A
-correct rule, against an unbounded condition, is starvation.</p>
-<p>The second request sat in <code>waiting</code> and never even reached <code>ready</code>, because the FIFO front was a
-<code>ready</code> job holding.</p>
+The queue was permanently full, so <code>depth &gt; 0</code> was permanently true, and the hold had no
+deadline. A correct rule, against an unbounded condition, is starvation. It is a rule that
+works perfectly right up until the universe schedules something pathological, and then it works
+perfectly forever, in the bad direction.</p>
+<p>The second request sat in <code>waiting</code> and never even reached <code>ready</code>, because the FIFO front was
+a <code>ready</code> job holding. Queue position: behind a job that was itself queueing.</p>
 <h2>What the fix is not</h2>
-<p>The obvious one — queue immediately, always — is worse. ComfyUI is FIFO, so the position is the same
-or worse, and <code>src/reconcile.ts</code> interrupts the <em>whole server</em> after a ten-minute stall, which would
-kill a parked bot render outright. An always-append design trades a visible wait for a shorter,
-invisible one that occasionally destroys itself.</p>
+<p>The obvious one, queue immediately, always, is worse! ComfyUI is FIFO, so the position is the
+same or worse, and <code>src/reconcile.ts</code> interrupts the <em>whole server</em> after a ten-minute stall,
+which would kill a parked bot render outright. An always-append design trades a visible wait
+for a shorter, invisible one that occasionally destroys itself. Next!</p>
 <h2>What the fix is</h2>
-<p>A bounded hold: wait behind external work up to a deadline, then append anyway. Appending pre-empts
-nothing — no prompt is interrupted or cleared, and the sweep&#39;s queued prompts keep their FIFO
-positions. Plus one message on entering the hold and one on leaving it.</p>
+<p>A bounded hold: wait behind external work up to a deadline, then append anyway. Appending
+pre-empts nothing, no prompt is interrupted or cleared, and the sweep&#39;s queued prompts keep
+their FIFO positions. Plus one message on entering the hold and one on leaving it, so the chat
+learns that &quot;waiting&quot; is a thing that can happen to it.</p>
 <p>The general lesson is about any status the user reads:</p>
 <blockquote>
-<p>A two-state vocabulary — accepted, or done — forces you to lie during the long middle.</p>
+<p>A two-state vocabulary, accepted or done, forces you to lie during the long middle.</p>
 </blockquote>
-<p>There was no third word for &quot;queued behind other work, currently at position 41&quot;, so the bot used the
-first word and fell silent. The state existed in the job record the whole time. It just had no way
-out.</p>
+<p>There was no third word for &quot;queued behind other work, currently at position 41&quot;, so the bot
+used the first word and fell silent. The state existed in the job record the whole time. It
+just had no way out, and neither, for three hours, did anyone waiting on it.</p>
+<h2>What still hurts</h2>
+<p>The deadline is on the hold now, but the deeper dent is what &quot;Accepted&quot; turned out to mean: it
+described the bot&#39;s confidence, not the render&#39;s progress. Every status message a service
+sends deserves that interrogation, because the user cannot tell enthusiasm from information.
+The one honest sentence, &quot;you are number 41 in a queue you cannot see&quot;, was always available.
+It just had to be invented before anyone would say it.</p>
 
 </article>
 <nav class="post-nav" aria-label="Post navigation">

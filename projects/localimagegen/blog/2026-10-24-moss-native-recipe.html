@@ -431,24 +431,81 @@ a:hover {
     </header>
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
+<img class="post-banner" src="https://assets.brook.dev/localimagegen/blog/banners/2ad80e8e59/moss-native-recipe.png" alt="MOSS gets a native recipe, not the global bootstrap" />
 <h1>MOSS gets a native recipe, not the global bootstrap</h1>
 <p class="post-meta">2026-10-24 · <span class="tag">decision</span> <span class="tag">content</span></p>
-<h2>Initial offline integration</h2>
-<p>MOSS-Image Base and SFT have separate matrix entries, <code>mossbase</code> and <code>mosssft</code>. The integration is built and tested, but neither model has rendered on this Mac. The running ComfyUI lacks the MOSS encoder type and the required weight files. The existing gallery sweep has not been interrupted.</p>
-<p>The <a href="../docs/moss-image.html">research note</a> compares the authors&#39; guidance with the faster ComfyUI templates. We chose Euler, CFG 3 and negative-branch layer-22 skipping for both releases, with fixed 10/25/50-step comparisons. The 50-step setting follows the authors&#39; baseline; the lower rungs are drafts, not an established quality plateau. INT8/W4A8 loaders and the small FLUX.2 VAE still need MPS qualification. Sources: the <a href="https://github.com/OpenMOSS/MOSS-Image/blob/main/USERGUIDE.html">author guide</a>, <a href="https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT">SFT card</a> and <code>src/graphs.ts</code>.</p>
-<p>Prompting is model-specific. MOSS accepts descriptive prose, tags and experimental JSON layouts. The initial matrix uses its English prose scenes. The graph passes tags and layout JSON through unchanged as well, with regression tests covering all three inputs. A generated caption is not proof that an edit or layout instruction worked. Sources: the <a href="https://github.com/OpenMOSS/MOSS-Image/blob/main/skills/moss-image-prompt-enhancer/SKILL.html">official prompt skill</a> and <code>test/graphs.moss.test.ts</code>.</p>
-<p>One integration trap was in our own planner. Setting <code>ceiling</code> activates its dynamic low-step bootstrap even when the model has an explicit step array. MOSS therefore uses the existing fixed-ladder route without that field. No other model&#39;s scheduling behaviour changed. Sources: <code>src/config.ts</code>, <code>src/reconcile.ts</code> and the MOSS planning regression test.</p>
-<p>Observed verification: 507 tests passed, three skipped; the fast type/path/index gate and dynamic gallery build passed. Live schema checks identified the missing files and encoder type before submission. Weight installation, a coordinated ComfyUI update and a small smoke comparison remain outstanding. No second controller was started during this offline phase.</p>
-<h2>Authorised activation</h2>
-<p>Brook then authorised installation and replacement of the existing matrix run. Four pinned weight files passed SHA-256 checks, ComfyUI was updated to v0.42.1 with PyTorch 2.12.1 retained, and the bot completed jobs after the idle-boundary restart. The first adaptation had retained simple scheduling and automatic BF16 VAE precision. The author&#39;s <a href="https://github.com/OpenMOSS/MOSS-Image/blob/main/comfyui/README.html">ComfyUI guide</a> specifies sgm_uniform and FP32 VAE, so both the builder and materialised graphs were corrected. The installed KJNodes loader supplies model-scoped VAE precision.</p>
-<p>The first 50-step Base image was all black despite successful ComfyUI history. An author-aligned retry also saved black, and its saved pre-decode latent contained zero finite values out of 460,800 elements. That locates the observed disagreement before the VAE, without identifying the first faulty operation. Base 50 is excluded from automatic work; SFT 50 remains unqualified. The matrix uses 10/25-step drafts, not a claimed author-baseline result. The original images and sampled latent are preserved with hashes under <code>data/runs/2026-10-24-moss-inclusion/</code>.</p>
-<p>The stamp path now validates pixels before importing a master and preserves rejected raw output and any prior valid master. A regression reproduced the earlier false-success case, then passed with the guard; the actual black retry was rejected too. Sources: <code>src/stamp.ts</code>, <code>src/reconcile.ts</code> and <code>test/stamp.validation.test.ts</code>.</p>
-<p>Both variants completed normal gallery qualification at 10 and 25 steps. Their 25-step van images were inspected. A single persistent full-matrix controller, PID 1565, then started with <code>--priority-models mossbase,mosssft</code>. Its client <code>5593f3b3-bc4c-47fb-8e6b-7060a87c2ffc</code> completed two further Base van images, at seeds 2026 and 1670940986. Both masters passed an independent pixel/structure check. This is live inclusion evidence, not just smoke-test or configuration evidence. Sources: <code>base-native-draft-qualification.json</code>, <code>sft-native-draft-qualification.json</code> and <code>matrix-evidence.json</code> in the run directory. The rest of the matrix continues; the 50-step numerical cause remains open.</p>
+<p>The first 50-step MOSS image came back <strong>all black</strong>. A perfect, flawless, lightless void of an
+image, delivered with a straight face and a green tick in ComfyUI&#39;s history. If you have ever
+wanted a diffusion model to hand you a rip-off of Malevich with no explanation, MOSS-Image Base
+at 50 steps is your guy. This post is the story of how we got there, why it was our fault
+twice over, and how the model finally earned its place in the matrix.</p>
+<h2>Built in the dark (on purpose)</h2>
+<p>MOSS-Image Base and SFT got separate matrix entries, <code>mossbase</code> and <code>mosssft</code>, while neither
+had rendered a single pixel on this Mac. The running ComfyUI did not even know the MOSS
+encoder type and the weight files were nowhere on disk. Cheeky? Entirely. Safe? Also entirely,
+because nothing was submitted and the running gallery sweep was not touched.</p>
+<p>The <a href="../docs/moss-image.html">research note</a> compares the authors&#39; guidance with the faster
+ComfyUI templates, and the authors win: Euler, CFG 3 and negative-branch layer-22 skipping for
+both releases, with fixed 10/25/50-step comparisons. The 50-step setting follows the authors&#39;
+baseline. The lower rungs are drafts, not a claimed quality plateau. INT8/W4A8 loaders and the
+small FLUX.2 VAE still need MPS qualification. Sources: the
+<a href="https://github.com/OpenMOSS/MOSS-Image/blob/main/USERGUIDE.html">author guide</a>, the
+<a href="https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT">SFT card</a> and <code>src/graphs.ts</code>.</p>
+<p>Prompting turned out to be a whole personality. MOSS accepts descriptive prose, tags and
+experimental JSON layouts, and the initial matrix uses its English prose scenes. Tags and
+layout JSON pass through the graph unchanged too, with regression tests covering all three
+inputs. One rule was learned the hard way and written down: a generated caption is not proof
+that an edit or layout instruction worked. Sources: the
+<a href="https://github.com/OpenMOSS/MOSS-Image/blob/main/skills/moss-image-prompt-enhancer/SKILL.html">official prompt skill</a>
+and <code>test/graphs.moss.test.ts</code>.</p>
+<p>And then our own planner tried to &quot;help&quot;. Setting <code>ceiling</code> activates its dynamic low-step
+bootstrap even when the model carries an explicit step array, which is exactly the kind of
+eager assistance you do not want. MOSS therefore takes the existing fixed-ladder route without
+that field, and no other model&#39;s scheduling changed. Sources: <code>src/config.ts</code>,
+<code>src/reconcile.ts</code> and the MOSS planning regression test.</p>
+<p>Offline verification: 507 tests passed, three skipped; the fast type/path/index gate and the
+dynamic gallery build passed. Live schema checks caught the missing files and encoder type
+before submission. No second controller was started.</p>
+<h2>Activation, and the black square strikes</h2>
+<p>Brook authorised installation and replacement of the running matrix. Four pinned weight files
+passed SHA-256 checks, ComfyUI went to v0.42.1 with PyTorch 2.12.1 retained, and the bot
+completed jobs after the idle-boundary restart. Then the fun started. The first adaptation had
+kept simple scheduling and automatic BF16 VAE precision, and the authors&#39;
+<a href="https://github.com/OpenMOSS/MOSS-Image/blob/main/comfyui/README.html">ComfyUI guide</a> says
+sgm_uniform and FP32 VAE, so both the builder and the materialised graphs were corrected. The
+installed KJNodes loader supplies model-scoped VAE precision.</p>
+<p>Still black. An author-aligned retry: black again, with a successful history entry both times.
+So we opened up the saved pre-decode latent and counted: <strong>zero finite values out of 460,800
+elements</strong>. Not &quot;dim&quot;. Not &quot;dark&quot;. Not-a-single-finite-number, before the VAE ever ran. That
+locates the disagreement upstream of decoding without pinning the first faulty operation, and
+it is the difference between &quot;the renderer is broken&quot; and &quot;the sampling is producing garbage
+we then faithfully decode&quot;. Base 50 is excluded from automatic work; SFT 50 stays unqualified;
+the matrix runs 10/25-step drafts, which is a statement of what is proven, not a claim about
+the authors&#39; baseline. The black images and the sampled latent are preserved with hashes under
+<code>data/runs/2026-10-24-moss-inclusion/</code>, because a mystery you cannot reproduce is just a story.</p>
+<p>The stamp path now validates pixels before importing a master and keeps the rejected raw
+output and any prior valid master. A regression reproduced the earlier false-success case and
+passed with the guard; the actual black retry was rejected too. Sources: <code>src/stamp.ts</code>,
+<code>src/reconcile.ts</code> and <code>test/stamp.validation.test.ts</code>. No more free black squares.</p>
+<h2>Qualified, finally</h2>
+<p>Both variants completed normal gallery qualification at 10 and 25 steps, and the 25-step van
+images were inspected like suspicious customs declarations. A single persistent full-matrix
+controller, PID 1565, then started with <code>--priority-models mossbase,mosssft</code>. Its client
+<code>5593f3b3-bc4c-47fb-8e6b-7060a87c2ffc</code> completed two further Base van images, at seeds 2026
+and 1670940986, and both masters passed an independent pixel/structure check. This is live
+inclusion evidence, not a smoke test wearing a lab coat. Sources:
+<code>base-native-draft-qualification.json</code>, <code>sft-native-draft-qualification.json</code> and
+<code>matrix-evidence.json</code> in the run directory.</p>
+<h2>What still hurts</h2>
+<p>The rest of the matrix keeps rendering, and the 50-step numerical cause is still out there:
+somewhere between layer 22 and the sampler, Base produces an all-nonfinite latent at 50 steps
+and nobody can yet point at the first operation that goes bad. Two rungs of the ladder are
+roped off with a &quot;do not feed&quot; sign, and the sign stays up until someone finds the culprit.</p>
 
 </article>
 <nav class="post-nav" aria-label="Post navigation">
 <a class="post-nav-link post-nav-prev" href="2026-10-23-fortyfive-of-fortyeight.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">Forty-five of forty-eight, and the three that were on a stale path</span></span></a>
-<a class="post-nav-link post-nav-next" href="2026-10-24-the-seed-was-a-hash-of-the-prompt.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">The seed was a hash of the prompt</span></span><span class="post-nav-arrow">&rarr;</span></a>
+<a class="post-nav-link post-nav-next" href="2026-10-24-the-first-job-to-finish-ate-the-photograph.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">The first job to finish ate the photograph</span></span><span class="post-nav-arrow">&rarr;</span></a>
 </nav></main>
     <footer class="site-footer">
       <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>

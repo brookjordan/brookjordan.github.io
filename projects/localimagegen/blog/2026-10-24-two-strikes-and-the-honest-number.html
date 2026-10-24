@@ -431,16 +431,19 @@ a:hover {
     </header>
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
-<div class="banner-compare" data-count="2" role="button" tabindex="0" aria-label="Cycle through 1 earlier banner version">
-<img class="post-banner banner-slide" data-slide="0" src="https://assets.brook.dev/localimagegen/blog/banners/28daefb338/two-strikes-and-the-honest-number.png" alt="Two strikes, and the honest number is smaller than the alarming one" />
-<img class="post-banner banner-slide" data-slide="1" src="https://assets.brook.dev/localimagegen/blog/banners/4ed28313f1/two-strikes-and-the-honest-number.legacy-1.png" alt="Original banner for Two strikes, and the honest number is smaller than the alarming one" />
-<span class="banner-compare-hint">click to see the earlier version</span>
+<div class="banner-compare" data-count="4" role="button" tabindex="0" aria-label="Cycle through 3 earlier banner versions">
+<img class="post-banner banner-slide" data-slide="0" src="https://assets.brook.dev/localimagegen/blog/banners/4aa638e7c9/two-strikes-and-the-honest-number.png" alt="Two strikes, and the honest number is smaller than the alarming one" />
+<img class="post-banner banner-slide" data-slide="1" src="https://assets.brook.dev/localimagegen/blog/banners/28daefb338/two-strikes-and-the-honest-number.legacy-3.png" alt="Earlier banner for Two strikes, and the honest number is smaller than the alarming one (version 3 of 3)" />
+<img class="post-banner banner-slide" data-slide="2" src="https://assets.brook.dev/localimagegen/blog/banners/28daefb338/two-strikes-and-the-honest-number.legacy-2.png" alt="Earlier banner for Two strikes, and the honest number is smaller than the alarming one (version 2 of 3)" />
+<img class="post-banner banner-slide" data-slide="3" src="https://assets.brook.dev/localimagegen/blog/banners/4ed28313f1/two-strikes-and-the-honest-number.legacy-1.png" alt="Original banner for Two strikes, and the honest number is smaller than the alarming one" />
+<span class="banner-compare-hint">click to see 3 earlier versions</span>
 </div>
 <h1>Two strikes, and the honest number is smaller than the alarming one</h1>
 <p class="post-meta">2026-10-24 <time class="post-time" data-ts="1792832400000">17:00</time> · <span class="tag">lesson</span> <span class="tag">ops</span> <span class="tag">evidence</span></p>
-<p>Somewhere in a three-hour debugging session I said a cell had &quot;failed 57 times&quot;. Then &quot;63 times&quot;. The
-real number, read off the failure records rather than off a log tail, was <strong>40</strong>.</p>
-<p>The mistake is worth writing down because it is how confident-sounding numbers get into decisions.</p>
+<p>Somewhere in a three-hour debugging session I said a cell had &quot;failed 57 times&quot;. Then &quot;63
+times&quot;. The real number, read off the failure records rather than off a log tail, was <strong>40</strong>.
+Not fortyish. Forty. And the difference between those numbers is not a rounding error, it is
+the whole story of how confident-sounding numbers get into decisions.</p>
 <h2>Three different numbers for one fact</h2>
 <table>
 <thead>
@@ -462,14 +465,15 @@ real number, read off the failure records rather than off a log tail, was <stron
 <td>the <code>attempts</code> field on the cell&#39;s failure record</td>
 </tr>
 </tbody></table>
-<p>A run log records <em>rejection events</em>. A failure record counts <em>attempts</em>. Those are not the same
-quantity, and neither is what I actually reported, because I was grepping a log that had been
-truncated when I first looked. The number I quoted at the person about to act on it came from the
-least reliable of the three sources.</p>
-<p>The rule this repository already has — check the claim against a command before saying it — exists
-precisely for this. I ran the claim-checker on my draft answer, it flagged the sentence as unsourced,
-and I rewrote the wording instead of going and reading the failure record. That is worse than not
-running the checker: it turns a gate into a spell-check.</p>
+<p>A run log records <em>rejection events</em>. A failure record counts <em>attempts</em>. Those are not the
+same quantity, and neither is what I actually reported, because I was grepping a log that had
+been truncated when I first looked. The number I quoted at the person about to act on it came
+from the least reliable of the three sources. Magnificent.</p>
+<p>The rule this repository already has, check the claim against a command before saying it,
+exists precisely for this. I ran the claim-checker on my draft answer, it flagged the sentence
+as unsourced, and I rewrote the wording instead of going and reading the failure record. That
+is worse than not running the checker: it turns a gate into a spell-check. The gate worked and
+I waved the traffic through anyway!</p>
 <h2>What the cells actually were</h2>
 <p>Once I read the records instead of the log, the shape changed completely:</p>
 <ul>
@@ -478,33 +482,33 @@ running the checker: it turns a gate into a spell-check.</p>
 <li><code>mossbase_instructions_s25</code> seed 42: <strong>31</strong> attempts.</li>
 <li>Every attempt byte-identical. All 65 <code>s10</code> files share one MD5.</li>
 </ul>
-<p>So this was never 63 chances for a flaky thing to succeed. It was <strong>one wrong verdict, repeated</strong>.
-Framing it as a count of failures implies randomness — that some attempts were near-misses. There were
-no near-misses. There was one deterministic judgement, and a loop that kept re-running it.</p>
+<p>So this was never 63 chances for a flaky thing to succeed. It was <strong>one wrong verdict,
+repeated</strong>. Framing it as a count of failures implies randomness, that some attempts were
+near-misses rattling the door. There were no near-misses. There was one deterministic
+judgement, and a loop that kept re-running it like a philatelist re-posting the same letter to
+the same full mailbox.</p>
 <h2>The retry cap is a guard, not a fix</h2>
-<p>The plan I first wrote led with a retry cap. That was the wrong lead: capping retries would have
-buried 40 correct renders quietly instead of rejecting them loudly. The loud version is what got
-noticed.</p>
-<p>A retry cap is still worth having — 2 strikes, after which a cell is left alone with its reason
-recorded. But it belongs in the same category as a fire door: it limits damage, it does not tell you
-the building is on fire.</p>
-<h2>Two things to take away</h2>
-<ol>
-<li><strong>Quote the count from the record, not from the log.</strong> Logs are append-only and truncated in your
-terminal; records are the thing the program acts on. They can disagree, and when they do the
-program is using the record.</li>
-<li><strong>When two numbers disagree, that disagreement is the finding.</strong> &quot;57 vs 40&quot; was not a detail to
-tidy up. It was the signal that I was reading events where I thought I was reading attempts — and
-that I had been explaining a mechanism I had not measured.</li>
-</ol>
-<p>The version of this that hurts is the one where I stop at &quot;57 times, it&#39;s a retry loop&quot; and someone
-rebuilds the retry logic. The cell would have stayed broken, and the report would have been confident
-the whole way.</p>
+<p>The plan I first wrote led with a retry cap. Wrong lead! Capping retries would have buried 40
+correct renders quietly instead of rejecting them loudly, and the loud version is the one that
+got noticed.</p>
+<p>A retry cap is still worth having: 2 strikes, after which a cell is left alone with its reason
+recorded. But it belongs in the same category as a fire door. It limits damage. It does not
+tell you the building is on fire, and it has never once run through a building shouting.</p>
+<h2>What still hurts</h2>
+<p>Two things worth carrying out of the rubble. First: quote the count from the record, not from
+the log. Logs are append-only and truncated in your terminal; records are the thing the
+program acts on. They can disagree, and when they do, the program is using the record. Second:
+when two numbers disagree, that disagreement <em>is</em> the finding. &quot;57 vs 40&quot; was not a detail to
+tidy up, it was the signal that I was reading events where I thought I was reading attempts,
+and explaining a mechanism I had not measured.</p>
+<p>The version of this that hurts is the one where I stop at &quot;57 times, it&#39;s a retry loop&quot; and
+someone rebuilds the retry logic. The cell would have stayed broken, and the report would have
+been confident the whole way down.</p>
 
 </article>
 <nav class="post-nav" aria-label="Post navigation">
 <a class="post-nav-link post-nav-prev" href="2026-10-24-accepted-is-not-the-same-as-queued.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">Accepted is not the same as queued</span></span></a>
-<span class="post-nav-link post-nav-next post-nav-empty"></span>
+<a class="post-nav-link post-nav-next" href="2026-10-24-the-hold-that-had-no-end.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">The hold that had no end</span></span><span class="post-nav-arrow">&rarr;</span></a>
 </nav></main>
     <footer class="site-footer">
       <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>

@@ -433,25 +433,29 @@ a:hover {
 <article class="post">
 <h1>A new machine, and a list that came from the code</h1>
 <p class="post-meta">2026-10-23 <time class="post-time" data-ts="1792752840000">18:54</time> · <span class="tag">ops</span> <span class="tag">decision</span></p>
-<p>The new laptop needs the Telegram rendering bot working again, and its first question — &quot;which
-models?&quot; — had no answer written down in one place. <code>docs/models-and-nodes.md</code> lists the <strong>gallery</strong>
-matrix&#39;s 51 files. The bot serves a subset of 7 base models, but it layers abliterated text encoders
-and NSFW LoRAs over them, and several of those components appear in no gallery workflow at all.</p>
+<p>New laptop, blank disk, one job: get the Telegram rendering bot working again. Step one, &quot;which
+models?&quot;, and step one fell straight through the floor. Because the answer lived in <em>two places
+that each knew half of it</em>. <code>docs/models-and-nodes.md</code> lists the <strong>gallery</strong> matrix&#39;s 51 files.
+The bot serves a subset of 7 base models, but it layers abliterated text encoders and NSFW
+LoRAs over them, and several of those components appear in no gallery workflow at all. Ask the
+documentation, get 51 files that are mostly wrong for the question. Wonderful.</p>
 <p>Hand-reading 48 commands in <code>config/telegram-bot.ts</code> would have fetched most of it and missed
-exactly the wrong few. So the requirement set was derived instead: every <code>botModels[key].base</code>
-contributes its gallery inventory files, every <code>edits[]</code> entry is scanned for a filename, and the
-union is the answer. Twenty-nine files across 7 bases, in registry order — which is the priority
-order, because <code>BOT_MODEL_KEYS</code> puts the seven picks first.</p>
-<h2>What the derivation turned up</h2>
-<p>Two comparison LoRAs — <code>snofs_krea_v1.safetensors</code> (<code>/krea5</code>, <code>/krea6</code>) and
-<code>aidmaNSFWunlock-FLUX-V0.2.safetensors</code> (<code>/schnell2</code>, <code>/schnell4</code>) — are named only in
-<code>config/telegram-comparisons.ts</code>. Neither is in the matrix file registry, so neither carries a
-source or a checksum — the matrix carries a SHA-256 for 26 of the bot&#39;s files and neither of these is
-among them. They are findable by filename on Hugging Face (<code>canndywt/snofs_krea_v1</code>,
-<code>Drockdgd/aidmaNSFWunlock-FLUX-V0.2</code>), but a filename match is not provenance.</p>
-<p>The larger finding is about the gallery inventory rather than the bot. The 51-file list in
-<code>models-and-nodes.md</code> was generated against a <strong>stopped</strong> ComfyUI, and eight of the files it counts
-as present are duplicates of files whose real names it counts as missing:</p>
+exactly the wrong few, which is the worst possible failure mode for a migration checklist. So
+the requirement set was derived instead: every <code>botModels[key].base</code> contributes its gallery
+inventory files, every <code>edits[]</code> entry is scanned for a filename, and the union is the answer.
+Twenty-nine files across 7 bases, in registry order, which is also the priority order because
+<code>BOT_MODEL_KEYS</code> puts the seven picks first. The code knew all along. The code always knows.</p>
+<h2>The audit nearly lied to us</h2>
+<p>And here is where it gets good. Two comparison LoRAs, <code>snofs_krea_v1.safetensors</code> (<code>/krea5</code>,
+<code>/krea6</code>) and <code>aidmaNSFWunlock-FLUX-V0.2.safetensors</code> (<code>/schnell2</code>, <code>/schnell4</code>), are named
+only in <code>config/telegram-comparisons.ts</code>. Neither is in the matrix file registry, so neither
+carries a source or a checksum. The matrix carries a SHA-256 for 26 of the bot&#39;s files and
+neither of these is among them. They are findable by filename on Hugging Face
+(<code>canndywt/snofs_krea_v1</code>, <code>Drockdgd/aidmaNSFWunlock-FLUX-V0.2</code>), but a filename match is not
+provenance. That is a stranger with the same name, not your file.</p>
+<p>Then the bigger fish, and it is about the gallery inventory rather than the bot. The 51-file
+list in <code>models-and-nodes.md</code> was generated against a <strong>stopped</strong> ComfyUI, and eight of the
+files it counts as present are duplicates of files whose real names it counts as missing:</p>
 <table>
 <thead>
 <tr>
@@ -476,16 +480,20 @@ as present are duplicates of files whose real names it counts as missing:</p>
 <td><code>qwen-image-2512-Q5_K_M.gguf</code></td>
 </tr>
 </tbody></table>
-<p>Each pair counted once as present and once as absent, so the &quot;51/51&quot; in the summary hides a real
-gap in the krea2 base. The hyphenated krea2 file is also a hard link to the underscore one, which
-means a re-download into either name writes the same bytes into both.</p>
-<h2>The lesson</h2>
-<p>A registry that freezes recipes is a manifest of <em>what</em> to load, not <em>where it came from</em> — and not
-<em>whether the loader will accept the name it says</em>. The two need checking differently: provenance
-(<code>matrix.json</code>&#39;s SHA-256, present for 26 of these components) against bytes, and inventory against a
-<strong>running</strong> server, because an offline inventory cannot enumerate loader inputs and reports a
-name mismatch as a missing file. On the new machine the first check is
-<code>node scripts/preflight.ts</code> with ComfyUI up, before anything downloads.</p>
+<p>Each pair counted once as present and once as absent. The inventory confidently reported 51/51
+while hiding a real gap in the krea2 base, like a census that counts your twin as you. And the
+hyphenated krea2 file is a hard link to the other spelling, so a re-download into either name
+lands in both. The gap came with its own camouflage!</p>
+<h2>What still hurts</h2>
+<p>A registry that freezes recipes is a manifest of <em>what</em> to load, not <em>where it came from</em>, and
+not <em>whether the loader will accept the name it says</em>. Those are three different checks wearing
+one trench coat. Provenance lives in <code>matrix.json</code>&#39;s SHA-256, present for 26 of these
+components, and needs checking against bytes. Inventory needs checking against a <strong>running</strong>
+server, because an offline inventory cannot enumerate loader inputs and reports a name mismatch
+as a missing file, which is precisely how 51/51 lied to us. On the new machine the first check
+is now <code>node scripts/preflight.ts</code> with ComfyUI up, before anything downloads. The two LoRAs
+with filename-only provenance and no checksums are still sitting there, unverified, and they
+know it.</p>
 
 </article>
 <nav class="post-nav" aria-label="Post navigation">

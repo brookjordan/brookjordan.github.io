@@ -437,12 +437,14 @@ a:hover {
 <p>krea2 stopped rendering with this, at execution time, on every cell:</p>
 <pre><code>UnetLoaderGGUF: This model is not currently supported - (Unknown model architecture!)
 </code></pre>
-<p>That message is the loader blaming the architecture. It was not the architecture. It was the file
-having no idea what it was.</p>
-<h2>What a GGUF actually is</h2>
-<p>A GGUF is two things: a block of key-value metadata, then tensors. The metadata is the schema — it is
-where <code>general.architecture</code> lives, and that single string is how the loader knows whether it is
-holding a Flux, an SDXL or a Qwen-Image model. <code>comfyui-gguf</code> reads it and dispatches on it:</p>
+<p>That message is the loader blaming the architecture. It was not the architecture. It was the
+file having no idea what it was. Thirteen point seven gigabytes of beautiful tensors, and not
+one byte of self-knowledge.</p>
+<h2>What a GGUF actually is (bring a flashlight)</h2>
+<p>A GGUF is two things: a block of key-value metadata, then tensors. The metadata is the schema,
+it is where <code>general.architecture</code> lives, and that single string is how the loader knows whether
+it is holding a Flux, an SDXL or a Qwen-Image model. <code>comfyui-gguf</code> reads it and dispatches on
+it:</p>
 <pre><code class="language-python">arch_str = get_field(reader, &quot;general.architecture&quot;, str)
 if arch_str in [None, &quot;pig&quot;, &quot;cow&quot;]:
     compat = &quot;sd.cpp&quot; if arch_str is None else arch_str
@@ -450,9 +452,10 @@ if arch_str in [None, &quot;pig&quot;, &quot;cow&quot;]:
     ...
     arch_str = detect_arch(set(tensor names)).arch
 </code></pre>
-<p>If the key is missing, it falls back to guessing from tensor names. The guess list has no entry for
-krea2&#39;s layout, so <code>detect_arch</code> raises <code>Unknown model architecture!</code> — and that is the message we
-were reading as &quot;your model is unsupported&quot;.</p>
+<p>If the key is missing, it falls back to guessing from tensor names. The guess list has no entry
+for krea2&#39;s layout, so <code>detect_arch</code> raises <code>Unknown model architecture!</code> and that is the
+message we were reading as &quot;your model is unsupported&quot;. It was not &quot;your model is unsupported&quot;.
+It was &quot;your file has amnesia and I am too polite to say so&quot;.</p>
 <p>The file told a different story:</p>
 <pre><code>$ gguf-dump --no-tensors krea2_turbo-Q8_0.gguf
 * Dumping 3 key/value pair(s)
@@ -461,28 +464,31 @@ were reading as &quot;your model is unsupported&quot;.</p>
       3: GGUF.kv_count = 0
 </code></pre>
 <p><code>kv_count = 0</code>. Three keys, all of them structural, none of them metadata. The tensors were all
-there — 432 of them, 13.7 GB — and the file had forgotten what it was.</p>
+there, 432 of them, 13.7 GB, and the file had forgotten what it was. It could still <em>be</em> a
+model. It could no longer <em>say</em> it was one.</p>
 <h2>How we knew which file to trust</h2>
-<p>Not by looking at it. The model store keeps a ledger, and the ledger had a row for the file:</p>
+<p>Not by looking at it! The model store keeps a ledger, and the ledger had a row for the file:</p>
 <pre><code>path  huggingface/hub/models--vantagewithai--Krea-2-Turbo-GGUF/snapshots/390847e2.../krea2_turbo-Q8_0.gguf
 size  13705958688
 </code></pre>
-<p>Our local copy was 13,702,890,272 bytes. Three megabytes smaller — a different artefact with the same
-name. That is the whole detection method: the ledger remembered the byte count, and the file on disk
-did not match it.</p>
+<p>Our local copy was 13,702,890,272 bytes. Three megabytes smaller. A different artefact wearing
+the same name, like a body double who read the brief wrong. That is the whole detection method:
+the ledger remembered the byte count, and the file on disk did not match it. Boring, mechanical,
+unstoppable.</p>
 <p>Re-downloading the original from <code>vantagewithai/Krea-2-Turbo-GGUF</code> gave a file of exactly the recorded
 size, and:</p>
 <pre><code>      3: UINT64     | 1 | GGUF.kv_count = 7
       4: STRING     | 1 | general.architecture = &#39;qwen_image&#39;
 </code></pre>
-<p><code>qwen_image</code> — the architecture Krea 2 Turbo is built on, and one the installed loader already knows.
-First prompt after the swap: accepted, rendered, stamped.</p>
+<p><code>qwen_image</code>, the architecture Krea 2 Turbo is built on, and one the installed loader already
+knows. First prompt after the swap: accepted, rendered, stamped. Welcome back from the void.</p>
 <h2>What it cost</h2>
-<p>One cell logged <strong>329 attempts</strong>. The run&#39;s log holds <strong>7,827</strong> <code>execution error krea2</code> lines, and all
-135 krea2 cells hit the three-attempt cap and quarantined. The failures were fast, so it mostly cost
-noise and a corrupted sense of what was left to do — but it also meant 135 cells sat in the &quot;given up
-on&quot; bucket for something that was a missing header.</p>
-<h2>The lessons, in the order they bit</h2>
+<p>One cell logged <strong>329 attempts</strong>. The run&#39;s log holds <strong>7,827</strong> <code>execution error krea2</code> lines,
+and all 135 krea2 cells hit the three-attempt cap and quarantined. The failures were fast, so
+it mostly cost noise and a corrupted sense of what was left to do. But it also meant 135 cells
+sat in the &quot;given up on&quot; bucket for something that was a missing header. A whole base model,
+grounded for want of one string.</p>
+<h2>The lessons, in the order they bit (what still hurts, chronological)</h2>
 <ol>
 <li><strong>A GGUF&#39;s metadata is not optional garnish.</strong> It is the schema. A re-quantisation that drops the
 key-value block produces a file that is byte-plausible, loads as a tensor dump, and cannot be
@@ -497,7 +503,7 @@ before it is allowed to replace anything.</li>
 structurally wrong, and it reads like noise in the log. A retry budget per <em>reason</em> would have
 stopped at three and escalated.</li>
 </ol>
-<p>The GGUF is restored, the cells are re-armed, and krea2 is rendering again — <code>krea2_angels_s02</code>,
+<p>The GGUF is restored, the cells are re-armed, and krea2 is rendering again. <code>krea2_angels_s02</code>,
 12 seconds, stamped at 03:35. The arch key is now written down in <code>CLAUDE.md</code> next to the model, with
 the expected <code>kv_count</code>, so the next agent checks the file before trusting it.</p>
 

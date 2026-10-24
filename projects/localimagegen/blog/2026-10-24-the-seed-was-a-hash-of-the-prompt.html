@@ -431,9 +431,18 @@ a:hover {
     </header>
     <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
 <article class="post">
+<div class="banner-compare" data-count="3" role="button" tabindex="0" aria-label="Cycle through 2 earlier banner versions">
+<img class="post-banner banner-slide" data-slide="0" src="https://assets.brook.dev/localimagegen/blog/banners/5a51d5a386/the-seed-was-a-hash-of-the-prompt.png" alt="The seed was a hash of the prompt" />
+<img class="post-banner banner-slide" data-slide="1" src="https://assets.brook.dev/localimagegen/blog/banners/db522e4b97/the-seed-was-a-hash-of-the-prompt.legacy-2.png" alt="Earlier banner for The seed was a hash of the prompt (version 2 of 2)" />
+<img class="post-banner banner-slide" data-slide="2" src="https://assets.brook.dev/localimagegen/blog/banners/db522e4b97/the-seed-was-a-hash-of-the-prompt.legacy-1.png" alt="Original banner for The seed was a hash of the prompt" />
+<span class="banner-compare-hint">click to see 2 earlier versions</span>
+</div>
 <h1>The seed was a hash of the prompt</h1>
 <p class="post-meta">2026-10-24 · <span class="tag">incident</span> <span class="tag">lesson</span></p>
-<p>Brook, in the Telegram bot: &quot;the seeds seem to be repeating a lot.&quot; They were. The bot&#39;s seed was not random at all — it was a deterministic hash of the prompt text.</p>
+<p>Brook, in the Telegram bot: &quot;the seeds seem to be repeating a lot.&quot; They were! Oh, they were.
+The bot&#39;s seed was not random at all. It was a deterministic hash of the prompt text. Every
+prompt carried its own little fixed seed, like a name tag. Ask for the same picture twice and
+you got the same picture twice, forever, with the bot cheerfully calling that randomness.</p>
 <pre><code class="language-ts">function stableSeed(prompt: string): number {
   let h = 2166136261 &gt;&gt;&gt; 0;
   for (const byte of Buffer.from(prompt, &#39;utf8&#39;)) {
@@ -443,9 +452,16 @@ a:hover {
 }
 </code></pre>
 <p>and the job record carried <code>seed: stableSeed(job.originalPrompt)</code>.</p>
-<p>The intent was written in the comment: &quot;Deterministic per prompt: Krea comparison commands can share a seed.&quot; That is a real property someone wanted — compare five Krea variants and hold the seed constant so the comparison is fair. But it was applied to <strong>every</strong> job, so every repeat of a prompt was a repeat of the image. The gallery&#39;s own cell identity is <code>&lt;model&gt;_&lt;scene&gt;_sNN_&lt;seed&gt;</code>, which means a re-used seed is not merely similar output; it is the same cell.</p>
-<h2>The measurement</h2>
-<p>Not a theory from reading the code — counted from the live job store in <code>data/telegram-bot/jobs/</code> on 2026-10-24:</p>
+<p>The intent was right there in the comment: &quot;Deterministic per prompt: Krea comparison commands
+can share a seed.&quot; And that is a genuinely lovely property! Compare five Krea variants with the
+seed held constant and the comparison is fair. Someone wanted that, and they were right to. The
+trouble is the property got applied to <strong>every</strong> job, so the comparison affordance escaped into
+the product and started eating novelty. Worse, the gallery&#39;s own cell identity is
+<code>&lt;model&gt;_&lt;scene&gt;_sNN_&lt;seed&gt;</code>, which means a re-used seed is not &quot;similar output&quot;. It is the
+same cell. The bot was re-printing the same trading card and calling it a new draw.</p>
+<h2>Counted, not guessed</h2>
+<p>Not a theory from reading the code. Counted from the live job store in
+<code>data/telegram-bot/jobs/</code> on 2026-10-24:</p>
 <table>
 <thead>
 <tr>
@@ -470,23 +486,41 @@ a:hover {
 <td><strong>17 of 25</strong></td>
 </tr>
 </tbody></table>
-<p>One seed appeared in 11 separate jobs. Two prompts accounted for 12 and 11 jobs respectively.</p>
+<p>One seed appeared in 11 separate jobs. Two prompts accounted for 12 and 11 jobs respectively.
+Eighty-two rolls of the dice, thirty-six numbers. Those dice were loaded, rigged, and
+hand-polished.</p>
 <h2>The fix</h2>
-<p><code>randomInt(1, 0x7fff_ffff + 1)</code> — a cryptographically random positive 31-bit seed, drawn <strong>once at creation</strong> and then durable. A retry or a restart re-uses the recorded value, so idempotency is preserved and a job never re-rolls under a retry. That was the property worth keeping: the seed is stable <em>for a job</em>, not stable <em>for a prompt</em>.</p>
-<p>The regression test draws 40 jobs from the identical prompt and asserts 40 distinct seeds. Against the old code it fails; against the new code it passes. That check was run both ways rather than assumed.</p>
+<p><code>randomInt(1, 0x7fff_ffff + 1)</code>: a properly random positive 31-bit seed, drawn <strong>once at
+creation</strong> and then durable. A retry or a restart re-uses the recorded value, so idempotency
+is preserved and a job never re-rolls under a retry. That was the property worth keeping all
+along: the seed is stable <em>for a job</em>, not stable <em>for a prompt</em>. Comparison commands keep
+their fairness; everyone else gets fresh dice.</p>
+<p>The regression test draws 40 jobs from the identical prompt and asserts 40 distinct seeds.
+Against the old code it fails spectacularly, which is the point. Against the new code it
+passes. Both directions were run, not assumed.</p>
 <h2>What this was not</h2>
-<p>Two other seed sources look like repetition and are not:</p>
+<p>Two other seed sources look like repetition and are not, and both get to live:</p>
 <ul>
-<li><code>scripts/replay-edit.ts</code> defaults to <code>--seed 4242</code>. That is deliberate: a certificate is only comparable to another certificate if the seed is pinned. The replay harness is a scientific instrument, not a user-facing render.</li>
-<li><code>config/gallery.ts</code> pins <code>seeds: [42, 2026]</code>. The gallery matrix <em>is</em> a controlled comparison — the same scene at fixed seeds across models. Randomising it would destroy the thing it exists to measure.</li>
+<li><code>scripts/replay-edit.ts</code> defaults to <code>--seed 4242</code>. Deliberate! A certificate is only
+comparable to another certificate if the seed is pinned. The replay harness is a scientific
+instrument, not a user-facing render. Next!</li>
+<li><code>config/gallery.ts</code> pins <code>seeds: [42, 2026]</code>. The gallery matrix <em>is</em> a controlled
+comparison, the same scene at fixed seeds across models. Randomising it would destroy the
+very thing it exists to measure. Absolutely not. Next!</li>
 </ul>
-<p>So the change is scoped to the Telegram bot&#39;s job store: the one surface where a user asks for an image and expects a new one.</p>
-<h2>Lesson</h2>
-<p>A provenance default and a user-facing default pulled in opposite directions, and one comment let a comparison affordance leak into the product. The durable-seed test that shipped alongside the original code asserted only that the seed did not change between reads — it never asserted the seed differed between requests, so it passed happily while every repeat re-rendered the same picture. A test named &quot;assigns a durable seed&quot; documented exactly the wrong half of the contract.</p>
+<p>So the change is scoped to the Telegram bot&#39;s job store: the one surface where a human asks
+for an image and expects a new one.</p>
+<h2>What still hurts</h2>
+<p>The test that shipped alongside the original code was named &quot;assigns a durable seed&quot;, and it
+documented exactly the wrong half of the contract. It asserted the seed did not change between
+reads. It never asserted the seed differed between requests. So it sat there passing, green
+and proud, while every repeat re-rendered the same picture. The bug had a bodyguard the whole
+time. A test named for one property cannot catch the loss of the property you forgot to name,
+and that is the part worth losing sleep over.</p>
 
 </article>
 <nav class="post-nav" aria-label="Post navigation">
-<a class="post-nav-link post-nav-prev" href="2026-10-24-moss-native-recipe.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">MOSS gets a native recipe, not the global bootstrap</span></span></a>
+<a class="post-nav-link post-nav-prev" href="2026-10-24-the-first-job-to-finish-ate-the-photograph.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">The first job to finish ate the photograph</span></span></a>
 <a class="post-nav-link post-nav-next" href="2026-10-24-the-validator-rejected-the-best-render.html"><span class="post-nav-text"><span class="post-nav-label">Next</span><span class="post-nav-title">The validator rejected the best render in the room</span></span><span class="post-nav-arrow">&rarr;</span></a>
 </nav></main>
     <footer class="site-footer">
