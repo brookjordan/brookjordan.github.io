@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Patch Notes v2026.44.2-22.21</title>
+    <base href="/projects/news/v2026.44.2-22.21/">
+    <style>
+        body {
+          background: #121212;
+          color: #eee;
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-height: 100vh;
+          margin: 0;
+          padding: 20px;
+          box-sizing: border-box;
+        }
+    
+        .card {
+          background: #1e1e1e;
+          padding: 2rem;
+          border-radius: 24px;
+          text-align: center;
+          width: 100%;
+          max-width: 500px;
+          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+          display: flex;
+          flex-direction: column;
+        }
+    
+        h1 {
+          margin: 0 0 1rem 0;
+          color: #fff;
+          font-size: 1.6rem;
+        }
+
+        .media-stage {
+          position: relative;
+          width: 100%;
+          aspect-ratio: 16 / 9;
+          border-radius: 16px;
+          margin-bottom: 0.75rem;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+          border: 1px solid #333;
+          overflow: hidden;
+          cursor: pointer;
+          background: #1a1a1a;
+        }
+
+        .cover-art,
+        .podcast-video {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: opacity 650ms ease;
+        }
+
+        .cover-primary { z-index: 3; opacity: 1; }
+        .podcast-video { z-index: 2; opacity: 0; }
+        .cover-alt { z-index: 4; opacity: 0; }
+        .media-stage.video-playing .cover-primary { opacity: 0; }
+        .media-stage.video-playing .podcast-video { opacity: 1; }
+        .media-stage.show-final .cover-alt { opacity: 1; }
+        .media-stage.show-final .podcast-video { opacity: 1; }
+
+        .image-hint {
+          position: absolute;
+          right: 10px;
+          bottom: 10px;
+          z-index: 2;
+          padding: 5px 9px;
+          border-radius: 999px;
+          background: rgba(18,18,18,0.72);
+          color: #ddd;
+          font-size: 0.68rem;
+          pointer-events: none;
+          backdrop-filter: blur(5px);
+        }
+
+        .media-viewport {
+          position: relative;
+          width: 100%;
+          padding-top: 56.25%; /* Force uniform 16:9 Aspect Ratio box */
+          border-radius: 16px;
+          margin-bottom: 1.5rem;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+          border: 1px solid #333;
+          background: #1a1a1a;
+          overflow: hidden;
+        }
+        
+        .cover-media {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: 15px;
+        }
+    
+        .podcast-nav {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
+          margin: 0 0 1.25rem 0;
+        }
+
+        .podcast-nav a {
+          color: #ddd;
+          background: #292929;
+          border: 1px solid #3a3a3a;
+          border-radius: 10px;
+          padding: 9px 12px;
+          text-decoration: none;
+          font-size: 0.78rem;
+          transition: 0.2s;
+        }
+
+        .podcast-nav a:hover { border-color: #bb86fc; color: #fff; }
+        .podcast-nav a.disabled { opacity: 0.35; pointer-events: none; }
+
+        /* Navigation & Status Row */
+        .nav-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 0.5rem;
+        }
+    
+        #st {
+          color: #888;
+          font-size: 0.75rem;
+          text-transform: uppercase;
+          letter-spacing: 1.5px;
+          margin: 0;
+          flex-grow: 1;
+        }
+    
+        .skip-btn {
+          background: #333;
+          color: #fff;
+          border: none;
+          border-radius: 50%;
+          width: 36px;
+          height: 36px;
+          cursor: pointer;
+          transition: 0.2s;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1rem;
+        }
+    
+        .skip-btn:hover:not(:disabled) {
+          background: #bb86fc;
+          color: #121212;
+        }
+    
+        .skip-btn:disabled {
+          opacity: 0.3;
+          cursor: not-allowed;
+        }
+    
+        audio {
+          color-scheme: dark;
+          background: #292929;
+          border-radius: 12px;
+          width: 100%;
+          margin: 0.5rem 0 1rem 0;
+          outline: none;
+          flex-shrink: 0;
+        }
+    
+        /* 'Now Playing' Transcript Box */
+        .transcript-box {
+          background: #252525;
+          padding: 1.5rem;
+          border-radius: 16px;
+          margin: 0.5rem 0;
+          min-height: 60px;
+          text-align: left;
+          border-left: 4px solid #444;
+          flex-shrink: 0;
+          transition: border-color 0.3s;
+        }
+    
+        #ts-text {
+          line-height: 1.5;
+          font-size: 1.05rem;
+          margin: 0;
+          color: #f0f0f0;
+        }
+    
+        #ts-voice {
+          font-weight: bold;
+          font-size: 0.7rem;
+          text-transform: uppercase;
+          margin-bottom: 0.4rem;
+          opacity: 0.6;
+        }
+    
+        /* Links & Buttons */
+        .link-container {
+          margin-top: 1rem;
+          opacity: 0;
+          transition: opacity 0.3s;
+          pointer-events: none;
+          flex-shrink: 0;
+        }
+    
+        .link-container.visible {
+          opacity: 1;
+          pointer-events: auto;
+        }
+    
+        .btn {
+          background: #bb86fc;
+          color: #121212;
+          padding: 12px 20px;
+          text-decoration: none;
+          border-radius: 12px;
+          display: inline-flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          transition: transform 0.2s;
+          gap: 4px;
+          box-shadow: 0 4px 15px rgba(187, 134, 252, 0.2);
+        }
+    
+        .btn:hover {
+          transform: scale(1.03);
+        }
+    
+        .btn-title {
+          font-weight: 800;
+          font-size: 1rem;
+        }
+    
+        .btn-summary {
+          font-size: 0.75rem;
+          font-weight: 600;
+          opacity: 0.75;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+    
+        /* Messenger Toggle */
+        .toggle-btn {
+          background: none;
+          border: 1px solid #555;
+          color: #aaa;
+          padding: 8px 16px;
+          border-radius: 20px;
+          cursor: pointer;
+          margin: 1.5rem auto 0.5rem auto;
+          font-size: 0.85rem;
+          transition: all 0.2s;
+          flex-shrink: 0;
+        }
+    
+        .toggle-btn:hover {
+          background: #333;
+          color: #fff;
+        }
+    
+        /* Full Messenger Chat */
+        .chat-container {
+          display: none;
+          flex-direction: column;
+          gap: 20px;
+          margin-top: 1rem;
+          text-align: left;
+          overflow-y: auto;
+          padding: 10px 15px 10px 5px;
+          border-top: 1px solid #333;
+          scrollbar-width: thin;
+          scroll-behavior: smooth;
+        }
+    
+        .chat-container.visible {
+          display: flex;
+          flex-grow: 1;
+        }
+    
+        .chat-container::-webkit-scrollbar {
+          width: 6px;
+        }
+    
+        .chat-container::-webkit-scrollbar-thumb {
+          background-color: #555;
+          border-radius: 10px;
+        }
+    
+        /* Topic Wrapper */
+        .topic-group {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          position: relative;
+        }
+    
+        /* Sticky Topic Header */
+        .topic-header {
+          position: sticky;
+          top: 5px;
+          align-self: center;
+          background: rgba(35, 35, 35, 0.95);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          color: #bb86fc;
+          padding: 8px 16px;
+          font-size: 0.75rem;
+          font-weight: bold;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          text-align: center;
+          border-radius: 12px;
+          z-index: 10;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+          border: 1px solid rgba(187, 134, 252, 0.2);
+          max-width: 85%;
+        }
+    
+        .chat-bubble {
+          padding: 12px 16px;
+          border-radius: 18px;
+          max-width: 85%;
+          font-size: 0.95rem;
+          line-height: 1.4;
+          position: relative;
+          opacity: 0.4;
+          transition: all 0.3s;
+          cursor: pointer;
+        }
+    
+        .chat-bubble:hover {
+          opacity: 0.8;
+          transform: scale(1.01);
+        }
+    
+        .chat-bubble.active {
+          opacity: 1;
+          cursor: default;
+          transform: none;
+        }
+    
+        .chat-label {
+          font-size: 0.65rem;
+          font-weight: bold;
+          margin-bottom: 4px;
+          text-transform: uppercase;
+          opacity: 0.7;
+          pointer-events: none;
+        }
+    
+        /* Dynamic Character Styles */
+        .am_adam {
+          border-color: #00d2ff;
+        }
+    
+        .af_sky {
+          border-color: #bb86fc;
+        }
+    
+        .chat-bubble.am_adam {
+          align-self: flex-start;
+          background: #2a2a2a;
+          color: #e0e0e0;
+          border-bottom-left-radius: 4px;
+          border-left: 3px solid #00d2ff;
+        }
+    
+        .chat-bubble.af_sky {
+          align-self: flex-end;
+          background: #3c2a4d;
+          color: #e0e0e0;
+          border-bottom-right-radius: 4px;
+          border-right: 3px solid #bb86fc;
+        }
+
+        .stats-panel { margin-top: 1rem; text-align: left; border: 1px solid #3a3a3a; border-radius: 14px; background: #202020; }
+        .stats-panel summary { cursor: pointer; padding: 12px 14px; color: #bb86fc; font-weight: 700; list-style-position: inside; }
+        .stats-content { padding: 0 14px 14px; color: #ddd; }
+        .stats-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 8px 0 12px; }
+        .stats-card { background: #292929; border-radius: 10px; padding: 10px; }
+        .stats-value { display: block; color: #fff; font-size: 1.05rem; font-weight: 750; }
+        .stats-label { display: block; color: #999; font-size: 0.68rem; text-transform: uppercase; letter-spacing: .06em; margin-top: 3px; }
+        .stats-stage { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; border-top: 1px solid #333; padding: 9px 0; font-size: .8rem; }
+        .stats-stage small { grid-column: 1 / -1; color: #888; }
+        .stats-raw { color: #bb86fc; font-size: .78rem; }
+        .stats-error { color: #ffb4ab; }
+        .attempt-switcher { display: inline-flex; gap: 6px; margin-top: 8px; align-items: center; }
+        .attempt-btn { background: #292929; color: #eee; border: 1px solid #3a3a3a; border-radius: 10px; padding: 3px 10px; font-size: .75rem; cursor: pointer; }
+        .attempt-btn[aria-pressed="true"] { background: #bb86fc; color: #121212; font-weight: 700; border-color: #bb86fc; }
+        .attempt-btn.pass { border-color: #2e7d32; }
+        .attempt-btn.fail { border-color: #c62828; }
+        .attempt-btn.pass[aria-pressed="true"] { background: #2e7d32; border-color: #2e7d32; color: #fff; }
+        .attempt-btn.fail[aria-pressed="true"] { background: #c62828; border-color: #c62828; color: #fff; }
+        .attempt-key { font-size: .72rem; margin-right: 6px; border: none; background: none; padding: 0; }
+        .attempt-num { display: inline-block; padding: 0 6px; border-radius: 8px; font-weight: 700; }
+        .attempt-num.num-fail { color: #ff6e63; background: rgba(255,110,99,.12); }
+        .attempt-num.num-pass { color: #7ef7b0; background: rgba(126,247,176,.10); }
+        .attempt-slash { opacity: .5; margin: 0 3px; }
+        .attempt-icons { margin-right: 2px; }
+        .attempt-btn.fail { text-decoration: line-through; text-decoration-thickness: 1px; }
+        .crit-dots { display: inline-flex; gap: 5px; margin-left: 10px; vertical-align: middle; }
+        .crit-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; cursor: help; }
+        .crit-dot.pass { background: #fff; }
+        .crit-dot.fail { background: #e5484d; }
+        .crit-dot.na { background: transparent; border: 1px dashed #666; }
+
+        .player-tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; margin: 0.4rem 0 1rem; }
+        .player-tabs button { background: #292929; color: #ddd; border: 1px solid #444; border-radius: 9px; padding: 10px 5px; cursor: pointer; font-size: .78rem; }
+        .player-tabs button[aria-selected="true"] { background: #bb86fc; color: #121212; font-weight: 700; }
+        .player-tabs button:focus-visible, .chat-bubble:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+        .player-tab-panel[hidden] { display: none !important; }
+        .chat-container.tab-visible { display: flex; flex-grow: 1; }
+        .chat-bubble[aria-current="true"] { opacity: 1; outline: 2px solid #bb86fc; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div id="media-stage" class="media-stage" tabindex="0" role="button" aria-label="Play animated briefing">
+            <img id="primary-cover" src="https://assets.brook.dev/podcasts/v2026.44.2-22.21/cover.png" class="cover-art cover-primary" alt="Patch Notes v2026.44.2-22.21 — Cinematic 16:9 wide shot establishing a rugged, weathered four-wheeled robotic rover stationary on a vast, rust-colored Martian desert plain. The metallic chassis is coated in fine orange dust and shows signs of age. A high-gain antenna extends vertically toward a hazy, thick orange sky. Swirls of dust hover around the base of the vehicle. Long, dramatic shadows stretch across the cracked, uneven ground. The lighting is dim and atmospheric, capturing a desolate, hostile environment before any movement occurs." />
+            <video id="podcast-video" class="podcast-video" muted playsinline preload="auto" poster="https://assets.brook.dev/podcasts/v2026.44.2-22.21/cover.png">
+                <source src="https://assets.brook.dev/podcasts/v2026.44.2-22.21/animated_briefing.mp4" type="video/mp4" />
+            </video>
+            <img id="final-cover" src="https://assets.brook.dev/podcasts/v2026.44.2-22.21/cover-alt.png" class="cover-art cover-alt" loading="eager" alt="Final keyframe — Edit Picture 1 to create keyframe 3. Make only these visible changes:
+- A sudden gust of wind kicks up a heavy veil of orange silt.
+- The rover's movement becomes visibly strained against the elements.
+- Foreground soil shows significant disturbed textures.
+Keep these regions fixed: sky_01, antenna_01.
+Keep Picture 1's camera, framing, composition, spatial layout, identities, object count, exact text, and these protected details unchanged: robotic rover, front left wheel, front right wheel, rear left wheel, rear right wheel, high-gain antenna, dust cloud, Martian surface, rover shadow, hazy sky, scale, color.
+Do not describe animation or intent. Do not add material without visibly reducing its named source. Do not add, remove, duplicate, or rewrite people, objects, signs, labels, captions, symbols, or lettering." />
+            <span id="media-hint" class="image-hint">Loading motion…</span>
+        </div>
+        <nav id="podcast-nav" class="podcast-nav" aria-label="Podcast navigation">
+            <a id="podcast-older" class="disabled" aria-disabled="true">&#8592; Older</a>
+            <a id="podcast-newer" class="disabled" aria-disabled="true">Newer &#8594;</a>
+        </nav>
+
+        <!--
+        <div class="media-viewport">
+            <video 
+                id="podcast-video"
+                class="cover-media" 
+                poster="https://assets.brook.dev/podcasts/v2026.44.2-22.21/cover.png"
+                preload="auto"
+                playsinline
+                muted
+                loop>
+                <source src="https://assets.brook.dev/podcasts/v2026.44.2-22.21/animated_briefing.mp4" type="video/mp4">
+                <img src="https://assets.brook.dev/podcasts/v2026.44.2-22.21/cover.png" class="cover-media" alt="Cinematic 16:9 wide shot establishing a rugged, weathered four-wheeled robotic rover stationary on a vast, rust-colored Martian desert plain. The metallic chassis is coated in fine orange dust and shows signs of age. A high-gain antenna extends vertically toward a hazy, thick orange sky. Swirls of dust hover around the base of the vehicle. Long, dramatic shadows stretch across the cracked, uneven ground. The lighting is dim and atmospheric, capturing a desolate, hostile environment before any movement occurs.">
+            </video>
+        </div>
+        -->
+        
+        <div id="player-audio" class="player-audio" aria-label="Episode audio controls">
+            <audio id="pl1" controls autoplay></audio>
+            <audio id="pl2" controls style="display:none;"></audio>
+        </div>
+        <div class="player-tabs" role="tablist" aria-label="Episode views">
+            <button type="button" id="tab-manual" role="tab" aria-controls="panel-manual" aria-selected="true" tabindex="0">Manual controls</button>
+            <button type="button" id="tab-transcript" role="tab" aria-controls="panel-transcript" aria-selected="false" tabindex="-1">Full transcript</button>
+            <button type="button" id="tab-stats" role="tab" aria-controls="panel-stats" aria-selected="false" tabindex="-1">Stats for nerds</button>
+        </div>
+
+        <section id="panel-manual" class="player-tab-panel" role="tabpanel" aria-labelledby="tab-manual">
+            <div class="nav-row">
+                <button id="btn-prev" class="skip-btn" aria-label="Previous segment" disabled>&#9198;</button>
+                <p id="st">Ready to play</p>
+                <button id="btn-next" class="skip-btn" aria-label="Next segment">&#9199;</button>
+            </div>
+        </section>
+        <section id="panel-manual-content" class="player-tab-panel" aria-label="Current segment">
+            <div id="ts-box" class="transcript-box">
+                <div id="ts-voice"></div>
+                <p id="ts-text">Press play to start the briefing...</p>
+            </div>
+            <div id="manual-attempts"></div>
+            <div id="lnk-wrap" class="link-container">
+                <a id="lnk" class="btn" target="_blank" rel="noopener noreferrer">
+                    <span class="btn-title">Read Source Article</span>
+                    <span id="summ" class="btn-summary"></span>
+                </a>
+            </div>
+        </section>
+        <section id="panel-transcript" class="player-tab-panel" role="tabpanel" aria-labelledby="tab-transcript" hidden>
+            <div id="full-chat" class="chat-container"></div>
+        </section>
+        <section id="panel-stats" class="player-tab-panel" role="tabpanel" aria-labelledby="tab-stats" hidden>
+            <div id="stats-panel" class="stats-panel">
+                <div id="stats-content" class="stats-content" aria-live="polite">Open to load run statistics.</div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const OVERLAP_SECONDS = 2;
+        const playlist = [{"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/intro.wav","url":null,"text":"Intro song\n\n[Intro: Driving synth bass and crisp percussion]\n\n[Verse]\nFrom the red dust of Mars to the halls of the UK inquiry\nWe're tracing the ghosts in the wires and the heat of the forest fire.\nThe old guard is watching as the new code starts to bleed,\nWhile a legacy profile seeks the spark of a different need.\n\n[Chorus]\nIt’s the friction in the system, the crack in the screen,\nBetween the human intent and the ghost in the machine.\nWe're looking for the signal through the noise of the day.","voice":"intro","speaker":"Intro Theme","summary":"Intro"},{"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_0.mp3","url":"https://www.nytimes.com/2026/10/25/style/marissa-mayer-ai-assistants-women.html?unlocked_article_code=1.L1E.xBwx.X_EjBGNsRNqr","text":"I was just looking at this piece on Marissa Mayer's new AI startup... it feels like the 'impossible' hurdles she's hitting now are basically the same ones we see in autonomous fleet scaling. It's that transition from 'it works in a lab' to 'it actually survives the real world.'","voice":1,"speaker":"Brook","summary":"Marissa Mayer Profile","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_0.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7745378659399271,"voiceMargin":0.44308492095618895,"technicalSafe":true,"asrText":"i was just looking at this piece on marissa mayer's new ai startup it feels like the impossible hurdles she's hitting now are basically the same ones we see in autonomous fleet scaling it's that transition from it works in a lab to it actually survives the real world","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_1.mp3","url":"https://www.nytimes.com/2026/10/25/style/marissa-mayer-ai-assistants-women.html?unlocked_article_code=1.L1E.xBwx.X_EjBGNsRNqr","text":"It’s the classic engineering trap, isn't it? You solve for the edge case and suddenly you have ten thousand new ones. I wonder if she's finding that the 'impossible' part is actually just the human unpredictability side of the equation.","voice":2,"speaker":"Conrad","summary":"Marissa Mayer Profile","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_1_alt_1.mp3","selected":false,"passed":false,"wer":0.025,"substitutions":1,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7381081051579212,"voiceMargin":0.6210734566722533,"technicalSafe":true,"asrText":"it's the classic engineering trap isn't it you solve for the edge case and suddenly you have 10 thousand new ones i wonder if she's finding that the impossible part it's actually just the human unpredictability side of the equation","reasons":["transcript_gate"]},{"n":2,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_1.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7115259072773611,"voiceMargin":0.5483805797478063,"technicalSafe":true,"asrText":"it's the classic engineering trap isn't it you solve for the edge case and suddenly you have 10 thousand new ones i wonder if she's finding that the impossible part is actually just the human unpredictability side of the equation","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_2.mp3","url":"https://www.nytimes.com/2026/10/25/style/marissa-mayer-ai-assistants-women.html?unlocked_article_code=1.L1E.xBwx.X_EjBGNsRNqr","text":"Exactly. You can code for a road, but coding for a person's mood or a sudden whim? That's where the real friction is.","voice":1,"speaker":"Brook","summary":"Marissa Mayer Profile","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_2.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7104383907021788,"voiceMargin":0.25079396929970277,"technicalSafe":true,"asrText":"exactly you can code for a road but coding for a person's mood or a sudden whim that's where the real friction is","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_3.mp3","url":"https://www.nytimes.com/2026/10/25/style/marissa-mayer-ai-assistants-women.html?unlocked_article_code=1.L1E.xBwx.X_EjBGNsRNqr","text":"Right. It’s less about the math and more about the messiness of reality.","voice":2,"speaker":"Conrad","summary":"Marissa Mayer Profile","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_3.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.6860367275409343,"voiceMargin":0.6025784869542197,"technicalSafe":true,"asrText":"right it's less about the math and more about the messiness of reality","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_4.mp3","url":null,"text":"I'm Brook.","voice":1,"speaker":"Brook","summary":null,"attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_4_alt_1.mp3","selected":false,"passed":false,"wer":0.5,"substitutions":1,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.2907372770937771,"voiceMargin":-0.025685812781414408,"technicalSafe":true,"asrText":"i'm broke","reasons":["transcript_gate","voice_gate"]},{"n":2,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_4_alt_2.mp3","selected":false,"passed":false,"wer":0.5,"substitutions":1,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.29600060482895274,"voiceMargin":-0.030386804320983285,"technicalSafe":true,"asrText":"i'm brooke","reasons":["transcript_gate","voice_gate"]},{"n":3,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_4_alt_3.mp3","selected":false,"passed":false,"wer":0.5,"substitutions":1,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.4394904076233861,"voiceMargin":0.0910248729165094,"technicalSafe":true,"asrText":"i'm bro","reasons":["transcript_gate","voice_gate"]}]},{"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_5.mp3","url":null,"text":"And I'm Conrad. On today's episode of Patch Notes, we're looking at the friction between high-tech ambitions and the messy reality of our world—from AI security risks to the logistics of global aid.","voice":2,"speaker":"Conrad","summary":null,"attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_5.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7678074514629735,"voiceMargin":0.6556720825726763,"technicalSafe":true,"asrText":"and i'm conrad on today's episode of patch notes we're looking at the friction between high tech ambitions and the messy reality of our world from ai security risks to the logistics of global aid","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_6.mp3","url":"https://kottke.org/26/10/0049891-bunkering-down","text":"Speaking of messiness in tech, I saw that Matt Webb is basically bracing for a future where we might have to 'turn the internet off and on again' because of AI worms. It sounds like a sci-fi nightmare, but from an infrastructure standpoint, it’s a terrifyingly plausible security bottleneck.","voice":1,"speaker":"Brook","summary":"LLM Security Risks","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_6.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7672602467855011,"voiceMargin":0.40128950351599646,"technicalSafe":true,"asrText":"speaking of messiness in tech i saw that matt webb is basically bracing for a future where we might have to turn the internet off and on again because of ai worms it sounds like a sci fi nightmare but from an infrastructure standpoint it's a terrifyingly plausible security bottleneck","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_7.mp3","url":"https://kottke.org/26/10/0049891-bunkering-down","text":"It’s the ultimate 'Plan B,' isn't it? If we can't contain the worms, we just pull the plug. It highlights how much we're relying on these systems without having a truly granular way to isolate the infection.","voice":2,"speaker":"Conrad","summary":"LLM Security Risks","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_7.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7703258057718467,"voiceMargin":0.6620073164816961,"technicalSafe":true,"asrText":"it's the ultimate plan b isn't it if we can't contain the worms we just pull the plug it highlights how much we're relying on these systems without having a truly granular way to isolate the infection","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_8.mp3","url":"https://kottke.org/26/10/0049891-bunkering-down","text":"Exactly. We're building faster cars but we haven't really perfected the brakes for when the engine starts smoking.","voice":1,"speaker":"Brook","summary":"LLM Security Risks","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_8_alt_1.mp3","selected":false,"passed":false,"wer":0.05555555555555555,"substitutions":1,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7395861686684411,"voiceMargin":0.3852276610505652,"technicalSafe":true,"asrText":"exactly we're building faster cars but we haven't really perfected the brakes to when the engine starts smoking","reasons":["transcript_gate"]},{"n":2,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_8.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.6722845842560727,"voiceMargin":0.32788663990000977,"technicalSafe":true,"asrText":"exactly we're building faster cars but we haven't really perfected the brakes for when the engine starts smoking","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_9.mp3","url":"https://kottke.org/26/10/0049891-bunkering-down","text":"Well put. It’s a massive responsibility on the developers to ensure those 'brakes' are actually there before the worms start spreading.","voice":2,"speaker":"Conrad","summary":"LLM Security Risks","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_9_alt_1.mp3","selected":false,"passed":false,"wer":0.14285714285714285,"substitutions":1,"deletions":2,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.6861146627859883,"voiceMargin":0.5626913886540654,"technicalSafe":true,"asrText":"well put massive responsibility on the developers to ensure those breaks are actually there before the worms start spreading","reasons":["transcript_gate"]},{"n":2,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_9_alt_2.mp3","selected":false,"passed":false,"wer":0.047619047619047616,"substitutions":1,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7507069313862639,"voiceMargin":0.6411856610922231,"technicalSafe":true,"asrText":"well put it's a massive responsibility on the developers to ensure those breaks are actually there before the worms start spreading","reasons":["transcript_gate"]},{"n":3,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_9.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.784207296666711,"voiceMargin":0.6723992032041053,"technicalSafe":true,"asrText":"well put it's a massive responsibility on the developers to ensure those brakes are actually there before the worms start spreading","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_10.mp3","url":"https://www.wired.com/story/ai-agents-are-medias-new-favorite-audience/","text":"Moving over to something a bit more... human-centric, but still very much about how we use technology. There’s this trend where publishers are hoping people will pay for content tailor-made for AI agents rather than humans.","voice":1,"speaker":"Brook","summary":"AI Media Audience","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_10.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7942792794961325,"voiceMargin":0.46205557251043494,"technicalSafe":true,"asrText":"moving over to something a bit more human centric but still very much about how we use technology there's this trend where publishers are hoping people will pay for content tailor made for ai agents rather than humans","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_11.mp3","url":"https://www.wired.com/story/ai-agents-are-medias-new-favorite-audience/","text":"That's a fascinating pivot. It suggests that the 'audience' is shifting from a person with feelings and attention spans to a machine with processing power and specific parameters.","voice":2,"speaker":"Conrad","summary":"AI Media Audience","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_11.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7217692049710261,"voiceMargin":0.5838583085246377,"technicalSafe":true,"asrText":"that's a fascinating pivot it suggests that the audience is shifting from a person with feelings and attention spans to a machine with processing power and specific parameters","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_12.mp3","url":"https://www.wired.com/story/ai-agents-are-medias-new-favorite-audience/","text":"It’s like we’re optimizing for the consumer of the future—the one that doesn't need to be 'entertained,' just 'informed' or 'task-completed.'","voice":1,"speaker":"Brook","summary":"AI Media Audience","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_12.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7145533218854955,"voiceMargin":0.404980019717098,"technicalSafe":true,"asrText":"it's like we're optimizing for the consumer of the future the 1 that doesn't need to be entertained just informed or task completed","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_13.mp3","url":"https://www.wired.com/story/ai-agents-are-medias-new-favorite-audience/","text":"And it raises the question: what happens to the nuance and the 'soul' of the content when the primary reader is an algorithm?","voice":2,"speaker":"Conrad","summary":"AI Media Audience","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_13_alt_1.mp3","selected":false,"passed":false,"wer":0.043478260869565216,"substitutions":1,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7250131234342047,"voiceMargin":0.6068630378390834,"technicalSafe":true,"asrText":"and it raises the question what happens to the nuance in the soul of the content when the primary reader is an algorithm","reasons":["transcript_gate"]},{"n":2,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_13.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7626497573848997,"voiceMargin":0.6323530684325073,"technicalSafe":true,"asrText":"and it raises the question what happens to the nuance and the soul of the content when the primary reader is an algorithm","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_14.mp3","url":"https://www.wired.com/story/ai-agents-are-medias-new-favorite-audience/","text":"That’s the billion-dollar question. We might be creating a very efficient, very hollow information loop.","voice":1,"speaker":"Brook","summary":"AI Media Audience","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_14.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.6645030471860991,"voiceMargin":0.3235682518882721,"technicalSafe":true,"asrText":"that's the billion dollar question we might be creating a very efficient very hollow information loop","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_15.mp3","url":"https://www.wired.com/story/how-nasa-oldest-martian-spacecraft-run-for-decades/","text":"Let's look at some of the physical world stuff too. NASA's oldest Martian orbiters have been running for decades, way past their expected lifespans. That’s a masterclass in engineering longevity.","voice":2,"speaker":"Conrad","summary":"Mars Orbiter History","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_15_alt_1.mp3","selected":false,"passed":false,"wer":0.06666666666666667,"substitutions":1,"deletions":0,"insertions":1,"protectedTermFailures":0,"voiceTargetScore":0.7465488668268307,"voiceMargin":0.6785444863292702,"technicalSafe":true,"asrText":"let's look at some of the physical world stuff too nasa's oldest martian orbiters have been running for decades way past their expected lifespans that's a master class in engineering longevity","reasons":["transcript_gate"]},{"n":2,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_15.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7609898725468298,"voiceMargin":0.6341052611130138,"technicalSafe":true,"asrText":"let's look at some of the physical world stuff too nasa's oldest martian orbiters have been running for decades way past their expected lifespans that's a masterclass in engineering longevity","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_16.mp3","url":"https://www.wired.com/story/how-nasa-oldest-martian-spacecraft-run-for-decades/","text":"It really is. Operating 140 million miles away means you can't just send a technician over to swap a part. You have to build for extreme resilience from day one.","voice":1,"speaker":"Brook","summary":"Mars Orbiter History","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_16_alt_1.mp3","selected":false,"passed":false,"wer":0.06666666666666667,"substitutions":1,"deletions":1,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.8020395627423644,"voiceMargin":0.47083269081202017,"technicalSafe":true,"asrText":"it really is operating 140 million miles away means you can't just send a technician over to swap apart you have to build for extreme resilience from day 1","reasons":["transcript_gate"]},{"n":2,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_16_alt_2.mp3","selected":false,"passed":false,"wer":0.06666666666666667,"substitutions":1,"deletions":1,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.8157544353858307,"voiceMargin":0.5159627469984565,"technicalSafe":true,"asrText":"it really is operating 140 million miles away means you can't just send a technician over to swap apart you have to build for extreme resilience from day 1","reasons":["transcript_gate"]},{"n":3,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_16_alt_3.mp3","selected":false,"passed":false,"wer":0.13333333333333333,"substitutions":2,"deletions":0,"insertions":2,"protectedTermFailures":0,"voiceTargetScore":0.8352987916681812,"voiceMargin":0.449760337170818,"technicalSafe":true,"asrText":"it really is operating 100 and 40 million miles away means you can't just send a technician over to swap a park you have to build for extreme resilience from day 1","reasons":["transcript_gate"]}]},{"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_17.mp3","url":"https://www.wired.com/story/how-nasa-oldest-martian-spacecraft-run-for-decades/","text":"It’s the ultimate 'set it and forget it,' but with incredibly high stakes for our understanding of the Red Planet.","voice":2,"speaker":"Conrad","summary":"Mars Orbiter History","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_17.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.6335221679226307,"voiceMargin":0.4847348026566583,"technicalSafe":true,"asrText":"it's the ultimate set it and forget it but with incredibly high stakes for our understanding of the red planet","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_18.mp3","url":"https://novaramedia.com/2026/10/27/over-20k-sign-petition-demanding-inquiry-into-uk-role-in-gaza-genocide/","text":"And then you have the opposite—the UK's role in Gaza. There's a petition with over 20,000 signatures demanding an independent inquiry into the atrocities there. It’s a huge push for accountability.","voice":1,"speaker":"Brook","summary":"UK Gaza Inquiry","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_18.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7686102998028628,"voiceMargin":0.4055782103928663,"technicalSafe":true,"asrText":"and then you have the opposite the uk's role in gaza there's a petition with over 20 000 signatures demanding an independent inquiry into the atrocities there it's a huge push for accountability","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_19.mp3","url":"https://novaramedia.com/2026/10/27/over-20k-sign-petition-demanding-inquiry-into-uk-role-in-gaza-genocide/","text":"It shows how much pressure is building for transparency on the international stage, especially regarding the UK's specific involvement.","voice":2,"speaker":"Conrad","summary":"UK Gaza Inquiry","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_19.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.746550952510156,"voiceMargin":0.6573593764490282,"technicalSafe":true,"asrText":"it shows how much pressure is building for transparency on the international stage especially regarding the uk's specific involvement","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_20.mp3","url":"https://novaramedia.com/2026/10/27/over-20k-sign-petition-demanding-inquiry-into-uk-role-in-gaza-genocide/","text":"It’s a significant number of people demanding that the 'official' narrative be scrutinized by an independent body.","voice":1,"speaker":"Brook","summary":"UK Gaza Inquiry","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_20_alt_1.mp3","selected":false,"passed":false,"wer":0.058823529411764705,"substitutions":1,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7245438370819972,"voiceMargin":0.41376602931844647,"technicalSafe":true,"asrText":"it's a significant number of people demanding that the official narrative be scrutinised by an independent body","reasons":["transcript_gate"]},{"n":2,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_20_alt_2.mp3","selected":false,"passed":false,"wer":0.11764705882352941,"substitutions":2,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7531364284444749,"voiceMargin":0.38970566930114464,"technicalSafe":true,"asrText":"is a significant number of people demanding that the official narrative be scrutinised by an independent body","reasons":["transcript_gate"]},{"n":3,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_20_alt_3.mp3","selected":false,"passed":false,"wer":0.058823529411764705,"substitutions":1,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7827108130054372,"voiceMargin":0.47198203330717575,"technicalSafe":true,"asrText":"it's a significant number of people demanding that the official narrative be scrutinised by an independent body","reasons":["transcript_gate"]}]},{"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_21.mp3","url":"https://novaramedia.com/2026/10/27/over-20k-sign-petition-demanding-inquiry-into-uk-role-in-gaza-genocide/","text":"True. Accountability is often the hardest thing to build into any system, whether it's political or technical.","voice":2,"speaker":"Conrad","summary":"UK Gaza Inquiry","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_21.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7404164937715043,"voiceMargin":0.6115406025196566,"technicalSafe":true,"asrText":"true accountability is often the hardest thing to build into any system whether it's political or technical","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_22.mp3","url":"https://www.channelnewsasia.com/singapore/singapore-indonesia-haze-taskforce-hotline-6495736","text":"On a different note, we have some news on the environmental front—Singapore and Indonesia are setting up a joint task force to probe firms linked to forest fires. They’re even setting up hotlines to manage differences between the two countries.","voice":1,"speaker":"Brook","summary":"Forest Fire Taskforce","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_22.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7553212587207931,"voiceMargin":0.4402623862515524,"technicalSafe":true,"asrText":"on a different note we have some news on the environmental front singapore and indonesia are setting up a joint task force to probe firms linked to forest fires they're even setting up hotlines to manage differences between the 2 countries","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_23.mp3","url":"https://www.channelnewsasia.com/singapore/singapore-indonesia-haze-taskforce-hotline-6495736","text":"That's practical diplomacy. Using a shared environmental threat as a catalyst for better communication and joint enforcement.","voice":2,"speaker":"Conrad","summary":"Forest Fire Taskforce","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_23.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.6864215321623678,"voiceMargin":0.6070349633393857,"technicalSafe":true,"asrText":"that's practical diplomacy using a shared environmental threat as a catalyst for better communication and joint enforcement","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_24.mp3","url":"https://www.channelnewsasia.com/singapore/singapore-indonesia-haze-taskforce-hotline-6495736","text":"It’s about creating a unified front against the companies causing the damage, rather than just letting it be a bilateral headache.","voice":1,"speaker":"Brook","summary":"Forest Fire Taskforce","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_24.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.8333293156358409,"voiceMargin":0.5731287222922302,"technicalSafe":true,"asrText":"it's about creating a unified front against the companies causing the damage rather than just letting it be a bilateral headache","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_25.mp3","url":"https://www.channelnewsasia.com/singapore/singapore-indonesia-haze-taskforce-hotline-6495736","text":"Exactly. Cooperation is often the only way to handle issues that don't respect national borders.","voice":2,"speaker":"Conrad","summary":"Forest Fire Taskforce","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_25.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7276762416342809,"voiceMargin":0.6123243217226846,"technicalSafe":true,"asrText":"exactly cooperation is often the only way to handle issues that don't respect national borders","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_26.mp3","url":"https://kottke.org/26/10/0049872-harry-kane-is-this-years-","text":"And finally, a bit of sports—Harry Kane has been named this year’s men’s winner of the Ballon d’Or. People are calling it 100% the right choice for his season.","voice":1,"speaker":"Brook","summary":"Harry Kane Award","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_26_alt_1.mp3","selected":false,"passed":false,"wer":0.03333333333333333,"substitutions":0,"deletions":0,"insertions":1,"protectedTermFailures":0,"voiceTargetScore":0.7739639697915897,"voiceMargin":0.4400042510150114,"technicalSafe":true,"asrText":"and finally a bit of the sports harry kane has been named this year's men's winner of the ballon d'or people are calling it 100 the right choice for his season","reasons":["transcript_gate"]},{"n":2,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_26.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7973147853315316,"voiceMargin":0.4595764313506029,"technicalSafe":true,"asrText":"and finally a bit of sports harry kane has been named this year's men's winner of the ballon d'or people are calling it 100 the right choice for his season","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_27.mp3","url":"https://kottke.org/26/10/0049872-harry-kane-is-this-years-","text":"He certainly had a massive impact on the pitch this year. It feels like a well-deserved recognition of consistency over just one-off highlights.","voice":2,"speaker":"Conrad","summary":"Harry Kane Award","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_27.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.6689440736418678,"voiceMargin":0.5874424126601242,"technicalSafe":true,"asrText":"he certainly had a massive impact on the pitch this year it feels like a well deserved recognition of consistency over just 1 off highlights","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_28.mp3","url":"https://kottke.org/26/10/0049872-harry-kane-is-this-years-","text":"It’s the 'reliable' choice, which is always a strong argument in any field.","voice":1,"speaker":"Brook","summary":"Harry Kane Award","attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_28.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.7187196285816021,"voiceMargin":0.4405501775733702,"technicalSafe":true,"asrText":"it's the reliable choice which is always a strong argument in any field","reasons":[]}]},{"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_29.mp3","url":null,"text":"Well said. That's all for today's Patch Notes.","voice":2,"speaker":"Conrad","summary":null,"attempts":[{"n":1,"file":"https://assets.brook.dev/podcasts/v2026.44.2-22.21/audio_29.mp3","selected":true,"passed":true,"wer":0,"substitutions":0,"deletions":0,"insertions":0,"protectedTermFailures":0,"voiceTargetScore":0.6169633520867676,"voiceMargin":0.4652252238905631,"technicalSafe":true,"asrText":"well said that's all for today's patch notes","reasons":[]}]}];
+
+        /* intro-option-tabs: offer the story-driven readings of the intro.
+           Fetched on the client so nothing about publishing this episode depends on
+           the manifest being reachable, and so this code needs nothing interpolated
+           from the build. Every failure path here is silent, and with no options the
+           page behaves exactly as it does today. */
+        (function () {
+          var MANIFEST = 'https://brook.dev/projects/song-matrix/songs.json';
+          var runId = null;
+          fetch('stats.json', { cache: 'no-store' })
+            .then(function (r) { return r.ok ? r.json() : null; })
+            .then(function (s) {
+              runId = s && s.runId ? String(s.runId) : null;
+              return runId ? fetch(MANIFEST, { cache: 'no-store' }) : null;
+            })
+            .then(function (r) { return r && r.ok ? r.json() : null; })
+            .then(function (m) {
+              var entry = m && m.episodes && m.episodes[runId];
+              var opts = ((entry && entry.options) || []).filter(function (o) {
+                return o && o.audio;
+              });
+              var intro = playlist[0];
+              if (!opts.length || !intro) return;
+              intro.introOptions = true;
+              intro.attempts = [{
+                n: 1, file: intro.file, introLabel: 'Old',
+                introTitle: 'The intro that shipped with this episode',
+                introText: intro.text, introSpeaker: intro.speaker, selected: true
+              }].concat(opts.map(function (o, i) {
+                return {
+                  n: i + 2, file: o.audio,
+                  introLabel: o.label || o.family || ('Option ' + (i + 1)),
+                  introTitle: o.style || '', introText: o.lyric || '',
+                  introSpeaker: o.style || 'Intro Theme', selected: false
+                };
+              }));
+              // Only three things need overriding, and each delegates for every
+              // other segment, so the speech retries behave exactly as before.
+              var _failedKeys = segmentFailedKeys;
+              segmentFailedKeys = function (item) {
+                return (item && item.introOptions) ? [] : _failedKeys(item);
+              };
+              var _attemptButton = attemptButton;
+              attemptButton = function (a, segIdx, ai, failedKeys) {
+                if (segIdx === 0 && a && a.introLabel) {
+                  var cls = a.selected ? ' pass' : '';
+                  return '<button type="button" class="attempt-btn' + cls
+                    + '" data-seg="' + segIdx + '" data-ai="' + ai
+                    + '" aria-pressed="' + (a.selected ? 'true' : 'false')
+                    + '" title="' + (a.introTitle || '') + '">' + a.introLabel + '</button>';
+                }
+                return _attemptButton(a, segIdx, ai, failedKeys);
+              };
+              // Auditioning swaps the audio; the words on screen only get written
+              // inside updateUI on a track change, so they are refreshed here.
+              var _audition = auditionAttempts;
+              auditionAttempts = function (segIdx, ai) {
+                _audition(segIdx, ai);
+                if (segIdx !== 0) return;
+                var list = playlist[0].attempts || [];
+                var chosen = list[ai];
+                list.forEach(function (a, i) { a.selected = (i === ai); });
+                if (chosen && chosen.introText) {
+                  playlist[0].text = chosen.introText;
+                  playlist[0].speaker = chosen.introSpeaker || 'Intro Theme';
+                  var tsText = document.getElementById('ts-text');
+                  if (tsText) tsText.innerText = chosen.introText;
+                  var tsVoice = document.getElementById('ts-voice');
+                  if (tsVoice) tsVoice.innerText = playlist[0].speaker;
+                }
+                var row = document.getElementById('manual-attempts');
+                if (row && typeof cur !== 'undefined' && cur === 0) {
+                  renderAttemptSwitcher(row, 0);
+                }
+              };
+              var row = document.getElementById('manual-attempts');
+              if (row && typeof cur !== 'undefined' && cur === 0) {
+                renderAttemptSwitcher(row, 0);
+              }
+            })
+            .catch(function () {});
+        })(); 
+        let cur = 0; 
+        
+        let plActive = document.getElementById('pl1'); 
+        let plStandby = document.getElementById('pl2'); 
+        
+        const st = document.getElementById('st'); 
+        const btnPrev = document.getElementById('btn-prev');
+        const btnNext = document.getElementById('btn-next');
+        const lnkWrap = document.getElementById('lnk-wrap');
+        const lnk = document.getElementById('lnk');
+        const summ = document.getElementById('summ');
+        const tsText = document.getElementById('ts-text');
+        const tsVoice = document.getElementById('ts-voice');
+        const tsBox = document.getElementById('ts-box');
+        const mediaStage = document.getElementById('media-stage');
+        const podcastVideo = document.getElementById('podcast-video');
+        const finalCover = document.getElementById('final-cover');
+        const mediaHint = document.getElementById('media-hint');
+        
+        const chatContainer = document.getElementById('full-chat');
+        chatContainer.classList.add('tab-visible');
+
+        const statsPanel = document.getElementById('stats-panel');
+        const statsContent = document.getElementById('stats-content');
+        let statsLoaded = false;
+        const formatDuration = (ms) => ms == null ? 'Unavailable' : ms < 1000 ? ms + ' ms' : (ms / 1000).toFixed(ms < 60000 ? 1 : 0) + ' s';
+        const formatBytes = (bytes) => bytes == null ? 'Unavailable' : (bytes / (1024 ** 3)).toFixed(1) + ' GiB';
+        function renderStats(stats) {
+            const summary = stats.summary || {};
+            const speech = stats.speech || {};
+            const cards = [
+                ['Total run', formatDuration(summary.wallClockMs)],
+                ['Peak memory', formatBytes(summary.peakHostUsedBytes)],
+                ['Speech attempts', String(speech.totalAttempts ?? 'Unavailable')],
+                ['Speech retries', String(speech.retries ?? 'Unavailable')],
+            ];
+            const stageRows = (stats.stages || []).map((stage) =>
+                '<div class="stats-stage"><strong>' + stage.stage + '</strong><span>' + formatDuration(stage.durationMs) + '</span>' +
+                '<small>' + stage.status + '</small></div>'
+            ).join('');
+            statsContent.innerHTML = '<div class="stats-grid">' + cards.map(([label, value]) =>
+                '<div class="stats-card"><span class="stats-value">' + value + '</span><span class="stats-label">' + label + '</span></div>'
+            ).join('') + '</div>' + stageRows + '<a class="stats-raw" href="stats.json" target="_blank" rel="noopener">View raw stats.json</a>';
+        }
+        async function loadStats() {
+            if (statsLoaded) return;
+            statsLoaded = true;
+            statsContent.textContent = 'Loading run statistics…';
+            try {
+                const response = await fetch('stats.json', { cache: 'no-store' });
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                renderStats(await response.json());
+            } catch (error) {
+                statsContent.innerHTML = '<p class="stats-error">Statistics are unavailable for this episode.</p>';
+            }
+        }
+        
+        // --- PRIMARY KEYFRAME → FIRST/LAST-FRAME VIDEO → HIGH-QUALITY FINAL KEYFRAME ---
+        let videoReady = podcastVideo.readyState >= HTMLMediaElement.HAVE_ENOUGH_DATA;
+        let finalImageReady = finalCover.complete && finalCover.naturalWidth > 0;
+        let videoStarted = false;
+        let videoUnavailable = false;
+
+        function maybeStartVideo() {
+            if (videoStarted || videoUnavailable || !videoReady || !finalImageReady) return;
+            videoStarted = true;
+            mediaStage.classList.remove('show-final');
+            mediaStage.classList.add('video-playing');
+            mediaHint.textContent = 'Playing motion';
+            podcastVideo.currentTime = 0;
+            podcastVideo.play().catch(() => {
+                videoStarted = false;
+                mediaHint.textContent = 'Tap to play motion';
+            });
+        }
+
+        podcastVideo.addEventListener('canplaythrough', () => {
+            videoReady = true;
+            maybeStartVideo();
+        }, { once: true });
+
+        finalCover.addEventListener('load', () => {
+            finalImageReady = true;
+            maybeStartVideo();
+        }, { once: true });
+
+        podcastVideo.addEventListener('ended', () => {
+            mediaStage.classList.add('show-final');
+            mediaHint.textContent = 'Tap to replay';
+        });
+
+        podcastVideo.addEventListener('error', () => {
+            videoUnavailable = true;
+            mediaHint.textContent = 'Motion unavailable · tap for frame 2';
+        });
+
+        function activateMediaStage() {
+            if (videoUnavailable) {
+                mediaStage.classList.toggle('show-final');
+                return;
+            }
+            if (mediaStage.classList.contains('show-final')) {
+                mediaStage.classList.remove('show-final');
+                videoStarted = false;
+            }
+            maybeStartVideo();
+        }
+
+        mediaStage.addEventListener('click', activateMediaStage);
+        mediaStage.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                activateMediaStage();
+            }
+        });
+
+        setTimeout(maybeStartVideo, 0);
+
+        // --- BACKGROUND PRELOADER (+/- 2 Tracks) ---
+        const preloadBuffer = {};
+        
+        function updatePreloadBuffer(index) {
+            // Define the exact target window: 2 behind, 2 ahead
+            const targets = [index - 2, index - 1, index + 1, index + 2]
+                .filter(i => i >= 0 && i < playlist.length);
+                
+            // 1. Fetch new tracks into the invisible background buffer
+            targets.forEach(i => {
+                if (!preloadBuffer[i]) {
+                    const bgAudio = new Audio();
+                    bgAudio.src = playlist[i].file;
+                    bgAudio.preload = 'auto'; // Forces browser to download/cache
+                    preloadBuffer[i] = bgAudio;
+                }
+            });
+            
+            // 2. Clean up old tracks outside the +/- 2 window to save RAM
+            Object.keys(preloadBuffer).forEach(key => {
+                if (!targets.includes(parseInt(key))) {
+                    preloadBuffer[key].src = ''; // Instantly kills the network request
+                    delete preloadBuffer[key];
+                }
+            });
+        }
+
+        // --- KEYBOARD SHORTCUTS (J, K, L) ---
+        document.addEventListener('keydown', (e) => {
+            // Ignore keystrokes if the user holds Ctrl, Alt, or Cmd (e.g. Cmd+R to refresh)
+            if (e.metaKey || e.ctrlKey || e.altKey) return;
+            
+            switch(e.key.toLowerCase()) {
+                case 'j': // Previous
+                    if (activeTab === 0 && !btnPrev.disabled) btnPrev.click();
+                    break;
+                case 'l': // Next
+                    if (activeTab === 0 && !btnNext.disabled) btnNext.click();
+                    break;
+                case 'k': // Play/Pause
+                    if (plActive.paused) {
+                        plActive.play().catch(err => {});
+                    } else {
+                        plActive.pause();
+                    }
+                    break;
+            }
+        });
+
+
+        // --- ATTEMPT AUDITION HELPERS (PCB-023) ---
+        function critState(value, passValue, lowerIsBetter) {
+            if (value === null || value === undefined) return 'na';
+            const ok = lowerIsBetter ? value <= passValue : value >= passValue;
+            return ok ? 'pass' : 'fail';
+        }
+        function critDot(cls, label, tooltip) {
+            return '<span class="crit-dot ' + cls + '" role="img" aria-label="' + label + ': ' + tooltip + '" title="' + label + ': ' + tooltip + '"></span>';
+        }
+        function criterionDots(a) {
+            const t = critState(a.technicalSafe === true ? 1 : (a.technicalSafe === false ? 0 : null), 1, false);
+            const w = critState(a.wer, 0, true);
+            const p = critState(a.protectedTermFailures, 0, true);
+            const v = critState(a.voiceTargetScore, 0.35, false);
+            const m = critState(a.voiceMargin, 0.15, false);
+            const werTxt = a.wer == null ? 'unavailable' : (Math.round(a.wer * 1000) / 10) + '% word error (pass: 0%)';
+            const sdi = (a.substitutions ?? '-') + ' substituted, ' + (a.deletions ?? '-') + ' missing, ' + (a.insertions ?? '-') + ' extra';
+            const ptTxt = a.protectedTermFailures == null ? 'unavailable' : a.protectedTermFailures + ' protected term(s) wrong';
+            const vtTxt = a.voiceTargetScore == null ? 'unavailable' : 'voice match ' + Math.round(a.voiceTargetScore * 100) + '% (pass: 35%)';
+            const vmTxt = a.voiceMargin == null ? 'unavailable' : 'voice margin ' + Math.round(a.voiceMargin * 100) + '% (pass: 15%)';
+            return critDot(t, 'Technical', a.technicalSafe == null ? 'unavailable' : (a.technicalSafe ? 'healthy audio' : 'audio defects')) +
+                   critDot(w, 'Transcript', werTxt + ' — ' + sdi) +
+                   critDot(p, 'Protected terms', ptTxt) +
+                   critDot(v, 'Voice identity', vtTxt) +
+                   critDot(m, 'Voice margin', vmTxt);
+        }
+                function critValue(a, key) {
+            if (key === 'V') return a.voiceTargetScore == null ? null : Math.round(a.voiceTargetScore * 100);
+            if (key === 'T') return a.wer == null ? null : Math.round(a.wer * 100);
+            if (key === 'P') return a.protectedTermFailures == null ? null : a.protectedTermFailures;
+            return null;
+        }
+        function critFailed(a, key) {
+            if (key === 'V') return !(a.voiceTargetScore != null && a.voiceTargetScore >= 0.35);
+            if (key === 'T') return !(a.wer != null && a.wer === 0);
+            if (key === 'P') return !(a.protectedTermFailures != null && a.protectedTermFailures === 0);
+            if (key === 'A') return a.technicalSafe !== true;
+            return false;
+        }
+        function attemptIcon(key) {
+            // sounds-like, mistakes, protected terms, audio defects
+            return { V: '🗣', T: '✏️', P: '🔑', A: '🔈' }[key];
+        }
+        function attemptTooltip(a) {
+            const lines = ['Attempt ' + a.n + (a.selected ? ' — published selection' : (a.passed === false ? ' — rejected' : ''))];
+            lines.push(a.voiceTargetScore == null ? 'Voice match unavailable' : 'Voice match ' + Math.round(a.voiceTargetScore * 100) + '% (margin ' + (a.voiceMargin == null ? 'n/a' : Math.round(a.voiceMargin * 100) + '%') + ')');
+            if (a.wer == null) lines.push('Transcript unavailable');
+            else {
+                const pct = Math.round(a.wer * 100);
+                lines.push('Transcript ' + (pct === 0 ? 'exact' : pct + '% word errors (' + (a.substitutions ?? 0) + ' wrong, ' + (a.deletions ?? 0) + ' missing, ' + (a.insertions ?? 0) + ' extra)'));
+                if (a.asrText) lines.push('Heard: "' + a.asrText + '"');
+            }
+            lines.push(a.protectedTermFailures == null ? 'Protected terms unavailable' : (a.protectedTermFailures === 0 ? 'Protected terms correct' : a.protectedTermFailures + ' protected term(s) wrong'));
+            lines.push(a.technicalSafe == null ? 'Technical check unavailable' : (a.technicalSafe ? 'Audio technically clean' : 'Audio defects'));
+            if ((a.reasons || []).length) lines.push('Rejected for: ' + a.reasons.join(', '));
+            return lines.join(String.fromCharCode(10));
+        }
+        function segmentFailedKeys(item) {
+            const keys = ['V', 'T', 'P', 'A'];
+            const failed = keys.filter(k => (item.attempts || []).some(a => critFailed(a, k)));
+            // If every attempt failed something, the winner was chosen on voice — add the
+            // sounds-like key so the numbers explain what decided it.
+            if (failed.length && !(item.attempts || []).some(a => a.passed === true)) {
+                if (failed.indexOf('V') === -1) failed.push('V');
+            }
+            return failed;
+        }
+        function attemptButton(a, segIdx, ai, failedKeys) {
+            const cls = a.passed === true ? ' pass' : (a.selected || a.passed === false ? ' fail' : '');
+            const stateTxt = a.selected ? 'published selection' : (a.passed === false ? 'rejected — ' + (a.reasons || []).join(', ') : 'not published');
+            const nums = failedKeys.filter(k => k !== 'A').map(k => {
+                const v = critValue(a, k);
+                const val = v == null ? '?' : v;
+                return '<span class="attempt-num ' + (critFailed(a, k) ? 'num-fail' : 'num-pass') + '">' + val + '</span>';
+            }).join('<span class="attempt-slash">/</span>');
+            return '<button type="button" class="attempt-btn' + cls + '" data-seg="' + segIdx + '" data-ai="' + ai + '" aria-pressed="' + (a.selected ? 'true' : 'false') + '" aria-label="Audition attempt ' + a.n + ', ' + stateTxt + ' for segment ' + (segIdx + 1) + '" title="' + attemptTooltip(a).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;') + '">' + nums + '</button>';
+        }
+        
+function renderAttemptSwitcher(el, segIdx, compact) {
+            const item = playlist[segIdx];
+            if (!item.attempts || item.attempts.length <= 1) { el.innerHTML = ''; el.style.display = 'none'; return; }
+            el.style.display = '';
+            const failedKeys = segmentFailedKeys(item);
+            const btns = item.attempts.map((a, ai) => attemptButton(a, segIdx, ai, failedKeys)).join('');
+            const keyIcons = failedKeys.filter(k => k !== 'A').map(attemptIcon).join('');
+            el.innerHTML = '<div class="attempt-switcher" role="group" aria-label="Alternative takes for segment ' + (segIdx + 1) + '">'
+                + '<span class="attempt-key">' + keyIcons + '</span>'
+                + btns + '</div>';
+        }
+        function syncManualAttempts(segIdx) {
+            const el = document.getElementById('manual-attempts');
+            if (!el) return;
+            renderAttemptSwitcher(el, segIdx);
+        }
+        function auditionAttempts(segIdx, attemptIndex) {
+            const item = playlist[segIdx];
+            const a = item.attempts && item.attempts[attemptIndex];
+            if (!a) return;
+            plActive.pause();
+            plStandby.pause();
+            plActive.src = a.file;
+            plActive.play().catch(err => {});
+        }
+
+        // --- CHAT BUBBLE GENERATION ---
+        let lastTopic = null;
+        let currentGroup = null;
+        
+        playlist.forEach((item, idx) => {
+            const currentTopic = item.summary || "Banter & Hot Takes";
+            
+            if (currentTopic !== lastTopic) {
+                currentGroup = document.createElement('div');
+                currentGroup.className = 'topic-group';
+                chatContainer.appendChild(currentGroup);
+                
+                const header = document.createElement('div');
+                header.className = 'topic-header';
+                header.innerText = currentTopic;
+                currentGroup.appendChild(header);
+                
+                lastTopic = currentTopic;
+            }
+
+            const bubble = document.createElement('div');
+            bubble.className = 'chat-bubble ' + item.voice;
+            bubble.id = 'chat-msg-' + idx;
+            bubble.setAttribute('role', 'button');
+            bubble.tabIndex = 0;
+            bubble.setAttribute('aria-label', 'Play segment ' + (idx + 1) + ': ' + item.speaker);
+            let bubbleExtras = '';
+            if (item.attempts && item.attempts.length > 1) {
+                const switcher = document.createElement('div');
+                renderAttemptSwitcher(switcher, idx);
+                bubbleExtras = switcher.innerHTML;
+            }
+            bubble.innerHTML = '<div class="chat-label">' + item.speaker + '</div>' + item.text + bubbleExtras;
+            
+            bubble.onclick = () => {
+                if (cur !== idx) {
+                    cur = idx;
+                    updateUI(cur);
+                    playNewTrack(cur);
+                }
+            };
+            bubble.addEventListener('keydown', event => {
+                if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); bubble.click(); }
+            });
+            currentGroup.appendChild(bubble);
+        });
+
+        function handleAttemptClick(event) {
+            const btn = event.target.closest('.attempt-btn');
+            if (!btn) return;
+            event.stopPropagation();
+            const segIdx = Number(btn.dataset.seg);
+            const ai = Number(btn.dataset.ai);
+            document.querySelectorAll('.attempt-btn[data-seg="' + segIdx + '"]').forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.ai) === ai)));
+            auditionAttempts(segIdx, ai);
+        }
+        chatContainer.addEventListener('click', handleAttemptClick);
+        const manualAttempts = document.getElementById('manual-attempts');
+        manualAttempts.addEventListener('click', handleAttemptClick);
+
+        // Audio controls stay mounted above all tabs so switching views never interrupts listening.
+        const tabIds = ['manual', 'transcript', 'stats'];
+        const tabs = tabIds.map(id => document.getElementById('tab-' + id));
+        const panels = tabIds.map(id => document.getElementById('panel-' + id));
+        const manualContent = document.getElementById('panel-manual-content');
+
+        let activeTab = 0;
+        function selectTab(index, focus = false) {
+            activeTab = index;
+            tabs.forEach((tab, i) => {
+                const active = i === index;
+                tab.setAttribute('aria-selected', String(active));
+                tab.tabIndex = active ? 0 : -1;
+                panels[i].hidden = !active;
+            });
+            manualContent.hidden = index !== 0;
+            if (index === 2) loadStats();
+            if (index === 1) {
+                const activeBubble = document.getElementById('chat-msg-' + cur);
+                if (activeBubble) activeBubble.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            if (focus) tabs[index].focus();
+        }
+        tabs.forEach((tab, index) => {
+            tab.addEventListener('click', () => selectTab(index));
+            tab.addEventListener('keydown', event => {
+                const next = event.key === 'ArrowRight' ? (index + 1) % tabs.length
+                    : event.key === 'ArrowLeft' ? (index + tabs.length - 1) % tabs.length
+                    : event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : null;
+                if (next !== null) { event.preventDefault(); selectTab(next, true); }
+            });
+        });
+
+        btnPrev.onclick = () => { if (cur > 0) { cur--; updateUI(cur); playNewTrack(cur); } };
+        btnNext.onclick = () => { if (cur < playlist.length - 1) { cur++; updateUI(cur); playNewTrack(cur); } };
+
+        // --- DUAL PLAYER LOGIC ---
+        let isOverlapping = false;
+
+        function updateUI(i) {
+            if (i >= playlist.length) {
+                st.innerText = 'Broadcast Ended';
+                tsText.innerText = 'See you tomorrow!';
+                tsVoice.innerText = '';
+                lnkWrap.classList.remove('visible');
+                btnNext.disabled = true;
+                return;
+            } 
+            
+            btnPrev.disabled = (i === 0);
+            btnNext.disabled = (i >= playlist.length - 1);
+
+            const t = playlist[i]; 
+            st.innerText = 'Segment ' + (i + 1) + ' of ' + playlist.length;
+            syncManualAttempts(i);
+            try { history.replaceState(null, '', '#section=' + (i + 1)); } catch (e) {}
+            
+            tsText.innerText = t.text;
+            tsVoice.innerText = t.speaker;
+            tsBox.className = 'transcript-box ' + t.voice;
+
+            document.querySelectorAll('.chat-bubble').forEach((b, idx) => {
+                if (idx === i) {
+                    b.classList.add('active');
+                    b.setAttribute('aria-current', 'true');
+                    if (activeTab === 1) {
+                        b.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                } else {
+                    b.classList.remove('active');
+                    b.removeAttribute('aria-current');
+                }
+            });
+
+            if (t.url) { 
+                lnk.href = t.url; 
+                if (t.summary) {
+                    summ.innerText = t.summary;
+                    summ.style.display = 'block';
+                } else {
+                    summ.style.display = 'none';
+                }
+                lnkWrap.classList.add('visible'); 
+            } else { 
+                lnkWrap.classList.remove('visible'); 
+            } 
+        }
+
+        function attachPlayerLogic(playerIndex) {
+            isOverlapping = false;
+
+            plActive.ontimeupdate = () => {
+                if (!isOverlapping && playerIndex < playlist.length - 1) {
+                    const nextText = playlist[playerIndex + 1].text.trim();
+                    if (nextText.startsWith('--')) {
+                        if (plActive.duration && (plActive.duration - plActive.currentTime) <= OVERLAP_SECONDS) {
+                            isOverlapping = true;
+                            cur++;
+                            updateUI(cur);
+                            plStandby.src = playlist[cur].file;
+                            plStandby.play().catch(e => {});
+                        }
+                    }
+                }
+            };
+
+            plActive.onended = () => {
+                if (isOverlapping) {
+                    const temp = plActive;
+                    plActive = plStandby;
+                    plStandby = temp;
+
+                    plActive.style.display = 'block';
+                    plStandby.style.display = 'none';
+                    attachPlayerLogic(cur);
+                } else {
+                    if (cur < playlist.length - 1) {
+                        cur++;
+                        updateUI(cur);
+                        playNewTrack(cur);
+                    }
+                }
+            };
+        }
+
+        function playNewTrack(i) {
+            plActive.pause();
+            plStandby.pause();
+            
+            // Trigger our background cache manager!
+            updatePreloadBuffer(i);
+            
+            // Check if the file is already cached in our buffer
+            if (preloadBuffer[i] && preloadBuffer[i].readyState === 4) {
+                // If it is fully loaded in the background, assign it instantly
+                plActive.src = preloadBuffer[i].src;
+            } else {
+                // Fallback normal loading
+                plActive.src = playlist[i].file;
+            }
+            
+            plActive.style.display = 'block';
+            plStandby.style.display = 'none';
+            plActive.play().catch(e => {});
+            attachPlayerLogic(i);
+        }
+
+        cur = (function () { var m = (location.hash || '').match(/(d+)/); if (m) { var i = parseInt(m[1], 10) - 1; if (i >= 0 && i < playlist.length) return i; } return 0; })();
+        updateUI(cur);
+        playNewTrack(cur);
+
+        // ==========================================
+        // SIDEBAR NAVIGATION INJECTION MODULE
+        // ==========================================
+        async function initSidebarMenu() {
+            try {
+                // Fetch the static json database generated by n8n!
+                const response = await fetch('/projects/news/menu-data.json');
+                if (!response.ok) return;
+                const foldersArray = await response.json();
+                injectPodcastNavigation(foldersArray);
+                injectSidebarUI(foldersArray);
+            } catch (error) { console.error('Menu failed:', error); }
+        }
+
+        function injectPodcastNavigation(foldersArray) {
+            const currentFolder = 'v2026.44.2-22.21';
+            const currentIndex = foldersArray.indexOf(currentFolder);
+            if (currentIndex < 0) return;
+
+            const older = foldersArray[currentIndex + 1];
+            const newer = currentIndex > 0 ? foldersArray[currentIndex - 1] : null;
+            const olderLink = document.getElementById('podcast-older');
+            const newerLink = document.getElementById('podcast-newer');
+
+            if (older) {
+                olderLink.href = '/projects/news/' + older + '/';
+                olderLink.textContent = '← Older · ' + older;
+                olderLink.classList.remove('disabled');
+                olderLink.removeAttribute('aria-disabled');
+            }
+            if (newer) {
+                newerLink.href = '/projects/news/' + newer + '/';
+                newerLink.textContent = 'Newer · ' + newer + ' →';
+                newerLink.classList.remove('disabled');
+                newerLink.removeAttribute('aria-disabled');
+            }
+        }
+
+        function injectSidebarUI(foldersArray) {
+            const style = document.createElement('style');
+            style.innerHTML = `
+                #news-menu-btn { position: fixed; top: 20px; left: 20px; z-index: 1000; background: #1e1e1e; border: 1px solid #333; color: #fff; padding: 10px 16px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.5); transition: 0.2s; font-weight: bold; }
+                #news-menu-btn:hover { background: #2a2a2a; transform: scale(1.05); border-color: #bb86fc; }
+                #news-sidebar { position: fixed; top: 0; left: -300px; width: 280px; height: 100vh; background: #121212; z-index: 1001; transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 4px 0 25px rgba(0,0,0,0.8); overflow-y: auto; display: flex; flex-direction: column; border-right: 1px solid #333; }
+                #news-sidebar.open { left: 0; }
+                .sidebar-header { padding: 20px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; background: #1a1a1a; }
+                .sidebar-header h2 { margin: 0; font-size: 1.1rem; color: #bb86fc; text-transform: uppercase; letter-spacing: 1px; }
+                .sidebar-close { background: none; border: none; color: #888; font-size: 1.8rem; cursor: pointer; transition: 0.2s; line-height: 1; padding: 0; }
+                .sidebar-close:hover { color: #fff; transform: scale(1.1); }
+                .sidebar-list { list-style: none; padding: 0; margin: 0; }
+                .sidebar-list li a { display: block; padding: 16px 20px; color: #ccc; text-decoration: none; border-bottom: 1px solid #222; transition: 0.2s; font-size: 0.95rem; }
+                .sidebar-list li a:hover { background: #1e1e1e; padding-left: 26px; color: #bb86fc; border-left: 4px solid #bb86fc; }
+                #sidebar-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 1000; display: none; backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); opacity: 0; transition: opacity 0.3s; }
+                #sidebar-overlay.open { display: block; opacity: 1; }
+            `;
+            document.head.appendChild(style);
+
+            const overlay = document.createElement('div');
+            overlay.id = 'sidebar-overlay';
+            document.body.appendChild(overlay);
+
+            const sidebar = document.createElement('div');
+            sidebar.id = 'news-sidebar';
+            sidebar.innerHTML = '<div class="sidebar-header"><h2>Archives</h2><button class="sidebar-close" id="news-close-btn">&times;</button></div>';
+            
+            const list = document.createElement('ul');
+            list.className = 'sidebar-list';
+            
+            foldersArray.forEach(folderString => {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = `/projects/news/${folderString}/`;
+                
+                const parts = folderString.split('-');
+                if (parts.length >= 4) {
+                    const dateObj = new Date(`${parts[0]}-${parts[1]}-${parts[2]}T00:00:00`);
+                    const suffix = parts.slice(3).join(' ').replace(/\b\w/g, c => c.toUpperCase());
+                    a.innerText = `${dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} - ${suffix}`;
+                } else {
+                    a.innerText = folderString;
+                }
+                
+                li.appendChild(a);
+                list.appendChild(li);
+            });
+            sidebar.appendChild(list);
+            document.body.appendChild(sidebar);
+
+            const btn = document.createElement('button');
+            btn.id = 'news-menu-btn';
+            btn.innerHTML = '&#9776; Menu';
+            document.body.appendChild(btn);
+
+            const closeBtn = document.getElementById('news-close-btn');
+            const toggleMenu = () => {
+                if (sidebar.classList.contains('open')) {
+                    sidebar.classList.remove('open');
+                    overlay.classList.remove('open');
+                    setTimeout(() => overlay.style.display = 'none', 300);
+                } else {
+                    overlay.style.display = 'block';
+                    setTimeout(() => { sidebar.classList.add('open'); overlay.classList.add('open'); }, 10);
+                }
+            };
+            btn.addEventListener('click', toggleMenu);
+            closeBtn.addEventListener('click', toggleMenu);
+            overlay.addEventListener('click', toggleMenu);
+        }
+        
+        if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initSidebarMenu); } 
+        else { initSidebarMenu(); }
+    </script>
+</body>
+</html>
