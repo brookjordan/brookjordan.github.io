@@ -446,6 +446,7 @@ New renders needed for recovery: 0
 <h2>The ruler had not met this node</h2>
 <p>The graph metadata extractor in <code>src/stamp.ts</code> read dimensions from the node classes it recognised. <code>TextEncodeFibo2</code> owned this graph&#39;s canvas and prompt, but was absent from that list. Its dimensions stayed unknown. The image validator was comparing a real square with missing graph metadata. <!-- claim-check: graphMeta source inspection, the -1 dimensions in the failing fixture, and the successful unchanged-output re-import after the extractor change --></p>
 <p>The fix reads the native width, height and prompt. The fixture failed before that change and passed afterwards. Seven already-rendered files then became correctly stamped masters. The validator&#39;s size requirement was not weakened. Same files, repaired ruler. <!-- claim-check: exact red/green test and seven successful stampItem recovery results; no model rerun --></p>
+<p><img src="https://assets.brook.dev/localimagegen/blog/img/215a780b9a/2026-10-27-fibo-square-recovered.jpg" alt="A recovered FIBO dragon master at its native 1024 by 1024: the pixels were square, and the stamp was what had been wrong"> <!-- claim-check: the unchanged-output re-import records in the private recovery packet --></p>
 <h2>The test report, without a party hat</h2>
 <pre><code class="language-text">Focused graph/stamping tests: 7 passed
 Fast type/path/history gate: passed
