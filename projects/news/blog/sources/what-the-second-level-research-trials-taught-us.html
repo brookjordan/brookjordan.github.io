@@ -1,0 +1,136 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Source: What the second-level research trials taught us — PodCast Builder devlog</title>
+<style>
+body{max-width:760px;margin:2.5rem auto;padding:0 1.2rem;font-family:ui-sans-serif,system-ui,sans-serif;background:#16181f;color:#dfe2ea;line-height:1.65}
+a{color:#7aa2f7} h1,h2{line-height:1.25} code{background:#262a33;padding:.1em .35em;border-radius:4px;font-size:.9em}
+pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{color:#8b90a0;font-size:.85rem}
+.back{font-size:.85rem} .backnote{background:#262a33;border:1px solid #333;border-radius:8px;padding:.8rem 1rem;font-size:.85rem;color:#aeb3c2}
+</style></head><body>
+<p class="back"><a href="../index.html">← PodCast Builder devlog</a></p>
+<p class="backnote">This is a public snapshot of a private project-tracking note, sanitised for
+publication: internal links, status metadata and personal paths are removed. The live private
+version lives in the author's Obsidian vault.</p>
+<h1>What the second-level research trials taught us</h1>
+<h1>What the second-level research trials taught us</h1>
+<p>The single record of what was learned on 2026-11-02 and 2026-11-03 about running the second level of the video direction research cheaply. Tickets, handoffs and the corpus README link here rather than repeating it. Dollar figures on Claude Haiku are notional, from the CLI&#39;s reported cost on a subscription. <!-- claim-check: research-cost.log and the oneshot-cost.log files in the corpus repository's Sweep 2 folder --></p>
+<p>Terms: <strong>Sweep 1</strong> is the first level, 291 discovery harvests. <strong>Sweep 2</strong> is the second level, 48,211 planned sub-packets. <strong>Round 1</strong> is the first selected batch inside Sweep 2, 2,880 packets, ten per base. <strong>A pass</strong> is one research attempt on one packet.</p>
+<h2>Where the tokens went</h2>
+<p>A worker loop on Haiku cost $0.072 a harvest over 126 harvests, against $0.019 on DeepSeek. Across 11 runs, each harvest averaged about 600,000 cache-read tokens, 56,000 cache-write tokens and 4,850 output tokens, with about 9 Edit calls and 5 searches and fetches. So the money went on re-reading the conversation at each turn, not on writing. Moving search, fetching, validation and file writing into a script, with one model call, removes that loop. <!-- claim-check: Sweep 2/research-cost.log and 11 subagent transcripts measured in the session --></p>
+<h2>Trial versions on one fixed set of 20 packets</h2>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Change</th>
+<th>Cost a packet</th>
+<th>Names</th>
+<th>Reading</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Existing harvests</td>
+<td>Worker loops</td>
+<td>$0.072 Haiku, $0.019 DeepSeek</td>
+<td>155</td>
+<td>Baseline</td>
+</tr>
+<tr>
+<td>1</td>
+<td>One call, Bing search</td>
+<td>$0.0014</td>
+<td>5</td>
+<td>Search returned junk; result void</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Free Keenable search</td>
+<td>$0.0037</td>
+<td>186</td>
+<td>More names, clearly worse rows</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Answer first, strict row rules, root-name filter</td>
+<td>$0.0026</td>
+<td>53</td>
+<td>More on-topic, too few</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Keep rows whose verbatim evidence checks out; second search if unanswered</td>
+<td>$0.0040</td>
+<td>105</td>
+<td>12 baseline better, 5 tied, 3 better on one reader&#39;s judgement</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Ask for rare and foreign terms, add a glossary search</td>
+<td>$0.0037</td>
+<td>104</td>
+<td>Adds terms such as Stimmung and strip diopter; not rescored</td>
+</tr>
+</tbody></table>
+<p>Versions 4 and 5 are kept as <code>Sweep 2/Trial oneshot 4</code> and <code>5</code>. Versions 1 to 3 were deleted as superseded. <!-- claim-check: cost logs of those directories, compared with compare_oneshot.py, and the earlier versions as recorded on PCB-056 --></p>
+<p>The lesson of version 2: <strong>name counts mislead, so read the rows</strong>. It beat the baseline on names while giving rows such as &quot;Hat Choke&quot; for a question about rack focus.</p>
+<p>The one-call method gives direct answers and says plainly when sources fall short. It trailed the worker loops on rare vocabulary in that reading, and <code>run_oneshot.py</code> runs its searches before seeing any rows, which suggests the two are connected. The two methods overlapped on only 4 to 10 names in 20 packets, so low overlap says little about how much is left to find.</p>
+<h2>Things that did not work</h2>
+<ul>
+<li><strong>Turning off Haiku&#39;s thinking through Claude Code.</strong> <code>--effort low</code>, <code>MAX_THINKING_TOKENS=0</code>, <code>alwaysThinkingEnabled: false</code> and <code>CLAUDE_CODE_DISABLE_THINKING=1</code> all left empty thinking blocks and about 2,100 to 3,900 output tokens against about 500 visible, on one to three runs each. Asking for summaries returned none. The thinking cannot be read. A provider that lets it be disabled may be much cheaper. <!-- claim-check: stream-json probe on packet A02-177, one packet only --></li>
+<li><strong>Scraped search.</strong> Bing&#39;s HTML returned Google Drive help for a film query. DuckDuckGo, Mojeek, Yahoo, Startpage and Brave&#39;s HTML page returned nothing usable or refused. The Google MCP returned nothing. Keenable, Exa and Parallel, taken from the Hermes agent&#39;s web plugin, need no key. Keenable served all searches so far; its limits at volume are unknown. <!-- claim-check: search_probe run 2026-11-02, as one attempt per route --></li>
+<li><strong>Packet-level <code>@see</code>.</strong> Comparing questions finds only 102 near-duplicates at 0.6 similarity, about 0.2% of the queue. At 0.5 and below, groups chain unrelated packets, such as grief with game trailers. <!-- claim-check: see_packets.py output 2026-11-02 --></li>
+</ul>
+<h2>Volume</h2>
+<p>Running all 48,211 packets is not the aim. The planner wrote that many when told &quot;more is better&quot;, and the worker loop would have produced about 450,000 rows nobody could integrate. On Pro, one reading of about 50% of a window suggests about $18 notional a window, which is about 250 worker-loop harvests. Round 1 at about $0.0037 a packet is about $11. <!-- claim-check: arithmetic from the cost logs and Brook's one usage reading; the $18 is an inference --></p>
+<h2><code>@see</code> links</h2>
+<p>Brook&#39;s design: begin with one entry per idea and fill in detail slowly. Links are <code>alias</code> (the same thing, nothing to fill in) or <code>near</code> (close but different, the fill-in list). Each points directly at one main entry, and harvests are never changed. <code>see_rows.py</code> turns 32% of existing rows into <code>alias</code>-style links for no tokens. <code>see_near.py</code> gave 46 links from 2 of 81 batches for $0.0079. Most looked sensible, and some were doubtful, such as &quot;Broadcast live <code>@see</code> Actual one shot&quot;. <strong>Its batches are alphabetical within one dimension, so a pair in different batches cannot link, and dolly against zoom may be split.</strong> <!-- claim-check: see_rows.py and see_near.py runs 2026-11-02 --></p>
+<h2>Further passes</h2>
+<p>A small trial on Round 1 packets, with <code>run_next_pass.py</code>. Ten packets, half chosen for rare names. The third pass took the five with most new names, so it is flattered. <!-- claim-check: Sweep 2/Trial pass 2 and Trial pass 3 cost logs --></p>
+<table>
+<thead>
+<tr>
+<th>Pass</th>
+<th>Packets</th>
+<th>Cost a packet</th>
+<th>Names</th>
+<th>New to corpus, exact match</th>
+<th>Names per dollar</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>First, first 50 of Round 1</td>
+<td>50</td>
+<td>$0.0035</td>
+<td>about 200</td>
+<td>not measured</td>
+<td>about 1,140</td>
+</tr>
+<tr>
+<td>Second</td>
+<td>10</td>
+<td>$0.0020</td>
+<td>18</td>
+<td>15</td>
+<td>about 880</td>
+</tr>
+<tr>
+<td>Third</td>
+<td>5</td>
+<td>$0.0025</td>
+<td>16</td>
+<td>12</td>
+<td>about 1,270</td>
+</tr>
+</tbody></table>
+<ul>
+<li>Saved pages gave 22 of the 34 names and need no search, since a first call sees about 3,500 of up to 30,000 saved characters a page.</li>
+<li>Finds were mixed: pinscreen technique, imaginary focus and snorkel/borescope shots against push-in, Dutch tilts and The Wolf House, a film that should not be a row.</li>
+<li>Two packets found nothing at the second pass and three at the third, so a fixed pass count wastes calls.</li>
+<li>One of five unanswered packets became answered. The flag is weak, because the model sees only new text, but chasing rare names does not aim at the question.</li>
+</ul>
+<h2>Current judgement, not yet measured</h2>
+<p>Rich packets should mine saved pages, then chase rare names only while that pays. Unanswered packets should search the question using the model&#39;s <code>next_queries</code> and see the earlier answer. Both should be tested against ten more new packets per base, about 100 packets each, comparing new names per dollar after alias matching and then reading a sample. <code>@see</code> fill-in comes last and on demand. See PCB-057 and PCB-058.</p>
+<h2>Unknown</h2>
+<p>Quality has been judged by one reader from names and answer openings, with no row checked against its source. The provider route has only run against a local stub. Rate limits at volume, extra-usage billing on the Claude account, and Round 1&#39;s final yield are all unmeasured.</p>
+
+</body></html>

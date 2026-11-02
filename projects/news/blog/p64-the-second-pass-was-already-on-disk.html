@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#1a1d24" />
+    <meta name="color-scheme" content="dark" />
+    <title>Most of the second pass was already on disk</title>
+    <style>
+/* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
+   This is the single source of truth for colour, radius, spacing and type.
+   It is inlined ahead of each page's stylesheet at build time, and linked
+   first in dev so opening the .html files directly still resolves the vars.
+
+   Theming: everything below is a semantic token mapped onto a small palette of
+   primitives. To add a theme, override the *semantic* tokens under a selector
+   (see the commented [data-theme="light"] block at the bottom) — no stylesheet
+   needs to change, only these variables. */
+:root {
+  color-scheme: dark;
+
+  /* ---- palette primitives (raw colours; reference these only via the tokens below) ---- */
+  --c-ink-900: #0f1115;
+  --c-ink-800: #1a1d24;
+  --c-ink-700: #232732;
+  --c-ink-600: #2a2f3a;
+  --c-fog-100: #e8eaed;
+  --c-fog-300: #9aa0a6;
+  --c-fog-500: #6b727d;
+  --c-accent: #7c9cff;
+
+  /* ---- semantic: background / border / text, primary > secondary > tertiary ---- */
+  --bg-primary: var(--c-ink-900);
+  --bg-secondary: var(--c-ink-800);
+  --bg-tertiary: var(--c-ink-700);
+
+  --border-primary: var(--c-ink-600);
+  --border-secondary: rgba(150, 170, 210, 0.16);
+
+  --text-primary: var(--c-fog-100);
+  --text-secondary: var(--c-fog-300);
+  --text-tertiary: var(--c-fog-500);
+
+  --accent: var(--c-accent);
+
+  /* ---- radius scale ---- */
+  --radius-sm: 5px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 9999px;
+
+  /* ---- spacing / padding scale ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 2rem;
+
+  /* ---- type ---- */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* Shared cross-nav link (gallery <-> devlog). Both app.css and blog.css inline this
+   file, so defining it once here keeps the two links visually identical. */
+.cross-link {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.cross-link:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+/* Example theme override — set <html data-theme="light"> to activate (or wire it
+   to prefers-color-scheme). Left commented so we don't ship untuned colours:
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg-primary: #fbfbfd;
+  --bg-secondary: #f1f2f5;
+  --bg-tertiary: #e7e9ee;
+  --border-primary: #d4d8e0;
+  --border-secondary: rgba(20, 30, 60, 0.12);
+  --text-primary: #1a1d24;
+  --text-secondary: #555b66;
+  --text-tertiary: #7b828d;
+}
+*/
+
+</style>
+    <style>
+:root {
+  /* Local aliases mapped onto the shared tokens in tokens.css (inlined first),
+     so the devlog and the gallery share one palette, radius and spacing scale. */
+  --bg: var(--bg-primary);
+  --bg-soft: var(--bg-secondary);
+  --panel: var(--bg-tertiary);
+  --text: var(--text-primary);
+  --muted: var(--text-secondary);
+  --border: var(--border-secondary);
+  --radius: var(--radius-md);
+  /* --accent comes straight from tokens.css */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.65 var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.site-header,
+.site-footer {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 1.25rem 1.25rem;
+}
+
+.site-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text);
+}
+
+.brand span {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.content {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+
+.site-footer {
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* ---- post typography ---- */
+.content h1 {
+  font-size: 1.9rem;
+  line-height: 1.2;
+  margin: 0 0 0.5rem;
+}
+
+.content h2 {
+  font-size: 1.35rem;
+  margin: 2rem 0 0.6rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.3rem;
+}
+
+.content h3 {
+  font-size: 1.1rem;
+  margin: 1.5rem 0 0.4rem;
+}
+
+.content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  display: block;
+  margin: 1.25rem 0;
+}
+
+.content audio {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.content blockquote {
+  margin: 1.25rem 0;
+  padding: 0.5rem 1rem;
+  border-left: 3px solid var(--accent);
+  background: var(--bg-soft);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  color: var(--muted);
+}
+
+.content pre {
+  background: #12151b;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  overflow: auto;
+  font-size: 0.88rem;
+}
+
+.content code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: rgba(150, 170, 210, 0.14);
+  padding: 0.1em 0.35em;
+  border-radius: 5px;
+}
+
+.content pre code {
+  background: none;
+  padding: 0;
+}
+
+.post-banner {
+  width: 100%;
+  max-height: 22rem;
+  object-fit: cover;
+  border-radius: var(--radius);
+  display: block;
+  margin: 0 0 1.5rem;
+}
+
+/* Click-to-cycle: slide 0 (current) sits in normal flow and sizes the box; every other
+   slide overlays it absolutely at opacity 0. web/blog.html's script sets each slide's
+   opacity directly (not CSS classes) so this scales to any number of legacy versions. */
+.banner-compare {
+  position: relative;
+  cursor: pointer;
+}
+
+.banner-compare .banner-slide {
+  margin: 0;
+  transition: opacity 0.25s ease;
+}
+
+.banner-compare .banner-slide:not([data-slide='0']) {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.banner-compare-hint {
+  position: absolute;
+  right: 0.7rem;
+  bottom: calc(1.5rem + 0.7rem);
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 0.72rem;
+  line-height: 1;
+  padding: 0.4rem 0.65rem;
+  border-radius: 999px;
+  opacity: 0.85;
+  transition: opacity 0.15s ease;
+}
+
+.banner-compare:hover .banner-compare-hint {
+  opacity: 1;
+}
+
+/* ---- per-post header (date + tags) ---- */
+.post-meta {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0 0 1.5rem;
+}
+
+.tag {
+  display: inline-block;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 0.1em 0.7em;
+  font-size: 0.78rem;
+  margin-right: 0.35rem;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+/* ---- prev/next post nav (baked at build time, see postNav in src/blog.ts) ---- */
+.post-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 2rem 0 0;
+}
+
+.post-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-soft);
+  color: var(--text);
+  min-width: 0;
+}
+
+.post-nav-link:hover {
+  border-color: var(--accent);
+  text-decoration: none;
+}
+
+.post-nav-empty {
+  border-color: transparent;
+  background: none;
+}
+
+.post-nav-next {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.post-nav-arrow {
+  color: var(--muted);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.post-nav-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.post-nav-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.post-nav-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .post-nav {
+    grid-template-columns: 1fr;
+  }
+
+  .post-nav-next {
+    justify-content: flex-start;
+    text-align: left;
+  }
+}
+
+/* ---- index listing ---- */
+.index-intro {
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+
+.post-group-date {
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 2rem 0 0.75rem;
+}
+
+.post-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.post-list li {
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.post-list a.post-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.post-list .post-row-meta {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+}
+
+.post-time {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  margin-right: 0.5rem;
+  cursor: help;
+}
+
+</style>
+  <style>
+/* --- index cards / featured / thumbnails (PodCast Builder devlog) --- */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:var(--space-5,1.5rem);margin:2rem 0}
+.card{display:flex;flex-direction:column;border:1px solid var(--border-primary,#333);border-radius:var(--radius-md,10px);overflow:hidden;background:var(--bg-secondary,#22252c);transition:transform .12s ease,border-color .12s ease}
+.card:hover{transform:translateY(-2px);border-color:var(--accent,#7aa2f7)}
+.card-body{display:flex;flex-direction:column;gap:.4rem;padding:1rem 1.1rem 1.2rem}
+.card-title{margin:0;font-size:1.02rem;line-height:1.35}
+.card-title a{color:var(--text-primary,#e8eaf0);text-decoration:none}
+.card-title a:hover{color:var(--accent,#7aa2f7)}
+.card .post-time{color:var(--text-tertiary,#8b90a0);font-size:.78rem}
+.blurb{margin:0;color:var(--text-secondary,#aeb3c2);font-size:.88rem;line-height:1.5}
+.readmore{margin:.2rem 0 0}
+.readmore a{color:var(--accent,#7aa2f7);font-size:.85rem;text-decoration:none;font-weight:600}
+.readmore a:hover{text-decoration:underline}
+.thumb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.3rem;aspect-ratio:16/9;text-decoration:none;overflow:hidden;
+  background:linear-gradient(135deg,hsl(var(--h) 45% 16%),hsl(var(--h) 55% 26%));border-bottom:1px solid var(--border-primary,#333);position:relative}
+.thumb .thumb-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.thumb .thumb-topic{position:absolute;left:.6rem;bottom:.45rem;font-size:.66rem;text-transform:uppercase;letter-spacing:.14em;color:#fff;background:rgba(10,12,18,.62);padding:.14rem .5rem;border-radius:999px;z-index:1}
+.featured{display:grid;grid-template-columns:minmax(220px,380px) 1fr;gap:1.5rem;align-items:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border-primary,#333);border-radius:var(--radius-lg,14px);background:var(--bg-tertiary,#262a33)}
+.featured .thumb{aspect-ratio:auto;height:100%;min-height:180px;border:0;border-radius:var(--radius-md,10px)}
+.featured-body{display:flex;flex-direction:column;gap:.5rem}
+.kicker{margin:0;font-size:.75rem;text-transform:uppercase;letter-spacing:.16em;color:var(--accent,#7aa2f7);font-weight:700}
+.featured-title{margin:0;font-size:1.5rem;line-height:1.3}
+.featured-title a{color:var(--text-primary,#e8eaf0);text-decoration:none}
+.featured-title a:hover{color:var(--accent,#7aa2f7)}
+.all-posts-heading{margin-top:3rem}
+.intro{max-width:62ch;color:var(--text-secondary,#aeb3c2)}
+.evidence-window{color:var(--text-tertiary,#8b90a0);font-size:.85rem;margin:0 0 1.5rem}
+.post-banner{width:100%;max-height:340px;object-fit:cover;border-radius:var(--radius-md,10px);margin:0 0 1.2rem;border:1px solid var(--border-primary,#333)}
+/* Banner provenance: ComfyUI mark links to the stored workflow, plus the prompt. */
+.banner-credit{display:flex;flex-wrap:wrap;align-items:center;gap:.45rem;margin:-.5rem 0 1.3rem;font-size:.8rem;color:var(--text-tertiary,#8b90a0)}
+.banner-credit a{color:var(--text-tertiary,#8b90a0);text-decoration:none}
+.banner-credit a:hover{color:var(--accent,#7aa2f7);text-decoration:underline}
+.comfy-link{display:inline-flex;align-items:center;gap:.35rem;padding:.14rem .5rem .14rem .28rem;border:1px solid var(--border-primary,#333);border-radius:999px}
+.comfy-link:hover{border-color:var(--accent,#7aa2f7);text-decoration:none}
+.comfy-mark{width:15px;height:15px;flex:none;border-radius:3px}
+.credit-sep{opacity:.6}
+.banner-prompt{margin:0 0 1.6rem;font-size:.82rem;color:var(--text-tertiary,#8b90a0)}
+.banner-prompt summary{cursor:pointer;font-weight:600}
+.banner-prompt[open] summary{margin-bottom:.45rem}
+.banner-prompt p{margin:0;padding:.6rem .75rem;border-left:2px solid var(--border-primary,#333);color:var(--text-secondary,#aeb3c2);line-height:1.5}
+.part-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.16em;color:var(--text-tertiary,#8b90a0);margin:0 0 .6rem;font-weight:700}
+.post-title{margin:0 0 .8rem;font-size:1.7rem;line-height:1.25}
+.lead{font-size:1.02rem;color:var(--text-secondary,#aeb3c2);line-height:1.55;margin:0 0 1.8rem;max-width:64ch}
+.sources{margin-top:2.5rem;padding-top:1.2rem;border-top:1px solid var(--border-primary,#333)}
+.sources h2{font-size:1.1rem;margin:0 0 .4rem}
+.sources-note{font-size:.8rem;color:var(--text-tertiary,#8b90a0);margin:0 0 .6rem}
+.sources ul{margin:0;padding-left:1.2rem}
+.sources li{margin:.25rem 0;font-size:.9rem}
+@media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
+</style></head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="./index.html">PodCast Builder <span>· devlog</span></a>
+      <nav class="site-nav"></nav>
+    </header>
+    <main class="content">
+<p class="part-label">Part 63 of 63</p><img class="post-banner" src="https://assets.brook.dev/podcast/blog-banners/p64-banner.webp" alt="A cinematic photograph of a researcher's cluttered attic study in morning light. An old wooden filing cabinet has one long drawer pulled out unusually far, packed with folded paper maps. One map has been opened on the floor, and only its top corner has pencil marks and a bookmark, the great remaining expanse of it clean and unread, covered in fine unexamined detail. A coat and a packed travel bag wait by the door, unneeded. Warm slanting sun, floating dust, high angle, photorealistic, extremely detailed, wry and quiet." onerror="this.remove()"><p class="banner-credit"><a class="comfy-link" href="https://assets.brook.dev/podcast/blog-banners/workflows/zimage.t2i.json" target="_blank" rel="noopener" title="Open the stored ComfyUI workflow for this banner"><svg class="comfy-mark" viewBox="0 0 520 520" aria-hidden="true"><path d="M0 184.335C0 119.812 0 87.5502 12.5571 62.9055C23.6026 41.2274 41.2274 23.6026 62.9055 12.5571C87.5502 0 119.812 0 184.335 0H335.665C400.188 0 432.45 0 457.094 12.5571C478.773 23.6026 496.397 41.2274 507.443 62.9055C520 87.5502 520 119.812 520 184.335V335.665C520 400.188 520 432.45 507.443 457.094C496.397 478.773 478.773 496.397 457.094 507.443C432.45 520 400.188 520 335.665 520H184.335C119.812 520 87.5502 520 62.9055 507.443C41.2274 496.397 23.6026 478.773 12.5571 457.094C0 432.45 0 400.188 0 335.665V184.335Z" fill="#211927"/><path d="M176.484 428.831C168.649 428.831 162.327 425.919 158.204 420.412C153.966 414.755 152.861 406.857 155.171 398.749L164.447 366.178C165.187 363.585 164.672 360.794 163.059 358.636C161.446 356.483 158.921 355.216 156.241 355.216H129.571C121.731 355.216 115.409 352.308 111.289 346.802C107.051 341.14 105.946 333.242 108.258 325.134L140.124 213.748L143.642 201.51C148.371 184.904 165.62 171.407 182.097 171.407H214.009C217.817 171.407 221.167 168.868 222.215 165.183L232.769 128.135C237.494 111.545 254.742 98.048 271.219 98.048L339.468 97.9264L389.431 97.9221C397.268 97.9221 403.59 100.831 407.711 106.337C411.949 111.994 413.054 119.892 410.744 128L396.457 178.164C391.734 194.75 374.485 208.242 358.009 208.242L289.607 208.372H257.706C253.902 208.372 250.557 210.907 249.502 214.588L222.903 307.495C222.159 310.093 222.673 312.892 224.291 315.049C225.904 317.202 228.428 318.469 231.107 318.469C231.113 318.469 276.307 318.381 276.307 318.381H326.122C333.959 318.381 340.281 321.29 344.402 326.796C348.639 332.457 349.744 340.355 347.433 348.463L333.146 398.619C328.423 415.209 311.174 428.701 294.698 428.701L226.299 428.831H176.484Z" fill="#F2FF59"/></svg><span>ComfyUI workflow</span></a><span class="credit-sep">·</span><span>Created with <strong>zimage</strong> · 14 steps · seed 42</span><span class="credit-sep">·</span><a href="https://assets.brook.dev/podcast/blog-banners/banner-manifest.json" target="_blank" rel="noopener">provenance JSON</a></p><details class="banner-prompt"><summary>Prompt</summary><p>A cinematic photograph of a researcher's cluttered attic study in morning light. An old wooden filing cabinet has one long drawer pulled out unusually far, packed with folded paper maps. One map has been opened on the floor, and only its top corner has pencil marks and a bookmark, the great remaining expanse of it clean and unread, covered in fine unexamined detail. A coat and a packed travel bag wait by the door, unneeded. Warm slanting sun, floating dust, high angle, photorealistic, extremely detailed, wry and quiet.</p></details><p class="evidence-window">3 Nov 2026</p><h1 class="post-title">Most of the second pass was already on disk</h1><p class="lead">A small test of second and third passes found 34 new names, and 22 came from pages we had already saved and never shown the model. We had been fetching pages and reading the first ninth.</p><p>Once the first batch was running, the next question was what to do when it finished. The instinct,
+which we shared, was to go back over the packets that had only had one pass. A second look should
+find more, and a third more again. It seemed a cheap thing to try before building a plan on it, so
+we tried it on ten packets, and then on five of those.</p>
+<h2>What happened</h2>
+<p>Repeating a first pass would have mostly fetched the same pages, so the second pass was built to chase
+what the first had found. It searches for the rarest names in a packet, the ones no other harvest has,
+and gives the model that new text with an instruction not to repeat what is known. As an afterthought,
+it also shows the model parts of pages already saved that it had never seen.</p>
+<p>That afterthought did most of the work. Across both passes, 22 of the 34 new names came from text we
+already had. The reason is unglamorous. The first pass saves up to 30,000 characters a page and only
+shows the model about 3,500. We had been fetching pages, reading the first ninth and filing the rest.</p>
+<p>The new text gave up some real finds: pinscreen technique, imaginary focus, snorkel and borescope shots,
+Cine Kodak Eight, a spatial against a temporal jump cut. It also gave us push-in, Dutch tilts and The
+Wolf House, which is a film and is not supposed to be a row at all.</p>
+<h2>What the evidence changed</h2>
+<p>The numbers were less dramatic than the instinct. The second pass found about 880 names per notional
+dollar, and the third about 1,270. The first 50 packets of the batch managed about 1,140. The third
+pass looks best but was run only on the five packets where the second had found the most, so it is
+flattered. Put plainly, further passes cost about the same per name as first passes, on very small
+numbers.</p>
+<p>Two other things stood out. Results varied by packet: two found nothing at the second pass, and three
+of the five best found nothing at the third. So giving every packet a fixed number of passes would pay
+for a lot of nothing. A third pass has to be earned by a second that found something.</p>
+<p>And chasing rare names did little for the questions left unanswered. Only one of five changed its flag.
+That flag is a weak measure, because the model sees only the new text and not its earlier answer, but
+the design was also aimed at the wrong thing. If a packet has not answered its question, the next search
+should be about the question.</p>
+<h2>Where we left it</h2>
+<p>So the second pass becomes two. Rich packets mine what is saved first, then chase names only while that
+pays. Unanswered packets search the question, using the queries the model itself suggests, and get shown
+their earlier answer.</p>
+<p>We still have not answered the question that started this. Further passes have only been compared with
+first passes, and with chosen packets at that. The real alternative is asking new questions, and the test
+is written down: about a hundred packets each way on the same topics, new names per dollar after matching
+aliases, and then somebody reads them. A ten-packet trial cost about three cents. It did not settle the
+plan, but it did change it, which is a good return on three cents.</p>
+<section class="sources"><h2>Source notes</h2><p class="sources-note">Each source is a sanitised public snapshot of a private project-tracking note.</p><ul><li><a href="sources/what-the-second-level-research-trials-taught-us.html">What the second-level research trials taught us, 3 November 2026</a></li><li><a href="sources/pcb-057-test-further-passes-against-new-packets.html">PCB-057, further passes against new packets</a></li></ul></section><nav class="post-nav"><a class="post-nav-link" href="p63-duplicates-live-in-the-answers.html">← earlier: The duplicates were in the answers</a><span></span></nav></main>
+    <footer class="site-footer">
+      <p>Private review preview of the <strong>PodCast Builder</strong> devlog — built from the senior-accepted draft set, 2026-09-19.</p>
+    </footer>
+    <script>
+      // Localise all post times to the reader's timezone.
+      // Each <time class="post-time" data-ts="..."> carries a Unix epoch (ms);
+      // we replace the static server-rendered HH:MM with the local equivalent.
+      document.querySelectorAll('time.post-time[data-ts]').forEach(function (el) {
+        var d = new Date(+el.dataset.ts);
+        el.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        el.title = d.toLocaleString(); // full local datetime on hover
+      });
+
+      // Click (or Enter/Space) a .banner-compare to cycle: current -> most recent earlier
+      // version -> ... -> oldest/original -> back to current. Each click advances one slide;
+      // opacity is set directly (not via CSS classes) so this works for any slide count.
+      document.querySelectorAll('.banner-compare').forEach(function (el) {
+        var slides = el.querySelectorAll('.banner-slide');
+        var hint = el.querySelector('.banner-compare-hint');
+        var count = slides.length;
+        var active = 0;
+        function render() {
+          slides.forEach(function (s, i) {
+            s.style.opacity = i === active ? '1' : '0';
+          });
+          if (!hint) return;
+          if (active === 0) {
+            hint.textContent =
+              'click to see ' + (count === 2 ? 'the earlier version' : count - 1 + ' earlier versions');
+          } else if (active === count - 1) {
+            hint.textContent = 'original banner · click for current';
+          } else {
+            hint.textContent = 'earlier version ' + active + ' of ' + (count - 1) + ' · click to continue';
+          }
+        }
+        function advance() {
+          active = (active + 1) % count;
+          render();
+        }
+        el.addEventListener('click', advance);
+        el.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            advance();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

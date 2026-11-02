@@ -1,0 +1,28 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Source: PCB-058 — PodCast Builder devlog</title>
+<style>
+body{max-width:760px;margin:2.5rem auto;padding:0 1.2rem;font-family:ui-sans-serif,system-ui,sans-serif;background:#16181f;color:#dfe2ea;line-height:1.65}
+a{color:#7aa2f7} h1,h2{line-height:1.25} code{background:#262a33;padding:.1em .35em;border-radius:4px;font-size:.9em}
+pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{color:#8b90a0;font-size:.85rem}
+.back{font-size:.85rem} .backnote{background:#262a33;border:1px solid #333;border-radius:8px;padding:.8rem 1rem;font-size:.85rem;color:#aeb3c2}
+</style></head><body>
+<p class="back"><a href="../index.html">← PodCast Builder devlog</a></p>
+<p class="backnote">This is a public snapshot of a private project-tracking note, sanitised for
+publication: internal links, status metadata and personal paths are removed. The live private
+version lives in the author's Obsidian vault.</p>
+<h1>PCB-058</h1>
+<h1>PCB-058 Build the alias and near links</h1>
+<h2>Goal</h2>
+<p>Brook&#39;s design: the style system begins with one entry per idea, and repeats and near-synonyms point at it with <code>@see</code>. <code>alias</code> means the same thing. <code>near</code> means close but different, such as a zoom against a dolly, and those form the list to fill in later.</p>
+<p>Background and measurements: the trials note.</p>
+<h2>To do</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Fix <code>Sweep 2/see_near.py</code> batching, which is alphabetical within one dimension, so a pair in different batches or dimensions cannot link.</li>
+<li><input disabled="" type="checkbox"> Run <code>see_rows.py</code> and <code>see_near.py</code> over <code>Raw</code> and <code>Round 1</code> once Round 1 has finished. All 81 batches on <code>Raw</code> would cost about $0.32 notional at the tested rate.</li>
+<li><input disabled="" type="checkbox"> Review <code>near</code> links lightly, because some were doubtful in the test.</li>
+<li><input disabled="" type="checkbox"> Merge exact, alias and near links into one index, one level deep, leaving harvests unchanged.</li>
+<li><input disabled="" type="checkbox"> Fill in entries on demand, most repeated first. This is deliberately later than PCB-057.</li>
+</ul>
+
+</body></html>
