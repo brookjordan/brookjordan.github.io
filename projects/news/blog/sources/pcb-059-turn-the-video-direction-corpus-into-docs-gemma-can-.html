@@ -1,0 +1,45 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Source: PCB-059 — PodCast Builder devlog</title>
+<style>
+body{max-width:760px;margin:2.5rem auto;padding:0 1.2rem;font-family:ui-sans-serif,system-ui,sans-serif;background:#16181f;color:#dfe2ea;line-height:1.65}
+a{color:#7aa2f7} h1,h2{line-height:1.25} code{background:#262a33;padding:.1em .35em;border-radius:4px;font-size:.9em}
+pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{color:#8b90a0;font-size:.85rem}
+.back{font-size:.85rem} .backnote{background:#262a33;border:1px solid #333;border-radius:8px;padding:.8rem 1rem;font-size:.85rem;color:#aeb3c2}
+</style></head><body>
+<p class="back"><a href="../index.html">← PodCast Builder devlog</a></p>
+<p class="backnote">This is a public snapshot of a private project-tracking note, sanitised for
+publication: internal links, status metadata and personal paths are removed. The live private
+version lives in the author's Obsidian vault.</p>
+<h1>PCB-059</h1>
+<h1>PCB-059 Turn the video direction corpus into docs Gemma can choose from</h1>
+<h2>Goal</h2>
+<p>Brook, 2026-11-03: use the video direction research to make docs Gemma can use in the podcast&#39;s music video, starting from how the song-style data was reshaped for PCB-047 but tailored to this data.</p>
+<p>The plan is the plan for video direction docs: one small catalogue per slot of the direction (<code>medium</code>, world <code>look</code>, opening and climax devices, shot moves), canonical entries built from the <code>@see</code> links, cards labelled by a local model panel, render-tested before they are offered, then chosen by enum in <code>direction.ts</code>.</p>
+<h2>To do</h2>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> First slot and review depth decided, 2026-11-03 (below).</li>
+<li><input checked="" disabled="" type="checkbox"> Round 1 complete, 2,880 of 2,880 harvests, 2026-11-03 16:18. Final <code>see_near.py</code> pass running.</li>
+<li><input checked="" disabled="" type="checkbox"> Canonical entries: <code>Sweep 2/build_entries.py</code> writes <code>entries.json</code> (first build, rerun after the final linking pass).</li>
+<li><input disabled="" type="checkbox"> Label slots and draft cards with the local panel; reconcile. Running: <code>Sweep 2/label_entries.py</code>, Gemma then Qwen then Phi, output in <code>Sweep 2/Docs build/</code>.</li>
+<li><input disabled="" type="checkbox"> Generate families and cards into <code>podcastbuilder/data/video/</code>; Brook reads a sample.</li>
+<li><input disabled="" type="checkbox"> Render-test an approved shortlist of cards.</li>
+<li><input disabled="" type="checkbox"> Wire the choice into <code>direction.ts</code> with logged reasons and one random shortlist slot.</li>
+<li><input disabled="" type="checkbox"> Compare against free-text direction on at least three episodes.</li>
+</ul>
+<h2>Completion criterion</h2>
+<p>A medium choice in the live shots stage, from cards that passed a render test, whose stills pass the judge at least as often as free-text direction and which Brook prefers on at least three episodes.</p>
+<h2>Decisions, 2026-11-03</h2>
+<ul>
+<li><strong>Medium first, then world look.</strong> Brook left it to the agent&#39;s judgement and asked that the choice not rest on resemblance to the song-style selector. Reasons: <code>medium</code> is free text today and sets the look of every still and clip; PCB-050 traced failed stills to looks that did not fit their shots; and the corpus is richest there, with about 3,150 <code>aesthetic</code> rows plus animation-technique, material and capture-medium rows. <!-- claim-check: Brook's message 2026-11-03; PCB-050 Evidence section; row profile over Sweep 2 Raw and Round 1 --></li>
+<li><strong>Review depth.</strong> Every card is checked by script and render test; Brook reads about five cards per family before that family is offered to Gemma.</li>
+<li><strong>GPU.</strong> Brook: no podcasts are scheduled, so render qualification may use the GPU freely. <!-- claim-check: Brook's message 2026-11-03 --></li>
+</ul>
+<h2>2026-11-03 16:30: entries built, panel labelling started</h2>
+<ul>
+<li><code>build_entries.py</code> reads tables by header, so the 487 older ten-column <code>Raw</code> tables keep their <code>Suits</code> and <code>Veto</code> columns, which map onto a card&#39;s use-when and against. 16,151 rows became 12,849 entries; 1,458 are named in more than one harvest; 2,197 carry a flag, mostly &quot;no sourced row&quot; (1,894).</li>
+<li>A first build joined entries on the aliases rows list, and chains merged unrelated ideas: establishing shot absorbed American shot and close shot, and deep focus absorbed shallow focus. Entries now merge only on exact names and <code>see_near.py</code> <code>alias</code> links, which point one level deep; listed aliases are kept as other names only. A remaining error of that kind: &quot;L-cut&quot; lists J-cut among its other names. <!-- claim-check: build_entries.py output, first and second builds, 2026-11-03 --></li>
+<li>Medium and look candidates: 3,768 unflagged entries in the aesthetic, animation-technique, material or capture-medium dimensions. A two-batch Gemma pilot labelled stop-motion, claymation, cut-out, pixilation and 16mm <code>medium</code>, chiaroscuro and low-key lighting <code>look</code>, and dolly zoom, long take and Dutch angle <code>neither</code>, at about 10 s a batch of ten. It also called kinetic typography a medium, which the no-lettering rule should fail at the render test, and left stop-motion and stop-motion animation as two entries. <!-- claim-check: label_entries.py pilot, 20 entries, read by the agent --></li>
+</ul>
+
+</body></html>

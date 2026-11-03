@@ -130,6 +130,19 @@ version lives in the author's Obsidian vault.</p>
 </ul>
 <h2>Current judgement, not yet measured</h2>
 <p>Rich packets should mine saved pages, then chase rare names only while that pays. Unanswered packets should search the question using the model&#39;s <code>next_queries</code> and see the earlier answer. Both should be tested against ten more new packets per base, about 100 packets each, comparing new names per dollar after alias matching and then reading a sample. <code>@see</code> fill-in comes last and on demand. See PCB-057 and PCB-058.</p>
+<h2>Round 1, finished 2026-11-03</h2>
+<p>All 2,880 packets have a harvest: 11,707 rows, 442 packets with none. Three models did it in relay, 92 packets on Luna, 805 on Terra and 1,983 on Claude Haiku, each switch forced by a usage limit or a decision by Brook. Haiku&#39;s share cost $6.76 notional. <!-- claim-check: Sweep 2/Round 1/oneshot-cost.log, last entry per packet --></p>
+<h2>What running it taught us about search</h2>
+<ul>
+<li><strong>Free search runs out by the hour.</strong> Keenable&#39;s public tier allows 1,000 requests an hour per IP; Exa and Parallel returned HTTP 429 at the same time. A free Keenable account removes the hourly cap and allows 100,000 requests a month. With the key, the pace went from stalls to about 130 harvests in five minutes. <!-- claim-check: docs.keenable.ai/rate-limits.md, and monitor output 15:47 to 16:12 --></li>
+<li><strong>A cooldown should bench one vendor, not all of them.</strong> The first quota handler paused every search for Keenable&#39;s whole cooldown (602 s), so all workers idled while Exa and Parallel were free. Skipping only the throttled vendor fixed it. <!-- claim-check: run_oneshot.py before and after the change, and harvest counts around 12:07 --></li>
+<li><strong>Benching the last vendor stalls everything.</strong> Treating Brave&#39;s rate-limit replies like the free vendors&#39; benched Brave too, and with every vendor benched the workers slept through a 23-minute cooldown; no worker had a network connection open. The cause was inferred from that, not proved. Brave now paces all processes to one call a second through a lock file and retries its own rate-limit replies. <!-- claim-check: lsof on a runner and the brave_mcp.py change, about 12:50 --></li>
+<li><strong>Paid credit runs out too.</strong> Brave&#39;s prepaid balance returned 402 at about 13:30 and the postpaid account at about 15:35, after 1,440 calls. A 402 now benches Brave for an hour. <!-- claim-check: run trails and .brave-pace --></li>
+<li><strong>Retrying an honest empty wastes calls.</strong> &quot;No web results found&quot; is an answer, not an error. It is now accepted, and a search that finds nothing is retried in a broader form that the trail states plainly. <!-- claim-check: run_oneshot.py search_or_relax and its tests --></li>
+<li><strong>Detached is not detached enough.</strong> Runners started with <code>nohup</code> ended silently when the agent session that launched them closed, inferred from the timing; <code>Sweep 2/detach.py</code> now starts them in their own session. <!-- claim-check: runner logs ending 13:49 without a stop line --></li>
+</ul>
+<h2>Redoing empty searches</h2>
+<p>99 harvests had an empty or failed search. Moved aside and redone once search worked, they gave 248 rows against 167. <!-- claim-check: retry comparison, Sweep 2/Round 1 superseded/manifest.jsonl --></p>
 <h2>Unknown</h2>
 <p>Quality has been judged by one reader from names and answer openings, with no row checked against its source. The provider route has only run against a local stub. Rate limits at volume, extra-usage billing on the Claude account, and Round 1&#39;s final yield are all unmeasured.</p>
 

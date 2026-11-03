@@ -1,0 +1,97 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Source: The plan for video direction docs for Gemma — PodCast Builder devlog</title>
+<style>
+body{max-width:760px;margin:2.5rem auto;padding:0 1.2rem;font-family:ui-sans-serif,system-ui,sans-serif;background:#16181f;color:#dfe2ea;line-height:1.65}
+a{color:#7aa2f7} h1,h2{line-height:1.25} code{background:#262a33;padding:.1em .35em;border-radius:4px;font-size:.9em}
+pre{background:#1d2027;padding:1rem;border-radius:8px;overflow-x:auto} .meta{color:#8b90a0;font-size:.85rem}
+.back{font-size:.85rem} .backnote{background:#262a33;border:1px solid #333;border-radius:8px;padding:.8rem 1rem;font-size:.85rem;color:#aeb3c2}
+</style></head><body>
+<p class="back"><a href="../index.html">← PodCast Builder devlog</a></p>
+<p class="backnote">This is a public snapshot of a private project-tracking note, sanitised for
+publication: internal links, status metadata and personal paths are removed. The live private
+version lives in the author's Obsidian vault.</p>
+<h1>The plan for video direction docs for Gemma</h1>
+<h1>Plan: video direction docs Gemma can use in the music video</h1>
+<p>Written 2026-11-03 while Round 1 finished. Owned by the ticket for turning the corpus into Gemma docs. Starting point: the song-style docs built for PCB-047.</p>
+<h2>Where the docs would be used</h2>
+<p>The shots stage asks Gemma 4 12B for one direction per video: a frame, a climax, one <code>medium</code>, one to three worlds each with a free-text <code>look</code>, up to three cast, a <code>never</code> list and one beat per act. Each shot then picks <code>framing</code> from three values (wide, medium, close-up) and <code>camera</code> from seven moves (static, slow push in, slow pull out, pan, tilt, tracking, handheld). Medium and look are free text the model invents today. <!-- claim-check: read in podcastbuilder src/lib/direction.ts at ffaa0d6 --></p>
+<p>So the research has four places to land, in order of how much a choice changes the video:</p>
+<table>
+<thead>
+<tr>
+<th>Slot in <code>direction.ts</code></th>
+<th>What the corpus offers</th>
+<th>Corpus dimensions</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>medium</code></td>
+<td>named visual styles, animation techniques, materials, capture media, film movements</td>
+<td>aesthetic, animation-technique, material, capture-medium; roots B03, C01 to C06</td>
+</tr>
+<tr>
+<td>world <code>look</code></td>
+<td>colour schemes, light, contrast, period looks, set and texture</td>
+<td>aesthetic, material, attention; root A03</td>
+</tr>
+<tr>
+<td>beats, opening and climax</td>
+<td>sequence shapes, cutting to music, figurative devices, opening and ending conventions</td>
+<td>sequence-grammar, shot-function, device; roots A04 to A06, B01</td>
+</tr>
+<tr>
+<td>shot <code>framing</code> and <code>camera</code></td>
+<td>framings, viewpoints, moves, platforms</td>
+<td>camera-operation, camera-platform, shot-function; roots A01, A02</td>
+</tr>
+</tbody></table>
+<p>This plan leaves sound, attention-research and festival or archive rows in the corpus, because the direction schema asks for nothing they would fill (checked: the required fields and enums in <code>podcastbuilder/src/lib/direction.ts</code>).</p>
+<h2>How the song-style docs work, and what carries over</h2>
+<p>Song styles are chosen in two constrained steps. Gemma picks a family from about 29, each a one-line &quot;for X&quot; description, then a style within it from compact cards; each answer is an enum, so it cannot invent a style. The cards were labelled offline by a model panel (Gemma, Qwen 3 8B, Phi-4 mini, then reconciled), assignments live in an editable JSON, and the Markdown family docs are generated from it. Each style entry says use when, suits, feel, signals, against, wrong for and voices. <!-- claim-check: read in podcastbuilder data/build-style-index.py, select-family.py, select-style.py, data/style-cards and data/styles/README.md --></p>
+<p>Carry over: two-level choice, enum answers, a short reason logged with each pick, a generated doc from an editable assignment file, the &quot;against&quot; and &quot;wrong for&quot; fields, and the PCB-047 rule to keep room for bold pairings such as the terrace chant for air strikes.</p>
+<h2>Why this data needs a different shape</h2>
+<ol>
+<li><strong>Several choices, not one.</strong> A song needs one style; a video needs a medium, a look per world, an opening and climax device, and per-shot moves. So there is one small catalogue per slot, not one catalogue.</li>
+<li><strong>The data is raw.</strong> Round 1 plus the earlier harvests hold 15,833 rows and 13,078 distinct names, unreviewed. In a 30-row read about 18 were useful, 6 generic and 6 phrases lifted from prose; 3.1% of names were missing from their cited source text. Song styles began as a curated library; these need cleaning first. <!-- claim-check: profile and sample scripts over Sweep 2 Raw and Round 1, 2026-11-03; sample n=30, one reader --></li>
+<li><strong>Many names for one idea.</strong> 2,577 <code>alias</code> and <code>near</code> links and 537 exact-repeat groups exist, across languages (plano próximo, 望遠レンズを多用). An entry must be one idea with its other names folded in, or Gemma sees duplicates as different choices. <!-- claim-check: see_near.json and see_rows.json, 2026-11-03 --></li>
+<li><strong>Not everything may render.</strong> Rack focus, split diopter or a dolly zoom are real direction but may not be controllable in a Qwen-Image still and a five-second LTX or H3 clip, which are also asked for no lettering. A card should say whether the pipeline can show it, and that needs a render test, not a label. <!-- claim-check: untested assumption to be checked in step 5; no-lettering rule read in direction.ts --></li>
+<li><strong>The output is prompt text.</strong> A song card feeds a choice; a medium or look card must also give the paragraph pasted into every still prompt, like the mermaid video&#39;s ABOVE and BELOW looks, plus what to add to <code>never</code>.</li>
+</ol>
+<h2>Doc shapes</h2>
+<p><strong>Medium card</strong>, about 60 words for the choice, plus prompt text used only after it is chosen:</p>
+<ul>
+<li>name, id, also called (from <code>alias</code> links), close variants (from <code>near</code> links, with their difference)</li>
+<li>use when: what kind of story or song it suits; against: where it fights the story</li>
+<li>look: one paragraph a still prompt can paste: technique, material, light, palette</li>
+<li>motion: how movement should read in a clip (stepped frames for stop motion, drifting for watercolour)</li>
+<li>avoid: what breaks it, added to the direction&#39;s <code>never</code></li>
+<li>renders: <code>verified</code>, <code>partial</code> or <code>untested</code>, with the test still&#39;s path</li>
+<li>sources: how many harvests name it, and one example work</li>
+</ul>
+<p><strong>Look card</strong>: the same, without motion, chosen per world.</p>
+<p><strong>Device card</strong> for openings, climaxes, endings and transitions: purpose, how to stage it in shots of about five seconds, which act it fits, and how many shots it needs.</p>
+<p><strong>Shot vocabulary</strong>: no cards. Code widens the <code>framing</code> and <code>camera</code> enums only with terms that pass a clip render test, each with the exact wording the clip prompt uses.</p>
+<p>Families per slot, built like the song families: for media perhaps photographic periods, painted, drawn, stop motion and materials, collage and cut-out, computer image, experimental, each under about 25 cards so a family listing stays short for Gemma.</p>
+<h2>Pipeline</h2>
+<p>Proposed: every step runs from scripts in the corpus repository and writes into <code>podcastbuilder/data/video/</code>, the way the song docs live in <code>podcastbuilder/data/</code>. Under this plan the corpus stays private and Gemma sees only the generated docs.</p>
+<ol>
+<li><strong>Freeze Round 1.</strong> Finish the run, retry failed packets, run <code>see_near.py</code> once more, and normalise the older <code>Raw</code> tables, some of which put URLs in the confidence column. No tokens beyond the last linking run.</li>
+<li><strong>Canonical entries.</strong> Fold exact repeats and <code>alias</code> links into one entry per idea; keep <code>near</code> links as variants. Drop rows that fail cheap checks: film titles, names over about six words, names absent from their source. Code only.</li>
+<li><strong>Slot labelling by a local panel.</strong> Gemma, Qwen and Phi label each entry, in batches of ten as the song index did: which slot, if any; is it something a director can choose; a 40-word card draft from the entry&#39;s own rows only. Reconcile disagreements and mark them for review, as <code>style-family-review.json</code> does. Local models, no paid spend.</li>
+<li><strong>Families and cards.</strong> Group each slot&#39;s entries into families with an editable assignment file, generate the Markdown docs and a JSON index from it, and have Brook read a sample of each family before anything ships.</li>
+<li><strong>Render qualification.</strong> One still per medium and look card, and one clip per proposed camera move, judged by the existing stills judge. Cards below the bar stay <code>untested</code> or <code>partial</code> and are not offered. Research the image and video models&#39; known limits first, then test only an approved shortlist.</li>
+<li><strong>Wire into <code>direction.ts</code>.</strong> Before writing the direction, Gemma picks a medium family, then a medium card, each as an enum with a logged reason; the card&#39;s look and avoid text are pasted in rather than invented. Then a look per world, then an opening and climax device. Code builds each shortlist of five to eight cards, and one shortlist slot is drawn at random so a bold pairing stays possible.</li>
+<li><strong>Evaluate.</strong> Against today&#39;s free-text direction on the same songs: stills judge pass rate (PCB-050&#39;s bar is 80% on first planning), and Brook&#39;s preference on at least three episodes, as PCB-047 set for song styles.</li>
+</ol>
+<p>Gaps found in steps 4 and 5, such as a family with few renderable cards, become the packet selection for Round 2 instead of more of the same.</p>
+<h2>Open decisions for Brook</h2>
+<ul>
+<li>Which slot first. Recommendation: medium, then world look, because they change every shot and mirror the song-style choice most closely.</li>
+<li>How much review per family before it ships: a sample read, or every card.</li>
+<li>Whether render qualification may use the GPU between podcast runs.</li>
+</ul>
+<h2>Not decided here</h2>
+<p>The exact families, card word limits and shortlist size are to be set from the step 3 output, not in advance.</p>
+
+</body></html>

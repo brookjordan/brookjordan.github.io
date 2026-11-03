@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#1a1d24" />
+    <meta name="color-scheme" content="dark" />
+    <title>One search engine sneezed and every worker went home</title>
+    <style>
+/* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
+   This is the single source of truth for colour, radius, spacing and type.
+   It is inlined ahead of each page's stylesheet at build time, and linked
+   first in dev so opening the .html files directly still resolves the vars.
+
+   Theming: everything below is a semantic token mapped onto a small palette of
+   primitives. To add a theme, override the *semantic* tokens under a selector
+   (see the commented [data-theme="light"] block at the bottom) — no stylesheet
+   needs to change, only these variables. */
+:root {
+  color-scheme: dark;
+
+  /* ---- palette primitives (raw colours; reference these only via the tokens below) ---- */
+  --c-ink-900: #0f1115;
+  --c-ink-800: #1a1d24;
+  --c-ink-700: #232732;
+  --c-ink-600: #2a2f3a;
+  --c-fog-100: #e8eaed;
+  --c-fog-300: #9aa0a6;
+  --c-fog-500: #6b727d;
+  --c-accent: #7c9cff;
+
+  /* ---- semantic: background / border / text, primary > secondary > tertiary ---- */
+  --bg-primary: var(--c-ink-900);
+  --bg-secondary: var(--c-ink-800);
+  --bg-tertiary: var(--c-ink-700);
+
+  --border-primary: var(--c-ink-600);
+  --border-secondary: rgba(150, 170, 210, 0.16);
+
+  --text-primary: var(--c-fog-100);
+  --text-secondary: var(--c-fog-300);
+  --text-tertiary: var(--c-fog-500);
+
+  --accent: var(--c-accent);
+
+  /* ---- radius scale ---- */
+  --radius-sm: 5px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 9999px;
+
+  /* ---- spacing / padding scale ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 2rem;
+
+  /* ---- type ---- */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* Shared cross-nav link (gallery <-> devlog). Both app.css and blog.css inline this
+   file, so defining it once here keeps the two links visually identical. */
+.cross-link {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.cross-link:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+/* Example theme override — set <html data-theme="light"> to activate (or wire it
+   to prefers-color-scheme). Left commented so we don't ship untuned colours:
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg-primary: #fbfbfd;
+  --bg-secondary: #f1f2f5;
+  --bg-tertiary: #e7e9ee;
+  --border-primary: #d4d8e0;
+  --border-secondary: rgba(20, 30, 60, 0.12);
+  --text-primary: #1a1d24;
+  --text-secondary: #555b66;
+  --text-tertiary: #7b828d;
+}
+*/
+
+</style>
+    <style>
+:root {
+  /* Local aliases mapped onto the shared tokens in tokens.css (inlined first),
+     so the devlog and the gallery share one palette, radius and spacing scale. */
+  --bg: var(--bg-primary);
+  --bg-soft: var(--bg-secondary);
+  --panel: var(--bg-tertiary);
+  --text: var(--text-primary);
+  --muted: var(--text-secondary);
+  --border: var(--border-secondary);
+  --radius: var(--radius-md);
+  /* --accent comes straight from tokens.css */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.65 var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.site-header,
+.site-footer {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 1.25rem 1.25rem;
+}
+
+.site-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text);
+}
+
+.brand span {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.content {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+
+.site-footer {
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* ---- post typography ---- */
+.content h1 {
+  font-size: 1.9rem;
+  line-height: 1.2;
+  margin: 0 0 0.5rem;
+}
+
+.content h2 {
+  font-size: 1.35rem;
+  margin: 2rem 0 0.6rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.3rem;
+}
+
+.content h3 {
+  font-size: 1.1rem;
+  margin: 1.5rem 0 0.4rem;
+}
+
+.content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  display: block;
+  margin: 1.25rem 0;
+}
+
+.content audio {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.content blockquote {
+  margin: 1.25rem 0;
+  padding: 0.5rem 1rem;
+  border-left: 3px solid var(--accent);
+  background: var(--bg-soft);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  color: var(--muted);
+}
+
+.content pre {
+  background: #12151b;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  overflow: auto;
+  font-size: 0.88rem;
+}
+
+.content code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: rgba(150, 170, 210, 0.14);
+  padding: 0.1em 0.35em;
+  border-radius: 5px;
+}
+
+.content pre code {
+  background: none;
+  padding: 0;
+}
+
+.post-banner {
+  width: 100%;
+  max-height: 22rem;
+  object-fit: cover;
+  border-radius: var(--radius);
+  display: block;
+  margin: 0 0 1.5rem;
+}
+
+/* Click-to-cycle: slide 0 (current) sits in normal flow and sizes the box; every other
+   slide overlays it absolutely at opacity 0. web/blog.html's script sets each slide's
+   opacity directly (not CSS classes) so this scales to any number of legacy versions. */
+.banner-compare {
+  position: relative;
+  cursor: pointer;
+}
+
+.banner-compare .banner-slide {
+  margin: 0;
+  transition: opacity 0.25s ease;
+}
+
+.banner-compare .banner-slide:not([data-slide='0']) {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.banner-compare-hint {
+  position: absolute;
+  right: 0.7rem;
+  bottom: calc(1.5rem + 0.7rem);
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 0.72rem;
+  line-height: 1;
+  padding: 0.4rem 0.65rem;
+  border-radius: 999px;
+  opacity: 0.85;
+  transition: opacity 0.15s ease;
+}
+
+.banner-compare:hover .banner-compare-hint {
+  opacity: 1;
+}
+
+/* ---- per-post header (date + tags) ---- */
+.post-meta {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0 0 1.5rem;
+}
+
+.tag {
+  display: inline-block;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 0.1em 0.7em;
+  font-size: 0.78rem;
+  margin-right: 0.35rem;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+/* ---- prev/next post nav (baked at build time, see postNav in src/blog.ts) ---- */
+.post-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 2rem 0 0;
+}
+
+.post-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-soft);
+  color: var(--text);
+  min-width: 0;
+}
+
+.post-nav-link:hover {
+  border-color: var(--accent);
+  text-decoration: none;
+}
+
+.post-nav-empty {
+  border-color: transparent;
+  background: none;
+}
+
+.post-nav-next {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.post-nav-arrow {
+  color: var(--muted);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.post-nav-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.post-nav-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.post-nav-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .post-nav {
+    grid-template-columns: 1fr;
+  }
+
+  .post-nav-next {
+    justify-content: flex-start;
+    text-align: left;
+  }
+}
+
+/* ---- index listing ---- */
+.index-intro {
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+
+.post-group-date {
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 2rem 0 0.75rem;
+}
+
+.post-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.post-list li {
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.post-list a.post-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.post-list .post-row-meta {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+}
+
+.post-time {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  margin-right: 0.5rem;
+  cursor: help;
+}
+
+</style>
+  <style>
+/* --- index cards / featured / thumbnails (PodCast Builder devlog) --- */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:var(--space-5,1.5rem);margin:2rem 0}
+.card{display:flex;flex-direction:column;border:1px solid var(--border-primary,#333);border-radius:var(--radius-md,10px);overflow:hidden;background:var(--bg-secondary,#22252c);transition:transform .12s ease,border-color .12s ease}
+.card:hover{transform:translateY(-2px);border-color:var(--accent,#7aa2f7)}
+.card-body{display:flex;flex-direction:column;gap:.4rem;padding:1rem 1.1rem 1.2rem}
+.card-title{margin:0;font-size:1.02rem;line-height:1.35}
+.card-title a{color:var(--text-primary,#e8eaf0);text-decoration:none}
+.card-title a:hover{color:var(--accent,#7aa2f7)}
+.card .post-time{color:var(--text-tertiary,#8b90a0);font-size:.78rem}
+.blurb{margin:0;color:var(--text-secondary,#aeb3c2);font-size:.88rem;line-height:1.5}
+.readmore{margin:.2rem 0 0}
+.readmore a{color:var(--accent,#7aa2f7);font-size:.85rem;text-decoration:none;font-weight:600}
+.readmore a:hover{text-decoration:underline}
+.thumb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.3rem;aspect-ratio:16/9;text-decoration:none;overflow:hidden;
+  background:linear-gradient(135deg,hsl(var(--h) 45% 16%),hsl(var(--h) 55% 26%));border-bottom:1px solid var(--border-primary,#333);position:relative}
+.thumb .thumb-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.thumb .thumb-topic{position:absolute;left:.6rem;bottom:.45rem;font-size:.66rem;text-transform:uppercase;letter-spacing:.14em;color:#fff;background:rgba(10,12,18,.62);padding:.14rem .5rem;border-radius:999px;z-index:1}
+.featured{display:grid;grid-template-columns:minmax(220px,380px) 1fr;gap:1.5rem;align-items:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border-primary,#333);border-radius:var(--radius-lg,14px);background:var(--bg-tertiary,#262a33)}
+.featured .thumb{aspect-ratio:auto;height:100%;min-height:180px;border:0;border-radius:var(--radius-md,10px)}
+.featured-body{display:flex;flex-direction:column;gap:.5rem}
+.kicker{margin:0;font-size:.75rem;text-transform:uppercase;letter-spacing:.16em;color:var(--accent,#7aa2f7);font-weight:700}
+.featured-title{margin:0;font-size:1.5rem;line-height:1.3}
+.featured-title a{color:var(--text-primary,#e8eaf0);text-decoration:none}
+.featured-title a:hover{color:var(--accent,#7aa2f7)}
+.all-posts-heading{margin-top:3rem}
+.intro{max-width:62ch;color:var(--text-secondary,#aeb3c2)}
+.evidence-window{color:var(--text-tertiary,#8b90a0);font-size:.85rem;margin:0 0 1.5rem}
+.post-banner{width:100%;max-height:340px;object-fit:cover;border-radius:var(--radius-md,10px);margin:0 0 1.2rem;border:1px solid var(--border-primary,#333)}
+/* Banner provenance: ComfyUI mark links to the stored workflow, plus the prompt. */
+.banner-credit{display:flex;flex-wrap:wrap;align-items:center;gap:.45rem;margin:-.5rem 0 1.3rem;font-size:.8rem;color:var(--text-tertiary,#8b90a0)}
+.banner-credit a{color:var(--text-tertiary,#8b90a0);text-decoration:none}
+.banner-credit a:hover{color:var(--accent,#7aa2f7);text-decoration:underline}
+.comfy-link{display:inline-flex;align-items:center;gap:.35rem;padding:.14rem .5rem .14rem .28rem;border:1px solid var(--border-primary,#333);border-radius:999px}
+.comfy-link:hover{border-color:var(--accent,#7aa2f7);text-decoration:none}
+.comfy-mark{width:15px;height:15px;flex:none;border-radius:3px}
+.credit-sep{opacity:.6}
+.banner-prompt{margin:0 0 1.6rem;font-size:.82rem;color:var(--text-tertiary,#8b90a0)}
+.banner-prompt summary{cursor:pointer;font-weight:600}
+.banner-prompt[open] summary{margin-bottom:.45rem}
+.banner-prompt p{margin:0;padding:.6rem .75rem;border-left:2px solid var(--border-primary,#333);color:var(--text-secondary,#aeb3c2);line-height:1.5}
+.part-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.16em;color:var(--text-tertiary,#8b90a0);margin:0 0 .6rem;font-weight:700}
+.post-title{margin:0 0 .8rem;font-size:1.7rem;line-height:1.25}
+.lead{font-size:1.02rem;color:var(--text-secondary,#aeb3c2);line-height:1.55;margin:0 0 1.8rem;max-width:64ch}
+.sources{margin-top:2.5rem;padding-top:1.2rem;border-top:1px solid var(--border-primary,#333)}
+.sources h2{font-size:1.1rem;margin:0 0 .4rem}
+.sources-note{font-size:.8rem;color:var(--text-tertiary,#8b90a0);margin:0 0 .6rem}
+.sources ul{margin:0;padding-left:1.2rem}
+.sources li{margin:.25rem 0;font-size:.9rem}
+@media(max-width:640px){.featured{grid-template-columns:1fr}.featured .thumb{min-height:120px}}
+</style></head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="./index.html">PodCast Builder <span>· devlog</span></a>
+      <nav class="site-nav"></nav>
+    </header>
+    <main class="content">
+<p class="part-label">Part 64 of 72</p><img class="post-banner" src="https://assets.brook.dev/podcast/blog-banners/p65-banner.webp" alt="" onerror="this.remove()"><p class="evidence-window">3 Nov 2026</p><h1 class="post-title">One search engine sneezed and every worker went home</h1><p class="lead">When the free search engine hit its hourly limit, every search stopped, including the two backups that exist for exactly that moment. Then the fix benched the last engine too, and sixteen workers slept for 23 minutes.</p><p>At 11:47 the harvest counter said 1,268. Twenty minutes later it said 1,287. Nineteen harvests, from sixteen workers, in twenty minutes! Something had quietly sat down, and it was not the model.</p>
+<h2>The numbers before the theory</h2>
+<table>
+<thead>
+<tr>
+<th>Window</th>
+<th>Harvests</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>11:42 to 11:47</td>
+<td>65 in five minutes</td>
+</tr>
+<tr>
+<td>11:47 to 12:07</td>
+<td>19 in twenty minutes</td>
+</tr>
+</tbody></table>
+<p>Both runners were alive. No packet had failed. The log had one new kind of line in it: &#39;Keenable hourly quota: shared cooldown 602s&#39;. <!-- claim-check: monitor output and round1-haiku.out, 2026-11-03 --></p>
+<h2>A tragedy in two good ideas</h2>
+<p>Idea one: our free search engine, Keenable, tells you how long to wait when you hit its hourly limit. Lovely! Honour it, so we stop hammering a service that has asked us nicely to go away.</p>
+<p>Idea two: share that wait across every worker, so sixteen polite workers do not each discover the limit separately. <!-- claim-check: read in run_oneshot.py wait_search_slot before the change --></p>
+<p>Put them together and you get this: the moment Keenable said &#39;wait ten minutes&#39;, every search stopped for ten minutes. Including the searches meant for Exa and Parallel, the two backup engines that sit behind Keenable precisely for this moment. We had built a fire exit and then locked it whenever there was a fire.</p>
+<p>We checked the backups by hand. Exa returned 8 results and Parallel 10. They were fine. They were just never asked. <!-- claim-check: one probe of each, about 12:07 --></p>
+<h2>The fix, and then the sequel</h2>
+<p>A cooldown now benches one vendor, not all of them. Keenable sits out its own wait; everyone else carries on. The next five minutes gave 70 harvests. HUZZAH. <!-- claim-check: monitor at 12:13 --></p>
+<p>Then we added a fourth search engine (paid Brave, a story of its own), split the work across four runners, and taught the code to bench Exa and Parallel for ten minutes after a 429. At 12:50 the counter had moved by one. ONE.</p>
+<p>Every engine had been benched, Brave included, so the fallback did the only thing left: it slept through Keenable&#39;s whole cooldown, about 23 minutes. We looked at a runner&#39;s open network connections and found none at all. Brave itself answered a direct test in 0.6 seconds. That it was Brave&#39;s own rate-limit replies benching it is our best reading of the evidence, not something we caught in the act. <!-- claim-check: lsof on one runner and a direct Brave test, about 12:50; mechanism inferred --></p>
+<p>So Brave is never benched now. All four runners share one pace for it, about one call a second, kept in a small lock file, and a Brave rate-limit reply gets a short pause and a retry. The longest fallback wait dropped to 20 seconds. Four Brave calls took 4.4 seconds in the check, which is exactly how slow we asked it to be. <!-- claim-check: read in run_oneshot.py and brave_mcp.py after the change; pace check 2026-11-03 --></p>
+<h2>Rejected, briskly</h2>
+<ul>
+<li>Remove the cooldown and retry instantly. That is how you get a polite service to stop being polite. Next!</li>
+<li>One runner, so nobody shares anything. Safe, and about a quarter of the speed. Next!</li>
+</ul>
+<h2>What still hurts</h2>
+<p>The fallback wait was later lengthened again, on purpose, for the hour when every engine really was out. Pauses are back, but packets wait instead of failing. And a pace of one Brave call a second is our guess at a safe speed, not a number from Brave.</p>
+<section class="sources"><h2>Source notes</h2><p class="sources-note">Each source is a sanitised public snapshot of a private project-tracking note.</p><ul><li><a href="sources/what-the-second-level-research-trials-taught-us.html">What the second-level research trials taught us, 3 November 2026</a></li><li><a href="sources/pcb-056-run-the-video-direction-discovery-wave.html">PCB-056, the video direction discovery wave</a></li></ul></section><nav class="post-nav"><a class="post-nav-link" href="p64-the-second-pass-was-already-on-disk.html">← earlier: Most of the second pass was already on disk</a><a class="post-nav-link" href="p66-we-ran-out-of-internet.html">later →: We ran out of internet. Twice.</a></nav></main>
+    <footer class="site-footer">
+      <p>Private review preview of the <strong>PodCast Builder</strong> devlog — built from the senior-accepted draft set, 2026-09-19.</p>
+    </footer>
+    <script>
+      // Localise all post times to the reader's timezone.
+      // Each <time class="post-time" data-ts="..."> carries a Unix epoch (ms);
+      // we replace the static server-rendered HH:MM with the local equivalent.
+      document.querySelectorAll('time.post-time[data-ts]').forEach(function (el) {
+        var d = new Date(+el.dataset.ts);
+        el.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        el.title = d.toLocaleString(); // full local datetime on hover
+      });
+
+      // Click (or Enter/Space) a .banner-compare to cycle: current -> most recent earlier
+      // version -> ... -> oldest/original -> back to current. Each click advances one slide;
+      // opacity is set directly (not via CSS classes) so this works for any slide count.
+      document.querySelectorAll('.banner-compare').forEach(function (el) {
+        var slides = el.querySelectorAll('.banner-slide');
+        var hint = el.querySelector('.banner-compare-hint');
+        var count = slides.length;
+        var active = 0;
+        function render() {
+          slides.forEach(function (s, i) {
+            s.style.opacity = i === active ? '1' : '0';
+          });
+          if (!hint) return;
+          if (active === 0) {
+            hint.textContent =
+              'click to see ' + (count === 2 ? 'the earlier version' : count - 1 + ' earlier versions');
+          } else if (active === count - 1) {
+            hint.textContent = 'original banner · click for current';
+          } else {
+            hint.textContent = 'earlier version ' + active + ' of ' + (count - 1) + ' · click to continue';
+          }
+        }
+        function advance() {
+          active = (active + 1) % count;
+          render();
+        }
+        el.addEventListener('click', advance);
+        el.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            advance();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
