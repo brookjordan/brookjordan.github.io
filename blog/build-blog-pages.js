@@ -3,7 +3,7 @@ import fs from "fs/promises";
 import { marked } from "marked";
 import markedImages from "marked-images";
 import prism from "prismjs";
-import { fileMetadata } from "file-metadata";
+import { createHash } from "crypto";
 import htmlminifier from "html-minifier";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
@@ -42,6 +42,34 @@ const postFileNamesGetter = readdir(path.join(__dirname, "posts")).then(
   (fileNames) => fileNames.filter((fileName) => fileName.endsWith(".md"))
 );
 
+// Each post's dates are pinned in dates.json, so a rebuild on another machine or
+// after a fresh clone gives the same dates. File metadata changes whenever files
+// are copied, and on 2026-11-07 a rebuild re-dated every old post to the day the
+// repository arrived on this laptop. A new post is pinned on its first build; a
+// post whose Markdown changes gets today as its "last updated" date.
+const datesPath = path.join(__dirname, "dates.json");
+const postDatesGetter = (async () => {
+  const dates = JSON.parse(await readFile(datesPath, "utf8").catch(() => "{}"));
+  let changed = false;
+  for (const fileName of await postFileNamesGetter) {
+    const postName = fileName.split(".")[0];
+    const contents = await readFile(path.join(__dirname, "posts", fileName));
+    const sha256 = createHash("sha256").update(contents).digest("hex");
+    const entry = dates[postName];
+    const today = new Date();
+    if (!entry) {
+      dates[postName] = { published: today.toISOString(), updated: today.toDateString(), sha256 };
+      changed = true;
+    } else if (entry.sha256 !== sha256) {
+      entry.updated = today.toDateString();
+      entry.sha256 = sha256;
+      changed = true;
+    }
+  }
+  if (changed) await writeFile(datesPath, JSON.stringify(dates, null, 2) + "\n");
+  return dates;
+})();
+
 function minifyHTML(html) {
   return htmlminifier.minify(html, {
     removeComments: true,
@@ -76,22 +104,20 @@ async function buildPosts() {
         return await open(indexHTMLFilePath, "w");
       })();
 
-      let [mdMeta, mdContents, indexHTMLFileDescriptor] = await Promise.all([
-        fileMetadata(markdownFilePath),
+      let [postDates, mdContents, indexHTMLFileDescriptor] = await Promise.all([
+        postDatesGetter,
         mdContentsGetter,
         indexHTMLFileDescriptorGetter,
       ]);
+      const dates = postDates[postName];
 
       let htmlContents = marked.parse(mdContents);
       let indexHTMLFileContents = postTemplateString
-        .replace(
-          postLastUpdatedPlaceholder,
-          `${mdMeta.contentModificationDate}`.split(/ \d+:/)[0]
-        )
+        .replace(postLastUpdatedPlaceholder, dates.updated)
         .replace(postContentPlaceholder, htmlContents)
         .replace(
           directoryPublishedDatePlaceholder,
-          mdMeta.contentCreationDate.toISOString()
+          dates.published
         );
       await writeFile(
         indexHTMLFileDescriptor,
@@ -135,9 +161,9 @@ async function buildPostDirectory() {
       postFileNames.map(async (postFileName) => {
         let markdownFilePath = path.join(__dirname, "posts", postFileName);
         let postName = postFileName.split(".")[0];
-        let [mdContents, mdMeta] = await Promise.all([
+        let [mdContents, postDates] = await Promise.all([
           readFile(markdownFilePath, "utf8"),
-          fileMetadata(markdownFilePath),
+          postDatesGetter,
         ]);
 
         let mdTitle;
@@ -150,7 +176,7 @@ async function buildPostDirectory() {
         const explicitLink = `https://brook.dev/blog/post/${postName}`;
         const link = `./post/${postName}`;
         return {
-          date: mdMeta.contentCreationDate,
+          date: new Date(postDates[postName].published),
           link: explicitLink,
           title: mdTitle,
           HTML: directoryLinkTemplate
@@ -171,8 +197,8 @@ async function buildPostDirectory() {
     <link>https://brook.dev/blog</link>
     <description>Various things Brook did or liked</description>
     <language>en-gb</language>
-    <pubDate>${files.sort((a, b) => +new Date(b.date) - +new Date(a.date))[0].date}</pubDate>
-    <lastBuildDate>${String(new Date())}</lastBuildDate>
+    <pubDate>${new Date(files.sort((a, b) => +new Date(b.date) - +new Date(a.date))[0].date).toUTCString()}</pubDate>
+    <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
     <managingEditor>brook@brook.dev</managingEditor>
     <webMaster>brook@brook.dev</webMaster>
 
@@ -181,7 +207,7 @@ ${files.map((item) =>
       <title>${item.title}</title>
       <link>${item.link}</link>
       <description>${item.title}</description>
-      <pubDate>${item.date}</pubDate>
+      <pubDate>${new Date(item.date).toUTCString()}</pubDate>
       <guid>${item.link}</guid>
     </item>`
 
