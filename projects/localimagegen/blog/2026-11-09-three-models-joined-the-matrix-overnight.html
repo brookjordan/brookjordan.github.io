@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#1a1d24" />
+    <meta name="color-scheme" content="dark" />
+    <title>Three new models, one midnight ghost, and 384 pictures by breakfast</title>
+    <style>
+/* Design tokens shared by the gallery (app.css) and the devlog (blog.css).
+   This is the single source of truth for colour, radius, spacing and type.
+   It is inlined ahead of each page's stylesheet at build time, and linked
+   first in dev so opening the .html files directly still resolves the vars.
+
+   Theming: everything below is a semantic token mapped onto a small palette of
+   primitives. To add a theme, override the *semantic* tokens under a selector
+   (see the commented [data-theme="light"] block at the bottom) — no stylesheet
+   needs to change, only these variables. */
+:root {
+  color-scheme: dark;
+
+  /* ---- palette primitives (raw colours; reference these only via the tokens below) ---- */
+  --c-ink-900: #0f1115;
+  --c-ink-800: #1a1d24;
+  --c-ink-700: #232732;
+  --c-ink-600: #2a2f3a;
+  --c-fog-100: #e8eaed;
+  --c-fog-300: #9aa0a6;
+  --c-fog-500: #6b727d;
+  --c-accent: #7c9cff;
+
+  /* ---- semantic: background / border / text, primary > secondary > tertiary ---- */
+  --bg-primary: var(--c-ink-900);
+  --bg-secondary: var(--c-ink-800);
+  --bg-tertiary: var(--c-ink-700);
+
+  --border-primary: var(--c-ink-600);
+  --border-secondary: rgba(150, 170, 210, 0.16);
+
+  --text-primary: var(--c-fog-100);
+  --text-secondary: var(--c-fog-300);
+  --text-tertiary: var(--c-fog-500);
+
+  --accent: var(--c-accent);
+
+  /* ---- radius scale ---- */
+  --radius-sm: 5px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 9999px;
+
+  /* ---- spacing / padding scale ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 2rem;
+
+  /* ---- type ---- */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* Shared cross-nav link (gallery <-> devlog). Both app.css and blog.css inline this
+   file, so defining it once here keeps the two links visually identical. */
+.cross-link {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.cross-link:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+/* Example theme override — set <html data-theme="light"> to activate (or wire it
+   to prefers-color-scheme). Left commented so we don't ship untuned colours:
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg-primary: #fbfbfd;
+  --bg-secondary: #f1f2f5;
+  --bg-tertiary: #e7e9ee;
+  --border-primary: #d4d8e0;
+  --border-secondary: rgba(20, 30, 60, 0.12);
+  --text-primary: #1a1d24;
+  --text-secondary: #555b66;
+  --text-tertiary: #7b828d;
+}
+*/
+
+</style>
+    <style>
+:root {
+  /* Local aliases mapped onto the shared tokens in tokens.css (inlined first),
+     so the devlog and the gallery share one palette, radius and spacing scale. */
+  --bg: var(--bg-primary);
+  --bg-soft: var(--bg-secondary);
+  --panel: var(--bg-tertiary);
+  --text: var(--text-primary);
+  --muted: var(--text-secondary);
+  --border: var(--border-secondary);
+  --radius: var(--radius-md);
+  /* --accent comes straight from tokens.css */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.65 var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.site-header,
+.site-footer {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 1.25rem 1.25rem;
+}
+
+.site-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text);
+}
+
+.brand span {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.content {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+
+.site-footer {
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* ---- post typography ---- */
+.content h1 {
+  font-size: 1.9rem;
+  line-height: 1.2;
+  margin: 0 0 0.5rem;
+}
+
+.content h2 {
+  font-size: 1.35rem;
+  margin: 2rem 0 0.6rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.3rem;
+}
+
+.content h3 {
+  font-size: 1.1rem;
+  margin: 1.5rem 0 0.4rem;
+}
+
+.content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  display: block;
+  margin: 1.25rem 0;
+}
+
+.content audio {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.content blockquote {
+  margin: 1.25rem 0;
+  padding: 0.5rem 1rem;
+  border-left: 3px solid var(--accent);
+  background: var(--bg-soft);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  color: var(--muted);
+}
+
+.content pre {
+  background: #12151b;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  overflow: auto;
+  font-size: 0.88rem;
+}
+
+.content code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: rgba(150, 170, 210, 0.14);
+  padding: 0.1em 0.35em;
+  border-radius: 5px;
+}
+
+.content pre code {
+  background: none;
+  padding: 0;
+}
+
+.post-banner {
+  width: 100%;
+  max-height: 22rem;
+  object-fit: cover;
+  border-radius: var(--radius);
+  display: block;
+  margin: 0 0 1.5rem;
+}
+
+/* Click-to-cycle: slide 0 (current) sits in normal flow and sizes the box; every other
+   slide overlays it absolutely at opacity 0. web/blog.html's script sets each slide's
+   opacity directly (not CSS classes) so this scales to any number of legacy versions. */
+.banner-compare {
+  position: relative;
+  cursor: pointer;
+}
+
+.banner-compare .banner-slide {
+  margin: 0;
+  transition: opacity 0.25s ease;
+}
+
+.banner-compare .banner-slide:not([data-slide='0']) {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.banner-compare-hint {
+  position: absolute;
+  right: 0.7rem;
+  bottom: calc(1.5rem + 0.7rem);
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 0.72rem;
+  line-height: 1;
+  padding: 0.4rem 0.65rem;
+  border-radius: 999px;
+  opacity: 0.85;
+  transition: opacity 0.15s ease;
+}
+
+.banner-compare:hover .banner-compare-hint {
+  opacity: 1;
+}
+
+/* ---- per-post header (date + tags) ---- */
+.post-meta {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0 0 1.5rem;
+}
+
+.tag {
+  display: inline-block;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 0.1em 0.7em;
+  font-size: 0.78rem;
+  margin-right: 0.35rem;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+/* ---- prev/next post nav (baked at build time, see postNav in src/blog.ts) ---- */
+.post-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 2rem 0 0;
+}
+
+.post-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-soft);
+  color: var(--text);
+  min-width: 0;
+}
+
+.post-nav-link:hover {
+  border-color: var(--accent);
+  text-decoration: none;
+}
+
+.post-nav-empty {
+  border-color: transparent;
+  background: none;
+}
+
+.post-nav-next {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.post-nav-arrow {
+  color: var(--muted);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.post-nav-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.post-nav-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.post-nav-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .post-nav {
+    grid-template-columns: 1fr;
+  }
+
+  .post-nav-next {
+    justify-content: flex-start;
+    text-align: left;
+  }
+}
+
+/* ---- index listing ---- */
+.index-intro {
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+
+.post-group-date {
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 2rem 0 0.75rem;
+}
+
+.post-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.post-list li {
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.post-list a.post-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.post-list .post-row-meta {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+}
+
+.post-time {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  margin-right: 0.5rem;
+  cursor: help;
+}
+
+</style>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="./index.html">localimagegen <span>· devlog</span></a>
+      <nav class="site-nav"><a class="cross-link" href="../index.html">gallery →</a></nav>
+    </header>
+    <main class="content"><a class="back-link" href="./index.html">&larr; all posts</a>
+<article class="post">
+<h1>Three new models, one midnight ghost, and 384 pictures by breakfast</h1>
+<p class="post-meta">2026-11-09 · <span class="tag">matrix</span> <span class="tag">nitrofusion2</span> <span class="tag">animaaesthetic</span> <span class="tag">illustrious</span> <span class="tag">fibo</span></p>
+<blockquote>
+<p>&quot;Everything, come on, don&#39;t hold us back! Add all the image generators you can get your hands on!&quot;</p>
+</blockquote>
+<!-- claim-check: Brook's verbatim instruction, recorded in the 'Overnight takeover' section of LIG-053 on 8 November 2026 --><p>That is Brook at 22:31 last night, approving a model shortlist that had spent the evening sitting
+politely in a ticket, using words like &#39;secure the required user approval&#39;. It got the approval.
+It did not get a signature; it got a starting pistol.</p>
+<p>By breakfast the matrix had stamped <strong>384 new masters</strong>, the backlog had collapsed from 518
+actionable cells to 134, three models had joined the roster, and one controller had died quietly
+at 01:15 like a Victorian novelist. It got better. A cron job that did not exist at dinner time
+walked into the empty room at 01:15:04 and turned everything back on. Here is the whole night,
+with every number still bolted to its evidence.</p>
+<h2>Numbers before vibes</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>23:54 last night</th>
+<th>09:57 this morning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>done</td>
+<td>7,889</td>
+<td>8,273</td>
+</tr>
+<tr>
+<td>missing</td>
+<td>315</td>
+<td>127</td>
+</tr>
+<tr>
+<td>deprecated</td>
+<td>203</td>
+<td>7</td>
+</tr>
+<tr>
+<td>actionable</td>
+<td>518</td>
+<td>134</td>
+</tr>
+</tbody></table>
+<p>And the night&#39;s output, straight from the directory timestamps:</p>
+<table>
+<thead>
+<tr>
+<th>model</th>
+<th>masters</th>
+<th>per cell</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>animaaesthetic</td>
+<td>50</td>
+<td>about 40 seconds</td>
+</tr>
+<tr>
+<td>illustrious</td>
+<td>38</td>
+<td>19 to 25 seconds</td>
+</tr>
+<tr>
+<td>nitrofusion2</td>
+<td>50</td>
+<td>34 to 47 seconds</td>
+</tr>
+<tr>
+<td>nitrofusion2two</td>
+<td>50</td>
+<td>44 to 80 seconds</td>
+</tr>
+<tr>
+<td>fibo</td>
+<td>196</td>
+<td>about four minutes</td>
+</tr>
+</tbody></table>
+<p>Illustrious is the cheapest date in the building at 19 seconds a picture. FIBO stays for four
+rounds of porridge at four minutes a bowl. Both worked while you were asleep, which is the
+entire point of the machine.</p>
+<h2>Three models walked in, each with its own accent</h2>
+<p><strong>NitroFusion2, one step.</strong> Shift 3, CFG 1, euler/simple. Not our opinions; that is the author&#39;s
+one-step BF16 workflow, read through its embedded node group like an adult. And CFG 1 is not
+laziness: on a distilled model the guidance lives inside the weights, so asking for a second
+opinion is how you get soup. We have <em>had</em> that soup before, in this very devlog, and it cost 46
+seconds a bowl.</p>
+<p>Best bit: the author&#39;s own graph reuses <code>qwen_3_4b.safetensors</code> and <code>ae.safetensors</code>, which the
+server already had on the shelf. The only new luggage was the diffusion weights themselves,
+hashed against the publisher&#39;s LFS digests on the NAS before a single byte was hardlinked into
+the live store. Sources: the author workflow JSON and
+<code>research/nitrofusion2-2026-11-08/acquisition-plan.json</code>.</p>
+<p><strong>NitroFusion2 two-step</strong>, which is not the one-step model wearing a comedy moustache. Shift 6,
+two KSamplerAdvanced stages, and a LoRA applied at strength 0.5 then 0.0, because the author
+ships the two-step contract with per-step application. The temptation, at 23:00, was to take the
+one-step recipe and press &#39;2&#39;. The author ships two <em>different</em> workflows, which is the source
+material politely explaining that the guess would have been wrong. Sources: both author workflow
+JSONs at revision <code>62d1a7000af9c46a0c4348d936bd7670ff33c1b9</code>.</p>
+<p><strong>Anima-Aesthetic v1.1.</strong> The weights were already in the local store, so its entire audition was
+paperwork: 4,182,230,656 bytes, SHA-256 matching the publisher byte for byte, and then the house
+canvas at 30 steps. It got in on its checksum alone. Sources: the acquisition records on
+LIG-053.</p>
+<p>All of them entered the world as <code>matrix_enabled: false</code> and stayed that way until each had a
+smoke render that was actually opened and checked. <code>first-smoke-validation.json</code> records four
+outputs across the new models and the FIBO landscape: dimensionally correct, none monotonous,
+every one using the full 0 to 255 range; the two-step model&#39;s smoke ran as its own bounded pass
+at 23:30 and stamped like the rest. A model that renders black squares does not get into the
+matrix, no matter how exciting its release thread is. <!-- claim-check: first-smoke-validation.json fields; smoke run records in logs/events.ndjson; recipes and revision from the author workflow JSONs; checksums from the acquisition records on LIG-053 --></p>
+<h2>The loop that rendered pictures nobody wanted</h2>
+<p>A tragedy in three acts, as is tradition.</p>
+<p>The cast: Illustrious, whose sub-21-step renders have been incoherent since a July incident and
+are permanently deprecated in <code>config/deprecations.yaml</code>. Act one: the scheduler computes work.
+Act two: the scheduler drops already-deprecated rungs from its completed cache before deciding
+what to render, so it keeps requesting rungs the policy immediately bins. Regeneration as a
+service. Forever. Free of charge. Nobody ordered it, and it never stops.</p>
+<p>Act three is the fix, named plainly: a rung now counts as occupied if it is rendered, in flight,
+or capped by a failure in this pass; failures record only on observed outcomes; and a rung that
+fails twice in one pass stops being submitted. The Illustrious low-step rungs are excluded at
+the planning stage, so the loop is dead rather than napping. What it deliberately does not do:
+un-deprecate anything, delete history, or touch another model&#39;s scheduling. The old reasons stay
+in <code>config/deprecations.yaml</code>; the excluded masters stay on disk. Sources: <code>src/reconcile.ts</code>,
+<code>test/reconcile.live-strikes.test.ts</code> and <code>test/illustrious.exclusion-policy.test.ts</code>, red
+before, green after. <!-- claim-check: mechanism read in the named code and tests this session --></p>
+<h2>The ghost at 01:15</h2>
+<p>The first controller, launched at 23:54, got through 86 cells, 518 down to 432 on the keeper&#39;s
+own record, and then died at 01:15. No error. NO STACK TRACE. No dramatic exit music. Just gone,
+like a homeowner slipping off to bed without telling the party.</p>
+<p>On any previous night that is where the story ends: the GPU goes cold, four hundred cells sit
+unrendered, and the morning finds a lukewarm Mac and a todo list. Not tonight. A cron job was
+watching, on a strict rule: stay completely silent while a controller process exists, and act
+only when three doors are open at once, no controller, an empty ComfyUI queue, and cells still
+outstanding. At 01:15:04 it found all three doors open, relaunched the identical detached
+command, and wrote exactly one line of JSON about it. Controller two then ran eight and a half
+hours, chewed through the FIBO landscape at about four minutes a cell, and was finishing the
+last three as this post went out. Sources: <code>logs/matrix-watchdog.ndjson</code> (one entry, one
+relaunch) and <code>logs/events.ndjson</code>. <!-- claim-check: watchdog entry at 01:15:04 with the 432 count in its complete_line; overnight master counts from directory mtimes --></p>
+<h2>The ones the bouncer turned away</h2>
+<p><strong>P-JiT.</strong> Prepared, tested, recipes staged, and held at the door: its ComfyUI extension wants
+0.44 or newer and the server honestly reports 0.42.0. Upgrading the shared renderer at 23:30
+while a matrix runs on it is the sort of decision you make exactly once, and then spend the rest
+of your life explaining. Next!</p>
+<p><strong>P-H3-Image.</strong> The licence excludes several territories and needs an actual review against
+where the outputs go. No agent accepts a licence on your behalf at midnight, not even a very
+polite one. Homework pending. Next!</p>
+<p><strong>One shared recipe for both NitroFusion2 contracts.</strong> Rejected by the source material itself,
+which ships two different workflows and would like us to stop trying to out-guess the author at
+23:00.</p>
+<h2>What still hurts</h2>
+<ul>
+<li>127 Ideogram cells are still missing, and <code>lig status</code> calls them &#39;planned 2+ times and never
+once failed&#39;, which is a bookkeeping riddle wearing a lab coat. That riddle is the next
+ticket, not a rendering result.</li>
+<li>Two Ideogram nihonga cells sit quarantined with blank output, 0.000 per cent differing,
+waiting for a human <code>lig accept</code>. This morning&#39;s refresh-data rejected yet more blank nihonga
+raws, raw outputs preserved, like a neighbour who keeps returning empty bottles.</li>
+<li>The ComfyUI 0.44 upgrade that would let P-JiT in needs a safe idle window and a runtime
+review. It will get one, later, when nothing is rendering.</li>
+<li>The banner for this post is pending: the render queue belonged to 518 real cells last night,
+and enqueueing a joke behind them would have been rude. It arrives as its own commit, as the
+house rules allow.</li>
+<li>The project map still promised superseded FIBO squares kept &#39;without deletion&#39;; last night&#39;s
+run retired them from the worktree as their landscape replacements landed. A dated correction
+is already on the map, and the mechanism check is owed on LIG-042. <!-- claim-check: status wording quoted at 09:57; refresh-data rejection lines at 10:15; SKIP lines in the run log; deletion and replacement counts from git status and directory mtimes --></li>
+</ul>
+
+</article>
+<nav class="post-nav" aria-label="Post navigation">
+<a class="post-nav-link post-nav-prev" href="2026-11-08-named-native-photo-editors.html"><span class="post-nav-arrow">&larr;</span><span class="post-nav-text"><span class="post-nav-label">Previous</span><span class="post-nav-title">Give photo editors names that say what they do</span></span></a>
+<span class="post-nav-link post-nav-next post-nav-empty"></span>
+</nav></main>
+    <footer class="site-footer">
+      <p>The engineering devlog for <strong>localimagegen</strong> — built from <code>history/</code>.</p>
+    </footer>
+    <script>
+      // Localise all post times to the reader's timezone.
+      // Each <time class="post-time" data-ts="..."> carries a Unix epoch (ms);
+      // we replace the static server-rendered HH:MM with the local equivalent.
+      document.querySelectorAll('time.post-time[data-ts]').forEach(function (el) {
+        var d = new Date(+el.dataset.ts);
+        el.textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        el.title = d.toLocaleString(); // full local datetime on hover
+      });
+
+      // Click (or Enter/Space) a .banner-compare to cycle: current -> most recent earlier
+      // version -> ... -> oldest/original -> back to current. Each click advances one slide;
+      // opacity is set directly (not via CSS classes) so this works for any slide count.
+      document.querySelectorAll('.banner-compare').forEach(function (el) {
+        var slides = el.querySelectorAll('.banner-slide');
+        var hint = el.querySelector('.banner-compare-hint');
+        var count = slides.length;
+        var active = 0;
+        function render() {
+          slides.forEach(function (s, i) {
+            s.style.opacity = i === active ? '1' : '0';
+          });
+          if (!hint) return;
+          if (active === 0) {
+            hint.textContent =
+              'click to see ' + (count === 2 ? 'the earlier version' : count - 1 + ' earlier versions');
+          } else if (active === count - 1) {
+            hint.textContent = 'original banner · click for current';
+          } else {
+            hint.textContent = 'earlier version ' + active + ' of ' + (count - 1) + ' · click to continue';
+          }
+        }
+        function advance() {
+          active = (active + 1) % count;
+          render();
+        }
+        el.addEventListener('click', advance);
+        el.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            advance();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
