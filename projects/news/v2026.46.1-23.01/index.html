@@ -1,0 +1,376 @@
+<!-- built by podcastbuilder scripts/episode-page.ts from episodes/pod-20261109; published -->
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Patch Notes v2026.46.1-23.01 · The Weight of the Wake</title>
+<base href="/projects/news/v2026.46.1-23.01/">
+<meta property="og:title" content="Patch Notes v2026.46.1-23.01 · The Weight of the Wake">
+<meta property="og:image" content="https://assets.brook.dev/podcasts/v2026.46.1-23.01/music-video-poster-1fe53265.jpg">
+<style>
+  [hidden] { display: none !important; }
+  body { background: #121212; color: #eee; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; margin: 0; padding: 70px 16px 40px; box-sizing: border-box; }
+  .card { background: #1e1e1e; padding: 1.5rem; border-radius: 24px; width: 100%; max-width: 720px; box-shadow: 0 20px 50px rgba(0,0,0,.6); display: flex; flex-direction: column; gap: .9rem; }
+  .ep-id { color: #999; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; }
+  h1 { margin: .15rem 0 0; font-size: 1.5rem; color: #fff; }
+  .version-switch { display: inline-flex; border: 1px solid #3a3a3a; border-radius: 999px; overflow: hidden; align-self: flex-start; font-size: .85rem; }
+  .version-switch a { padding: 7px 14px; color: #ccc; text-decoration: none; background: #262626; }
+  .version-switch a[aria-current="page"] { background: #bb86fc; color: #121212; font-weight: 600; }
+  .version-switch a:not([aria-current]):hover { background: #333; color: #fff; }
+  .stage { position: relative; border-radius: 16px; overflow: hidden; border: 1px solid #333; background: #000; aspect-ratio: 16 / 9; box-shadow: 0 10px 30px rgba(0,0,0,.5); }
+  .stage video { width: 100%; height: 100%; display: block; object-fit: contain; background: #000; }
+  .stage video::cue { background: rgba(0,0,0,.6); color: #fff; font-size: 1.05rem; }
+  .video-tools { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-size: .85rem; color: #aaa; }
+  .video-tools button, .skip-btn, .toggle-btn { background: #292929; color: #eee; border: 1px solid #3a3a3a; border-radius: 10px; padding: 8px 12px; cursor: pointer; font: inherit; }
+  .video-tools button:hover, .skip-btn:hover:not(:disabled), .toggle-btn:hover { border-color: #bb86fc; }
+  .skip-btn:disabled { opacity: .35; cursor: default; }
+  .nav-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  #st { margin: 0; color: #bbb; font-size: .9rem; }
+  audio { width: 100%; }
+  .transcript-box { background: #181818; border: 1px solid #2c2c2c; border-radius: 14px; padding: 1rem 1.1rem; border-left: 3px solid #bb86fc; }
+  #ts-voice { font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; color: #bb86fc; margin-bottom: .35rem; }
+  #ts-text { margin: 0; line-height: 1.5; white-space: pre-line; }
+  .link-container { display: none; }
+  .link-container.visible { display: block; }
+  .btn { display: block; text-decoration: none; background: #262626; border: 1px solid #3a3a3a; border-radius: 12px; padding: 10px 14px; color: #eee; }
+  .btn:hover { border-color: #bb86fc; }
+  .btn-title { display: block; font-weight: 600; }
+  .btn-summary { display: block; color: #aaa; font-size: .85rem; margin-top: 2px; }
+  .podcast-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .podcast-nav a { color: #ddd; background: #292929; border: 1px solid #3a3a3a; border-radius: 10px; padding: 9px 12px; text-decoration: none; font-size: .8rem; text-align: center; }
+  .podcast-nav a.disabled { opacity: .35; pointer-events: none; }
+  .chat-container { display: none; flex-direction: column; gap: 8px; max-height: 60vh; overflow-y: auto; padding-right: 4px; }
+  .chat-container.visible { display: flex; }
+  .topic-header { color: #bb86fc; font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; margin: 12px 0 4px; }
+  .chat-bubble { background: #262626; border-radius: 12px; padding: 9px 12px; line-height: 1.45; cursor: pointer; white-space: pre-line; border-left: 3px solid var(--c, #666); }
+  .chat-bubble.active { outline: 1px solid #bb86fc; background: #2d2636; }
+  .chat-label { font-size: .7rem; color: var(--c, #aaa); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 2px; }
+  .sources h2 { font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; color: #bb86fc; margin: .5rem 0; }
+  .sources ul { margin: 0; padding-left: 1.1rem; line-height: 1.6; }
+  .sources a { color: #ddd; }
+  .credits { font-size: .78rem; color: #888; line-height: 1.5; }
+  #news-menu-btn { position: fixed; top: 16px; left: 16px; z-index: 1000; background: #1e1e1e; border: 1px solid #333; color: #fff; padding: 10px 16px; border-radius: 12px; cursor: pointer; font-weight: bold; }
+  #news-sidebar { position: fixed; top: 0; left: -300px; width: 280px; height: 100vh; background: #121212; z-index: 1001; transition: left .3s; overflow-y: auto; border-right: 1px solid #333; }
+  #news-sidebar.open { left: 0; }
+  .sidebar-header { padding: 20px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; background: #1a1a1a; }
+  .sidebar-header h2 { margin: 0; font-size: 1.1rem; color: #bb86fc; text-transform: uppercase; letter-spacing: 1px; }
+  .sidebar-close { background: none; border: none; color: #888; font-size: 1.8rem; cursor: pointer; }
+  .sidebar-list { list-style: none; padding: 0; margin: 0; }
+  .sidebar-list a { display: block; padding: 14px 20px; color: #ccc; text-decoration: none; border-bottom: 1px solid #222; font-size: .95rem; }
+  .sidebar-list a:hover { background: #1e1e1e; color: #bb86fc; }
+  #sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.7); z-index: 1000; display: none; }
+  #sidebar-overlay.open { display: block; }
+</style>
+</head>
+<body>
+<div class="card">
+  <header>
+    <div class="ep-id">Patch Notes v2026.46.1-23.01</div>
+    <h1 id="song-title"></h1>
+  </header>
+  <nav id="version-switch" class="version-switch" aria-label="Episode version" hidden>
+    <a aria-current="page">Music video</a>
+    <a href="legacy.html">Legacy intro and video</a>
+  </nav>
+
+  <div class="stage">
+    <video id="mv" controls playsinline preload="metadata" poster="https://assets.brook.dev/podcasts/v2026.46.1-23.01/music-video-poster-1fe53265.jpg">
+      <source src="https://assets.brook.dev/podcasts/v2026.46.1-23.01/music-video-befd86cc.mp4" type="video/mp4">
+      <track id="lyrics" kind="captions" srclang="en" label="Lyrics" src="music-video.vtt" default>
+    </video>
+  </div>
+  <div class="video-tools">
+    <button type="button" id="mv-sound">Sound: on</button>
+    <span id="mv-note"></span>
+  </div>
+
+  <div id="news-player">
+    <div class="nav-row">
+      <button type="button" id="btn-prev" class="skip-btn" aria-label="Previous segment" disabled>&#9198;</button>
+      <p id="st">Ready to play</p>
+      <button type="button" id="btn-next" class="skip-btn" aria-label="Next segment">&#9199;</button>
+    </div>
+    <audio id="pl1" controls style="display:none;"></audio>
+    <audio id="pl2" controls style="display:none;"></audio>
+  </div>
+
+  <div id="ts-box" class="transcript-box">
+    <div id="ts-voice"></div>
+    <p id="ts-text">Press play to start.</p>
+  </div>
+
+  <div id="lnk-wrap" class="link-container">
+    <a id="lnk" class="btn" target="_blank" rel="noopener">
+      <span class="btn-title">Read source article</span>
+      <span id="summ" class="btn-summary"></span>
+    </a>
+  </div>
+
+  <button type="button" id="toggle-chat" class="toggle-btn">Show full transcript</button>
+  <div id="full-chat" class="chat-container"></div>
+
+  <section id="sources" class="sources" hidden>
+    <h2>The stories in the song</h2>
+    <ul id="sources-list"></ul>
+  </section>
+
+  <p id="credits" class="credits"></p>
+
+  <nav class="podcast-nav" aria-label="Podcast navigation">
+    <a id="podcast-older" class="disabled" aria-disabled="true">&#8592; Older</a>
+    <a id="podcast-newer" class="disabled" aria-disabled="true">Newer &#8594;</a>
+  </nav>
+</div>
+
+<script>
+const EP = {"folder":"v2026.46.1-23.01","songTitle":"The Weight of the Wake","hasLegacy":false,"credits":"Song \"The Weight of the Wake\" sung by YuE2 (take 983636). Picture: Qwen Image 2.1 stills brought to motion by H3, cut to the song by pb. Conversation: Gemma 4 12B script, VibeVoice 7B voices, each line checked by the PCB-010 evaluator. Beta test. Character depictions do not represent real people, even when they do.","sources":[{"title":"Who is the suspected Chinese spy at centre of the Nvidia investigation?","url":"https://www.bbc.co.uk/news/videos/c80404zyr53wo?at_campaign=rss&at_medium=RSS","where":"BBC News"},{"title":"Jensen Huang Hired a PR Firm Known for Handling Sex Scandals Last Year","url":"https://www.wired.com/story/nvidia-ceo-jensen-huang-hired-a-pr-firm-known-for-handling-sex-scandals-last-year/","where":"Wired"},{"title":"At least 39 die after Europe-bound migrant boat sinks off Senegal","url":"https://www.bbc.co.uk/news/articles/cv2d6dpge65go?at_campaign=rss&at_medium=RSS","where":"BBC local news"},{"title":"Thirteen migrants die after boat sinks off Crete","url":"https://www.bbc.co.uk/news/articles/c65ynyxrjdyeo?at_campaign=rss&at_medium=RSS","where":"BBC News"},{"title":"Workers Building Europe’s Data Centres Face Burns, Rat Infestation and Wage Theft","url":"https://novaramedia.com/2026/11/09/workers-building-europes-data-centres-face-burns-rat-infestation-and-wage-theft/","where":"Novara Media"},{"title":"Nvidia CEO Jensen Huang Was Banging a Chinese Spy, Who Was Feeding Information Back to Beijing","url":"https://www.nytimes.com/2026/11/08/technology/nvidia-investigation-jensen-huang-china.html?unlocked_article_code=1.O1E.Soow.6UjrM7Ch-C8L","where":"Daring Fireball"},{"title":"Partnering with Hacktron to find vulnerabilities in OpenAI’s systems","url":"https://openai.com/index/partnering-with-hacktron","where":"Open AI"},{"title":"Measuring how AI agents handle everyday wet-lab science","url":"https://openai.com/index/measuring-how-ai-agents-handle-wet-lab-science","where":"Open AI"},{"title":"Deportation policy ‘might have been too tough’, says Trump, as Miller starts chief of staff role – live","url":"https://www.theguardian.com/us-news/live/2026/nov/09/donald-trump-stephen-miller-immigration-midterms-iran-qatar-economy-latest-news-updates","where":"The Guardian"},{"title":"Iran stands by demands to end the war as US ramps up military pressure","url":"https://www.aljazeera.com/news/2026/11/9/iran-stands-by-demands-to-end-the-war-as-us-ramps-up-military-pressure?traffic_source=rss","where":"Al Jazeera"},{"title":"Meet Drops, the new music app bringing back the fun of sharing songs with friends","url":"https://techcrunch.com/2026/11/09/meet-drops-the-new-music-app-bringing-back-the-fun-of-sharing-songs-with-friends/","where":"TechCrunch"}],"playlist":[{"kind":"video","file":null,"url":null,"text":"[Verse 1]\nAlice stands in the glass cathedral.\nJensen sits at the polished table.\nConsultants map a shroud of lies.\nThey hide a secret in San Francisco.\n\n[Chorus]\nSecrets hide in the glass tower.\nBodies sink in the deep sea.\nPower moves the global market.\nSystems save a broken life.\n\n[Verse 2]\nThe boat groans off the coast.\nWater swallows thirty-nine lives at once.\nElena clings to a splintered door.\nThe coastguard hauls her from the waves.\n\n[Chorus]\nSecrets hide in the glass tower.\nBodies sink in the deep sea.\nPower moves the global market.\nSystems save a broken life.\n\n[Bridge]\nThe sea takes every heavy breath.\nThe world turns on a hidden gear.\n\n[Chorus]\nSecrets hide in the glass tower.\nBodies sink in the deep sea.\nPower moves the global market.\nSystems save a broken life.","voice":"song","speaker":"Music video","summary":"The Weight of the Wake"},{"file":"https://assets.brook.dev/podcasts/v2026.46.1-23.01/line-000.mp3","url":"https://novaramedia.com/2026/11/09/workers-building-europes-data-centres-face-burns-rat-infestation-and-wage-theft/","text":"I was just reading about the workers building those massive data centres in Europe... it's honestly grim. Rat-infested housing and wage theft while we're all marveling at the 'magic' of the cloud.","voice":1,"speaker":"Brook","summary":"Workers Building Europe’s Data Centres Face"},{"file":"https://assets.brook.dev/podcasts/v2026.46.1-23.01/line-001.mp3","url":"https://novaramedia.com/2026/11/09/workers-building-europes-data-centres-face-burns-rat-infestation-and-wage-theft/","text":"It’s the classic hidden cost of infrastructure, isn't it? We want the high-speed processing and the AI capabilities, but there's a physical reality to it—buildings, power, and unfortunately, people who are being treated as disposable parts of that machine.","voice":2,"speaker":"Conrad","summary":"Workers Building Europe’s Data Centres Face"},{"file":"https://assets.brook.dev/podcasts/v2026.46.1-23.01/line-002.mp3","url":"https://novaramedia.com/2026/11/09/workers-building-europes-data-centres-face-burns-rat-infestation-and-wage-theft/","text":"Exactly. It feels like a massive engineering and ethical failure on the part of the big tech firms involved.","voice":1,"speaker":"Brook","summary":"Workers Building Europe’s Data Centres Face"},{"file":"https://assets.brook.dev/podcasts/v2026.46.1-23.01/line-003.mp3","url":null,"text":"I'm Brook.","voice":1,"speaker":"Brook","summary":null},{"file":"https://assets.brook.dev/podcasts/v2026.46.1-23.01/line-004.mp3","url":null,"text":"And I'm Conrad. On today's episode of Patch Notes, we're looking at the human cost of our digital backbone and some pretty bizarre corporate drama in the tech world.","voice":2,"speaker":"Conrad","summary":null},{"file":"https://assets.brook.dev/podcasts/v2026.46.1-23.01/line-005.mp3","url":"https://www.nytimes.com/2026/11/08/technology/nvidia-investigation-jensen-huang-china.html?unlocked_article_code=1.O1E.Soow.6UjrM7Ch-C8L","text":"Speaking of corporate drama, have you seen this stuff coming out about Nvidia? It’s... well, it's a lot to unpack. They're investigating their own CEO for having a relationship with a suspected Chinese spy.","voice":1,"speaker":"Brook","summary":"Nvidia CEO Jensen Huang Was Banging"},{"file":"https://assets.brook.dev/podcasts/v2026.46.1-23.01/line-006.mp3","url":"https://www.nytimes.com/2026/11/08/technology/nvidia-investigation-jensen-huang-china.html?unlocked_article_code=1.O1E.Soow.6UjrM7Ch-C8L","text":"It's staggering. The Times reports he told the board he'd been intimate with a business executive who US intelligence says was a Chinese spy. It puts a whole new lens on the 'tech race'... it's not just about who has the best chips anymore.","voice":2,"speaker":"Conrad","summary":"Nvidia CEO Jensen Huang Was Banging"},{"file":"https://assets.brook.dev/podcasts/v2026.46.1-23.01/line-007.mp3","url":"https://www.wired.com/story/nvidia-ceo-jensen-huang-hired-a-pr-firm-known-for-handling-sex-scandals-last-year/","text":"And to make it even more surreal, Wired says Huang himself started working with a PR firm known for handling sex scandals last year, around the time he was first linked to her. It's like managing a geopolitical crisis as if it were a celebrity tabloid mess.","voice":1,"speaker":"Brook","summary":"Jensen Huang Hired a PR Firm"},{"file":"https://assets.brook.dev/podcasts/v2026.46.1-23.01/line-008.mp3","url":"https://www.wired.com/story/nvidia-ceo-jensen-huang-hired-a-pr-firm-known-for-handling-sex-scandals-last-year/","text":"That is the ultimate 'fix it' move. Hire the people who know how to spin the scandalous and hope the public doesn't look too closely at the actual espionage.","voice":2,"speaker":"Conrad","summary":"Jensen Huang Hired a PR Firm"},{"file":"https://assets.brook.dev/podcasts/v2026.46.1-23.01/line-009.mp3","url":"https://openai.com/index/partnering-with-hacktron","text":"It’s a mess. But on a different note, OpenAI is actually being proactive about security by partnering with Hacktron to find vulnerabilities in their systems. At least someone is trying to shore up the defenses.","voice":1,"speaker":"Brook","summary":"Partnering with Hacktron to find vulnerabilities"},{"file":"https://assets.brook.dev/podcasts/v2026.46.1-23.01/line-010.mp3","url":"https://openai.com/index/partnering-with-hacktron","text":"It's a necessary move. With frontier AI moving so fast, you have to assume there are cracks in the foundation that only an outside 'red team' can find.","voice":2,"speaker":"Conrad","summary":"Partnering with Hacktron to find vulnerabilities"},{"file":"https://assets.brook.dev/podcasts/v2026.46.1-23.01/line-011.mp3","url":"https://openai.com/index/measuring-how-ai-agents-handle-wet-lab-science","text":"True. They're also launching BioBasicsBench to see how well AI agents handle wet-lab science data. It’s a big step toward seeing if these models can actually handle raw experimental reality.","voice":1,"speaker":"Brook","summary":"Measuring how AI agents handle everyday"},{"file":"https://assets.brook.dev/podcasts/v2026.46.1-23.01/line-012.mp3","url":"https://openai.com/index/measuring-how-ai-agents-handle-wet-lab-science","text":"That's the next frontier—moving from 'chatting' about science to actually interpreting the messy data of a real lab.","voice":2,"speaker":"Conrad","summary":"Measuring how AI agents handle everyday"},{"file":"https://assets.brook.dev/podcasts/v2026.46.1-23.01/line-013.mp3","url":"https://www.bbc.co.uk/news/articles/cv2d6dpge65go?at_campaign=rss&at_medium=RSS","text":"We also have some heavy news on the migrant routes. A boat sank off Senegal with at least 39 people dying on the way to the Canary Islands.","voice":1,"speaker":"Brook","summary":"At least 39 die after Europe-bound"},{"file":"https://assets.brook.dev/podcasts/v2026.46.1-23.01/line-014.mp3","url":"https://www.bbc.co.uk/news/articles/cv2d6dpge65go?at_campaign=rss&at_medium=RSS","text":"It's a recurring tragedy. The Atlantic crossing remains incredibly dangerous for those seeking a better life.","voice":2,"speaker":"Conrad","summary":"At least 39 die after Europe-bound"},{"file":"https://assets.brook.dev/podcasts/v2026.46.1-23.01/line-015.mp3","url":"https://www.bbc.co.uk/news/articles/c65ynyxrjdyeo?at_campaign=rss&at_medium=RSS","text":"And another boat sank off Crete recently, with thirteen more migrants losing their lives. It’s devastating.","voice":1,"speaker":"Brook","summary":"Thirteen migrants die after boat sinks"},{"file":"https://assets.brook.dev/podcasts/v2026.46.1-23.01/line-016.mp3","url":"https://www.bbc.co.uk/news/articles/c65ynyxrjdyeo?at_campaign=rss&at_medium=RSS","text":"The Greek coastguard managed to rescue eighteen people from that one, but the loss of life is just constant.","voice":2,"speaker":"Conrad","summary":"Thirteen migrants die after boat sinks"},{"file":"https://assets.brook.dev/podcasts/v2026.46.1-23.01/line-017.mp3","url":"https://www.theguardian.com/us-news/live/2026/nov/09/donald-trump-stephen-miller-immigration-midterms-iran-qatar-economy-latest-news-updates","text":"On the political side, Trump mentioned his deportation policy 'might have been too tough' while simultaneously elevating Stephen Miller, who was actually the architect of those very policies. That’s a strange pivot.","voice":1,"speaker":"Brook","summary":"Deportation policy ‘might have been too"},{"file":"https://assets.brook.dev/podcasts/v2026.46.1-23.01/line-018.mp3","url":"https://www.theguardian.com/us-news/live/2026/nov/09/donald-trump-stephen-miller-immigration-midterms-iran-qatar-economy-latest-news-updates","text":"It feels like a classic political balancing act—acknowledging the optics of 'toughness' while keeping the people who built the machinery in place.","voice":2,"speaker":"Conrad","summary":"Deportation policy ‘might have been too"},{"file":"https://assets.brook.dev/podcasts/v2026.46.1-23.01/line-019.mp3","url":"https://www.aljazeera.com/news/2026/11/9/iran-stands-by-demands-to-end-the-war-as-us-ramps-up-military-pressure?traffic_source=rss","text":"And over in Iran, they're standing by their demands to end the war even as US military pressure ramps up. The tension there is clearly reaching a boiling point.","voice":1,"speaker":"Brook","summary":"Iran stands by demands to end"},{"file":"https://assets.brook.dev/podcasts/v2026.46.1-23.01/line-020.mp3","url":"https://www.aljazeera.com/news/2026/11/9/iran-stands-by-demands-to-end-the-war-as-us-ramps-up-military-pressure?traffic_source=rss","text":"The talks are ongoing, but with that kind of pressure, it's anyone's guess how much room for diplomacy is left.","voice":2,"speaker":"Conrad","summary":"Iran stands by demands to end"},{"file":"https://assets.brook.dev/podcasts/v2026.46.1-23.01/line-021.mp3","url":"https://techcrunch.com/2026/11/09/meet-drops-the-new-music-app-bringing-back-the-fun-of-sharing-songs-with-friends/","text":"Finally, a bit of lighter tech—there's a new music app called Drops that lets you scroll through short snippets of songs to share with friends. It’s trying to bring back that old-school discovery feel.","voice":1,"speaker":"Brook","summary":"Meet Drops, the new music app"},{"file":"https://assets.brook.dev/podcasts/v2026.46.1-23.01/line-022.mp3","url":"https://techcrunch.com/2026/11/09/meet-drops-the-new-music-app-bringing-back-the-fun-of-sharing-songs-with-friends/","text":"A bit of a 'TikTok-ification' of music discovery, I suppose. Interesting to see if it actually captures that fun of sharing.","voice":2,"speaker":"Conrad","summary":"Meet Drops, the new music app"}]};
+const playlist = EP.playlist;
+const FOLDER = EP.folder;
+const COLOURS = ['#bb86fc', '#00d2ff', '#ffb74d', '#81c784', '#f06292', '#90a4ae'];
+
+const mv = document.getElementById('mv');
+const lyricsTrack = mv.textTracks[0];
+const mvSound = document.getElementById('mv-sound');
+const mvNote = document.getElementById('mv-note');
+const st = document.getElementById('st');
+const btnPrev = document.getElementById('btn-prev');
+const btnNext = document.getElementById('btn-next');
+const lnkWrap = document.getElementById('lnk-wrap');
+const lnk = document.getElementById('lnk');
+const summ = document.getElementById('summ');
+const tsText = document.getElementById('ts-text');
+const tsVoice = document.getElementById('ts-voice');
+const tsBox = document.getElementById('ts-box');
+const chatContainer = document.getElementById('full-chat');
+const toggleBtn = document.getElementById('toggle-chat');
+let plActive = document.getElementById('pl1');
+let plStandby = document.getElementById('pl2');
+
+document.getElementById('song-title').textContent = EP.songTitle;
+document.getElementById('credits').textContent = EP.credits;
+if (EP.hasLegacy) document.getElementById('version-switch').hidden = false;
+if (playlist.length < 2) document.getElementById('news-player').hidden = true;
+if (EP.sources.length) {
+  const list = document.getElementById('sources-list');
+  EP.sources.forEach((s) => {
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.href = s.url; a.target = '_blank'; a.rel = 'noopener'; a.textContent = s.title;
+    li.appendChild(a);
+    if (s.where) li.appendChild(document.createTextNode(' · ' + s.where));
+    list.appendChild(li);
+  });
+  document.getElementById('sources').hidden = false;
+}
+
+// Lyrics show on the video only while the music video is the current segment.
+function setLyrics(on) { if (lyricsTrack) lyricsTrack.mode = on ? 'showing' : 'hidden'; }
+
+let cur = 0;
+let isOverlapping = false;
+
+function colourFor(item) {
+  if (item.kind === 'video') return COLOURS[0];
+  const v = typeof item.voice === 'number' ? item.voice : String(item.voice).length;
+  return COLOURS[(v % (COLOURS.length - 1)) + 1];
+}
+
+function refreshSoundButton() {
+  mvSound.textContent = mv.muted ? 'Sound: off' : 'Sound: on';
+  mvSound.setAttribute('aria-pressed', String(!mv.muted));
+}
+
+function refreshNote() {
+  if (cur === 0) {
+    mvNote.textContent = playlist.length > 1 ? 'The music video opens the episode; the news follows when it ends.' : '';
+  } else {
+    mvNote.textContent = mv.paused ? 'The news is playing. You can play the video alongside it, with or without its sound.' : (mv.muted ? 'Video playing without sound.' : 'Video playing with its sound.');
+  }
+}
+
+function currentLyric() {
+  if (!lyricsTrack || !lyricsTrack.activeCues || !lyricsTrack.activeCues.length) return '';
+  return Array.from(lyricsTrack.activeCues).map((c) => c.text).join('\n');
+}
+
+function updateUI(i) {
+  btnPrev.disabled = i === 0;
+  btnNext.disabled = i >= playlist.length - 1;
+  const t = playlist[i];
+  st.textContent = 'Segment ' + (i + 1) + ' of ' + playlist.length + (i === 0 ? ' · music video' : '');
+  try { history.replaceState(null, '', '#section=' + (i + 1)); } catch (e) {}
+  tsVoice.textContent = t.speaker;
+  tsText.textContent = i === 0 ? (currentLyric() || '♪ ' + EP.songTitle) : t.text;
+  tsBox.style.borderLeftColor = colourFor(t);
+  document.querySelectorAll('.chat-bubble').forEach((b, idx) => {
+    b.classList.toggle('active', idx === i);
+    if (idx === i && chatContainer.classList.contains('visible')) b.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+  if (t.url) {
+    lnk.href = t.url;
+    summ.textContent = t.summary || '';
+    lnkWrap.classList.add('visible');
+  } else {
+    lnkWrap.classList.remove('visible');
+  }
+  refreshNote();
+}
+
+const preload = {};
+function preloadAround(i) {
+  const targets = [i + 1, i + 2].filter((n) => n > 0 && n < playlist.length);
+  targets.forEach((n) => { if (!preload[n]) { const a = new Audio(); a.preload = 'auto'; a.src = playlist[n].file; preload[n] = a; } });
+  Object.keys(preload).forEach((k) => { if (!targets.includes(+k)) { preload[k].src = ''; delete preload[k]; } });
+}
+
+function stopAudio() { plActive.pause(); plStandby.pause(); }
+
+function attachPlayerLogic(idx) {
+  isOverlapping = false;
+  plActive.ontimeupdate = () => {
+    if (isOverlapping || idx >= playlist.length - 1) return;
+    if (playlist[idx + 1].text.trim().startsWith('--') && plActive.duration && plActive.duration - plActive.currentTime <= 2) {
+      isOverlapping = true;
+      cur++;
+      updateUI(cur);
+      plStandby.src = playlist[cur].file;
+      plStandby.play().catch(() => {});
+    }
+  };
+  plActive.onended = () => {
+    if (isOverlapping) {
+      const tmp = plActive; plActive = plStandby; plStandby = tmp;
+      plActive.style.display = 'block'; plStandby.style.display = 'none';
+      attachPlayerLogic(cur);
+    } else if (cur < playlist.length - 1) {
+      go(cur + 1);
+    } else {
+      st.textContent = 'Broadcast ended';
+    }
+  };
+}
+
+function go(i, opts) {
+  const autoplay = !opts || opts.autoplay !== false;
+  cur = i;
+  updateUI(i);
+  if (i === 0) {
+    stopAudio();
+    plActive.style.display = 'none';
+    plStandby.style.display = 'none';
+    setLyrics(true);
+    mv.muted = false;
+    if (!mv.paused || mv.ended || mv.currentTime > 0) mv.currentTime = 0;
+    if (autoplay) mv.play().catch(() => { mvNote.textContent = 'Press play on the video to start.'; });
+    refreshSoundButton();
+    return;
+  }
+  // Leaving the song for the news: stop the song, hide its lyrics, and mute the video so it can be
+  // played alongside the news without the two soundtracks clashing until the listener asks.
+  setLyrics(false);
+  if (!mv.paused) mv.pause();
+  mv.muted = true;
+  refreshSoundButton();
+  stopAudio();
+  preloadAround(i);
+  plActive.src = playlist[i].file;
+  plActive.style.display = 'block';
+  plStandby.style.display = 'none';
+  if (autoplay) plActive.play().catch(() => {});
+  attachPlayerLogic(i);
+}
+
+mv.addEventListener('ended', () => {
+  if (cur === 0 && playlist.length > 1) go(1);
+  refreshNote();
+});
+mv.addEventListener('play', () => {
+  if (cur === 0) stopAudio();
+  refreshNote();
+});
+mv.addEventListener('pause', refreshNote);
+mv.addEventListener('volumechange', () => { refreshSoundButton(); refreshNote(); });
+mvSound.addEventListener('click', () => { mv.muted = !mv.muted; });
+if (lyricsTrack) lyricsTrack.addEventListener('cuechange', () => { if (cur === 0) tsText.textContent = currentLyric() || '♪ ' + EP.songTitle; });
+
+btnPrev.onclick = () => { if (cur > 0) go(cur - 1); };
+btnNext.onclick = () => { if (cur < playlist.length - 1) go(cur + 1); };
+
+document.addEventListener('keydown', (e) => {
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.target && /^(INPUT|TEXTAREA|BUTTON|VIDEO|AUDIO)$/.test(e.target.tagName) && e.key === ' ') return;
+  const k = e.key.toLowerCase();
+  if (k === 'j' && !btnPrev.disabled) btnPrev.click();
+  if (k === 'l' && !btnNext.disabled) btnNext.click();
+  if (k === 'k') {
+    const p = cur === 0 ? mv : plActive;
+    if (p.paused) p.play().catch(() => {}); else p.pause();
+  }
+});
+
+let lastTopic = null;
+let group = null;
+playlist.forEach((item, idx) => {
+  const topic = item.summary || 'Banter and hot takes';
+  if (topic !== lastTopic) {
+    group = document.createElement('div');
+    const h = document.createElement('div');
+    h.className = 'topic-header'; h.textContent = topic;
+    group.appendChild(h);
+    chatContainer.appendChild(group);
+    lastTopic = topic;
+  }
+  const b = document.createElement('div');
+  b.className = 'chat-bubble';
+  b.style.setProperty('--c', colourFor(item));
+  const label = document.createElement('div');
+  label.className = 'chat-label'; label.textContent = item.speaker;
+  b.appendChild(label);
+  b.appendChild(document.createTextNode(item.text));
+  b.onclick = () => go(idx);
+  group.appendChild(b);
+});
+
+toggleBtn.onclick = () => {
+  const vis = chatContainer.classList.toggle('visible');
+  toggleBtn.textContent = vis ? 'Hide transcript' : 'Show full transcript';
+  tsBox.style.display = vis ? 'none' : 'block';
+};
+
+const startAt = (() => { const m = (location.hash || '').match(/section=(\d+)/); const n = m ? parseInt(m[1], 10) - 1 : 0; return n >= 0 && n < playlist.length ? n : 0; })();
+setLyrics(startAt === 0);
+go(startAt);
+refreshSoundButton();
+
+async function initMenu() {
+  try {
+    const r = await fetch('/projects/news/menu-data.json');
+    if (!r.ok) return;
+    const folders = await r.json();
+    const at = folders.indexOf(FOLDER);
+    if (at >= 0) {
+      const older = folders[at + 1];
+      const newer = at > 0 ? folders[at - 1] : null;
+      const o = document.getElementById('podcast-older');
+      const n = document.getElementById('podcast-newer');
+      if (older) { o.href = '/projects/news/' + older + '/'; o.textContent = '← Older · ' + older; o.classList.remove('disabled'); o.removeAttribute('aria-disabled'); }
+      if (newer) { n.href = '/projects/news/' + newer + '/'; n.textContent = 'Newer · ' + newer + ' →'; n.classList.remove('disabled'); n.removeAttribute('aria-disabled'); }
+    }
+    const overlay = document.createElement('div'); overlay.id = 'sidebar-overlay'; document.body.appendChild(overlay);
+    const sidebar = document.createElement('div'); sidebar.id = 'news-sidebar';
+    sidebar.innerHTML = '<div class="sidebar-header"><h2>Archives</h2><button class="sidebar-close" id="news-close-btn" aria-label="Close">&times;</button></div>';
+    const list = document.createElement('ul'); list.className = 'sidebar-list';
+    folders.forEach((f) => { const li = document.createElement('li'); const a = document.createElement('a'); a.href = '/projects/news/' + f + '/'; a.textContent = f; li.appendChild(a); list.appendChild(li); });
+    sidebar.appendChild(list); document.body.appendChild(sidebar);
+    const btn = document.createElement('button'); btn.id = 'news-menu-btn'; btn.innerHTML = '&#9776; Menu'; document.body.appendChild(btn);
+    const toggle = () => { const open = !sidebar.classList.contains('open'); sidebar.classList.toggle('open', open); overlay.classList.toggle('open', open); };
+    btn.addEventListener('click', toggle);
+    overlay.addEventListener('click', toggle);
+    document.getElementById('news-close-btn').addEventListener('click', toggle);
+  } catch (e) { console.error('Menu failed:', e); }
+}
+initMenu();
+</script>
+</body>
+</html>
