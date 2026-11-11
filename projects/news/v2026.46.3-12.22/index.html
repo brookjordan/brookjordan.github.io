@@ -1,0 +1,376 @@
+<!-- built by podcastbuilder scripts/episode-page.ts from episodes/pod-20261111-0714; published -->
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Patch Notes v2026.46.3-12.22 · The Architecture of Shadows</title>
+<base href="/projects/news/v2026.46.3-12.22/">
+<meta property="og:title" content="Patch Notes v2026.46.3-12.22 · The Architecture of Shadows">
+<meta property="og:image" content="https://assets.brook.dev/podcasts/v2026.46.3-12.22/music-video-poster-e045aa75.jpg">
+<style>
+  [hidden] { display: none !important; }
+  body { background: #121212; color: #eee; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; margin: 0; padding: 70px 16px 40px; box-sizing: border-box; }
+  .card { background: #1e1e1e; padding: 1.5rem; border-radius: 24px; width: 100%; max-width: 720px; box-shadow: 0 20px 50px rgba(0,0,0,.6); display: flex; flex-direction: column; gap: .9rem; }
+  .ep-id { color: #999; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; }
+  h1 { margin: .15rem 0 0; font-size: 1.5rem; color: #fff; }
+  .version-switch { display: inline-flex; border: 1px solid #3a3a3a; border-radius: 999px; overflow: hidden; align-self: flex-start; font-size: .85rem; }
+  .version-switch a { padding: 7px 14px; color: #ccc; text-decoration: none; background: #262626; }
+  .version-switch a[aria-current="page"] { background: #bb86fc; color: #121212; font-weight: 600; }
+  .version-switch a:not([aria-current]):hover { background: #333; color: #fff; }
+  .stage { position: relative; border-radius: 16px; overflow: hidden; border: 1px solid #333; background: #000; box-shadow: 0 10px 30px rgba(0,0,0,.5); }
+  .stage video { width: 100%; height: 100%; display: block; object-fit: contain; background: #000; }
+  .stage video::cue { background: rgba(0,0,0,.6); color: #fff; font-size: 1.05rem; }
+  .video-tools { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-size: .85rem; color: #aaa; }
+  .video-tools button, .skip-btn, .toggle-btn { background: #292929; color: #eee; border: 1px solid #3a3a3a; border-radius: 10px; padding: 8px 12px; cursor: pointer; font: inherit; }
+  .video-tools button:hover, .skip-btn:hover:not(:disabled), .toggle-btn:hover { border-color: #bb86fc; }
+  .skip-btn:disabled { opacity: .35; cursor: default; }
+  .nav-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  #st { margin: 0; color: #bbb; font-size: .9rem; }
+  audio { width: 100%; }
+  .transcript-box { background: #181818; border: 1px solid #2c2c2c; border-radius: 14px; padding: 1rem 1.1rem; border-left: 3px solid #bb86fc; }
+  #ts-voice { font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; color: #bb86fc; margin-bottom: .35rem; }
+  #ts-text { margin: 0; line-height: 1.5; white-space: pre-line; }
+  .link-container { display: none; }
+  .link-container.visible { display: block; }
+  .btn { display: block; text-decoration: none; background: #262626; border: 1px solid #3a3a3a; border-radius: 12px; padding: 10px 14px; color: #eee; }
+  .btn:hover { border-color: #bb86fc; }
+  .btn-title { display: block; font-weight: 600; }
+  .btn-summary { display: block; color: #aaa; font-size: .85rem; margin-top: 2px; }
+  .podcast-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .podcast-nav a { color: #ddd; background: #292929; border: 1px solid #3a3a3a; border-radius: 10px; padding: 9px 12px; text-decoration: none; font-size: .8rem; text-align: center; }
+  .podcast-nav a.disabled { opacity: .35; pointer-events: none; }
+  .chat-container { display: none; flex-direction: column; gap: 8px; max-height: 60vh; overflow-y: auto; padding-right: 4px; }
+  .chat-container.visible { display: flex; }
+  .topic-header { color: #bb86fc; font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; margin: 12px 0 4px; }
+  .chat-bubble { background: #262626; border-radius: 12px; padding: 9px 12px; line-height: 1.45; cursor: pointer; white-space: pre-line; border-left: 3px solid var(--c, #666); }
+  .chat-bubble.active { outline: 1px solid #bb86fc; background: #2d2636; }
+  .chat-label { font-size: .7rem; color: var(--c, #aaa); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 2px; }
+  .sources h2 { font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; color: #bb86fc; margin: .5rem 0; }
+  .sources ul { margin: 0; padding-left: 1.1rem; line-height: 1.6; }
+  .sources a { color: #ddd; }
+  .credits { font-size: .78rem; color: #888; line-height: 1.5; }
+  #news-menu-btn { position: fixed; top: 16px; left: 16px; z-index: 1000; background: #1e1e1e; border: 1px solid #333; color: #fff; padding: 10px 16px; border-radius: 12px; cursor: pointer; font-weight: bold; }
+  #news-sidebar { position: fixed; top: 0; left: -300px; width: 280px; height: 100vh; background: #121212; z-index: 1001; transition: left .3s; overflow-y: auto; border-right: 1px solid #333; }
+  #news-sidebar.open { left: 0; }
+  .sidebar-header { padding: 20px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; background: #1a1a1a; }
+  .sidebar-header h2 { margin: 0; font-size: 1.1rem; color: #bb86fc; text-transform: uppercase; letter-spacing: 1px; }
+  .sidebar-close { background: none; border: none; color: #888; font-size: 1.8rem; cursor: pointer; }
+  .sidebar-list { list-style: none; padding: 0; margin: 0; }
+  .sidebar-list a { display: block; padding: 14px 20px; color: #ccc; text-decoration: none; border-bottom: 1px solid #222; font-size: .95rem; }
+  .sidebar-list a:hover { background: #1e1e1e; color: #bb86fc; }
+  #sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.7); z-index: 1000; display: none; }
+  #sidebar-overlay.open { display: block; }
+</style>
+</head>
+<body>
+<div class="card">
+  <header>
+    <div class="ep-id">Patch Notes v2026.46.3-12.22</div>
+    <h1 id="song-title"></h1>
+  </header>
+  <nav id="version-switch" class="version-switch" aria-label="Episode version" hidden>
+    <a aria-current="page">Music video</a>
+    <a href="legacy.html">Legacy intro and video</a>
+  </nav>
+
+  <div class="stage">
+    <video id="mv" controls playsinline preload="metadata" poster="https://assets.brook.dev/podcasts/v2026.46.3-12.22/music-video-poster-e045aa75.jpg">
+      <source src="https://assets.brook.dev/podcasts/v2026.46.3-12.22/music-video-dad1b2ed.mp4" type="video/mp4">
+      <track id="lyrics" kind="captions" srclang="en" label="Lyrics" src="music-video.vtt" default>
+    </video>
+  </div>
+  <div class="video-tools">
+    <button type="button" id="mv-sound">Sound: on</button>
+    <span id="mv-note"></span>
+  </div>
+
+  <div id="news-player">
+    <div class="nav-row">
+      <button type="button" id="btn-prev" class="skip-btn" aria-label="Previous segment" disabled>&#9198;</button>
+      <p id="st">Ready to play</p>
+      <button type="button" id="btn-next" class="skip-btn" aria-label="Next segment">&#9199;</button>
+    </div>
+    <audio id="pl1" controls style="display:none;"></audio>
+    <audio id="pl2" controls style="display:none;"></audio>
+  </div>
+
+  <div id="ts-box" class="transcript-box">
+    <div id="ts-voice"></div>
+    <p id="ts-text">Press play to start.</p>
+  </div>
+
+  <div id="lnk-wrap" class="link-container">
+    <a id="lnk" class="btn" target="_blank" rel="noopener">
+      <span class="btn-title">Read source article</span>
+      <span id="summ" class="btn-summary"></span>
+    </a>
+  </div>
+
+  <button type="button" id="toggle-chat" class="toggle-btn">Show full transcript</button>
+  <div id="full-chat" class="chat-container"></div>
+
+  <section id="sources" class="sources" hidden>
+    <h2>The stories in the song</h2>
+    <ul id="sources-list"></ul>
+  </section>
+
+  <p id="credits" class="credits"></p>
+
+  <nav class="podcast-nav" aria-label="Podcast navigation">
+    <a id="podcast-older" class="disabled" aria-disabled="true">&#8592; Older</a>
+    <a id="podcast-newer" class="disabled" aria-disabled="true">Newer &#8594;</a>
+  </nav>
+</div>
+
+<script>
+const EP = {"folder":"v2026.46.3-12.22","songTitle":"The Architecture of Shadows","hasLegacy":false,"credits":"Song \"The Architecture of Shadows\" sung by YuE2 (take 737940). Picture: Qwen Image 2.1 stills brought to motion by H3, cut to the song by pb. Conversation: Gemma 4 12B script, VibeVoice 7B voices, each line checked by the PCB-010 evaluator. Beta test. Character depictions do not represent real people, even when they do.","sources":[{"title":"Why Walliams' unprecedented legal battle to stay anonymous failed","url":"https://www.bbc.co.uk/news/articles/cwx2922r4mrjo?at_campaign=rss&at_medium=RSS","where":"BBC local news"},{"title":"David Walliams Allegations Finally Go Public","url":"https://novaramedia.com/2026/11/10/david-walliams-allegations-finally-go-public/","where":"Novara Media"},{"title":"Trump ally Jim Jordan to lead House Republicans next year, with John Thune to return as Senate minority leader - live","url":"https://www.theguardian.com/us-news/live/2026/nov/10/donald-trump-pete-hegseth-thomas-massie-republicans-iran-war-impeachment-midterms-latest-news-updates","where":"The Guardian"},{"title":"Republicans elect Jim Jordan as House minority leader after midterm defeats","url":"https://www.theguardian.com/us-news/2026/nov/10/jim-jordan-house-republican-leader","where":"The Guardian"},{"title":"Nvidia hires major US law firm to investigate alleged Chinese spy affair","url":"https://www.bbc.co.uk/news/articles/ck1wvwwl3x0go?at_campaign=rss&at_medium=RSS","where":"BBC local news"},{"title":"OpenAI, Anthropic face new oversight as New York’s AI safety law takes effect","url":"https://techcrunch.com/2026/11/10/openai-anthropic-face-new-oversight-as-new-yorks-ai-safety-law-takes-effect/","where":"TechCrunch"},{"title":"OpenAI acquires Odessia, travel startup created by Sonder founder","url":"https://techcrunch.com/2026/11/10/openai-acquires-odessia-travel-startup-created-by-sonder-founder/","where":"TechCrunch"},{"title":"Makers of GLP-1 drugs ordered to add warnings about rare eye condition that can lead to blindness","url":"https://www.bbc.co.uk/news/articles/crwydyde0lp3o?at_campaign=rss&at_medium=RSS","where":"BBC News"},{"title":"‘Dehumanising and humiliating’: Extreme heat behind bars","url":"https://thebristolcable.org/2026/11/dehumanising-and-humiliating-extreme-heat-behind-bars/","where":"The Bristol Cable"}],"playlist":[{"kind":"video","file":null,"url":null,"text":"[Verse 1]\nA private firm smells of beeswax and paper.\nDavid Walliams seeks a shield for his past.\nElena sees the architecture of the legal wall.\nHe wants the conduct to remain a ghost.\n\n[Chorus]\nThe architecture of shadows builds the cage.\nThe truth is molded by the strongest tools.\nThe law serves as a heavy shield.\nThe vote acts as a sharp sword.\n\n[Verse 2]\nThe restriction on public naming falls away.\nDavid Walliams hunches in the London corridor.\nThe Ohio tally moves with collective will.\nThune sits in the silence of the Senate.\n\n[Chorus]\nThe architecture of shadows builds the cage.\nThe truth is molded by the strongest tools.\nThe law serves as a heavy shield.\nThe vote acts as a sharp sword.\n\n[Bridge]\nThe weight of the role sits heavy.\nThe elite move through the glittering labyrinth.\n\n[Chorus]\nThe architecture of shadows builds the cage.\nThe truth is molded by the strongest tools.\nThe law serves as a heavy shield.\nThe vote acts as a sharp sword.","voice":"song","speaker":"Music video","summary":"The Architecture of Shadows"},{"file":"https://assets.brook.dev/podcasts/v2026.46.3-12.22/line-000.mp3","url":"https://www.bbc.co.uk/news/articles/ck1wvwwl3x0go?at_campaign=rss&at_medium=RSS","text":"I was just looking at the news about Nvidia hiring a law firm to investigate... well, an 'affair' involving a potential Chinese spy? It feels like we're moving into some very strange territory for tech giants.","voice":1,"speaker":"Brook","summary":"Nvidia hires major US law firm"},{"file":"https://assets.brook.dev/podcasts/v2026.46.3-12.22/line-001.mp3","url":"https://www.bbc.co.uk/news/articles/ck1wvwwl3x0go?at_campaign=rss&at_medium=RSS","text":"It’s the ultimate intersection of corporate governance and high-stakes espionage. When you're dealing with hardware that powers the entire AI revolution, 'personal' indiscretions suddenly become national security liabilities.","voice":3,"speaker":"Antony","summary":"Nvidia hires major US law firm"},{"file":"https://assets.brook.dev/podcasts/v2026.46.3-12.22/line-002.mp3","url":"https://www.bbc.co.uk/news/articles/ck1wvwwl3x0go?at_campaign=rss&at_medium=RSS","text":"Exactly. It’s not just a HR headache anymore; it's a systemic risk for the whole supply chain.","voice":1,"speaker":"Brook","summary":"Nvidia hires major US law firm"},{"file":"https://assets.brook.dev/podcasts/v2026.46.3-12.22/line-003.mp3","url":"https://www.bbc.co.uk/news/articles/ck1wvwwl3x0go?at_campaign=rss&at_medium=RSS","text":"Right. The personal becomes political in the most literal sense.","voice":3,"speaker":"Antony","summary":"Nvidia hires major US law firm"},{"file":"https://assets.brook.dev/podcasts/v2026.46.3-12.22/line-004.mp3","url":null,"text":"I'm Brook.","voice":1,"speaker":"Brook","summary":null},{"file":"https://assets.brook.dev/podcasts/v2026.46.3-12.22/line-005.mp3","url":null,"text":"And I'm Antony. On today's episode of Patch Notes, we're looking at the shifting sands of US politics, some heavy-hitting AI regulations, and a few stories about how our world is being reshaped by both tech and tradition.","voice":3,"speaker":"Antony","summary":null},{"file":"https://assets.brook.dev/podcasts/v2026.46.3-12.22/line-006.mp3","url":"https://www.theguardian.com/us-news/live/2026/nov/10/donald-trump-pete-hegseth-thomas-massie-republicans-iran-war-impeachment-midterms-latest-news-updates","text":"So, starting with the big picture in Washington—Republicans have officially tapped Jim Jordan to lead the House minority. It’s a significant move following those midterm results.","voice":3,"speaker":"Antony","summary":"Trump ally Jim Jordan to lead"},{"file":"https://assets.brook.dev/podcasts/v2026.46.3-12.22/line-007.mp3","url":"https://www.theguardian.com/us-news/live/2026/nov/10/donald-trump-pete-hegseth-thomas-massie-republicans-iran-war-impeachment-midterms-latest-news-updates","text":"It's interesting because it signals a very specific direction for the next two years of Trump's presidency. They're doubling down on that hardline conservative stance.","voice":1,"speaker":"Brook","summary":"Trump ally Jim Jordan to lead"},{"file":"https://assets.brook.dev/podcasts/v2026.46.3-12.22/line-008.mp3","url":"https://www.theguardian.com/us-news/2026/nov/10/jim-jordan-house-republican-leader","text":"And with John Thune returning as Senate minority leader, it creates this very consistent, almost unified front across both chambers for the opposition.","voice":3,"speaker":"Antony","summary":"Republicans elect Jim Jordan as House"},{"file":"https://assets.brook.dev/podcasts/v2026.46.3-12.22/line-009.mp3","url":"https://www.theguardian.com/us-news/live/2026/nov/10/donald-trump-pete-hegseth-thomas-massie-republicans-iran-war-impeachment-midterms-latest-news-updates","text":"It's a clear consolidation of power. They aren't looking to pivot; they're looking to entrench.","voice":1,"speaker":"Brook","summary":"Trump ally Jim Jordan to lead"},{"file":"https://assets.brook.dev/podcasts/v2026.46.3-12.22/line-010.mp3","url":"https://techcrunch.com/2026/11/10/openai-anthropic-face-new-oversight-as-new-yorks-ai-safety-law-takes-effect/","text":"Moving from the halls of government to the world of silicon—New York is actually moving to enforce a sweeping AI safety law. They want major players like OpenAI and Anthropic to register and disclose their practices.","voice":3,"speaker":"Antony","summary":"OpenAI, Anthropic face new oversight as"},{"file":"https://assets.brook.dev/podcasts/v2026.46.3-12.22/line-011.mp3","url":"https://techcrunch.com/2026/11/10/openai-anthropic-face-new-oversight-as-new-yorks-ai-safety-law-takes-effect/","text":"That's a huge milestone for the industry. We've seen a lot of 'voluntary' commitments, but actual registration and reporting requirements with potential fines... that changes the engineering roadmap significantly.","voice":1,"speaker":"Brook","summary":"OpenAI, Anthropic face new oversight as"},{"file":"https://assets.brook.dev/podcasts/v2026.46.3-12.22/line-012.mp3","url":"https://techcrunch.com/2026/11/10/openai-anthropic-face-new-oversight-as-new-yorks-ai-safety-law-takes-effect/","text":"It’s the transition from the 'Wild West' phase to a regulated utility model. It's about accountability for the risks these models pose.","voice":3,"speaker":"Antony","summary":"OpenAI, Anthropic face new oversight as"},{"file":"https://assets.brook.dev/podcasts/v2026.46.3-12.22/line-013.mp3","url":"https://techcrunch.com/2026/11/10/openai-anthropic-face-new-oversight-as-new-yorks-ai-safety-law-takes-effect/","text":"Definitely. Though I wonder how they'll balance safety without stifling the actual innovation we're trying to achieve.","voice":1,"speaker":"Brook","summary":"OpenAI, Anthropic face new oversight as"},{"file":"https://assets.brook.dev/podcasts/v2026.46.3-12.22/line-014.mp3","url":"https://techcrunch.com/2026/11/10/openai-anthropic-face-new-oversight-as-new-yorks-ai-safety-law-takes-effect/","text":"That’s the perennial tension, isn't it? Safety versus speed.","voice":3,"speaker":"Antony","summary":"OpenAI, Anthropic face new oversight as"},{"file":"https://assets.brook.dev/podcasts/v2026.46.3-12.22/line-015.mp3","url":"https://techcrunch.com/2026/11/10/openai-acquires-odessia-travel-startup-created-by-sonder-founder/","text":"On a lighter note for the tech world, OpenAI is acquiring Odessia, that travel startup. It makes you wonder what their play is for the travel industry specifically.","voice":1,"speaker":"Brook","summary":"OpenAI acquires Odessia, travel startup created"},{"file":"https://assets.brook.dev/podcasts/v2026.46.3-12.22/line-016.mp3","url":"https://techcrunch.com/2026/11/10/openai-acquires-odessia-travel-startup-created-by-sonder-founder/","text":"Maybe they want to own the entire journey—from planning the trip with an LLM to actually booking it through a dedicated platform.","voice":3,"speaker":"Antony","summary":"OpenAI acquires Odessia, travel startup created"},{"file":"https://assets.brook.dev/podcasts/v2026.46.3-12.22/line-017.mp3","url":"https://techcrunch.com/2026/11/10/openai-acquires-odessia-travel-startup-created-by-sonder-founder/","text":"Or maybe they just want the data. Either way, it's a big move into real-world logistics.","voice":1,"speaker":"Brook","summary":"OpenAI acquires Odessia, travel startup created"},{"file":"https://assets.brook.dev/podcasts/v2026.46.3-12.22/line-018.mp3","url":"https://www.bbc.co.uk/news/articles/crwydyde0lp3o?at_campaign=rss&at_medium=RSS","text":"Speaking of real-world impacts, we have some sobering news regarding GLP-1 drugs like Ozempic and Wegovy. The FDA is ordering warnings about a rare eye condition that can lead to blindness.","voice":3,"speaker":"Antony","summary":"Makers of GLP-1 drugs ordered to"},{"file":"https://assets.brook.dev/podcasts/v2026.46.3-12.22/line-019.mp3","url":"https://www.bbc.co.uk/news/articles/crwydyde0lp3o?at_campaign=rss&at_medium=RSS","text":"That's a serious side effect for a drug that's become so mainstream lately. It really highlights the need for those very regulations we just talked about.","voice":1,"speaker":"Brook","summary":"Makers of GLP-1 drugs ordered to"},{"file":"https://assets.brook.dev/podcasts/v2026.46.3-12.22/line-020.mp3","url":"https://www.bbc.co.uk/news/articles/crwydyde0lp3o?at_campaign=rss&at_medium=RSS","text":"It’s a stark reminder of the trade-offs in rapid pharmaceutical deployment.","voice":3,"speaker":"Antony","summary":"Makers of GLP-1 drugs ordered to"},{"file":"https://assets.brook.dev/podcasts/v2026.46.3-12.22/line-021.mp3","url":"https://thebristolcable.org/2026/11/dehumanising-and-humiliating-extreme-heat-behind-bars/","text":"And finally, on the human side of things—there's a report on how extreme heat is affecting prisoners in Victorian-era jails across the UK. They're calling it 'dehumanising'.","voice":1,"speaker":"Brook","summary":"‘Dehumanising and humiliating’: Extreme heat behind"},{"file":"https://assets.brook.dev/podcasts/v2026.46.3-12.22/line-022.mp3","url":"https://thebristolcable.org/2026/11/dehumanising-and-humiliating-extreme-heat-behind-bars/","text":"It’s a tragic failure of infrastructure. When the climate shifts this quickly, our oldest buildings become literal ovens for the most vulnerable.","voice":3,"speaker":"Antony","summary":"‘Dehumanising and humiliating’: Extreme heat behind"},{"file":"https://assets.brook.dev/podcasts/v2026.46.3-12.22/line-023.mp3","url":"https://thebristolcable.org/2026/11/dehumanising-and-humiliating-extreme-heat-behind-bars/","text":"It's a massive engineering and policy challenge that we can't ignore much longer.","voice":1,"speaker":"Brook","summary":"‘Dehumanising and humiliating’: Extreme heat behind"}]};
+const playlist = EP.playlist;
+const FOLDER = EP.folder;
+const COLOURS = ['#bb86fc', '#00d2ff', '#ffb74d', '#81c784', '#f06292', '#90a4ae'];
+
+const mv = document.getElementById('mv');
+const lyricsTrack = mv.textTracks[0];
+const mvSound = document.getElementById('mv-sound');
+const mvNote = document.getElementById('mv-note');
+const st = document.getElementById('st');
+const btnPrev = document.getElementById('btn-prev');
+const btnNext = document.getElementById('btn-next');
+const lnkWrap = document.getElementById('lnk-wrap');
+const lnk = document.getElementById('lnk');
+const summ = document.getElementById('summ');
+const tsText = document.getElementById('ts-text');
+const tsVoice = document.getElementById('ts-voice');
+const tsBox = document.getElementById('ts-box');
+const chatContainer = document.getElementById('full-chat');
+const toggleBtn = document.getElementById('toggle-chat');
+let plActive = document.getElementById('pl1');
+let plStandby = document.getElementById('pl2');
+
+document.getElementById('song-title').textContent = EP.songTitle;
+document.getElementById('credits').textContent = EP.credits;
+if (EP.hasLegacy) document.getElementById('version-switch').hidden = false;
+if (playlist.length < 2) document.getElementById('news-player').hidden = true;
+if (EP.sources.length) {
+  const list = document.getElementById('sources-list');
+  EP.sources.forEach((s) => {
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.href = s.url; a.target = '_blank'; a.rel = 'noopener'; a.textContent = s.title;
+    li.appendChild(a);
+    if (s.where) li.appendChild(document.createTextNode(' · ' + s.where));
+    list.appendChild(li);
+  });
+  document.getElementById('sources').hidden = false;
+}
+
+// Lyrics show on the video only while the music video is the current segment.
+function setLyrics(on) { if (lyricsTrack) lyricsTrack.mode = on ? 'showing' : 'hidden'; }
+
+let cur = 0;
+let isOverlapping = false;
+
+function colourFor(item) {
+  if (item.kind === 'video') return COLOURS[0];
+  const v = typeof item.voice === 'number' ? item.voice : String(item.voice).length;
+  return COLOURS[(v % (COLOURS.length - 1)) + 1];
+}
+
+function refreshSoundButton() {
+  mvSound.textContent = mv.muted ? 'Sound: off' : 'Sound: on';
+  mvSound.setAttribute('aria-pressed', String(!mv.muted));
+}
+
+function refreshNote() {
+  if (cur === 0) {
+    mvNote.textContent = playlist.length > 1 ? 'The music video opens the episode; the news follows when it ends.' : '';
+  } else {
+    mvNote.textContent = mv.paused ? 'The news is playing. You can play the video alongside it, with or without its sound.' : (mv.muted ? 'Video playing without sound.' : 'Video playing with its sound.');
+  }
+}
+
+function currentLyric() {
+  if (!lyricsTrack || !lyricsTrack.activeCues || !lyricsTrack.activeCues.length) return '';
+  return Array.from(lyricsTrack.activeCues).map((c) => c.text).join('\n');
+}
+
+function updateUI(i) {
+  btnPrev.disabled = i === 0;
+  btnNext.disabled = i >= playlist.length - 1;
+  const t = playlist[i];
+  st.textContent = 'Segment ' + (i + 1) + ' of ' + playlist.length + (i === 0 ? ' · music video' : '');
+  try { history.replaceState(null, '', '#section=' + (i + 1)); } catch (e) {}
+  tsVoice.textContent = t.speaker;
+  tsText.textContent = i === 0 ? (currentLyric() || '♪ ' + EP.songTitle) : t.text;
+  tsBox.style.borderLeftColor = colourFor(t);
+  document.querySelectorAll('.chat-bubble').forEach((b, idx) => {
+    b.classList.toggle('active', idx === i);
+    if (idx === i && chatContainer.classList.contains('visible')) b.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+  if (t.url) {
+    lnk.href = t.url;
+    summ.textContent = t.summary || '';
+    lnkWrap.classList.add('visible');
+  } else {
+    lnkWrap.classList.remove('visible');
+  }
+  refreshNote();
+}
+
+const preload = {};
+function preloadAround(i) {
+  const targets = [i + 1, i + 2].filter((n) => n > 0 && n < playlist.length);
+  targets.forEach((n) => { if (!preload[n]) { const a = new Audio(); a.preload = 'auto'; a.src = playlist[n].file; preload[n] = a; } });
+  Object.keys(preload).forEach((k) => { if (!targets.includes(+k)) { preload[k].src = ''; delete preload[k]; } });
+}
+
+function stopAudio() { plActive.pause(); plStandby.pause(); }
+
+function attachPlayerLogic(idx) {
+  isOverlapping = false;
+  plActive.ontimeupdate = () => {
+    if (isOverlapping || idx >= playlist.length - 1) return;
+    if (playlist[idx + 1].text.trim().startsWith('--') && plActive.duration && plActive.duration - plActive.currentTime <= 2) {
+      isOverlapping = true;
+      cur++;
+      updateUI(cur);
+      plStandby.src = playlist[cur].file;
+      plStandby.play().catch(() => {});
+    }
+  };
+  plActive.onended = () => {
+    if (isOverlapping) {
+      const tmp = plActive; plActive = plStandby; plStandby = tmp;
+      plActive.style.display = 'block'; plStandby.style.display = 'none';
+      attachPlayerLogic(cur);
+    } else if (cur < playlist.length - 1) {
+      go(cur + 1);
+    } else {
+      st.textContent = 'Broadcast ended';
+    }
+  };
+}
+
+function go(i, opts) {
+  const autoplay = !opts || opts.autoplay !== false;
+  cur = i;
+  updateUI(i);
+  if (i === 0) {
+    stopAudio();
+    plActive.style.display = 'none';
+    plStandby.style.display = 'none';
+    setLyrics(true);
+    mv.muted = false;
+    if (!mv.paused || mv.ended || mv.currentTime > 0) mv.currentTime = 0;
+    if (autoplay) mv.play().catch(() => { mvNote.textContent = 'Press play on the video to start.'; });
+    refreshSoundButton();
+    return;
+  }
+  // Leaving the song for the news: stop the song, hide its lyrics, and mute the video so it can be
+  // played alongside the news without the two soundtracks clashing until the listener asks.
+  setLyrics(false);
+  if (!mv.paused) mv.pause();
+  mv.muted = true;
+  refreshSoundButton();
+  stopAudio();
+  preloadAround(i);
+  plActive.src = playlist[i].file;
+  plActive.style.display = 'block';
+  plStandby.style.display = 'none';
+  if (autoplay) plActive.play().catch(() => {});
+  attachPlayerLogic(i);
+}
+
+mv.addEventListener('ended', () => {
+  if (cur === 0 && playlist.length > 1) go(1);
+  refreshNote();
+});
+mv.addEventListener('play', () => {
+  if (cur === 0) stopAudio();
+  refreshNote();
+});
+mv.addEventListener('pause', refreshNote);
+mv.addEventListener('volumechange', () => { refreshSoundButton(); refreshNote(); });
+mvSound.addEventListener('click', () => { mv.muted = !mv.muted; });
+if (lyricsTrack) lyricsTrack.addEventListener('cuechange', () => { if (cur === 0) tsText.textContent = currentLyric() || '♪ ' + EP.songTitle; });
+
+btnPrev.onclick = () => { if (cur > 0) go(cur - 1); };
+btnNext.onclick = () => { if (cur < playlist.length - 1) go(cur + 1); };
+
+document.addEventListener('keydown', (e) => {
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.target && /^(INPUT|TEXTAREA|BUTTON|VIDEO|AUDIO)$/.test(e.target.tagName) && e.key === ' ') return;
+  const k = e.key.toLowerCase();
+  if (k === 'j' && !btnPrev.disabled) btnPrev.click();
+  if (k === 'l' && !btnNext.disabled) btnNext.click();
+  if (k === 'k') {
+    const p = cur === 0 ? mv : plActive;
+    if (p.paused) p.play().catch(() => {}); else p.pause();
+  }
+});
+
+let lastTopic = null;
+let group = null;
+playlist.forEach((item, idx) => {
+  const topic = item.summary || 'Banter and hot takes';
+  if (topic !== lastTopic) {
+    group = document.createElement('div');
+    const h = document.createElement('div');
+    h.className = 'topic-header'; h.textContent = topic;
+    group.appendChild(h);
+    chatContainer.appendChild(group);
+    lastTopic = topic;
+  }
+  const b = document.createElement('div');
+  b.className = 'chat-bubble';
+  b.style.setProperty('--c', colourFor(item));
+  const label = document.createElement('div');
+  label.className = 'chat-label'; label.textContent = item.speaker;
+  b.appendChild(label);
+  b.appendChild(document.createTextNode(item.text));
+  b.onclick = () => go(idx);
+  group.appendChild(b);
+});
+
+toggleBtn.onclick = () => {
+  const vis = chatContainer.classList.toggle('visible');
+  toggleBtn.textContent = vis ? 'Hide transcript' : 'Show full transcript';
+  tsBox.style.display = vis ? 'none' : 'block';
+};
+
+const startAt = (() => { const m = (location.hash || '').match(/section=(\d+)/); const n = m ? parseInt(m[1], 10) - 1 : 0; return n >= 0 && n < playlist.length ? n : 0; })();
+setLyrics(startAt === 0);
+go(startAt);
+refreshSoundButton();
+
+async function initMenu() {
+  try {
+    const r = await fetch('/projects/news/menu-data.json');
+    if (!r.ok) return;
+    const folders = await r.json();
+    const at = folders.indexOf(FOLDER);
+    if (at >= 0) {
+      const older = folders[at + 1];
+      const newer = at > 0 ? folders[at - 1] : null;
+      const o = document.getElementById('podcast-older');
+      const n = document.getElementById('podcast-newer');
+      if (older) { o.href = '/projects/news/' + older + '/'; o.textContent = '← Older · ' + older; o.classList.remove('disabled'); o.removeAttribute('aria-disabled'); }
+      if (newer) { n.href = '/projects/news/' + newer + '/'; n.textContent = 'Newer · ' + newer + ' →'; n.classList.remove('disabled'); n.removeAttribute('aria-disabled'); }
+    }
+    const overlay = document.createElement('div'); overlay.id = 'sidebar-overlay'; document.body.appendChild(overlay);
+    const sidebar = document.createElement('div'); sidebar.id = 'news-sidebar';
+    sidebar.innerHTML = '<div class="sidebar-header"><h2>Archives</h2><button class="sidebar-close" id="news-close-btn" aria-label="Close">&times;</button></div>';
+    const list = document.createElement('ul'); list.className = 'sidebar-list';
+    folders.forEach((f) => { const li = document.createElement('li'); const a = document.createElement('a'); a.href = '/projects/news/' + f + '/'; a.textContent = f; li.appendChild(a); list.appendChild(li); });
+    sidebar.appendChild(list); document.body.appendChild(sidebar);
+    const btn = document.createElement('button'); btn.id = 'news-menu-btn'; btn.innerHTML = '&#9776; Menu'; document.body.appendChild(btn);
+    const toggle = () => { const open = !sidebar.classList.contains('open'); sidebar.classList.toggle('open', open); overlay.classList.toggle('open', open); };
+    btn.addEventListener('click', toggle);
+    overlay.addEventListener('click', toggle);
+    document.getElementById('news-close-btn').addEventListener('click', toggle);
+  } catch (e) { console.error('Menu failed:', e); }
+}
+initMenu();
+</script>
+</body>
+</html>
