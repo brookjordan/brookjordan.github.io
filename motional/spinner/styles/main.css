@@ -143,13 +143,43 @@ button {
   width: 100%;
 }
 
-.name--selected {
+.name:first-child:nth-last-child(1),
+.name:first-child:nth-last-child(2) ~ :nth-child(2),
+.name:first-child:nth-last-child(3) ~ :nth-child(2),
+.name:first-child:nth-last-child(4) ~ :nth-child(3),
+.name:first-child:nth-last-child(5) ~ :nth-child(3),
+.name:first-child:nth-last-child(6) ~ :nth-child(4),
+.name:first-child:nth-last-child(7) ~ :nth-child(4),
+.name:first-child:nth-last-child(8) ~ :nth-child(5),
+.name:first-child:nth-last-child(9) ~ :nth-child(5),
+.name:first-child:nth-last-child(10) ~ :nth-child(6),
+.name:first-child:nth-last-child(11) ~ :nth-child(6),
+.name:first-child:nth-last-child(12) ~ :nth-child(7),
+.name:first-child:nth-last-child(13) ~ :nth-child(7),
+.name:first-child:nth-last-child(14) ~ :nth-child(8),
+.name:first-child:nth-last-child(15) ~ :nth-child(8),
+.name:first-child:nth-last-child(16) ~ :nth-child(9) {
   background-color: white;
   color: black;
   transition-delay: 0.75s;
   transition-duration: 0.5s;
 }
-.name--selected .name__text-wrapper {
+.name:first-child:nth-last-child(1) .name__text-wrapper,
+.name:first-child:nth-last-child(2) ~ :nth-child(2) .name__text-wrapper,
+.name:first-child:nth-last-child(3) ~ :nth-child(2) .name__text-wrapper,
+.name:first-child:nth-last-child(4) ~ :nth-child(3) .name__text-wrapper,
+.name:first-child:nth-last-child(5) ~ :nth-child(3) .name__text-wrapper,
+.name:first-child:nth-last-child(6) ~ :nth-child(4) .name__text-wrapper,
+.name:first-child:nth-last-child(7) ~ :nth-child(4) .name__text-wrapper,
+.name:first-child:nth-last-child(8) ~ :nth-child(5) .name__text-wrapper,
+.name:first-child:nth-last-child(9) ~ :nth-child(5) .name__text-wrapper,
+.name:first-child:nth-last-child(10) ~ :nth-child(6) .name__text-wrapper,
+.name:first-child:nth-last-child(11) ~ :nth-child(6) .name__text-wrapper,
+.name:first-child:nth-last-child(12) ~ :nth-child(7) .name__text-wrapper,
+.name:first-child:nth-last-child(13) ~ :nth-child(7) .name__text-wrapper,
+.name:first-child:nth-last-child(14) ~ :nth-child(8) .name__text-wrapper,
+.name:first-child:nth-last-child(15) ~ :nth-child(8) .name__text-wrapper,
+.name:first-child:nth-last-child(16) ~ :nth-child(9) .name__text-wrapper {
   background: linear-gradient(
     to left,
     rgb(255 255 255 / 0) 0%,
@@ -160,7 +190,22 @@ button {
     rgb(255 255 255 / 0) 100%
   );
 }
-.name--selected .name__text {
+.name:first-child:nth-last-child(1) .name__text,
+.name:first-child:nth-last-child(2) ~ :nth-child(2) .name__text,
+.name:first-child:nth-last-child(3) ~ :nth-child(2) .name__text,
+.name:first-child:nth-last-child(4) ~ :nth-child(3) .name__text,
+.name:first-child:nth-last-child(5) ~ :nth-child(3) .name__text,
+.name:first-child:nth-last-child(6) ~ :nth-child(4) .name__text,
+.name:first-child:nth-last-child(7) ~ :nth-child(4) .name__text,
+.name:first-child:nth-last-child(8) ~ :nth-child(5) .name__text,
+.name:first-child:nth-last-child(9) ~ :nth-child(5) .name__text,
+.name:first-child:nth-last-child(10) ~ :nth-child(6) .name__text,
+.name:first-child:nth-last-child(11) ~ :nth-child(6) .name__text,
+.name:first-child:nth-last-child(12) ~ :nth-child(7) .name__text,
+.name:first-child:nth-last-child(13) ~ :nth-child(7) .name__text,
+.name:first-child:nth-last-child(14) ~ :nth-child(8) .name__text,
+.name:first-child:nth-last-child(15) ~ :nth-child(8) .name__text,
+.name:first-child:nth-last-child(16) ~ :nth-child(9) .name__text {
   transition-duration: 2s;
   transform: scaleX(1);
   letter-spacing: 0.1em;
@@ -242,41 +287,6 @@ button {
   height: 12px;
   flex-shrink: 0;
   cursor: pointer;
-}
-
-.hit-toggle {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 20;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  height: 50px;
-  padding: 0 16px;
-  background: rgba(255 255 255 / 0.5);
-  border-bottom-right-radius: 10px;
-  font-family: "Nunito Sans", "open sans", sans-serif;
-  font-size: 18px;
-  cursor: pointer;
-}
-.hit-toggle input {
-  width: 14px;
-  height: 14px;
-  cursor: pointer;
-}
-
-.hit-list {
-  position: fixed;
-  bottom: 6px;
-  left: calc(100 / var(--name-count) * 1vh + 10px);
-  left: calc(100 / var(--name-count) * 1svh + 10px);
-  right: 170px;
-  z-index: 20;
-  font-family: "Nunito Sans", "open sans", sans-serif;
-  font-size: 12px;
-  color: rgb(0 0 0 / 0.4);
-  pointer-events: none;
 }
 
 .checkbox-toggle {
