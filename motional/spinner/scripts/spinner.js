@@ -129,10 +129,16 @@ function keepSpinning({ frame }) {
   if (spinnerSpeed) {
     simulateSpin(frame);
     // The simulated position only approaches the landing slot asymptotically.
-    if (Math.abs(spinnerPos - landingSpot) < 0.005) {
+    // Easing from half a slot out to this threshold outlasts the 5s name
+    // reveal, so a hit is never listed before the spinner shows it.
+    if (Math.abs(spinnerPos - landingSpot) < 0.02) {
       spinnerPos = landingSpot;
       spinnerSpeed = 0;
       spinThread.pause();
+      if (hitPending) {
+        hitPending = false;
+        recordHit();
+      }
     }
   } else {
     spinThread.pause();
@@ -144,19 +150,8 @@ function selectedCard() {
   return nameCards.find(({ index }) => Math.round(spinnerPos + index) === slot);
 }
 
-// A spin counts once the selected name finishes its CSS reveal, so the hit
-// list never names someone before the spinner does.
-function recordHitOnReveal(event) {
-  if (event.propertyName !== "letter-spacing" || !hitPending) {
-    return;
-  }
-  const card = nameCards.find(({ elt }) => elt.contains(event.target));
-  if (!card || !card.elt.classList.contains("name--selected")) {
-    return;
-  }
-  hitPending = false;
-
-  const name = card.text?.name;
+function recordHit() {
+  const name = selectedCard()?.text?.name;
   if (!removeHit || !name || hitNames.includes(name)) {
     return;
   }
@@ -354,7 +349,6 @@ export function initialiseSpinner(
   hitListElt.className = "hit-list";
   document.body.append(hitListElt);
   renderHitList();
-  spinnerElt.addEventListener("transitionend", recordHitOnReveal);
 
   buildNames();
   initialiseCursorTracking();
