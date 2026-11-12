@@ -1,0 +1,17 @@
+export const items = [
+  { name: "Aloysius Chun", image: "./i/Aloysius Chun.png" },
+  { name: "Billy Giesenschlag", image: "./i/Billy Giesenschlag.png" },
+  { name: "Brandon Goh", image: "./i/Brandon Goh.png" },
+  { name: "Brandon Lam", image: "./i/Brandon Lam.jpg" },
+  { name: "Brook Jordan", image: "./i/Brook Jordan.png" },
+  { name: "Cong Vu", image: "./i/Cong Vu.jpg" },
+  { name: "Jingchen Yu", image: "./i/Jingchen Yu.jpg" },
+  { name: "Joel Yeo", image: "./i/Joel Yeo.png" },
+  { name: "Marcel Jodihardja", image: "./i/Marcel Jodihardja.jpg" },
+  { name: "Nicholas Tan Xuan", image: "./i/Nicholas Tan Xuan.png" },
+  { name: "Stacey Ng", image: "./i/Stacey Ng.png" },
+  { name: "Sylvain Bougerel", image: "./i/Sylvain Bougerel.jpg" },
+  { name: "Tian Fu", image: "./i/Tian Fu.jpg" },
+  { name: "Tung Hoang", image: "./i/Tung Hoang.png" },
+  { name: "Wee Kiat Clarence Ang", image: "./i/Wee Kiat Clarence Ang.jpg" },
+];

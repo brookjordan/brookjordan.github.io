@@ -79,7 +79,10 @@ function startSpinnerSpinning(event, customSpeed) {
   spinnerStartSpeed = spinnerSpeed =
     typeof customSpeed === "number" ? customSpeed : px2spd(cursorSpeed());
 
-  if (showEasySpinTimeout && spinnerStartSpeed > 0.07 || spinnerSpeed < -0.07) {
+  if (
+    (showEasySpinTimeout && spinnerStartSpeed > 0.07) ||
+    spinnerSpeed < -0.07
+  ) {
     clearTimeout(showEasySpinTimeout);
   }
 
@@ -206,10 +209,7 @@ function killFallenNames() {
 }
 
 function renderName({ elt, index }) {
-  elt.style.setProperty(
-    "--y",
-    (spinnerPos + index).toFixed(3)
-  );
+  elt.style.setProperty("--y", (spinnerPos + index).toFixed(3));
 }
 
 function renderNames() {
@@ -246,7 +246,9 @@ function addName(cardName = false) {
   if (randomPerson) {
     cardElt.style.setProperty(
       "--i-bg",
-      randomPerson.image ? `url("../${randomPerson.image}")` : "none",
+      randomPerson.image
+        ? `url("${new URL(randomPerson.image, document.baseURI).href}")`
+        : "none",
     );
     labelElt.innerHTML = (randomPerson && randomPerson.name) || "";
   }
@@ -269,9 +271,11 @@ export function initialiseSpinner(
     friction = 0.01,
     desiredNameCount = 5,
     initialItemNames = _cards.map(({ name }) => name),
+    storageKey = "nameFilter",
   } = {},
 ) {
   cards = _cards;
+  nameFilterStorage = storageKey;
   spinnerElt = _spinnerElt;
   requestedFriction = friction;
   setNameCount(desiredNameCount);
