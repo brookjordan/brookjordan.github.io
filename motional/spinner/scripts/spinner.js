@@ -36,9 +36,15 @@ let spinnerElt = null;
 let defaultNameFilter = null;
 let nameFilter = null;
 let nameFilterStorage = "nameFilter";
+let landingSpot = null;
+let hitPending = false;
+let removeHit = false;
+let hitNames = [];
+let hitStorage = null;
+let hitListElt = null;
 
 function enableTrackMouse(event) {
-  if (event.target.closest(".lazy-spin-button")) {
+  if (event.target.closest(".lazy-spin-button, .hit-toggle")) {
     return;
   }
 
@@ -46,6 +52,7 @@ function enableTrackMouse(event) {
 
   resetCursorSpeed(event);
   spinThread.pause();
+  hitPending = false;
   if (body.classList) {
     body.classList.add("grabbing");
   }
@@ -96,6 +103,8 @@ function startSpinnerSpinning(event, customSpeed) {
     spinnerSpeed > 0
       ? Math.ceil(calculatedLandingSpot)
       : Math.floor(calculatedLandingSpot);
+  landingSpot = integerLandingSpot;
+  hitPending = spinnerSpeed !== 0;
   frict = frictionRequiredToLandAt({
     initialPosition: spinnerStartPos,
     initialVelocity: spinnerStartSpeed,
@@ -119,9 +128,53 @@ function simulateSpin(frameNumber) {
 function keepSpinning({ frame }) {
   if (spinnerSpeed) {
     simulateSpin(frame);
+    // The simulated position only approaches the landing slot asymptotically.
+    if (Math.abs(spinnerPos - landingSpot) < 0.005) {
+      spinnerPos = landingSpot;
+      spinnerSpeed = 0;
+      spinThread.pause();
+    }
   } else {
     spinThread.pause();
   }
+}
+
+function selectedCard() {
+  const slot = Math.floor(nameCount / 2);
+  return nameCards.find(({ index }) => Math.round(spinnerPos + index) === slot);
+}
+
+// A spin counts once the selected name finishes its CSS reveal, so the hit
+// list never names someone before the spinner does.
+function recordHitOnReveal(event) {
+  if (event.propertyName !== "letter-spacing" || !hitPending) {
+    return;
+  }
+  const card = nameCards.find(({ elt }) => elt.contains(event.target));
+  if (!card || !card.elt.classList.contains("name--selected")) {
+    return;
+  }
+  hitPending = false;
+
+  const name = card.text?.name;
+  if (!removeHit || !name || hitNames.includes(name)) {
+    return;
+  }
+  hitNames.push(name);
+  saveHits();
+  renderHitList();
+}
+
+function saveHits() {
+  localStorage.setItem(
+    hitStorage,
+    JSON.stringify({ enabled: removeHit, names: hitNames }),
+  );
+}
+
+function renderHitList() {
+  hitListElt.textContent =
+    removeHit && hitNames.length ? `Hit: ${hitNames.join(", ")}` : "";
 }
 
 function startSpinning() {
@@ -213,8 +266,10 @@ function renderName({ elt, index }) {
 }
 
 function renderNames() {
+  const selected = selectedCard();
   nameCards.forEach((card) => {
     renderName(card);
+    card.elt.classList.toggle("name--selected", card === selected);
   });
 }
 
@@ -224,8 +279,10 @@ function addName(cardName = false) {
       ? cards.filter(({ name }) => nameFilter.includes(name))
       : [...cards]
   ).sort((cardA, cardB) => cardA.name.localeCompare(cardB.name));
-  const unusedCards = filteredCards.filter(({ name }) =>
-    nameCards.every(({ text }) => text.name !== name),
+  const unusedCards = filteredCards.filter(
+    ({ name }) =>
+      nameCards.every(({ text }) => text?.name !== name) &&
+      !(removeHit && hitNames.includes(name)),
   );
 
   const randomPerson =
@@ -287,6 +344,15 @@ export function initialiseSpinner(
     nameFilter = defaultNameFilter;
   }
 
+  hitStorage = `${nameFilterStorage}-hit`;
+  const savedHits = JSON.parse(localStorage.getItem(hitStorage) || "null");
+  if (savedHits) {
+    removeHit = savedHits.enabled;
+    hitNames = savedHits.names;
+  }
+  createHitControls();
+  spinnerElt.addEventListener("transitionend", recordHitOnReveal);
+
   buildNames();
   initialiseCursorTracking();
 
@@ -299,6 +365,29 @@ export function initialiseSpinner(
   showEasySpinTimeout = setTimeout(() => {
     createEasySpinnerButton();
   }, 10000);
+}
+
+function createHitControls() {
+  const label = document.createElement("label");
+  label.className = "hit-toggle";
+
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.checked = removeHit;
+  checkbox.addEventListener("change", () => {
+    removeHit = checkbox.checked;
+    hitNames = [];
+    saveHits();
+    renderHitList();
+  });
+
+  label.append(checkbox, document.createTextNode("Remove hit"));
+
+  hitListElt = document.createElement("p");
+  hitListElt.className = "hit-list";
+
+  document.body.append(label, hitListElt);
+  renderHitList();
 }
 
 function createEasySpinnerButton() {
