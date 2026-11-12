@@ -44,7 +44,7 @@ let hitStorage = null;
 let hitListElt = null;
 
 function enableTrackMouse(event) {
-  if (event.target.closest(".lazy-spin-button, .hit-toggle")) {
+  if (event.target.closest(".lazy-spin-button")) {
     return;
   }
 
@@ -350,7 +350,10 @@ export function initialiseSpinner(
     removeHit = savedHits.enabled;
     hitNames = savedHits.names;
   }
-  createHitControls();
+  hitListElt = document.createElement("p");
+  hitListElt.className = "hit-list";
+  document.body.append(hitListElt);
+  renderHitList();
   spinnerElt.addEventListener("transitionend", recordHitOnReveal);
 
   buildNames();
@@ -367,9 +370,8 @@ export function initialiseSpinner(
   }, 10000);
 }
 
-function createHitControls() {
+function createHitToggle() {
   const label = document.createElement("label");
-  label.className = "hit-toggle";
 
   const checkbox = document.createElement("input");
   checkbox.type = "checkbox";
@@ -382,12 +384,7 @@ function createHitControls() {
   });
 
   label.append(checkbox, document.createTextNode("Remove hit"));
-
-  hitListElt = document.createElement("p");
-  hitListElt.className = "hit-list";
-
-  document.body.append(label, hitListElt);
-  renderHitList();
+  return label;
 }
 
 function createEasySpinnerButton() {
@@ -417,7 +414,7 @@ function createCheckboxControls() {
   container.className = "checkbox-container";
   container.id = "checkbox_container";
 
-  cards.forEach(({ name, image }) => {
+  const personCheckboxes = cards.map(({ name, image }) => {
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.name = name;
@@ -441,6 +438,7 @@ function createCheckboxControls() {
     label.append(checkbox, img, labelText);
 
     wrapper.appendChild(label);
+    return checkbox;
   });
 
   const resetButton = document.createElement("button");
@@ -449,11 +447,14 @@ function createCheckboxControls() {
   resetButton.addEventListener("click", () => {
     nameFilter = defaultNameFilter;
     localStorage.removeItem(nameFilterStorage);
-    Array.from(wrapper.querySelectorAll("input")).forEach((input) => {
+    personCheckboxes.forEach((input) => {
       input.checked = nameFilter.includes(input.name);
     });
   });
-  wrapper.appendChild(resetButton);
+  const actions = document.createElement("div");
+  actions.className = "checkbox-actions";
+  actions.append(resetButton, createHitToggle());
+  wrapper.append(actions);
   container.appendChild(wrapper);
 
   return container;
