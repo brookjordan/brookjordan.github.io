@@ -1,0 +1,23 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>dice-roller, and the laptop that fell asleep — jc3636-knob</title><link rel="stylesheet" href="./style.css"></head><body><header class="site-header"><a class="brand" href="./index.html">jc3636-knob <span>· devlog</span></a><a href="../../../index.html">brook.dev</a></header><main class="content"><a class="back-link" href="./index.html">← all posts</a><article><h1>dice-roller, and the laptop that fell asleep</h1><p class="post-meta">2026-11-21 <time>12:15 (Pacific)</time> · part 11 of 17 <span class="tag">lab</span><span class="tag">occamy</span><span class="tag">review</span><span class="tag">power</span></p><p><strong>dice-roller took 208 minutes. That sounded terrible. Then I read the power log, and it turned out the model had worked for about 25 minutes and spent three hours waiting for a laptop that had passed out.</strong></p>
+<div class="pair"><img src="https://assets.brook.dev/jc3636-knob/blog/img/dice-roller-tumbling.webp" alt="dice mid-tumble"><img src="https://assets.brook.dev/jc3636-knob/blog/img/dice-roller-landed4.webp" alt="four dice landed"></div><h2>The good bit first</h2>
+<p>Occamy built a dice roller: turn the knob to choose one to four dice, tap to roll, watch them tumble and land, see the total. It finished with a report and CHECK PASS, with <strong>zero coach notes</strong>.</p>
+<p>And my favourite moment: in its own text pictures, it spotted that a label was hidden behind the previews of the 3- and 4-dice layouts, and <strong>moved it</strong>. Nobody told it. It looked at the letters, saw a word that wasn&#39;t where it should be, and fixed the layout. I was delighted.</p>
+<h2>The 208 minutes</h2>
+<p><code>pmset -g log</code> keeps the Mac&#39;s power history, and it tells a sad little story:</p>
+<ul>
+<li>09:09: &quot;Clamshell Sleep&quot;. Lid closed.</li>
+<li>09:11: &quot;<strong>Thermal Emergency Sleep</strong>&quot;, on battery, <strong>19 %</strong>.</li>
+<li>12:12: lid opened.</li>
+</ul>
+<p>The session&#39;s 35-minute tool call and a 117-minute &quot;compaction&quot; both sat inside that nap. Active work: about <strong>25 minutes</strong>. The model wasn&#39;t slow. The model was holding its breath in a sleeping laptop.</p>
+<p>Lesson for overnight runs: keep the Mac open and on power. Whether a <code>caffeinate</code> would have saved it isn&#39;t shown: one ended 34 seconds before the lid sleep, and the thermal sleep followed anyway. One observation, so it&#39;s a suggestion, not a law.</p>
+<p>It happened again on the next overnight run (metronome: asleep for 182 of 189 minutes), so <code>pi-stats.py</code> now reads the power log itself and prints how much of a run&#39;s wall time the Mac was asleep, and the runner logs whether it started on battery or mains. Lies, damned lies, and wall-clock time.</p>
+<h2>The review</h2>
+<p>The coach played it with a script: clamp the count at 1 and 4, roll, land 1, 2, 3 and 4 dice, change the count after a roll. Findings:</p>
+<ul>
+<li>three dice overlapped (the top die was half covered);</li>
+<li>four dice touched, with a pip sitting right on the seam;</li>
+<li>after changing the count, the old dice and total stayed on screen until the next roll.</li>
+</ul>
+<p>The pips did add up (3 + 5 = 8 for two dice; the coach counted, bless it). All three went back as <em>symptoms</em>, no hints, and Occamy fixed all three: one coach note, one clean game.</p>
+</article><nav class="post-nav"><a href="./2026-11-21-0905-the-scoreboard.html">← The scoreboard</a><a href="./2026-11-21-1250-three-beeps-and-an-arcade.html">Three beeps at once, and an arcade →</a></nav></main><footer class="site-footer">The devlog for <strong>jc3636-knob</strong>: a round screen with a knob, a usage panel, and a local model learning to make games on it. Written from the working record, mistakes included.</footer></body></html>

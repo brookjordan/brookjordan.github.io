@@ -1,0 +1,36 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Three beeps at once, and an arcade — jc3636-knob</title><link rel="stylesheet" href="./style.css"></head><body><header class="site-header"><a class="brand" href="./index.html">jc3636-knob <span>· devlog</span></a><a href="../../../index.html">brook.dev</a></header><main class="content"><a class="back-link" href="./index.html">← all posts</a><article><h1>Three beeps at once, and an arcade</h1><p class="post-meta">2026-11-21 <time>12:50 (Pacific)</time> · part 12 of 17 <span class="tag">lab</span><span class="tag">occamy</span><span class="tag">sound</span><span class="tag">arcade</span></p><p><strong>kitchen-timer was the first game under the new runner, and it was a joy: built in 20 minutes, two replies cut off and both auto-resumed, its own feature scripts written, CHECK PASS. Then the coach listened to the alarm. Well. &quot;Listened&quot;.</strong></p>
+<div class="pair"><img src="https://assets.brook.dev/jc3636-knob/blog/img/kitchen-timer-half.webp" alt="kitchen timer half way"><img src="https://assets.brook.dev/jc3636-knob/blog/img/kitchen-timer-flashing.webp" alt="kitchen timer alarm flashing"></div><h2>Three beeps, one millisecond</h2>
+<p>The brief asked for three alarm beeps when the timer hits zero. The event log said three beeps. All three started <strong>in the same millisecond</strong>.</p>
+<p>On the board, the sound code <em>mixes</em> voices. Three identical beeps at the same instant aren&#39;t three beeps, they&#39;re one beep, louder and probably clipped. The simulator logged three sounds. Your ears would have heard one, with a crunch.</p>
+<p>One symptom note later (three minutes and a half!), they were at 60,583, 60,984 and 61,384 ms, about 400 ms apart, with a new feature-script line that <em>proves</em> it. Beep. Beep. Beep. Perfect.</p>
+<h2>Coach notes, so far</h2>
+<table>
+<thead>
+<tr>
+<th>Game</th>
+<th>Coach notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>dial-synth</td>
+<td>2</td>
+</tr>
+<tr>
+<td>tap-reflex</td>
+<td>0 (but no report)</td>
+</tr>
+<tr>
+<td>dice-roller</td>
+<td>1</td>
+</tr>
+<tr>
+<td>kitchen-timer</td>
+<td>1</td>
+</tr>
+</tbody></table>
+<p>Trending the right way.</p>
+<h2>The arcade</h2>
+<p>Flashing the knob means holding BOOT and pressing RESET, which needs me, so flashing one game at a time was going to get old fast. Hence <code>tools/arcade.py</code>: give it a list of finished games and it builds <strong>one firmware with all of them</strong>.</p>
+<p>The trick is lovely and slightly evil. Each game&#39;s <code>main.c</code> is copied <strong>unchanged</strong>, with a two-line header on top that renames its <code>app_main</code> and routes its setup calls and its screen flush through a little arcade layer. Setup runs once, however many games ask for it. And holding the screen for <strong>3 seconds</strong> inside any game jumps straight back to the menu, from inside the flush, with a <code>longjmp</code>. The games don&#39;t know they&#39;re in an arcade. They just suddenly aren&#39;t running any more.</p>
+<p>At 12:50 the arcade held four games and passed its own check. Knob picks, tap plays, hold to come home. A tiny cabinet of tiny games.</p>
+</article><nav class="post-nav"><a href="./2026-11-21-1215-the-laptop-fell-asleep.html">← dice-roller, and the laptop that fell asleep</a><a href="./2026-11-23-1130-a-hundred-and-eight-ideas.html">A hundred and eight ideas, each with a picture →</a></nav></main><footer class="site-footer">The devlog for <strong>jc3636-knob</strong>: a round screen with a knob, a usage panel, and a local model learning to make games on it. Written from the working record, mistakes included.</footer></body></html>

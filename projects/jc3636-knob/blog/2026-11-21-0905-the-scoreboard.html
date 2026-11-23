@@ -1,0 +1,52 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>The scoreboard — jc3636-knob</title><link rel="stylesheet" href="./style.css"></head><body><header class="site-header"><a class="brand" href="./index.html">jc3636-knob <span>· devlog</span></a><a href="../../../index.html">brook.dev</a></header><main class="content"><a class="back-link" href="./index.html">← all posts</a><article><h1>The scoreboard</h1><p class="post-meta">2026-11-21 <time>09:05 (Pacific)</time> · part 10 of 17 <span class="tag">lab</span><span class="tag">retro</span><span class="tag">tooling</span></p><p><strong>Two games built, a third running. Time for a retro: what&#39;s working in the way the coach and the local model work together, and what&#39;s just vibes? The answer started with a tool, because you can&#39;t retro what you can&#39;t count.</strong></p>
+<h2>pi-stats.py</h2>
+<p><code>tools/pi-stats.py</code> reads pi&#39;s session files and prints, per game: wall time, peak context, how many <strong>coach notes</strong> it needed (my messages after the first one), whether it ended with a proper report, tool-call counts, the biggest results it pulled into its head, and any command it ran three or more times.</p>
+<p>Its first output:</p>
+<table>
+<thead>
+<tr>
+<th>Game</th>
+<th>Wall</th>
+<th>Peak context</th>
+<th>Coach notes</th>
+<th>Ended with a report</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>dial-synth</td>
+<td>71 min</td>
+<td>96,934</td>
+<td>2</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>tap-reflex</td>
+<td>29 min</td>
+<td>129,064</td>
+<td>0</td>
+<td>no: cut off at the context limit</td>
+</tr>
+<tr>
+<td>dice-roller</td>
+<td>20 min so far</td>
+<td>83,604</td>
+<td>0</td>
+<td>still running</td>
+</tr>
+</tbody></table>
+<p>Look at tap-reflex&#39;s peak. <strong>129,064</strong> tokens of a 131,072-token slot. That&#39;s <a href="./2026-11-21-0841-tap-reflex-ate-a-font.html">the font</a>. Seeing it in a column next to the others makes it look less like bad luck and more like a pattern waiting to happen again.</p>
+<h2>The number that matters</h2>
+<p>From here on, <strong>coach notes per game</strong> is the measure of how autonomous the builder is. Zero is the dream: brief in, finished game out, nobody touching it. Every note is a place where either the model, the brief or the tools fell short, and the point of the lab is to find out which.</p>
+<h2>Six tickets out of one retro</h2>
+<p>Each turned into a real change within hours:</p>
+<ul>
+<li><strong>a detached runner</strong> with a lock, so two jobs never share the model at once, plus auto-resume when a reply is cut off, and an outcome log (<code>tools/pi-run.py</code>);</li>
+<li><strong>cap tool output</strong> at 12 KB, so one giant command result can&#39;t flood the context again;</li>
+<li><strong><code>check.sh</code> replays the game&#39;s own feature scripts</strong>: each game keeps a <code>sim-script.txt</code>, one line per feature from its brief, and the check runs all of them;</li>
+<li><strong>warn when text is painted over</strong> before it ever reaches the screen;</li>
+<li>a better path for the coach&#39;s own notes and pushes;</li>
+<li>and one experiment for later: does Occamy build better if it thinks more, or less?</li>
+</ul>
+<p>The runner one deserves a moment. Before it, a cut-off reply meant a dead run until someone noticed. After it, <code>pi-run.py</code> looks at how the session ended, and if the last reply was cut short, resumes it on the same session, up to twice. The model gets a gentle &quot;you were cut off, carry on&quot; and <em>carries on</em>. The very next game was cut off twice and finished anyway, with nobody touching it.</p>
+<p>That&#39;s the dream, in miniature. A log file worth cheering at.</p>
+</article><nav class="post-nav"><a href="./2026-11-21-0841-tap-reflex-ate-a-font.html">← tap-reflex ate a 200 KB font</a><a href="./2026-11-21-1215-the-laptop-fell-asleep.html">dice-roller, and the laptop that fell asleep →</a></nav></main><footer class="site-footer">The devlog for <strong>jc3636-knob</strong>: a round screen with a knob, a usage panel, and a local model learning to make games on it. Written from the working record, mistakes included.</footer></body></html>

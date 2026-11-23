@@ -1,0 +1,26 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>A folder for a flight — jc3636-knob</title><link rel="stylesheet" href="./style.css"></head><body><header class="site-header"><a class="brand" href="./index.html">jc3636-knob <span>· devlog</span></a><a href="../../../index.html">brook.dev</a></header><main class="content"><a class="back-link" href="./index.html">← all posts</a><article><h1>A folder for a flight</h1><p class="post-meta">2026-11-19 <time>18:41 (the laptop was on Pacific time)</time> · part 6 of 17 <span class="tag">lab</span><span class="tag">offline</span><span class="tag">template</span></p><p><strong>I had a flight coming up and a slightly unhinged idea: what if a model running entirely on my laptop, no internet at all, could make little games for the knob while I sat on a plane eating a bread roll? For that to work, everything it could possibly need had to be in one folder. So: one folder.</strong></p>
+<h2>The lab root</h2>
+<p>At 18:41 the first commit landed: one folder, <code>jc3636-knob</code>. In it:</p>
+<ul>
+<li>an <code>AGENTS.md</code> as the front door;</li>
+<li><code>projects/</code>, one folder per firmware (the usage panel, the vendor&#39;s own demo, and soon, games);</li>
+<li><code>docs/</code>: the vendor pack, the datasheets, and the documentation repos, cloned;</li>
+<li><code>toolchain/</code>: ESP-IDF 5.5.2, so a build never has to download anything.</li>
+</ul>
+<p>Seven minutes later the docs were split into small <code>docs/kb/</code> files, because a local model has a much smaller attention span than the cloud ones, and a 40-page &quot;everything about the board&quot; document is a great way to make it forget what it was doing halfway down page two.</p>
+<h2>The template, and the number</h2>
+<p>At 18:54: <code>projects/game-template</code>. Every game starts as a copy of it. It drives the screen by writing straight into a framebuffer and sending only the rectangles that changed, with no graphics library in the way. Knob, touch, haptics and a little synthesiser for sound, all wrapped so a game never talks to a chip directly.</p>
+<p>And on the board it ran at <strong>63 frames a second</strong>. Sixty. Three. On a round screen over a four-wire bus, from a template written that evening. I&#39;m aware that 63 fps is not news in the year of our lord 2026. I am choosing to be extremely excited anyway.</p>
+<p>The demo game is &quot;rim pong&quot;: the knob moves a paddle around the edge of the circle, a ball bounces around inside, and you try to keep it in.</p>
+<p><img src="https://assets.brook.dev/jc3636-knob/blog/img/rim-pong.webp" alt="rim pong, the template&#39;s demo, just after the serve"></p>
+<h2>Things the first afternoon decided</h2>
+<p>A few decisions from that evening are still load-bearing:</p>
+<ul>
+<li><strong>Sound starts muted.</strong> BOOT cycles mute → headphones → speaker and headphones, with a little dot at the top of the screen saying which (red, blue, green). That choice comes back to bite, <a href="./2026-11-23-1729-the-silent-arcade.html">delightfully, on 23 November</a>.</li>
+<li><strong>The screen was rotated 180°</strong> in software, because the vendor demo mirrored it. That one also comes back to bite. <a href="./2026-11-23-1352-the-screen-was-upside-down-the-whole-time.html">Hard.</a></li>
+<li><strong>Starting a game is one command:</strong> <code>tools/new-game.sh &lt;name&gt;</code> copies the template and renames it. Not &quot;copy these six folders and edit this CMake file&quot;. One command. A model can&#39;t get one command wrong. (Narrator: it can get almost anything wrong. But it couldn&#39;t get this wrong.)</li>
+</ul>
+<h2>What it didn&#39;t have yet</h2>
+<p>A way for the model to <em>see</em> what it drew. With no board plugged in on a plane, a game it wrote would compile and then... nothing. You&#39;d find out at the gate whether anything worked.</p>
+<p>That gap gets filled on the 21st, by a simulator, and it changes everything.</p>
+</article><nav class="post-nav"><a href="./2026-11-03-1220-half-a-radio-and-a-cable-that-turned-out-to-be-the-network.html">← Half a radio, and a cable that turned out to be the network</a><a href="./2026-11-20-2300-the-agent-had-been-dead-all-along.html">The agent had been dead all along →</a></nav></main><footer class="site-footer">The devlog for <strong>jc3636-knob</strong>: a round screen with a knob, a usage panel, and a local model learning to make games on it. Written from the working record, mistakes included.</footer></body></html>

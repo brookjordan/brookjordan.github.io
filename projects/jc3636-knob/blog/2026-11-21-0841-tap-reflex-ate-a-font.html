@@ -1,0 +1,22 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>tap-reflex ate a 200 KB font — jc3636-knob</title><link rel="stylesheet" href="./style.css"></head><body><header class="site-header"><a class="brand" href="./index.html">jc3636-knob <span>· devlog</span></a><a href="../../../index.html">brook.dev</a></header><main class="content"><a class="back-link" href="./index.html">← all posts</a><article><h1>tap-reflex ate a 200 KB font</h1><p class="post-meta">2026-11-21 <time>08:41 (Pacific)</time> · part 9 of 17 <span class="tag">lab</span><span class="tag">occamy</span><span class="tag">context</span><span class="tag">pi</span></p><p><strong>Game two: a reaction timer. Wait for green, tap, see your time. Occamy got it to CHECK PASS in 1,712 seconds. And then its session simply stopped. Mid-thought. No report, no goodbye. Like a cartoon character running off a cliff and only falling when it looks down.</strong></p>
+<div class="pair"><img src="https://assets.brook.dev/jc3636-knob/blog/img/tap-reflex-green.webp" alt="tap-reflex: the screen turns green"><img src="https://assets.brook.dev/jc3636-knob/blog/img/tap-reflex-result.webp" alt="tap-reflex: the reaction time"></div><h2>The last thing it read</h2>
+<p>Just before it went silent, Occamy wanted to know how tall a font was. Reasonable! So it opened <code>font_data.c</code>. Which is the <em>generated</em> font: <strong>200 KB</strong> of glyph bytes.</p>
+<p>The session&#39;s last reply was one single token, with <code>stopReason: &quot;length&quot;</code>, at <strong>128,971</strong> cached tokens. The model&#39;s whole context is <strong>131,072</strong>. It had filled its head with a font and had room for exactly one more word.</p>
+<p>(For the record, the first write-up only said the font dump &quot;co-occurred&quot; with the cut-off, because two things happening together isn&#39;t proof. Reading the session file afterwards gave the mechanism: context overflow. I love that the correction is in the record.)</p>
+<h2>The fix is a sign on the door</h2>
+<ul>
+<li><code>font.h</code> and the generated file itself now <em>state the heights</em> at the top and say <strong>do not read this file</strong>;</li>
+<li><code>AGENTS.md</code> now says: check a file&#39;s size (<code>wc -c</code>) before reading one you haven&#39;t seen. Generated data is never worth reading.</li>
+</ul>
+<h2>The stowaway</h2>
+<p>While tidying up, the coach found something much funnier. pi, by default, loads <code>AGENTS.md</code> from <strong>every parent directory</strong>. So every single Occamy session had also been carrying <em>my personal</em> <code>AGENTS.md</code> from my home folder: pages of rules for every other project I run, none of them about knobs. Into a tiny local model. That was trying to make a reaction timer.</p>
+<p>Poor thing. No wonder it was tired.</p>
+<p><code>tools/pi.sh</code> now runs pi with <code>--no-context-files</code> and hands it only this repo&#39;s <code>AGENTS.md</code> and its own skills.</p>
+<h2>AGENTS.md goes on a diet</h2>
+<p>I asked for <code>AGENTS.md</code> to be short and generic, with the specifics moved into skills. It came out at about <strong>450 words</strong>: what the board is, an index of four skills (<code>knob-game</code>, <code>knob-sim</code>, <code>knob-drawing</code>, <code>knob-flash</code>), five rules, and a little section called &quot;when things go sideways&quot;:</p>
+<ul>
+<li>a mundane step taking long? Look for a skill or a tool first;</li>
+<li>the same error twice? Don&#39;t try a third variation. Change approach.</li>
+</ul>
+<p>That second one is good advice for models. It is <em>excellent</em> advice for me.</p>
+</article><nav class="post-nav"><a href="./2026-11-21-0801-dial-synth-and-the-cheat.html">← dial-synth, the simulator, and a very small cheat</a><a href="./2026-11-21-0905-the-scoreboard.html">The scoreboard →</a></nav></main><footer class="site-footer">The devlog for <strong>jc3636-knob</strong>: a round screen with a knob, a usage panel, and a local model learning to make games on it. Written from the working record, mistakes included.</footer></body></html>

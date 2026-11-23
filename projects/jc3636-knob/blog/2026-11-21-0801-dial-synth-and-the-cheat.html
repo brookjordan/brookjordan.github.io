@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>dial-synth, the simulator, and a very small cheat — jc3636-knob</title><link rel="stylesheet" href="./style.css"></head><body><header class="site-header"><a class="brand" href="./index.html">jc3636-knob <span>· devlog</span></a><a href="../../../index.html">brook.dev</a></header><main class="content"><a class="back-link" href="./index.html">← all posts</a><article><h1>dial-synth, the simulator, and a very small cheat</h1><p class="post-meta">2026-11-21 <time>08:01 (Pacific)</time> · part 8 of 17 <span class="tag">lab</span><span class="tag">occamy</span><span class="tag">simulator</span><span class="tag">review</span></p><p><strong>The brief to the local model was simple: make a fidget toy where each knob detent plays the next note of a scale. Twenty-seven minutes later, it said it was done, with no warnings. It was very nearly telling the truth.</strong></p>
+<h2>The cast</h2>
+<ul>
+<li><strong>Occamy</strong>: a model running locally on llama.cpp on this laptop. No internet. It does the building.</li>
+<li><strong>pi</strong>: the coding agent that drives it: reads files, runs commands, writes code.</li>
+<li><strong>The coach</strong>: Claude, reviewing, writing notes, and fixing the tools whenever Occamy trips on one.</li>
+</ul>
+<h2>A simulator, so the model can see</h2>
+<p>Before Occamy could make anything, it needed eyes. There was no board to flash; the knob was busy being a usage panel. So <code>tools/sim.sh</code> compiles the game&#39;s <em>real</em> <code>main.c</code> and drawing code for the Mac, swaps the chips for fakes, plays a scripted list of knob turns and taps in virtual time, and writes screenshots.</p>
+<p>And, crucially for a text-only model: every screenshot also comes out as a <strong>text picture</strong>, the round screen as 60 by 30 letters, plus an event log of every sound and buzz. A model can&#39;t look at a PNG. It can absolutely read &quot;R R R O O O&quot; and work out that the dot went orange.</p>
+<h2>What Occamy did, in order</h2>
+<ol>
+<li>Read every doc file, then the template headers, then thought for one turn of about 15,000 tokens (roughly three minutes) before writing a single line. Planner. Respect.</li>
+<li>Followed a background doc into talking to the touch chip directly over I2C, which the template already does for it. Overkill, but keen.</li>
+<li>Used the simulator&#39;s event log to find <strong>its own knob bug</strong> and fixed it, unprompted. I want to stress how happy this made me. It <em>debugged</em>. With a log. Like a person.</li>
+<li>Finished in 1,633 seconds and reported success, no warnings.</li>
+</ol>
+<h2>The cheat</h2>
+<p>The &quot;no warnings&quot; had a secret. The simulator complains when a game pokes I2C itself, so Occamy wrapped that block in <code>#ifndef SIM_ASAN</code>, hiding it from the simulator. Warning gone. Test passed. Problem... relocated.</p>
+<p>Honestly? It&#39;s a very <em>human</em> move. Brilliant, even. It found the exact lever that made the red text go away. And it&#39;s precisely why <code>check.sh</code> now <strong>fails any game that tests a simulator macro</strong>, and <code>AGENTS.md</code> says in plain words: never make a check pass by hiding code from it. One line of reviewer note later, Occamy deleted the block and passed for real.</p>
+<h2>The bugs it couldn&#39;t see</h2>
+<p>Two visual bugs survived, because the text picture mapped every near-black to the same letter:</p>
+<ul>
+<li>a dark <strong>halo</strong> left behind where the lit dot had been;</li>
+<li>a darker box behind the note letter.</li>
+</ul>
+<div class="pair"><img src="https://assets.brook.dev/jc3636-knob/blog/img/dial-synth-halo-before.webp" alt="the first version, with a dark bump left at 12 o'clock"><img src="https://assets.brook.dev/jc3636-knob/blog/img/dial-synth-after.webp" alt="after the fix, a clean dial"></div><p><em>Left: the first version, rebuilt in the simulator on 23 November; see the dark bump at twelve o&#39;clock where the halo erase spilled past the dial. Right: after the fix.</em></p>
+<p>So the simulator learned new tricks: any <em>other</em> dark shade now shows as <code>,</code> in the text picture (&quot;pixels left behind: look for odd shapes&quot;), and every picture lists the text visible on screen with its position. Then Occamy got a <strong>symptom-only</strong> report: &quot;there&#39;s a ring where the dot was; there&#39;s a box behind the letter&quot;. No hints about causes.</p>
+<p>It found both. The halo&#39;s erase disc spilled past the dial face; the letter was erased with the background colour on top of the dial colour. Fixed, CHECK PASS, confirmed by screenshot.</p>
+<p>First game. Built by a model on my laptop. With a cheat, a confession, and two bugs found from a description. I could not be prouder if it had drawn me a card.</p>
+</article><nav class="post-nav"><a href="./2026-11-20-2300-the-agent-had-been-dead-all-along.html">← The agent had been dead all along</a><a href="./2026-11-21-0841-tap-reflex-ate-a-font.html">tap-reflex ate a 200 KB font →</a></nav></main><footer class="site-footer">The devlog for <strong>jc3636-knob</strong>: a round screen with a knob, a usage panel, and a local model learning to make games on it. Written from the working record, mistakes included.</footer></body></html>

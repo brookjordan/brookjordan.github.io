@@ -1,0 +1,51 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>A hundred and eight ideas, each with a picture — jc3636-knob</title><link rel="stylesheet" href="./style.css"></head><body><header class="site-header"><a class="brand" href="./index.html">jc3636-knob <span>· devlog</span></a><a href="../../../index.html">brook.dev</a></header><main class="content"><a class="back-link" href="./index.html">← all posts</a><article><h1>A hundred and eight ideas, each with a picture</h1><p class="post-meta">2026-11-23 <time>11:30 (+0800)</time> · part 13 of 17 <span class="tag">ideas</span><span class="tag">image generation</span><span class="tag">design</span></p><p><strong>I asked for some more game ideas for the knob. Specifically, one in the style of a call-and-response action toy: click left, click right, spin left, spin right, tap. What came back was fifteen new briefs, fifteen mini design docs, and a catalogue of one hundred and eight ideas, every single one with its own art. I may need a bigger knob.</strong></p>
+<p><img src="https://assets.brook.dev/knob-concepts/img/do-this-banner.jpg" alt="Do This!: &quot;Click it. Spin it. Tap it. Faster.&quot;"></p>
+<h2>The catalogue</h2>
+<p>It&#39;s a page called &quot;Coming to the Knob&quot;: a card per idea with a name, a one-line tag, a pitch, how it plays, what parts of the board it needs, and an age rating. The 108 split into five groups:</p>
+<table>
+<thead>
+<tr>
+<th>Group</th>
+<th>Ideas</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>multiplayer</td>
+<td>40</td>
+</tr>
+<tr>
+<td>the build queue</td>
+<td>25</td>
+</tr>
+<tr>
+<td>after dark (mostly 16+ and 18+ party games)</td>
+<td>20</td>
+</tr>
+<tr>
+<td>brand new</td>
+<td>15</td>
+</tr>
+<tr>
+<td>vision (games about what your eyes can tell apart)</td>
+<td>8</td>
+</tr>
+</tbody></table>
+<p>Some favourites, chosen entirely on vibes:</p>
+<ul>
+<li><strong>Pocket Pet</strong>: &quot;It&#39;s hungry. It&#39;s bored. It&#39;s yours.&quot;</li>
+<li><strong>Defuse</strong>: &quot;Cut the red wire. Then spin left twice.&quot;</li>
+<li><strong>Glow Memory</strong>: &quot;Remember the glow. Then find it again.&quot;</li>
+<li><strong>Hot Potato</strong>: &quot;Pass it before it blows.&quot;</li>
+<li><strong>Cat and Laser</strong>: &quot;One points. One pounces.&quot;</li>
+</ul>
+<div class="pair"><img src="https://assets.brook.dev/knob-concepts/img/pocket-pet-banner.jpg" alt="Pocket Pet concept art"><img src="https://assets.brook.dev/knob-concepts/img/glow-memory-banner.jpg" alt="Glow Memory concept art"></div><h2>How the pictures were made</h2>
+<p>Every idea has a banner and two pretend screens, so <strong>324 images</strong>, all rendered <strong>locally</strong>: <code>design/concepts/render.py</code> sends each prompt to ComfyUI on this Mac running Z-Image Turbo, then <code>optimise.ts</code> resizes them and compresses each to AVIF or WebP with an SSIM gate, using the compressor from my local image generation project: it keeps shrinking until the picture starts to look worse, then stops.</p>
+<p>The images live on my NAS, served from <code>assets.brook.dev/knob-concepts</code>, and are deliberately kept out of git. (The pictures in <em>this</em> devlog live next door, under <code>assets.brook.dev/jc3636-knob/blog/</code>.)</p>
+<h2>From idea to brief</h2>
+<p>An idea isn&#39;t a brief. The fifteen new briefs went into the model&#39;s build queue, placed among the existing ones by difficulty, from &quot;tally counter&quot; up to &quot;pocket pet&quot;. Two details I love:</p>
+<ul>
+<li>the briefs that need the model to tell a <strong>click</strong> from a <strong>spin</strong> define both precisely: a click is one detent with no other within 300 ms; a spin is three or more detents in one direction within 400 ms. The template has no spin helper, so the brief carries the definition;</li>
+<li>the swipe game works out direction from finger movement, not from the touch chip&#39;s own gesture codes, which hadn&#39;t been seen working on this unit yet. (<a href="./2026-11-23-1352-the-screen-was-upside-down-the-whole-time.html">They work now. Kind of. It&#39;s complicated.</a>)</li>
+</ul>
+<p>Do This! went to the front of the queue. It&#39;s going to be <a href="./2026-11-23-1603-pocket-pet-passes-and-the-pet-is-brown.html">quite the story</a>.</p>
+</article><nav class="post-nav"><a href="./2026-11-21-1250-three-beeps-and-an-arcade.html">← Three beeps at once, and an arcade</a><a href="./2026-11-23-1352-the-screen-was-upside-down-the-whole-time.html">The screen was upside down the whole time →</a></nav></main><footer class="site-footer">The devlog for <strong>jc3636-knob</strong>: a round screen with a knob, a usage panel, and a local model learning to make games on it. Written from the working record, mistakes included.</footer></body></html>

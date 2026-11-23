@@ -1,0 +1,21 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>The knob that counted to zero — jc3636-knob</title><link rel="stylesheet" href="./style.css"></head><body><header class="site-header"><a class="brand" href="./index.html">jc3636-knob <span>· devlog</span></a><a href="../../../index.html">brook.dev</a></header><main class="content"><a class="back-link" href="./index.html">← all posts</a><article><h1>The knob that counted to zero</h1><p class="post-meta">2026-11-02 <time>time not recorded</time> · part 4 of 17 <span class="tag">knob</span><span class="tag">hardware</span><span class="tag">debugging</span></p><p><strong>Turning the knob changed the provider. Sometimes. Sometimes it changed it twice. Sometimes it did absolutely nothing, with the calm confidence of a cat ignoring its name.</strong></p>
+<h2>The obvious answer was wrong</h2>
+<p>A rotary knob is a quadrature encoder, right? Two lines, A and B, out of phase, and the order they change in tells you the direction. Every tutorial on the internet. ESPHome even has a <code>rotary_encoder</code> component for exactly this.</p>
+<p>So we used it. And it reported... nothing, a lot of the time.</p>
+<p>Here&#39;s why, and it&#39;s lovely: <code>rotary_encoder</code> publishes the <em>net</em> counter when the main loop looks at it. A detent that wobbles forward and back between two loop passes nets to zero. The knob clicked. The counter went +1, −1. The panel saw 0. Technically correct, the best kind of useless.</p>
+<p>Polling the pins on a timer was even better: the captures from 2 November show <em>no events at all</em>. Zero. The knob was being turned and the code was looking the other way every single time.</p>
+<h2>Stop counting, start looking</h2>
+<p>The thing that cracked it was dumping <strong>raw pin transitions</strong> with timestamps instead of counts. Counts hide everything. Edges tell the truth.</p>
+<p>And the truth was not a quadrature encoder at all:</p>
+<ul>
+<li>the knob is <strong>two independent pulse lines</strong>: B on GPIO1 pulses for clockwise, A on GPIO2 for anticlockwise;</li>
+<li>a real detent is a low pulse <strong>30 to 250 ms wide on exactly one line</strong>;</li>
+<li>and every time one line switches, it couples a <strong>zero-millisecond glitch</strong> onto the other line.</li>
+</ul>
+<p>That glitch is the double-count. That glitch is the &quot;it went backwards&quot;. That glitch is the whole villain, and it&#39;s zero milliseconds wide, which is the most smug width a glitch can be.</p>
+<h2>The decode that works</h2>
+<p>Once you know the shapes, the fix almost writes itself: a 15 ms on/off filter on each pin throws away the zero-width glitch and keeps the narrowest real detent (measured at 30 ms), and a 40 ms acceptance window between steps stops one pulse counting twice. Direction is simply <em>which line pulsed</em>.</p>
+<p>One step per detent. Every time. Click, one. Click, one. Click, one. Glorious.</p>
+<h2>A footnote from three weeks later</h2>
+<p>Those numbers (15 ms debounce, 40 ms gap) were right for the panel and wrong for games. On 23 November the feature probe measured fast flicks producing pulses only <strong>2 to 3 ms</strong> wide, so a game spinning the knob hard lost most of its detents. The template now uses a 2 ms debounce and a 5 ms gap. That&#39;s <a href="./2026-11-23-1352-the-screen-was-upside-down-the-whole-time.html">its own post</a>, and the moral is the same both times: measure the edges, then believe them.</p>
+</article><nav class="post-nav"><a href="./2026-11-02-1106-the-knob-that-knows-when-the-tokens-run-out.html">← The knob that knows when the tokens run out</a><a href="./2026-11-03-1220-half-a-radio-and-a-cable-that-turned-out-to-be-the-network.html">Half a radio, and a cable that turned out to be the network →</a></nav></main><footer class="site-footer">The devlog for <strong>jc3636-knob</strong>: a round screen with a knob, a usage panel, and a local model learning to make games on it. Written from the working record, mistakes included.</footer></body></html>
