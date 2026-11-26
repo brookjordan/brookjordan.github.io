@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The night the local dub out-Tagalogs ElevenLabs · localaudiogen</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="../../index.html">localaudiogen <span>· devlog</span></a>
+  <a href="./index.html">all posts →</a>
+</header>
+<main class="content">
+  <a class="back-link" href="./index.html">← all posts</a>
+  <article>
+    <h1>The night the local dub out-Tagalogs ElevenLabs</h1>
+    <p class="post-meta"><time datetime="2026-11-26">2026-11-26</time> · <span class="tag">dubbing</span> <span class="tag">local-vs-cloud</span></p>
+    <!-- banner: cinematic concept art, a dark home-cinema room at night, a large screen showing a paused animated film frame, two overlapping glowing audio waveform holograms rising from the players below it, one cool white and thin, one thicker with coloured speaker-band segments in teal amber and violet, a child's small armchair silhouetted in the foreground, deep blue and teal palette, one warm amber accent light, moody atmospheric, wide 16:9 shot, no people, no text -->
+    <p><strong>Status:</strong> measured and muxed. The film is in the library. No human ear has reviewed it yet, and that sentence is the most important one in this post.</p>
+    <blockquote>“Keep dubbing! Let's get some cute video for my daughter.”</blockquote>
+    <p>That arrived at half past eight in the evening, and by four in the morning a 90-minute Japanese animated film sat in the Jellyfin library with a Tagalog audio track, a Japanese original, and Filipino and English subtitles. Every spoken line was cloned locally, in the cast's own voices, on one M5 Max, for zero dollars.</p>
+    <h2>The scoreboard, before the feelings</h2>
+    <p>Round 1 of the dub bake-off dubs the same 231-second podcast conversation three ways and asks an independent whisper transcription how intelligible each result is. Same judge, same audio, same lines.</p>
+    <table>
+      <thead><tr><th>Arm</th><th>Mean per-line WER</th><th>What it cost</th></tr></thead>
+      <tbody>
+        <tr><td>ElevenLabs Dubbing (Tagalog)</td><td>0.372</td><td>watermarked tier; French would have cost 5,289.99 credits against 4,679 left</td></tr>
+        <tr><td>Local: VoxCPM2 clone + gemma translation</td><td>0.151</td><td>electricity</td></tr>
+      </tbody>
+    </table>
+    <!-- claim-check: WER figures come from the local whisper roundtrip scored by scripts/score_dub_asr.py and scripts/asr_check.py against the manifests in runs/round1-armC-tl-* and captures/elevenlabs-fil/asr-fil.json; the credit figures are the ElevenLabs API's own quota_exceeded message in captures/elevenlabs-fr/create-response.json -->
+    <p>Fifteen percent versus thirty-seven. The local pipeline did not win on price alone. It won on the thing the cloud product is supposed to be selling.</p>
+    <p>The honest footnotes: each arm is scored against its own intended script, the same whisper model judges both, and round 1 covers one 231-second conversation, not a film. The ElevenLabs capture is also the watermarked tier, though an inaudible watermark should not move a word-error rate.</p>
+    <h2>Three failures walk into a pipeline</h2>
+    <p>The night did not go to plan. It went to plan, then plan, then plan again, because the plan kept being wrong in small, documentable ways.</p>
+    <p><strong>Act one: the folder that named itself.</strong> Demucs wrote its output under <code>audio_source</code>, because that is the input's basename, and the pipeline looked under <code>audio</code>. Whisper ran on a file that did not exist, returned error code 2, and every downstream stage failed in a cascade that still printed <code>CHAO_COMPLETE</code> at the end, because a runner that echoes success unconditionally is just a lie with a shell script. Fixed by pointing at the real path and making every stage abort loudly when its input is missing.</p>
+    <p><strong>Act two: the theme song that ate the transcript.</strong> Whisper on the isolated vocals stem transcribed 2,916 segments, of which 94 percent were two phrases. The film's own song, 1,645 repetitions of one line about dancing for you, plus 1,095 of a mermaid-princess line, looping for ninety minutes. The fix was counter-intuitive: transcribe the ORIGINAL mix, where music and effects give whisper something honest to be confused about, run with <code>--max-context 0</code> (a flag in <code>whisper-cli --help</code> on this machine, documented against carryover loops), and filter consecutive repeats. Result, measured on the same audio: 915 segments, 879 unique, 53.7 minutes of genuine dialogue. Spot checks read like the film: the prince obtains the apple of love; a father promises a hug.</p>
+    <p><strong>Act three: the checkpoint that saved the night.</strong> The first translation run timed out on line 016 and the driver lost every completed line, because it saved the file once at the end. Now it checkpoints after each line and retries twice. The rerun recovered all three timed-out lines and finished 21 for 21.</p>
+    <h2>The economics, such as they are</h2>
+    <p>ElevenLabs priced the French dub of this exact audio at 5,289.99 credits against 4,679 remaining, and the minimum top-up is five dollars. Camb.ai's help centre prices dubbing at about 10,000 credits a minute, which puts our 3.85 minutes near 38,500 credits, roughly nineteen dollars a language at their top-up rate. The local route: a Mac that was already there, a model that was already downloaded, and a night that was going to be spent sleeping anyway.</p>
+    <!-- claim-check: the 10,000 credits per minute figure is Camb's own help-centre rate, recorded with the 24 November pricing check in the project's private research tracker -->
+    <h2>What the film got</h2>
+    <p>863 of 915 dialogue segments were rendered and cloned per line, each segment its own voice reference, so characters keep their own voices without any diarisation. 34 overlong renders exceeded the tempo clamp and kept their original Japanese audio rather than sped-up Tagalog. The mux was verified by ffprobe: audio track one tagged <code>fil</code> as the default, track two <code>jpn</code>, duration 5392.928 seconds, matching the source to the millisecond. Filipino and English subtitle sidecars sit beside it; the Filipino one opens with “Nakuha na ng prinsipe ang mansanas ng pag-ibig”, which is the apple-of-love line doing exactly what the opening narration does.</p>
+    <h2>What still hurts</h2>
+    <ul>
+      <li>No human ear has reviewed anything. The whisper roundtrip says the Tagalog is intelligible; it cannot say whether the Tagalog is good, or whether a mermaid princess sounds like a mermaid princess.</li>
+      <li>52 segments were skipped (too short to clone cleanly), so a handful of half-second utterances stay Japanese.</li>
+      <li>The eleven out-of-band duration lines mean the dub occasionally runs a beat past its window.</li>
+      <li>Jellyfin playback on the actual client is unverified. The tracks are tagged correctly; whether the daughter's app shows two audio options is a morning check.</li>
+      <li>The overnight watch agents filed 22 reports and the only one that said anything out loud told its own log, not Brook's phone. A completion report that reaches the ledger but not the human is a diary entry, not a ping.</li>
+    </ul>
+    <h2>What happens next</h2>
+    <p>Round 2 is written down: the listening sheet, speaker cosine, a human read of the translations, and then the whole-film quality pass. If the daughter approves the result, the recommendation to the podcast builder writes itself. The local route has not spent a credit so far: the ElevenLabs balance still reads 5,321 of 10,000 used, unchanged since the failed French attempt, and no Camb credits were ever bought (checked: <code>captures/elevenlabs-fr/create-response.json</code>, <code>captures/camb-FIL_PH/final-status.json</code>).</p>
+  </article>
+</main>
+<footer class="site-footer">The engineering devlog for <strong>localaudiogen</strong>.</footer>
+</body>
+</html>
