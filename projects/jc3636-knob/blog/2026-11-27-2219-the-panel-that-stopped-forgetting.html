@@ -1,0 +1,58 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>The panel that stopped forgetting — jc3636-knob</title><link rel="stylesheet" href="./style.css"></head><body><header class="site-header"><a class="brand" href="./index.html">jc3636-knob <span>· devlog</span></a><a href="../../../index.html">brook.dev</a></header><main class="content"><a class="back-link" href="./index.html">← all posts</a><article><h1>The panel that stopped forgetting</h1><p class="post-meta">2026-11-27 <time>22:19 (+0800)</time> · part 26 of 26 <span class="tag">usage panel</span><span class="tag">crashes</span><span class="tag">esp32-s3</span><span class="tag">flash</span><span class="tag">design</span><span class="tag">antigravity</span></p><p><strong>Changing tabs sometimes dropped the panel back to its &quot;connecting&quot; screen. That isn&#39;t a loading screen. That&#39;s a reboot, wearing a disguise. The agent&#39;s log had ten of them, quietly filed under <code>reset:exception/panic</code>.</strong></p>
+<h2>Suspect one: a race, fixed and flashed</h2>
+<p>The first theory was a data race. The panel fetches on one core and draws on the other, and they shared one string with no lock. A tab change straight after a fetch could start the next fetch while the screen was still copying the last one. Fixed, compiled, and flashed over WiFi at 18:21. Good.</p>
+<p>At 19:33 it crashed again. On a tab change. Not good.</p>
+<h2>The crash that wrote its own report</h2>
+<p>Here&#39;s a thing I didn&#39;t know: ESPHome keeps a crash record across the reset and prints it to anything that subscribes to the device&#39;s logs. So I asked. The panel answered:</p>
+<pre><code>Reason: Fault - Cache error (cause 7)
+Crashed core: 0
+PC: esp_cpu_wait_for_intr
+</code></pre>
+<p>Core 0 was <strong>asleep</strong>. It crashed while idle, in the scheduler&#39;s idle task. On the ESP32-S3 a &quot;Cache error&quot; means something touched flash or PSRAM while a flash write had switched the cache off. Those two share one bus, and while flash is busy, PSRAM is out of reach.</p>
+<p>So what was writing to flash every time I changed tabs? The code that remembered which tab I was on. It saved the tab so that a reboot could come back to it, and it became the prime suspect for causing the reboots. Magnificent. There&#39;s also an open ESP-IDF issue, #18806, about exactly this chip revision, 0.2 with octal PSRAM, corrupting shared flash access. Which is the chip in my knob.</p>
+<p>The test was to stop writing. The tab now lives in RTC memory, which survives crashes and updates and costs no flash at all. Between 19:42 and 20:05 I changed tabs eight times, and not one of those changes wrote to flash. As I write this there have been no panics since 19:33. That&#39;s a few hours, not a few days, so I&#39;m watching, with <code>status.sh</code> printing the count.</p>
+<h2>Remembering things without writing them down</h2>
+<p>Then I got greedy.</p>
+<ul>
+<li><strong>The tab after a power cut.</strong> RTC memory dies with the power, but the laptop doesn&#39;t. Each fetch now tells the agent which pane I&#39;m on, the agent keeps it in a file, and a freshly plugged-in panel reads it back from the first reply. (Not before: a panel sitting on tab 0 at boot would otherwise happily overwrite the saved one.)</li>
+<li><strong>The figures after a power cut.</strong> This one does need flash. It&#39;s the only memory that survives losing power. So the panel writes the last pane list at most once every half hour, only when nothing has moved for ten seconds, and logs every write. The first one took <strong>17 ms</strong>. Then I unplugged it, plugged it back in, and at 22:19:18 it drew 2,482 bytes from flash, before the WiFi had even connected. Old numbers, a little spinner, then new numbers. No &quot;connecting&quot;. <em>Gorgeous.</em></li>
+</ul>
+<h2>The loader nobody ever saw</h2>
+<p>The little refresh ring only appeared once a fetch had taken two seconds. So I looked at 769 fetches:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>p50</td>
+<td>66 ms</td>
+</tr>
+<tr>
+<td>p95</td>
+<td>409 ms</td>
+</tr>
+<tr>
+<td>p99</td>
+<td>1,581 ms</td>
+</tr>
+<tr>
+<td>slowest</td>
+<td>6,656 ms</td>
+</tr>
+</tbody></table>
+<p>Two seconds caught 0.8% of them. It now waits 500 ms, and once it shows it stays at least 400 ms, so it doesn&#39;t flash for a single frame.</p>
+<h2>Seven logos and a dock</h2>
+<p>Antigravity joined the personal group, which made seven logos on a round screen. So the row became a dock: logos packed 8 px apart at their actual sizes, the focused one at 50 px, and as it grows its neighbours slide aside. Seven fit in 284 pixels.</p>
+<p>Getting Antigravity&#39;s numbers was its own small adventure. On 20 November, Google said on its developer forum that running <code>agy /usage</code> from another app isn&#39;t allowed on consumer plans, even just to read it. But agy has a documented status line hook: it hands your script its quota as JSON whenever it redraws. So my script writes the quota to a file and the agent reads the file. Google&#39;s rules, Google&#39;s hook, my knob. It showed Gemini at 21% of the five hours and 6% of the week the first time I used agy afterwards.</p>
+<p>The logo is Google&#39;s own white icon from its press kit, to match the others. And the &quot;turn: next provider&quot; hint at the bottom is gone, because it vanished whenever anything else needed that row, and a knob does not need instructions.</p>
+<h2>The coach&#39;s corrections</h2>
+<p>Two things the coach got wrong tonight, both fixed:</p>
+<ul>
+<li>It told me the agent&#39;s log was stamped sixteen hours behind local time, as a fact about the log. It was a fact about one old agent process. After a restart the log was on local time again.</li>
+<li>It told me the WiFi upload had been blocked by the sandbox in its own session. It never tried. It had skipped the sandbox up front, because the handoff said it would be blocked.</li>
+</ul>
+<p>Both were corrected in writing the same evening, which is the right way round.</p>
+</article><nav class="post-nav"><a href="./2026-11-27-2143-six-crimes-no-refusals.html">← Six crimes, no refusals</a><span></span></nav></main><footer class="site-footer">The devlog for <strong>jc3636-knob</strong>: a round screen with a knob, a usage panel, and a local model learning to make games on it. Written from the working record, mistakes included.</footer></body></html>

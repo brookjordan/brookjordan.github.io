@@ -1,0 +1,45 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>A button that spends a reset — jc3636-knob</title><link rel="stylesheet" href="./style.css"></head><body><header class="site-header"><a class="brand" href="./index.html">jc3636-knob <span>· devlog</span></a><a href="../../../index.html">brook.dev</a></header><main class="content"><a class="back-link" href="./index.html">← all posts</a><article><h1>A button that spends a reset</h1><p class="post-meta">2026-11-27 <time>19:00 (+0800)</time> · part 23 of 26 <span class="tag">usage panel</span><span class="tag">resets</span><span class="tag">openai</span><span class="tag">claude</span><span class="tag">z.ai</span><span class="tag">rate limits</span></p><p><strong>OpenAI gave everyone a free &quot;banked reset&quot; this week, a saved refill of your Codex limits you spend whenever you like. My ChatGPT pane was showing two maxed bars and I had four of them sitting unused. So, obviously, the knob needed a big friendly button to spend one.</strong></p>
+<h2>The button, and the dial that guards it</h2>
+<p>Here is the dance. The pane shows <strong>use reset (4)</strong>. Tap it and a confirm screen appears: a dial of twelve dots, a pointer you move with the knob, and an amber ring at a random spot. <strong>Reset</strong> stays greyed out until the pointer sits on the ring. Turn past it and it greys out again. <strong>Cancel</strong>, or thirty seconds of nothing, goes back to the panes.</p>
+<p>It&#39;s a combination lock with one number. For a free refill. Proportionate? No. Delightful? Yes. (Later that evening another session tightened it so the ring always sits at least four detents away, so a nudge can&#39;t do it by accident.)</p>
+<p>The knob doesn&#39;t talk to OpenAI. It asks the agent on the laptop, which makes the same call Codex CLI&#39;s own <code>/usage</code> → <strong>Redeem reset</strong> makes. I didn&#39;t guess that call: the Codex CLI is open source, so the agent copies the request straight from it, request id and all. That id is an idempotency key, so one confirmation can spend at most one reset, however many times the request is retried.</p>
+<p>The first real press, from the log:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>19:00:53</td>
+<td>panel sends the reset</td>
+</tr>
+<tr>
+<td>19:00:57</td>
+<td>ChatGPT answers <code>reset</code></td>
+</tr>
+<tr>
+<td>19:00:58</td>
+<td>panel shows <strong>DONE</strong></td>
+</tr>
+<tr>
+<td>after</td>
+<td>4 resets → 3; both bars from maxed → 6% and 1%</td>
+</tr>
+</tbody></table>
+<p>Five seconds from tap to refilled. <em>Chef&#39;s kiss.</em></p>
+<h2>Claude had one too, in a binary</h2>
+<p>The guides say Claude&#39;s resets are spent on claude.ai, not in Claude Code. But the Claude Code binary on my laptop has to name every endpoint it calls, and <code>strings</code> on it turned up <code>reset_rate_limits</code>, with two programmes behind it: banked grants, and a weekly one that only appears when you&#39;ve hit your limit.</p>
+<p>The status comes back in the same usage reply the agent already reads, but only if you ask in the right voice. With the agent&#39;s old User-Agent, both programmes said <code>ineligible_reason: &quot;surface&quot;</code>. Ask as Claude Code (<code>claude-cli/2.1.332 (external, cli)</code>) and there it was: <strong>one full limit reset, usable now, expiring 10 December.</strong> Same account, same token, different hat.</p>
+<h2>Z.AI&#39;s was in another country&#39;s website</h2>
+<p>Z.AI calls them <strong>Quota Reset Cards</strong>. Its international console has no code for them at all, which was briefly very confusing. Then I looked at the Chinese sister site, bigmodel.cn, which runs the same backend. Its console bundle has a <code>ResetQuotaCard</code> component and two endpoints, one to list your cards and one to use one. The international API answers both with the key the agent already holds.</p>
+<p>Three cards. In my account. Unspent. The first one expires on 22 December.</p>
+<p>All three panes now grow the same button whenever their provider has a reset, and lose it when they don&#39;t. The firmware didn&#39;t change for Claude or Z.AI at all: any pane with an <code>action</code> gets the button. I love a generic renderer.</p>
+<h2>And then I rate-limited myself</h2>
+<p>The Anthropic pane started saying <strong>rate limited</strong>, which also hid its shiny new button. Rude.</p>
+<p>The usage endpoint allows about 30 reads an hour <strong>per account</strong>, shared with every Claude Code session on that login (an account-switching tool, claude-swap, measured it). A 429 then locks you out for whatever <code>retry-after</code> says, and retrying inside the lock makes it longer.</p>
+<p>The agent was polling every 120 seconds. That&#39;s 30 an hour. The panel was spending the entire budget on its own, before Claude Code got a look in. And at start-up it sent two reads in the same second. No-one else was hammering my rate limit. It was me, from inside the house.</p>
+<p>The fix: read every five minutes; after a 429 send nothing until it clears, with the wait written to disk so a restart can&#39;t cheat; never have two reads in flight. When the server says <code>retry-after: 0</code>, which it did, wait fifteen minutes, as people who&#39;d been burned before recommend (the coach briefly cut it to five, then found that advice and put it back). The pane now says <strong>next read 22:06</strong> instead of <strong>rate limited</strong>, keeps its last figures, and keeps the button.</p>
+<p>The coach also shipped a bug here: pressed during a lockout, straight after an agent restart, the Claude button said <strong>no reset left</strong>, because the grant to fall back on lived only in memory and the restart had wiped it. Another session reworked it so a press during a lockout now says when to try again. Honesty, delivered late, but delivered.</p>
+</article><nav class="post-nav"><a href="./2026-11-27-1845-the-knob-wants-to-teach-me-piano.html">← The knob wants to teach me piano</a><a href="./2026-11-27-1907-the-knob-gets-a-keyboard.html">The knob gets a keyboard →</a></nav></main><footer class="site-footer">The devlog for <strong>jc3636-knob</strong>: a round screen with a knob, a usage panel, and a local model learning to make games on it. Written from the working record, mistakes included.</footer></body></html>

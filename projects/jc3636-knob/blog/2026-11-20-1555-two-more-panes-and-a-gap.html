@@ -1,0 +1,40 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Two more panes, and a gap — jc3636-knob</title><link rel="stylesheet" href="./style.css"></head><body><header class="site-header"><a class="brand" href="./index.html">jc3636-knob <span>· devlog</span></a><a href="../../../index.html">brook.dev</a></header><main class="content"><a class="back-link" href="./index.html">← all posts</a><article><h1>Two more panes, and a gap</h1><p class="post-meta">2026-11-20 <time>15:55 (the laptop's clock; zone not recorded)</time> · part 7 of 26 <span class="tag">usage panel</span><span class="tag">work</span><span class="tag">carousel</span><span class="tag">design</span></p><p><strong>The panel had four panes: Z.AI, Anthropic, OpenAI, DeepSeek. All mine, all personal. Then I wanted the two the company pays for on there as well: Cursor, and Claude at work. Six panes. On a round screen 360 pixels across. Reader, it got cosy.</strong></p>
+<h2>Copying a colleague&#39;s homework</h2>
+<p>The obvious way to show Cursor and work Claude spend is to log the agent into both and fetch the numbers. That means work logins, work URLs and work cookies living in a personal repository on my laptop. No thank you.</p>
+<p>A colleague had already written <code>llmgauge</code>, a little macOS menu-bar app that fetches exactly those two numbers and saves them to a cache file every ten minutes. So the agent doesn&#39;t fetch anything. It reads llmgauge&#39;s files: a dollar figure, a timestamp, and an error field. Every work-specific URL, query and cookie stays in llmgauge&#39;s own repository, where it belongs.</p>
+<p>It is, technically, copying someone&#39;s homework. Excellent homework.</p>
+<p>The reader is small. A missing file means &quot;not installed&quot; and shows nothing. A recorded error serves the last good figure, marked stale. A file older than two refresh periods says <code>llmgauge not refreshing</code>, because the worst number on a dashboard is an old one that looks new.</p>
+<h2>Telling two Claudes apart</h2>
+<p>That left a small identity crisis: two Claude panes. Same logo, same company, different wallet. The options on the ticket were a different title, a tinted logo, or a tiny badge (unreadable at 28 pixels, so: no).</p>
+<p>What I chose instead was <strong>groups</strong>. Personal subscriptions on the left, a gap, then the company-paid ones on the right with my employer&#39;s mark above them. The work Claude pane is just titled <code>CLAUDE</code>, with the Claude logo, and the mark beside its title says whose bill it is.</p>
+<p>The mark isn&#39;t even an image. It&#39;s four filled triangles drawn from the logo&#39;s SVG path, so it costs no flash and scales to whatever size it needs to be. Moving a provider between groups is one field in the agent&#39;s table, <code>group: &quot;work&quot;</code>, with no firmware flash at all. Lovely.</p>
+<h2>Six slots, one round screen</h2>
+<p>At the logo row&#39;s height the round screen is about 312 pixels wide. Six 50-pixel logos would sit about 52 pixels apart, which is to say practically on top of each other.</p>
+<p>So the layout puts the gap where it means something:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Personal</th>
+<th>Work</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Slots (x, px)</td>
+<td>50, 96, 141, 187</td>
+<td>264, 310</td>
+</tr>
+<tr>
+<td>Pitch</td>
+<td>45 to 46 px</td>
+<td>46 px</td>
+</tr>
+<tr>
+<td>Gap between the groups</td>
+<td>77 px</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>The host test measured those from the live payload: it runs the firmware&#39;s pane code on the laptop against whatever the agent is serving right now. The panel was flashed at 15:55 and applied all six panes at 15:55:42.</p>
+<p>Until they had logos, the two new panes showed a drawn initial in a grey circle. Cursor&#39;s logo was rendered that night from the SVG in llmgauge&#39;s icons and compiled in, waiting for the next flash. Its fill is a light grey, so it reads on black with no recolouring. Work Claude borrows the Claude logo. Which was, after all, the point of the mark.</p>
+</article><nav class="post-nav"><a href="./2026-11-19-1841-a-folder-for-a-flight.html">← A folder for a flight</a><a href="./2026-11-20-2300-the-agent-had-been-dead-all-along.html">The agent had been dead all along →</a></nav></main><footer class="site-footer">The devlog for <strong>jc3636-knob</strong>: a round screen with a knob, a usage panel, and a local model learning to make games on it. Written from the working record, mistakes included.</footer></body></html>
