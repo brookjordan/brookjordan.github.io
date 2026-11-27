@@ -70,8 +70,10 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .screen { width: 132px; aspect-ratio: 1; max-width: 100%; border-radius: 50%; overflow: hidden; background: #0b0d1a;
   box-shadow: 0 0 0 6px #3a4166, 0 0 0 8px var(--chrome), 0 12px 30px #0009; }
 .screen img { width: 100%; height: 100%; object-fit: cover; display: block; }
-/* Screen images keep hard pixel edges when scaled, like the 360 px panel itself. */
-.screen img, .capture { image-rendering: pixelated; }
+/* Screen images: smooth when shown smaller than they are, hard pixel edges when shown larger, like
+   the 360 px panel itself. fitScreens() sets .grows by comparing device pixels with the image's own. */
+.screen img, .capture { image-rendering: auto; }
+.screen img.grows, .capture.grows { image-rendering: pixelated; }
 .game.wide .screen { width: 168px; }
 .meta { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px; padding-top: 14px; border-top: 1px dashed var(--rim); }
 .use { font: 500 12px/1 var(--mono); padding: 6px 9px; border-radius: 6px; background: #20264a; color: var(--chrome); }
@@ -239,7 +241,21 @@ function draw() {
   });
   if (!list.length) grid.append(el("p", "empty", showProposed ? "No apps match that filter." : "No built apps match. Include proposed apps to see more."));
   document.getElementById("count").textContent = `${list.length} of ${available.length} apps`;
+  fitScreens();
 }
+// Pixelated only when an image is drawn larger than its own pixels (counting the display's pixel
+// ratio); shrunk images stay smooth.
+function fitScreen(image) {
+  if (!image.naturalWidth) return;
+  image.classList.toggle("grows", image.clientWidth * (window.devicePixelRatio || 1) > image.naturalWidth);
+}
+function fitScreens() {
+  document.querySelectorAll(".screen img, img.capture").forEach(image => {
+    if (image.complete) fitScreen(image);
+    else image.addEventListener("load", () => fitScreen(image), { once: true });
+  });
+}
+window.addEventListener("resize", fitScreens);
 document.querySelectorAll("[data-status]").forEach(button => button.addEventListener("click", () => {
   showProposed = button.dataset.status === "all";
   document.querySelectorAll("[data-status]").forEach(x => x.setAttribute("aria-pressed", String(x === button)));
