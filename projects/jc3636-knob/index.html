@@ -51,15 +51,12 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; }
 .game { background: var(--panel); border: 1px solid var(--rim); border-radius: 22px; overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
 .game.wide { grid-column: 1 / -1; }
-.built-card { display: grid; grid-template-columns: minmax(100px, 42%) minmax(0, 1fr); align-items: center; gap: 20px; padding: 20px; }
-.built-card h2 { font-size: clamp(22px, 3vw, 32px); }
-.built-card p { margin: 8px 0 0; color: var(--muted); }
-.built-card .banner { grid-column: 1 / -1; overflow: hidden; border-radius: 12px; }
+.banner.simulator img { object-fit: contain; }
+.game .body.single-column { grid-template-columns: minmax(0, 1fr); }
 .capture { width: 100%; display: block; aspect-ratio: 1; border-radius: 50%; object-fit: contain; background: #090b14; }
 .hero-shot { width: min(100%, 330px); margin-inline: auto; box-shadow: 0 0 0 8px var(--rim), 0 24px 54px #0008; }
 .status { display: flex; flex-wrap: wrap; gap: 8px; margin-block: 10px; }
 .lede a { color: var(--chrome); }
-@media (max-width: 520px) { .built-card { gap: 15px; padding: 16px; } }
 .banner { position: relative; aspect-ratio: 16 / 9; max-width: 100%; background: linear-gradient(135deg, #2a2f5a, #3b1f3f); }
 .banner img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .body { padding: 22px 24px 26px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 20px 24px; }
@@ -190,23 +187,50 @@ function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.
 
 function card(g, i) {
   const a = el("article", "game" + (i % 5 === 0 ? " wide" : "")); a.id = g.slug;
-  const b = el("div", "banner"); b.append(img(src(`${g.slug}-banner`), `${g.name} key art`, "art still rendering"));
-  const r = el("span", "adult rate-" + g.rating.replace(/\W/g, ""), g.rating); if (g.rnote) r.title = g.rnote; b.append(r);
+  const cover = art[g.slug + "-banner"];
+  const screenshotAsBanner = g.image && !cover;
+  const b = el("div", screenshotAsBanner ? "banner simulator" : "banner");
+  if (screenshotAsBanner) b.append(simulatorImage(g));
+  else if (g.image) {
+    const image = img("web/" + cover, `${g.name} concept art`, "Concept art unavailable");
+    useImageFallback(image, src(g.slug + "-banner"));
+    b.append(image);
+  } else b.append(img(src(`${g.slug}-banner`), `${g.name} key art`, "art still rendering"));
+  if (g.rating) {
+    const r = el("span", "adult rate-" + g.rating.replace(/\W/g, ""), g.rating);
+    if (g.rnote) r.title = g.rnote;
+    b.append(r);
+  }
   a.append(b);
-  const body = el("div", "body");
-  const t = el("div", "title"); t.append(el("h2", null, g.name), el("p", "tag", g.tag));
+  const body = el("div", screenshotAsBanner ? "body single-column" : "body");
+  const t = el("div", "title");
+  t.append(el("h2", null, g.name));
+  if (g.tag) t.append(el("p", "tag", g.tag));
   if (g.rnote) t.append(el("p", "rnote", g.rnote));
   body.append(t);
   const txt = el("div"); txt.style.minWidth = "0"; txt.append(el("p", "pitch", g.pitch));
-  const ul = el("ul", "how"); g.how.forEach(h => ul.append(el("li", null, h))); txt.append(ul); body.append(txt);
-  const s = el("div", "screens");
-  ["s1", "s2"].forEach(k => { const c = el("div", "screen"); c.append(img(src(`${g.slug}-${k}`), `${g.name} on the round screen`, "screen rendering")); s.append(c); });
-  body.append(s);
+  if (!g.image) {
+    const ul = el("ul", "how");
+    g.how.forEach(h => ul.append(el("li", null, h)));
+    txt.append(ul);
+  }
+  body.append(txt);
+  if (!screenshotAsBanner) {
+    const s = el("div", "screens");
+    if (g.image) {
+      const screen = el("div", "screen");
+      screen.append(simulatorImage(g));
+      s.append(screen);
+    } else {
+      ["s1", "s2"].forEach(k => { const c = el("div", "screen"); c.append(img(src(`${g.slug}-${k}`), `${g.name} on the round screen`, "screen rendering")); s.append(c); });
+    }
+    body.append(s);
+  }
   const m = el("div", "meta");
-  m.append(el("span", "use", "Proposed"));
+  m.append(el("span", "use", g.image ? "Built" : "Proposed"));
   [g.mode, g.team, g.sym].filter(Boolean).forEach(u => m.append(el("span", "use mp", u)));
   g.uses.forEach(u => m.append(el("span", "use", u)));
-  (g.needs || []).forEach(([n, tk]) => m.append(el("span", "use need", `needs testing: ${n} · ${tk}`)));
+  if (!g.image) (g.needs || []).forEach(([n, tk]) => m.append(el("span", "use need", `needs testing: ${n} · ${tk}`)));
   body.append(m);
   if (g.devlog) {
     const link = el("a", "use", `Read the devlog about ${g.name}`);
@@ -217,30 +241,16 @@ function card(g, i) {
   }
   a.append(body); return a;
 }
-function builtCard(g) {
-  const a = el("article", "game built-card");
-  a.id = g.slug;
-  const cover = art[g.slug + "-banner"];
-  if (cover) {
-    const banner = el("div", "banner");
-    const image = img("web/" + cover, `${g.name} concept art`, "Concept art unavailable");
-    useImageFallback(image, src(g.slug + "-banner"));
-    banner.append(image);
-    a.append(banner);
-  }
+function simulatorImage(g) {
   const shot = img("screenshots/" + g.image, g.alt, "Screenshot unavailable");
-  shot.className = "capture";
   useImageFallback(shot, screenshots + g.image);
-  const description = el("div");
-  description.append(el("h2", null, g.name), el("p", null, g.pitch));
-  a.append(shot, description);
-  return a;
+  return shot;
 }
 function matches(g) {
   if (filter === "all") return true;
   if (["new", "after-dark", "multiplayer", "vision", "music"].includes(filter)) return g.group === filter;
   if (["co-op", "versus"].includes(filter)) return g.team === filter;
-  if (filter === "needs") return (g.needs || []).length > 0;
+  if (filter === "needs") return !g.image && (g.needs || []).length > 0;
   if (filter === "allages") return g.rating === "All ages";
   if (["turn-based", "real-time"].includes(filter)) return g.mode === filter;
   return g.uses.includes(filter);
@@ -251,11 +261,7 @@ function draw() {
   const list = available.filter(matches);
   let k = 0;
   list.forEach((g, i) => {
-    if (g.image) {
-      grid.append(builtCard(g));
-      return;
-    }
-    const sec = SECTIONS[g.group];
+    const sec = !g.image && SECTIONS[g.group];
     if (sec && (i === 0 || list[i - 1].image || list[i - 1].group !== g.group)) {
       const s = el("div", "section " + g.group);
       s.append(el("div", "eyebrow", sec[0]), el("h2", null, sec[1]), el("p", null, sec[2]));
