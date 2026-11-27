@@ -51,8 +51,6 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; }
 .game { background: var(--panel); border: 1px solid var(--rim); border-radius: 22px; overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
 .game.wide { grid-column: 1 / -1; }
-.banner.simulator img { object-fit: contain; }
-.game .body.single-column { grid-template-columns: minmax(0, 1fr); }
 .capture { width: 100%; display: block; aspect-ratio: 1; border-radius: 50%; object-fit: contain; background: #090b14; }
 .hero-shot { width: min(100%, 330px); margin-inline: auto; box-shadow: 0 0 0 8px var(--rim), 0 24px 54px #0008; }
 .status { display: flex; flex-wrap: wrap; gap: 8px; margin-block: 10px; }
@@ -150,7 +148,7 @@ footer { margin-top: 48px; color: var(--muted); font-size: 14px; max-width: 70ch
 
   <main class="grid" id="grid"><p class="empty">Loading the catalogue…</p></main>
 
-  <footer>Built apps show simulator screenshots. Proposed apps show concept art or a placeholder while the artwork is pending.</footer>
+  <footer>AI-generated banners are labelled “Yet to render” while artwork is pending. Built apps show simulator screenshots in the round frames.</footer>
 </div>
 
 <script>
@@ -188,21 +186,19 @@ function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.
 function card(g, i) {
   const a = el("article", "game" + (i % 5 === 0 ? " wide" : "")); a.id = g.slug;
   const cover = art[g.slug + "-banner"];
-  const screenshotAsBanner = g.image && !cover;
-  const b = el("div", screenshotAsBanner ? "banner simulator" : "banner");
-  if (screenshotAsBanner) b.append(simulatorImage(g));
-  else if (g.image) {
-    const image = img("web/" + cover, `${g.name} concept art`, "Concept art unavailable");
+  const b = el("div", "banner");
+  if (g.image && cover) {
+    const image = img("web/" + cover, `${g.name} concept art`, "Yet to render");
     useImageFallback(image, src(g.slug + "-banner"));
     b.append(image);
-  } else b.append(img(src(`${g.slug}-banner`), `${g.name} key art`, "art still rendering"));
+  } else b.append(img(src(`${g.slug}-banner`), `${g.name} key art`, "Yet to render"));
   if (g.rating) {
     const r = el("span", "adult rate-" + g.rating.replace(/\W/g, ""), g.rating);
     if (g.rnote) r.title = g.rnote;
     b.append(r);
   }
   a.append(b);
-  const body = el("div", screenshotAsBanner ? "body single-column" : "body");
+  const body = el("div", "body");
   const t = el("div", "title");
   t.append(el("h2", null, g.name));
   if (g.tag) t.append(el("p", "tag", g.tag));
@@ -215,17 +211,15 @@ function card(g, i) {
     txt.append(ul);
   }
   body.append(txt);
-  if (!screenshotAsBanner) {
-    const s = el("div", "screens");
-    if (g.image) {
-      const screen = el("div", "screen");
-      screen.append(simulatorImage(g));
-      s.append(screen);
-    } else {
-      ["s1", "s2"].forEach(k => { const c = el("div", "screen"); c.append(img(src(`${g.slug}-${k}`), `${g.name} on the round screen`, "screen rendering")); s.append(c); });
-    }
-    body.append(s);
+  const s = el("div", "screens");
+  if (g.image) {
+    const screen = el("div", "screen");
+    screen.append(simulatorImage(g));
+    s.append(screen);
+  } else {
+    ["s1", "s2"].forEach(k => { const c = el("div", "screen"); c.append(img(src(`${g.slug}-${k}`), `${g.name} on the round screen`, "Yet to render")); s.append(c); });
   }
+  body.append(s);
   const m = el("div", "meta");
   m.append(el("span", "use", g.image ? "Built" : "Proposed"));
   [g.mode, g.team, g.sym].filter(Boolean).forEach(u => m.append(el("span", "use mp", u)));
