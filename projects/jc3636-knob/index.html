@@ -115,7 +115,7 @@ footer { margin-top: 48px; color: var(--muted); font-size: 14px; max-width: 70ch
       <p class="lede">A round touchscreen, a dial and a growing collection of games, instruments and little tools. The built apps are shown with screenshots from the simulator.</p>
       <p class="lede small"><a href="https://brook.dev/projects/jc3636-knob/blog/">Read the devlog</a></p>
     </div>
-    <img class="capture hero-shot" src="screenshots/arcade-menu.webp" alt="The knob arcade menu in the simulator" width="360" height="360">
+    <img class="capture hero-shot" src="https://assets.brook.dev/jc3636-knob/blog/img/arcade-menu.webp" alt="The knob arcade menu in the simulator" width="360" height="360">
   </header>
 
   <div class="status" role="group" aria-label="Build status">
@@ -148,15 +148,8 @@ footer { margin-top: 48px; color: var(--muted); font-size: 14px; max-width: 70ch
 
 <script>
 let games = [], filter = "all", showProposed = false, art = {};
+// Every image is served from the NAS asset share, not from this repository.
 const screenshots = "https://assets.brook.dev/jc3636-knob/blog/img/";
-function useImageFallback(image, fallback) {
-  const showMissing = image.onerror;
-  image.onerror = () => {
-    image.onerror = showMissing;
-    image.src = fallback;
-  };
-}
-useImageFallback(document.querySelector(".hero-shot"), screenshots + "arcade-menu.webp");
 const SECTIONS = {
   "music": ["Music & learning", "Play, connect and practise",
     "Play through the knob with Pocket Synth, route a keyboard to other gear with MIDI Bridge, or practise note names, rhythm, sight-reading and listening. Piano Coach, Staff Sight, Echo Keys and Chord Spotter are planned with left- and right-handed touch layouts. The acoustic piano exercises depend on microphone pitch detection."],
@@ -180,13 +173,8 @@ function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.
 
 function card(g, i) {
   const a = el("article", "game" + (i % 5 === 0 ? " wide" : "")); a.id = g.slug;
-  const cover = art[g.slug + "-banner"];
   const b = el("div", "banner");
-  if (g.image && cover) {
-    const image = img("web/" + cover, `${g.name} concept art`, "Yet to render");
-    useImageFallback(image, src(g.slug + "-banner"));
-    b.append(image);
-  } else b.append(img(src(`${g.slug}-banner`), `${g.name} key art`, "Yet to render"));
+  b.append(img(src(`${g.slug}-banner`), `${g.name} key art`, "Yet to render"));
   a.append(b);
   const body = el("div", "body");
   const t = el("div", "title");
@@ -225,9 +213,7 @@ function card(g, i) {
   a.append(body); return a;
 }
 function simulatorImage(g) {
-  const shot = img("screenshots/" + g.image, g.alt, "Screenshot unavailable");
-  useImageFallback(shot, screenshots + g.image);
-  return shot;
+  return img(screenshots + g.image, g.alt, "Screenshot unavailable");
 }
 function matches(g) {
   if (filter === "all") return true;
@@ -271,7 +257,7 @@ function json(path) {
     return response.json();
   });
 }
-Promise.all([json("built.json"), json("concepts.json"), json("web/manifest.json").catch(() => ({}))])
+Promise.all([json("built.json"), json("concepts.json"), json("manifest.json").catch(() => ({}))])
   .then(([built, concepts, manifest]) => {
     const bySlug = new Map(concepts.map(g => [g.slug, g]));
     games = built.map(g => ({uses: [], ...bySlug.get(g.slug), ...g}));
