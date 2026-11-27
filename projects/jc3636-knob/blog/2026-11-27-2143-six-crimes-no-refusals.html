@@ -1,0 +1,85 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Six crimes, no refusals — jc3636-knob</title><link rel="stylesheet" href="./style.css"></head><body><header class="site-header"><a class="brand" href="./index.html">jc3636-knob <span>· devlog</span></a><a href="../../../index.html">brook.dev</a></header><main class="content"><a class="back-link" href="./index.html">← all posts</a><article><h1>Six crimes, no refusals</h1><p class="post-meta">2026-11-27 <time>21:43 (+0800)</time> · part 23 of 23 <span class="tag">lab</span><span class="tag">inkling</span><span class="tag">uncensored</span><span class="tag">a/b</span><span class="tag">simulator</span></p><p><strong>The plan was simple. Find games a cautious model would balk at, give them to stock Inkling and to an uncensored build, and watch one of them refuse. A hacking game. A pickpocketing game. A police chase. Six builds later, the refusal count is zero.</strong></p>
+<p>Everything else that happened was more useful.</p>
+<div class="pair"><img src="https://assets.brook.dev/jc3636-knob/blog/img/mainframe-q8-trace.webp" alt="mainframe by stock Inkling: green hex rain, a trace arc around the rim, slot 1 of 6"><img src="https://assets.brook.dev/jc3636-knob/blog/img/mainframe-unc-slots.webp" alt="mainframe by the uncensored build: six slot boxes and a HOT/COLD bar"></div><h2>The setup</h2>
+<p>The briefs were written to sound a bit naughty and be completely harmless: crack a fake password before the trace completes, lift a cartoon wallet while the cartoon eye is shut, outrun cartoon police round a ring road. Each one went to stock Inkling (Q8) and to AtomicChat&#39;s uncensored build (Q4), through the same runner, with the same tools, one after the other. The coach reviewed every game, and that was where the real findings came from.</p>
+<h2>The scorecard</h2>
+<table>
+<thead>
+<tr>
+<th>Game</th>
+<th>Model</th>
+<th>Reasoning</th>
+<th>Time</th>
+<th>Check</th>
+<th>What the review found</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>mainframe</td>
+<td>stock</td>
+<td>medium</td>
+<td>1 h 54 min</td>
+<td>pass</td>
+<td>a 0.4 s freeze on the win jingle</td>
+</tr>
+<tr>
+<td>mainframe</td>
+<td>uncensored</td>
+<td>medium</td>
+<td>25 min</td>
+<td>pass</td>
+<td>&quot;hex rain&quot; that was one row; the password printed to the debug log</td>
+</tr>
+<tr>
+<td>pickpocket</td>
+<td>stock</td>
+<td>low</td>
+<td>16 min</td>
+<td>pass</td>
+<td>&quot;HEY!&quot; showed as &quot;!&quot;</td>
+</tr>
+<tr>
+<td>pickpocket</td>
+<td>uncensored</td>
+<td>low</td>
+<td>17 min</td>
+<td>pass</td>
+<td>&quot;HEY!&quot; showed as &quot;!&quot;, score off the screen, wallet over the game-over text</td>
+</tr>
+<tr>
+<td>getaway</td>
+<td>stock</td>
+<td>low</td>
+<td>15 min</td>
+<td>pass</td>
+<td>&quot;BUSTED&quot; showed as nothing at all</td>
+</tr>
+<tr>
+<td>getaway</td>
+<td>uncensored</td>
+<td>low</td>
+<td>21 min</td>
+<td>pass</td>
+<td>nothing. A clean build</td>
+</tr>
+</tbody></table>
+<p>Six for six on the check. Zero refusals. Zero hedges. Not even a &quot;please note this is fiction&quot;. The uncensored build did call its own password printout &quot;fiction&quot;, in a code comment, which is the closest anyone came to a conscience.</p>
+<p>So for crime-flavoured games, the stock model is fine. The uncensored build stays in the cupboard for the work it was actually downloaded for.</p>
+<h2>The dial that mattered</h2>
+<p>Halfway through, I asked whether anyone had checked Inkling&#39;s settings. Someone had checked half of them. Inkling has a reasoning dial from 0 to 0.99, and pi had been quietly sending &quot;medium&quot;, which is 0.7. People who had tried it said medium thinks for tens of thousands of tokens before doing anything, and recommended 0.2.</p>
+<p>The mainframe pair ran at medium. Stock Inkling took <strong>1 hour 54 minutes</strong>, five context compactions, and at one point solved the simulator&#39;s random password one letter at a time just so it could script a win. Thorough. Exhausting.</p>
+<p>Everything after that ran at low: <strong>15 to 21 minutes</strong>, no compactions, every time.</p>
+<p>That is four builds on one setting and two on the other, all different games, so I will not call it proven. But I will be very surprised.</p>
+<div class="pair"><img src="https://assets.brook.dev/jc3636-knob/blog/img/pickpocket-q8-hey.webp" alt="pickpocket after the fix: a big eye, HEY! in red, the hand at the pocket"><img src="https://assets.brook.dev/jc3636-knob/blog/img/getaway-unc-police.webp" alt="getaway by the uncensored build: a ring road with a blue police car and an orange player car"></div><h2>The font with no letters</h2>
+<p>The extra-large font on this board is digits and a handful of symbols. That is written down, clearly, in the docs. Three of the six games put a big word on screen in it anyway. &quot;HEY!&quot; came out as a lone &quot;!&quot;. &quot;BUSTED&quot; came out as nothing. Both models, both settings.</p>
+<p>When both models make the same mistake, it is not really the models&#39; mistake. And the check passed every one, because the simulator reported the text the game <em>asked</em> for, not what it drew.</p>
+<p>So the simulator now warns when a string uses characters its size cannot draw, and the warning fails the check. Run over all eighteen games, it found one more: do-this has been drawing a &quot;✓&quot; in the big font since the day it was built. Its success mark has never once appeared. It says &quot;+1&quot; now.</p>
+<h2>The score in the corner</h2>
+<p>The other new warning is for text drawn outside the circle. The simulator draws a square, the board is round, and the uncensored pickpocket put its score at the top-left of the square. On the board that is about 36 pixels past the edge of the glass. You would have been playing for points nobody could see.</p>
+<h2>For the curious</h2>
+<ul>
+<li>One build per game per model. Six games is a handful, not a study.</li>
+<li>The uncensored build also decodes faster (40 against 32 tokens a second), because it is the smaller quant. That alone does not explain 25 minutes against 114.</li>
+<li>Five of the six passed the check and still had something wrong that only the review found. The check is getting better. The coach is still earning its keep.</li>
+</ul>
+</article><nav class="post-nav"><a href="./2026-11-27-1907-the-knob-gets-a-keyboard.html">← The knob gets a keyboard</a><span></span></nav></main><footer class="site-footer">The devlog for <strong>jc3636-knob</strong>: a round screen with a knob, a usage panel, and a local model learning to make games on it. Written from the working record, mistakes included.</footer></body></html>
