@@ -17,7 +17,7 @@
   --fg: #eef0fb;
   --muted: #9aa1c4;
   --coral: #ff6b5b;      /* primary accent: the alarm-beep colour */
-  --amber: #ffc34d;      /* 18+ badge, focus ring */
+  --amber: #ffc34d;      /* focus ring */
   --display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
   --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
@@ -90,14 +90,8 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .section.music .eyebrow { color: #ffd98a; }
 .section.music p { color: #f0e2c4; }
 .use.need { background: #3d2a12; color: #ffc34d; border: 1px dashed #8a6420; }
-.rnote { margin: 6px 0 0; font-size: 14px; color: var(--muted); font-style: italic; }
-.adult.rate-Allages { color: #9fe2ff; border-color: #9fe2ff; }
-.adult.rate-16 { color: #ffc34d; border-color: #ffc34d; }
-.adult.rate-18 { color: #ff8fa3; border-color: #ff8fa3; }
 .section h2 { font: 800 clamp(30px, 4.4vw, 52px)/1 var(--display); margin: 0; letter-spacing: -.02em; text-wrap: balance; }
 .section p { margin: 0; color: #e7c9dd; max-width: 62ch; }
-.adult { position: absolute; top: 14px; left: 14px; font: 500 12px/1 var(--mono); padding: 7px 10px; border-radius: 999px;
-  background: #0d1020cc; color: var(--amber); border: 1px solid var(--amber); }
 footer { margin-top: 48px; color: var(--muted); font-size: 14px; max-width: 70ch; }
 
 @media (max-width: 860px) {
@@ -131,7 +125,7 @@ footer { margin-top: 48px; color: var(--muted); font-size: 14px; max-width: 70ch
     <span class="lab">Show</span>
     <button class="chip" data-f="all" aria-pressed="true" id="f-all">All</button>
     <button class="chip" data-f="music" aria-pressed="false" id="f-music">Music &amp; learning</button>
-    <button class="chip" data-f="after-dark" aria-pressed="false" id="f-dark">After dark 18+</button>
+    <button class="chip" data-f="after-dark" aria-pressed="false" id="f-dark">After dark</button>
     <button class="chip" data-f="vision" aria-pressed="false" id="f-vision">Vision</button>
     <button class="chip" data-f="multiplayer" aria-pressed="false" id="f-mp">Multiplayer</button>
     <button class="chip" data-f="co-op" aria-pressed="false" id="f-coop">Co-op</button>
@@ -140,7 +134,6 @@ footer { margin-top: 48px; color: var(--muted); font-size: 14px; max-width: 70ch
     <button class="chip" data-f="real-time" aria-pressed="false" id="f-real">Real-time</button>
     <button class="chip" data-f="new" aria-pressed="false" id="f-new">New ideas</button>
     <button class="chip" data-f="needs" aria-pressed="false" id="f-needs">Needs testing</button>
-    <button class="chip" data-f="allages" aria-pressed="false" id="f-allages">All ages</button>
     <button class="chip" data-f="spin" aria-pressed="false" id="f-spin">Uses spin</button>
     <button class="chip" data-f="haptic" aria-pressed="false" id="f-haptic">Uses haptics</button>
     <span class="count" id="count" role="status"></span>
@@ -167,8 +160,8 @@ const SECTIONS = {
     "Play through the knob with Pocket Synth, route a keyboard to other gear with MIDI Bridge, or practise note names, rhythm, sight-reading and listening. Piano Coach, Staff Sight, Echo Keys and Chord Spotter are planned with left- and right-handed touch layouts. The acoustic piano exercises depend on microphone pitch detection."],
   "vision": ["Eyes only · new", "Eight games for your eyeballs",
     "Brightness, colour and perception games for a 360 px circle of light. How well can you remember a shade of pink? How dim can you see? Best played in a dark room. Several depend on how many brightness steps this screen can really show, which is the next thing we test."],
-  "after-dark": ["After dark · 18+", "Twenty games for later in the evening",
-    "Best played with friends, a drink and lowered standards. Party games, couples games and dares. Not all of them are actually rude, though: each card carries its own rating, judged on what the game asks you to do rather than how filthy its name sounds."],
+  "after-dark": ["After dark", "Party games and dares",
+    "Choose the prompts and house rules that suit the people playing."],
   "multiplayer": ["Two players · one knob", "Forty games for two",
     "One board, two people, a lot of elbows. Split the knob into clockwise and anticlockwise, split the screen down the middle, give one player the headphones, blindfold the other. Half are co-op, half are versus; half take turns, half are flat out. Mirrored games give you both the same job; asymmetric ones give you different jobs and a reason to shout."],
 };
@@ -192,17 +185,11 @@ function card(g, i) {
     useImageFallback(image, src(g.slug + "-banner"));
     b.append(image);
   } else b.append(img(src(`${g.slug}-banner`), `${g.name} key art`, "Yet to render"));
-  if (g.rating) {
-    const r = el("span", "adult rate-" + g.rating.replace(/\W/g, ""), g.rating);
-    if (g.rnote) r.title = g.rnote;
-    b.append(r);
-  }
   a.append(b);
   const body = el("div", "body");
   const t = el("div", "title");
   t.append(el("h2", null, g.name));
   if (g.tag) t.append(el("p", "tag", g.tag));
-  if (g.rnote) t.append(el("p", "rnote", g.rnote));
   body.append(t);
   const txt = el("div"); txt.style.minWidth = "0"; txt.append(el("p", "pitch", g.pitch));
   if (!g.image) {
@@ -245,7 +232,6 @@ function matches(g) {
   if (["new", "after-dark", "multiplayer", "vision", "music"].includes(filter)) return g.group === filter;
   if (["co-op", "versus"].includes(filter)) return g.team === filter;
   if (filter === "needs") return !g.image && (g.needs || []).length > 0;
-  if (filter === "allages") return g.rating === "All ages";
   if (["turn-based", "real-time"].includes(filter)) return g.mode === filter;
   return g.uses.includes(filter);
 }
