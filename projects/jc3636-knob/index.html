@@ -1,20 +1,279 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>jc3636-knob</title><link rel="stylesheet" href="./style.css"></head><body><header class="site-header"><a class="brand" href="../../index.html">brookjordan.github.io</a><a href="./blog/">devlog →</a></header><main class="content">
-<h1>jc3636-knob</h1>
-<p class="index-intro">Small games for a GUITION JC3636K718: an ESP32-S3 with a round 360×360 touch screen, a detent knob, a haptic motor, a speaker and a ring of twelve LEDs. Most of them were written by a local language model driven by the pi agent, on a laptop, with a Claude session as coach.</p>
-<div class="grid"><div class="card"><h2>How they are made</h2><p>A game starts as a one-paragraph brief. The model builds it from a template that already wraps every chip, tests it in a simulator on the Mac, and has to pass a check: the simulator runs clean, the game's own feature scripts pass, and the firmware builds for the board.</p></div><div class="card"><h2>The models</h2><p>Occamy built the early games. Since 27 November 2026 the builder is Inkling 2 Mini, served on demand on the same laptop.</p></div><div class="card"><h2>Screens</h2><p>The pictures below are simulator screenshots, the same frames the check reads.</p></div></div>
-<h2>The games</h2>
-<div class="games">
-<figure class="game"><img src="https://assets.brook.dev/jc3636-knob/blog/img/arcade-menu.webp" alt="The arcade menu listing six games"><h3>arcade</h3><p>A menu: the knob picks a game, a tap starts it, and holding the screen for 3 seconds comes back.</p></figure>
-<figure class="game"><img src="https://assets.brook.dev/jc3636-knob/blog/img/theremin-tone-down.webp" alt="theremin with a finger near the top, 220 Hz"><h3>theremin</h3><p>A finger on the screen plays a tone: angle sets the pitch, distance from the centre the volume. The knob changes the waveform. Built by Inkling in 22 minutes.</p></figure>
-<figure class="game"><img src="https://assets.brook.dev/jc3636-knob/blog/img/safe-cracker2-locked.webp" alt="safe-cracker2 dial with a number locked in"><h3>safe-cracker2</h3><p>Turn the dial to each number of a secret three-number combination and tap to lock it, against the clock.</p></figure>
-<figure class="game"><img src="https://assets.brook.dev/jc3636-knob/blog/img/do-this-called.webp" alt="do-this calling SPIN LEFT"><h3>do-this</h3><p>Call and response: click left, click right, spin left, spin right or tap, before the rim runs out.</p></figure>
-<figure class="game"><img src="https://assets.brook.dev/jc3636-knob/blog/img/pocket-pet-happy.webp" alt="pocket-pet, a happy blob"><h3>pocket-pet</h3><p>A tiny virtual pet. Food, fun and sleep drain around the rim; tap to feed it, spin the knob to play.</p></figure>
-<figure class="game"><img src="https://assets.brook.dev/jc3636-knob/blog/img/tap-reflex-green.webp" alt="tap-reflex green screen"><h3>tap-reflex</h3><p>Wait for green, then tap as fast as you can. Shows your time and your best.</p></figure>
-<figure class="game"><img src="https://assets.brook.dev/jc3636-knob/blog/img/dice-roller-landed4.webp" alt="dice-roller showing four dice"><h3>dice-roller</h3><p>One to four dice for board games. Tap to roll: they tumble with slowing clicks and haptic ticks.</p></figure>
-<figure class="game"><img src="https://assets.brook.dev/jc3636-knob/blog/img/kitchen-timer-half.webp" alt="kitchen-timer half way"><h3>kitchen-timer</h3><p>One detent is a minute. Tap to start, and an arc drains around the rim; three beeps at zero.</p></figure>
-<figure class="game"><img src="https://assets.brook.dev/jc3636-knob/blog/img/metronome-started-after.webp" alt="metronome running"><h3>metronome</h3><p>40 to 220 BPM on the knob, a click and a haptic tick on every beat, and a stronger one on the one.</p></figure>
-<figure class="game"><img src="https://assets.brook.dev/jc3636-knob/blog/img/dial-synth-after.webp" alt="dial-synth"><h3>dial-synth</h3><p>A fidget toy: each detent plays the next note of a pentatonic scale; tap for a chord.</p></figure>
-<figure class="game"><img src="https://assets.brook.dev/jc3636-knob/blog/img/rim-pong.webp" alt="rim pong just after the serve"><h3>rim pong</h3><p>The template's own demo: keep the ball inside the circle with a paddle on the rim.</p></figure>
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Games for the Knob</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: an arcade-cabinet catalogue. A dial hero, filter detents, then one cartridge per game:
+   banner on top, two round "screens" (the knob's real 360 px circle) beside the pitch. Single dark look by choice. */
+:root {
+  --ink: #0d1020;        /* cabinet night */
+  --panel: #161a30;      /* card ground */
+  --rim: #2a3054;        /* hairlines, ring metal */
+  --chrome: #b9c0dc;     /* brushed aluminium */
+  --fg: #eef0fb;
+  --muted: #9aa1c4;
+  --coral: #ff6b5b;      /* primary accent: the alarm-beep colour */
+  --amber: #ffc34d;      /* 18+ badge, focus ring */
+  --display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--ink); color: var(--fg); font: 16px/1.55 var(--body); }
+.wrap { max-width: 1180px; margin: 0 auto; padding-block: 0 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+/* hero */
+.hero { display: grid; grid-template-columns: minmax(0,1.2fr) minmax(0,1fr); gap: 32px; align-items: center; padding-block: 56px 32px; }
+.eyebrow { font: 500 12px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--coral); }
+h1 { font: 800 clamp(44px, 7vw, 88px)/.95 var(--display); letter-spacing: -.02em; margin: 14px 0 18px; text-wrap: balance; }
+.lede { color: var(--muted); max-width: 56ch; font-size: 18px; margin: 0; }
+.lede b { color: var(--fg); }
+
+/* filters */
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: color-mix(in srgb, var(--ink) 92%, transparent);
+  backdrop-filter: blur(8px); padding-block: 12px; border-bottom: 1px solid var(--rim); margin-bottom: 28px;
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--ink); }
+.bar .lab { font: 500 11px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-right: 4px; }
+.chip { font: 500 13px/1 var(--mono); padding: 8px 12px; border-radius: 999px; border: 1px solid var(--rim); background: var(--panel);
+  color: var(--fg); cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--coral); border-color: var(--coral); color: #1a0b09; }
+.chip:focus-visible, a:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+.bar .count { margin-left: auto; font: 500 13px/1 var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* cartridges */
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; }
+.game { background: var(--panel); border: 1px solid var(--rim); border-radius: 22px; overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
+.game.wide { grid-column: 1 / -1; }
+.built-card { display: grid; grid-template-columns: minmax(100px, 42%) minmax(0, 1fr); align-items: center; gap: 20px; padding: 20px; }
+.built-card h2 { font-size: clamp(22px, 3vw, 32px); }
+.built-card p { margin: 8px 0 0; color: var(--muted); }
+.capture { width: 100%; display: block; aspect-ratio: 1; border-radius: 50%; object-fit: contain; background: #090b14; }
+.hero-shot { width: min(100%, 330px); margin-inline: auto; box-shadow: 0 0 0 8px var(--rim), 0 24px 54px #0008; }
+.status { display: flex; flex-wrap: wrap; gap: 8px; margin-block: 10px; }
+.lede a { color: var(--chrome); }
+@media (max-width: 520px) { .built-card { gap: 15px; padding: 16px; } }
+.banner { position: relative; aspect-ratio: 16 / 9; max-width: 100%; background: linear-gradient(135deg, #2a2f5a, #3b1f3f); }
+.banner img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.body { padding: 22px 24px 26px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 20px 24px; }
+.title { grid-column: 1 / -1; }
+.game h2 { font: 800 clamp(28px, 3.4vw, 40px)/1 var(--display); margin: 0 0 6px; letter-spacing: -.01em; }
+.tag { font: 500 15px/1.35 var(--mono); color: var(--coral); margin: 0; }
+.pitch { margin: 0 0 14px; min-width: 0; }
+.how { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.how li { padding-left: 22px; position: relative; color: var(--muted); }
+.how li::before { content: ""; position: absolute; left: 2px; top: .55em; width: 9px; height: 9px; border-radius: 50%;
+  border: 2px solid var(--coral); }
+.screens { display: flex; flex-direction: column; gap: 16px; }
+.screen { width: 132px; aspect-ratio: 1; max-width: 100%; border-radius: 50%; overflow: hidden; background: #0b0d1a;
+  box-shadow: 0 0 0 6px #3a4166, 0 0 0 8px var(--chrome), 0 12px 30px #0009; }
+.screen img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.game.wide .screen { width: 168px; }
+.meta { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px; padding-top: 14px; border-top: 1px dashed var(--rim); }
+.use { font: 500 12px/1 var(--mono); padding: 6px 9px; border-radius: 6px; background: #20264a; color: var(--chrome); }
+.pending { display: grid; place-items: center; width: 100%; height: 100%; font: 500 12px/1.3 var(--mono); color: var(--muted); text-align: center; padding: 12px; }
+.empty { color: var(--muted); padding: 40px 0; text-align: center; }
+.lede.small { font-size: 15px; margin-top: 12px; }
+.section { grid-column: 1 / -1; border-radius: 22px; padding: 28px 28px 30px; display: grid; gap: 8px;
+  background: radial-gradient(120% 140% at 0% 0%, #5a1f4a, #241433 55%, var(--panel)); border: 1px solid #6b2a5a; }
+.section .eyebrow { color: var(--amber); }
+.section.multiplayer { background: radial-gradient(120% 140% at 100% 0%, #16506a, #142a45 55%, var(--panel)); border-color: #2a6a86; }
+.section.multiplayer p { color: #c8e4ef; }
+.use.mp { background: #173a4d; color: #9fe2ff; }
+.section.vision { background: radial-gradient(120% 140% at 50% 0%, #5a2a6a, #2a1a40 55%, var(--panel)); border-color: #7a3a8a; }
+.section.vision p { color: #e6d2f0; }
+/* music: ivory-and-ebony keys under a warm brass glow */
+.section.music { background: repeating-linear-gradient(90deg, #f4efe2 0 26px, #c9c2b0 26px 27px) top / 100% 10px no-repeat,
+  radial-gradient(120% 140% at 0% 100%, #6a4a14, #2e2214 55%, var(--panel)); border-color: #9a7428; padding-top: 38px; }
+.section.music .eyebrow { color: #ffd98a; }
+.section.music p { color: #f0e2c4; }
+.use.need { background: #3d2a12; color: #ffc34d; border: 1px dashed #8a6420; }
+.rnote { margin: 6px 0 0; font-size: 14px; color: var(--muted); font-style: italic; }
+.adult.rate-Allages { color: #9fe2ff; border-color: #9fe2ff; }
+.adult.rate-16 { color: #ffc34d; border-color: #ffc34d; }
+.adult.rate-18 { color: #ff8fa3; border-color: #ff8fa3; }
+.section h2 { font: 800 clamp(30px, 4.4vw, 52px)/1 var(--display); margin: 0; letter-spacing: -.02em; text-wrap: balance; }
+.section p { margin: 0; color: #e7c9dd; max-width: 62ch; }
+.adult { position: absolute; top: 14px; left: 14px; font: 500 12px/1 var(--mono); padding: 7px 10px; border-radius: 999px;
+  background: #0d1020cc; color: var(--amber); border: 1px solid var(--amber); }
+footer { margin-top: 48px; color: var(--muted); font-size: 14px; max-width: 70ch; }
+
+@media (max-width: 860px) {
+  .hero { grid-template-columns: minmax(0, 1fr); padding-block: 32px 16px; }
+  .grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 520px) {
+  .body { grid-template-columns: minmax(0, 1fr); }
+  .screens { flex-direction: row; justify-content: center; }
+  .screen, .game.wide .screen { width: 120px; }
+}
+</style>
+
+<div class="wrap">
+  <header class="hero">
+    <div>
+      <div class="eyebrow">JC3636 knob lab</div>
+      <h1>Games for the Knob</h1>
+      <p class="lede">A round touchscreen, a dial and a growing collection of games, instruments and little tools. The built apps are shown with screenshots from the simulator.</p>
+      <p class="lede small"><a href="https://brook.dev/projects/jc3636-knob/blog/">Read the devlog</a></p>
+    </div>
+    <img class="capture hero-shot" src="https://assets.brook.dev/jc3636-knob/blog/img/arcade-menu.webp" alt="The knob arcade menu in the simulator" width="360" height="360">
+  </header>
+
+  <div class="status" role="group" aria-label="Build status">
+    <button class="chip" data-status="built" aria-pressed="true">Built only</button>
+    <button class="chip" data-status="all" aria-pressed="false">Include proposed</button>
+  </div>
+
+  <nav class="bar" aria-label="Filter games">
+    <span class="lab">Show</span>
+    <button class="chip" data-f="all" aria-pressed="true" id="f-all">All</button>
+    <button class="chip" data-f="music" aria-pressed="false" id="f-music">Music &amp; learning</button>
+    <button class="chip" data-f="after-dark" aria-pressed="false" id="f-dark">After dark 18+</button>
+    <button class="chip" data-f="vision" aria-pressed="false" id="f-vision">Vision</button>
+    <button class="chip" data-f="multiplayer" aria-pressed="false" id="f-mp">Multiplayer</button>
+    <button class="chip" data-f="co-op" aria-pressed="false" id="f-coop">Co-op</button>
+    <button class="chip" data-f="versus" aria-pressed="false" id="f-vs">Versus</button>
+    <button class="chip" data-f="turn-based" aria-pressed="false" id="f-turn">Turn-based</button>
+    <button class="chip" data-f="real-time" aria-pressed="false" id="f-real">Real-time</button>
+    <button class="chip" data-f="new" aria-pressed="false" id="f-new">New ideas</button>
+    <button class="chip" data-f="needs" aria-pressed="false" id="f-needs">Needs testing</button>
+    <button class="chip" data-f="allages" aria-pressed="false" id="f-allages">All ages</button>
+    <button class="chip" data-f="spin" aria-pressed="false" id="f-spin">Uses spin</button>
+    <button class="chip" data-f="haptic" aria-pressed="false" id="f-haptic">Uses haptics</button>
+    <span class="count" id="count" role="status"></span>
+  </nav>
+
+  <main class="grid" id="grid"><p class="empty">Loading the catalogue…</p></main>
+
+  <footer>Built apps show simulator screenshots. Proposed apps show concept art or a placeholder while the artwork is pending.</footer>
 </div>
-<h2>Devlog</h2><p>What the models got right, what the check missed, and what broke along the way, in small dated posts.</p><p><a href="./blog/">Read the jc3636-knob devlog →</a></p>
-</main><footer class="site-footer">jc3636-knob · Brook Jordan</footer></body></html>
+
+<script>
+let games = [], filter = "all", showProposed = false, art = {};
+const screenshots = "https://assets.brook.dev/jc3636-knob/blog/img/";
+const SECTIONS = {
+  "music": ["Music & learning", "Play, connect and practise",
+    "Play through the knob with Pocket Synth, route a keyboard to other gear with MIDI Bridge, or practise note names, rhythm, sight-reading and listening. Piano Coach, Staff Sight, Echo Keys and Chord Spotter are planned with left- and right-handed touch layouts. The acoustic piano exercises depend on microphone pitch detection."],
+  "vision": ["Eyes only · new", "Eight games for your eyeballs",
+    "Brightness, colour and perception games for a 360 px circle of light. How well can you remember a shade of pink? How dim can you see? Best played in a dark room. Several depend on how many brightness steps this screen can really show, which is the next thing we test."],
+  "after-dark": ["After dark · 18+", "Twenty games for later in the evening",
+    "Best played with friends, a drink and lowered standards. Party games, couples games and dares. Not all of them are actually rude, though: each card carries its own rating, judged on what the game asks you to do rather than how filthy its name sounds."],
+  "multiplayer": ["Two players · one knob", "Forty games for two",
+    "One board, two people, a lot of elbows. Split the knob into clockwise and anticlockwise, split the screen down the middle, give one player the headphones, blindfold the other. Half are co-op, half are versus; half take turns, half are flat out. Mirrored games give you both the same job; asymmetric ones give you different jobs and a reason to shout."],
+};
+const src = (stem) => art[stem] ? `https://assets.brook.dev/knob-concepts/${art[stem]}` : null;
+
+function img(src, alt, label) {
+  if (!src) return el("div", "pending", label);
+  const i = document.createElement("img");
+  i.src = src; i.alt = alt; i.loading = "lazy";
+  i.onerror = () => { const d = document.createElement("div"); d.className = "pending"; d.textContent = label; i.replaceWith(d); };
+  return i;
+}
+function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+
+function card(g, i) {
+  const a = el("article", "game" + (i % 5 === 0 ? " wide" : "")); a.id = g.slug;
+  const b = el("div", "banner"); b.append(img(src(`${g.slug}-banner`), `${g.name} key art`, "art still rendering"));
+  const r = el("span", "adult rate-" + g.rating.replace(/\W/g, ""), g.rating); if (g.rnote) r.title = g.rnote; b.append(r);
+  a.append(b);
+  const body = el("div", "body");
+  const t = el("div", "title"); t.append(el("h2", null, g.name), el("p", "tag", g.tag));
+  if (g.rnote) t.append(el("p", "rnote", g.rnote));
+  body.append(t);
+  const txt = el("div"); txt.style.minWidth = "0"; txt.append(el("p", "pitch", g.pitch));
+  const ul = el("ul", "how"); g.how.forEach(h => ul.append(el("li", null, h))); txt.append(ul); body.append(txt);
+  const s = el("div", "screens");
+  ["s1", "s2"].forEach(k => { const c = el("div", "screen"); c.append(img(src(`${g.slug}-${k}`), `${g.name} on the round screen`, "screen rendering")); s.append(c); });
+  body.append(s);
+  const m = el("div", "meta");
+  m.append(el("span", "use", "Proposed"));
+  [g.mode, g.team, g.sym].filter(Boolean).forEach(u => m.append(el("span", "use mp", u)));
+  g.uses.forEach(u => m.append(el("span", "use", u)));
+  (g.needs || []).forEach(([n, tk]) => m.append(el("span", "use need", `needs testing: ${n} · ${tk}`)));
+  body.append(m);
+  if (g.devlog) {
+    const link = el("a", "use", `Read the devlog about ${g.name}`);
+    link.href = g.devlog;
+    const related = el("div", "meta");
+    related.append(link);
+    body.append(related);
+  }
+  a.append(body); return a;
+}
+function builtCard(g) {
+  const a = el("article", "game built-card");
+  a.id = g.slug;
+  const shot = img(screenshots + g.image, g.alt, "Screenshot unavailable");
+  shot.className = "capture";
+  const description = el("div");
+  description.append(el("h2", null, g.name), el("p", null, g.pitch));
+  a.append(shot, description);
+  return a;
+}
+function matches(g) {
+  if (filter === "all") return true;
+  if (["new", "after-dark", "multiplayer", "vision", "music"].includes(filter)) return g.group === filter;
+  if (["co-op", "versus"].includes(filter)) return g.team === filter;
+  if (filter === "needs") return (g.needs || []).length > 0;
+  if (filter === "allages") return g.rating === "All ages";
+  if (["turn-based", "real-time"].includes(filter)) return g.mode === filter;
+  return g.uses.includes(filter);
+}
+function draw() {
+  const grid = document.getElementById("grid"); grid.replaceChildren();
+  const available = showProposed ? games : games.filter(g => g.image);
+  const list = available.filter(matches);
+  let k = 0;
+  list.forEach((g, i) => {
+    if (g.image) {
+      grid.append(builtCard(g));
+      return;
+    }
+    const sec = SECTIONS[g.group];
+    if (sec && (i === 0 || list[i - 1].image || list[i - 1].group !== g.group)) {
+      const s = el("div", "section " + g.group);
+      s.append(el("div", "eyebrow", sec[0]), el("h2", null, sec[1]), el("p", null, sec[2]));
+      grid.append(s); k = 0;
+    }
+    grid.append(card(g, k++));
+  });
+  if (!list.length) grid.append(el("p", "empty", showProposed ? "No apps match that filter." : "No built apps match. Include proposed apps to see more."));
+  document.getElementById("count").textContent = `${list.length} of ${available.length} apps`;
+}
+document.querySelectorAll("[data-status]").forEach(button => button.addEventListener("click", () => {
+  showProposed = button.dataset.status === "all";
+  document.querySelectorAll("[data-status]").forEach(x => x.setAttribute("aria-pressed", String(x === button)));
+  draw();
+}));
+document.querySelectorAll("[data-f]").forEach(c => c.addEventListener("click", () => {
+  filter = c.dataset.f;
+  document.querySelectorAll("[data-f]").forEach(x => x.setAttribute("aria-pressed", String(x === c)));
+  draw();
+}));
+const params = new URLSearchParams(location.search);
+function json(path) {
+  return fetch(path).then(response => {
+    if (!response.ok) throw new Error(path);
+    return response.json();
+  });
+}
+Promise.all([json("built.json"), json("concepts.json"), json("web/manifest.json").catch(() => ({}))])
+  .then(([built, concepts, manifest]) => {
+    const bySlug = new Map(concepts.map(g => [g.slug, g]));
+    games = built.map(g => ({uses: [], ...bySlug.get(g.slug), ...g}));
+    games.push(...concepts.filter(g => !built.some(app => app.slug === g.slug)));
+    art = manifest;
+    if (params.get("section") === "music") document.getElementById("f-music").click();
+    if (params.get("proposed") === "1") document.querySelector('[data-status="all"]').click();
+    draw();
+  })
+  .catch(() => { document.getElementById("grid").replaceChildren(el("p", "empty", "The catalogue file did not load. Reload the page to try again.")); });
+</script>
