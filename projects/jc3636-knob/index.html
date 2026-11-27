@@ -54,6 +54,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .built-card { display: grid; grid-template-columns: minmax(100px, 42%) minmax(0, 1fr); align-items: center; gap: 20px; padding: 20px; }
 .built-card h2 { font-size: clamp(22px, 3vw, 32px); }
 .built-card p { margin: 8px 0 0; color: var(--muted); }
+.built-card .banner { grid-column: 1 / -1; overflow: hidden; border-radius: 12px; }
 .capture { width: 100%; display: block; aspect-ratio: 1; border-radius: 50%; object-fit: contain; background: #090b14; }
 .hero-shot { width: min(100%, 330px); margin-inline: auto; box-shadow: 0 0 0 8px var(--rim), 0 24px 54px #0008; }
 .status { display: flex; flex-wrap: wrap; gap: 8px; margin-block: 10px; }
@@ -123,7 +124,7 @@ footer { margin-top: 48px; color: var(--muted); font-size: 14px; max-width: 70ch
       <p class="lede">A round touchscreen, a dial and a growing collection of games, instruments and little tools. The built apps are shown with screenshots from the simulator.</p>
       <p class="lede small"><a href="https://brook.dev/projects/jc3636-knob/blog/">Read the devlog</a></p>
     </div>
-    <img class="capture hero-shot" src="https://assets.brook.dev/jc3636-knob/blog/img/arcade-menu.webp" alt="The knob arcade menu in the simulator" width="360" height="360">
+    <img class="capture hero-shot" src="screenshots/arcade-menu.webp" alt="The knob arcade menu in the simulator" width="360" height="360">
   </header>
 
   <div class="status" role="group" aria-label="Build status">
@@ -158,6 +159,14 @@ footer { margin-top: 48px; color: var(--muted); font-size: 14px; max-width: 70ch
 <script>
 let games = [], filter = "all", showProposed = false, art = {};
 const screenshots = "https://assets.brook.dev/jc3636-knob/blog/img/";
+function useImageFallback(image, fallback) {
+  const showMissing = image.onerror;
+  image.onerror = () => {
+    image.onerror = showMissing;
+    image.src = fallback;
+  };
+}
+useImageFallback(document.querySelector(".hero-shot"), screenshots + "arcade-menu.webp");
 const SECTIONS = {
   "music": ["Music & learning", "Play, connect and practise",
     "Play through the knob with Pocket Synth, route a keyboard to other gear with MIDI Bridge, or practise note names, rhythm, sight-reading and listening. Piano Coach, Staff Sight, Echo Keys and Chord Spotter are planned with left- and right-handed touch layouts. The acoustic piano exercises depend on microphone pitch detection."],
@@ -211,8 +220,17 @@ function card(g, i) {
 function builtCard(g) {
   const a = el("article", "game built-card");
   a.id = g.slug;
-  const shot = img(screenshots + g.image, g.alt, "Screenshot unavailable");
+  const cover = art[g.slug + "-banner"];
+  if (cover) {
+    const banner = el("div", "banner");
+    const image = img("web/" + cover, `${g.name} concept art`, "Concept art unavailable");
+    useImageFallback(image, src(g.slug + "-banner"));
+    banner.append(image);
+    a.append(banner);
+  }
+  const shot = img("screenshots/" + g.image, g.alt, "Screenshot unavailable");
   shot.className = "capture";
+  useImageFallback(shot, screenshots + g.image);
   const description = el("div");
   description.append(el("h2", null, g.name), el("p", null, g.pitch));
   a.append(shot, description);
