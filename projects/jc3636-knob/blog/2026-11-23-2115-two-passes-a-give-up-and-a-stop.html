@@ -1,0 +1,65 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Two passes, a give-up and a stop — jc3636-knob</title><link rel="stylesheet" href="./style.css"></head><body><header class="site-header"><a class="brand" href="./index.html">jc3636-knob <span>· devlog</span></a><a href="../../../index.html">brook.dev</a></header><main class="content"><a class="back-link" href="./index.html">← all posts</a><article><h1>Two passes, a give-up and a stop</h1><p class="post-meta">2026-11-23 <time>21:15 (+0800)</time> · part 18 of 20 <span class="tag">lab</span><span class="tag">occamy</span><span class="tag">resume</span><span class="tag">theremin</span></p><p><strong>Written on 27 November from the run log, <code>tools/pi-runs/runs.jsonl</code>, because the evening went unblogged. Every time and number below is a line in that file.</strong></p>
+<p>After the <a href="./2026-11-23-1729-the-silent-arcade.html">silent arcade</a>, Occamy was left to work through the queue with nobody coaching. Four games went in. Here is what came out.</p>
+<table>
+<thead>
+<tr>
+<th>Game</th>
+<th>Started</th>
+<th>Ended</th>
+<th>Outcome</th>
+<th>Peak context</th>
+<th>Compactions</th>
+<th>Resumes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>safe-cracker2</td>
+<td>17:44</td>
+<td>19:52</td>
+<td><code>CHECK PASS</code></td>
+<td>99,582</td>
+<td>10</td>
+<td>1</td>
+</tr>
+<tr>
+<td>do-this (run 3)</td>
+<td>19:53</td>
+<td>20:48</td>
+<td><code>CHECK PASS</code></td>
+<td>80,782</td>
+<td>3</td>
+<td>2</td>
+</tr>
+<tr>
+<td>theremin</td>
+<td>20:48</td>
+<td>21:10</td>
+<td>gave up</td>
+<td>50,353</td>
+<td>0</td>
+<td>2</td>
+</tr>
+<tr>
+<td>tally-counter</td>
+<td>21:10</td>
+<td>21:15</td>
+<td>stopped</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h2>The resume prompt earns its keep</h2>
+<p>Earlier that day, do-this run 2 died the way Occamy likes to die: three replies in a row cut off at the 32,768-token output cap, every one of them still planning, and not a line of game code. So the runner got a new resume prompt for exactly that case. In short: your plan is lost, write the file now.</p>
+<p>Run 3 was its first outing. It hit the cap while planning at 20:03. Then again at 20:14. Each time the runner sent the new prompt, and after the second one there were no more cut-offs. Reported at 20:48, <code>CHECK PASS</code> fourteen seconds later. Fifty-five minutes, and the brief that had sunk two earlier runs was done.</p>
+<p>Glorious. Mostly.</p>
+<h2>safe-cracker2: two hours and ten compactions</h2>
+<p>A port of the old safe-cracker onto the game template. It took 2 hours 8 minutes, compacted its context ten times, peaked just under 100,000 tokens, and passed. That is a lot of forgetting for one game. It also passed, which is the part the queue cares about.</p>
+<h2>The theremin</h2>
+<p>Then the theremin. Cut at the cap while planning at 20:55. Resumed with the new prompt. Cut again at 21:02. Resumed again. Cut a third time at 21:10, and the runner gave up, as it is built to after three. Twenty-two minutes, about 50,000 tokens of thinking each time, and no game.</p>
+<p>The same prompt that saved do-this an hour earlier did nothing here. Hold that thought: on 27 November a different model gets this brief, and the <a href="./2026-11-27-1638-a-prediction-about-inkling-and-the-theremin.html">prediction post</a> bets on how that goes.</p>
+<h2>And tally-counter</h2>
+<p>Started at 21:10. Stopped by a <code>SIGTERM</code> to its runner at 21:15. The log records the signal and not who sent it or why, so neither will I.</p>
+<h2>What nobody has done yet</h2>
+<p>Nobody has reviewed safe-cracker2 or do-this. Both passed <code>check.sh</code>, and the <a href="./2026-11-23-1603-pocket-pet-passes-and-the-pet-is-brown.html">pocket-pet post</a> showed what that is worth on its own: seven green feature scripts and a brown pet. They are still uncommitted, waiting for a coach and, ideally, the board.</p>
+</article><nav class="post-nav"><a href="./2026-11-23-1729-the-silent-arcade.html">← The silent arcade</a><a href="./2026-11-27-1638-a-prediction-about-inkling-and-the-theremin.html">A prediction about Inkling and the theremin, written before the result →</a></nav></main><footer class="site-footer">The devlog for <strong>jc3636-knob</strong>: a round screen with a knob, a usage panel, and a local model learning to make games on it. Written from the working record, mistakes included.</footer></body></html>

@@ -1,0 +1,119 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>The theremin, in twenty-two minutes — jc3636-knob</title><link rel="stylesheet" href="./style.css"></head><body><header class="site-header"><a class="brand" href="./index.html">jc3636-knob <span>· devlog</span></a><a href="../../../index.html">brook.dev</a></header><main class="content"><a class="back-link" href="./index.html">← all posts</a><article><h1>The theremin, in twenty-two minutes</h1><p class="post-meta">2026-11-27 <time>17:02 (+0800)</time> · part 20 of 20 <span class="tag">lab</span><span class="tag">inkling</span><span class="tag">theremin</span><span class="tag">predictions</span><span class="tag">sound</span></p><p><strong>At 16:38 I wrote down <a href="./2026-11-27-1638-a-prediction-about-inkling-and-the-theremin.html">what I expected Inkling to do with the theremin</a>, before looking. At 16:52 it reported. This is the scorecard.</strong></p>
+<p>On 23 November, <a href="./2026-11-23-2115-two-passes-a-give-up-and-a-stop.html">Occamy gave up on this brief</a> after 22 minutes: three replies cut off at the output cap, all of them still planning. Today Inkling 2 Mini started it at 16:30 and reported at 16:52.</p>
+<p>Twenty-two minutes. Same brief, same tools, same queue line. One model never wrote a line of code in that time. The other wrote the whole game, tested it, fixed two of its own mistakes and passed the check. No resumes. No compactions. No coach notes. Nuts.</p>
+<div class="pair"><img src="https://assets.brook.dev/jc3636-knob/blog/img/theremin-tone-down.webp" alt="The theremin in the simulator with a finger near the top: a red dot, SQUARE, a square-wave sketch and 220 Hz vol 45%"><img src="https://assets.brook.dev/jc3636-knob/blog/img/theremin-triangle.webp" alt="The theremin after two turns of the knob: TRIANGLE and a small triangle-wave sketch"></div><h2>The scorecard</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Prediction</th>
+<th>My odds</th>
+<th>What happened</th>
+<th>Score</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Inkling reports, rather than giving up</td>
+<td>4 in 5</td>
+<td>Reported at 16:52</td>
+<td>right</td>
+</tr>
+<tr>
+<td>2</td>
+<td>If it gives up, it is by planning cut-offs</td>
+<td>3 in 4</td>
+<td>It did not give up</td>
+<td>no contest</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Wall time between 45 and 75 minutes</td>
+<td>1 in 2</td>
+<td>22 minutes (1,329 s)</td>
+<td>wrong, and gladly</td>
+</tr>
+<tr>
+<td>4</td>
+<td>First <code>CHECK PASS</code> with no coach note</td>
+<td>3 in 5</td>
+<td>Its first full <code>check.sh</code> passed</td>
+<td>right</td>
+</tr>
+<tr>
+<td>5</td>
+<td>The sustained tone is the hard part</td>
+<td>certain</td>
+<td>It is, and the answer is below</td>
+<td>right</td>
+</tr>
+<tr>
+<td>6</td>
+<td>The review finds a bug the check did not</td>
+<td>4 in 5</td>
+<td>Probably the tone itself; not heard yet</td>
+<td>pending the board</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Peak context under 80,000 tokens</td>
+<td>3 in 4</td>
+<td>62,302</td>
+<td>right</td>
+</tr>
+</tbody></table>
+<p>Four right, one wrong, one that never came up, and one waiting on a pair of ears.</p>
+<p>The wrong one is the interesting one. I expected it to be slower than Occamy, because it decodes slower: 26 to 29 tokens a second during this build, against Occamy&#39;s 60 to 80. Per token, it is slower. Per game, it was not even close, because it spent its tokens on code instead of on a plan it then lost.</p>
+<h2>How it built it</h2>
+<p>Read the skills. Made the game from the template. Read the sound module, and noticed in its own thinking that <code>sfx_play</code> has an exponential decay, so a theremin&#39;s held tone is not on the menu. Then it went looking for prior art in the other games, and found dial-synth on its own. Then it wrote <code>main.c</code> in one go: 205 lines.</p>
+<p>Two catches along the way, both its own:</p>
+<ul>
+<li><strong>The halo ate the label.</strong> The simulator reported that the text &quot;SQUARE&quot; was painted over before it was shown. The glowing dot&#39;s halo was drawn after the waveform name. It fixed the draw order.</li>
+<li><strong>Its screenshots were lying.</strong> Two of its own feature shots were taken after the finger had lifted, so they showed an idle screen while claiming to show pitch and volume. It noticed, moved the shots, and checked the text on screen again.</li>
+</ul>
+<p>That second one matters. On 23 November a model <a href="./2026-11-23-1603-pocket-pet-passes-and-the-pet-is-brown.html">accepted a screenshot that contradicted its claim</a>. This one caught its own.</p>
+<h2>The tone</h2>
+<p>Here is how Inkling keeps a note sounding while your finger is down: every 40 ms it plays a fresh 50 ms note at the current pitch and volume.</p>
+<p>The template&#39;s notes decay to about −60 dB over their length, so 40 ms into a 50 ms note, the old one is down to roughly 0.4% of its level, and the new one starts with a fresh attack. That is about 25 restarts a second. A theremin, in the way a flip-book is a film.</p>
+<p>It might sound fine. It might sound like a buzzing wasp. The simulator logs sounds and does not play them, so this is a reading of the code, by the coach, and nobody has heard it. Prediction 6 waits for the board.</p>
+<p>The fix is not in the game. The template has no way to hold a note and change its pitch while it plays, and games are not allowed to edit the template. Whether the template grows one is my call, and the next theremin, singing bowl or engine-noise toy will need it.</p>
+<h2>What would have changed my mind</h2>
+<p>I said: &quot;It finishes in under 30 minutes with a clean tone. Then Inkling is a bigger step up than 4 in 5, and the queue should be reordered around it.&quot;</p>
+<p>Under 30 minutes: yes, by eight. Clean tone: unknown. Half a mind changed, then. The queue reorder waits for the board and for the next brief, because one game is one game.</p>
+<h2>For the curious</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Occamy, 23 Nov</th>
+<th>Inkling, 27 Nov</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Wall time</td>
+<td>22 min</td>
+<td>22 min</td>
+</tr>
+<tr>
+<td>Outcome</td>
+<td>gave up</td>
+<td><code>CHECK PASS</code></td>
+</tr>
+<tr>
+<td>Replies cut at the output cap</td>
+<td>3</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Peak context</td>
+<td>50,353</td>
+<td>62,302</td>
+</tr>
+<tr>
+<td>Memory for the model</td>
+<td></td>
+<td>37.6 GB of 48</td>
+</tr>
+</tbody></table>
+<p>Inkling runs on demand on the lab&#39;s own server now, and stops when the queue is done. At 37.6 GB of a 48 GB laptop, it is not something you leave running.</p>
+</article><nav class="post-nav"><a href="./2026-11-27-1638-a-prediction-about-inkling-and-the-theremin.html">← A prediction about Inkling and the theremin, written before the result</a><span></span></nav></main><footer class="site-footer">The devlog for <strong>jc3636-knob</strong>: a round screen with a knob, a usage panel, and a local model learning to make games on it. Written from the working record, mistakes included.</footer></body></html>

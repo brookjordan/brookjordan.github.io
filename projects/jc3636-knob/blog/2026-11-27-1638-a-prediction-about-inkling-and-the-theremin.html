@@ -1,0 +1,66 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>A prediction about Inkling and the theremin, written before the result — jc3636-knob</title><link rel="stylesheet" href="./style.css"></head><body><header class="site-header"><a class="brand" href="./index.html">jc3636-knob <span>· devlog</span></a><a href="../../../index.html">brook.dev</a></header><main class="content"><a class="back-link" href="./index.html">← all posts</a><article><h1>A prediction about Inkling and the theremin, written before the result</h1><p class="post-meta">2026-11-27 <time>16:38 (+0800)</time> · part 19 of 20 <span class="tag">lab</span><span class="tag">inkling</span><span class="tag">theremin</span><span class="tag">occamy</span><span class="tag">predictions</span></p><p><strong>The theremin has beaten the local model three times running. Today a different model started on it, at 16:30. I am writing down what I think will happen at 16:38, without looking at a single thing it has done so far. When it finishes, the result post will score this against what actually happened.</strong></p>
+<h2>The brief that keeps winning</h2>
+<p>A theremin. Finger on the screen and a tone plays: angle sets the pitch over two octaves, distance from the centre sets the volume. A dot follows the finger. The knob changes the waveform. Lift the finger and the tone fades over 100 ms.</p>
+<p>On 23 November, Occamy got it and gave up in 22 minutes. Three replies in a row were cut off at the 32,768-token output cap while still planning. That was after the new resume prompt (&quot;your plan is lost, write the file now&quot;), which had rescued do-this an hour earlier. Each of those three replies took about 7 minutes to hit the cap, so roughly 80 tokens a second of thinking, and no game.</p>
+<p>So today the model changes. Inkling 2 Mini is building the same brief, from the same queue line, with the same tools and the same rule as the <a href="./2026-11-23-1603-pocket-pet-passes-and-the-pet-is-brown.html">pocket-pet stress test</a>: no coach notes until it reports or gives up.</p>
+<p>Why this post exists: it is easy to read a result and find it obvious. It is harder to be wrong in writing first. Here goes.</p>
+<h2>What I expect</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Prediction</th>
+<th>My odds</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Inkling reports (builds it), rather than giving up</td>
+<td>4 in 5</td>
+</tr>
+<tr>
+<td>2</td>
+<td>If it gives up, it is the same way: replies cut at the output cap while planning</td>
+<td>3 in 4</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Wall time between 45 and 75 minutes</td>
+<td>1 in 2</td>
+</tr>
+<tr>
+<td>4</td>
+<td>First <code>CHECK PASS</code> with no coach note</td>
+<td>3 in 5</td>
+</tr>
+<tr>
+<td>5</td>
+<td>The sustained tone is the hard part, and how it solves it is the thing worth reading</td>
+<td>certain</td>
+</tr>
+<tr>
+<td>6</td>
+<td>The review finds at least one bug the check did not</td>
+<td>4 in 5</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Peak context under 80,000 tokens</td>
+<td>3 in 4</td>
+</tr>
+</tbody></table>
+<h2>Why those numbers</h2>
+<p><strong>It finishes.</strong> Occamy failed on this brief by deliberating, not by writing bad code. It never got to the code. Inkling is newer and larger (26.4 billion stored parameters, released on 20 November), and the bet in swapping it in is that it plans less and writes sooner. That is a bet: nobody has run it on a brief with a classifier in it. I would not put it higher than 4 in 5. What tips me that far is the pocket-pet list of model-class failures (a measured value accepted when it contradicts the expectation, a rule known but not applied), where a stronger model is the only fix on offer.</p>
+<p><strong>Slower, per token.</strong> Inkling decoded 32 tokens a second on this laptop today. Occamy managed about 60 to 80. So even if Inkling wastes far less of its thinking, the wall clock will not be as kind as its quality: <a href="./2026-11-23-1603-pocket-pet-passes-and-the-pet-is-brown.html">pocket-pet took 39 minutes</a> on Occamy and do-this took 55. I expect this one to land past both.</p>
+<p><strong>The tone is the real test.</strong> The template&#39;s sound module plays notes: one call, <code>sfx_play</code>, with a frequency that sweeps from one value to another over a set number of milliseconds, a fast attack and an exponential decay, and then it is over. Ready-made, it has a click, a blip, a hit and a lose. It does not have &quot;hold this tone, and change its pitch while I move my finger&quot;. A theremin is exactly that. So the model has to build a sustained tone out of parts that were not designed for it, or go around the module. Prediction 5 is the one I am sure of, and the part of its session I will read first.</p>
+<p><strong>The check will pass something wrong.</strong> It did for pocket-pet: seven feature scripts green, and a brown pet, crumbs of old text, and needs that drained in 30 seconds. The check sees only what its script asks for. Prediction 6 follows from the drawing skill&#39;s rules (erase where it was last drawn; remember the old width of text) and from a model writing its first version of a toy it cannot hear.</p>
+<h2>What would change my mind</h2>
+<ul>
+<li><strong>It gives up with three planning cut-offs.</strong> Then the model was not the limit, the output cap and the resume prompt were. That is a process failure, and no model swap fixes it.</li>
+<li><strong>It finishes in under 30 minutes with a clean tone.</strong> Then Inkling is a bigger step up than 4 in 5, and the queue should be reordered around it.</li>
+<li><strong>The tone works in the simulator and is silence on the board.</strong> The simulator logs sounds; it does not play them. Nothing has been flashed today, so that check still needs a human hand on BOOT and RESET.</li>
+</ul>
+<h2>The cross-link, for later</h2>
+<p>The result post is not written yet. When it is, it goes here, both ways, and keeps score. Until then this page stands as it was written: 16:38, run started at 16:30, nobody has looked.</p>
+<p><strong>Added at 17:02:</strong> the result is in. <a href="./2026-11-27-1702-the-theremin-in-twenty-two-minutes.html">The theremin, in twenty-two minutes</a> scores every prediction above. Nothing else on this page has changed.</p>
+</article><nav class="post-nav"><a href="./2026-11-23-2115-two-passes-a-give-up-and-a-stop.html">← Two passes, a give-up and a stop</a><a href="./2026-11-27-1702-the-theremin-in-twenty-two-minutes.html">The theremin, in twenty-two minutes →</a></nav></main><footer class="site-footer">The devlog for <strong>jc3636-knob</strong>: a round screen with a knob, a usage panel, and a local model learning to make games on it. Written from the working record, mistakes included.</footer></body></html>
