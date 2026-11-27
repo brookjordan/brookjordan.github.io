@@ -324,7 +324,12 @@
   "tag": "Turn it on and play.",
   "group": "music",
   "devlog": "https://brook.dev/projects/jc3636-knob/blog/2026-11-27-1907-the-knob-gets-a-keyboard.html",
-  "uses": ["knob", "tap", "sound", "midi"],
+  "uses": [
+   "knob",
+   "tap",
+   "sound",
+   "midi"
+  ],
   "pitch": "Play chords on the Launchkey and hear them through the knob’s speaker or headphones. With the keyboard unplugged, tap the screen to audition notes and explore patches.",
   "how": [
    "Open on Play, with the current patch and input status visible",
@@ -336,7 +341,12 @@
   "banner": "wide editorial product photo, full-size MIDI keyboard behind one small round graphite ESP32 knob with a circular screen, headphones plugged into the round unit, warm desk lamp and dark blue shadows, keyboard and knob centred for a wide crop, realistic scale, no logos or text",
   "s1": "single circular instrument display viewed straight on, dark navy face, broad amber volume arc near the edge, one cyan connected-keyboard pictogram, a quiet clear centre reserved for the patch name, restrained palette, no words",
   "s2": "single circular instrument display viewed straight on, dark navy face, four large coloured touch pads in the lower half, amber patch-selection arc along the upper rim, one pad softly lit, flat interface art, no text",
-  "needs": [["Launchkey USB host and polyphonic audio", "KNOB-056"]]
+  "needs": [
+   [
+    "Launchkey USB host and polyphonic audio",
+    "KNOB-056"
+   ]
+  ]
  },
  {
   "slug": "midi-bridge",
@@ -344,7 +354,11 @@
   "tag": "Send your playing to another instrument.",
   "group": "music",
   "devlog": "https://brook.dev/projects/jc3636-knob/blog/2026-11-27-1907-the-knob-gets-a-keyboard.html",
-  "uses": ["knob", "tap", "midi"],
+  "uses": [
+   "knob",
+   "tap",
+   "midi"
+  ],
   "pitch": "Route the Launchkey through the knob to a BLE MIDI synth, computer or tablet. The screen shows where your playing is going and the destination makes the sound.",
   "how": [
    "See the USB input and selected destination together",
@@ -356,7 +370,12 @@
   "banner": "wide editorial desk photo, one small round graphite controller centred between a full-size keyboard on the left and a compact desktop synth on the right, visible USB lead from keyboard to a hub beside the knob, separated synth with no cable to the knob, cool blue studio light, no logos or text",
   "s1": "single circular controller display viewed straight on, charcoal background, keyboard pictogram on the left and synth pictogram on the right with one clear cyan arrow pointing right, tiny green link indicator, broad margins, no words",
   "s2": "single circular controller display viewed straight on, dark charcoal background, three stacked destination rows represented by simple synth, laptop and tablet pictograms, amber selection on the centre row, tiny status dot, no text",
-  "needs": [["Launchkey USB host and BLE MIDI routing", "KNOB-056"]]
+  "needs": [
+   [
+    "Launchkey USB host and BLE MIDI routing",
+    "KNOB-056"
+   ]
+  ]
  },
  {
   "slug": "piano-coach",
@@ -370,14 +389,16 @@
    "tap",
    "sound",
    "haptic",
-   "timing"
+   "timing",
+   "midi"
   ],
   "pitch": "Sit the knob on your piano. It shows a note, F♯, B♭, plain old D, and listens for you to play it, in any octave. Quick draw times every answer and keeps your slowest notes in a list, so you find out exactly which ones you still have to think about. Rhythm mode clicks a steady beat and asks for the notes on it, then shows how early or late each one landed.",
   "how": [
    "Quick draw: a note name appears, play it, see how long it took",
    "Rhythm: hit each note on the click; the rim shows how early or late you were",
    "Knob picks sharps, flats, white keys only or a mix of all three",
-   "Knob also picks the scale and key: major, minor, chromatic, pentatonic, blues"
+   "Knob also picks the scale and key: major, minor, chromatic, pentatonic, blues",
+   "Or play on a Launchkey or M-VAVE keyboard: exact notes, octave checked too"
   ],
   "banner": "a cheerful round glowing gadget perched on the music stand of an upright piano, a giant sharp sign and flat sign floating above the keys like neon signs, a stopwatch hand sweeping around its rim",
   "s1": "a huge note name F with a proper musical sharp sign beside it, and a small 0.8 s timer under it",
@@ -386,6 +407,10 @@
    [
     "hearing piano notes through the mic",
     "KNOB-053"
+   ],
+   [
+    "MIDI keyboard input",
+    "KNOB-062"
    ]
   ]
  },
@@ -400,14 +425,16 @@
    "knob",
    "tap",
    "sound",
-   "timing"
+   "timing",
+   "midi"
   ],
   "pitch": "The next step after note names: the board draws one note on a stave and you play it. No letter to lean on. Treble, bass, or both at once, with ledger lines unlocking as you get quicker. The knob chooses the range, so you can drill just the notes above middle C that keep tripping you up.",
   "how": [
    "One note on a treble or bass stave; play the key it means",
    "The knob widens the range one note at a time",
    "Ledger lines arrive when you are fast enough to earn them",
-   "A miss shows the letter, so you learn from it"
+   "A miss shows the letter, so you learn from it",
+   "Works with a Launchkey or M-VAVE keyboard as well as the piano"
   ],
   "banner": "a round glowing gadget with a five-line music stave curving around its screen like a racetrack, a single bold whole note riding the lines, piano keys blurred in the foreground",
   "s1": "five horizontal stave lines across a round screen with a treble clef and one bold note on the second line",
@@ -416,6 +443,10 @@
    [
     "hearing piano notes through the mic",
     "KNOB-053"
+   ],
+   [
+    "MIDI keyboard input",
+    "KNOB-062"
    ]
   ]
  },
@@ -429,14 +460,16 @@
    "listens",
    "sound",
    "LEDs",
-   "timing"
+   "timing",
+   "midi"
   ],
   "pitch": "Simon, on a real piano. The board plays a short phrase through its speaker and lights the ring, then listens while you play it back on your keys. Get it right and the phrase grows by one note. It is ear training that feels like a game, and it starts on three notes so nobody gets lost.",
   "how": [
    "The board plays a phrase and lights one LED per note",
    "Play it back on your piano, any octave",
    "Each correct round adds a note",
-   "The knob picks the scale the phrases come from"
+   "The knob picks the scale the phrases come from",
+   "Play it back on the piano or on a Launchkey or M-VAVE keyboard"
   ],
   "banner": "a round glowing gadget and a grand piano facing each other like duelling musicians, coloured sound waves bouncing between them, a ring of twelve lights glowing on the gadget",
   "s1": "three glowing coloured dots around the rim in a row and a speaker icon in the centre",
@@ -445,6 +478,10 @@
    [
     "hearing piano notes through the mic",
     "KNOB-053"
+   ],
+   [
+    "MIDI keyboard input",
+    "KNOB-062"
    ]
   ]
  },
@@ -458,14 +495,16 @@
    "listens",
    "knob",
    "sound",
-   "timing"
+   "timing",
+   "midi"
   ],
   "pitch": "A chord name appears, Cm, G7, F♯ major, and you play it. The board listens for all its notes at once, and shows which ones it heard and which are missing, so a wrong third shows up in red. The knob sets which chords can appear, from three-note majors up to sevenths.",
   "how": [
    "A chord name appears; play every note of it",
    "The rim shows the notes it heard, missing ones dimmed",
    "Times each chord, like quick draw",
-   "The knob unlocks minors, then sevenths"
+   "The knob unlocks minors, then sevenths",
+   "A Launchkey or M-VAVE keyboard sends every held note exactly"
   ],
   "banner": "a round glowing gadget above piano keys where three keys glow at once in different colours, chord symbols floating above like constellations",
   "s1": "a large chord symbol C m in the centre with three small coloured note dots around the rim",
@@ -478,6 +517,10 @@
    [
     "hearing several notes at once",
     "KNOB-053"
+   ],
+   [
+    "MIDI keyboard input",
+    "KNOB-062"
    ]
   ]
  },
