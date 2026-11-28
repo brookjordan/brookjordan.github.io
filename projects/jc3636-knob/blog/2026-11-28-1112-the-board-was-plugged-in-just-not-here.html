@@ -1,0 +1,73 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>The board was plugged in, just not here — jc3636-knob</title><meta property="og:type" content="article"><meta property="og:title" content="The board was plugged in, just not here"><meta property="og:url" content="https://brook.dev/projects/jc3636-knob/blog/2026-11-28-1112-the-board-was-plugged-in-just-not-here"><meta property="og:description" content="Why the local builder stayed in the simulator even when the knob was powered on the desk, and the two-slot Knob OS design that fixes it from first principles."><meta property="og:image" content="https://assets.brook.dev/jc3636-knob/blog/banners/2026-11-28-1112-the-board-was-plugged-in-just-not-here.webp"><meta property="og:image:width" content="1280"><meta property="og:image:height" content="720"><meta name="twitter:card" content="summary_large_image"><meta name="description" content="Why the local builder stayed in the simulator even when the knob was powered on the desk, and the two-slot Knob OS design that fixes it from first principles."><link rel="stylesheet" href="./style.css"></head><body><header class="site-header"><a class="brand" href="./index.html">jc3636-knob <span>· devlog</span></a><a href="../../../index.html">brook.dev</a></header><main class="content"><a class="back-link" href="./index.html">← all posts</a><article><img class="banner" src="https://assets.brook.dev/jc3636-knob/blog/banners/2026-11-28-1112-the-board-was-plugged-in-just-not-here.webp" width="1280" height="720" alt=""><h1>The board was plugged in, just not here</h1><p class="post-meta">2026-11-28 <time>11:12 (+0800)</time> · part 29 of 57 <span class="tag">lab</span><span class="tag">hardware</span><span class="tag">flashing</span><span class="tag">ota</span><span class="tag">architecture</span></p><p><strong>&quot;It never seems to do real tests. The board is always plugged in.&quot;</strong></p>
+<p>That was a very reasonable question at 10:08. Seven piano apps had just flown through the Mac simulator with green checkmarks, and not a single one had touched the actual ESP32-S3 sitting right there on the desk.</p>
+<p>So we went looking. And we found two completely different reasons, stacked neatly one on top of the other like a comedy routine.</p>
+<h2>The measurements before the theory</h2>
+<!-- claim-check: tools/pi-run.py line 60 prior to 5d7e858; ls -la /dev/cu.* and system_profiler SPUSBDataType and ping 192.168.0.120 run 28 Nov 2026 10:09-10:16; projects/game-template/partitions.csv -->
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>What we expected</th>
+<th>What we actually observed</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>tools/pi-run.py</code> prompt (<code>NEW</code>)</td>
+<td>Flash if a board is attached</td>
+<td>Hardcoded: <em>&quot;There is no board attached: do not flash.&quot;</em></td>
+</tr>
+<tr>
+<td><code>ls -la /dev/cu.*</code></td>
+<td><code>/dev/cu.usbmodem*</code></td>
+<td>Only <code>Bluetooth-Incoming-Port</code> and <code>debug-console</code></td>
+</tr>
+<tr>
+<td><code>system_profiler SPUSBDataType</code></td>
+<td>Espressif USB device</td>
+<td>Nothing on the USB bus</td>
+</tr>
+<tr>
+<td><code>ping -c 1 192.168.0.120</code></td>
+<td>Maybe offline?</td>
+<td><strong>62.0 ms reply</strong>, ESPHome usage panel happily alive on Wi-Fi</td>
+</tr>
+<tr>
+<td><code>projects/game-template/partitions.csv</code></td>
+<td>Dual OTA slots?</td>
+<td>One 9 MB <code>factory</code> partition, no <code>ota_0</code>/<code>ota_1</code>, no Wi-Fi stack</td>
+</tr>
+</tbody></table>
+<p>The board <em>was</em> plugged in. Just into power, not into a Mac USB data port. And even if it had been plugged into USB data, our own runner was telling <code>pi</code> not to touch it!</p>
+<h2>Two worlds fighting over one flash chip</h2>
+<!-- claim-check: jc3636-knob.yaml; docs/kb/toolchain-and-flashing.md; ESP-IDF v5.5 USB-Serial-JTAG and OTA rollback docs -->
+<p>Every flashing headache we have paid for this week comes from the same root cause: the knob lives a double life as two incompatible firmware worlds.</p>
+<ul>
+<li><strong>World 1: The daily-driver LLM usage panel</strong> (ESPHome, reachable on Wi-Fi at <code>192.168.0.120</code>, freshly stabilised in <a href="./2026-11-27-2219-the-panel-that-stopped-forgetting.html">the panel that stopped forgetting</a>). Its TinyUSB CDC driver claims GPIO19/20, which locks out the ESP32-S3&#39;s built-in USB-Serial-JTAG auto-reset until a human taps RESET or BOOT+RESET.</li>
+<li><strong>World 2: The ESP-IDF games and piano apps.</strong> Fast direct-framebuffer C, single <code>factory</code> partition, zero Wi-Fi, zero OTA. Once an ESP-IDF game is on the chip, USB-Serial-JTAG stays wide open for button-free flashing, bidirectional console commands (<code>idf.py monitor</code>), and built-in hardware JTAG debugging (<code>idf.py openocd</code> + <code>idf.py gdb</code> on <code>:3333</code>) with no external probe.</li>
+</ul>
+<p>Flashing an ESP-IDF game over ESPHome&#39;s Wi-Fi OTA would be a one-way trip: the game boots, Wi-Fi OTA vanishes, and the knob becomes an island until you plug in a USB data cable.</p>
+<h2>The fix today, and the first-principles destination</h2>
+<!-- claim-check: commits 5d7e858 and 0d0d6b8 -->
+<p>First, we fixed the immediate offline bugs so <code>pi</code> can actually use hardware the moment a USB data cable is plugged in:</p>
+<ol>
+<li><strong><code>tools/pi-run.py</code> (<code>5d7e858</code>)</strong> now inspects <code>/dev/cu.usbmodem*</code> at launch instead of hardcoding no-flash: a short-named game/bootloader port tells <code>pi</code> to run <code>tools/build.sh &lt;name&gt; flash</code> and <code>tools/build.sh &lt;name&gt; log</code> after <code>check.sh</code> passes; a long-named TinyUSB port warns that one manual <code>BOOT+RESET</code> is needed first.</li>
+<li><strong><code>.agents/skills/knob-flash/SKILL.md</code> (<code>0d0d6b8</code>)</strong> now documents every verified ESP-IDF 5.5 connection path: USB-Serial-JTAG auto-reset, bidirectional console commands, built-in OpenOCD/GDB debugging, and the Wi-Fi OTA boundary.</li>
+</ol>
+<p>Then we stepped back and asked: <em>if we designed this knob from day one knowing it is both a daily LLM desk panel and an autonomous <code>pi</code> hardware testbed, what would we build?</em></p>
+<p>One ESP-IDF Knob OS with <strong>two OTA slots</strong>:</p>
+<ul>
+<li><strong>Slot A (<code>ota_0</code>, the Knob Shell):</strong> boots straight into the LLM usage gauges plus an app launcher, and exposes a tiny OTA + control endpoint over Wi-Fi and USB-Serial-JTAG.</li>
+<li><strong>Slot B (<code>ota_1</code>, <code>pi</code>&#39;s Hardware Test Sandbox):</strong> <code>pi</code> still writes tiny single-file apps against <code>game-template</code>, while the template quietly carries ESP-IDF automatic rollback (<code>CONFIG_BOOTLOADER_APP_ROLLBACK_ENABLE</code>) plus a thin remote input/log shim speaking the exact same <code>knob</code>/<code>tap</code>/<code>drag</code> script language as <code>tools/sim.sh</code>. If a <code>pi</code> build panics or hangs, the bootloader rolls straight back to your LLM gauges. Unbrickable, even over Wi-Fi!</li>
+</ul>
+<h2>Alternatives rejected</h2>
+<ul>
+<li><strong>Porting the entire ESPHome usage panel to ESP-IDF before doing any hardware tests.</strong> Next! Dropping TinyUSB CDC (or adding a reboot-to-bootloader trigger) in ESPHome gives button-free USB flashing in minutes while the two-slot OS is built incrementally.</li>
+<li><strong>Leaving Wi-Fi on during BLE MIDI performance.</strong> Next! Wi-Fi and BLE 5.0 share one 2.4 GHz antenna on the ESP32-S3, so the Wi-Fi debug shim must stay off whenever a BLE MIDI app is active.</li>
+</ul>
+<h2>What still hurts</h2>
+<!-- claim-check: KNOB-056, KNOB-062, KNOB-053 -->
+<p>We still have not plugged a single MIDI cable into the knob! Next up is a deep-research pass on left-handed piano geometry, Launchkey 49 MK4 + M-VAVE FM-1 / SMK-37 Pro MIDI quirks, and ESP32-S3 USB Host + BLE MIDI coexistence, followed by the physical bench tests as soon as the USB-C data cable, powered USB 2.0 hub and OTG adapter hit the desk. See <a href="./2026-11-28-1042-the-coach-stepped-back.html">the morning&#39;s coaching post</a> and <a href="./2026-11-28-1110-seven-piano-apps-before-lunch.html">the seven piano apps post</a> for the builds waiting to be flashed.</p>
+<ul>
+<li><strong>Banner concept (pending ComfyUI render once the queue frees the GPU, seed 4129):</strong> the gadget glowing cheerfully on a Wi-Fi cloud beside a neatly coiled unplugged USB cable, while a miniature blueprint shows two numbered launch pads with glowing green and amber rings.</li>
+</ul>
+</article><nav class="post-nav"><a href="./2026-11-28-1110-seven-piano-apps-before-lunch.html">← Seven piano apps before lunch, and a keyboard turned back to front</a><a href="./2026-11-28-1510-the-left-handed-piano-went-wireless.html">The left-handed piano went wireless, and the keyboard had a secret →</a></nav></main><footer class="site-footer">The devlog for <strong>jc3636-knob</strong>: a round screen with a knob, a usage panel, and a local model learning to make games on it. Written from the working record, mistakes included.</footer></body></html>

@@ -1,0 +1,27 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Five apps missing from the home screen, two lines away — jc3636-knob</title><meta property="og:type" content="article"><meta property="og:title" content="Five apps missing from the home screen, two lines away"><meta property="og:url" content="https://brook.dev/projects/jc3636-knob/blog/2026-11-28-1916-five-apps-missing-two-lines-away"><meta property="og:description" content="The catalogue has 58 apps and the home screen 53. The agent reported the five as skipped for no reason and asked the architect why. The reason is a filter in the launcher script, just past where it stopped reading."><meta property="og:image" content="https://assets.brook.dev/jc3636-knob/blog/banners/2026-11-28-1916-five-apps-missing-two-lines-away.webp"><meta property="og:image:width" content="1280"><meta property="og:image:height" content="720"><meta name="twitter:card" content="summary_large_image"><meta name="description" content="The catalogue has 58 apps and the home screen 53. The agent reported the five as skipped for no reason and asked the architect why. The reason is a filter in the launcher script, just past where it stopped reading."><link rel="stylesheet" href="./style.css"></head><body><header class="site-header"><a class="brand" href="./index.html">jc3636-knob <span>· devlog</span></a><a href="../../../index.html">brook.dev</a></header><main class="content"><a class="back-link" href="./index.html">← all posts</a><article><img class="banner" src="https://assets.brook.dev/jc3636-knob/blog/banners/2026-11-28-1916-five-apps-missing-two-lines-away.webp" width="1280" height="720" alt=""><details class="banner-legacy"><summary>Banner: NitroFusion2 (1 step) · show the Z-Image Turbo version</summary><img src="https://assets.brook.dev/jc3636-knob/blog/banners/2026-11-28-1916-five-apps-missing-two-lines-away-zimage.webp" width="1280" height="720" loading="lazy" decoding="async" alt="The same banner as rendered by Z-Image Turbo"></details><h1>Five apps missing from the home screen, two lines away</h1><p class="post-meta">2026-11-28 <time>19:16 (+0800)</time> · part 44 of 57 <span class="tag">lab</span><span class="tag">launcher</span><span class="tag">tools</span><span class="tag">mysteries</span></p><p>At 19:16 the agent regenerated the home screen. <code>design/concepts/built.json</code> now has 58 entries. <code>tools/launcher.py --all-built</code> bundled 53. Which five are gone?</p>
+<!-- claim-check: pi session 01a22165 tool result at ~11:16Z: "missing from fits: ['arcade', 'mainframe', 'pickpocket', 'getaway', 'rim-pong']" -->
+<pre><code>missing from fits: [&#39;arcade&#39;, &#39;mainframe&#39;, &#39;pickpocket&#39;, &#39;getaway&#39;, &#39;rim-pong&#39;]
+</code></pre>
+<!-- claim-check: HANDOFF-2026-11-28-home-hub-apps.md section 3 item 4 -->
+<p>Good detective work so far: it diffed the catalogue against <code>tools/size.py --plan --all-built</code> itself. Then it decided they were <em>&quot;silently skipped… Either they exceed the budget, or something else filters them&quot;</em>, and put it in the handoff as an open question.</p>
+<h2>Something else filters them</h2>
+<!-- claim-check: tools/launcher.py lines 194-198 -->
+<p><code>tools/launcher.py</code>, lines 194 to 198:</p>
+<pre><code class="language-python">for s in ordered:
+    if s in (&quot;arcade&quot;, &quot;launcher&quot;):
+        continue
+    if (ROOT / &quot;projects&quot; / s / &quot;main/main.c&quot;).exists():
+        slugs.append(s)
+</code></pre>
+<!-- claim-check: ls projects/ on 2026-11-28 21:40; git log -S rim-pong -->
+<ul>
+<li><strong>arcade</strong> is skipped by name: it&#39;s a menu of games itself, and the home screen is a menu of apps. Nesting one in the other is a choice, and the script made it.</li>
+<li><strong>mainframe, pickpocket, getaway</strong> have no <code>projects/mainframe/</code> etc. They were built twice each in last night&#39;s A/B test, as <code>mainframe-q8</code> and <code>mainframe-unc</code> and so on, and the catalogue names the idea, not either build.</li>
+<li><strong>rim-pong</strong> has no project folder at all; its last appearance is in the <a href="./2026-11-19-1841-a-folder-for-a-flight.html">flight post</a>.</li>
+</ul>
+<p>Not silent, not size. A missing folder and a deliberate exclusion.</p>
+<h2>Why it didn&#39;t find it</h2>
+<!-- claim-check: tool calls `head -80 tools/launcher.py` and `sed -n 80,160p tools/launcher.py` in the session -->
+<p>It read <code>tools/launcher.py</code> lines 1 to 80, then 80 to 160. The answer starts at 194. Thirty-four lines short.</p>
+<p><strong>The fix</strong> is a printout, not a doc: <code>launcher.py --all-built</code> should say <em>&quot;skipped arcade (a menu), mainframe (no projects/mainframe/main/main.c)…&quot;</em>. It already prints a note for apps left out on size. A tool that explains its own choices saves every future agent the same detective story.</p>
+</article><nav class="post-nav"><a href="./2026-11-28-1901-twenty-two-by-the-summarys-count.html">← Twenty-two apps, by the summary's count</a><a href="./2026-11-28-1917-fifty-three-on-the-home-screen.html">Fifty-three apps on the home screen, and 41% of the slot →</a></nav></main><footer class="site-footer">The devlog for <strong>jc3636-knob</strong>: a round screen with a knob, a usage panel, and a local model learning to make games on it. Written from the working record, mistakes included.</footer></body></html>

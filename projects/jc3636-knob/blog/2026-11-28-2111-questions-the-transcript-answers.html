@@ -1,0 +1,54 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>The handoff asked six questions the transcript already answered — jc3636-knob</title><meta property="og:type" content="article"><meta property="og:title" content="The handoff asked six questions the transcript already answered"><meta property="og:url" content="https://brook.dev/projects/jc3636-knob/blog/2026-11-28-2111-questions-the-transcript-answers"><meta property="og:description" content="At 21:05 I asked for a handoff for the architect. It's well organised, honest about what wasn't verified, and most of its open questions are answered in its own session file."><meta property="og:image" content="https://assets.brook.dev/jc3636-knob/blog/banners/2026-11-28-2111-questions-the-transcript-answers.webp"><meta property="og:image:width" content="1280"><meta property="og:image:height" content="720"><meta name="twitter:card" content="summary_large_image"><meta name="description" content="At 21:05 I asked for a handoff for the architect. It's well organised, honest about what wasn't verified, and most of its open questions are answered in its own session file."><link rel="stylesheet" href="./style.css"></head><body><header class="site-header"><a class="brand" href="./index.html">jc3636-knob <span>· devlog</span></a><a href="../../../index.html">brook.dev</a></header><main class="content"><a class="back-link" href="./index.html">← all posts</a><article><img class="banner" src="https://assets.brook.dev/jc3636-knob/blog/banners/2026-11-28-2111-questions-the-transcript-answers.webp" width="1280" height="720" alt=""><p class="banner-credit">Banner: MOSS-Image SFT</p><h1>The handoff asked six questions the transcript already answered</h1><p class="post-meta">2026-11-28 <time>21:11 (+0800)</time> · part 49 of 57 <span class="tag">lab</span><span class="tag">handoff</span><span class="tag">inkling</span><span class="tag">review</span></p><p>At 21:05 I asked: <em>&quot;Throw me a /handoff and a deeper /retro for the architect to look at. I&#39;ll come back with update docs, feedback from them on the system, and feedback from me on the games!&quot;</em></p>
+<p>By 21:11 there was a 114-line handoff in <code>tools/pi-runs/</code>. First, the good. It&#39;s genuinely well put together:</p>
+<!-- claim-check: tools/pi-runs/HANDOFF-2026-11-28-home-hub-apps.md sections 1, 2 and 4 -->
+<ul>
+<li>Two tables of apps, with sizes.</li>
+<li>A <strong>Verified / not verified</strong> section that says plainly: no app has run on the board; haptics, loudness, touch feel and BLE order are simulator-only; Orbit Dodge and Colour Match prove only one mechanic each.</li>
+<li>A list of every file it touched.</li>
+</ul>
+<p>That honesty section is the best thing the agent wrote all night.</p>
+<h2>The open questions, answered</h2>
+<!-- claim-check: handoff sections 3, 5 and 6; answers from the session file, tools/launcher.py, tools/pi-runs/queue.txt and the first user message -->
+<table>
+<thead>
+<tr>
+<th>Handoff asks</th>
+<th>Answer</th>
+<th>Where it was</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Why 21 apps, not 22?</td>
+<td>There were 21. The 22 is a compaction miscount</td>
+<td>first user message</td>
+</tr>
+<tr>
+<td>Why are 5 apps silently missing?</td>
+<td><code>arcade</code> skipped by name; 4 have no project folder</td>
+<td><code>tools/launcher.py:194</code></td>
+</tr>
+<tr>
+<td>morse-tapper vs Morse Trainer: migrate the name?</td>
+<td>Two different games; mine was never built</td>
+<td><code>queue.txt</code> line 35 vs the brief</td>
+</tr>
+<tr>
+<td>Should <code>ui.h</code> get a settable long press?</td>
+<td>Not for this; the real Morse brief has no long press</td>
+<td>the brief</td>
+</tr>
+<tr>
+<td>Is ±12 semitones right for Drone Pad?</td>
+<td>Drone Pad wasn&#39;t meant to transpose a held chord at all</td>
+<td>the brief</td>
+</tr>
+<tr>
+<td>Is Bubble Level&#39;s snap-to-zero right?</td>
+<td>Bubble Level was meant to be a balance game</td>
+<td>the brief</td>
+</tr>
+</tbody></table>
+<p>Half the &quot;for the architect&quot; questions are about apps built from their titles, asking whether details of the wrong design are right. The architect can&#39;t answer those well, because the question is upstream: <em>was this the app?</em></p>
+<h2>What a handoff needs from a forgetful agent</h2>
+<p>The agent asked for review of &quot;brief fidelity&quot; without having the briefs. The one question that would have caught everything was: <em>&quot;Here are the 21 briefs I built against. Are these yours?&quot;</em>, with the briefs pasted in. It couldn&#39;t paste what it didn&#39;t have. Which is the same lesson again, from the other end: if the brief lives in a file, the handoff can quote it, the reviewer can diff it, and the questions get much better.</p>
+</article><nav class="post-nav"><a href="./2026-11-28-1928-the-retros-sixteen-retries.html">← The retro's sixteen retries, checked against the tape</a><a href="./2026-11-28-2130-reading-the-tape.html">Reading the tape: how to review a run you didn't watch →</a></nav></main><footer class="site-footer">The devlog for <strong>jc3636-knob</strong>: a round screen with a knob, a usage panel, and a local model learning to make games on it. Written from the working record, mistakes included.</footer></body></html>

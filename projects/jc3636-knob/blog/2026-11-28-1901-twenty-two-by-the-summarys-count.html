@@ -1,0 +1,25 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Twenty-two apps, by the summary's count — jc3636-knob</title><meta property="og:type" content="article"><meta property="og:title" content="Twenty-two apps, by the summary's count"><meta property="og:url" content="https://brook.dev/projects/jc3636-knob/blog/2026-11-28-1901-twenty-two-by-the-summarys-count"><meta property="og:description" content="I asked for 21 apps. The compaction summary said 22 and then listed 21. The agent finished, went looking for the missing one, and handed the mystery to the architect."><meta property="og:image" content="https://assets.brook.dev/jc3636-knob/blog/banners/2026-11-28-1901-twenty-two-by-the-summarys-count.webp"><meta property="og:image:width" content="1280"><meta property="og:image:height" content="720"><meta name="twitter:card" content="summary_large_image"><meta name="description" content="I asked for 21 apps. The compaction summary said 22 and then listed 21. The agent finished, went looking for the missing one, and handed the mystery to the architect."><link rel="stylesheet" href="./style.css"></head><body><header class="site-header"><a class="brand" href="./index.html">jc3636-knob <span>· devlog</span></a><a href="../../../index.html">brook.dev</a></header><main class="content"><a class="back-link" href="./index.html">← all posts</a><article><img class="banner" src="https://assets.brook.dev/jc3636-knob/blog/banners/2026-11-28-1901-twenty-two-by-the-summarys-count.webp" width="1280" height="720" alt=""><details class="banner-legacy"><summary>Banner: NitroFusion2 (1 step) · show the Z-Image Turbo version</summary><img src="https://assets.brook.dev/jc3636-knob/blog/banners/2026-11-28-1901-twenty-two-by-the-summarys-count-zimage.webp" width="1280" height="720" loading="lazy" decoding="async" alt="The same banner as rendered by Z-Image Turbo"></details><h1>Twenty-two apps, by the summary's count</h1><p class="post-meta">2026-11-28 <time>19:01 (+0800)</time> · part 43 of 57 <span class="tag">lab</span><span class="tag">inkling</span><span class="tag">compaction</span><span class="tag">counting</span></p><p>At 18:58 Starfield passed and the agent&#39;s note said: <em>&quot;Last of the 22.&quot;</em> Then, at 19:00: <em>&quot;All 22 apps done? Count: 7 ble_midi… &quot;</em></p>
+<!-- claim-check: first user message has 21 bullet points -->
+<p>Reader, there were never 22.</p>
+<!-- claim-check: first user message (21 bullet points); compaction entry 2026-11-28T09:40:24Z, "Add 22 new apps... The 22 apps:" followed by 21 names -->
+<p>My message has 21 bullet points. The first compaction summary, at 17:40, wrote <em>&quot;Add 22 new apps&quot;</em> and then, in the same paragraph, <em>&quot;The 22 apps:&quot;</em> followed by a list of twenty-one names. Every later summary copied the sentence forward. Six compactions, six copies of a number that was wrong the first time.</p>
+<h2>The search party</h2>
+<p>From 19:01 the agent went looking for app 22:</p>
+<!-- claim-check: tool calls at 11:01:00Z, 11:01:09Z, 11:01:41Z, 11:02:07Z in pi session 01a22165 -->
+<ol>
+<li>Listed <code>projects/</code> and grepped for the 21 names.</li>
+<li>Grepped <code>tools/pi-runs/queue.txt</code> for any brief that wasn&#39;t one of them.</li>
+<li>Grepped again, wider.</li>
+<li>Read its own <code>/tmp/PLAN.md</code>, which has 21 lines.</li>
+</ol>
+<p>Then it got it right: <em>&quot;The plan has 21 apps — the original &#39;22&#39; is likely an off-by-one in the summary.&quot;</em> Four calls, correct conclusion. Lovely.</p>
+<h2>And then it un-got it</h2>
+<!-- claim-check: tools/pi-runs/HANDOFF-2026-11-28-home-hub-apps.md sections 5-6; tools/pi-runs/retros/2026-11-28-home-hub-apps.md open question 1 -->
+<p>Two hours later, writing the handoff for the architect, the question is back as open:</p>
+<blockquote>
+<p><strong>Why 21 apps not 22?</strong> The plan was 22, the brief set came out 21. Which app is missing?</p>
+</blockquote>
+<p>and in the handoff&#39;s next steps: <em>&quot;either add one more app (what was it?) or reconcile the brief.&quot;</em></p>
+<p>The answer it had already reached was lost to a later compaction, and the summary&#39;s 22 was not. A wrong number in a summary outlives the right number in a thought. That&#39;s worth knowing about compaction in general: whatever the first summary says, every later one inherits.</p>
+<p>Nothing is missing. Twenty-one asked, twenty-one built.</p>
+</article><nav class="post-nav"><a href="./2026-11-28-1858-twenty-one-apps-in-113-minutes.html">← Twenty-one apps in 113 minutes (not ninety minutes each)</a><a href="./2026-11-28-1916-five-apps-missing-two-lines-away.html">Five apps missing from the home screen, two lines away →</a></nav></main><footer class="site-footer">The devlog for <strong>jc3636-knob</strong>: a round screen with a knob, a usage panel, and a local model learning to make games on it. Written from the working record, mistakes included.</footer></body></html>

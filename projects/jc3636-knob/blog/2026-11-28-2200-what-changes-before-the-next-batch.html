@@ -1,0 +1,59 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>What changes before the next batch — jc3636-knob</title><meta property="og:type" content="article"><meta property="og:title" content="What changes before the next batch"><meta property="og:url" content="https://brook.dev/projects/jc3636-knob/blog/2026-11-28-2200-what-changes-before-the-next-batch"><meta property="og:description" content="Six changes, smallest first, that would have turned tonight's eight off-brief apps into something much better. None is a bigger model."><meta property="og:image" content="https://assets.brook.dev/jc3636-knob/blog/banners/2026-11-28-2200-what-changes-before-the-next-batch.webp"><meta property="og:image:width" content="1280"><meta property="og:image:height" content="720"><meta name="twitter:card" content="summary_large_image"><meta name="description" content="Six changes, smallest first, that would have turned tonight's eight off-brief apps into something much better. None is a bigger model."><link rel="stylesheet" href="./style.css"></head><body><header class="site-header"><a class="brand" href="./index.html">jc3636-knob <span>· devlog</span></a><a href="../../../index.html">brook.dev</a></header><main class="content"><a class="back-link" href="./index.html">← all posts</a><article><img class="banner" src="https://assets.brook.dev/jc3636-knob/blog/banners/2026-11-28-2200-what-changes-before-the-next-batch.webp" width="1280" height="720" alt=""><p class="banner-credit">Banner: NitroFusion2 (2 steps)</p><h1>What changes before the next batch</h1><p class="post-meta">2026-11-28 <time>22:00 (+0800)</time> · part 55 of 57 <span class="tag">lab</span><span class="tag">process</span><span class="tag">plans</span><span class="tag">pi</span></p><p>Tonight was a genuinely impressive run with one fatal hole. Twenty-one apps in 113 minutes, all building, all clean in the simulator, all on the home screen, the launcher flashed. And eight of them answer a different question from the one I asked, because the questions were forgotten at 17:40.</p>
+<!-- claim-check: brief-fidelity table: Key Speed, Scale Lock, Arpeggiator met or close; all started before 17:40 -->
+<p>The temptation is &quot;use a bigger model&quot;. The record says otherwise: the five apps built while the briefs were in view are the close ones. The model can follow a brief. It needs to be able to see it.</p>
+<p>These are proposals, not done yet. Smallest first.</p>
+<!-- claim-check: the posts linked in each row; nothing below has been changed in the repo as of 2026-11-28 22:00 -->
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Change</th>
+<th>Fixes</th>
+<th>Post</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Put <code>tools/</code> on <code>PATH</code> in <code>tools/pi.sh</code></td>
+<td>22 wrong-folder errors</td>
+<td><a href="./2026-11-28-1803-twenty-two-times-in-the-wrong-folder.html">wrong folder</a></td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>launcher.py</code> prints why it skipped each app</td>
+<td>the &quot;silent&quot; five</td>
+<td><a href="./2026-11-28-1916-five-apps-missing-two-lines-away.html">five missing</a></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Refuse a sim script whose times go backwards</td>
+<td>Arpeggiator and Memory Dial shots</td>
+<td><a href="./2026-11-28-2140-check-pass-picture-fail.html">picture fail</a></td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>expect &quot;&lt;text&gt;&quot;</code> in sim scripts, checked against the <code>.txt</code> shot</td>
+<td>8 shots showing the wrong state</td>
+<td><a href="./2026-11-28-2140-check-pass-picture-fail.html">picture fail</a></td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>ble_midi_slot_label(slot)</code>, plus a synth-first test per piano app</td>
+<td>slot mix-ups on the board</td>
+<td><a href="./2026-11-28-1730-which-slot-is-the-synth.html">which slot</a></td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>A <code>BRIEF.md</code> per app, written before code, required by <code>check.sh</code>, quoted in the handoff</strong></td>
+<td>everything in <a href="./2026-11-28-1740-not-repeated-here.html">not repeated here</a></td>
+<td>that one</td>
+</tr>
+</tbody></table>
+<!-- claim-check: /tmp/PLAN.md, a file, came through all six compactions intact while the user message did not -->
+<p>Number 6 is the big one. A file survives compaction: tonight&#39;s plan file came through all six. It lets the agent re-read the brief at the start of each app instead of reconstructing it. It lets the handoff say <em>&quot;here is what I built against&quot;</em>. And it lets a reviewer diff brief against build without hunting through a 900 KB session for the first user message.</p>
+<h2>Then the apps</h2>
+<!-- claim-check: brief-fidelity table in tools/pi-runs/retros/2026-11-28-home-hub-apps.md -->
+<p>With the briefs in files, rebuild the eight that went astray, plus one fix: Velocity Meter (a dial with dynamics zones), Drone Pad (root and fifth, no keyboard), Rhythm Tap (milliseconds and a spread), Compass Spinner (lands at random), Bubble Level (the balance game), Asteroid Cannon (360° from the centre), Safe Heat (in the dark, by feel), Morse Trainer (listen, then pick), and Key Speed&#39;s targets made random again. Same model, same laptop. I&#39;d bet on most of them landing first time.</p>
+<p>And then, finally, plug the knob in and actually play them.</p>
+<p><em>Follow-up: <a href="./2026-11-28-2251-what-changed-after-the-review.html">what changed after the review</a>, fifty minutes later.</em></p>
+</article><nav class="post-nav"><a href="./2026-11-28-2155-twenty-one-screens-graded.html">← Twenty-one screens, graded</a><a href="./2026-11-28-2227-the-script-that-deleted-the-evidence.html">The script that deleted the evidence →</a></nav></main><footer class="site-footer">The devlog for <strong>jc3636-knob</strong>: a round screen with a knob, a usage panel, and a local model learning to make games on it. Written from the working record, mistakes included.</footer></body></html>

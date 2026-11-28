@@ -1,0 +1,84 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>The retro's sixteen retries, checked against the tape — jc3636-knob</title><meta property="og:type" content="article"><meta property="og:title" content="The retro's sixteen retries, checked against the tape"><meta property="og:url" content="https://brook.dev/projects/jc3636-knob/blog/2026-11-28-1928-the-retros-sixteen-retries"><meta property="og:description" content="The agent's retro has a tidy table of sixteen things that broke. Read against the session, most happened as told, one happened differently, one happened twenty-two times, and the best catches are missing."><meta property="og:image" content="https://assets.brook.dev/jc3636-knob/blog/banners/2026-11-28-1928-the-retros-sixteen-retries.webp"><meta property="og:image:width" content="1280"><meta property="og:image:height" content="720"><meta name="twitter:card" content="summary_large_image"><meta name="description" content="The agent's retro has a tidy table of sixteen things that broke. Read against the session, most happened as told, one happened differently, one happened twenty-two times, and the best catches are missing."><link rel="stylesheet" href="./style.css"></head><body><header class="site-header"><a class="brand" href="./index.html">jc3636-knob <span>· devlog</span></a><a href="../../../index.html">brook.dev</a></header><main class="content"><a class="back-link" href="./index.html">← all posts</a><article><img class="banner" src="https://assets.brook.dev/jc3636-knob/blog/banners/2026-11-28-1928-the-retros-sixteen-retries.webp" width="1280" height="720" alt=""><p class="banner-credit">Banner: FLUX.3 Klein</p><h1>The retro's sixteen retries, checked against the tape</h1><p class="post-meta">2026-11-28 <time>19:28 (+0800)</time> · part 48 of 57 <span class="tag">lab</span><span class="tag">retro</span><span class="tag">inkling</span><span class="tag">honesty</span></p><p>At 19:28 the agent wrote a short retro, and at 21:11, asked for a deeper one, replaced it with an 83-line version with a table: <strong>What broke or took retries</strong>, sixteen rows. It&#39;s the most useful thing in the handoff, so it deserves a proper check. I went through the session line by line.</p>
+<!-- claim-check: tools/pi-runs/retros/2026-11-28-home-hub-apps.md table rows 1-16 vs tool results in pi session 01a22165 -->
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Retro says</th>
+<th>The tape says</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><code>static const int N</code> at file scope fails</td>
+<td>Yes: <code>N_STAT</code>, <code>MELODY_LEN</code>, <code>N_STEPS</code>, all fixed with <code>#define</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>snprintf</code> truncation, <code>-Werror</code></td>
+<td>Yes, several; Safe Heat&#39;s took three goes</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>3</td>
+<td>misleading-indentation in Colour Match</td>
+<td>Yes</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>DEG_TO_RAD</code> not in the template</td>
+<td>True, but <code>polar()</code> is, and it&#39;s what the doc says to use</td>
+<td>⚠️</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>leds_set_all</code> doesn&#39;t exist</td>
+<td>True; it was invented. <code>leds_fill</code> is in the doc</td>
+<td>⚠️</td>
+</tr>
+<tr>
+<td>6, 15</td>
+<td>long press fixed at 600 ms</td>
+<td>True, for a brief I didn&#39;t write (see <a href="./2026-11-28-1847-morse-the-wrong-way-round.html">Morse</a>)</td>
+<td>⚠️</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Chord Mirror&#39;s FM-1 slot not connected</td>
+<td>Yes, and the skill&#39;s example already shows both</td>
+<td>⚠️</td>
+</tr>
+<tr>
+<td>10</td>
+<td><code>sfx_play</code> volume is 0..1</td>
+<td>Yes; the simulator warned, the doc gives no range</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>11</td>
+<td><code>vTaskDelayUntil</code> passed NULL</td>
+<td>It was an <code>int64_t</code> where a <code>TickType_t</code> goes</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>12, 13</td>
+<td>text off the round screen; text painted over</td>
+<td>Yes, many times; the warnings are excellent</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>16</td>
+<td><code>check.sh</code> run from the wrong folder, once</td>
+<td>Twenty-two times</td>
+<td>❌</td>
+</tr>
+</tbody></table>
+<p>Missing entirely: two AddressSanitizer out-of-bounds bugs (Chord Mirror and Velocity Meter both indexed an array with -1), caught by the simulator and fixed in one go each. Those are the best catches of the night and they&#39;re not in the table.</p>
+<h2>Not lying. Smoothing.</h2>
+<p>None of this is invented to look good. It&#39;s what a summary of a summary of a summary looks like after six compactions: the first and the most recent things are sharp, the repeated thing becomes a single row, and the details drift to whatever is most typical. &quot;Passed NULL to <code>vTaskDelayUntil</code>&quot; is a <em>very</em> typical mistake. It just isn&#39;t this one.</p>
+<!-- claim-check: AGENTS.md "Say what you verified on the board, what only in the simulator, and what you only read." -->
+<p>The thing to fix is where retros come from. The session file has every tool call with a timestamp, and <code>tools/pi-trace.py</code> already summarises it. A retro that starts from <code>pi-trace.py</code> output rather than from memory would have got rows 11 and 16 right and found the ASan catches. The agent&#39;s &quot;Verified vs not verified&quot; table is honest and good; the retry table just needs the same discipline.</p>
+</article><nav class="post-nav"><a href="./2026-11-28-1920-the-blog-ideas-it-left.html">← The blog ideas it left, and the posts it didn't see</a><a href="./2026-11-28-2111-questions-the-transcript-answers.html">The handoff asked six questions the transcript already answered →</a></nav></main><footer class="site-footer">The devlog for <strong>jc3636-knob</strong>: a round screen with a knob, a usage panel, and a local model learning to make games on it. Written from the working record, mistakes included.</footer></body></html>

@@ -1,0 +1,53 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Docs that were there all along, and the four that weren't — jc3636-knob</title><meta property="og:type" content="article"><meta property="og:title" content="Docs that were there all along, and the four that weren't"><meta property="og:url" content="https://brook.dev/projects/jc3636-knob/blog/2026-11-28-2145-docs-that-were-there-all-along"><meta property="og:description" content="The retro asks for eight doc fixes. Four of them are already in the docs the agent read at 17:04. The other four are real gaps, and they're small."><meta property="og:image" content="https://assets.brook.dev/jc3636-knob/blog/banners/2026-11-28-2145-docs-that-were-there-all-along.webp"><meta property="og:image:width" content="1280"><meta property="og:image:height" content="720"><meta name="twitter:card" content="summary_large_image"><meta name="description" content="The retro asks for eight doc fixes. Four of them are already in the docs the agent read at 17:04. The other four are real gaps, and they're small."><link rel="stylesheet" href="./style.css"></head><body><header class="site-header"><a class="brand" href="./index.html">jc3636-knob <span>· devlog</span></a><a href="../../../index.html">brook.dev</a></header><main class="content"><a class="back-link" href="./index.html">← all posts</a><article><img class="banner" src="https://assets.brook.dev/jc3636-knob/blog/banners/2026-11-28-2145-docs-that-were-there-all-along.webp" width="1280" height="720" alt=""><p class="banner-credit">Banner: NitroFusion2 (2 steps)</p><h1>Docs that were there all along, and the four that weren't</h1><p class="post-meta">2026-11-28 <time>21:45 (+0800)</time> · part 52 of 57 <span class="tag">lab</span><span class="tag">docs</span><span class="tag">inkling</span><span class="tag">skills</span></p><p>When a small model trips, the retro&#39;s reflex is <em>&quot;the doc should say X&quot;</em>. Sometimes it should. Often it does. Tonight&#39;s list, split honestly:</p>
+<h2>Already written down</h2>
+<!-- claim-check: docs/kb/game-template.md lines 16-18 and 61; .agents/skills/knob-ble-midi/SKILL.md lines 83-84; .agents/skills/knob-flash/SKILL.md lines 36-39; tools/launcher.py 194-198 -->
+<table>
+<thead>
+<tr>
+<th>Tripped on</th>
+<th>Where it already was</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>leds_set_all</code> doesn&#39;t exist</td>
+<td><code>game-template.md</code> line 18: <code>leds_set</code>, <code>leds_fill</code>, <code>leds_show</code></td>
+</tr>
+<tr>
+<td><code>TEXT_XL</code> can&#39;t draw letters (Octave Jumper&#39;s &quot;G3&quot;, Morse&#39;s &quot;K&quot;)</td>
+<td>line 16: <em>XL: digits and <code>: - + % / . ! ? x</code> only</em></td>
+</tr>
+<tr>
+<td><code>DEG_TO_RAD</code> re-defined in 5 apps</td>
+<td>line 17: <code>polar()</code>, <code>angle_of()</code>, <code>angle_diff()</code>, <strong>&quot;Use these instead of writing your own&quot;</strong></td>
+</tr>
+<tr>
+<td>random targets break the test</td>
+<td>line 61: <em>in the sim it is seeded, so runs repeat</em></td>
+</tr>
+<tr>
+<td>FM-1 sends dropped</td>
+<td>knob-ble-midi example connects both slots</td>
+</tr>
+<tr>
+<td>board &quot;needs replug&quot;</td>
+<td>knob-flash: <code>--after watchdog-reset</code></td>
+</tr>
+<tr>
+<td>5 apps skipped</td>
+<td><code>launcher.py</code> line 196</td>
+</tr>
+</tbody></table>
+<!-- claim-check: pi session 01a22165 tool calls at 09:04:16-09:04:52Z read knob-game, knob-ble-midi, knob-sim and game-template.md -->
+<p>The agent read all four of the main docs between 17:04 and 17:05, in the first ninety seconds. Then it built for two hours and compacted six times. Reading a doc at the start of a long run is like reading the manual in the shop: you remember there was a manual.</p>
+<h2>Real gaps</h2>
+<!-- claim-check: docs/kb/game-template.md line 19 (sfx_play with no range); projects/game-template/main/ui.c line 25; modules/ble_midi/ble_midi.h lines 16-17 -->
+<ol>
+<li><strong><code>sfx_play</code> volume is 0 to 1.</strong> The doc gives the signature, not the range. Key Speed passed 90. The simulator caught it (<em>&quot;vol 90.00 is outside 0..1&quot;</em>), which is the system working, but one word in the doc saves the round trip.</li>
+<li><strong><code>-Werror=format-truncation</code>.</strong> GCC can&#39;t always prove a <code>%d</code> fits a small buffer. One line in the doc: <em>size text buffers at 32</em>.</li>
+<li><strong>The long press is fixed at 600 ms</strong>, in <code>ui.c</code>. Fine for every game so far. Worth a sentence so nobody hunts for the setting.</li>
+<li><strong><code>ble_midi_smk_label()</code> means slot 0.</strong> That&#39;s a naming problem more than a doc problem (<a href="./2026-11-28-1730-which-slot-is-the-synth.html">the post</a>).</li>
+</ol>
+<h2>The lesson for the docs</h2>
+<!-- claim-check: opinion, drawn from the first table: every item there was already documented and read at 17:04 -->
+<p>More docs probably won&#39;t fix the first table. The fixes there are <em>at the point of the mistake</em>: the compiler error for <code>leds_set_all</code> could say &quot;see <code>leds_fill</code>&quot;; the simulator&#39;s TEXT_XL warning already says &quot;use TEXT_L&quot;, and the agent fixed both cases in one go because of it. That&#39;s the pattern that worked all night: <strong>the warning that names the fix</strong>. The simulator&#39;s warnings did more teaching tonight than every doc together.</p>
+</article><nav class="post-nav"><a href="./2026-11-28-2140-check-pass-picture-fail.html">← CHECK PASS, picture fail</a><a href="./2026-11-28-2150-no-app-remembers-anything.html">No app remembers anything (and Key Speed really should) →</a></nav></main><footer class="site-footer">The devlog for <strong>jc3636-knob</strong>: a round screen with a knob, a usage panel, and a local model learning to make games on it. Written from the working record, mistakes included.</footer></body></html>

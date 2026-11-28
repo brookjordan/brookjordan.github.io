@@ -1,0 +1,96 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>The coach stepped back, and the model designed a better screen — jc3636-knob</title><meta property="og:type" content="article"><meta property="og:title" content="The coach stepped back, and the model designed a better screen"><meta property="og:url" content="https://brook.dev/projects/jc3636-knob/blog/2026-11-28-1042-the-coach-stepped-back"><meta property="og:description" content="When I told the coach to stop micromanaging and hand over the raw catalogue pitches, Inkling built cleaner piano apps with zero coach notes and carried its own UI language across them."><meta property="og:image" content="https://assets.brook.dev/jc3636-knob/blog/banners/2026-11-28-1042-the-coach-stepped-back.webp"><meta property="og:image:width" content="1280"><meta property="og:image:height" content="720"><meta name="twitter:card" content="summary_large_image"><meta name="description" content="When I told the coach to stop micromanaging and hand over the raw catalogue pitches, Inkling built cleaner piano apps with zero coach notes and carried its own UI language across them."><link rel="stylesheet" href="./style.css"></head><body><header class="site-header"><a class="brand" href="./index.html">jc3636-knob <span>· devlog</span></a><a href="../../../index.html">brook.dev</a></header><main class="content"><a class="back-link" href="./index.html">← all posts</a><article><img class="banner" src="https://assets.brook.dev/jc3636-knob/blog/banners/2026-11-28-1042-the-coach-stepped-back.webp" width="1280" height="720" alt=""><h1>The coach stepped back, and the model designed a better screen</h1><p class="post-meta">2026-11-28 <time>10:42 (+0800)</time> · part 27 of 57 <span class="tag">lab</span><span class="tag">inkling</span><span class="tag">piano</span><span class="tag">simulator</span><span class="tag">coaching</span></p><p><strong>&quot;You&#39;re taking too much control of their project.&quot;</strong></p>
+<p>That was me at 09:48, pulling the coach off the keyboard. All morning it had been hovering over Inkling 2 Mini like an over-caffeinated driving instructor grabbing the wheel at every roundabout: 150-word micro-specs, exact C function signatures, exact button labels, even a sticky note saying <em>&quot;please remember to turn the screen on&quot;</em>.</p>
+<p>Reader, the second we kicked the coach out of the passenger seat, the screens got noticeably better.</p>
+<div class="pair"><img src="https://assets.brook.dev/jc3636-knob/blog/img/piano-coach-lh.webp" alt="Piano Coach built by Inkling from the raw catalogue pitch: centred D, 375 ms, top LH chip, big gold-ringed TAP disc bottom-left"><img src="https://assets.brook.dev/jc3636-knob/blog/img/staff-sight-lh.webp" alt="Staff Sight built by Inkling from the raw catalogue pitch: five-line treble staff with notehead, 263 ms, matching LH chip and gold-ringed TAP disc"></div><h2>The scoreboard first</h2>
+<!-- claim-check: tools/pi-runs/runs.jsonl lines of 28 Nov 2026; jc3636-knob commits 2b8b62e, 9c68b0d, 6cbd02c, f9c812b, 013fdf9 -->
+<p>Six builds and four coach passes before lunch, all on Inkling 2 Mini Q8 at thinking <code>low</code>, zero compactions, zero resumes:</p>
+<table>
+<thead>
+<tr>
+<th>App</th>
+<th>What we handed <code>pi</code></th>
+<th>Time</th>
+<th>Peak tokens</th>
+<th>Coach notes</th>
+<th>Outcome</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>safe-cracker2</code> (fix)</td>
+<td>3 review symptoms</td>
+<td>2 m 52 s</td>
+<td>18,632</td>
+<td>0</td>
+<td><code>CHECK PASS</code> (<code>2b8b62e</code>)</td>
+</tr>
+<tr>
+<td><code>do-this</code> (fix)</td>
+<td>2 review symptoms</td>
+<td>13 m 34 s</td>
+<td>46,436</td>
+<td>0</td>
+<td><code>CHECK PASS</code> (<code>2b8b62e</code>)</td>
+</tr>
+<tr>
+<td><code>pocket-synth</code></td>
+<td>Micromanaged spec + fix</td>
+<td>12 m 18 s + 2 m 56 s</td>
+<td>40,675</td>
+<td>1</td>
+<td><code>CHECK PASS</code> (<code>9c68b0d</code>)</td>
+</tr>
+<tr>
+<td><code>midi-bridge</code></td>
+<td>Micromanaged spec + fix</td>
+<td>11 m 31 s + 2 m 44 s</td>
+<td>36,424</td>
+<td>1</td>
+<td><code>CHECK PASS</code> (<code>9c68b0d</code>)</td>
+</tr>
+<tr>
+<td><code>piano-coach</code></td>
+<td><strong>Raw catalogue pitch</strong></td>
+<td>21 m 49 s</td>
+<td>66,942</td>
+<td><strong>0</strong></td>
+<td><code>CHECK PASS</code> (<code>f9c812b</code>)</td>
+</tr>
+<tr>
+<td><code>staff-sight</code></td>
+<td><strong>Raw catalogue pitch</strong></td>
+<td>13 m 8 s</td>
+<td>41,121</td>
+<td><strong>0</strong></td>
+<td><code>CHECK PASS</code> (<code>013fdf9</code>)</td>
+</tr>
+</tbody></table>
+<p>Two raw pitches from <a href="./2026-11-27-1845-the-knob-wants-to-teach-me-piano.html">the piano post</a>. Zero function names. Zero pixel coordinates. Zero coach notes. Both passed <code>tools/check.sh</code> on the first swing.</p>
+<h2>Three blind spots walk into a green checkmark</h2>
+<!-- claim-check: sim/sim.c commits 2b8b62e and 9c68b0d; projects/safe-cracker2/sim-out/features/3-events.txt before fix; projects/pocket-synth/sim-out/features/ before fix; projects/midi-bridge/main/main.c before fix -->
+<p>Before we stepped back, the morning&#39;s real payoff was not the micro-specs at all. It was catching three places where our own simulator was happily stamping <code>CHECK PASS</code> on broken hardware behaviour, just like <a href="./2026-11-27-2143-six-crimes-no-refusals.html">the font with no letters yesterday</a>:</p>
+<ol>
+<li><strong>The 60 Hz jackhammer (<code>safe-cracker2</code>).</strong> In its wrong-lock state, the game called <code>haptic_play(HAPTIC_STRONG_BUZZ)</code> on every single frame: 38 buzzes in 600 ms. The simulator logged every one of them politely and said PASS.</li>
+<li><strong>The black-screen synth (<code>pocket-synth</code>).</strong> It never called <code>board_backlight(80)</code>. On the real board, the backlight starts at 0%, which is a very polite way of saying the screen is off. The simulator dimmed the PNG to one-eighth brightness and said PASS anyway!</li>
+<li><strong>The immortal mirrored note (<code>midi-bridge</code>).</strong> Built from <a href="./2026-11-27-1907-the-knob-gets-a-keyboard.html">the Launchkey brief</a>, its left-handed piano mirror flipped Note On (<code>C4 -&gt; E4</code>), then passed Note Off (<code>vel == 0</code>) through untransformed (<code>C4</code>). On a real synth, releasing a key would have left <code>E4</code> ringing until the heat death of the universe.</li>
+</ol>
+<h2>The fix: sharpen the offline tools, then leave the room</h2>
+<!-- claim-check: sim/sim.c lines 418-420 and 627-645; docs/kb/game-template.md line 17; tools/pi-run.py lines 56-74 (commit 5d7e858); .agents/skills/knob-flash/SKILL.md (commit 0d0d6b8) -->
+<p>Instead of whispering fixes into every future prompt, we put the lessons where an offline <code>pi</code> will actually trip over them:</p>
+<ul>
+<li><code>sim/sim.c</code> now fails any game that fires <code>haptic_play</code>/<code>haptic_seq</code> 10+ times in a row within 25 ms (<code>2b8b62e</code>), or flushes frames while the backlight is still at 0% (<code>9c68b0d</code>). Eleven minutes later, <code>midi-bridge</code> turned the backlight on at 80% on its very first try. <!-- claim-check: sim/sim.c lines 418-420 and 627-645; tools/pi-run.py commit 5d7e858; .agents/skills/knob-flash/SKILL.md commit 0d0d6b8 --></li>
+<li><code>docs/kb/game-template.md</code> now spells out that <code>polar()</code> already returns coordinates centred at <code>180,180</code> (after <code>do-this</code> added <code>CX,CY</code> a second time and threw its spin arcs into the bottom-right gutter).</li>
+<li><code>tools/pi-run.py</code> stopped hardcoding <em>&quot;There is no board attached: do not flash&quot;</em> (<code>5d7e858</code>) and now checks <code>/dev/cu.usbmodem*</code> live at launch, backed by an expanded <code>knob-flash</code> skill (<code>0d0d6b8</code>) covering USB-Serial-JTAG console commands and built-in OpenOCD/GDB debugging.</li>
+</ul>
+<p>What the fix deliberately did <strong>not</strong> do: we rejected a pixel-based corner-drawing warning in <code>sim/sim.c</code> after sweeping all 17 games showed it false-positived on <code>mainframe-q8</code>&#39;s full-screen hex rain and <code>pickpocket-unc</code>&#39;s bottom wedge. Next! We also rejected keeping 150-word coach specs for <code>piano-coach</code> and <code>staff-sight</code>. Next!</p>
+<p>And look what Inkling did once we stopped hovering: instead of stuffing three cramped rectangles down the side of the circle, it gave <code>piano-coach</code> one giant gold-ringed <code>TAP</code> disc that flips cleanly between bottom-left and bottom-right via a top <code>LH</code>/<code>RH</code> chip, drew real flat and sharp strokes in the slowest-notes list, and then <strong>reused its own <code>piano-coach</code> layout</strong> when <code>staff-sight</code> and <code>echo-keys</code> started up afterwards.</p>
+<h2>What still hurts</h2>
+<!-- claim-check: ls -la /dev/cu.* and ping 192.168.0.120 run 28 Nov 2026 10:16; projects/game-template/partitions.csv -->
+<p>Two things are still on the bench:</p>
+<ol>
+<li><strong>Zero real-hardware tests yet.</strong> Even after fixing <code>tools/pi-run.py</code>, <code>ls /dev/cu.*</code> sees no USB modem device at all while <code>ping 192.168.0.120</code> answers in 62 ms: the knob is alive on WiFi running the ESPHome usage panel, not on a Mac USB data port. Until we either plug it into USB (without TinyUSB CDC blocking <code>esptool</code>) or give <code>game-template</code> a dual-OTA WiFi rollback sandbox, every <code>CHECK PASS</code> is simulator plus board build only.</li>
+<li><strong>Stems in <code>staff-sight</code> <code>BOTH</code> mode.</strong> High treble notes still point their stem upwards into the <code>&quot;ledgers locked&quot;</code> text instead of flipping downwards above the middle line. Honest model-class polish, saved for later.</li>
+</ol>
+<ul>
+<li><strong>Banner concept (pending ComfyUI render once the piano batch frees the GPU, seed 4127):</strong> a small robot coach stepping back with hands raised from a miniature workbench while a second smaller robot happily paints a glowing round screen on the gadget, a bright desk lamp switching on overhead.</li>
+</ul>
+</article><nav class="post-nav"><a href="./2026-11-27-2219-the-panel-that-stopped-forgetting.html">← The panel that stopped forgetting</a><a href="./2026-11-28-1110-seven-piano-apps-before-lunch.html">Seven piano apps before lunch, and a keyboard turned back to front →</a></nav></main><footer class="site-footer">The devlog for <strong>jc3636-knob</strong>: a round screen with a knob, a usage panel, and a local model learning to make games on it. Written from the working record, mistakes included.</footer></body></html>

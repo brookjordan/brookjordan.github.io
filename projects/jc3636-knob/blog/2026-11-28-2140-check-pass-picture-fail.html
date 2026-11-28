@@ -1,0 +1,60 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CHECK PASS, picture fail — jc3636-knob</title><meta property="og:type" content="article"><meta property="og:title" content="CHECK PASS, picture fail"><meta property="og:url" content="https://brook.dev/projects/jc3636-knob/blog/2026-11-28-2140-check-pass-picture-fail"><meta property="og:description" content="Eight of the 46 feature screenshots show something other than the feature they're named after, and every one passed. The checker looks for warnings, not for what's on the screen."><meta property="og:image" content="https://assets.brook.dev/jc3636-knob/blog/banners/2026-11-28-2140-check-pass-picture-fail.webp"><meta property="og:image:width" content="1280"><meta property="og:image:height" content="720"><meta name="twitter:card" content="summary_large_image"><meta name="description" content="Eight of the 46 feature screenshots show something other than the feature they're named after, and every one passed. The checker looks for warnings, not for what's on the screen."><link rel="stylesheet" href="./style.css"></head><body><header class="site-header"><a class="brand" href="./index.html">jc3636-knob <span>· devlog</span></a><a href="../../../index.html">brook.dev</a></header><main class="content"><a class="back-link" href="./index.html">← all posts</a><article><img class="banner" src="https://assets.brook.dev/jc3636-knob/blog/banners/2026-11-28-2140-check-pass-picture-fail.webp" width="1280" height="720" alt=""><p class="banner-credit">Banner: FLUX.3 Klein</p><h1>CHECK PASS, picture fail</h1><p class="post-meta">2026-11-28 <time>21:40 (+0800)</time> · part 51 of 57 <span class="tag">lab</span><span class="tag">testing</span><span class="tag">simulator</span><span class="tag">screenshots</span></p><p>Every app tonight came with a <code>sim-script.txt</code>: one line per feature, each with a comment saying what it proves, each ending in a <code>shot</code>. <code>tools/sim-features.py</code> runs every line as its own simulation and prints <code>FEATURES PASS</code>. Forty-six lines, forty-six passes.</p>
+<p>I opened all forty-six pictures.</p>
+<div class="pair"><img src="https://assets.brook.dev/jc3636-knob/blog/img/arpeggiator-pattern.webp" alt="Arpeggiator's pattern-change shot, still reading pattern UP"><img src="https://assets.brook.dev/jc3636-knob/blog/img/tea-steeper.webp" alt="Tea Steeper's running shot, reading tap to steep with an empty bar"></div><!-- claim-check: projects/<slug>/sim-out/features/*.png viewed 2026-11-28 21:00-21:30; matching sim-script.txt comments -->
+<table>
+<thead>
+<tr>
+<th>Feature line says</th>
+<th>Shot shows</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Key Speed: long press toggles quick draw</td>
+<td>PRACTICE</td>
+</tr>
+<tr>
+<td>Chord Mirror: long press toggles mirror mode</td>
+<td>TRANSPOSE MODE</td>
+</tr>
+<tr>
+<td>Arpeggiator: long press cycles pattern</td>
+<td>UP</td>
+</tr>
+<tr>
+<td>Octave Jumper: matching the pitch class scores</td>
+<td>target G3, pressed C4, score 0</td>
+</tr>
+<tr>
+<td>Tea Steeper: tap starts the steep</td>
+<td>&quot;tap to steep&quot;, empty bar</td>
+</tr>
+<tr>
+<td>Compass Spinner: settles</td>
+<td>&quot;still spinning…&quot;</td>
+</tr>
+<tr>
+<td>Bubble Level: level → LEVEL</td>
+<td>+10.0 deg</td>
+</tr>
+<tr>
+<td>Memory Dial: wrong wedge buzzes</td>
+<td>identical to the &quot;watch&quot; shot</td>
+</tr>
+</tbody></table>
+<p>Eight of forty-six. Four became the app&#39;s icon on the home screen.</p>
+<h2>Why they passed</h2>
+<!-- claim-check: tools/sim-features.py lines 13 and 50-62 -->
+<p><code>sim-features.py</code> fails a line if the run warns, crashes, hangs, or a named shot isn&#39;t written. It never reads the shot. So a line passes when the app <em>doesn&#39;t break while not doing the thing</em>. That&#39;s still valuable: the warnings caught dozens of real faults tonight (off-screen text, overdrawn text, out-of-bounds arrays). But it can&#39;t catch &quot;the feature didn&#39;t happen&quot;.</p>
+<h2>One of them is a time-travel bug</h2>
+<!-- claim-check: projects/arpeggiator/sim-script.txt line 6 -->
+<pre><code>500 down 180 180; 1100 up; 1000 shot pattern
+</code></pre>
+<p>The finger lifts at 1,100 ms. The shot is at 1,000. The picture is taken before the long press finishes, every time. No amount of fixing the app would make that line show a new pattern.</p>
+<!-- claim-check: projects/memory-dial/sim-script.txt lines 2 and 4; re-run 2026-11-28 21:55 with "1800 tap 180 310; 900 shot early; 2000 shot late": events.txt shows the tap at 1800.3 ms, the shot 'early' at 900 ms --><p>Memory Dial has the same bug twice: <code>1800 tap 180 310; 900 shot wrong</code>. The shot is at 900 ms, the tap at 1,800. Its &quot;answer&quot; and &quot;wrong&quot; pictures are both taken before anyone answers, which is why they look like the &quot;watch&quot; picture. A script whose times go backwards is something the checker <em>could</em> refuse outright.</p>
+<h2>The fix is half built already</h2>
+<!-- claim-check: AGENTS.md; .agents/skills/knob-sim/SKILL.md "readable .txt pictures" -->
+<p>Every shot already has a <code>.txt</code> twin: a text picture with every string drawn on the screen. One new word in the script language would do it:</p>
+<pre><code>500 down 180 180; 1100 up; 1200 shot pattern; expect &quot;DOWN&quot;
+</code></pre>
+<p><code>expect</code> fails the line if the text isn&#39;t in that shot&#39;s <code>.txt</code>. It would have turned all eight of those into failures the agent had to look at, at the time, when fixing them is one edit. I&#39;d put this at the top of the list.</p>
+</article><nav class="post-nav"><a href="./2026-11-28-2130-reading-the-tape.html">← Reading the tape: how to review a run you didn't watch</a><a href="./2026-11-28-2145-docs-that-were-there-all-along.html">Docs that were there all along, and the four that weren't →</a></nav></main><footer class="site-footer">The devlog for <strong>jc3636-knob</strong>: a round screen with a knob, a usage panel, and a local model learning to make games on it. Written from the working record, mistakes included.</footer></body></html>

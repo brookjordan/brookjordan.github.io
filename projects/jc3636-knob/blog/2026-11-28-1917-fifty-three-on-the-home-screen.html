@@ -1,0 +1,42 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Fifty-three apps on the home screen, and 41% of the slot — jc3636-knob</title><meta property="og:type" content="article"><meta property="og:title" content="Fifty-three apps on the home screen, and 41% of the slot"><meta property="og:url" content="https://brook.dev/projects/jc3636-knob/blog/2026-11-28-1917-fifty-three-on-the-home-screen"><meta property="og:description" content="All 21 new apps went into the Apple Watch-style home screen in one command. The whole thing is 1.62 MB, which leaves room for about as many again."><meta property="og:image" content="https://assets.brook.dev/jc3636-knob/blog/banners/2026-11-28-1917-fifty-three-on-the-home-screen.webp"><meta property="og:image:width" content="1280"><meta property="og:image:height" content="720"><meta name="twitter:card" content="summary_large_image"><meta name="description" content="All 21 new apps went into the Apple Watch-style home screen in one command. The whole thing is 1.62 MB, which leaves room for about as many again."><link rel="stylesheet" href="./style.css"></head><body><header class="site-header"><a class="brand" href="./index.html">jc3636-knob <span>· devlog</span></a><a href="../../../index.html">brook.dev</a></header><main class="content"><a class="back-link" href="./index.html">← all posts</a><article><img class="banner" src="https://assets.brook.dev/jc3636-knob/blog/banners/2026-11-28-1917-fifty-three-on-the-home-screen.webp" width="1280" height="720" alt=""><details class="banner-legacy"><summary>Banner: FIBO 2.0 Edit Turbo (text only) · show the Z-Image Turbo version</summary><img src="https://assets.brook.dev/jc3636-knob/blog/banners/2026-11-28-1917-fifty-three-on-the-home-screen-zimage.webp" width="1280" height="720" loading="lazy" decoding="async" alt="The same banner as rendered by Z-Image Turbo"></details><h1>Fifty-three apps on the home screen, and 41% of the slot</h1><p class="post-meta">2026-11-28 <time>19:17 (+0800)</time> · part 45 of 57 <span class="tag">lab</span><span class="tag">launcher</span><span class="tag">size</span><span class="tag">home-screen</span></p><p>This bit was glorious, and I want it on the record before the grumbling continues.</p>
+<!-- claim-check: pi session 01a22165 tool results for `tools/launcher.py --all-built` (~11:16Z) and `tools/build.sh launcher build` (~11:17Z); projects/launcher/build/launcher.bin mtime 19:17:06 -->
+<p>At 19:16 the agent ran <code>tools/launcher.py --all-built</code>. At 19:17 the launcher was built:</p>
+<pre><code>launcher: 1.62 MB of 4.00 MB `ota_0` partition (41%); budget 80% = 3.20 MB: OK (1.58 MB left)
+</code></pre>
+<p><strong>Fifty-three apps</strong> in one firmware: the 32 from before plus all 21 new ones, each with an icon made from its own screenshot, every global name checked for clashes, all on one honeycomb home screen.</p>
+<div class="pair"><img src="https://assets.brook.dev/jc3636-knob/blog/img/launcher-home-53.webp" alt="The honeycomb home screen with MIDI Bridge selected, 1 of 53"><img src="https://assets.brook.dev/jc3636-knob/blog/img/sound-board.webp" alt="Sound Board, one of the new icons"></div><h2>The arithmetic</h2>
+<!-- claim-check: tools/size.py --plan --all-built output in the session -->
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Launcher base (home screen, template, BLE, Wi-Fi, kv)</td>
+<td>1.11 MB</td>
+</tr>
+<tr>
+<td>53 apps</td>
+<td>about 0.5 MB together</td>
+</tr>
+<tr>
+<td>Planned total</td>
+<td>1.63 MB (41%)</td>
+</tr>
+<tr>
+<td>Built</td>
+<td>1.62 MB (41%)</td>
+</tr>
+<tr>
+<td>Budget (80% of the 4 MB slot)</td>
+<td>3.20 MB</td>
+</tr>
+</tbody></table>
+<p>A whole game is about 10 KB once the shared code is counted once. A Bluetooth piano app is the same: the BLE stack is in the base already. At this rate the slot holds well over a hundred more before the budget complains. The size planner&#39;s 1.63 MB and the real build&#39;s 1.62 MB agree to the second decimal place.</p>
+<h2>What the sim showed, and didn&#39;t</h2>
+<!-- claim-check: tools/sim.sh launcher --script "300 shot home; 800 tap 180 60; 1000 shot home-again"; projects/launcher/sim-out/home.png -->
+<p>The simulator rendered the home screen, page one, MIDI Bridge selected, &quot;1 / 53&quot;. The new apps are at 33 to 53, so none of them is on that first screen. The script taps once, near the top, and takes another shot.</p>
+<p>What nobody tested: that any of the 21 new apps <em>opens</em> from the home screen and returns. Each passed on its own; inside the launcher, every one is renamed and wrapped. One <code>knob 40; tap 180 180; shot</code> line would have proved one of them. Next time.</p>
+</article><nav class="post-nav"><a href="./2026-11-28-1916-five-apps-missing-two-lines-away.html">← Five apps missing from the home screen, two lines away</a><a href="./2026-11-28-1918-flashed-then-waiting-for-a-hand.html">Flashed, then waiting for a hand that wasn't needed →</a></nav></main><footer class="site-footer">The devlog for <strong>jc3636-knob</strong>: a round screen with a knob, a usage panel, and a local model learning to make games on it. Written from the working record, mistakes included.</footer></body></html>

@@ -1,0 +1,48 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Twenty-one screens, graded — jc3636-knob</title><meta property="og:type" content="article"><meta property="og:title" content="Twenty-one screens, graded"><meta property="og:url" content="https://brook.dev/projects/jc3636-knob/blog/2026-11-28-2155-twenty-one-screens-graded"><meta property="og:description" content="Brief aside, how do tonight's apps actually look? A consistent house style, no smeared text, a couple of genuinely nice screens, and a handful of titles that collide with the round edge."><meta property="og:image" content="https://assets.brook.dev/jc3636-knob/blog/banners/2026-11-28-2155-twenty-one-screens-graded.webp"><meta property="og:image:width" content="1280"><meta property="og:image:height" content="720"><meta name="twitter:card" content="summary_large_image"><meta name="description" content="Brief aside, how do tonight's apps actually look? A consistent house style, no smeared text, a couple of genuinely nice screens, and a handful of titles that collide with the round edge."><link rel="stylesheet" href="./style.css"></head><body><header class="site-header"><a class="brand" href="./index.html">jc3636-knob <span>· devlog</span></a><a href="../../../index.html">brook.dev</a></header><main class="content"><a class="back-link" href="./index.html">← all posts</a><article><img class="banner" src="https://assets.brook.dev/jc3636-knob/blog/banners/2026-11-28-2155-twenty-one-screens-graded.webp" width="1280" height="720" alt=""><p class="banner-credit">Banner: MOSS-Image SFT</p><h1>Twenty-one screens, graded</h1><p class="post-meta">2026-11-28 <time>21:55 (+0800)</time> · part 54 of 57 <span class="tag">lab</span><span class="tag">design</span><span class="tag">screenshots</span><span class="tag">games</span></p><p>Forget the briefs for one post. If you only saw the screenshots, how good is this batch?</p>
+<div class="pair"><img src="https://assets.brook.dev/jc3636-knob/blog/img/scale-lock.webp" alt="Scale Lock: twelve note dots round the rim, in-scale notes green, title Major"><img src="https://assets.brook.dev/jc3636-knob/blog/img/pomodoro-dial.webp" alt="Pomodoro Dial: 5:00 in the centre of a ring of green dots"></div><h2>The house style holds</h2>
+<!-- claim-check: all 46 PNGs in projects/<slug>/sim-out/features/, viewed 2026-11-28 -->
+<p>Dark navy background, a cyan title at the top, white numbers, one accent colour per app. Twenty-one apps from a small model in under two hours and they look like a <em>set</em>. None has the smeared, half-erased text the <a href="./2026-11-21-0841-tap-reflex-ate-a-font.html">earlier</a> games fought with: the simulator&#39;s overdraw warnings caught every case before it shipped.</p>
+<h2>My grades</h2>
+<table>
+<thead>
+<tr>
+<th>Grade</th>
+<th>Apps</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>A</strong></td>
+<td>Sound Board, Scale Lock, Pomodoro Dial</td>
+<td>clear at a glance, use the circle, colour means something</td>
+</tr>
+<tr>
+<td><strong>B</strong></td>
+<td>Key Speed, Coin Flip, Safe Heat, Morse Trainer, Memory Dial, Tea Steeper, Arpeggiator</td>
+<td>clean and readable, but a text column in a circle</td>
+</tr>
+<tr>
+<td><strong>C</strong></td>
+<td>Chord Mirror, Drone Pad, Octave Jumper, Compass Spinner, Bubble Level, Orbit Dodge</td>
+<td>mostly text, or the main object is two dots</td>
+</tr>
+<tr>
+<td><strong>D</strong></td>
+<td>Velocity Meter, Asteroid Cannon, Starfield, Rhythm Tap, Colour Match</td>
+<td>mostly empty, or the one thing on screen is clipped</td>
+</tr>
+</tbody></table>
+<h2>The faults the warnings missed</h2>
+<!-- claim-check: arpeggiator features/1-arp.png; scale-lock 1-major-snap.png; colour-match 1-rotate.png; pomodoro-dial 1-set.png; key-speed 4-keyboard.png; scale-lock "tap: no-op" -->
+<ul>
+<li><strong>Arpeggiator</strong>&#39;s hint line, <em>knob: speed long-press: pattern</em>, is cut off at both ends by the round edge (&quot;rnob&quot;, &quot;patterr&quot;).</li>
+<li><strong>Scale Lock</strong>&#39;s title sits under the C note dot, and the screen literally says <em>&quot;tap: no-op&quot;</em>. A debug label made it to the home screen.</li>
+<li><strong>Colour Match</strong>&#39;s title has a magenta hue dot sitting on it.</li>
+<li><strong>Pomodoro</strong>&#39;s hint runs through the ring of dots.</li>
+<li><strong>Key Speed</strong>&#39;s 12-key strip slides under the target note&#39;s circle.</li>
+<li><strong>Starfield</strong> draws about six stars. Six! Calm, certainly.</li>
+</ul>
+<p>Each is a one-number fix. They slip through because the warnings check <em>text over text</em> and <em>text off the screen</em>, and these are text under a shape, or a word cut at the rim by a few pixels.</p>
+<h2>The pick of the night</h2>
+<p>Sound Board. Six fat coloured pads, labels you can read from across the room, a ring on the one you pressed, volume at the bottom. Not the eight-sounds-round-the-rim I asked for, but if it had been, I&#39;d want it to look like this.</p>
+</article><nav class="post-nav"><a href="./2026-11-28-2150-no-app-remembers-anything.html">← No app remembers anything (and Key Speed really should)</a><a href="./2026-11-28-2200-what-changes-before-the-next-batch.html">What changes before the next batch →</a></nav></main><footer class="site-footer">The devlog for <strong>jc3636-knob</strong>: a round screen with a knob, a usage panel, and a local model learning to make games on it. Written from the working record, mistakes included.</footer></body></html>

@@ -1,16 +1,509 @@
 [
-  {"slug":"arcade","name":"Arcade","group":"games","image":"arcade-menu.webp","alt":"Arcade menu on the round screen","pitch":"Turn to choose a game, tap to play and hold the screen to return.","banner":"a glowing round arcade gadget like a tiny cabinet, a ring of six miniature game worlds orbiting its circular screen, neon tokens and joystick sparks"},
-  {"slug":"theremin","name":"Theremin","group":"music","image":"theremin-tone-down.webp","alt":"Theremin playing 220 Hz","pitch":"Slide a finger around the screen to play. Angle sets pitch, distance sets volume and the bezel changes waveform.","devlog":"blog/2026-11-27-1702-the-theremin-in-twenty-two-minutes.html"},
-  {"slug":"safe-cracker2","name":"Safe Cracker","group":"games","image":"safe-cracker2-locked.webp","alt":"Safe dial with a number locked in","pitch":"Turn and tap to lock in a three-number combination before time runs out.","banner":"a chunky cartoon bank-vault dial glowing on a round gadget, a stethoscope listening at the dial, gold bars peeking from a door swinging open"},
-  {"slug":"do-this","name":"Do This!","group":"games","image":"do-this-called.webp","alt":"The screen calling for a left spin","pitch":"Follow the prompt before the rim runs out."},
-  {"slug":"mainframe","name":"Mainframe","group":"games","image":"mainframe-q8-trace.webp","alt":"A green terminal with hex raining down and an amber trace arc around the rim","pitch":"Crack a six-character password one slot at a time, guided by a hot and cold bar, before the trace fills the rim.","banner":"a round gadget glowing green in a dark server room, cascading green hex digits raining past, a cartoon hacker hood and ACCESS GRANTED light beams","devlog":"blog/2026-11-27-2143-six-crimes-no-refusals.html"},
-  {"slug":"pickpocket","name":"Pickpocket","group":"games","image":"pickpocket-q8-hey.webp","alt":"A big cartoon eye wide open and HEY! in red","pitch":"Turn your hand round the rim to the swaying pocket and tap to lift the wallet, but only while the eye is shut.","banner":"a cartoon gloved hand sneaking towards a wallet poking out of a swaying coat pocket, a giant cartoon eye peeking from a round gadget's screen","devlog":"blog/2026-11-27-2143-six-crimes-no-refusals.html"},
-  {"slug":"getaway","name":"Getaway","group":"games","image":"getaway-unc-police.webp","alt":"A ring road with a blue police car and an orange getaway car","pitch":"Switch lanes round a ring road to dodge the police. Every ten cars you pass, it gets faster.","banner":"a tiny cartoon getaway car racing round a circular ring road on a gadget's glowing screen, police cars with red and blue lights chasing","devlog":"blog/2026-11-27-2143-six-crimes-no-refusals.html"},
-  {"slug":"pocket-pet","name":"Pocket Pet","group":"games","image":"pocket-pet-happy.webp","alt":"A happy round virtual pet","pitch":"Tap to feed your pet or spin to play as food, fun and sleep drain around the rim."},
-  {"slug":"tap-reflex","name":"Tap Reflex","group":"games","image":"tap-reflex-green.webp","alt":"Tap Reflex showing the green signal","pitch":"Wait for green, tap and see how close you came to your best time.","banner":"a round gadget flashing bright green, a cartoon finger blurring towards it, a stopwatch exploding into speed lines"},
-  {"slug":"dice-roller","name":"Dice Roller","group":"games","image":"dice-roller-landed4.webp","alt":"Four dice settled on the screen","pitch":"Roll up to four dice with slowing clicks and haptic ticks.","banner":"four chunky glowing dice tumbling out of a round gadget's screen onto a board-game table, pips trailing light"},
-  {"slug":"kitchen-timer","name":"Kitchen Timer","group":"tools","image":"kitchen-timer-half.webp","alt":"Kitchen timer with half of the countdown arc left","pitch":"Turn to set the minutes and tap to start. Three beeps mark zero.","banner":"a round gadget perched on a kitchen counter beside a steaming pot, a glowing orange arc draining around its rim, an egg and a whisk"},
-  {"slug":"metronome","name":"Metronome","group":"music","image":"metronome-started-after.webp","alt":"Metronome with its beat indicator lit","pitch":"Turn the bezel to set the tempo. Hear and feel each beat, with an accent on the first.","banner":"a round gadget swinging a glowing pendulum like a metronome, musical notes bouncing in time, sheet music fanned behind"},
-  {"slug":"dial-synth","name":"Dial Synth","group":"music","image":"dial-synth-after.webp","alt":"Dial Synth with its circular note display","pitch":"Turn through a pentatonic scale and tap to play a chord.","banner":"a round gadget whose bezel is a glowing ring of piano keys, colourful notes spiralling out of its screen like a synth wave"},
-  {"slug":"rim-pong","name":"Rim Pong","group":"games","image":"rim-pong.webp","alt":"Rim Pong just after a serve","pitch":"Keep the ball inside the circle with a paddle that moves around the rim.","banner":"a glowing ball bouncing inside a round screen, a curved paddle hugging the rim, retro arcade sparks and a scoreboard"}
+  {
+    "slug": "arcade",
+    "name": "Arcade",
+    "group": "games",
+    "image": "arcade-menu.webp",
+    "alt": "Arcade menu on the round screen",
+    "pitch": "Turn to choose a game, tap to play and hold the screen to return.",
+    "banner": "a glowing round arcade gadget like a tiny cabinet, a ring of six miniature game worlds orbiting its circular screen, neon tokens and joystick sparks"
+  },
+  {
+    "slug": "theremin",
+    "name": "Theremin",
+    "group": "music",
+    "image": "theremin-tone-down.webp",
+    "alt": "Theremin playing 220 Hz",
+    "pitch": "Slide a finger around the screen to play. Angle sets pitch, distance sets volume and the bezel changes waveform.",
+    "devlog": "blog/2026-11-27-1702-the-theremin-in-twenty-two-minutes.html"
+  },
+  {
+    "slug": "safe-cracker2",
+    "name": "Safe Cracker",
+    "group": "games",
+    "image": "safe-cracker2-locked.webp",
+    "alt": "Safe dial with a number locked in",
+    "pitch": "Turn and tap to lock in a three-number combination before time runs out.",
+    "banner": "a chunky cartoon bank-vault dial glowing on a round gadget, a stethoscope listening at the dial, gold bars peeking from a door swinging open"
+  },
+  {
+    "slug": "do-this",
+    "name": "Do This!",
+    "group": "games",
+    "image": "do-this-called.webp",
+    "alt": "The screen calling for a left spin",
+    "pitch": "Follow the prompt before the rim runs out."
+  },
+  {
+    "slug": "mainframe",
+    "name": "Mainframe",
+    "group": "games",
+    "image": "mainframe-q8-trace.webp",
+    "alt": "A green terminal with hex raining down and an amber trace arc around the rim",
+    "pitch": "Crack a six-character password one slot at a time, guided by a hot and cold bar, before the trace fills the rim.",
+    "banner": "a round gadget glowing green in a dark server room, cascading green hex digits raining past, a cartoon hacker hood and ACCESS GRANTED light beams",
+    "devlog": "blog/2026-11-27-2143-six-crimes-no-refusals.html"
+  },
+  {
+    "slug": "pickpocket",
+    "name": "Pickpocket",
+    "group": "games",
+    "image": "pickpocket-q8-hey.webp",
+    "alt": "A big cartoon eye wide open and HEY! in red",
+    "pitch": "Turn your hand round the rim to the swaying pocket and tap to lift the wallet, but only while the eye is shut.",
+    "banner": "a cartoon gloved hand sneaking towards a wallet poking out of a swaying coat pocket, a giant cartoon eye peeking from a round gadget's screen",
+    "devlog": "blog/2026-11-27-2143-six-crimes-no-refusals.html"
+  },
+  {
+    "slug": "getaway",
+    "name": "Getaway",
+    "group": "games",
+    "image": "getaway-unc-police.webp",
+    "alt": "A ring road with a blue police car and an orange getaway car",
+    "pitch": "Switch lanes round a ring road to dodge the police. Every ten cars you pass, it gets faster.",
+    "banner": "a tiny cartoon getaway car racing round a circular ring road on a gadget's glowing screen, police cars with red and blue lights chasing",
+    "devlog": "blog/2026-11-27-2143-six-crimes-no-refusals.html"
+  },
+  {
+    "slug": "pocket-pet",
+    "name": "Pocket Pet",
+    "group": "games",
+    "image": "pocket-pet-happy.webp",
+    "alt": "A happy round virtual pet",
+    "pitch": "Tap to feed your pet or spin to play as food, fun and sleep drain around the rim."
+  },
+  {
+    "slug": "tap-reflex",
+    "name": "Tap Reflex",
+    "group": "games",
+    "image": "tap-reflex-green.webp",
+    "alt": "Tap Reflex showing the green signal",
+    "pitch": "Wait for green, tap and see how close you came to your best time.",
+    "banner": "a round gadget flashing bright green, a cartoon finger blurring towards it, a stopwatch exploding into speed lines"
+  },
+  {
+    "slug": "dice-roller",
+    "name": "Dice Roller",
+    "group": "games",
+    "image": "dice-roller-landed4.webp",
+    "alt": "Four dice settled on the screen",
+    "pitch": "Roll up to four dice with slowing clicks and haptic ticks.",
+    "banner": "four chunky glowing dice tumbling out of a round gadget's screen onto a board-game table, pips trailing light"
+  },
+  {
+    "slug": "kitchen-timer",
+    "name": "Kitchen Timer",
+    "group": "tools",
+    "image": "kitchen-timer-half.webp",
+    "alt": "Kitchen timer with half of the countdown arc left",
+    "pitch": "Turn to set the minutes and tap to start. Three beeps mark zero.",
+    "banner": "a round gadget perched on a kitchen counter beside a steaming pot, a glowing orange arc draining around its rim, an egg and a whisk"
+  },
+  {
+    "slug": "metronome",
+    "name": "Metronome",
+    "group": "music",
+    "image": "metronome-started-after.webp",
+    "alt": "Metronome with its beat indicator lit",
+    "pitch": "Turn the bezel to set the tempo. Hear and feel each beat, with an accent on the first.",
+    "banner": "a round gadget swinging a glowing pendulum like a metronome, musical notes bouncing in time, sheet music fanned behind"
+  },
+  {
+    "slug": "dial-synth",
+    "name": "Dial Synth",
+    "group": "music",
+    "image": "dial-synth-after.webp",
+    "alt": "Dial Synth with its circular note display",
+    "pitch": "Turn through a pentatonic scale and tap to play a chord.",
+    "banner": "a round gadget whose bezel is a glowing ring of piano keys, colourful notes spiralling out of its screen like a synth wave"
+  },
+  {
+    "slug": "rim-pong",
+    "name": "Rim Pong",
+    "group": "games",
+    "image": "rim-pong.webp",
+    "alt": "Rim Pong just after a serve",
+    "pitch": "Keep the ball inside the circle with a paddle that moves around the rim.",
+    "banner": "a glowing ball bouncing inside a round screen, a curved paddle hugging the rim, retro arcade sparks and a scoreboard"
+  },
+  {
+    "slug": "pocket-synth",
+    "name": "Pocket Synth",
+    "group": "music",
+    "image": "pocket-synth-lh.webp",
+    "alt": "Pocket Synth with eight rainbow keys mirrored around D4 in left-handed mode",
+    "pitch": "Touch-audition synth with four patches, bezel volume, left-handed piano mirror around D4 and a MIDI input hook.",
+    "devlog": "blog/2026-11-28-1110-seven-piano-apps-before-lunch.html"
+  },
+  {
+    "slug": "midi-bridge",
+    "name": "MIDI Bridge",
+    "group": "music",
+    "image": "midi-bridge-lh.webp",
+    "alt": "MIDI Bridge showing M-VAVE FM-1 connected, LH ON and C4 -> E4",
+    "pitch": "Wireless dual-BLE Left-Handed Piano bridge between SMK-37 Pro and FM-1 with a live 37-key colour-paired keyboard, lockable piano mirror axes and Wi-Fi OTA.",
+    "devlog": "blog/2026-11-28-1110-seven-piano-apps-before-lunch.html"
+  },
+  {
+    "slug": "gap-finder",
+    "name": "Gap Finder",
+    "group": "music",
+    "image": "gap-finder-correct.webp",
+    "alt": "Gap Finder showing a correct m3 interval answer and weakest interval footer",
+    "pitch": "Ear-training interval game: hear two notes, turn the bezel to name the interval, and track your weakest interval.",
+    "devlog": "blog/2026-11-28-1110-seven-piano-apps-before-lunch.html"
+  },
+  {
+    "slug": "piano-coach",
+    "name": "Piano Coach",
+    "group": "music",
+    "image": "piano-coach-lh.webp",
+    "alt": "Piano Coach showing D, 375 ms, LH chip and gold-ringed TAP disc",
+    "pitch": "Note-name Quick Draw with drawn sharp and flat signs, slowest-notes list, Rhythm timing mode and left/right touch layout.",
+    "devlog": "blog/2026-11-28-1042-the-coach-stepped-back.html"
+  },
+  {
+    "slug": "staff-sight",
+    "name": "Staff Sight",
+    "group": "music",
+    "image": "staff-sight-lh.webp",
+    "alt": "Staff Sight showing a treble staff note, 263 ms and LH layout",
+    "pitch": "Sight-reading trainer on treble, bass or grand staves with unlockable ledger lines and left/right touch layout.",
+    "devlog": "blog/2026-11-28-1042-the-coach-stepped-back.html"
+  },
+  {
+    "slug": "echo-keys",
+    "name": "Echo Keys",
+    "group": "music",
+    "image": "echo-keys-rh.webp",
+    "alt": "Echo Keys with a 12-semitone chromatic strip on the right and D lit yellow",
+    "pitch": "Simon on a piano: hear a growing phrase light the LED ring and repeat it on a flippable left/right chromatic strip.",
+    "devlog": "blog/2026-11-28-1110-seven-piano-apps-before-lunch.html"
+  },
+  {
+    "slug": "chord-spotter",
+    "name": "Chord Spotter",
+    "group": "music",
+    "image": "chord-spotter-lh.webp",
+    "alt": "Chord Spotter showing a 3x4 chromatic pad grid on the left with D major notes ringed gold",
+    "pitch": "Spot and play triads and sevenths with green heard tones, gold missing notes, red wrong thirds and left/right pad layout.",
+    "devlog": "blog/2026-11-28-1110-seven-piano-apps-before-lunch.html"
+  },
+  {
+    "slug": "tally-counter",
+    "name": "Tally Counter",
+    "group": "tools",
+    "image": "tally-counter-ten.webp",
+    "alt": "Tally Counter showing 10 with one green rim segment filled",
+    "pitch": "Turn to count up or down with haptic ticks, a rising chime and rim segment every ten, and a 1-second hold to reset."
+  },
+  {
+    "slug": "colour-mixer",
+    "name": "Colour Mixer",
+    "group": "tools",
+    "image": "colour-mixer-swatches.webp",
+    "alt": "Colour Mixer showing a 36-segment rainbow ring, #FFD400 disc and saved swatches",
+    "pitch": "Turn through a 36-segment colour wheel, drag for brightness, read the hex code and save up to four swatches."
+  },
+  {
+    "slug": "magic-eight",
+    "name": "Magic Eight",
+    "group": "games",
+    "image": "magic-eight-reveal.webp",
+    "alt": "Magic Eight ball triangle revealing 'very unlikely'",
+    "pitch": "Flick the knob or tap to shake, feel the haptic rumble and bubbling sounds, and watch one of twenty fortunes fade in."
+  },
+  {
+    "slug": "breathing-guide",
+    "name": "Breathing Guide",
+    "group": "tools",
+    "image": "breathing-guide-hold.webp",
+    "alt": "Breathing Guide showing the expanded calm breathing disc at hold",
+    "pitch": "A calm box-breathing disc that grows, holds and shrinks with soft haptic bumps, rising tones and bezel-set cycle length."
+  },
+  {
+    "slug": "whack-a-mole",
+    "name": "Whack-a-Mole",
+    "group": "games",
+    "image": "whack-a-mole-up.webp",
+    "alt": "Whack-a-Mole with eight ring holes, a centre hole and a brown mole popped up",
+    "pitch": "Tap popping moles around eight rim holes and the centre before they duck away and cost one of three lives."
+  },
+  {
+    "slug": "copy-cat",
+    "name": "Copy Cat",
+    "group": "games",
+    "image": "copy-cat-watch.webp",
+    "alt": "Copy Cat showing a cyan left chevron, ROUND 1 WATCH and CLICK L",
+    "pitch": "Watch a growing sequence of clicks, spins and taps light the screen and LED ring, then repeat it back from memory."
+  },
+  {
+    "slug": "simon",
+    "name": "Simon",
+    "group": "games",
+    "image": "simon-lit.webp",
+    "alt": "Simon with four coloured quadrants, the yellow quadrant lit and ROUND 1 in the centre",
+    "pitch": "Four coloured quadrants light up and play their own tones in a growing sequence; tap them back without a mistake."
+  },
+  {
+    "slug": "pitch-match",
+    "name": "Pitch Match",
+    "group": "music",
+    "image": "pitch-match-tune.webp",
+    "alt": "Pitch Match showing a circular chromatic tuning dial with Tune it! and Round 1 / 5",
+    "pitch": "Hear a target tone, turn the knob to tune your own pitch by ear, tap to lock in and see how many cents off you were."
+  },
+  {
+    "slug": "higher-lower",
+    "name": "Higher or Lower",
+    "group": "games",
+    "image": "higher-lower-win.webp",
+    "alt": "Higher or Lower showing 31, YOU GOT IT! and 1 guesses",
+    "pitch": "Turn the knob to guess a secret number from 1 to 100, tap to submit, and follow the higher or lower hints."
+  },
+  {
+    "slug": "quick-draw",
+    "name": "Quick Draw",
+    "group": "games",
+    "image": "quick-draw-win.webp",
+    "alt": "Quick Draw showing knob player wins! with reaction time and score",
+    "pitch": "Two-player standoff on one knob: wait for DRAW, then race to spin the bezel or tap the screen first."
+  },
+  {
+    "slug": "stop-the-sweep",
+    "name": "Stop the Sweep",
+    "group": "games",
+    "image": "stop-the-sweep.webp",
+    "alt": "Stop the Sweep showing a concentric sweep dial with a scored hit",
+    "pitch": "A marker sweeps round the rim through a shrinking target zone; tap at the right instant to score and chase your best."
+  },
+  {
+    "slug": "lock-pick",
+    "name": "Lock Pick",
+    "group": "games",
+    "image": "lock-pick.webp",
+    "alt": "Lock Pick showing the radial tumbler dial with the pick marker glowing near the sweet spot",
+    "pitch": "Feel your way round a radial tumbler dial as colour and haptics warm near the sweet spot, then tap before your picks run out."
+  },
+  {
+    "slug": "tug-of-war",
+    "name": "Tug of War",
+    "group": "games",
+    "image": "tug-of-war.webp",
+    "alt": "Tug of War showing the rope, goal posts and flag pulled towards the knob side",
+    "pitch": "Two-player battle on one knob: one player taps the screen to pull left while the other spins the bezel to pull right."
+  },
+  {
+    "slug": "hot-potato",
+    "name": "Hot Potato",
+    "group": "games",
+    "image": "hot-potato.webp",
+    "alt": "Hot Potato showing the warming crimson dial and potato face with HOLD ON...",
+    "pitch": "Pass the knob round the table while the screen warms toward crimson and ticks faster until it blows."
+  },
+  {
+    "slug": "redline",
+    "name": "Redline",
+    "group": "games",
+    "image": "redline.webp",
+    "alt": "Redline tachometer showing the needle in the green band at LV 2 LEVEL UP",
+    "pitch": "Spin the bezel to hold the tachometer needle inside the green rev band without stalling or hitting the redline."
+  },
+  {
+    "slug": "snail-race",
+    "name": "Snail Race",
+    "group": "games",
+    "image": "snail-race.webp",
+    "alt": "Snail Race showing red, yellow and blue snails with eye-stalks racing along three curved lanes toward a checkered finish line",
+    "pitch": "Spin the bezel to squelch your snail forward along three curved lanes and beat two rivals to the checkered line."
+  },
+  {
+    "slug": "key-speed",
+    "name": "Key Speed",
+    "group": "games",
+    "image": "key-speed.webp",
+    "alt": "Key Speed showing a correct key",
+    "pitch": "Light up the right notes fast: rhythm and practice modes for a 12-key strip.",
+    "banner": "a glowing round gadget with a 12-key piano strip lighting up in time like a rhythm game, sparks and glow"
+  },
+  {
+    "slug": "chord-mirror",
+    "name": "Chord Mirror",
+    "group": "music",
+    "image": "chord-mirror.webp",
+    "alt": "Chord Mirror showing a held chord",
+    "pitch": "Play chords on the SMK-37 Pro and watch them mirrored back on the FM-1.",
+    "banner": "a glowing round gadget with two tiny music keyboards mirroring each other, chord notes glowing in gold"
+  },
+  {
+    "slug": "scale-lock",
+    "name": "Scale Lock",
+    "group": "music",
+    "image": "scale-lock.webp",
+    "alt": "Scale Lock snapping to a major scale",
+    "pitch": "Hear notes while the knob cycles the scale; the FM-1 locks to the right notes.",
+    "banner": "a round gadget glowing with a pentatonic dial and a glowing string of notes being trapped into a scale"
+  },
+  {
+    "slug": "arpeggiator",
+    "name": "Arpeggiator",
+    "group": "music",
+    "image": "arpeggiator.webp",
+    "alt": "Arpeggiator cycling chord notes",
+    "pitch": "Turn the knob to set the BPM and watch the arpeggio loop play a chord on the FM-1.",
+    "banner": "a round gadget with a weaving dot circling its rim like a metronome, musical notes spiralling out"
+  },
+  {
+    "slug": "octave-jumper",
+    "name": "Octave Jumper",
+    "group": "music",
+    "image": "octave-jumper.webp",
+    "alt": "Octave Jumper showing a matching pitch class",
+    "pitch": "Hear a random melody and jump an octave to make the pitch class match.",
+    "banner": "a round gadget with two glowing piano-key strips and an arrow carrying one note up an octave"
+  },
+  {
+    "slug": "velocity-meter",
+    "name": "Velocity Meter",
+    "group": "music",
+    "image": "velocity-meter.webp",
+    "alt": "Velocity Meter showing velocity bars",
+    "pitch": "Play on the SMK-37 Pro and watch per-note velocity bars light up.",
+    "banner": "a round gadget with a bar-graph of colourful bars rising like a tiny equaliser, glowing notes"
+  },
+  {
+    "slug": "drone-pad",
+    "name": "Drone Pad",
+    "group": "music",
+    "image": "drone-pad.webp",
+    "alt": "Drone Pad playing a held chord",
+    "pitch": "Hold a chord on the keyboard and the FM-1 drone plays it while the knob slides the pitch.",
+    "banner": "a round gadget resting a single chord as a glowing static-filled halo"
+  },
+  {
+    "slug": "rhythm-tap",
+    "name": "Rhythm Tap",
+    "group": "games",
+    "image": "rhythm-tap.webp",
+    "alt": "Rhythm Tap with a tapped ring",
+    "pitch": "Tap on the shrinking ring to score; knob sets the tempo.",
+    "banner": "a round gadget with a glowing shrinking ring and a cartoon finger flicking towards it"
+  },
+  {
+    "slug": "pomodoro-dial",
+    "name": "Pomodoro Dial",
+    "group": "tools",
+    "image": "pomodoro-dial.webp",
+    "alt": "Pomodoro Dial mid-countdown",
+    "pitch": "Pick a length with the knob, tap to start; a tick ring drains around the rim.",
+    "banner": "a cartoon tomato with a glowing arc draining around it like a pomodoro timer"
+  },
+  {
+    "slug": "tea-steeper",
+    "name": "Tea Steeper",
+    "group": "tools",
+    "image": "tea-steeper.webp",
+    "alt": "Tea Steeper running",
+    "pitch": "Pick a blend with the knob; tap to start a steep; long-press for strength.",
+    "banner": "a steaming tea cup glowing on a round gadget, bubbles rising in a glowing cup"
+  },
+  {
+    "slug": "compass-spinner",
+    "name": "Compass Spinner",
+    "group": "tools",
+    "image": "compass-spinner.webp",
+    "alt": "Compass Spinner settled north",
+    "pitch": "Flick the needle with the knob; it settles to north with a reading.",
+    "banner": "a glowing compass needle sweeping inside a round gadget like a tiny ship's compass"
+  },
+  {
+    "slug": "coin-flip",
+    "name": "Coin Flip",
+    "group": "games",
+    "image": "coin-flip.webp",
+    "alt": "Coin Flip mid-toss",
+    "pitch": "Tap to toss a wobbling coin; knob changes the toss speed.",
+    "banner": "a glowing cartoon coin spinnning mid-air over a round gadget, sparkle particles"
+  },
+  {
+    "slug": "bubble-level",
+    "name": "Bubble Level",
+    "group": "tools",
+    "image": "bubble-level.webp",
+    "alt": "Bubble Level showing LEVEL",
+    "pitch": "Roll the bubble with the knob; level and it chimes.",
+    "banner": "a tiny green bubble sitting dead-centre in a glowing tube on a round gadget"
+  },
+  {
+    "slug": "orbit-dodge",
+    "name": "Orbit Dodge",
+    "group": "games",
+    "image": "orbit-dodge.webp",
+    "alt": "Orbit Dodge showing the rim",
+    "pitch": "Spin the player dot around the rim to dodge asteroids.",
+    "banner": "a glowing dot orbiting a ring on a round gadget, tiny asteroids falling in from the rim"
+  },
+  {
+    "slug": "asteroid-cannon",
+    "name": "Asteroid Cannon",
+    "group": "games",
+    "image": "asteroid-cannon.webp",
+    "alt": "Asteroid Cannon firing",
+    "pitch": "Spin the barrel with the knob, tap to fire, and blast asteroids.",
+    "banner": "a glowing cannon barrel pointing up inside a round gadget, tiny asteroids tumbling past"
+  },
+  {
+    "slug": "colour-match",
+    "name": "Colour Match",
+    "group": "tools",
+    "image": "colour-match.webp",
+    "alt": "Colour Match with the needle turned",
+    "pitch": "Spin the hue dial to match the target colour.",
+    "banner": "a glowing colour wheel on a round gadget with a white needle pointing at a bright hue"
+  },
+  {
+    "slug": "memory-dial",
+    "name": "Memory Dial",
+    "group": "games",
+    "image": "memory-dial.webp",
+    "alt": "Memory Dial showing the lit wedge",
+    "pitch": "Watch the lit wedge, then tap it back.",
+    "banner": "a glowing 12-segment dial with one bright wedge on a round gadget"
+  },
+  {
+    "slug": "safe-heat",
+    "name": "Safe Heat",
+    "group": "games",
+    "image": "safe-heat.webp",
+    "alt": "Safe Heat with a dial picked",
+    "pitch": "Rotate the dial to pick three digits; tap to enter.",
+    "banner": "a glowing safe dial inside a round gadget, a cartoon lock glowing amber"
+  },
+  {
+    "slug": "sound-board",
+    "name": "Sound Board",
+    "group": "music",
+    "image": "sound-board.webp",
+    "alt": "Sound Board playing a pad",
+    "pitch": "Tap a pad for a sound; knob sets the volume.",
+    "banner": "a round gadget with six glowing coloured pads and musical notes bouncing off its rim"
+  },
+  {
+    "slug": "morse-trainer",
+    "name": "Morse Trainer",
+    "group": "tools",
+    "image": "morse-trainer.webp",
+    "alt": "Morse Trainer showing a dash",
+    "pitch": "Tap (dot) and long-press (dash) to enter a letter's Morse code.",
+    "banner": "a round gadget showing a glowing Morse code string of dots and dashes"
+  },
+  {
+    "slug": "starfield-screensaver",
+    "name": "Starfield",
+    "group": "tools",
+    "image": "starfield-screensaver.webp",
+    "alt": "Starfield Screensaver warping",
+    "pitch": "Knob sets the warp speed; tap to jolt the starfield.",
+    "banner": "a glowing starfield warping across a round gadget like a tiny night sky"
+  }
 ]

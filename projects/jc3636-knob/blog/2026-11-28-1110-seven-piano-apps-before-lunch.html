@@ -1,0 +1,103 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Seven piano apps before lunch, and a keyboard turned back to front — jc3636-knob</title><meta property="og:type" content="article"><meta property="og:title" content="Seven piano apps before lunch, and a keyboard turned back to front"><meta property="og:url" content="https://brook.dev/projects/jc3636-knob/blog/2026-11-28-1110-seven-piano-apps-before-lunch"><meta property="og:description" content="One local model built all seven piano and MIDI apps in a single morning, starting from a left-handed piano mirror around D4 and ending with a 12-pad chord spotter."><meta property="og:image" content="https://assets.brook.dev/jc3636-knob/blog/banners/2026-11-28-1110-seven-piano-apps-before-lunch.webp"><meta property="og:image:width" content="1280"><meta property="og:image:height" content="720"><meta name="twitter:card" content="summary_large_image"><meta name="description" content="One local model built all seven piano and MIDI apps in a single morning, starting from a left-handed piano mirror around D4 and ending with a 12-pad chord spotter."><link rel="stylesheet" href="./style.css"></head><body><header class="site-header"><a class="brand" href="./index.html">jc3636-knob <span>· devlog</span></a><a href="../../../index.html">brook.dev</a></header><main class="content"><a class="back-link" href="./index.html">← all posts</a><article><img class="banner" src="https://assets.brook.dev/jc3636-knob/blog/banners/2026-11-28-1110-seven-piano-apps-before-lunch.webp" width="1280" height="720" alt=""><h1>Seven piano apps before lunch, and a keyboard turned back to front</h1><p class="post-meta">2026-11-28 <time>11:10 (+0800)</time> · part 28 of 57 <span class="tag">lab</span><span class="tag">inkling</span><span class="tag">piano</span><span class="tag">midi</span><span class="tag">left-handed</span></p><p><strong>&quot;I&#39;d love if the next apps it worked on were the ones for modifying the piano. Especially the ones that have a feature to make it play left handed!&quot;</strong></p>
+<p>That is where this whole music tangent actually began. Not with a synth, not with a bridge, not even with note names. With wanting to play a <strong>left-handed piano</strong>: high notes on the left, low notes on the right, reflected around <code>D4</code> (MIDI 62) so every white key lands on a white key and every black key lands on a black key.</p>
+<p>By 11:03, Inkling 2 Mini Q8 (thinking <code>low</code>) had built all seven apps from <a href="./2026-11-27-1845-the-knob-wants-to-teach-me-piano.html">the piano coach post</a> and <a href="./2026-11-27-1907-the-knob-gets-a-keyboard.html">the keyboard post</a> before breakfast was even on the plate.</p>
+<div class="pair"><img src="https://assets.brook.dev/jc3636-knob/blog/img/pocket-synth-lh.webp" alt="Pocket Synth with LH KEYS enabled: eight rainbow key rings mirrored around D4 to E4, D4, C4, B3 and A3, G3, F3, E3"><img src="https://assets.brook.dev/jc3636-knob/blog/img/midi-bridge-lh.webp" alt="MIDI Bridge connected to M-VAVE FM-1 with LH ON showing live transform C4 -> E4 in amber and green LED ring"></div><h2>The morning&#39;s scoreboard</h2>
+<!-- claim-check: tools/pi-runs/runs.jsonl lines of 28 Nov 2026 08:42 to 11:03; commits 9c68b0d, 6cbd02c, f9c812b, 013fdf9, 0ca6f9b, 141de74 -->
+<p>Seven new apps, seven clean <code>CHECK PASS</code> verdicts, zero context compactions, zero auto-resumes:</p>
+<table>
+<thead>
+<tr>
+<th>App</th>
+<th>Build time</th>
+<th>Peak tokens</th>
+<th>Coach fixes</th>
+<th>Feature scripts</th>
+<th>Commit</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>pocket-synth</code></td>
+<td>12 m 18 s (+ 2 m 56 s fix)</td>
+<td>40,675</td>
+<td>1</td>
+<td>6/6</td>
+<td><code>9c68b0d</code></td>
+</tr>
+<tr>
+<td><code>midi-bridge</code></td>
+<td>11 m 31 s (+ 2 m 44 s fix)</td>
+<td>36,424</td>
+<td>1</td>
+<td>8/8</td>
+<td><code>9c68b0d</code></td>
+</tr>
+<tr>
+<td><code>gap-finder</code></td>
+<td>8 m 0 s</td>
+<td>29,222</td>
+<td>0</td>
+<td>8/8</td>
+<td><code>6cbd02c</code></td>
+</tr>
+<tr>
+<td><code>piano-coach</code></td>
+<td>21 m 49 s</td>
+<td>66,942</td>
+<td>0</td>
+<td>5/5</td>
+<td><code>f9c812b</code></td>
+</tr>
+<tr>
+<td><code>staff-sight</code></td>
+<td>13 m 8 s</td>
+<td>41,121</td>
+<td>0</td>
+<td>6/6</td>
+<td><code>013fdf9</code></td>
+</tr>
+<tr>
+<td><code>echo-keys</code></td>
+<td>18 m 20 s</td>
+<td>56,637</td>
+<td>0</td>
+<td>7/7</td>
+<td><code>0ca6f9b</code></td>
+</tr>
+<tr>
+<td><code>chord-spotter</code></td>
+<td>12 m 15 s</td>
+<td>40,598</td>
+<td>0</td>
+<td>5/5</td>
+<td><code>141de74</code></td>
+</tr>
+</tbody></table>
+<p>Total wall time for all seven apps from scratch: <strong>97 minutes</strong> of local inference on a MacBook Pro, at roughly 30 tokens a second, with zero hosted API spend.</p>
+<h2>Two kinds of left-handedness, and one immortal note</h2>
+<!-- claim-check: projects/pocket-synth/main/main.c; projects/midi-bridge/main/main.c; projects/echo-keys/main/main.c; projects/chord-spotter/main/main.c -->
+<p>It turned out &quot;left-handed&quot; meant two different things that both mattered:</p>
+<ol>
+<li><strong>Mirroring the piano keys (<code>LH KEYS</code> / <code>LH ON</code>).</strong> In <code>pocket-synth</code> and <code>midi-bridge</code>, every incoming or auditioned note reflects around <code>D4</code> (<code>124 - note</code>), turning <code>C4</code> into <code>E4</code>, <code>D4</code> into <code>D4</code>, and <code>C5</code> into <code>E3</code>. In <code>midi-bridge</code>&#39;s first draft, Note On got mirrored while Note Off (<code>vel == 0</code>) went straight through untransformed, which would have left every mirrored note ringing forever on the M-VAVE FM-1! The fix tracks <code>active_out[128]</code> per input key, so even if you flip the mirror switch mid-chord, releasing a key turns off the exact note that was turned on.</li>
+<li><strong>Flipping the knob&#39;s touch controls (<code>HAND</code> / <code>LH</code> / <code>RH</code>).</strong> Moving primary tap targets to whichever hand is free while leaving the notes, stave, routing arrow and knob direction alone.</li>
+</ol>
+<p>As covered in <a href="./2026-11-28-1042-the-coach-stepped-back.html">the companion coaching post</a>, once we stopped micromanaging prompts and handed Inkling the raw catalogue pitches, it invented its own house style across the five learning apps. <code>echo-keys</code> built a vertical 12-semitone chromatic strip that jumps cleanly left to right on a tap; <code>chord-spotter</code> built a 3x4 circular pad grid that lights heard chord tones green, missing notes gold, and wrong thirds red!</p>
+<div class="pair"><img src="https://assets.brook.dev/jc3636-knob/blog/img/echo-keys-rh.webp" alt="Echo Keys in RH layout: vertical chromatic strip C to B on the right with D lit yellow, YOUR TURN and 1/3 on the left"><img src="https://assets.brook.dev/jc3636-knob/blog/img/chord-spotter-lh.webp" alt="Chord Spotter in LEFT layout: 3x4 circular chromatic pad grid on the left with D, F# and A ringed gold, heard 0/3 missing D F# A"></div><h2>The student caught a bug in the teacher&#39;s header</h2>
+<!-- claim-check: tools/pi-runs/echo-keys.log line 10; commit f49617d -->
+<p>My favourite moment of the morning came from <code>echo-keys</code>&#39;s final report. It dutifully noted that <code>projects/game-template/main/leds.h</code> carried a warning saying the LED ring was <em>&quot;untested on this unit&quot;</em>, so it warned us not to expect visible LEDs on hardware.</p>
+<p>Reader, we counted all 12 LEDs glowing on the board four days ago! Line 1 of <code>leds.h</code> already said <code>counted on the board, KNOB-039</code>, and line 3 still said <code>Untested on this unit</code> right underneath it. Nobody had noticed until a local 30-tok/s model read the header properly and called it out. Fixed in <code>f49617d</code>.</p>
+<h2>Alternatives rejected</h2>
+<ul>
+<li><strong>Waiting for USB Host and BLE MIDI drivers before building any piano UI.</strong> Next! Every app compiles against the real ESP-IDF template today with clean note hooks (<code>midi_note_event</code>, <code>midi_bridge_in</code>/<code>out</code>), so the UI, ergonomics and left-handed mirror logic are already proven in the simulator.</li>
+<li><strong>Mirroring around <code>C4</code> (MIDI 60).</strong> Next! Reflecting around <code>C</code> maps black keys onto white keys (<code>C#</code> lands on <code>B</code>). <code>D4</code> (MIDI 62) preserves the exact white-and-black key geometry.</li>
+</ul>
+<h2>What still hurts</h2>
+<!-- claim-check: KNOB-053, KNOB-056, KNOB-062; tools/pi-runs/runs.jsonl -->
+<p>Every one of these seven apps is simulator plus board build only:</p>
+<ol>
+<li><strong>No live MIDI or microphone input wired yet.</strong> <code>pocket-synth</code> and <code>midi-bridge</code> still wait on the physical Launchkey 49 + powered USB 2.0 hub + M-VAVE FM-1 bench qualification (<code>KNOB-056</code>), and the five trainers still wait on either the PDM microphone piano test (<code>KNOB-053</code>) or BLE/USB MIDI pickup (<code>KNOB-062</code>).</li>
+<li><strong>Real hardware feel.</strong> Touch accuracy on <code>echo-keys</code>&#39;s 12-row strip, speaker loudness vs headphones, and real left-handed playing ergonomics can only be judged once the firmware lands on the desk.</li>
+</ol>
+<ul>
+<li><strong>Banner concept (pending ComfyUI render once the queue frees the GPU, seed 4128):</strong> a miniature piano keyboard reflected in a glowing brass mirror beside the gadget, musical notes arching backwards in neon green and gold, seven tiny glowing app discs orbiting above.</li>
+</ul>
+</article><nav class="post-nav"><a href="./2026-11-28-1042-the-coach-stepped-back.html">← The coach stepped back, and the model designed a better screen</a><a href="./2026-11-28-1112-the-board-was-plugged-in-just-not-here.html">The board was plugged in, just not here →</a></nav></main><footer class="site-footer">The devlog for <strong>jc3636-knob</strong>: a round screen with a knob, a usage panel, and a local model learning to make games on it. Written from the working record, mistakes included.</footer></body></html>
